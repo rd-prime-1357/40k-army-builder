@@ -272,7 +272,7 @@
 
   async function init() {
     try {
-      const res = await fetch('data/chaos-daemons.json');
+      const res = await fetch('chaos-daemons.json');
       if (!res.ok) throw new Error('Failed to load unit data');
       const data = await res.json();
       allUnits = data.units;
