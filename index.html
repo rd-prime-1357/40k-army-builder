@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>40K Army Builder</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f0f0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a0000;
+      border-bottom: 2px solid #8b0000;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #cc2200;
+      text-transform: uppercase;
+    }
+
+    header .faction-badge {
+      font-size: 0.8rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 0;
+      height: calc(100vh - 65px);
+    }
+
+    /* Unit roster panel */
+    .roster-panel {
+      padding: 1.5rem;
+      overflow-y: auto;
+      border-right: 1px solid #2a2a2a;
+    }
+
+    .panel-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .role-group { margin-bottom: 1.5rem; }
+
+    .role-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8b0000;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 0.3rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .unit-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      padding: 0.65rem 0.75rem;
+      margin-bottom: 0.4rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .unit-card:hover { border-color: #8b0000; background: #201010; }
+
+    .unit-info { flex: 1; min-width: 0; }
+
+    .unit-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e0e0e0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .unit-desc {
+      font-size: 0.72rem;
+      color: #666;
+      margin-top: 0.15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .unit-points {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cc9900;
+      margin: 0 0.75rem;
+      white-space: nowrap;
+    }
+
+    .add-btn {
+      background: #8b0000;
+      border: none;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .add-btn:hover { background: #cc0000; }
+
+    /* Army list panel */
+    .list-panel {
+      display: flex;
+      flex-direction: column;
+      background: #111;
+    }
+
+    .list-header {
+      padding: 1.5rem 1.5rem 0.75rem;
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    .points-total {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #cc9900;
+      line-height: 1;
+    }
+
+    .points-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #555;
+      margin-top: 0.2rem;
+    }
+
+    .list-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem 1.5rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #444;
+      font-size: 0.85rem;
+      margin-top: 3rem;
+      line-height: 1.6;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .list-item-name {
+      font-size: 0.85rem;
+      color: #ccc;
+      flex: 1;
+    }
+
+    .list-item-pts {
+      font-size: 0.8rem;
+      color: #cc9900;
+      font-weight: 600;
+      margin: 0 0.75rem;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0.1rem 0.2rem;
+      border-radius: 2px;
+      transition: color 0.15s;
+    }
+
+    .remove-btn:hover { color: #cc2200; }
+
+    .list-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .clear-btn {
+      width: 100%;
+      background: none;
+      border: 1px solid #2a2a2a;
+      color: #555;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .clear-btn:hover { border-color: #8b0000; color: #cc2200; }
+
+    .error-msg {
+      color: #cc4444;
+      padding: 2rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>40K Army Builder</h1>
+    <div class="faction-badge">Chaos Daemons</div>
+  </div>
+</header>
+
+<div class="layout">
+  <div class="roster-panel">
+    <div class="panel-title">Available Units</div>
+    <div id="roster"></div>
+  </div>
+
+  <div class="list-panel">
+    <div class="list-header">
+      <div class="points-total" id="points-total">0</div>
+      <div class="points-label">Points Total</div>
+    </div>
+    <div class="list-items" id="list-items">
+      <div class="empty-state">No units added yet.<br>Select units from the roster to build your army.</div>
+    </div>
+    <div class="list-footer">
+      <button class="clear-btn" onclick="clearList()">Clear List</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let armyList = [];
+  let allUnits = [];
+
+  async function init() {
+    try {
+      const res = await fetch('data/chaos-daemons.json');
+      if (!res.ok) throw new Error('Failed to load unit data');
+      const data = await res.json();
+      allUnits = data.units;
+      renderRoster(allUnits);
+    } catch (err) {
+      document.getElementById('roster').innerHTML =
+        `<div class="error-msg">Could not load unit data: ${err.message}</div>`;
+    }
+  }
+
+  function groupByRole(units) {
+    const order = ['Lord of War', 'HQ', 'Troops', 'Fast Attack', 'Heavy Support'];
+    const groups = {};
+    for (const unit of units) {
+      if (!groups[unit.role]) groups[unit.role] = [];
+      groups[unit.role].push(unit);
+    }
+    return order.filter(r => groups[r]).map(r => ({ role: r, units: groups[r] }));
+  }
+
+  function renderRoster(units) {
+    const roster = document.getElementById('roster');
+    const groups = groupByRole(units);
+    roster.innerHTML = groups.map(({ role, units }) => `
+      <div class="role-group">
+        <div class="role-label">${role}</div>
+        ${units.map(u => `
+          <div class="unit-card">
+            <div class="unit-info">
+              <div class="unit-name">${u.name}</div>
+              <div class="unit-desc">${u.description}</div>
+            </div>
+            <div class="unit-points">${u.points} pts</div>
+            <button class="add-btn" onclick="addUnit('${u.id}')" title="Add to list">+</button>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+
+  function addUnit(id) {
+    const unit = allUnits.find(u => u.id === id);
+    if (!unit) return;
+    armyList.push({ ...unit, listId: Date.now() + Math.random() });
+    renderList();
+  }
+
+  function removeUnit(listId) {
+    armyList = armyList.filter(u => u.listId !== listId);
+    renderList();
+  }
+
+  function clearList() {
+    armyList = [];
+    renderList();
+  }
+
+  function renderList() {
+    const total = armyList.reduce((sum, u) => sum + u.points, 0);
+    document.getElementById('points-total').textContent = total.toLocaleString();
+
+    const container = document.getElementById('list-items');
+    if (armyList.length === 0) {
+      container.innerHTML = '<div class="empty-state">No units added yet.<br>Select units from the roster to build your army.</div>';
+      return;
+    }
+
+    container.innerHTML = armyList.map(u => `
+      <div class="list-item">
+        <span class="list-item-name">${u.name}</span>
+        <span class="list-item-pts">${u.points} pts</span>
+        <button class="remove-btn" onclick="removeUnit(${u.listId})" title="Remove">&times;</button>
+      </div>
+    `).join('');
+  }
+
+  init();
+</script>
+
+</body>
+</html>

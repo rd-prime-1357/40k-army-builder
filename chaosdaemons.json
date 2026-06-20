@@ -1,0 +1,103 @@
+{
+  "faction": "Chaos Daemons",
+  "units": [
+    {
+      "id": "bloodthirster",
+      "name": "Bloodthirster",
+      "role": "Lord of War",
+      "points": 320,
+      "description": "A mighty Greater Daemon of Khorne, a towering engine of destruction."
+    },
+    {
+      "id": "great-unclean-one",
+      "name": "Great Unclean One",
+      "role": "Lord of War",
+      "points": 290,
+      "description": "A bloated Greater Daemon of Nurgle, spreading pestilence across the battlefield."
+    },
+    {
+      "id": "lord-of-change",
+      "name": "Lord of Change",
+      "role": "Lord of War",
+      "points": 300,
+      "description": "A many-eyed Greater Daemon of Tzeentch, a master of sorcery."
+    },
+    {
+      "id": "keeper-of-secrets",
+      "name": "Keeper of Secrets",
+      "role": "Lord of War",
+      "points": 280,
+      "description": "A lithe Greater Daemon of Slaanesh, graceful and deadly."
+    },
+    {
+      "id": "herald-of-khorne",
+      "name": "Herald of Khorne",
+      "role": "HQ",
+      "points": 80,
+      "description": "A lesser Daemon of Khorne leading the brass legions."
+    },
+    {
+      "id": "herald-of-nurgle",
+      "name": "Herald of Nurgle",
+      "role": "HQ",
+      "points": 75,
+      "description": "A bloated herald spreading Nurgle's gifts."
+    },
+    {
+      "id": "bloodletters",
+      "name": "Bloodletters",
+      "role": "Troops",
+      "points": 105,
+      "description": "Ferocious infantry of Khorne, wielding Hellblades. (10 models)"
+    },
+    {
+      "id": "plaguebearers",
+      "name": "Plaguebearers",
+      "role": "Troops",
+      "points": 100,
+      "description": "Resilient daemons of Nurgle, difficult to kill. (10 models)"
+    },
+    {
+      "id": "pink-horrors",
+      "name": "Pink Horrors",
+      "role": "Troops",
+      "points": 120,
+      "description": "Gibbering sorcerous daemons of Tzeentch. (10 models)"
+    },
+    {
+      "id": "daemonettes",
+      "name": "Daemonettes",
+      "role": "Troops",
+      "points": 90,
+      "description": "Swift and savage infantry of Slaanesh. (10 models)"
+    },
+    {
+      "id": "flesh-hounds",
+      "name": "Flesh Hounds",
+      "role": "Fast Attack",
+      "points": 115,
+      "description": "Swift hunting daemons of Khorne. (5 models)"
+    },
+    {
+      "id": "plague-drones",
+      "name": "Plague Drones",
+      "role": "Fast Attack",
+      "points": 150,
+      "description": "Nurgle daemons mounted on Rot Flies. (3 models)"
+    },
+    {
+      "id": "soul-grinder",
+      "name": "Soul Grinder",
+      "role": "Heavy Support",
+      "points": 175,
+      "description": "A hellish war machine forged from a daemon's essence."
+    },
+    {
+      "id": "skull-cannon",
+      "name": "Skull Cannon",
+      "role": "Heavy Support",
+      "points": 135,
+      "description": "A Khornate artillery piece that fires compressed skulls."
+    }
+  ]
+}
