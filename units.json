@@ -64,7 +64,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Slaughter and Carnage â strike",
+            "weapon_name": "Slaughter and Carnage - strike",
             "range": "Melee",
             "A": "8",
             "BS": null,
@@ -79,7 +79,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Slaughter and Carnage â sweep",
+            "weapon_name": "Slaughter and Carnage - sweep",
             "range": "Melee",
             "A": "16",
             "BS": null,
@@ -200,7 +200,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Axe of Khorne â strike",
+            "weapon_name": "Axe of Khorne - strike",
             "range": "Melee",
             "A": "8",
             "BS": null,
@@ -215,7 +215,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Axe of Khorne â sweep",
+            "weapon_name": "Axe of Khorne - sweep",
             "range": "Melee",
             "A": "16",
             "BS": null,
@@ -230,7 +230,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Great axe of Khorne â strike",
+            "weapon_name": "Great axe of Khorne - strike",
             "range": "Melee",
             "A": "7",
             "BS": null,
@@ -245,7 +245,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Great axe of Khorne â sweep",
+            "weapon_name": "Great axe of Khorne - sweep",
             "range": "Melee",
             "A": "14",
             "BS": null,
@@ -1198,7 +1198,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Infernal Gateway â witchfire",
+            "weapon_name": "Infernal Gateway - witchfire",
             "range": "24\"",
             "A": "D6+3",
             "BS": "2+",
@@ -1217,7 +1217,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Infernal Gateway â focused witchfire",
+            "weapon_name": "Infernal Gateway - focused witchfire",
             "range": "24\"",
             "A": "D3+6",
             "BS": "2+",
@@ -1328,7 +1328,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Bolt of Change â witchfire",
+            "weapon_name": "Bolt of Change - witchfire",
             "range": "18\"",
             "A": "9",
             "BS": "2+",
@@ -1345,7 +1345,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Bolt of Change â focused witchfire",
+            "weapon_name": "Bolt of Change - focused witchfire",
             "range": "18\"",
             "A": "9",
             "BS": "2+",
@@ -1467,7 +1467,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Infernal Flames â witchfire",
+            "weapon_name": "Infernal Flames - witchfire",
             "range": "12\"",
             "A": "D6",
             "BS": "N/A",
@@ -1486,7 +1486,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Infernal Flames â focused witchfire",
+            "weapon_name": "Infernal Flames - focused witchfire",
             "range": "12\"",
             "A": "D6+3",
             "BS": "N/A",
@@ -1581,7 +1581,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Arcane Fireball â witchfire",
+            "weapon_name": "Arcane Fireball - witchfire",
             "range": "18\"",
             "A": "3",
             "BS": "3+",
@@ -1598,7 +1598,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Arcane Fireball â focused witchfire",
+            "weapon_name": "Arcane Fireball - focused witchfire",
             "range": "18\"",
             "A": "3",
             "BS": "3+",
@@ -1712,7 +1712,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Arcane Fireball â witchfire",
+            "weapon_name": "Arcane Fireball - witchfire",
             "range": "18\"",
             "A": "3",
             "BS": "3+",
@@ -1729,7 +1729,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Arcane Fireball â focused witchfire",
+            "weapon_name": "Arcane Fireball - focused witchfire",
             "range": "18\"",
             "A": "3",
             "BS": "3+",
@@ -1888,7 +1888,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Arcane Fireball â witchfire",
+            "weapon_name": "Arcane Fireball - witchfire",
             "range": "18\"",
             "A": "3",
             "BS": "3+",
@@ -1905,7 +1905,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Arcane Fireball â focused witchfire",
+            "weapon_name": "Arcane Fireball - focused witchfire",
             "range": "18\"",
             "A": "3",
             "BS": "3+",
@@ -1998,7 +1998,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Fire of Tzeentch â blue fire",
+            "weapon_name": "Fire of Tzeentch - blue fire",
             "range": "18\"",
             "A": "3",
             "BS": "3+",
@@ -2016,7 +2016,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Fire of Tzeentch â pink fire",
+            "weapon_name": "Fire of Tzeentch - pink fire",
             "range": "12\"",
             "A": "2D6",
             "BS": "N/A",
@@ -2556,7 +2556,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Fire of Tzeentch â blue fire",
+            "weapon_name": "Fire of Tzeentch - blue fire",
             "range": "18\"",
             "A": "3",
             "BS": "3+",
@@ -2574,7 +2574,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Fire of Tzeentch â pink fire",
+            "weapon_name": "Fire of Tzeentch - pink fire",
             "range": "12\"",
             "A": "2D6",
             "BS": "N/A",
@@ -2704,7 +2704,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Gnarlrod â strike",
+            "weapon_name": "Gnarlrod - strike",
             "range": "Melee",
             "A": "7",
             "BS": null,
@@ -2722,7 +2722,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Gnarlrod â sweep",
+            "weapon_name": "Gnarlrod - sweep",
             "range": "Melee",
             "A": "14",
             "BS": null,
@@ -2848,7 +2848,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Bilesword â strike",
+            "weapon_name": "Bilesword - strike",
             "range": "Melee",
             "A": "6",
             "BS": null,
@@ -2865,7 +2865,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "Bilesword â sweep",
+            "weapon_name": "Bilesword - sweep",
             "range": "Melee",
             "A": "12",
             "BS": null,
@@ -3837,7 +3837,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Pavane of Slaanesh â witchfire",
+            "weapon_name": "Pavane of Slaanesh - witchfire",
             "range": "18\"",
             "A": "D6",
             "BS": "2+",
@@ -3855,7 +3855,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Pavane of Slaanesh â focused witchfire",
+            "weapon_name": "Pavane of Slaanesh - focused witchfire",
             "range": "18\"",
             "A": "D6",
             "BS": "2+",
@@ -3983,7 +3983,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Phantasmagoria â witchfire",
+            "weapon_name": "Phantasmagoria - witchfire",
             "range": "18\"",
             "A": "6",
             "BS": "2+",
@@ -4001,7 +4001,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Phantasmagoria â focused witchfire",
+            "weapon_name": "Phantasmagoria - focused witchfire",
             "range": "18\"",
             "A": "9",
             "BS": "2+",
@@ -4168,7 +4168,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Heartstring lyre â cacophonous melody",
+            "weapon_name": "Heartstring lyre - cacophonous melody",
             "range": "18\"",
             "A": "6",
             "BS": "3+",
@@ -4185,7 +4185,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Heartstring lyre â euphonic blast",
+            "weapon_name": "Heartstring lyre - euphonic blast",
             "range": "24\"",
             "A": "1",
             "BS": "3+",
@@ -4343,7 +4343,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Cacophonic choir â witchfire",
+            "weapon_name": "Cacophonic choir - witchfire",
             "range": "12\"",
             "A": "D6",
             "BS": "N/A",
@@ -4363,7 +4363,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Cacophonic choir â focused witchfire",
+            "weapon_name": "Cacophonic choir - focused witchfire",
             "range": "12\"",
             "A": "2D6",
             "BS": "N/A",
@@ -5193,7 +5193,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Betraying Shades â witchfire",
+            "weapon_name": "Betraying Shades - witchfire",
             "range": "18\"",
             "A": "9",
             "BS": "2+",
@@ -5212,7 +5212,7 @@
           {
             "model_group": "All",
             "weapon_type": "Ranged",
-            "weapon_name": "Betraying Shades â focused witchfire",
+            "weapon_name": "Betraying Shades - focused witchfire",
             "range": "18\"",
             "A": "12",
             "BS": "2+",
@@ -5232,7 +5232,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "The Blade of Shadows â strike",
+            "weapon_name": "The Blade of Shadows - strike",
             "range": "Melee",
             "A": "7",
             "BS": null,
@@ -5249,7 +5249,7 @@
           {
             "model_group": "All",
             "weapon_type": "Melee",
-            "weapon_name": "The Blade of Shadows â sweep",
+            "weapon_name": "The Blade of Shadows - sweep",
             "range": "Melee",
             "A": "14",
             "BS": null,
@@ -5279,7 +5279,7 @@
         "abilities": []
       },
       {
-        "unit_name": "Soul Grinder - Khorne",
+        "unit_name": "Soul Grinder",
         "unit_type": "Vehicle",
         "model_groups": [
           {
@@ -5315,163 +5315,127 @@
             ]
           }
         ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 180,
-              "second_unit": 180,
-              "third_plus": 195
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Soul Grinder - Tzeentch",
-        "unit_type": "Vehicle",
-        "model_groups": [
+        "weapons": [
           {
             "model_group": "All",
-            "M": "8\"",
-            "T": 11,
-            "SV": 3,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 14,
-            "LD": 7,
-            "OC": 5,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Scuttling Walker"
-            ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
-            ],
-            "keyword_names": [
-              "Vehicle",
-              "Walker",
-              "Chaos",
-              "Daemon",
-              "Tzeentch",
-              "Soul Grinder"
-            ]
-          }
-        ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 180,
-              "second_unit": 180,
-              "third_plus": 195
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Soul Grinder - Nurgle",
-        "unit_type": "Vehicle",
-        "model_groups": [
+            "weapon_type": "Ranged",
+            "weapon_name": "Harvester cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3+",
+            "WS": null,
+            "S": 10,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
           {
             "model_group": "All",
-            "M": "8\"",
-            "T": 11,
-            "SV": 3,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 14,
-            "LD": 7,
-            "OC": 5,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Scuttling Walker"
+            "weapon_type": "Ranged",
+            "weapon_name": "Torrent of burning blood",
+            "range": "12\"",
+            "A": "2D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
             ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
-            ],
-            "keyword_names": [
-              "Vehicle",
-              "Walker",
-              "Chaos",
-              "Daemon",
-              "Nurgle",
-              "Soul Grinder"
-            ]
-          }
-        ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 180,
-              "second_unit": 180,
-              "third_plus": 195
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Soul Grinder - Slaanesh",
-        "unit_type": "Vehicle",
-        "model_groups": [
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
           {
             "model_group": "All",
-            "M": "8\"",
-            "T": 11,
-            "SV": 3,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 14,
-            "LD": 7,
-            "OC": 5,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Scuttling Walker"
+            "weapon_type": "Melee",
+            "weapon_name": "Iron claw",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3+",
+            "S": 16,
+            "AP": -3,
+            "D": "D6+2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Warpsword",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3+",
+            "S": 8,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Extra Attacks"
             ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Warp gaze",
+            "range": "48\"",
+            "A": "D3",
+            "BS": "3+",
+            "WS": null,
+            "S": 12,
+            "AP": -2,
+            "D": "D6+2",
+            "weapon_ability_names": [
+              "Blast"
             ],
-            "keyword_names": [
-              "Vehicle",
-              "Walker",
-              "Chaos",
-              "Daemon",
-              "Slaanesh",
-              "Soul Grinder"
-            ]
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Phlegm bombardment",
+            "range": "36\"",
+            "A": "D6+1",
+            "BS": "3+",
+            "WS": null,
+            "S": 7,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Blast",
+              "Indirect Fire",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Scream of despair",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3+",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
           }
         ],
-        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
@@ -5487,7 +5451,7 @@
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos - Khorne",
+        "unit_name": "Daemon Prince of Chaos",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -5525,169 +5489,53 @@
             ]
           }
         ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 165,
-              "second_unit": 165,
-              "third_plus": 165
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Daemon Prince of Chaos - Tzeentch",
-        "unit_type": "Character",
-        "model_groups": [
+        "weapons": [
           {
             "model_group": "All",
-            "M": "8\"",
-            "T": 10,
-            "SV": 2,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 10,
-            "LD": 6,
-            "OC": 3,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Daemonic Lord",
-              "Prince of Darkness (Aura)",
-              "Unholy Vigour"
-            ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
-            ],
-            "keyword_names": [
-              "Monster",
-              "Character",
-              "Chaos",
-              "Daemon",
-              "Tzeentch",
-              "Daemon Prince of Chaos"
-            ]
-          }
-        ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 165,
-              "second_unit": 165,
-              "third_plus": 165
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Daemon Prince of Chaos - Nurgle",
-        "unit_type": "Character",
-        "model_groups": [
+            "weapon_type": "Ranged",
+            "weapon_name": "Infernal cannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "2+",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
           {
             "model_group": "All",
-            "M": "8\"",
-            "T": 11,
-            "SV": 2,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 10,
-            "LD": 6,
-            "OC": 3,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Daemonic Lord",
-              "Prince of Darkness (Aura)",
-              "Unholy Vigour"
-            ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
-            ],
-            "keyword_names": [
-              "Monster",
-              "Character",
-              "Chaos",
-              "Daemon",
-              "Nurgle",
-              "Daemon Prince of Chaos"
-            ]
-          }
-        ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 165,
-              "second_unit": 165,
-              "third_plus": 165
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Daemon Prince of Chaos - Slaanesh",
-        "unit_type": "Character",
-        "model_groups": [
+            "weapon_type": "Melee",
+            "weapon_name": "Hellforged weapons - strike",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2+",
+            "S": 10,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
           {
             "model_group": "All",
-            "M": "10\"",
-            "T": 10,
-            "SV": 2,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 10,
-            "LD": 6,
-            "OC": 3,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Daemonic Lord",
-              "Prince of Darkness (Aura)",
-              "Unholy Vigour"
-            ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
-            ],
-            "keyword_names": [
-              "Monster",
-              "Character",
-              "Chaos",
-              "Daemon",
-              "Slaanesh",
-              "Daemon Prince of Chaos"
-            ]
+            "weapon_type": "Melee",
+            "weapon_name": "Hellforged weapons - sweep",
+            "range": "Melee",
+            "A": "14",
+            "BS": null,
+            "WS": "2+",
+            "S": 8,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
           }
         ],
-        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
@@ -5703,7 +5551,7 @@
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos with Wings - Khorne",
+        "unit_name": "Daemon Prince of Chaos with Wings",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -5741,169 +5589,53 @@
             ]
           }
         ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 190,
-              "second_unit": 190,
-              "third_plus": 190
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Daemon Prince of Chaos with Wings - Tzeentch",
-        "unit_type": "Character",
-        "model_groups": [
+        "weapons": [
           {
             "model_group": "All",
-            "M": "12\"",
-            "T": 9,
-            "SV": 2,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 10,
-            "LD": 6,
-            "OC": 3,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Malefic Destruction",
-              "Harbinger of Death"
-            ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
-            ],
-            "keyword_names": [
-              "Monster",
-              "Character",
-              "Fly",
-              "Chaos",
-              "Daemon",
-              "Tzeentch",
-              "Daemon Prince of Chaos with Wings"
-            ]
-          }
-        ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 190,
-              "second_unit": 190,
-              "third_plus": 190
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Daemon Prince of Chaos with Wings - Nurgle",
-        "unit_type": "Character",
-        "model_groups": [
+            "weapon_type": "Ranged",
+            "weapon_name": "Infernal cannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "2+",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
           {
             "model_group": "All",
-            "M": "12\"",
-            "T": 10,
-            "SV": 2,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 10,
-            "LD": 6,
-            "OC": 3,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Malefic Destruction",
-              "Harbinger of Death"
-            ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
-            ],
-            "keyword_names": [
-              "Monster",
-              "Character",
-              "Fly",
-              "Chaos",
-              "Daemon",
-              "Nurgle",
-              "Daemon Prince of Chaos with Wings"
-            ]
-          }
-        ],
-        "weapons": [],
-        "wargear_options": [],
-        "other_options": [],
-        "points": {
-          "sizes": [
-            {
-              "size": 1,
-              "first_unit": 190,
-              "second_unit": 190,
-              "third_plus": 190
-            }
-          ]
-        },
-        "abilities": []
-      },
-      {
-        "unit_name": "Daemon Prince of Chaos with Wings - Slaanesh",
-        "unit_type": "Character",
-        "model_groups": [
+            "weapon_type": "Melee",
+            "weapon_name": "Hellforged weapons - strike",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2+",
+            "S": 10,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
           {
             "model_group": "All",
-            "M": "14\"",
-            "T": 9,
-            "SV": 2,
-            "INV": 4,
-            "INV_Condition": null,
-            "FNP": null,
-            "FNP_Condition": null,
-            "W": 10,
-            "LD": 6,
-            "OC": 3,
-            "leader_ability_name": null,
-            "leader_eligible_units": [],
-            "co_leader_eligible_with": [],
-            "leader_restrictions": null,
-            "unit_ability_names": [
-              "Malefic Destruction",
-              "Harbinger of Death"
-            ],
-            "rule_names": [
-              "Deadly Demise D3",
-              "Deep Strike"
-            ],
-            "keyword_names": [
-              "Monster",
-              "Character",
-              "Fly",
-              "Chaos",
-              "Daemon",
-              "Slaanesh",
-              "Daemon Prince of Chaos with Wings"
-            ]
+            "weapon_type": "Melee",
+            "weapon_name": "Hellforged weapons - sweep",
+            "range": "Melee",
+            "A": "14",
+            "BS": null,
+            "WS": "2+",
+            "S": 8,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
           }
         ],
-        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
