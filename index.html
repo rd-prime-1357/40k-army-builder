@@ -40,14 +40,14 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 320px 300px;
+      grid-template-columns: 25% 45% 30%;
       gap: 0;
       height: calc(100vh - 65px);
     }
 
     /* ── Roster panel ── */
     .roster-panel {
-      padding: 1.5rem;
+      padding: 1rem 0.75rem;
       overflow-y: auto;
       border-right: 1px solid #2a2a2a;
     }
@@ -57,10 +57,11 @@
       text-transform: uppercase;
       letter-spacing: 0.15em;
       color: #666;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
+      padding: 0 0.25rem;
     }
 
-    .role-group { margin-bottom: 1.5rem; }
+    .role-group { margin-bottom: 1.25rem; }
 
     .role-label {
       font-size: 0.65rem;
@@ -69,7 +70,7 @@
       color: #8b0000;
       border-bottom: 1px solid #2a2a2a;
       padding-bottom: 0.3rem;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
     }
 
     .unit-card {
@@ -78,20 +79,22 @@
       justify-content: space-between;
       background: #1a1a1a;
       border: 1px solid #2a2a2a;
-      border-radius: 4px;
-      padding: 0.65rem 0.75rem;
-      margin-bottom: 0.4rem;
+      border-radius: 3px;
+      padding: 0.45rem 0.6rem;
+      margin-bottom: 0.3rem;
       cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
     }
 
     .unit-card:hover { border-color: #8b0000; background: #201010; }
     .unit-card.selected { border-color: #cc2200; background: #1e0a0a; }
+    .unit-card.at-limit { opacity: 0.45; cursor: default; }
+    .unit-card.at-limit:hover { border-color: #2a2a2a; background: #1a1a1a; }
 
     .unit-info { flex: 1; min-width: 0; }
 
     .unit-name {
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: #e0e0e0;
       white-space: nowrap;
@@ -99,23 +102,29 @@
       text-overflow: ellipsis;
     }
 
-    .unit-desc {
-      font-size: 0.72rem;
-      color: #666;
-      margin-top: 0.15rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .unit-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.15rem;
+      margin-left: 0.5rem;
+      flex-shrink: 0;
     }
 
     .unit-pts-badge {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
       color: #cc9900;
-      margin-left: 0.75rem;
       white-space: nowrap;
-      flex-shrink: 0;
     }
+
+    .unit-limit-badge {
+      font-size: 0.65rem;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .unit-limit-badge.at-limit { color: #8b0000; }
 
     /* ── Army list panel ── */
     .list-panel {
@@ -343,6 +352,134 @@
     .size-option-label { font-size: 0.85rem; color: #ccc; }
     .size-option-pts   { font-size: 0.85rem; font-weight: 700; color: #cc9900; }
 
+    /* Wargear options */
+    .wargear-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .wargear-option {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      padding: 0.55rem 0.75rem;
+      margin-bottom: 0.3rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .wargear-option:hover { border-color: #555; background: #1e1e1e; }
+    .wargear-option.chosen { border-color: #cc9900; background: #1a1500; }
+
+    .wargear-option-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .wargear-check {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #444;
+      border-radius: 2px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: #cc9900;
+    }
+
+    .wargear-option.chosen .wargear-check {
+      border-color: #cc9900;
+      background: #2a2000;
+    }
+
+    /* Radio style for grouped choices */
+    .wargear-option.radio-style .wargear-check {
+      border-radius: 50%;
+    }
+
+    .wargear-option-name {
+      font-size: 0.82rem;
+      color: #ccc;
+      flex: 1;
+    }
+
+    .wargear-option.chosen .wargear-option-name { color: #e8d890; }
+
+    .wargear-option-note {
+      font-size: 0.68rem;
+      color: #555;
+      margin-top: 0.2rem;
+      padding-left: 1.4rem;
+    }
+
+    .wargear-group-label {
+      font-size: 0.68rem;
+      color: #666;
+      margin-bottom: 0.3rem;
+      font-style: italic;
+    }
+
+    /* Other options (icons/instruments) */
+    .other-options-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .other-option {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      padding: 0.55rem 0.75rem;
+      margin-bottom: 0.3rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .other-option:hover { border-color: #555; background: #1e1e1e; }
+    .other-option.chosen { border-color: #cc9900; background: #1a1500; }
+
+    .other-option-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .other-check {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #444;
+      border-radius: 2px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: #cc9900;
+    }
+
+    .other-option.chosen .other-check {
+      border-color: #cc9900;
+      background: #2a2000;
+    }
+
+    .other-option-name {
+      font-size: 0.82rem;
+      color: #ccc;
+      flex: 1;
+    }
+
+    .other-option.chosen .other-option-name { color: #e8d890; }
+
+    .other-option-note {
+      font-size: 0.68rem;
+      color: #555;
+      margin-top: 0.2rem;
+      padding-left: 1.4rem;
+    }
+
     .detail-points-display {
       font-size: 1.8rem;
       font-weight: 700;
@@ -363,6 +500,13 @@
       font-size: 0.7rem;
       color: #666;
       margin-bottom: 1rem;
+    }
+
+    .limit-warning {
+      font-size: 0.75rem;
+      color: #cc2200;
+      margin-bottom: 1rem;
+      font-weight: 600;
     }
 
     .detail-add-btn {
@@ -431,10 +575,18 @@
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
 
+  // D29: instance limits by unit type
+  function instanceLimit(unitType) {
+    if (unitType === 'Epic Hero') return 1;
+    if (unitType === 'Battleline' || unitType === 'Dedicated Transport') return 6;
+    return 3;
+  }
+
   let armyList    = [];
   let allUnits    = [];
-  let selectedUnit = null;  // unit_name
-  let detailState  = {};    // { chosenSizeIdx, chosenGod } for currently open unit
+  let rawUnits    = [];   // full unit objects from JSON (for wargear/other_options lookup)
+  let selectedUnit = null;
+  let detailState  = {};  // keyed by unit_name
 
   const TYPE_ORDER = [
     'Epic Hero','Character','Battleline','Infantry','Mounted',
@@ -451,9 +603,12 @@
       const army = data[0];
       document.getElementById('faction-badge').textContent = army.army;
 
+      rawUnits = army.units;
+
       allUnits = army.units.map(unit => {
-        const sizes  = unit.points ? unit.points.sizes : [];
+        const sizes    = unit.points ? unit.points.sizes : [];
         const needsGod = GOD_UNITS.has(unit.unit_name);
+        const limit    = unit.instance_limit_override || instanceLimit(unit.unit_type);
 
         let sizeDesc = '';
         if (sizes.length > 1) {
@@ -467,6 +622,7 @@
           unit_type: unit.unit_type,
           sizes,
           needsGod,
+          limit,
           minPts: sizes.length > 0 ? sizes[0].first_unit : null,
           sizeDesc,
         };
@@ -500,17 +656,23 @@
     roster.innerHTML = groups.map(({ type, units }) => `
       <div class="role-group">
         <div class="role-label">${type}</div>
-        ${units.map(u => `
-          <div class="unit-card${selectedUnit === u.unit_name ? ' selected' : ''}"
-               id="card-${cssId(u.unit_name)}"
-               onclick="openDetail('${esc(u.unit_name)}')">
-            <div class="unit-info">
-              <div class="unit-name">${u.unit_name}</div>
-              <div class="unit-desc">${u.sizeDesc}</div>
+        ${units.map(u => {
+          const count   = armyList.filter(e => e.unit_name === u.unit_name).length;
+          const atLimit = count >= u.limit;
+          return `
+            <div class="unit-card${selectedUnit === u.unit_name ? ' selected' : ''}${atLimit ? ' at-limit' : ''}"
+                 id="card-${cssId(u.unit_name)}"
+                 onclick="${atLimit ? '' : `openDetail('${esc(u.unit_name)}')`}">
+              <div class="unit-info">
+                <div class="unit-name">${u.unit_name}</div>
+              </div>
+              <div class="unit-right">
+                <div class="unit-pts-badge">${u.minPts !== null ? u.minPts + ' pts' : '—'}</div>
+                <div class="unit-limit-badge${atLimit ? ' at-limit' : ''}">(${count}/${u.limit})</div>
+              </div>
             </div>
-            <div class="unit-pts-badge">${u.minPts !== null ? u.minPts + ' pts' : '—'}</div>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
     `).join('');
   }
@@ -527,11 +689,12 @@
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (!unit) return;
 
-    // Reset state for new unit selection; preserve if same unit re-opened
     if (!detailState[unitName]) {
       detailState[unitName] = {
         chosenSizeIdx: 0,
         chosenGod: null,
+        wargear: {},      // option_group+weapon_replaced -> replacement_weapon_name or null
+        otherOptions: {}, // option_name -> bool
       };
     }
 
@@ -545,6 +708,8 @@
     const state     = detailState[unit.unit_name];
     const sizes     = unit.sizes;
     const copyCount = armyList.filter(e => e.unit_name === unit.unit_name).length;
+    const atLimit   = copyCount >= unit.limit;
+    const raw       = rawUnits.find(u => u.unit_name === unit.unit_name);
 
     function ptsForSize(sizeEntry) {
       if (copyCount === 0) return sizeEntry.first_unit;
@@ -555,11 +720,16 @@
     const chosen    = sizes[state.chosenSizeIdx];
     const chosenPts = chosen ? ptsForSize(chosen) : null;
     const godReady  = !unit.needsGod || state.chosenGod !== null;
-    const canAdd    = chosenPts !== null && godReady;
+    const canAdd    = chosenPts !== null && godReady && !atLimit;
 
     // Copy note
-    const copyNote = copyCount > 0
+    const copyNote = copyCount > 0 && !atLimit
       ? `<div class="copy-note">${copyCount} cop${copyCount === 1 ? 'y' : 'ies'} in list — ${copyCount === 1 ? '2nd' : '3rd+'} unit pricing applied</div>`
+      : '';
+
+    // Limit warning
+    const limitWarning = atLimit
+      ? `<div class="limit-warning">Limit reached (${unit.limit} maximum)</div>`
       : '';
 
     // God selector
@@ -594,32 +764,175 @@
       </div>
     `;
 
+    // Wargear options
+    const wargearHtml = buildWargearHtml(unit, raw, state);
+
+    // Other options (icons, instruments, etc.)
+    const otherHtml = buildOtherOptionsHtml(unit, raw, state);
+
     document.getElementById('detail-content').innerHTML = `
       <div class="detail-unit-name">${unit.unit_name}</div>
       <div class="detail-unit-type">${unit.unit_type}</div>
       ${godSelector}
+      ${limitWarning}
       ${copyNote}
       ${sizeSelector}
+      ${wargearHtml}
+      ${otherHtml}
       <div class="detail-points-display">${chosenPts !== null ? chosenPts : '—'}</div>
       <div class="detail-points-label">Points</div>
       <button class="detail-add-btn"
               onclick="addUnit('${esc(unit.unit_name)}')"
               ${!canAdd ? 'disabled' : ''}>
-        ${unit.needsGod && !state.chosenGod ? 'Choose Allegiance to Add' : 'Add to Army'}
+        ${atLimit ? 'Limit Reached' : unit.needsGod && !state.chosenGod ? 'Choose Allegiance to Add' : 'Add to Army'}
       </button>
     `;
   }
 
+  // Build wargear substitution HTML
+  function buildWargearHtml(unit, raw, state) {
+    if (!raw || !raw.wargear_options || raw.wargear_options.length === 0) return '';
+
+    const options = raw.wargear_options;
+
+    // Separate grouped choices (is_choice=true, has option_group) from independent swaps
+    const groups = {};
+    const independent = [];
+
+    for (const opt of options) {
+      if (opt.is_choice && opt.option_group) {
+        const key = opt.option_group;
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(opt);
+      } else {
+        independent.push(opt);
+      }
+    }
+
+    let html = '';
+
+    // Grouped choices — render as radio-style (pick one or none)
+    for (const [groupKey, opts] of Object.entries(groups)) {
+      // Label: "Replace [weapon_replaced] with:"
+      const replaced = opts[0].weapon_replaced;
+      const stateKey = `group_${groupKey}`;
+      const chosen   = state.wargear[stateKey] || null;
+
+      html += `<div class="wargear-section">`;
+      html += `<div class="detail-section-label">Replace ${replaced}</div>`;
+      for (const opt of opts) {
+        const isCh = chosen === opt.replacement_weapon_name;
+        html += `
+          <div class="wargear-option radio-style${isCh ? ' chosen' : ''}"
+               onclick="toggleWargearGroup('${esc(unit.unit_name)}','${esc(stateKey)}','${esc(opt.replacement_weapon_name)}')">
+            <div class="wargear-option-row">
+              <div class="wargear-check">${isCh ? '●' : ''}</div>
+              <div class="wargear-option-name">${opt.replacement_weapon_name}</div>
+            </div>
+          </div>
+        `;
+      }
+      html += `</div>`;
+    }
+
+    // Independent swaps — render as checkboxes
+    // Group by weapon_replaced in case multiple rows share the same replaced weapon (e.g. Great Unclean One bilesword strike+sweep)
+    const indepByWeapon = {};
+    for (const opt of independent) {
+      const k = opt.weapon_replaced;
+      if (!indepByWeapon[k]) indepByWeapon[k] = [];
+      indepByWeapon[k].push(opt);
+    }
+
+    for (const [replaced, opts] of Object.entries(indepByWeapon)) {
+      // All rows for the same replaced weapon represent the same logical swap — just show it once
+      const opt      = opts[0];
+      const stateKey = `indep_${replaced}`;
+      const isCh     = !!state.wargear[stateKey];
+      html += `
+        <div class="wargear-section">
+          <div class="detail-section-label">Optional Swap</div>
+          <div class="wargear-option${isCh ? ' chosen' : ''}"
+               onclick="toggleWargearIndep('${esc(unit.unit_name)}','${esc(stateKey)}')">
+            <div class="wargear-option-row">
+              <div class="wargear-check">${isCh ? '✓' : ''}</div>
+              <div class="wargear-option-name">${replaced} → ${opt.replacement_weapon_name}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (html) {
+      return `<div class="detail-section-label" style="margin-bottom:0.75rem;color:#666;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;">Wargear Options</div>` + html;
+    }
+    return '';
+  }
+
+  // Build other options HTML (icons, instruments, etc.)
+  function buildOtherOptionsHtml(unit, raw, state) {
+    if (!raw || !raw.other_options || raw.other_options.length === 0) return '';
+
+    let html = `<div class="detail-section-label" style="margin-bottom:0.5rem;">Unit Options</div>`;
+    html += `<div class="other-options-section">`;
+
+    for (const opt of raw.other_options) {
+      const isCh = !!state.otherOptions[opt.option_name];
+      html += `
+        <div class="other-option${isCh ? ' chosen' : ''}"
+             onclick="toggleOtherOption('${esc(unit.unit_name)}','${esc(opt.option_name)}')">
+          <div class="other-option-row">
+            <div class="other-check">${isCh ? '✓' : ''}</div>
+            <div class="other-option-name">${opt.option_name}</div>
+          </div>
+          ${opt.carrier_notes ? `<div class="other-option-note">${opt.carrier_notes}</div>` : ''}
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+    return html;
+  }
+
+  // ── Interaction handlers ────────────────────────────────────────────────────
+
   function chooseGod(unitName, god) {
-    if (!detailState[unitName]) detailState[unitName] = { chosenSizeIdx: 0, chosenGod: null };
+    if (!detailState[unitName]) detailState[unitName] = { chosenSizeIdx: 0, chosenGod: null, wargear: {}, otherOptions: {} };
     detailState[unitName].chosenGod = god;
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (unit) renderDetail(unit);
   }
 
   function chooseSizeIdx(unitName, idx) {
-    if (!detailState[unitName]) detailState[unitName] = { chosenSizeIdx: 0, chosenGod: null };
+    if (!detailState[unitName]) detailState[unitName] = { chosenSizeIdx: 0, chosenGod: null, wargear: {}, otherOptions: {} };
     detailState[unitName].chosenSizeIdx = idx;
+    const unit = allUnits.find(u => u.unit_name === unitName);
+    if (unit) renderDetail(unit);
+  }
+
+  // Grouped radio-style: clicking the chosen option deselects it (toggle off); clicking another selects it
+  function toggleWargearGroup(unitName, stateKey, chosenWeapon) {
+    const state = detailState[unitName];
+    if (!state) return;
+    state.wargear[stateKey] = state.wargear[stateKey] === chosenWeapon ? null : chosenWeapon;
+    const unit = allUnits.find(u => u.unit_name === unitName);
+    if (unit) renderDetail(unit);
+  }
+
+  // Independent swap: simple toggle
+  function toggleWargearIndep(unitName, stateKey) {
+    const state = detailState[unitName];
+    if (!state) return;
+    state.wargear[stateKey] = !state.wargear[stateKey];
+    const unit = allUnits.find(u => u.unit_name === unitName);
+    if (unit) renderDetail(unit);
+  }
+
+  // Other options: independent toggles (icon and instrument are independent — one model each)
+  function toggleOtherOption(unitName, optionName) {
+    const state = detailState[unitName];
+    if (!state) return;
+    state.otherOptions[optionName] = !state.otherOptions[optionName];
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (unit) renderDetail(unit);
   }
@@ -634,6 +947,8 @@
     if (unit.needsGod && !state.chosenGod) return;
 
     const copyCount = armyList.filter(e => e.unit_name === unitName).length;
+    if (copyCount >= unit.limit) return;
+
     const sizeEntry = unit.sizes[state.chosenSizeIdx];
 
     let pts;
@@ -642,23 +957,25 @@
     else                      pts = sizeEntry.third_plus;
 
     armyList.push({
-      listId:    Date.now() + Math.random(),
-      unit_name: unitName,
-      unit_type: unit.unit_type,
-      size:      sizeEntry.size,
-      god:       state.chosenGod,
-      points:    pts,
+      listId:       Date.now() + Math.random(),
+      unit_name:    unitName,
+      unit_type:    unit.unit_type,
+      size:         sizeEntry.size,
+      god:          state.chosenGod,
+      points:       pts,
+      wargear:      { ...state.wargear },
+      otherOptions: { ...state.otherOptions },
     });
 
     renderList();
-
-    // Refresh detail so copy count and pricing update
+    renderRoster(allUnits);
     renderDetail(unit);
   }
 
   function removeUnit(listId) {
     armyList = armyList.filter(u => u.listId !== listId);
     renderList();
+    renderRoster(allUnits);
     if (selectedUnit) {
       const unit = allUnits.find(u => u.unit_name === selectedUnit);
       if (unit) renderDetail(unit);
@@ -668,6 +985,7 @@
   function clearList() {
     armyList = [];
     renderList();
+    renderRoster(allUnits);
     if (selectedUnit) {
       const unit = allUnits.find(u => u.unit_name === selectedUnit);
       if (unit) renderDetail(unit);
