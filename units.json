@@ -98,9 +98,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 315,
+              "second_unit": 315,
+              "third_plus": 315
             }
           ]
         },
@@ -295,9 +295,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 320,
+              "second_unit": 320,
+              "third_plus": 335
             }
           ]
         },
@@ -370,9 +370,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
             }
           ]
         },
@@ -441,9 +441,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
             }
           ]
         },
@@ -530,9 +530,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
             }
           ]
         },
@@ -609,9 +609,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 170
             }
           ]
         },
@@ -702,9 +702,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
             }
           ]
         },
@@ -790,9 +790,9 @@
           "sizes": [
             {
               "size": 10,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
             }
           ]
         },
@@ -895,15 +895,15 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 105
             },
             {
               "size": 6,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 190
             }
           ]
         },
@@ -985,15 +985,15 @@
           "sizes": [
             {
               "size": 5,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
             },
             {
               "size": 10,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 150
             }
           ]
         },
@@ -1091,9 +1091,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
             }
           ]
         },
@@ -1144,9 +1144,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 105
             }
           ]
         },
@@ -1258,9 +1258,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 295,
+              "second_unit": 295,
+              "third_plus": 295
             }
           ]
         },
@@ -1422,9 +1422,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 300,
+              "second_unit": 300,
+              "third_plus": 315
             }
           ]
         },
@@ -1527,9 +1527,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 105
             }
           ]
         },
@@ -1657,9 +1657,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 95
             }
           ]
         },
@@ -1769,9 +1769,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
             }
           ]
         },
@@ -1834,9 +1834,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
             }
           ]
         },
@@ -1945,9 +1945,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
             }
           ]
         },
@@ -2054,9 +2054,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
             }
           ]
         },
@@ -2167,9 +2167,9 @@
           "sizes": [
             {
               "size": 10,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 125
             }
           ]
         },
@@ -2339,9 +2339,9 @@
           "sizes": [
             {
               "size": 10,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 150
             }
           ]
         },
@@ -2425,15 +2425,15 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
             },
             {
               "size": 6,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 130,
+              "second_unit": 130,
+              "third_plus": 130
             }
           ]
         },
@@ -2502,15 +2502,15 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
             },
             {
               "size": 6,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 160
             }
           ]
         },
@@ -2631,9 +2631,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 115,
+              "second_unit": 115,
+              "third_plus": 115
             }
           ]
         },
@@ -2744,9 +2744,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 280,
+              "second_unit": 280,
+              "third_plus": 280
             }
           ]
         },
@@ -2935,9 +2935,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 265,
+              "second_unit": 265,
+              "third_plus": 280
             }
           ]
         },
@@ -3010,9 +3010,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 55,
+              "second_unit": 55,
+              "third_plus": 55
             }
           ]
         },
@@ -3101,9 +3101,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
             }
           ]
         },
@@ -3175,9 +3175,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
             }
           ]
         },
@@ -3248,9 +3248,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 55,
+              "second_unit": 55,
+              "third_plus": 55
             }
           ]
         },
@@ -3340,9 +3340,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 120
             }
           ]
         },
@@ -3430,9 +3430,9 @@
           "sizes": [
             {
               "size": 10,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 115,
+              "second_unit": 115,
+              "third_plus": 115
             }
           ]
         },
@@ -3500,15 +3500,15 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 45,
+              "second_unit": 45,
+              "third_plus": 45
             },
             {
               "size": 6,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
             }
           ]
         },
@@ -3576,15 +3576,15 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
             },
             {
               "size": 2,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 140,
+              "second_unit": 140,
+              "third_plus": 140
             }
           ]
         },
@@ -3708,15 +3708,15 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
             },
             {
               "size": 6,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 220,
+              "second_unit": 220,
+              "third_plus": 220
             }
           ]
         },
@@ -3767,9 +3767,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
             }
           ]
         },
@@ -3914,9 +3914,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 340,
+              "second_unit": 340,
+              "third_plus": 340
             }
           ]
         },
@@ -4115,9 +4115,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 255,
+              "second_unit": 255,
+              "third_plus": 270
             }
           ]
         },
@@ -4223,9 +4223,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
             }
           ]
         },
@@ -4289,9 +4289,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 95
             }
           ]
         },
@@ -4437,9 +4437,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 120
             }
           ]
         },
@@ -4528,9 +4528,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
             }
           ]
         },
@@ -4657,9 +4657,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 135,
+              "second_unit": 135,
+              "third_plus": 135
             }
           ]
         },
@@ -4732,9 +4732,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
             }
           ]
         },
@@ -4823,9 +4823,9 @@
           "sizes": [
             {
               "size": 10,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
             }
           ]
         },
@@ -4891,15 +4891,15 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
             },
             {
               "size": 6,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 180
             }
           ]
         },
@@ -5005,15 +5005,15 @@
           "sizes": [
             {
               "size": 5,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
             },
             {
               "size": 10,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 155,
+              "second_unit": 155,
+              "third_plus": 155
             }
           ]
         },
@@ -5134,15 +5134,15 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
             },
             {
               "size": 2,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 160
             }
           ]
         },
@@ -5270,9 +5270,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 390,
+              "second_unit": 390,
+              "third_plus": 390
             }
           ]
         },
@@ -5322,9 +5322,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 195
             }
           ]
         },
@@ -5374,9 +5374,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 195
             }
           ]
         },
@@ -5426,9 +5426,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 195
             }
           ]
         },
@@ -5478,9 +5478,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 195
             }
           ]
         },
@@ -5532,9 +5532,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 165,
+              "second_unit": 165,
+              "third_plus": 165
             }
           ]
         },
@@ -5586,9 +5586,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 165,
+              "second_unit": 165,
+              "third_plus": 165
             }
           ]
         },
@@ -5640,9 +5640,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 165,
+              "second_unit": 165,
+              "third_plus": 165
             }
           ]
         },
@@ -5694,9 +5694,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 165,
+              "second_unit": 165,
+              "third_plus": 165
             }
           ]
         },
@@ -5748,9 +5748,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
             }
           ]
         },
@@ -5802,9 +5802,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
             }
           ]
         },
@@ -5856,9 +5856,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
             }
           ]
         },
@@ -5910,9 +5910,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": null,
-              "second_unit": null,
-              "third_plus": null
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
             }
           ]
         },
