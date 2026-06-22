@@ -38,13 +38,15 @@
       text-transform: uppercase;
     }
 
+    /* ── Three-panel layout ── */
     .layout {
       display: grid;
-      grid-template-columns: 1fr 380px;
+      grid-template-columns: 1fr 320px 300px;
       gap: 0;
       height: calc(100vh - 65px);
     }
 
+    /* ── Roster panel (left) ── */
     .roster-panel {
       padding: 1.5rem;
       overflow-y: auto;
@@ -80,10 +82,12 @@
       border-radius: 4px;
       padding: 0.65rem 0.75rem;
       margin-bottom: 0.4rem;
+      cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
     }
 
     .unit-card:hover { border-color: #8b0000; background: #201010; }
+    .unit-card.selected { border-color: #cc2200; background: #1e0a0a; }
 
     .unit-info { flex: 1; min-width: 0; }
 
@@ -105,37 +109,21 @@
       text-overflow: ellipsis;
     }
 
-    .unit-points {
-      font-size: 0.85rem;
+    .unit-pts-badge {
+      font-size: 0.78rem;
       font-weight: 700;
       color: #cc9900;
-      margin: 0 0.75rem;
+      margin-left: 0.75rem;
       white-space: nowrap;
-    }
-
-    .add-btn {
-      background: #8b0000;
-      border: none;
-      color: #fff;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      font-size: 1.1rem;
-      line-height: 1;
-      cursor: pointer;
       flex-shrink: 0;
-      transition: background 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    .add-btn:hover { background: #cc0000; }
-
+    /* ── Army list panel (middle) ── */
     .list-panel {
       display: flex;
       flex-direction: column;
       background: #111;
+      border-right: 1px solid #2a2a2a;
     }
 
     .list-header {
@@ -188,16 +176,20 @@
       border-bottom: 1px solid #1e1e1e;
     }
 
+    .list-item-info { flex: 1; min-width: 0; }
+
     .list-item-name {
       font-size: 0.85rem;
       color: #ccc;
-      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .list-item-type {
+    .list-item-sub {
       font-size: 0.7rem;
       color: #555;
-      margin-right: 0.5rem;
+      margin-top: 0.1rem;
     }
 
     .list-item-pts {
@@ -205,6 +197,8 @@
       color: #cc9900;
       font-weight: 600;
       margin: 0 0.75rem;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .remove-btn {
@@ -217,6 +211,7 @@
       padding: 0.1rem 0.2rem;
       border-radius: 2px;
       transition: color 0.15s;
+      flex-shrink: 0;
     }
 
     .remove-btn:hover { color: #cc2200; }
@@ -242,6 +237,138 @@
 
     .clear-btn:hover { border-color: #8b0000; color: #cc2200; }
 
+    /* ── Detail panel (right) ── */
+    .detail-panel {
+      display: flex;
+      flex-direction: column;
+      background: #0d0d0d;
+    }
+
+    .detail-empty {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .detail-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .detail-content.visible { display: block; }
+
+    .detail-unit-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-unit-type {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8b0000;
+      margin-bottom: 1.25rem;
+    }
+
+    .detail-section-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Size selector */
+    .size-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .size-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      padding: 0.6rem 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .size-option:hover { border-color: #555; background: #1e1e1e; }
+
+    .size-option.chosen {
+      border-color: #cc9900;
+      background: #1a1500;
+    }
+
+    .size-option-label {
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+
+    .size-option-pts {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cc9900;
+    }
+
+    /* Points display in detail */
+    .detail-points-display {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #cc9900;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .detail-points-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Add button */
+    .detail-add-btn {
+      width: 100%;
+      background: #8b0000;
+      border: none;
+      color: #fff;
+      padding: 0.65rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 0.5rem;
+    }
+
+    .detail-add-btn:hover { background: #cc0000; }
+    .detail-add-btn:disabled {
+      background: #2a2a2a;
+      color: #555;
+      cursor: not-allowed;
+    }
+
     .error-msg {
       color: #cc4444;
       padding: 2rem;
@@ -259,35 +386,48 @@
 </header>
 
 <div class="layout">
+
+  <!-- LEFT: Roster -->
   <div class="roster-panel">
     <div class="panel-title">Available Units</div>
     <div id="roster"></div>
   </div>
 
+  <!-- MIDDLE: Army list -->
   <div class="list-panel">
     <div class="list-header">
       <div class="points-total" id="points-total">0 <span class="points-cap">/ 2000</span></div>
       <div class="points-label">Points Total</div>
     </div>
     <div class="list-items" id="list-items">
-      <div class="empty-state">No units added yet.<br>Select units from the roster to build your army.</div>
+      <div class="empty-state">No units added yet.<br>Select a unit from the roster to begin.</div>
     </div>
     <div class="list-footer">
       <button class="clear-btn" onclick="clearList()">Clear List</button>
     </div>
   </div>
+
+  <!-- RIGHT: Detail panel -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-empty" id="detail-empty">Select a unit from<br>the roster to see options.</div>
+    <div class="detail-content" id="detail-content"></div>
+  </div>
+
 </div>
 
 <script>
   const POINTS_CAP = 2000;
 
-  let armyList = [];
-  let allUnits = [];
+  let armyList   = [];   // { listId, unit_name, unit_type, chosenSize, points }
+  let allUnits   = [];   // parsed unit objects
+  let selectedUnit = null; // unit_name of currently open detail panel
 
   const TYPE_ORDER = [
-    'Epic Hero', 'Character', 'Battleline', 'Infantry', 'Mounted',
-    'Beast', 'Monster', 'Vehicle', 'Dedicated Transport', 'Fortification', 'Allied'
+    'Epic Hero','Character','Battleline','Infantry','Mounted',
+    'Beast','Monster','Vehicle','Dedicated Transport','Fortification','Allied'
   ];
+
+  // ── Data load ──────────────────────────────────────────────────────────────
 
   async function init() {
     try {
@@ -299,23 +439,23 @@
       document.getElementById('faction-badge').textContent = army.army;
 
       allUnits = army.units.map(unit => {
-        const points = unit.points;
-        const basePoints = points ? points.first_unit_base_points : null;
-        const baseSize  = points ? points.base_size : null;
-        const maxSize   = points ? points.max_size : null;
-
+        const sizes = unit.points ? unit.points.sizes : [];
+        // Size description for roster card subtitle
         let sizeDesc = '';
-        if (baseSize !== null && maxSize !== null) {
-          sizeDesc = `${baseSize}–${maxSize} models`;
-        } else if (baseSize !== null) {
-          sizeDesc = `${baseSize} model${baseSize === 1 ? '' : 's'}`;
+        if (sizes.length > 1) {
+          sizeDesc = sizes.map(s => s.size).join(' / ') + ' models';
+        } else if (sizes.length === 1) {
+          sizeDesc = sizes[0].size + (sizes[0].size === 1 ? ' model' : ' models');
         }
+        // Minimum cost (first size, first copy) for roster badge
+        const minPts = sizes.length > 0 ? sizes[0].first_unit : null;
 
         return {
-          unit_name:   unit.unit_name,
-          unit_type:   unit.unit_type,
-          base_points: basePoints,
-          size_desc:   sizeDesc,
+          unit_name: unit.unit_name,
+          unit_type: unit.unit_type,
+          sizes,        // full sizes array from JSON
+          sizeDesc,
+          minPts,
         };
       });
 
@@ -327,6 +467,8 @@
     }
   }
 
+  // ── Roster rendering ───────────────────────────────────────────────────────
+
   function groupByType(units) {
     const groups = {};
     for (const unit of units) {
@@ -335,7 +477,7 @@
       groups[t].push(unit);
     }
     const ordered = TYPE_ORDER.filter(t => groups[t]);
-    const extra = Object.keys(groups).filter(t => !TYPE_ORDER.includes(t)).sort();
+    const extra   = Object.keys(groups).filter(t => !TYPE_ORDER.includes(t)).sort();
     return [...ordered, ...extra].map(t => ({ type: t, units: groups[t] }));
   }
 
@@ -346,59 +488,191 @@
       <div class="role-group">
         <div class="role-label">${type}</div>
         ${units.map(u => `
-          <div class="unit-card">
+          <div class="unit-card${selectedUnit === u.unit_name ? ' selected' : ''}"
+               id="card-${cssId(u.unit_name)}"
+               onclick="selectUnit('${esc(u.unit_name)}')">
             <div class="unit-info">
               <div class="unit-name">${u.unit_name}</div>
-              <div class="unit-desc">${u.size_desc}</div>
+              <div class="unit-desc">${u.sizeDesc}</div>
             </div>
-            <div class="unit-points">${u.base_points !== null ? u.base_points + ' pts' : '—'}</div>
-            <button class="add-btn" onclick="addUnit('${u.unit_name.replace(/'/g, "\\'")}')" title="Add to list">+</button>
+            <div class="unit-pts-badge">${u.minPts !== null ? u.minPts + ' pts' : '—'}</div>
           </div>
         `).join('')}
       </div>
     `).join('');
   }
 
-  function addUnit(unitName) {
+  // ── Detail panel ───────────────────────────────────────────────────────────
+
+  function selectUnit(unitName) {
+    selectedUnit = unitName;
+
+    // Update selected highlight on roster cards
+    document.querySelectorAll('.unit-card').forEach(el => el.classList.remove('selected'));
+    const card = document.getElementById('card-' + cssId(unitName));
+    if (card) card.classList.add('selected');
+
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (!unit) return;
-    armyList.push({ ...unit, listId: Date.now() + Math.random() });
+
+    // Hide placeholder, show content
+    document.getElementById('detail-empty').style.display = 'none';
+    const content = document.getElementById('detail-content');
+    content.classList.add('visible');
+
+    // Count existing copies of this unit in the list (for copy-tier pricing)
+    const copyCount = armyList.filter(e => e.unit_name === unitName).length;
+
+    // Determine initial size selection: first size slot
+    const sizes = unit.sizes;
+    let chosenSizeIdx = 0; // default to first
+
+    renderDetailContent(unit, chosenSizeIdx, copyCount);
+  }
+
+  function renderDetailContent(unit, chosenSizeIdx, copyCount) {
+    const content = document.getElementById('detail-content');
+    const sizes   = unit.sizes;
+
+    // Pick points from the correct copy tier
+    function ptsForSize(sizeEntry) {
+      if (copyCount === 0)      return sizeEntry.first_unit;
+      if (copyCount === 1)      return sizeEntry.second_unit;
+      return sizeEntry.third_plus;
+    }
+
+    const chosen   = sizes[chosenSizeIdx];
+    const chosenPts = chosen ? ptsForSize(chosen) : null;
+
+    // Build size selector rows (only shown if >1 size)
+    const sizeSelector = sizes.length > 1 ? `
+      <div class="detail-section-label">Unit Size</div>
+      <div class="size-options">
+        ${sizes.map((s, idx) => `
+          <div class="size-option${idx === chosenSizeIdx ? ' chosen' : ''}"
+               onclick="chooseSizeAndRefresh('${esc(unit.unit_name)}', ${idx})">
+            <span class="size-option-label">${s.size} model${s.size === 1 ? '' : 's'}</span>
+            <span class="size-option-pts">${ptsForSize(s) !== null ? ptsForSize(s) + ' pts' : '—'}</span>
+          </div>
+        `).join('')}
+      </div>
+    ` : `
+      <div class="detail-section-label">Unit Size</div>
+      <div style="font-size:0.85rem;color:#888;margin-bottom:1.25rem;">
+        ${sizes[0] ? sizes[0].size + ' model' + (sizes[0].size === 1 ? '' : 's') + ' (fixed)' : '—'}
+      </div>
+    `;
+
+    const copyNote = copyCount > 0
+      ? `<div style="font-size:0.7rem;color:#666;margin-bottom:1rem;">
+           Copy ${copyCount + 1} in list — ${copyCount === 1 ? '2nd unit' : '3rd+ unit'} pricing applied
+         </div>`
+      : '';
+
+    content.innerHTML = `
+      <div class="detail-unit-name">${unit.unit_name}</div>
+      <div class="detail-unit-type">${unit.unit_type}</div>
+      ${copyNote}
+      ${sizeSelector}
+      <div class="detail-points-display">${chosenPts !== null ? chosenPts : '—'}</div>
+      <div class="detail-points-label">Points</div>
+      <button class="detail-add-btn"
+              onclick="addUnit('${esc(unit.unit_name)}', ${chosenSizeIdx})"
+              ${chosenPts === null ? 'disabled' : ''}>
+        Add to Army
+      </button>
+    `;
+  }
+
+  // Called when user picks a different size in the detail panel
+  function chooseSizeAndRefresh(unitName, sizeIdx) {
+    const unit = allUnits.find(u => u.unit_name === unitName);
+    if (!unit) return;
+    const copyCount = armyList.filter(e => e.unit_name === unitName).length;
+    renderDetailContent(unit, sizeIdx, copyCount);
+  }
+
+  // ── Army list management ───────────────────────────────────────────────────
+
+  function addUnit(unitName, sizeIdx) {
+    const unit = allUnits.find(u => u.unit_name === unitName);
+    if (!unit) return;
+
+    const copyCount = armyList.filter(e => e.unit_name === unitName).length;
+    const sizeEntry = unit.sizes[sizeIdx];
+
+    let pts;
+    if      (copyCount === 0) pts = sizeEntry.first_unit;
+    else if (copyCount === 1) pts = sizeEntry.second_unit;
+    else                      pts = sizeEntry.third_plus;
+
+    armyList.push({
+      listId:    Date.now() + Math.random(),
+      unit_name: unitName,
+      unit_type: unit.unit_type,
+      size:      sizeEntry.size,
+      points:    pts,
+    });
+
     renderList();
+
+    // Refresh detail panel so copy count and pricing update
+    if (selectedUnit === unitName) {
+      const newCopyCount = armyList.filter(e => e.unit_name === unitName).length;
+      renderDetailContent(unit, sizeIdx, newCopyCount);
+    }
   }
 
   function removeUnit(listId) {
     armyList = armyList.filter(u => u.listId !== listId);
     renderList();
+    // Refresh detail if the removed unit is currently selected
+    if (selectedUnit) {
+      const unit = allUnits.find(u => u.unit_name === selectedUnit);
+      if (unit) {
+        const copyCount = armyList.filter(e => e.unit_name === selectedUnit).length;
+        renderDetailContent(unit, 0, copyCount);
+      }
+    }
   }
 
   function clearList() {
     armyList = [];
     renderList();
+    if (selectedUnit) {
+      const unit = allUnits.find(u => u.unit_name === selectedUnit);
+      if (unit) renderDetailContent(unit, 0, 0);
+    }
   }
 
   function renderList() {
-    const total = armyList.reduce((sum, u) => sum + (u.base_points || 0), 0);
+    const total   = armyList.reduce((sum, u) => sum + (u.points || 0), 0);
     const overCap = total > POINTS_CAP;
     document.getElementById('points-total').innerHTML =
       `<span class="${overCap ? 'over-cap' : ''}">${total.toLocaleString()}</span> <span class="points-cap">/ ${POINTS_CAP.toLocaleString()}</span>`;
 
     const container = document.getElementById('list-items');
     if (armyList.length === 0) {
-      container.innerHTML = '<div class="empty-state">No units added yet.<br>Select units from the roster to build your army.</div>';
+      container.innerHTML = '<div class="empty-state">No units added yet.<br>Select a unit from the roster to begin.</div>';
       return;
     }
 
     container.innerHTML = armyList.map(u => `
       <div class="list-item">
-        <div>
+        <div class="list-item-info">
           <div class="list-item-name">${u.unit_name}</div>
-          <div class="list-item-type">${u.unit_type}</div>
+          <div class="list-item-sub">${u.unit_type} · ${u.size} model${u.size === 1 ? '' : 's'}</div>
         </div>
-        <span class="list-item-pts">${u.base_points !== null ? u.base_points + ' pts' : '—'}</span>
+        <span class="list-item-pts">${u.points !== null ? u.points + ' pts' : '—'}</span>
         <button class="remove-btn" onclick="removeUnit(${u.listId})" title="Remove">&times;</button>
       </div>
     `).join('');
   }
+
+  // ── Utility ────────────────────────────────────────────────────────────────
+
+  function esc(str)   { return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
+  function cssId(str) { return str.replace(/[^a-zA-Z0-9]/g, '_'); }
 
   init();
 </script>
