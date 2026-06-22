@@ -5570,7 +5570,18 @@
             "allegiance_condition": "Slaanesh"
           }
         ],
-        "wargear_options": [],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Warpsword",
+            "replacement_weapon_name": "Warpclaw",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
         "other_options": [],
         "points": {
           "sizes": [
