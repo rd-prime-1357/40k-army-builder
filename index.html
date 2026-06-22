@@ -152,12 +152,22 @@
       line-height: 1;
     }
 
+    .points-cap {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #555;
+    }
+
     .points-label {
       font-size: 0.65rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       color: #555;
       margin-top: 0.2rem;
+    }
+
+    .over-cap {
+      color: #cc2200;
     }
 
     .list-items {
@@ -186,6 +196,12 @@
       font-size: 0.85rem;
       color: #ccc;
       flex: 1;
+    }
+
+    .list-item-type {
+      font-size: 0.7rem;
+      color: #555;
+      margin-right: 0.5rem;
     }
 
     .list-item-pts {
@@ -242,7 +258,7 @@
 <header>
   <div>
     <h1>40K Army Builder</h1>
-    <div class="faction-badge">Chaos Daemons</div>
+    <div class="faction-badge" id="faction-badge">Loading...</div>
   </div>
 </header>
 
@@ -254,7 +270,7 @@
 
   <div class="list-panel">
     <div class="list-header">
-      <div class="points-total" id="points-total">0</div>
+      <div class="points-total" id="points-total">0 <span class="points-cap">/ 2000</span></div>
       <div class="points-label">Points Total</div>
     </div>
     <div class="list-items" id="list-items">
@@ -267,54 +283,102 @@
 </div>
 
 <script>
+  const POINTS_CAP = 2000;
+
   let armyList = [];
-  let allUnits = [];
+  let allUnits = []; // flat array of processed unit objects
+
+  // Unit type display order in the roster
+  const TYPE_ORDER = [
+    'Epic Hero',
+    'Character',
+    'Battleline',
+    'Infantry',
+    'Mounted',
+    'Beast',
+    'Monster',
+    'Vehicle',
+    'Dedicated Transport',
+    'Fortification',
+    'Allied'
+  ];
 
   async function init() {
     try {
-      const res = await fetch('chaos-daemons.json');
+      const res = await fetch('units.json');
       if (!res.ok) throw new Error('Failed to load unit data');
       const data = await res.json();
-      allUnits = data.units;
+
+      // data is an array of army objects; take the first army for now
+      const army = data[0];
+      document.getElementById('faction-badge').textContent = army.army;
+
+      // Flatten unit data into a simple array for rendering
+      allUnits = army.units.map(unit => {
+        const points = unit.points;
+        const basePoints = points ? points.first_unit_base_points : null;
+        const baseSize  = points ? points.base_size : null;
+        const maxSize   = points ? points.max_size : null;
+
+        // Build a size descriptor for the unit description line
+        let sizeDesc = '';
+        if (baseSize !== null && maxSize !== null) {
+          sizeDesc = `${baseSize}–${maxSize} models`;
+        } else if (baseSize !== null) {
+          sizeDesc = `${baseSize} model${baseSize === 1 ? '' : 's'}`;
+        }
+
+        return {
+          unit_name:   unit.unit_name,
+          unit_type:   unit.unit_type,
+          base_points: basePoints,
+          size_desc:   sizeDesc,
+        };
+      });
+
       renderRoster(allUnits);
     } catch (err) {
       document.getElementById('roster').innerHTML =
         `<div class="error-msg">Could not load unit data: ${err.message}</div>`;
+      document.getElementById('faction-badge').textContent = 'Error';
     }
   }
 
-  function groupByRole(units) {
-    const order = ['Lord of War', 'HQ', 'Troops', 'Fast Attack', 'Heavy Support'];
+  function groupByType(units) {
     const groups = {};
     for (const unit of units) {
-      if (!groups[unit.role]) groups[unit.role] = [];
-      groups[unit.role].push(unit);
+      const t = unit.unit_type || 'Other';
+      if (!groups[t]) groups[t] = [];
+      groups[t].push(unit);
     }
-    return order.filter(r => groups[r]).map(r => ({ role: r, units: groups[r] }));
+    // Return in defined order, then any unexpected types alphabetically
+    const ordered = TYPE_ORDER.filter(t => groups[t]);
+    const extra = Object.keys(groups).filter(t => !TYPE_ORDER.includes(t)).sort();
+    return [...ordered, ...extra].map(t => ({ type: t, units: groups[t] }));
   }
 
   function renderRoster(units) {
     const roster = document.getElementById('roster');
-    const groups = groupByRole(units);
-    roster.innerHTML = groups.map(({ role, units }) => `
+    const groups = groupByType(units);
+    roster.innerHTML = groups.map(({ type, units }) => `
       <div class="role-group">
-        <div class="role-label">${role}</div>
+        <div class="role-label">${type}</div>
         ${units.map(u => `
           <div class="unit-card">
             <div class="unit-info">
-              <div class="unit-name">${u.name}</div>
-              <div class="unit-desc">${u.description}</div>
+              <div class="unit-name">${u.unit_name}</div>
+              <div class="unit-desc">${u.size_desc}</div>
             </div>
-            <div class="unit-points">${u.points} pts</div>
-            <button class="add-btn" onclick="addUnit('${u.id}')" title="Add to list">+</button>
+            <div class="unit-points">${u.base_points !== null ? u.base_points + ' pts' : '—'}</div>
+            <button class="add-btn" onclick="addUnit('${u.unit_name.replace(/'/g, "\\'")}')" title="Add to list">+</button>
           </div>
         `).join('')}
       </div>
     `).join('');
   }
 
-  function addUnit(id) {
-    const unit = allUnits.find(u => u.id === id);
+  function addUnit(unitName) {
+    const unit = allUnits.find(u => u.unit_name === unitName);
     if (!unit) return;
     armyList.push({ ...unit, listId: Date.now() + Math.random() });
     renderList();
@@ -331,8 +395,10 @@
   }
 
   function renderList() {
-    const total = armyList.reduce((sum, u) => sum + u.points, 0);
-    document.getElementById('points-total').textContent = total.toLocaleString();
+    const total = armyList.reduce((sum, u) => sum + (u.base_points || 0), 0);
+    const overCap = total > POINTS_CAP;
+    document.getElementById('points-total').innerHTML =
+      `<span class="${overCap ? 'over-cap' : ''}">${total.toLocaleString()}</span> <span class="points-cap">/ ${POINTS_CAP.toLocaleString()}</span>`;
 
     const container = document.getElementById('list-items');
     if (armyList.length === 0) {
@@ -342,8 +408,11 @@
 
     container.innerHTML = armyList.map(u => `
       <div class="list-item">
-        <span class="list-item-name">${u.name}</span>
-        <span class="list-item-pts">${u.points} pts</span>
+        <div>
+          <div class="list-item-name">${u.unit_name}</div>
+          <div class="list-item-type">${u.unit_type}</div>
+        </div>
+        <span class="list-item-pts">${u.base_points !== null ? u.base_points + ' pts' : '—'}</span>
         <button class="remove-btn" onclick="removeUnit(${u.listId})" title="Remove">&times;</button>
       </div>
     `).join('');
