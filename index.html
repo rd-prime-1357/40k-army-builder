@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>40K Army Builder</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -161,7 +164,7 @@
     .list-items {
       flex: 1;
       overflow-y: auto;
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 1rem;
     }
 
     .empty-state {
@@ -172,16 +175,47 @@
       line-height: 1.6;
     }
 
+    /* List type group */
+    .list-type-group { margin-bottom: 1.25rem; }
+
+    .list-type-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8b0000;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 0.3rem;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Bodyguard block — wraps a bodyguard + its attached leader(s) */
+    .bodyguard-block { margin-bottom: 0.25rem; }
+
     .list-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.5rem 0;
+      padding: 0.45rem 0.5rem;
       border-bottom: 1px solid #1e1e1e;
       cursor: pointer;
+      border-radius: 3px;
+      transition: background 0.15s;
     }
 
+    .list-item:hover { background: #181818; }
     .list-item:hover .list-item-name { color: #fff; }
+
+    /* Attached leader — indented under bodyguard */
+    .list-item.attached-leader {
+      padding-left: 1.25rem;
+      background: #0e0e0e;
+      border-left: 2px solid #2a2a2a;
+      border-bottom: none;
+      border-radius: 0;
+      margin-top: 1px;
+    }
+
+    .list-item.attached-leader:hover { background: #141414; }
 
     .list-item-info { flex: 1; min-width: 0; }
 
@@ -194,8 +228,13 @@
       transition: color 0.15s;
     }
 
+    .list-item.attached-leader .list-item-name {
+      font-size: 0.78rem;
+      color: #999;
+    }
+
     .list-item-sub {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #555;
       margin-top: 0.1rem;
     }
@@ -204,9 +243,14 @@
       font-size: 0.8rem;
       color: #cc9900;
       font-weight: 600;
-      margin: 0 0.75rem;
+      margin: 0 0.5rem;
       white-space: nowrap;
       flex-shrink: 0;
+    }
+
+    .list-item.attached-leader .list-item-pts {
+      font-size: 0.75rem;
+      color: #997700;
     }
 
     .remove-btn {
@@ -319,7 +363,6 @@
     }
 
     .god-option:hover { border-color: #555; color: #ddd; background: #1e1e1e; }
-
     .god-option.chosen-Khorne   { border-color: #cc2200; background: #1a0500; color: #ff6644; }
     .god-option.chosen-Tzeentch { border-color: #0077cc; background: #001a2a; color: #44aaff; }
     .god-option.chosen-Nurgle   { border-color: #447700; background: #0d1a00; color: #88cc44; }
@@ -348,14 +391,42 @@
 
     .size-option:hover { border-color: #555; background: #1e1e1e; }
     .size-option.chosen { border-color: #cc9900; background: #1a1500; }
-
     .size-option-label { font-size: 0.85rem; color: #ccc; }
     .size-option-pts   { font-size: 0.85rem; font-weight: 700; color: #cc9900; }
 
-    /* Wargear options */
-    .wargear-section {
-      margin-bottom: 1.25rem;
+    /* Leader assignment */
+    .leader-assign-section { margin-bottom: 1.25rem; }
+
+    .leader-assign-select {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      color: #ccc;
+      font-size: 0.82rem;
+      padding: 0.55rem 0.65rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.65rem center;
+      padding-right: 1.75rem;
     }
+
+    .leader-assign-select:focus { border-color: #555; }
+    .leader-assign-select option { background: #1a1a1a; color: #ccc; }
+
+    .leader-assigned-note {
+      font-size: 0.72rem;
+      color: #88cc44;
+      margin-top: 0.4rem;
+    }
+
+    /* Wargear options */
+    .wargear-section { margin-bottom: 1.25rem; }
 
     .wargear-option {
       background: #1a1a1a;
@@ -390,42 +461,14 @@
       color: #cc9900;
     }
 
-    .wargear-option.chosen .wargear-check {
-      border-color: #cc9900;
-      background: #2a2000;
-    }
+    .wargear-option.chosen .wargear-check { border-color: #cc9900; background: #2a2000; }
+    .wargear-option.radio-style .wargear-check { border-radius: 50%; }
 
-    /* Radio style for grouped choices */
-    .wargear-option.radio-style .wargear-check {
-      border-radius: 50%;
-    }
-
-    .wargear-option-name {
-      font-size: 0.82rem;
-      color: #ccc;
-      flex: 1;
-    }
-
+    .wargear-option-name { font-size: 0.82rem; color: #ccc; flex: 1; }
     .wargear-option.chosen .wargear-option-name { color: #e8d890; }
 
-    .wargear-option-note {
-      font-size: 0.68rem;
-      color: #555;
-      margin-top: 0.2rem;
-      padding-left: 1.4rem;
-    }
-
-    .wargear-group-label {
-      font-size: 0.68rem;
-      color: #666;
-      margin-bottom: 0.3rem;
-      font-style: italic;
-    }
-
-    /* Other options (icons/instruments) */
-    .other-options-section {
-      margin-bottom: 1.25rem;
-    }
+    /* Other options */
+    .other-options-section { margin-bottom: 1.25rem; }
 
     .other-option {
       background: #1a1a1a;
@@ -460,25 +503,10 @@
       color: #cc9900;
     }
 
-    .other-option.chosen .other-check {
-      border-color: #cc9900;
-      background: #2a2000;
-    }
-
-    .other-option-name {
-      font-size: 0.82rem;
-      color: #ccc;
-      flex: 1;
-    }
-
+    .other-option.chosen .other-check { border-color: #cc9900; background: #2a2000; }
+    .other-option-name { font-size: 0.82rem; color: #ccc; flex: 1; }
     .other-option.chosen .other-option-name { color: #e8d890; }
-
-    .other-option-note {
-      font-size: 0.68rem;
-      color: #555;
-      margin-top: 0.2rem;
-      padding-left: 1.4rem;
-    }
+    .other-option-note { font-size: 0.68rem; color: #555; margin-top: 0.2rem; padding-left: 1.4rem; }
 
     .detail-points-display {
       font-size: 1.8rem;
@@ -496,18 +524,9 @@
       margin-bottom: 1.5rem;
     }
 
-    .copy-note {
-      font-size: 0.7rem;
-      color: #666;
-      margin-bottom: 1rem;
-    }
+    .copy-note { font-size: 0.7rem; color: #666; margin-bottom: 1rem; }
 
-    .limit-warning {
-      font-size: 0.75rem;
-      color: #cc2200;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
+    .limit-warning { font-size: 0.75rem; color: #cc2200; margin-bottom: 1rem; font-weight: 600; }
 
     .detail-add-btn {
       width: 100%;
@@ -526,12 +545,7 @@
     }
 
     .detail-add-btn:hover { background: #cc0000; }
-
-    .detail-add-btn:disabled {
-      background: #2a2a2a;
-      color: #555;
-      cursor: not-allowed;
-    }
+    .detail-add-btn:disabled { background: #2a2a2a; color: #555; cursor: not-allowed; }
 
     .error-msg { color: #cc4444; padding: 2rem; text-align: center; }
   </style>
@@ -574,6 +588,12 @@
   const POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
+  const VERSION = '4.0';
+
+  const TYPE_ORDER = [
+    'Epic Hero','Character','Battleline','Infantry','Mounted',
+    'Beast','Monster','Vehicle','Dedicated Transport','Fortification','Allied'
+  ];
 
   // D29: instance limits by unit type
   function instanceLimit(unitType) {
@@ -582,22 +602,17 @@
     return 3;
   }
 
-  let armyList    = [];
-  let allUnits    = [];
-  let rawUnits    = [];   // full unit objects from JSON (for wargear/other_options lookup)
+  let armyList     = [];
+  let allUnits     = [];
+  let rawUnits     = [];
   let selectedUnit = null;
-  let detailState  = {};  // keyed by unit_name
-
-  const TYPE_ORDER = [
-    'Epic Hero','Character','Battleline','Infantry','Mounted',
-    'Beast','Monster','Vehicle','Dedicated Transport','Fortification','Allied'
-  ];
+  let detailState  = {};
 
   // ── Data load ──────────────────────────────────────────────────────────────
 
   async function init() {
     try {
-      const res = await fetch('units.json');
+      const res = await fetch(`units.json?v=${VERSION}`);
       if (!res.ok) throw new Error('Failed to load unit data');
       const data = await res.json();
       const army = data[0];
@@ -610,6 +625,11 @@
         const needsGod = GOD_UNITS.has(unit.unit_name);
         const limit    = unit.instance_limit_override || instanceLimit(unit.unit_type);
 
+        // Leader info from first model group
+        const mg = unit.model_groups && unit.model_groups[0];
+        const leaderEligible  = mg && mg.leader_eligible_units  ? mg.leader_eligible_units  : [];
+        const coLeaderWith    = mg && mg.co_leader_eligible_with ? mg.co_leader_eligible_with : [];
+
         let sizeDesc = '';
         if (sizes.length > 1) {
           sizeDesc = sizes.map(s => s.size).join(' / ') + ' models';
@@ -618,12 +638,14 @@
         }
 
         return {
-          unit_name: unit.unit_name,
-          unit_type: unit.unit_type,
+          unit_name:       unit.unit_name,
+          unit_type:       unit.unit_type,
           sizes,
           needsGod,
           limit,
-          minPts: sizes.length > 0 ? sizes[0].first_unit : null,
+          leaderEligible,   // array of bodyguard unit names this unit can lead
+          coLeaderWith,     // array of leader unit names this unit can co-lead with
+          minPts:          sizes.length > 0 ? sizes[0].first_unit : null,
           sizeDesc,
         };
       });
@@ -636,7 +658,14 @@
     }
   }
 
-  // ── Roster ─────────────────────────────────────────────────────────────────
+  // ── Utility ────────────────────────────────────────────────────────────────
+
+  function esc(str)   { return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
+  function cssId(str) { return str.replace(/[^a-zA-Z0-9]/g, '_'); }
+
+  function sortedAlpha(arr) {
+    return [...arr].sort((a, b) => a.unit_name.localeCompare(b.unit_name));
+  }
 
   function groupByType(units) {
     const groups = {};
@@ -645,10 +674,60 @@
       if (!groups[t]) groups[t] = [];
       groups[t].push(u);
     }
+    // Sort within each group alphabetically
+    for (const t of Object.keys(groups)) {
+      groups[t].sort((a, b) => a.unit_name.localeCompare(b.unit_name));
+    }
     const ordered = TYPE_ORDER.filter(t => groups[t]);
     const extra   = Object.keys(groups).filter(t => !TYPE_ORDER.includes(t)).sort();
     return [...ordered, ...extra].map(t => ({ type: t, units: groups[t] }));
   }
+
+  // ── Leader assignment helpers ───────────────────────────────────────────────
+
+  // Returns the listId of the bodyguard this leader entry is attached to, or null
+  function getLeaderAttachment(listId) {
+    const entry = armyList.find(e => e.listId === listId);
+    return entry ? entry.attachedToListId : null;
+  }
+
+  // Returns array of listIds of leaders attached to a given bodyguard listId
+  function getAttachedLeaders(bodyguardListId) {
+    return armyList.filter(e => e.attachedToListId === bodyguardListId).map(e => e.listId);
+  }
+
+  // Can this leader (by unit_name) attach to this bodyguard entry?
+  // Checks: bodyguard unit is in leader's eligible list, slot available (0 or co-leader rule)
+  function canAttachLeader(leaderUnitName, bodyguardEntry) {
+    const leaderUnit = allUnits.find(u => u.unit_name === leaderUnitName);
+    if (!leaderUnit) return false;
+    if (!leaderUnit.leaderEligible.includes(bodyguardEntry.unit_name)) return false;
+
+    const attachedLeaderIds = getAttachedLeaders(bodyguardEntry.listId);
+    if (attachedLeaderIds.length === 0) return true;  // slot open
+
+    // One leader already attached — check co-leader rule
+    if (attachedLeaderIds.length >= 2) return false;  // max 2 ever
+
+    const existingLeaderId = attachedLeaderIds[0];
+    const existingLeader   = armyList.find(e => e.listId === existingLeaderId);
+    if (!existingLeader) return false;
+
+    const existingLeaderUnit = allUnits.find(u => u.unit_name === existingLeader.unit_name);
+    if (!existingLeaderUnit) return false;
+
+    // Co-leader allowed if either leader lists the other in coLeaderWith
+    return leaderUnit.coLeaderWith.includes(existingLeader.unit_name) ||
+           existingLeaderUnit.coLeaderWith.includes(leaderUnitName);
+  }
+
+  // Detach a leader from whatever it's currently attached to
+  function detachLeader(listId) {
+    const entry = armyList.find(e => e.listId === listId);
+    if (entry) entry.attachedToListId = null;
+  }
+
+  // ── Roster ─────────────────────────────────────────────────────────────────
 
   function renderRoster(units) {
     const roster = document.getElementById('roster');
@@ -692,15 +771,15 @@
     if (!detailState[unitName]) {
       detailState[unitName] = {
         chosenSizeIdx: 0,
-        chosenGod: null,
-        wargear: {},      // option_group+weapon_replaced -> replacement_weapon_name or null
-        otherOptions: {}, // option_name -> bool
+        chosenGod:     null,
+        wargear:       {},
+        otherOptions:  {},
+        assignToListId: null,   // which bodyguard list entry to attach to when adding
       };
     }
 
     document.getElementById('detail-empty').style.display = 'none';
     document.getElementById('detail-content').classList.add('visible');
-
     renderDetail(unit);
   }
 
@@ -710,6 +789,7 @@
     const copyCount = armyList.filter(e => e.unit_name === unit.unit_name).length;
     const atLimit   = copyCount >= unit.limit;
     const raw       = rawUnits.find(u => u.unit_name === unit.unit_name);
+    const isLeader  = unit.leaderEligible.length > 0;
 
     function ptsForSize(sizeEntry) {
       if (copyCount === 0) return sizeEntry.first_unit;
@@ -722,12 +802,10 @@
     const godReady  = !unit.needsGod || state.chosenGod !== null;
     const canAdd    = chosenPts !== null && godReady && !atLimit;
 
-    // Copy note
     const copyNote = copyCount > 0 && !atLimit
       ? `<div class="copy-note">${copyCount} cop${copyCount === 1 ? 'y' : 'ies'} in list — ${copyCount === 1 ? '2nd' : '3rd+'} unit pricing applied</div>`
       : '';
 
-    // Limit warning
     const limitWarning = atLimit
       ? `<div class="limit-warning">Limit reached (${unit.limit} maximum)</div>`
       : '';
@@ -764,11 +842,16 @@
       </div>
     `;
 
-    // Wargear options
-    const wargearHtml = buildWargearHtml(unit, raw, state);
+    // Leader assignment — shown for leader units
+    const leaderHtml = buildLeaderAssignHtml(unit, state);
 
-    // Other options (icons, instruments, etc.)
-    const otherHtml = buildOtherOptionsHtml(unit, raw, state);
+    // Wargear & other options
+    const wargearHtml = buildWargearHtml(unit, raw, state);
+    const otherHtml   = buildOtherOptionsHtml(unit, raw, state);
+
+    let addBtnLabel = 'Add to Army';
+    if (atLimit) addBtnLabel = 'Limit Reached';
+    else if (unit.needsGod && !state.chosenGod) addBtnLabel = 'Choose Allegiance to Add';
 
     document.getElementById('detail-content').innerHTML = `
       <div class="detail-unit-name">${unit.unit_name}</div>
@@ -777,6 +860,7 @@
       ${limitWarning}
       ${copyNote}
       ${sizeSelector}
+      ${leaderHtml}
       ${wargearHtml}
       ${otherHtml}
       <div class="detail-points-display">${chosenPts !== null ? chosenPts : '—'}</div>
@@ -784,19 +868,58 @@
       <button class="detail-add-btn"
               onclick="addUnit('${esc(unit.unit_name)}')"
               ${!canAdd ? 'disabled' : ''}>
-        ${atLimit ? 'Limit Reached' : unit.needsGod && !state.chosenGod ? 'Choose Allegiance to Add' : 'Add to Army'}
+        ${addBtnLabel}
       </button>
     `;
   }
 
-  // Build wargear substitution HTML
+  // Leader assignment UI — dropdown of eligible bodyguard units in the army list
+  function buildLeaderAssignHtml(unit, state) {
+    if (unit.leaderEligible.length === 0) return '';
+
+    // Find eligible bodyguard entries currently in the list
+    const eligibleEntries = armyList.filter(e =>
+      unit.leaderEligible.includes(e.unit_name) &&
+      (state.assignToListId === e.listId || canAttachLeader(unit.unit_name, e))
+    );
+
+    const noEligible = eligibleEntries.length === 0;
+
+    let options = `<option value="">— Unattached —</option>`;
+    for (const e of eligibleEntries) {
+      const god   = e.god ? ` (${e.god})` : '';
+      const label = `${e.unit_name}${god} · ${e.size} model${e.size === 1 ? '' : 's'}`;
+      options += `<option value="${e.listId}" ${state.assignToListId === e.listId ? 'selected' : ''}>${label}</option>`;
+    }
+
+    const note = state.assignToListId
+      ? `<div class="leader-assigned-note">Will attach when added to army</div>`
+      : '';
+
+    const hint = noEligible
+      ? `<div style="font-size:0.72rem;color:#555;margin-top:0.35rem;">Add an eligible bodyguard unit first: ${unit.leaderEligible.join(', ')}</div>`
+      : '';
+
+    return `
+      <div class="leader-assign-section">
+        <div class="detail-section-label">Leader Assignment</div>
+        <select class="leader-assign-select"
+                onchange="chooseLeaderTarget('${esc(unit.unit_name)}', this.value)"
+                ${noEligible ? 'disabled' : ''}>
+          ${options}
+        </select>
+        ${note}
+        ${hint}
+      </div>
+    `;
+  }
+
+  // Wargear substitutions
   function buildWargearHtml(unit, raw, state) {
     if (!raw || !raw.wargear_options || raw.wargear_options.length === 0) return '';
 
     const options = raw.wargear_options;
-
-    // Separate grouped choices (is_choice=true, has option_group) from independent swaps
-    const groups = {};
+    const groups  = {};
     const independent = [];
 
     for (const opt of options) {
@@ -811,9 +934,7 @@
 
     let html = '';
 
-    // Grouped choices — render as radio-style (pick one or none)
     for (const [groupKey, opts] of Object.entries(groups)) {
-      // Label: "Replace [weapon_replaced] with:"
       const replaced = opts[0].weapon_replaced;
       const stateKey = `group_${groupKey}`;
       const chosen   = state.wargear[stateKey] || null;
@@ -835,8 +956,6 @@
       html += `</div>`;
     }
 
-    // Independent swaps — render as checkboxes
-    // Group by weapon_replaced in case multiple rows share the same replaced weapon (e.g. Great Unclean One bilesword strike+sweep)
     const indepByWeapon = {};
     for (const opt of independent) {
       const k = opt.weapon_replaced;
@@ -845,7 +964,6 @@
     }
 
     for (const [replaced, opts] of Object.entries(indepByWeapon)) {
-      // All rows for the same replaced weapon represent the same logical swap — just show it once
       const opt      = opts[0];
       const stateKey = `indep_${replaced}`;
       const isCh     = !!state.wargear[stateKey];
@@ -863,13 +981,10 @@
       `;
     }
 
-    if (html) {
-      return `<div class="detail-section-label" style="margin-bottom:0.75rem;color:#666;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;">Wargear Options</div>` + html;
-    }
-    return '';
+    return html ? `<div class="detail-section-label" style="margin-bottom:0.75rem;color:#666;font-size:0.6rem;">Wargear Options</div>${html}` : '';
   }
 
-  // Build other options HTML (icons, instruments, etc.)
+  // Other options (icons, instruments)
   function buildOtherOptionsHtml(unit, raw, state) {
     if (!raw || !raw.other_options || raw.other_options.length === 0) return '';
 
@@ -889,7 +1004,6 @@
         </div>
       `;
     }
-
     html += `</div>`;
     return html;
   }
@@ -897,44 +1011,82 @@
   // ── Interaction handlers ────────────────────────────────────────────────────
 
   function chooseGod(unitName, god) {
-    if (!detailState[unitName]) detailState[unitName] = { chosenSizeIdx: 0, chosenGod: null, wargear: {}, otherOptions: {} };
+    ensureState(unitName);
     detailState[unitName].chosenGod = god;
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (unit) renderDetail(unit);
   }
 
   function chooseSizeIdx(unitName, idx) {
-    if (!detailState[unitName]) detailState[unitName] = { chosenSizeIdx: 0, chosenGod: null, wargear: {}, otherOptions: {} };
+    ensureState(unitName);
     detailState[unitName].chosenSizeIdx = idx;
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (unit) renderDetail(unit);
   }
 
-  // Grouped radio-style: clicking the chosen option deselects it (toggle off); clicking another selects it
+  function chooseLeaderTarget(unitName, listIdStr) {
+    ensureState(unitName);
+    detailState[unitName].assignToListId = listIdStr ? Number(listIdStr) : null;
+    const unit = allUnits.find(u => u.unit_name === unitName);
+    if (unit) renderDetail(unit);
+  }
+
   function toggleWargearGroup(unitName, stateKey, chosenWeapon) {
+    ensureState(unitName);
     const state = detailState[unitName];
-    if (!state) return;
     state.wargear[stateKey] = state.wargear[stateKey] === chosenWeapon ? null : chosenWeapon;
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (unit) renderDetail(unit);
   }
 
-  // Independent swap: simple toggle
   function toggleWargearIndep(unitName, stateKey) {
-    const state = detailState[unitName];
-    if (!state) return;
-    state.wargear[stateKey] = !state.wargear[stateKey];
+    ensureState(unitName);
+    detailState[unitName].wargear[stateKey] = !detailState[unitName].wargear[stateKey];
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (unit) renderDetail(unit);
   }
 
-  // Other options: independent toggles (icon and instrument are independent — one model each)
   function toggleOtherOption(unitName, optionName) {
-    const state = detailState[unitName];
-    if (!state) return;
-    state.otherOptions[optionName] = !state.otherOptions[optionName];
+    ensureState(unitName);
+    detailState[unitName].otherOptions[optionName] = !detailState[unitName].otherOptions[optionName];
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (unit) renderDetail(unit);
+  }
+
+  // Also allow assigning an already-added leader from the army list
+  function assignLeaderFromList(leaderListId, bodyguardListIdStr) {
+    const leaderEntry = armyList.find(e => e.listId === leaderListId);
+    if (!leaderEntry) return;
+
+    const newBodyguardId = bodyguardListIdStr ? Number(bodyguardListIdStr) : null;
+
+    // Detach from current bodyguard first
+    leaderEntry.attachedToListId = null;
+
+    if (newBodyguardId) {
+      const bodyguardEntry = armyList.find(e => e.listId === newBodyguardId);
+      if (bodyguardEntry && canAttachLeader(leaderEntry.unit_name, bodyguardEntry)) {
+        leaderEntry.attachedToListId = newBodyguardId;
+      }
+    }
+
+    renderList();
+    if (selectedUnit) {
+      const unit = allUnits.find(u => u.unit_name === selectedUnit);
+      if (unit) renderDetail(unit);
+    }
+  }
+
+  function ensureState(unitName) {
+    if (!detailState[unitName]) {
+      detailState[unitName] = {
+        chosenSizeIdx:  0,
+        chosenGod:      null,
+        wargear:        {},
+        otherOptions:   {},
+        assignToListId: null,
+      };
+    }
   }
 
   // ── Army list ──────────────────────────────────────────────────────────────
@@ -950,21 +1102,30 @@
     if (copyCount >= unit.limit) return;
 
     const sizeEntry = unit.sizes[state.chosenSizeIdx];
-
     let pts;
     if      (copyCount === 0) pts = sizeEntry.first_unit;
     else if (copyCount === 1) pts = sizeEntry.second_unit;
     else                      pts = sizeEntry.third_plus;
 
+    // Validate leader attachment
+    let attachedToListId = null;
+    if (state.assignToListId) {
+      const bodyguardEntry = armyList.find(e => e.listId === state.assignToListId);
+      if (bodyguardEntry && canAttachLeader(unitName, bodyguardEntry)) {
+        attachedToListId = state.assignToListId;
+      }
+    }
+
     armyList.push({
-      listId:       Date.now() + Math.random(),
-      unit_name:    unitName,
-      unit_type:    unit.unit_type,
-      size:         sizeEntry.size,
-      god:          state.chosenGod,
-      points:       pts,
-      wargear:      { ...state.wargear },
-      otherOptions: { ...state.otherOptions },
+      listId:           Date.now() + Math.random(),
+      unit_name:        unitName,
+      unit_type:        unit.unit_type,
+      size:             sizeEntry.size,
+      god:              state.chosenGod,
+      points:           pts,
+      wargear:          { ...state.wargear },
+      otherOptions:     { ...state.otherOptions },
+      attachedToListId, // null = unattached
     });
 
     renderList();
@@ -973,7 +1134,9 @@
   }
 
   function removeUnit(listId) {
-    armyList = armyList.filter(u => u.listId !== listId);
+    // If removing a bodyguard, detach any leaders attached to it
+    armyList.forEach(e => { if (e.attachedToListId === listId) e.attachedToListId = null; });
+    armyList = armyList.filter(e => e.listId !== listId);
     renderList();
     renderRoster(allUnits);
     if (selectedUnit) {
@@ -992,6 +1155,8 @@
     }
   }
 
+  // ── Army list render ───────────────────────────────────────────────────────
+
   function renderList() {
     const total   = armyList.reduce((sum, u) => sum + (u.points || 0), 0);
     const overCap = total > POINTS_CAP;
@@ -1004,26 +1169,100 @@
       return;
     }
 
-    container.innerHTML = armyList.map(u => {
-      const sub = [u.unit_type, u.god, `${u.size} model${u.size === 1 ? '' : 's'}`]
-        .filter(Boolean).join(' · ');
-      return `
-        <div class="list-item" onclick="openDetail('${esc(u.unit_name)}')">
-          <div class="list-item-info">
-            <div class="list-item-name">${u.unit_name}</div>
-            <div class="list-item-sub">${sub}</div>
+    // Separate attached leaders from non-attached entries
+    const attachedLeaderIds = new Set(armyList.filter(e => e.attachedToListId).map(e => e.listId));
+
+    // Build display entries: only non-attached entries appear as top-level rows
+    // Group top-level entries by unit_type, then sort alpha within group
+    const topLevel = armyList.filter(e => !e.attachedToListId);
+
+    // Group top-level by type
+    const typeGroups = {};
+    for (const entry of topLevel) {
+      const t = entry.unit_type || 'Other';
+      if (!typeGroups[t]) typeGroups[t] = [];
+      typeGroups[t].push(entry);
+    }
+
+    // Sort within each type group by unit_name
+    for (const t of Object.keys(typeGroups)) {
+      typeGroups[t].sort((a, b) => a.unit_name.localeCompare(b.unit_name));
+    }
+
+    const orderedTypes = [
+      ...TYPE_ORDER.filter(t => typeGroups[t]),
+      ...Object.keys(typeGroups).filter(t => !TYPE_ORDER.includes(t)).sort()
+    ];
+
+    let html = '';
+
+    for (const type of orderedTypes) {
+      const entries = typeGroups[type];
+      html += `<div class="list-type-group">`;
+      html += `<div class="list-type-label">${type}</div>`;
+
+      for (const entry of entries) {
+        const sub = [entry.god, `${entry.size} model${entry.size === 1 ? '' : 's'}`]
+          .filter(Boolean).join(' · ');
+
+        // Get leaders attached to this bodyguard entry
+        const attachedLeaders = armyList.filter(e => e.attachedToListId === entry.listId);
+
+        html += `<div class="bodyguard-block">`;
+        html += `
+          <div class="list-item" onclick="openDetail('${esc(entry.unit_name)}')">
+            <div class="list-item-info">
+              <div class="list-item-name">${entry.unit_name}</div>
+              <div class="list-item-sub">${sub}</div>
+            </div>
+            <span class="list-item-pts">${entry.points !== null ? entry.points + ' pts' : '—'}</span>
+            <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${entry.listId})" title="Remove">&times;</button>
           </div>
-          <span class="list-item-pts">${u.points !== null ? u.points + ' pts' : '—'}</span>
-          <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${u.listId})" title="Remove">&times;</button>
-        </div>
-      `;
-    }).join('');
+        `;
+
+        // Render attached leaders indented beneath
+        for (const leader of attachedLeaders) {
+          const leaderUnit = allUnits.find(u => u.unit_name === leader.unit_name);
+          const eligibleEntries = leaderUnit
+            ? armyList.filter(e =>
+                leaderUnit.leaderEligible.includes(e.unit_name) &&
+                (e.listId === leader.attachedToListId || canAttachLeader(leader.unit_name, e))
+              )
+            : [];
+
+          let leaderOptions = `<option value="">— Unattached —</option>`;
+          for (const e of eligibleEntries) {
+            const god   = e.god ? ` (${e.god})` : '';
+            const label = `${e.unit_name}${god} · ${e.size} model${e.size === 1 ? '' : 's'}`;
+            leaderOptions += `<option value="${e.listId}" ${leader.attachedToListId === e.listId ? 'selected' : ''}>${label}</option>`;
+          }
+
+          html += `
+            <div class="list-item attached-leader" onclick="openDetail('${esc(leader.unit_name)}')">
+              <div class="list-item-info">
+                <div class="list-item-name">↳ ${leader.unit_name}</div>
+                <div class="list-item-sub">
+                  <select class="leader-assign-select" style="font-size:0.65rem;padding:0.15rem 1.5rem 0.15rem 0.4rem;background-size:8px;"
+                          onclick="event.stopPropagation()"
+                          onchange="event.stopPropagation();assignLeaderFromList(${leader.listId}, this.value)">
+                    ${leaderOptions}
+                  </select>
+                </div>
+              </div>
+              <span class="list-item-pts">${leader.points !== null ? leader.points + ' pts' : '—'}</span>
+              <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${leader.listId})" title="Remove">&times;</button>
+            </div>
+          `;
+        }
+
+        html += `</div>`; // bodyguard-block
+      }
+
+      html += `</div>`; // list-type-group
+    }
+
+    container.innerHTML = html;
   }
-
-  // ── Utility ────────────────────────────────────────────────────────────────
-
-  function esc(str)   { return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
-  function cssId(str) { return str.replace(/[^a-zA-Z0-9]/g, '_'); }
 
   init();
 </script>
