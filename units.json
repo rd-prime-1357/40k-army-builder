@@ -95,18 +95,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 315,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 315,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 315,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -296,18 +292,14 @@
         ],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 320,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 320,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 335,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -375,18 +367,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 85,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 85,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 85,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -450,18 +438,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 65,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 65,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 65,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -543,18 +527,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 85,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 85,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 85,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -626,18 +606,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 150,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 150,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 170,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -723,18 +699,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 70,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 70,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 70,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -815,18 +787,14 @@
           }
         ],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 110,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 110,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 110,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -924,18 +892,20 @@
           }
         ],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 95,
-          "first_unit_middle_points": 180,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 95,
-          "second_unit_middle_points": 180,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 105,
-          "third_plus_unit_middle_points": 190,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 6,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1012,18 +982,20 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 75,
-          "first_unit_middle_points": 150,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 75,
-          "second_unit_middle_points": 150,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 75,
-          "third_plus_unit_middle_points": 150,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 10,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1116,18 +1088,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 90,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 90,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 90,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1173,18 +1141,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 105,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 105,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 105,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1291,18 +1255,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 295,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 295,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 295,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1459,18 +1419,14 @@
         ],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 300,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 300,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 315,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1568,18 +1524,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 105,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 105,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 105,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1702,18 +1654,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 95,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 95,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 95,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1818,18 +1766,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 80,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 80,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 80,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -1887,18 +1831,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 75,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 75,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 75,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -2002,18 +1942,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 60,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 60,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 60,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -2115,18 +2051,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 65,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 65,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 65,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -2232,18 +2164,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 125,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 125,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 125,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -2408,18 +2336,14 @@
           }
         ],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 150,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 150,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 150,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -2498,18 +2422,20 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 65,
-          "first_unit_middle_points": 130,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 65,
-          "second_unit_middle_points": 130,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 65,
-          "third_plus_unit_middle_points": 130,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 6,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -2573,18 +2499,20 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 80,
-          "first_unit_middle_points": 160,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 80,
-          "second_unit_middle_points": 160,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 80,
-          "third_plus_unit_middle_points": 160,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 6,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -2700,18 +2628,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 115,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 115,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 115,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -2817,18 +2741,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 280,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 280,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 280,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3012,18 +2932,14 @@
         ],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 265,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 265,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 280,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3091,18 +3007,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 55,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 55,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 55,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3186,18 +3098,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 60,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 60,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 60,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3264,18 +3172,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 80,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 80,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 80,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3341,18 +3245,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 55,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 55,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 55,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3437,18 +3337,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 120,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 120,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 120,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3531,18 +3427,14 @@
           }
         ],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 115,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 115,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 115,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3605,18 +3497,20 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 45,
-          "first_unit_middle_points": 90,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 45,
-          "second_unit_middle_points": 90,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 45,
-          "third_plus_unit_middle_points": 90,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 6,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3679,18 +3573,20 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 70,
-          "first_unit_middle_points": 140,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 70,
-          "second_unit_middle_points": 140,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 70,
-          "third_plus_unit_middle_points": 140,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 2,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3809,18 +3705,20 @@
           }
         ],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 110,
-          "first_unit_middle_points": 220,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 110,
-          "second_unit_middle_points": 220,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 110,
-          "third_plus_unit_middle_points": 220,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 6,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -3866,18 +3764,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 100,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 100,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 100,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4017,18 +3911,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 340,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 340,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 340,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4222,18 +4112,14 @@
         ],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 255,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 255,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 270,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4334,18 +4220,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 60,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 60,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 60,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4404,18 +4286,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 95,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 95,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 95,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4556,18 +4434,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 120,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 120,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 120,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4651,18 +4525,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 100,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 100,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 100,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4784,18 +4654,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 135,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 135,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 135,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4863,18 +4729,14 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 60,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 60,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 60,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -4958,18 +4820,14 @@
           }
         ],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 90,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 90,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 90,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -5030,18 +4888,20 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 90,
-          "first_unit_middle_points": 180,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 90,
-          "second_unit_middle_points": 180,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 90,
-          "third_plus_unit_middle_points": 180,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 6,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -5142,18 +5002,20 @@
           }
         ],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 80,
-          "first_unit_middle_points": 155,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 80,
-          "second_unit_middle_points": 155,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 80,
-          "third_plus_unit_middle_points": 155,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 10,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -5269,18 +5131,20 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 80,
-          "first_unit_middle_points": 160,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 80,
-          "second_unit_middle_points": 160,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 80,
-          "third_plus_unit_middle_points": 160,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            },
+            {
+              "size": 2,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
@@ -5403,23 +5267,19 @@
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 390,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 390,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 390,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Soul Grinder â Khorne",
+        "unit_name": "Soul Grinder - Khorne",
         "unit_type": "Vehicle",
         "model_groups": [
           {
@@ -5455,104 +5315,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Harvester cannon",
-            "range": "36\"",
-            "A": "3",
-            "BS": "3+",
-            "WS": null,
-            "S": 10,
-            "AP": -1,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Torrent of burning blood",
-            "range": "12\"",
-            "A": "2D6",
-            "BS": "N/A",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "1",
-            "weapon_ability_names": [
-              "Ignores Cover",
-              "Torrent"
-            ],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Iron claw",
-            "range": "Melee",
-            "A": "5",
-            "BS": null,
-            "WS": "3+",
-            "S": 16,
-            "AP": -3,
-            "D": "D6+2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Warpsword",
-            "range": "Melee",
-            "A": "3",
-            "BS": null,
-            "WS": "3+",
-            "S": 8,
-            "AP": -2,
-            "D": "D6",
-            "weapon_ability_names": [
-              "Extra Attacks"
-            ],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
-        "wargear_options": [
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Warpsword",
-            "replacement_weapon_name": "Warpclaw",
-            "points_cost": null,
-            "is_choice": false,
-            "option_group": null
-          }
-        ],
+        "weapons": [],
+        "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 180,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 180,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 195,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Soul Grinder â Tzeentch",
+        "unit_name": "Soul Grinder - Tzeentch",
         "unit_type": "Vehicle",
         "model_groups": [
           {
@@ -5588,103 +5367,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Harvester cannon",
-            "range": "36\"",
-            "A": "3",
-            "BS": "3+",
-            "WS": null,
-            "S": 10,
-            "AP": -1,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Warp gaze",
-            "range": "48\"",
-            "A": "D3",
-            "BS": "3+",
-            "WS": null,
-            "S": 12,
-            "AP": -2,
-            "D": "D6+2",
-            "weapon_ability_names": [
-              "Blast"
-            ],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Iron claw",
-            "range": "Melee",
-            "A": "5",
-            "BS": null,
-            "WS": "3+",
-            "S": 16,
-            "AP": -3,
-            "D": "D6+2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Warpsword",
-            "range": "Melee",
-            "A": "3",
-            "BS": null,
-            "WS": "3+",
-            "S": 8,
-            "AP": -2,
-            "D": "D6",
-            "weapon_ability_names": [
-              "Extra Attacks"
-            ],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
-        "wargear_options": [
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Warpsword",
-            "replacement_weapon_name": "Warpclaw",
-            "points_cost": null,
-            "is_choice": false,
-            "option_group": null
-          }
-        ],
+        "weapons": [],
+        "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 180,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 180,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 195,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Soul Grinder â Nurgle",
+        "unit_name": "Soul Grinder - Nurgle",
         "unit_type": "Vehicle",
         "model_groups": [
           {
@@ -5720,105 +5419,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Harvester cannon",
-            "range": "36\"",
-            "A": "3",
-            "BS": "3+",
-            "WS": null,
-            "S": 10,
-            "AP": -1,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Phlegm bombardment",
-            "range": "36\"",
-            "A": "D6+1",
-            "BS": "3+",
-            "WS": null,
-            "S": 7,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [
-              "Blast",
-              "Indirect Fire",
-              "Lethal Hits"
-            ],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Iron claw",
-            "range": "Melee",
-            "A": "5",
-            "BS": null,
-            "WS": "3+",
-            "S": 16,
-            "AP": -3,
-            "D": "D6+2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Warpsword",
-            "range": "Melee",
-            "A": "3",
-            "BS": null,
-            "WS": "3+",
-            "S": 8,
-            "AP": -2,
-            "D": "D6",
-            "weapon_ability_names": [
-              "Extra Attacks"
-            ],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
-        "wargear_options": [
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Warpsword",
-            "replacement_weapon_name": "Warpclaw",
-            "points_cost": null,
-            "is_choice": false,
-            "option_group": null
-          }
-        ],
+        "weapons": [],
+        "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 180,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 180,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 195,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Soul Grinder â Slaanesh",
+        "unit_name": "Soul Grinder - Slaanesh",
         "unit_type": "Vehicle",
         "model_groups": [
           {
@@ -5854,104 +5471,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Harvester cannon",
-            "range": "36\"",
-            "A": "3",
-            "BS": "3+",
-            "WS": null,
-            "S": 10,
-            "AP": -1,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Scream of despair",
-            "range": "24\"",
-            "A": "6",
-            "BS": "3+",
-            "WS": null,
-            "S": 9,
-            "AP": -2,
-            "D": "2",
-            "weapon_ability_names": [
-              "Devastating Wounds",
-              "Sustained Hits 1"
-            ],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Iron claw",
-            "range": "Melee",
-            "A": "5",
-            "BS": null,
-            "WS": "3+",
-            "S": 16,
-            "AP": -3,
-            "D": "D6+2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Warpsword",
-            "range": "Melee",
-            "A": "3",
-            "BS": null,
-            "WS": "3+",
-            "S": 8,
-            "AP": -2,
-            "D": "D6",
-            "weapon_ability_names": [
-              "Extra Attacks"
-            ],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
-        "wargear_options": [
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Warpsword",
-            "replacement_weapon_name": "Warpclaw",
-            "points_cost": null,
-            "is_choice": false,
-            "option_group": null
-          }
-        ],
+        "weapons": [],
+        "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 180,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 180,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 195,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos â Khorne",
+        "unit_name": "Daemon Prince of Chaos - Khorne",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -5989,73 +5525,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Infernal cannon",
-            "range": "24\"",
-            "A": "3",
-            "BS": "2+",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â strike",
-            "range": "Melee",
-            "A": "6",
-            "BS": null,
-            "WS": "2+",
-            "S": 10,
-            "AP": -2,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â sweep",
-            "range": "Melee",
-            "A": "14",
-            "BS": null,
-            "WS": "2+",
-            "S": 8,
-            "AP": 0,
-            "D": "1",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
+        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 165,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 165,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 165,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos â Tzeentch",
+        "unit_name": "Daemon Prince of Chaos - Tzeentch",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -6093,73 +5579,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Infernal cannon",
-            "range": "24\"",
-            "A": "6",
-            "BS": "2+",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â strike",
-            "range": "Melee",
-            "A": "6",
-            "BS": null,
-            "WS": "2+",
-            "S": 8,
-            "AP": -2,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â sweep",
-            "range": "Melee",
-            "A": "14",
-            "BS": null,
-            "WS": "2+",
-            "S": 6,
-            "AP": 0,
-            "D": "1",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
+        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 165,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 165,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 165,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos â Nurgle",
+        "unit_name": "Daemon Prince of Chaos - Nurgle",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -6197,73 +5633,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Infernal cannon",
-            "range": "24\"",
-            "A": "3",
-            "BS": "2+",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â strike",
-            "range": "Melee",
-            "A": "6",
-            "BS": null,
-            "WS": "2+",
-            "S": 8,
-            "AP": -2,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â sweep",
-            "range": "Melee",
-            "A": "14",
-            "BS": null,
-            "WS": "2+",
-            "S": 6,
-            "AP": 0,
-            "D": "1",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
+        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 165,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 165,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 165,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos â Slaanesh",
+        "unit_name": "Daemon Prince of Chaos - Slaanesh",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -6301,73 +5687,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Infernal cannon",
-            "range": "24\"",
-            "A": "3",
-            "BS": "2+",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â strike",
-            "range": "Melee",
-            "A": "6",
-            "BS": null,
-            "WS": "2+",
-            "S": 8,
-            "AP": -2,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â sweep",
-            "range": "Melee",
-            "A": "14",
-            "BS": null,
-            "WS": "2+",
-            "S": 6,
-            "AP": 0,
-            "D": "1",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
+        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 165,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 165,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 165,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos with Wings â Khorne",
+        "unit_name": "Daemon Prince of Chaos with Wings - Khorne",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -6405,73 +5741,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Infernal cannon",
-            "range": "24\"",
-            "A": "3",
-            "BS": "2+",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â strike",
-            "range": "Melee",
-            "A": "6",
-            "BS": null,
-            "WS": "2+",
-            "S": 10,
-            "AP": -2,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â sweep",
-            "range": "Melee",
-            "A": "14",
-            "BS": null,
-            "WS": "2+",
-            "S": 8,
-            "AP": 0,
-            "D": "1",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
+        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 190,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 190,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 190,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos with Wings â Tzeentch",
+        "unit_name": "Daemon Prince of Chaos with Wings - Tzeentch",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -6509,73 +5795,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Infernal cannon",
-            "range": "24\"",
-            "A": "6",
-            "BS": "2+",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â strike",
-            "range": "Melee",
-            "A": "6",
-            "BS": null,
-            "WS": "2+",
-            "S": 8,
-            "AP": -2,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â sweep",
-            "range": "Melee",
-            "A": "14",
-            "BS": null,
-            "WS": "2+",
-            "S": 6,
-            "AP": 0,
-            "D": "1",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
+        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 190,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 190,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 190,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos with Wings â Nurgle",
+        "unit_name": "Daemon Prince of Chaos with Wings - Nurgle",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -6613,73 +5849,23 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Infernal cannon",
-            "range": "24\"",
-            "A": "3",
-            "BS": "2+",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â strike",
-            "range": "Melee",
-            "A": "6",
-            "BS": null,
-            "WS": "2+",
-            "S": 8,
-            "AP": -2,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â sweep",
-            "range": "Melee",
-            "A": "14",
-            "BS": null,
-            "WS": "2+",
-            "S": 6,
-            "AP": 0,
-            "D": "1",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
+        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 190,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 190,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 190,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       },
       {
-        "unit_name": "Daemon Prince of Chaos with Wings â Slaanesh",
+        "unit_name": "Daemon Prince of Chaos with Wings - Slaanesh",
         "unit_type": "Character",
         "model_groups": [
           {
@@ -6717,68 +5903,18 @@
             ]
           }
         ],
-        "weapons": [
-          {
-            "model_group": "All",
-            "weapon_type": "Ranged",
-            "weapon_name": "Infernal cannon",
-            "range": "24\"",
-            "A": "3",
-            "BS": "2+",
-            "WS": null,
-            "S": 5,
-            "AP": -1,
-            "D": "2",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â strike",
-            "range": "Melee",
-            "A": "6",
-            "BS": null,
-            "WS": "2+",
-            "S": 8,
-            "AP": -2,
-            "D": "3",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          },
-          {
-            "model_group": "All",
-            "weapon_type": "Melee",
-            "weapon_name": "Hellforged weapons â sweep",
-            "range": "Melee",
-            "A": "14",
-            "BS": null,
-            "WS": "2+",
-            "S": 6,
-            "AP": 0,
-            "D": "1",
-            "weapon_ability_names": [],
-            "weapon_keyword_names": [],
-            "is_base_equipment": true
-          }
-        ],
+        "weapons": [],
         "wargear_options": [],
         "other_options": [],
         "points": {
-          "base_size": null,
-          "middle_size": null,
-          "max_size": null,
-          "first_unit_base_points": 190,
-          "first_unit_middle_points": null,
-          "first_unit_max_points": null,
-          "second_unit_base_points": 190,
-          "second_unit_middle_points": null,
-          "second_unit_max_points": null,
-          "third_plus_unit_base_points": 190,
-          "third_plus_unit_middle_points": null,
-          "third_plus_unit_max_points": null
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": null,
+              "second_unit": null,
+              "third_plus": null
+            }
+          ]
         },
         "abilities": []
       }
