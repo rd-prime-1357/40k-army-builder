@@ -40,12 +40,11 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 400px;
+      grid-template-columns: 1fr 380px;
       gap: 0;
       height: calc(100vh - 65px);
     }
 
-    /* Unit roster panel */
     .roster-panel {
       padding: 1.5rem;
       overflow-y: auto;
@@ -133,7 +132,6 @@
 
     .add-btn:hover { background: #cc0000; }
 
-    /* Army list panel */
     .list-panel {
       display: flex;
       flex-direction: column;
@@ -186,48 +184,27 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.6rem 0;
+      padding: 0.5rem 0;
       border-bottom: 1px solid #1e1e1e;
-      gap: 0.5rem;
     }
-
-    .list-item-main { flex: 1; min-width: 0; }
 
     .list-item-name {
       font-size: 0.85rem;
       color: #ccc;
+      flex: 1;
     }
 
     .list-item-type {
       font-size: 0.7rem;
       color: #555;
-      margin-top: 0.1rem;
-    }
-
-    .size-select {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      color: #ccc;
-      font-size: 0.72rem;
-      padding: 0.2rem 0.3rem;
-      border-radius: 3px;
-      margin-top: 0.25rem;
-      cursor: pointer;
-    }
-
-    .size-select:hover { border-color: #8b0000; }
-
-    .size-fixed {
-      font-size: 0.7rem;
-      color: #555;
-      margin-top: 0.25rem;
+      margin-right: 0.5rem;
     }
 
     .list-item-pts {
       font-size: 0.8rem;
       color: #cc9900;
       font-weight: 600;
-      white-space: nowrap;
+      margin: 0 0.75rem;
     }
 
     .remove-btn {
@@ -322,35 +299,23 @@
       document.getElementById('faction-badge').textContent = army.army;
 
       allUnits = army.units.map(unit => {
-        const p = unit.points || {};
+        const points = unit.points;
+        const basePoints = points ? points.first_unit_base_points : null;
+        const baseSize  = points ? points.base_size : null;
+        const maxSize   = points ? points.max_size : null;
 
-        // Build available size tiers: each is { size, points } using first-unit cost
-        const tiers = [];
-        if (p.base_size != null && p.first_unit_base_points != null) {
-          tiers.push({ size: p.base_size, points: p.first_unit_base_points });
-        }
-        if (p.middle_size != null && p.first_unit_middle_points != null) {
-          tiers.push({ size: p.middle_size, points: p.first_unit_middle_points });
-        }
-        if (p.max_size != null && p.first_unit_max_points != null) {
-          tiers.push({ size: p.max_size, points: p.first_unit_max_points });
-        }
-
-        const minSize = tiers.length ? tiers[0].size : null;
-        const maxSize = tiers.length ? tiers[tiers.length - 1].size : null;
         let sizeDesc = '';
-        if (minSize != null && maxSize != null && minSize !== maxSize) {
-          sizeDesc = `${minSize}–${maxSize} models`;
-        } else if (minSize != null) {
-          sizeDesc = `${minSize} model${minSize === 1 ? '' : 's'}`;
+        if (baseSize !== null && maxSize !== null) {
+          sizeDesc = `${baseSize}–${maxSize} models`;
+        } else if (baseSize !== null) {
+          sizeDesc = `${baseSize} model${baseSize === 1 ? '' : 's'}`;
         }
 
         return {
-          unit_name: unit.unit_name,
-          unit_type: unit.unit_type,
-          tiers: tiers,
-          base_points: tiers.length ? tiers[0].points : null,
-          size_desc: sizeDesc,
+          unit_name:   unit.unit_name,
+          unit_type:   unit.unit_type,
+          base_points: basePoints,
+          size_desc:   sizeDesc,
         };
       });
 
@@ -386,7 +351,7 @@
               <div class="unit-name">${u.unit_name}</div>
               <div class="unit-desc">${u.size_desc}</div>
             </div>
-            <div class="unit-points">${u.base_points != null ? u.base_points + ' pts' : '—'}</div>
+            <div class="unit-points">${u.base_points !== null ? u.base_points + ' pts' : '—'}</div>
             <button class="add-btn" onclick="addUnit('${u.unit_name.replace(/'/g, "\\'")}')" title="Add to list">+</button>
           </div>
         `).join('')}
@@ -397,22 +362,8 @@
   function addUnit(unitName) {
     const unit = allUnits.find(u => u.unit_name === unitName);
     if (!unit) return;
-    armyList.push({
-      unit_name: unit.unit_name,
-      unit_type: unit.unit_type,
-      tiers: unit.tiers,
-      selectedTier: 0,
-      listId: Date.now() + Math.random()
-    });
+    armyList.push({ ...unit, listId: Date.now() + Math.random() });
     renderList();
-  }
-
-  function changeSize(listId, tierIndex) {
-    const item = armyList.find(u => u.listId === listId);
-    if (item) {
-      item.selectedTier = parseInt(tierIndex, 10);
-      renderList();
-    }
   }
 
   function removeUnit(listId) {
@@ -425,14 +376,8 @@
     renderList();
   }
 
-  function currentPoints(item) {
-    if (!item.tiers || item.tiers.length === 0) return 0;
-    const tier = item.tiers[item.selectedTier] || item.tiers[0];
-    return tier.points || 0;
-  }
-
   function renderList() {
-    const total = armyList.reduce((sum, u) => sum + currentPoints(u), 0);
+    const total = armyList.reduce((sum, u) => sum + (u.base_points || 0), 0);
     const overCap = total > POINTS_CAP;
     document.getElementById('points-total').innerHTML =
       `<span class="${overCap ? 'over-cap' : ''}">${total.toLocaleString()}</span> <span class="points-cap">/ ${POINTS_CAP.toLocaleString()}</span>`;
@@ -443,31 +388,16 @@
       return;
     }
 
-    container.innerHTML = armyList.map(u => {
-      let sizeControl;
-      if (u.tiers && u.tiers.length > 1) {
-        sizeControl = `<select class="size-select" onchange="changeSize(${u.listId}, this.value)">
-          ${u.tiers.map((t, i) =>
-            `<option value="${i}" ${i === u.selectedTier ? 'selected' : ''}>${t.size} models — ${t.points} pts</option>`
-          ).join('')}
-        </select>`;
-      } else if (u.tiers && u.tiers.length === 1) {
-        sizeControl = `<div class="size-fixed">${u.tiers[0].size} model${u.tiers[0].size === 1 ? '' : 's'}</div>`;
-      } else {
-        sizeControl = '';
-      }
-
-      return `
+    container.innerHTML = armyList.map(u => `
       <div class="list-item">
-        <div class="list-item-main">
+        <div>
           <div class="list-item-name">${u.unit_name}</div>
           <div class="list-item-type">${u.unit_type}</div>
-          ${sizeControl}
         </div>
-        <span class="list-item-pts">${currentPoints(u)} pts</span>
+        <span class="list-item-pts">${u.base_points !== null ? u.base_points + ' pts' : '—'}</span>
         <button class="remove-btn" onclick="removeUnit(${u.listId})" title="Remove">&times;</button>
-      </div>`;
-    }).join('');
+      </div>
+    `).join('');
   }
 
   init();
