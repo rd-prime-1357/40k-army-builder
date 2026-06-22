@@ -429,6 +429,7 @@
 <script>
   const POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
+  const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
 
   let armyList    = [];
   let allUnits    = [];
@@ -452,9 +453,7 @@
 
       allUnits = army.units.map(unit => {
         const sizes  = unit.points ? unit.points.sizes : [];
-        const needsGod = unit.weapons
-          ? unit.weapons.some(w => w.allegiance_condition)
-          : false;
+        const needsGod = GOD_UNITS.has(unit.unit_name);
 
         let sizeDesc = '';
         if (sizes.length > 1) {
@@ -560,7 +559,7 @@
 
     // Copy note
     const copyNote = copyCount > 0
-      ? `<div class="copy-note">Copy ${copyCount + 1} in list — ${copyCount === 1 ? '2nd' : '3rd+'} unit pricing applied</div>`
+      ? `<div class="copy-note">${copyCount} cop${copyCount === 1 ? 'y' : 'ies'} in list — ${copyCount === 1 ? '2nd' : '3rd+'} unit pricing applied</div>`
       : '';
 
     // God selector
