@@ -221,11 +221,17 @@
 
     .unit-right {
       display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-left: 0.4rem;
+      flex-shrink: 0;
+    }
+
+    .unit-right-badges {
+      display: flex;
       flex-direction: column;
       align-items: flex-end;
       gap: 0.12rem;
-      margin-left: 0.4rem;
-      flex-shrink: 0;
     }
 
     .unit-pts-badge {
@@ -242,6 +248,24 @@
     }
 
     .unit-limit-badge.over-limit { color: #cc2200; font-weight: 600; }
+
+    /* Info icon button */
+    .info-btn {
+      background: none;
+      border: none;
+      color: #444;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+      padding: 0.15rem 0.2rem;
+      border-radius: 2px;
+      transition: color 0.15s;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .info-btn:hover { color: #999; }
 
     /* ── Army list (middle panel) ── */
     .empty-state {
@@ -324,7 +348,7 @@
       font-size: 0.78rem;
       color: #cc9900;
       font-weight: 600;
-      margin: 0 0.4rem;
+      margin: 0 0.2rem;
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -565,6 +589,228 @@
     }
 
     .error-msg { color: #cc4444; padding: 2rem; text-align: center; }
+
+    /* ── Stat Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.hidden { display: none; }
+
+    .modal-box {
+      background: #1a1a1a;
+      border: 1px solid #3a3a3a;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 760px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 1rem;
+      background: #161616;
+      border-bottom: 1px solid #2a2a2a;
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      letter-spacing: 0.03em;
+    }
+
+    .modal-mode-badge {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #555;
+      margin-left: 0.6rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      padding: 0.2rem 0.4rem;
+      border-radius: 2px;
+      transition: color 0.15s;
+    }
+
+    .modal-close:hover { color: #cc2200; }
+
+    .modal-body {
+      overflow-y: auto;
+      padding: 0.9rem 1rem;
+      flex: 1;
+    }
+
+    /* Stat table */
+    .stat-block { margin-bottom: 1rem; }
+
+    .stat-group-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #666;
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    .stat-table th {
+      background: #111;
+      color: #666;
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.5rem;
+      text-align: center;
+      border: 1px solid #2a2a2a;
+    }
+
+    .stat-table th:first-child { text-align: left; }
+
+    .stat-table td {
+      padding: 0.3rem 0.5rem;
+      border: 1px solid #2a2a2a;
+      text-align: center;
+      color: #ccc;
+    }
+
+    .stat-table td:first-child { text-align: left; color: #e0e0e0; font-weight: 600; }
+
+    .stat-table .inv-cell { color: #cc9900; }
+    .stat-table .fnp-cell { color: #88cc44; }
+
+    /* Weapon table */
+    .weapon-section { margin-bottom: 1rem; }
+
+    .weapon-section-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #666;
+      margin-bottom: 0.35rem;
+    }
+
+    .weapon-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+    }
+
+    .weapon-table th {
+      background: #111;
+      color: #666;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 0.28rem 0.4rem;
+      border: 1px solid #2a2a2a;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .weapon-table th:first-child { text-align: left; }
+
+    .weapon-table td {
+      padding: 0.28rem 0.4rem;
+      border: 1px solid #2a2a2a;
+      text-align: center;
+      color: #ccc;
+      vertical-align: top;
+    }
+
+    .weapon-table td:first-child { text-align: left; }
+
+    .weapon-table tr.weapon-dimmed td { color: #3a3a3a; }
+    .weapon-table tr.weapon-dimmed td:first-child { color: #3a3a3a; }
+
+    .weapon-name-cell { font-weight: 600; }
+
+    .weapon-abilities-cell {
+      font-size: 0.68rem;
+      color: #888;
+      text-align: left;
+    }
+
+    .weapon-table tr.weapon-dimmed .weapon-abilities-cell { color: #2a2a2a; }
+
+    /* Abilities / Rules section */
+    .modal-section { margin-bottom: 1rem; }
+
+    .modal-section-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #666;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 0.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .ability-row {
+      margin-bottom: 0.5rem;
+      line-height: 1.45;
+    }
+
+    .ability-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #cc9900;
+      margin-bottom: 0.1rem;
+    }
+
+    .ability-desc {
+      font-size: 0.72rem;
+      color: #999;
+    }
+
+    .keyword-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .keyword-pill {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      border: 1px solid #3a3a3a;
+      color: #888;
+      background: #111;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .model-group-divider {
+      border: none;
+      border-top: 1px solid #2a2a2a;
+      margin: 0.9rem 0;
+    }
   </style>
 </head>
 <body>
@@ -638,11 +884,25 @@
 
 </div>
 
+<!-- Stat Modal -->
+<div class="modal-overlay hidden" id="stat-modal" onclick="closeModalOnOverlay(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div style="display:flex;align-items:baseline;gap:0.5rem;">
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-mode-badge" id="modal-mode-badge"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
 <script>
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.4';
+  const VERSION = '5.5';
 
   function selectArmy(value) {
     // Future: load different faction data. For now only Chaos Daemons exists.
@@ -651,7 +911,7 @@
   function selectArmyPoints(value) {
     POINTS_CAP = Number(value);
     renderBanner();
-    renderList(); // refresh error states
+    renderList();
     renderDetail();
   }
 
@@ -667,19 +927,52 @@
   }
 
   // State
-  let armyList        = [];   // array of list entry objects
-  let allUnits        = [];   // processed unit descriptors
-  let rawUnits        = [];   // full unit objects from JSON
-  let selectedListId  = null; // listId of the currently selected list entry
+  let armyList        = [];
+  let allUnits        = [];
+  let rawUnits        = [];
+  let selectedListId  = null;
   let nextId          = 1;
+
+  // Lookup tables
+  let abilitiesLookup       = {};  // ability_name -> description
+  let rulesLookup           = {};  // rule_name -> description
+  let keywordsLookup        = {};  // keyword_name -> description
+  let weaponAbilitiesLookup = {};  // weapon_ability_name -> description
 
   // ── Data load ──────────────────────────────────────────────────────────────
 
   async function init() {
     try {
-      const res = await fetch(`units.json?v=${VERSION}`);
-      if (!res.ok) throw new Error('Failed to load unit data');
-      const data = await res.json();
+      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes] = await Promise.all([
+        fetch(`units.json?v=${VERSION}`),
+        fetch(`abilities.json?v=${VERSION}`),
+        fetch(`rules.json?v=${VERSION}`),
+        fetch(`keywords.json?v=${VERSION}`),
+        fetch(`weapon_abilities.json?v=${VERSION}`),
+      ]);
+
+      if (!unitsRes.ok) throw new Error('Failed to load unit data');
+
+      const data = await unitsRes.json();
+
+      // Build lookup tables (fail gracefully if files missing)
+      if (abilitiesRes.ok) {
+        const arr = await abilitiesRes.json();
+        arr.forEach(a => { abilitiesLookup[a.ability_name] = a.ability_description; });
+      }
+      if (rulesRes.ok) {
+        const arr = await rulesRes.json();
+        arr.forEach(r => { rulesLookup[r.rule_name] = r.rule_description; });
+      }
+      if (keywordsRes.ok) {
+        const arr = await keywordsRes.json();
+        arr.forEach(k => { keywordsLookup[k.keyword_name] = k.keyword_description; });
+      }
+      if (weaponAbilitiesRes.ok) {
+        const arr = await weaponAbilitiesRes.json();
+        arr.forEach(w => { weaponAbilitiesLookup[w.weapon_ability_name] = w.weapon_ability_description; });
+      }
+
       const army = data[0];
       document.getElementById('banner-army-select').value = 'chaos_daemons';
       rawUnits = army.units;
@@ -733,13 +1026,11 @@
     return [...ordered, ...extra].map(t => ({ type: t, items: groups[t] }));
   }
 
-  // Points for a list entry based on how many copies of that unit were in the list BEFORE this entry
   function ptsForEntry(entry) {
     const unit = allUnits.find(u => u.unit_name === entry.unit_name);
     if (!unit) return null;
     const sizeEntry = unit.sizes[entry.sizeIdx];
     if (!sizeEntry) return null;
-    // Count copies added before this one (by insertion order via listId)
     const priorCopies = armyList.filter(e => e.unit_name === entry.unit_name && e.listId < entry.listId).length;
     if (priorCopies === 0) return sizeEntry.first_unit;
     if (priorCopies === 1) return sizeEntry.second_unit;
@@ -749,33 +1040,21 @@
   function entryHasError(entry) {
     const unit = allUnits.find(u => u.unit_name === entry.unit_name);
     if (!unit) return false;
-    if (unit.needsGod && !entry.god) return true;
     const count = armyList.filter(e => e.unit_name === entry.unit_name).length;
+    if (unit.needsGod && !entry.god) return true;
     if (count > unit.limit) return true;
     return false;
   }
-
-  // ── Leader helpers ─────────────────────────────────────────────────────────
 
   function getAttachedLeaders(bodyguardListId) {
     return armyList.filter(e => e.attachedToListId === bodyguardListId);
   }
 
-  function canAttachLeader(leaderUnitName, bodyguardEntry) {
-    const leaderUnit = allUnits.find(u => u.unit_name === leaderUnitName);
-    if (!leaderUnit) return false;
-    if (!leaderUnit.leaderEligible.includes(bodyguardEntry.unit_name)) return false;
-    const attached = getAttachedLeaders(bodyguardEntry.listId);
-    if (attached.length === 0) return true;
-    if (attached.length >= 2) return false;
-    const existing     = attached[0];
-    const existingUnit = allUnits.find(u => u.unit_name === existing.unit_name);
-    if (!existingUnit) return false;
-    return leaderUnit.coLeaderWith.includes(existing.unit_name) ||
-           existingUnit.coLeaderWith.includes(leaderUnitName);
+  function totalPoints() {
+    return armyList.reduce((sum, e) => sum + (e.points || 0), 0);
   }
 
-  // ── Roster ─────────────────────────────────────────────────────────────────
+  // ── Render roster ──────────────────────────────────────────────────────────
 
   function renderRoster() {
     const roster = document.getElementById('roster');
@@ -794,8 +1073,12 @@
                 <div class="unit-name">${u.unit_name}</div>
               </div>
               <div class="unit-right">
-                <div class="unit-pts-badge">${u.minPts !== null ? u.minPts + ' pts' : '—'}</div>
-                <div class="unit-limit-badge${overLim ? ' over-limit' : ''}">(${count}/${u.limit})</div>
+                <button class="info-btn" title="View datasheet"
+                        onclick="event.stopPropagation();openModalFull('${esc(u.unit_name)}')">ⓘ</button>
+                <div class="unit-right-badges">
+                  <div class="unit-pts-badge">${u.minPts !== null ? u.minPts + ' pts' : '—'}</div>
+                  <div class="unit-limit-badge${overLim ? ' over-limit' : ''}">(${count}/${u.limit})</div>
+                </div>
               </div>
             </div>
           `;
@@ -804,7 +1087,7 @@
     `).join('');
   }
 
-  // ── Add unit (immediate-add model) ────────────────────────────────────────
+  // ── Add unit ───────────────────────────────────────────────────────────────
 
   function addUnitFromRoster(unitName) {
     const unit = allUnits.find(u => u.unit_name === unitName);
@@ -812,7 +1095,6 @@
 
     const copyCount = armyList.filter(e => e.unit_name === unitName).length;
 
-    // Determine points for this copy at default size
     const sizeEntry = unit.sizes[0];
     let pts = null;
     if (sizeEntry) {
@@ -842,45 +1124,28 @@
   // ── Remove unit ────────────────────────────────────────────────────────────
 
   function removeUnit(listId) {
-    // Detach any leaders attached to this entry
     armyList.forEach(e => { if (e.attachedToListId === listId) e.attachedToListId = null; });
     armyList = armyList.filter(e => e.listId !== listId);
 
     if (selectedListId === listId) {
       selectedListId = armyList.length > 0 ? armyList[armyList.length - 1].listId : null;
     }
-
-    // Recalculate points for remaining entries (copy pricing may shift)
-    recalcPoints();
     renderAll();
   }
 
   function clearList() {
-    armyList      = [];
+    armyList = [];
     selectedListId = null;
     renderAll();
   }
 
-  // Recalculate points for every entry (call after any add/remove/size change)
-  function recalcPoints() {
-    // Track per-unit copy index in insertion order
-    const copyIndex = {};
-    for (const entry of armyList) {
-      const n = entry.unit_name;
-      if (copyIndex[n] === undefined) copyIndex[n] = 0;
-      const unit      = allUnits.find(u => u.unit_name === n);
-      const sizeEntry = unit ? unit.sizes[entry.sizeIdx] : null;
-      if (sizeEntry) {
-        const idx = copyIndex[n];
-        if      (idx === 0) entry.points = sizeEntry.first_unit;
-        else if (idx === 1) entry.points = sizeEntry.second_unit;
-        else                entry.points = sizeEntry.third_plus;
-      }
-      copyIndex[n]++;
-    }
-  }
+  // ── Edit operations ────────────────────────────────────────────────────────
 
-  // ── Edit handlers (live — operate directly on armyList entry) ─────────────
+  function selectListEntry(listId) {
+    selectedListId = listId;
+    renderList();
+    renderDetail();
+  }
 
   function editGod(listId, god) {
     const entry = armyList.find(e => e.listId === listId);
@@ -893,80 +1158,77 @@
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
     entry.sizeIdx = idx;
-    recalcPoints();
+    entry.points  = ptsForEntry(entry);
+    // Recalculate all same-unit entries (copy-tier pricing)
+    armyList.filter(e => e.unit_name === entry.unit_name).forEach(e => {
+      e.points = ptsForEntry(e);
+    });
     renderAll();
   }
 
-  function editLeaderTarget(listId, bodyguardListIdStr) {
+  function editLeaderTarget(listId, targetListId) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
-    entry.attachedToListId = bodyguardListIdStr ? Number(bodyguardListIdStr) : null;
+    entry.attachedToListId = targetListId ? Number(targetListId) : null;
     renderAll();
   }
 
-  function editWargearGroup(listId, stateKey, weapon) {
+  function editWargearGroup(listId, stateKey, weaponName) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
-    entry.wargear[stateKey] = entry.wargear[stateKey] === weapon ? null : weapon;
-    renderAll();
+    entry.wargear[stateKey] = entry.wargear[stateKey] === weaponName ? null : weaponName;
+    renderDetail();
   }
 
   function editWargearIndep(listId, stateKey) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
     entry.wargear[stateKey] = !entry.wargear[stateKey];
-    renderAll();
+    renderDetail();
   }
 
-  function editOtherOption(listId, optionName) {
+  function editOtherOption(listId, optName) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
-    entry.otherOptions[optionName] = !entry.otherOptions[optionName];
-    renderAll();
+    entry.otherOptions[optName] = !entry.otherOptions[optName];
+    renderDetail();
   }
 
-  function editLeaderFromList(leaderListId, bodyguardListIdStr) {
-    const entry = armyList.find(e => e.listId === leaderListId);
-    if (!entry) return;
-    const newId = bodyguardListIdStr ? Number(bodyguardListIdStr) : null;
-    entry.attachedToListId = null;
-    if (newId) {
-      const bg = armyList.find(e => e.listId === newId);
-      if (bg && canAttachLeader(entry.unit_name, bg)) entry.attachedToListId = newId;
-    }
-    renderAll();
+  function canAttachLeader(leaderUnitName, bodyguardEntry) {
+    const leaderUnit = allUnits.find(u => u.unit_name === leaderUnitName);
+    if (!leaderUnit) return false;
+    if (!leaderUnit.leaderEligible.includes(bodyguardEntry.unit_name)) return false;
+    const existing = armyList.find(e =>
+      e.attachedToListId === bodyguardEntry.listId && e.listId !== bodyguardEntry.listId
+    );
+    if (!existing) return true;
+    const existingUnit = allUnits.find(u => u.unit_name === existing.unit_name);
+    if (!existingUnit) return false;
+    return existingUnit.coLeaderWith.includes(leaderUnitName) || leaderUnit.coLeaderWith.includes(existing.unit_name);
   }
 
-  function selectListEntry(listId) {
-    selectedListId = listId;
-    renderAll();
-  }
-
-  // ── Master render ──────────────────────────────────────────────────────────
+  // ── Render all ─────────────────────────────────────────────────────────────
 
   function renderAll() {
-    recalcPoints();
     renderBanner();
     renderRoster();
     renderList();
     renderDetail();
   }
 
-  // ── Banner ─────────────────────────────────────────────────────────────────
-
   function renderBanner() {
-    const total   = armyList.reduce((sum, e) => sum + (e.points || 0), 0);
-    const overCap = total > POINTS_CAP;
-    const el      = document.getElementById('banner-points');
-    el.className  = 'banner-points' + (overCap ? ' over-cap' : '');
-    document.getElementById('banner-pts-value').textContent = total.toLocaleString();
+    const total    = totalPoints();
+    const overCap  = total > POINTS_CAP;
+    const bannerEl = document.getElementById('banner-points');
+    const ptsEl    = document.getElementById('banner-pts-value');
+    bannerEl.className = 'banner-points' + (overCap ? ' over-cap' : '');
+    ptsEl.textContent  = total;
   }
 
-  // ── Army list ──────────────────────────────────────────────────────────────
+  // ── Render army list ───────────────────────────────────────────────────────
 
   function renderList() {
     const container = document.getElementById('list-items');
-    const count     = armyList.filter(e => !e.attachedToListId).length;
     const total     = armyList.length;
 
     document.getElementById('list-unit-count').textContent =
@@ -977,10 +1239,8 @@
       return;
     }
 
-    // Top-level entries (not attached leaders)
     const topLevel = armyList.filter(e => !e.attachedToListId);
 
-    // Group by type, sort alpha within
     const typeGroups = {};
     for (const entry of topLevel) {
       const t = entry.unit_type || 'Other';
@@ -1006,7 +1266,6 @@
           ? (() => { const u = allUnits.find(u => u.unit_name === entry.unit_name); const s = u && u.sizes[entry.sizeIdx]; return s ? `${s.size} model${s.size===1?'':'s'}` : ''; })()
           : ''].filter(Boolean).join(' · ');
 
-        // Attached leaders render ABOVE the bodyguard
         const attachedLeaders = getAttachedLeaders(entry.listId);
         const hasLeaders = attachedLeaders.length > 0;
 
@@ -1028,6 +1287,8 @@
                 ${leaderSub ? `<div class="list-item-sub">${leaderSub}</div>` : ''}
               </div>
               <span class="list-item-pts">${leader.points !== null ? leader.points + ' pts' : '—'}</span>
+              <button class="info-btn" title="View configured datasheet"
+                      onclick="event.stopPropagation();openModalConfigured(${leader.listId})">ⓘ</button>
               <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${leader.listId})" title="Remove">&times;</button>
             </div>
           `;
@@ -1044,14 +1305,16 @@
               <div class="list-item-sub">${sub}</div>
             </div>
             <span class="list-item-pts">${entry.points !== null ? entry.points + ' pts' : '—'}</span>
+            <button class="info-btn" title="View configured datasheet"
+                    onclick="event.stopPropagation();openModalConfigured(${entry.listId})">ⓘ</button>
             <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${entry.listId})" title="Remove">&times;</button>
           </div>
         `;
 
-        html += `</div>`; // bodyguard-block
+        html += `</div>`;
       }
 
-      html += `</div>`; // list-type-group
+      html += `</div>`;
     }
 
     container.innerHTML = html;
@@ -1060,7 +1323,7 @@
   // ── Detail panel ───────────────────────────────────────────────────────────
 
   function renderDetail() {
-    const body = document.getElementById('detail-body');
+    const body    = document.getElementById('detail-body');
     const nameEl  = document.getElementById('detail-subheader-name');
     const countEl = document.getElementById('detail-subheader-count');
 
@@ -1081,19 +1344,16 @@
     const overLim = count > unit.limit;
     const isLeader = unit.leaderEligible.length > 0;
 
-    // Subheader
     nameEl.textContent  = entry.unit_name;
     countEl.textContent = `${count} of ${unit.limit}`;
     countEl.className   = 'panel-subheader-right' + (overLim ? ' over-limit' : '');
 
     let html = '';
 
-    // Over-limit warning
     if (overLim) {
       html += `<div class="over-limit-flag">⚠ Over limit — ${count} of ${unit.limit} allowed</div>`;
     }
 
-    // Incomplete: needs god
     if (unit.needsGod && !entry.god) {
       html += `<div class="incomplete-flag">! Choose Daemonic Allegiance</div>`;
     }
@@ -1116,7 +1376,6 @@
       for (let i = 0; i < sizes.length; i++) {
         const s    = sizes[i];
         const isCh = entry.sizeIdx === i;
-        // Points for this size at current copy position
         const copyIdx = armyList.filter(e => e.unit_name === entry.unit_name && e.listId < entry.listId).length;
         const pts = copyIdx === 0 ? s.first_unit : copyIdx === 1 ? s.second_unit : s.third_plus;
         html += `<div class="size-option${isCh ? ' chosen' : ''}" onclick="editSizeIdx(${entry.listId},${i})">
@@ -1175,8 +1434,8 @@
   }
 
   function buildWargearHtml(entry, raw) {
-    const options = raw.wargear_options;
-    const groups  = {};
+    const options  = raw.wargear_options;
+    const groups   = {};
     const independent = [];
 
     for (const opt of options) {
@@ -1244,6 +1503,368 @@
     }
     html += `</div>`;
     return html;
+  }
+
+  // ── Stat Modal ─────────────────────────────────────────────────────────────
+
+  function openModalFull(unitName) {
+    const raw = rawUnits.find(u => u.unit_name === unitName);
+    if (!raw) return;
+    document.getElementById('modal-title').textContent = unitName;
+    document.getElementById('modal-mode-badge').textContent = 'Full Datasheet';
+    document.getElementById('modal-body').innerHTML = buildModalFull(raw);
+    document.getElementById('stat-modal').classList.remove('hidden');
+  }
+
+  function openModalConfigured(listId) {
+    const entry = armyList.find(e => e.listId === listId);
+    if (!entry) return;
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    if (!raw) return;
+    document.getElementById('modal-title').textContent = entry.unit_name;
+    document.getElementById('modal-mode-badge').textContent = 'Configured';
+    document.getElementById('modal-body').innerHTML = buildModalConfigured(raw, entry);
+    document.getElementById('stat-modal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('stat-modal').classList.add('hidden');
+  }
+
+  function closeModalOnOverlay(event) {
+    if (event.target === document.getElementById('stat-modal')) closeModal();
+  }
+
+  // ESC key closes modal
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ── Modal: Full view ───────────────────────────────────────────────────────
+
+  function buildModalFull(raw) {
+    let html = '';
+
+    // Stat blocks — one per model group
+    for (let i = 0; i < raw.model_groups.length; i++) {
+      const mg = raw.model_groups[i];
+      if (i > 0) html += '<hr class="model-group-divider">';
+
+      if (raw.model_groups.length > 1) {
+        html += `<div class="stat-block"><div class="stat-group-label">${mg.model_group}</div>`;
+      } else {
+        html += `<div class="stat-block">`;
+      }
+
+      html += buildStatTable(mg);
+      html += `</div>`;
+
+      // Weapons for this model group
+      const mgWeapons = raw.weapons.filter(w => w.model_group === mg.model_group);
+      html += buildWeaponSections(mgWeapons, 'full', null, raw);
+    }
+
+    // Abilities — collected across all model groups (deduplicated)
+    const allAbilityNames = [];
+    for (const mg of raw.model_groups) {
+      for (const name of mg.unit_ability_names) {
+        if (!allAbilityNames.includes(name)) allAbilityNames.push(name);
+      }
+    }
+    if (allAbilityNames.length > 0) {
+      html += `<div class="modal-section"><div class="modal-section-label">Abilities</div>`;
+      for (const name of allAbilityNames) {
+        const desc = abilitiesLookup[name] || '';
+        html += `<div class="ability-row">
+          <div class="ability-name">${name}</div>
+          ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
+        </div>`;
+      }
+      html += `</div>`;
+    }
+
+    // Rules — collected across all model groups (deduplicated)
+    const allRuleNames = [];
+    for (const mg of raw.model_groups) {
+      for (const name of mg.rule_names) {
+        if (!allRuleNames.includes(name)) allRuleNames.push(name);
+      }
+    }
+    if (allRuleNames.length > 0) {
+      html += `<div class="modal-section"><div class="modal-section-label">Rules</div>`;
+      for (const name of allRuleNames) {
+        const desc = rulesLookup[name] || '';
+        html += `<div class="ability-row">
+          <div class="ability-name">${name}</div>
+          ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
+        </div>`;
+      }
+      html += `</div>`;
+    }
+
+    // Keywords — collected across all model groups (deduplicated)
+    const allKeywordNames = [];
+    for (const mg of raw.model_groups) {
+      for (const name of mg.keyword_names) {
+        if (!allKeywordNames.includes(name)) allKeywordNames.push(name);
+      }
+    }
+    if (allKeywordNames.length > 0) {
+      html += `<div class="modal-section"><div class="modal-section-label">Keywords</div>`;
+      html += `<div class="keyword-list">`;
+      for (const name of allKeywordNames) {
+        html += `<span class="keyword-pill">${name}</span>`;
+      }
+      html += `</div></div>`;
+    }
+
+    return html;
+  }
+
+  // ── Modal: Configured view ─────────────────────────────────────────────────
+
+  function buildModalConfigured(raw, entry) {
+    let html = '';
+
+    // Determine which weapons are "active" based on wargear state
+    const hasWargear = raw.wargear_options && raw.wargear_options.length > 0;
+
+    // Build set of active weapon names
+    const activeWeapons = new Set();
+    const replacedWeapons = new Set();
+
+    if (hasWargear) {
+      // Process group choices (radio-style)
+      const groups = {};
+      const independent = [];
+      for (const opt of raw.wargear_options) {
+        if (opt.is_choice && opt.option_group) {
+          if (!groups[opt.option_group]) groups[opt.option_group] = [];
+          groups[opt.option_group].push(opt);
+        } else {
+          independent.push(opt);
+        }
+      }
+
+      for (const [groupKey, opts] of Object.entries(groups)) {
+        const stateKey = `group_${groupKey}`;
+        const chosen = entry.wargear[stateKey] || null;
+        if (chosen) {
+          activeWeapons.add(chosen);
+          // Mark the replaced weapon
+          const replacedOpt = opts[0];
+          if (replacedOpt) replacedWeapons.add(replacedOpt.weapon_replaced);
+        }
+      }
+
+      for (const opt of independent) {
+        const stateKey = `indep_${opt.weapon_replaced}`;
+        if (entry.wargear[stateKey]) {
+          activeWeapons.add(opt.replacement_weapon_name);
+          replacedWeapons.add(opt.weapon_replaced);
+        }
+      }
+    }
+
+    for (let i = 0; i < raw.model_groups.length; i++) {
+      const mg = raw.model_groups[i];
+      if (i > 0) html += '<hr class="model-group-divider">';
+
+      if (raw.model_groups.length > 1) {
+        html += `<div class="stat-block"><div class="stat-group-label">${mg.model_group}</div>`;
+      } else {
+        html += `<div class="stat-block">`;
+      }
+
+      html += buildStatTable(mg);
+      html += `</div>`;
+
+      // Weapons for this model group — configured view
+      const mgWeapons = raw.weapons.filter(w => w.model_group === mg.model_group);
+      html += buildWeaponSections(mgWeapons, 'configured', { activeWeapons, replacedWeapons, hasWargear }, raw, entry);
+    }
+
+    // Abilities
+    const allAbilityNames = [];
+    for (const mg of raw.model_groups) {
+      for (const name of mg.unit_ability_names) {
+        if (!allAbilityNames.includes(name)) allAbilityNames.push(name);
+      }
+    }
+    if (allAbilityNames.length > 0) {
+      html += `<div class="modal-section"><div class="modal-section-label">Abilities</div>`;
+      for (const name of allAbilityNames) {
+        const desc = abilitiesLookup[name] || '';
+        html += `<div class="ability-row">
+          <div class="ability-name">${name}</div>
+          ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
+        </div>`;
+      }
+      html += `</div>`;
+    }
+
+    // Rules
+    const allRuleNames = [];
+    for (const mg of raw.model_groups) {
+      for (const name of mg.rule_names) {
+        if (!allRuleNames.includes(name)) allRuleNames.push(name);
+      }
+    }
+    if (allRuleNames.length > 0) {
+      html += `<div class="modal-section"><div class="modal-section-label">Rules</div>`;
+      for (const name of allRuleNames) {
+        const desc = rulesLookup[name] || '';
+        html += `<div class="ability-row">
+          <div class="ability-name">${name}</div>
+          ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
+        </div>`;
+      }
+      html += `</div>`;
+    }
+
+    // Keywords
+    const allKeywordNames = [];
+    for (const mg of raw.model_groups) {
+      for (const name of mg.keyword_names) {
+        if (!allKeywordNames.includes(name)) allKeywordNames.push(name);
+      }
+    }
+    if (allKeywordNames.length > 0) {
+      html += `<div class="modal-section"><div class="modal-section-label">Keywords</div>`;
+      html += `<div class="keyword-list">`;
+      for (const name of allKeywordNames) {
+        html += `<span class="keyword-pill">${name}</span>`;
+      }
+      html += `</div></div>`;
+    }
+
+    return html;
+  }
+
+  // ── Shared modal helpers ───────────────────────────────────────────────────
+
+  function buildStatTable(mg) {
+    const inv = mg.INV ? `${mg.INV}+` : '—';
+    const fnp = mg.FNP ? `${mg.FNP}+` : '—';
+    const invCond = mg.INV_Condition ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
+    const fnpCond = mg.FNP_Condition ? ` <span style="font-size:0.6rem;color:#666;">(${mg.FNP_Condition})</span>` : '';
+
+    return `<table class="stat-table">
+      <thead>
+        <tr>
+          <th>M</th><th>T</th><th>SV</th><th>INV</th><th>FNP</th><th>W</th><th>LD</th><th>OC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${mg.M}</td>
+          <td>${mg.T}</td>
+          <td>${mg.SV}+</td>
+          <td class="inv-cell">${inv}${invCond}</td>
+          <td class="fnp-cell">${fnp}${fnpCond}</td>
+          <td>${mg.W}</td>
+          <td>${mg.LD}+</td>
+          <td>${mg.OC}</td>
+        </tr>
+      </tbody>
+    </table>`;
+  }
+
+  function buildWeaponSections(weapons, mode, wargearState, raw, entry) {
+    // Separate by type
+    const ranged = weapons.filter(w => w.weapon_type === 'Ranged');
+    const melee  = weapons.filter(w => w.weapon_type === 'Melee');
+
+    let html = '';
+
+    if (ranged.length > 0) {
+      html += buildWeaponTable('Ranged Weapons', ranged, mode, wargearState, raw, entry);
+    }
+    if (melee.length > 0) {
+      html += buildWeaponTable('Melee Weapons', melee, mode, wargearState, raw, entry);
+    }
+
+    return html;
+  }
+
+  function buildWeaponTable(label, weapons, mode, wargearState, raw, entry) {
+    let html = `<div class="weapon-section">
+      <div class="weapon-section-label">${label}</div>
+      <table class="weapon-table">
+        <thead>
+          <tr>
+            <th>Weapon</th><th>Range</th><th>A</th><th>BS/WS</th><th>S</th><th>AP</th><th>D</th><th>Abilities</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    for (const w of weapons) {
+      const dimmed = shouldDimWeapon(w, mode, wargearState, raw, entry);
+      const skip   = shouldSkipWeapon(w, mode, wargearState, raw, entry);
+      if (skip) continue;
+
+      const rowClass = dimmed ? ' class="weapon-dimmed"' : '';
+      const bsws = w.BS || w.WS || '—';
+      const abilities = w.weapon_ability_names && w.weapon_ability_names.length > 0
+        ? w.weapon_ability_names.join(', ')
+        : '—';
+
+      html += `<tr${rowClass}>
+        <td class="weapon-name-cell">${w.weapon_name}</td>
+        <td>${w.range}</td>
+        <td>${w.A}</td>
+        <td>${bsws}</td>
+        <td>${w.S}</td>
+        <td>${w.AP}</td>
+        <td>${w.D}</td>
+        <td class="weapon-abilities-cell">${abilities}</td>
+      </tr>`;
+    }
+
+    html += `</tbody></table></div>`;
+    return html;
+  }
+
+  function shouldDimWeapon(w, mode, wargearState, raw, entry) {
+    if (mode === 'configured') return false; // configured view never dims — it hides instead
+
+    // Full view: dim non-default weapons
+    // God-conditional weapons are dimmed (greyed) in full view
+    if (w.allegiance_condition) return true;
+
+    // Replacement options that aren't base equipment are dimmed
+    if (!w.is_base_equipment) return true;
+
+    // If this weapon is a replacement option (appears in wargear_options as replacement),
+    // it's non-default and should be dimmed
+    const isReplacement = raw && raw.wargear_options &&
+      raw.wargear_options.some(opt => opt.replacement_weapon_name === w.weapon_name);
+    if (isReplacement) return true;
+
+    return false;
+  }
+
+  function shouldSkipWeapon(w, mode, wargearState, raw, entry) {
+    if (mode === 'full') return false; // full view shows everything
+
+    // Configured view: skip weapons that are not part of this unit's loadout
+    const { activeWeapons, replacedWeapons, hasWargear } = wargearState;
+
+    // No wargear options — show everything
+    if (!hasWargear) return false;
+
+    // God-conditional weapons: only show if god matches
+    if (w.allegiance_condition) {
+      return !entry || entry.god !== w.allegiance_condition;
+    }
+
+    // If this weapon was replaced, skip it (unless it's the active replacement)
+    if (replacedWeapons.has(w.weapon_name) && !activeWeapons.has(w.weapon_name)) return true;
+
+    // If this weapon is a replacement option that wasn't selected, skip it
+    const isReplacement = raw && raw.wargear_options &&
+      raw.wargear_options.some(opt => opt.replacement_weapon_name === w.weapon_name);
+    if (isReplacement && !activeWeapons.has(w.weapon_name)) return true;
+
+    return false;
   }
 
   init();
