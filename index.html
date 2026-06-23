@@ -46,33 +46,44 @@
       font-size: 1.1rem;
     }
 
-    .banner-faction {
-      font-size: 0.78rem;
-      color: #888;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    .banner-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
       white-space: nowrap;
+    }
+
+    .banner-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .banner-value {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #cccccc;
+      letter-spacing: 0.04em;
     }
 
     .banner-points {
       margin-left: auto;
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .banner-pts-value {
       font-size: 0.82rem;
       font-weight: 600;
       color: #cc9900;
-      white-space: nowrap;
       letter-spacing: 0.04em;
     }
 
-    .banner-points .pts-label {
-      font-size: 0.65rem;
-      font-weight: 400;
-      color: #555;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-right: 0.4rem;
-    }
-
-    .banner-points.over-cap { color: #cc2200; }
+    .banner-points.over-cap .banner-pts-value { color: #cc2200; }
 
     /* ── Three-column layout ── */
     .layout {
@@ -145,7 +156,7 @@
       font-size: 0.62rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: #8b0000;
+      color: #666;
       border-bottom: 1px solid #2a2a2a;
       padding-bottom: 0.25rem;
       margin-bottom: 0.4rem;
@@ -218,7 +229,7 @@
       font-size: 0.62rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: #8b0000;
+      color: #666;
       border-bottom: 1px solid #2a2a2a;
       padding-bottom: 0.25rem;
       margin-bottom: 0.35rem;
@@ -533,10 +544,13 @@
 <div class="top-banner">
   <div class="banner-title">40K Army Builder</div>
   <div class="banner-sep">|</div>
-  <div class="banner-faction" id="banner-faction">Loading…</div>
+  <div class="banner-item">
+    <span class="banner-label">Army</span>
+    <span class="banner-value" id="banner-faction">Loading…</span>
+  </div>
   <div class="banner-points" id="banner-points">
-    <span class="pts-label">Points</span>
-    <span id="banner-pts-value">0 / 2,000</span>
+    <span class="banner-label">Points</span>
+    <span class="banner-pts-value" id="banner-pts-value">0 / 2,000</span>
   </div>
 </div>
 
@@ -583,7 +597,7 @@
   const POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.1';
+  const VERSION = '5.2';
 
   const TYPE_ORDER = [
     'Epic Hero','Character','Battleline','Infantry','Mounted',
