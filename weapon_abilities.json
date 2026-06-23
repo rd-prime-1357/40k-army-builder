@@ -1,0 +1,26 @@
+[
+  {
+    "weapon_ability_name": "Daemonic Icon",
+    "weapon_ability_description": "Models in the bearer's unit have a Leadership characteristic of 6+."
+  },
+  {
+    "weapon_ability_name": "Instrument of Chaos",
+    "weapon_ability_description": "Add 1 to Charge rolls made for the bearer's unit."
+  },
+  {
+    "weapon_ability_name": "Collar of Khorne",
+    "weapon_ability_description": "The bearer has the Feel No Pain 3+ ability against Psychic Attacks."
+  },
+  {
+    "weapon_ability_name": "Brass Collar of Bloody Vengeance",
+    "weapon_ability_description": "The bearer has the Feel No Pain 3+ ability against Psychic Attacks and mortal wounds."
+  },
+  {
+    "weapon_ability_name": "Shining Aegis",
+    "weapon_ability_description": "The bearer has a Save characteristic of 3+."
+  },
+  {
+    "weapon_ability_name": "Reverberating Summons",
+    "weapon_ability_description": "Each time a model is destroyed by this weapon, you can select one friendly Plaguebearers unit within 12\\ of the bearer and return 1 destroyed Plaguebearer model to that unit.\""
+  }
+]
