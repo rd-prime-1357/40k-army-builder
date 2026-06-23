@@ -772,6 +772,40 @@
       margin-bottom: 0.5rem;
     }
 
+    .modal-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #666;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 0.2rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s;
+    }
+
+    .modal-section-header:hover { color: #999; }
+
+    .modal-section-chevron {
+      font-size: 0.55rem;
+      transition: transform 0.2s;
+      color: #444;
+    }
+
+    .modal-section-header.open .modal-section-chevron { transform: rotate(90deg); }
+
+    .modal-section-content {
+      display: none;
+    }
+
+    .modal-section-content.open {
+      display: block;
+    }
+
     .ability-row {
       margin-bottom: 0.5rem;
       line-height: 1.45;
@@ -902,7 +936,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.5';
+  const VERSION = '5.6';
 
   function selectArmy(value) {
     // Future: load different faction data. For now only Chaos Daemons exists.
@@ -1570,7 +1604,12 @@
       }
     }
     if (allAbilityNames.length > 0) {
-      html += `<div class="modal-section"><div class="modal-section-label">Abilities</div>`;
+      const sid = 'full-abilities';
+      html += `<div class="modal-section">
+        <div class="modal-section-header" onclick="toggleSection('${sid}')">
+          Abilities <span class="modal-section-chevron">▶</span>
+        </div>
+        <div class="modal-section-content" id="${sid}">`;
       for (const name of allAbilityNames) {
         const desc = abilitiesLookup[name] || '';
         html += `<div class="ability-row">
@@ -1578,7 +1617,7 @@
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
         </div>`;
       }
-      html += `</div>`;
+      html += `</div></div>`;
     }
 
     // Rules — collected across all model groups (deduplicated)
@@ -1589,7 +1628,12 @@
       }
     }
     if (allRuleNames.length > 0) {
-      html += `<div class="modal-section"><div class="modal-section-label">Rules</div>`;
+      const sid = 'full-rules';
+      html += `<div class="modal-section">
+        <div class="modal-section-header" onclick="toggleSection('${sid}')">
+          Rules <span class="modal-section-chevron">▶</span>
+        </div>
+        <div class="modal-section-content" id="${sid}">`;
       for (const name of allRuleNames) {
         const desc = rulesLookup[name] || '';
         html += `<div class="ability-row">
@@ -1597,10 +1641,10 @@
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
         </div>`;
       }
-      html += `</div>`;
+      html += `</div></div>`;
     }
 
-    // Keywords — collected across all model groups (deduplicated)
+    // Keywords — always visible, no collapse
     const allKeywordNames = [];
     for (const mg of raw.model_groups) {
       for (const name of mg.keyword_names) {
@@ -1690,7 +1734,12 @@
       }
     }
     if (allAbilityNames.length > 0) {
-      html += `<div class="modal-section"><div class="modal-section-label">Abilities</div>`;
+      const sid = 'cfg-abilities';
+      html += `<div class="modal-section">
+        <div class="modal-section-header" onclick="toggleSection('${sid}')">
+          Abilities <span class="modal-section-chevron">▶</span>
+        </div>
+        <div class="modal-section-content" id="${sid}">`;
       for (const name of allAbilityNames) {
         const desc = abilitiesLookup[name] || '';
         html += `<div class="ability-row">
@@ -1698,7 +1747,7 @@
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
         </div>`;
       }
-      html += `</div>`;
+      html += `</div></div>`;
     }
 
     // Rules
@@ -1709,7 +1758,12 @@
       }
     }
     if (allRuleNames.length > 0) {
-      html += `<div class="modal-section"><div class="modal-section-label">Rules</div>`;
+      const sid = 'cfg-rules';
+      html += `<div class="modal-section">
+        <div class="modal-section-header" onclick="toggleSection('${sid}')">
+          Rules <span class="modal-section-chevron">▶</span>
+        </div>
+        <div class="modal-section-content" id="${sid}">`;
       for (const name of allRuleNames) {
         const desc = rulesLookup[name] || '';
         html += `<div class="ability-row">
@@ -1717,10 +1771,10 @@
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
         </div>`;
       }
-      html += `</div>`;
+      html += `</div></div>`;
     }
 
-    // Keywords
+    // Keywords — always visible
     const allKeywordNames = [];
     for (const mg of raw.model_groups) {
       for (const name of mg.keyword_names) {
@@ -1865,6 +1919,17 @@
     if (isReplacement && !activeWeapons.has(w.weapon_name)) return true;
 
     return false;
+  }
+
+  // ── Collapsible modal sections ─────────────────────────────────────────────
+
+  function toggleSection(id) {
+    const content = document.getElementById(id);
+    const header  = content && content.previousElementSibling;
+    if (!content) return;
+    const isOpen = content.classList.contains('open');
+    content.classList.toggle('open', !isOpen);
+    if (header) header.classList.toggle('open', !isOpen);
   }
 
   init();
