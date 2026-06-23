@@ -27,9 +27,9 @@
       padding: 0.6rem 1.5rem;
       display: flex;
       align-items: center;
-      gap: 1.5rem;
       flex-shrink: 0;
       height: 48px;
+      position: relative;
     }
 
     .banner-title {
@@ -51,6 +51,8 @@
       align-items: baseline;
       gap: 0.4rem;
       white-space: nowrap;
+      position: absolute;
+      left: 25%;
     }
 
     .banner-label {
@@ -64,7 +66,7 @@
     .banner-value {
       font-size: 0.82rem;
       font-weight: 600;
-      color: #cccccc;
+      color: #cc9900;
       letter-spacing: 0.04em;
     }
 
@@ -597,7 +599,7 @@
   const POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.2';
+  const VERSION = '5.3';
 
   const TYPE_ORDER = [
     'Epic Hero','Character','Battleline','Infantry','Mounted',
