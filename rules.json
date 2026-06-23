@@ -50,5 +50,25 @@
   {
     "rule_name": "Leader",
     "rule_description": "You can attach this unit to one of the units listed in its Leader ability, so long as both units are Battleline units or neither is a Battleline unit, and the unit being led is not already led by another Character."
+  },
+  {
+    "rule_name": "Sullen Malevolence (Aura)",
+    "rule_description": "While an enemy unit is within 6\" of this unit and this unit contains one or more Blue Horror models, worsen the Leadership characteristic of models in that enemy unit by 1."
+  },
+  {
+    "rule_name": "Champion Slayer",
+    "rule_description": "Each time this model makes a melee attack that targets a Character unit, re-roll a Hit roll of 1. Each time this model destroys an enemy Character model, gain 1CP."
+  },
+  {
+    "rule_name": "Mischief and Confusion",
+    "rule_description": "At the start of the Shooting phase, select one enemy unit within 12\" of this model. Until the end of the phase, each time a model in that unit makes a ranged attack, subtract 1 from the Hit roll."
+  },
+  {
+    "rule_name": "Xirat'p's Sorcerous Barrages (Psychic)",
+    "rule_description": "At the end of your Movement phase, roll 1D6 for each enemy unit within 6\" of this model: on a 2-3, that unit suffers 1 mortal wound; on a 4-5, that unit suffers D3 mortal wounds; on a 6, that unit suffers D6 mortal wounds."
+  },
+  {
+    "rule_name": "Dazzling Acrobatics",
+    "rule_description": "This model is eligible to declare a charge in a turn in which it Fell Back."
   }
 ]

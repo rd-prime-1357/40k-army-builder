@@ -59,8 +59,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -75,8 +74,7 @@
             "D": "6",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -91,8 +89,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -165,8 +162,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -184,8 +180,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -200,8 +195,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -216,8 +210,7 @@
             "D": "D3+1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -232,8 +225,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -248,8 +240,7 @@
             "D": "D6+2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -264,8 +255,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [
@@ -273,8 +263,8 @@
             "model_group": "All",
             "models_per_trigger": null,
             "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Great axe of Khorne â strike",
-            "replacement_weapon_name": "Axe of Khorne â strike",
+            "weapon_replaced": "Great axe of Khorne - strike",
+            "replacement_weapon_name": "Axe of Khorne - strike",
             "points_cost": null,
             "is_choice": true,
             "option_group": "A"
@@ -283,8 +273,8 @@
             "model_group": "All",
             "models_per_trigger": null,
             "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Great axe of Khorne â sweep",
-            "replacement_weapon_name": "Axe of Khorne â sweep",
+            "weapon_replaced": "Great axe of Khorne - sweep",
+            "replacement_weapon_name": "Axe of Khorne - sweep",
             "points_cost": null,
             "is_choice": true,
             "option_group": "A"
@@ -371,8 +361,7 @@
               "Precision"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -443,8 +432,7 @@
             "D": "3",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -515,8 +503,7 @@
             "D": "3",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -534,8 +521,7 @@
               "Lance"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -573,10 +559,10 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "\"Blood Throne"
+              "Blood Throne"
             ],
             "rule_names": [
-              "Champion Slayer\""
+              "Champion Slayer"
             ],
             "keyword_names": [
               "Deep Strike"
@@ -599,8 +585,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -615,8 +600,7 @@
             "D": "3",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -691,8 +675,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -710,8 +693,7 @@
               "Precision"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -778,8 +760,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -866,8 +847,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -885,8 +865,7 @@
               "Lance"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -982,8 +961,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -998,8 +976,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -1073,8 +1050,7 @@
               "Blast"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1091,8 +1067,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1107,8 +1082,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -1238,8 +1212,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1259,8 +1232,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1277,8 +1249,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -1352,8 +1323,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -1370,8 +1340,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1389,8 +1358,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1407,8 +1375,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -1425,8 +1392,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [
@@ -1485,10 +1451,10 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "\"Formless Horror"
+              "Formless Horror"
             ],
             "rule_names": [
-              "Mischief and Confusion\""
+              "Mischief and Confusion"
             ],
             "keyword_names": [
               "Deep Strike",
@@ -1515,8 +1481,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1536,8 +1501,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1554,8 +1518,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -1630,8 +1593,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1650,8 +1612,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1668,8 +1629,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1688,8 +1648,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -1765,8 +1724,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1785,8 +1743,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1803,8 +1760,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -1842,10 +1798,10 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "\"P'tarix's Sorcerous Syphon (Aura)"
+              "P'tarix's Sorcerous Syphon (Aura)"
             ],
             "rule_names": [
-              "Xirat'p's Sorcerous Barrages (Psychic)\""
+              "Xirat'p's Sorcerous Barrages (Psychic)"
             ],
             "keyword_names": [
               "Deep Strike",
@@ -1869,8 +1825,7 @@
               "Anti-Psyker 2+"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -1945,8 +1900,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1965,8 +1919,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -1983,8 +1936,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -2059,8 +2011,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2079,8 +2030,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2095,8 +2045,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -2134,7 +2083,7 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "\"Split"
+              "Split"
             ],
             "rule_names": [
               "Sullen Malevolence (Aura)"
@@ -2161,8 +2110,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2180,8 +2128,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -2196,8 +2143,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2212,8 +2158,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           }
         ],
         "wargear_options": [],
@@ -2316,8 +2261,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "Pink Horror",
@@ -2332,8 +2276,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "Blue Horror",
@@ -2351,8 +2294,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "Blue Horror",
@@ -2367,8 +2309,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -2460,8 +2401,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2476,8 +2416,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -2554,8 +2493,7 @@
               "Anti-Vehicle 4+"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -2631,8 +2569,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2651,8 +2588,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2667,8 +2603,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2687,8 +2622,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -2765,8 +2699,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2784,8 +2717,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2803,8 +2735,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -2876,8 +2807,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2895,8 +2825,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2914,8 +2843,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -2932,8 +2860,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2950,8 +2877,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -2969,8 +2895,7 @@
               "Reverberating Summons"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           }
         ],
         "wargear_options": [
@@ -2988,7 +2913,7 @@
             "model_group": "All",
             "models_per_trigger": null,
             "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Bilesword â strike",
+            "weapon_replaced": "Bilesword - strike",
             "replacement_weapon_name": "Doomsday bell",
             "points_cost": null,
             "is_choice": false,
@@ -2998,7 +2923,7 @@
             "model_group": "All",
             "models_per_trigger": null,
             "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Bilesword â sweep",
+            "weapon_replaced": "Bilesword - sweep",
             "replacement_weapon_name": "Doomsday bell",
             "points_cost": null,
             "is_choice": false,
@@ -3076,8 +3001,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3151,8 +3075,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -3169,8 +3092,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3244,8 +3166,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3318,8 +3239,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3394,8 +3314,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -3412,8 +3331,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3482,8 +3400,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3574,8 +3491,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3651,8 +3567,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3728,8 +3643,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -3747,8 +3661,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -3765,8 +3678,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -3920,8 +3832,7 @@
               "Assault"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -3939,8 +3850,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -3960,8 +3870,7 @@
               "Sustained Hits 3"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -3979,8 +3888,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -3997,8 +3905,7 @@
               "Precision"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -4071,8 +3978,7 @@
               "Assault"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -4090,8 +3996,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4110,8 +4015,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4128,8 +4032,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": false,
-            "allegiance_condition": null
+            "is_base_equipment": false
           },
           {
             "model_group": "All",
@@ -4147,8 +4050,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4163,8 +4065,24 @@
             "D": "3",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Shining Aegis",
+            "range": "Melee",
+            "A": null,
+            "BS": null,
+            "WS": null,
+            "S": null,
+            "AP": null,
+            "D": null,
+            "weapon_ability_names": [
+              "Shining Aegis"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": "FALSE"
           }
         ],
         "wargear_options": [
@@ -4172,7 +4090,7 @@
             "model_group": "All",
             "models_per_trigger": null,
             "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Phantasmagoria â witchfire",
+            "weapon_replaced": "Phantasmagoria - witchfire",
             "replacement_weapon_name": "Living whip",
             "points_cost": null,
             "is_choice": true,
@@ -4182,7 +4100,7 @@
             "model_group": "All",
             "models_per_trigger": null,
             "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Phantasmagoria â focused witchfire",
+            "weapon_replaced": "Phantasmagoria - focused witchfire",
             "replacement_weapon_name": "Living whip",
             "points_cost": null,
             "is_choice": true,
@@ -4203,7 +4121,7 @@
             "models_per_trigger": null,
             "max_substitutions_per_trigger": null,
             "weapon_replaced": "Witstealer sword",
-            "replacement_weapon_name": "Shining aegis",
+            "replacement_weapon_name": "Shining Aegis",
             "points_cost": null,
             "is_choice": true,
             "option_group": "A"
@@ -4279,8 +4197,7 @@
               "Assault"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4297,8 +4214,7 @@
               "Assault"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4315,8 +4231,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -4354,10 +4269,10 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "\"The Eternal Dance"
+              "The Eternal Dance"
             ],
             "rule_names": [
-              "Dazzling Acrobatics\""
+              "Dazzling Acrobatics"
             ],
             "keyword_names": [
               "Deep Strike",
@@ -4382,8 +4297,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -4461,8 +4375,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4483,8 +4396,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4501,8 +4413,7 @@
               "Assault"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4517,8 +4428,7 @@
             "D": "3",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4535,8 +4445,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -4610,8 +4519,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4628,8 +4536,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -4705,8 +4612,7 @@
               "Pistol"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4724,8 +4630,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4743,8 +4648,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -4761,8 +4665,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -4837,8 +4740,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -4908,8 +4810,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -4998,8 +4899,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -5075,8 +4975,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5093,8 +4992,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -5191,8 +5089,7 @@
               "Pistol"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5210,8 +5107,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5229,8 +5125,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5247,8 +5142,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -5330,8 +5224,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5351,8 +5244,7 @@
               "Psychic"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5369,8 +5261,7 @@
               "Devastating Wounds"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5387,8 +5278,7 @@
               "Sustained Hits 1"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -5456,8 +5346,7 @@
             "D": "3",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5475,8 +5364,7 @@
               "Torrent"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": "Khorne"
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5491,8 +5379,7 @@
             "D": "D6+2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5509,8 +5396,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5527,8 +5413,7 @@
               "Blast"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": "Tzeentch"
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5547,8 +5432,7 @@
               "Lethal Hits"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": "Nurgle"
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5566,8 +5450,24 @@
               "Sustained Hits 1"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": "Slaanesh"
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Warpclaw",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "3+",
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Extra Attacks"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": "FALSE"
           }
         ],
         "wargear_options": [
@@ -5648,8 +5548,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5664,8 +5563,7 @@
             "D": "3",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5680,8 +5578,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
@@ -5751,8 +5648,7 @@
             "D": "2",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5767,8 +5663,7 @@
             "D": "3",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           },
           {
             "model_group": "All",
@@ -5783,8 +5678,7 @@
             "D": "1",
             "weapon_ability_names": [],
             "weapon_keyword_names": [],
-            "is_base_equipment": true,
-            "allegiance_condition": null
+            "is_base_equipment": true
           }
         ],
         "wargear_options": [],
