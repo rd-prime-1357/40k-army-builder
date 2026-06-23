@@ -24,7 +24,7 @@
     .top-banner {
       background: #1a0000;
       border-bottom: 2px solid #8b0000;
-      padding: 0.6rem 1.5rem;
+      padding: 0 1.5rem;
       display: flex;
       align-items: center;
       flex-shrink: 0;
@@ -44,15 +44,26 @@
     .banner-sep {
       color: #3a0000;
       font-size: 1.1rem;
+      margin: 0 1rem;
     }
 
     .banner-item {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 0.4rem;
       white-space: nowrap;
       position: absolute;
       left: 25%;
+    }
+
+    .banner-item-right {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+      position: absolute;
+      left: 70%;
+      transform: translateX(-100%);
     }
 
     .banner-label {
@@ -63,17 +74,33 @@
       letter-spacing: 0.1em;
     }
 
-    .banner-value {
+    .banner-select {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #3a3a3a;
+      color: #cc9900;
       font-size: 0.82rem;
       font-weight: 600;
-      color: #cc9900;
+      font-family: inherit;
       letter-spacing: 0.04em;
+      padding: 0.1rem 1.2rem 0.1rem 0.1rem;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23666'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.1rem center;
+      transition: border-color 0.15s;
     }
+
+    .banner-select:hover { border-bottom-color: #cc9900; }
+    .banner-select option { background: #1a0000; color: #cc9900; }
 
     .banner-points {
       margin-left: auto;
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 0.4rem;
       white-space: nowrap;
     }
@@ -546,13 +573,29 @@
 <div class="top-banner">
   <div class="banner-title">40K Army Builder</div>
   <div class="banner-sep">|</div>
+
+  <!-- Army selector — left-aligned with center panel -->
   <div class="banner-item">
     <span class="banner-label">Army</span>
-    <span class="banner-value" id="banner-faction">Loading…</span>
+    <select class="banner-select" id="banner-army-select" onchange="selectArmy(this.value)">
+      <option value="chaos_daemons">Chaos Daemons</option>
+    </select>
   </div>
+
+  <!-- Army points selector — right-aligned with center panel -->
+  <div class="banner-item-right">
+    <span class="banner-label">Army Points</span>
+    <select class="banner-select" id="banner-army-pts-select" onchange="selectArmyPoints(this.value)">
+      <option value="1000">1,000</option>
+      <option value="2000" selected>2,000</option>
+      <option value="3000">3,000</option>
+    </select>
+  </div>
+
+  <!-- List points — far right -->
   <div class="banner-points" id="banner-points">
-    <span class="banner-label">Points</span>
-    <span class="banner-pts-value" id="banner-pts-value">0 / 2,000</span>
+    <span class="banner-label">List Points</span>
+    <span class="banner-pts-value" id="banner-pts-value">0</span>
   </div>
 </div>
 
@@ -596,10 +639,21 @@
 </div>
 
 <script>
-  const POINTS_CAP = 2000;
+  let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.3';
+  const VERSION = '5.4';
+
+  function selectArmy(value) {
+    // Future: load different faction data. For now only Chaos Daemons exists.
+  }
+
+  function selectArmyPoints(value) {
+    POINTS_CAP = Number(value);
+    renderBanner();
+    renderList(); // refresh error states
+    renderDetail();
+  }
 
   const TYPE_ORDER = [
     'Epic Hero','Character','Battleline','Infantry','Mounted',
@@ -627,7 +681,7 @@
       if (!res.ok) throw new Error('Failed to load unit data');
       const data = await res.json();
       const army = data[0];
-      document.getElementById('banner-faction').textContent = army.army;
+      document.getElementById('banner-army-select').value = 'chaos_daemons';
       rawUnits = army.units;
 
       allUnits = army.units.map(unit => {
@@ -655,7 +709,7 @@
     } catch (err) {
       document.getElementById('roster').innerHTML =
         `<div class="error-msg">Could not load unit data: ${err.message}</div>`;
-      document.getElementById('banner-faction').textContent = 'Error';
+      document.getElementById('banner-army-select').value = 'chaos_daemons';
     }
   }
 
@@ -905,8 +959,7 @@
     const overCap = total > POINTS_CAP;
     const el      = document.getElementById('banner-points');
     el.className  = 'banner-points' + (overCap ? ' over-cap' : '');
-    document.getElementById('banner-pts-value').textContent =
-      `${total.toLocaleString()} / ${POINTS_CAP.toLocaleString()}`;
+    document.getElementById('banner-pts-value').textContent = total.toLocaleString();
   }
 
   // ── Army list ──────────────────────────────────────────────────────────────
