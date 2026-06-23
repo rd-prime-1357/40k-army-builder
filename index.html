@@ -226,6 +226,12 @@
 
     .bodyguard-block { margin-bottom: 0.2rem; }
 
+    .bodyguard-block.has-leader {
+      border-left: 2px solid #3a2a00;
+      padding-left: 0.4rem;
+      margin-left: 0.1rem;
+    }
+
     .list-item {
       display: flex;
       align-items: center;
@@ -241,15 +247,13 @@
     .list-item.has-error { border-left: 2px solid #cc2200; }
 
     .list-item.attached-leader {
-      padding-left: 1.1rem;
       background: #0e0e0e;
-      border-left: 2px solid #2a2a2a;
       border-radius: 0;
-      margin-top: 1px;
+      margin-bottom: 0;
     }
 
     .list-item.attached-leader:hover { background: #141414; }
-    .list-item.attached-leader.active { background: #150f00; border-left-color: #cc9900; }
+    .list-item.attached-leader.active { background: #150f00; }
 
     .list-item-info { flex: 1; min-width: 0; }
 
@@ -262,11 +266,6 @@
     }
 
     .list-item.active .list-item-name { color: #fff; }
-
-    .list-item.attached-leader .list-item-name {
-      font-size: 0.75rem;
-      color: #888;
-    }
 
     .list-item-sub {
       font-size: 0.65rem;
@@ -289,8 +288,6 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
-
-    .list-item.attached-leader .list-item-pts { font-size: 0.72rem; color: #997700; }
 
     .remove-btn {
       background: none;
@@ -586,7 +583,7 @@
   const POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.0';
+  const VERSION = '5.1';
 
   const TYPE_ORDER = [
     'Epic Hero','Character','Battleline','Infantry','Mounted',
@@ -940,7 +937,33 @@
           ? (() => { const u = allUnits.find(u => u.unit_name === entry.unit_name); const s = u && u.sizes[entry.sizeIdx]; return s ? `${s.size} model${s.size===1?'':'s'}` : ''; })()
           : ''].filter(Boolean).join(' · ');
 
-        html += `<div class="bodyguard-block">`;
+        // Attached leaders render ABOVE the bodyguard
+        const attachedLeaders = getAttachedLeaders(entry.listId);
+        const hasLeaders = attachedLeaders.length > 0;
+
+        html += `<div class="bodyguard-block${hasLeaders ? ' has-leader' : ''}">`;
+
+        for (const leader of attachedLeaders) {
+          const isLeaderActive = leader.listId === selectedListId;
+          const leaderError    = entryHasError(leader);
+          const leaderSub      = leader.god || '';
+
+          html += `
+            <div class="list-item${isLeaderActive ? ' active' : ''}${leaderError ? ' has-error' : ''}"
+                 onclick="selectListEntry(${leader.listId})">
+              <div class="list-item-info">
+                <div class="list-item-name">
+                  ${leader.unit_name} (${entry.unit_name})
+                  ${leaderError ? '<span class="error-flag">!</span>' : ''}
+                </div>
+                ${leaderSub ? `<div class="list-item-sub">${leaderSub}</div>` : ''}
+              </div>
+              <span class="list-item-pts">${leader.points !== null ? leader.points + ' pts' : '—'}</span>
+              <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${leader.listId})" title="Remove">&times;</button>
+            </div>
+          `;
+        }
+
         html += `
           <div class="list-item${isActive ? ' active' : ''}${hasError ? ' has-error' : ''}"
                onclick="selectListEntry(${entry.listId})">
@@ -955,49 +978,6 @@
             <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${entry.listId})" title="Remove">&times;</button>
           </div>
         `;
-
-        // Attached leaders
-        const attachedLeaders = getAttachedLeaders(entry.listId);
-        for (const leader of attachedLeaders) {
-          const leaderUnit  = allUnits.find(u => u.unit_name === leader.unit_name);
-          const isLeaderActive = leader.listId === selectedListId;
-          const leaderError    = entryHasError(leader);
-
-          const eligibleBgs = leaderUnit
-            ? armyList.filter(e =>
-                leaderUnit.leaderEligible.includes(e.unit_name) &&
-                (e.listId === leader.attachedToListId || canAttachLeader(leader.unit_name, e))
-              )
-            : [];
-
-          let bgOptions = `<option value="">— Unattached —</option>`;
-          for (const bg of eligibleBgs) {
-            const god   = bg.god ? ` (${bg.god})` : '';
-            const u     = allUnits.find(u => u.unit_name === bg.unit_name);
-            const s     = u && u.sizes[bg.sizeIdx];
-            const label = `${bg.unit_name}${god}${s ? ' · ' + s.size + ' model' + (s.size===1?'':'s') : ''}`;
-            bgOptions  += `<option value="${bg.listId}" ${leader.attachedToListId === bg.listId ? 'selected' : ''}>${label}</option>`;
-          }
-
-          html += `
-            <div class="list-item attached-leader${isLeaderActive ? ' active' : ''}${leaderError ? ' has-error' : ''}"
-                 onclick="selectListEntry(${leader.listId})">
-              <div class="list-item-info">
-                <div class="list-item-name">↳ ${leader.unit_name}${leaderError ? '<span class="error-flag">!</span>' : ''}</div>
-                <div class="list-item-sub">
-                  <select class="leader-assign-select"
-                          style="font-size:0.62rem;padding:0.12rem 1.4rem 0.12rem 0.35rem;background-size:8px;margin-bottom:0;"
-                          onclick="event.stopPropagation()"
-                          onchange="event.stopPropagation();editLeaderFromList(${leader.listId},this.value)">
-                    ${bgOptions}
-                  </select>
-                </div>
-              </div>
-              <span class="list-item-pts">${leader.points !== null ? leader.points + ' pts' : '—'}</span>
-              <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${leader.listId})" title="Remove">&times;</button>
-            </div>
-          `;
-        }
 
         html += `</div>`; // bodyguard-block
       }
