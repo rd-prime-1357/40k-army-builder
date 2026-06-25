@@ -936,7 +936,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.6';
+  const VERSION = '5.7';
 
   function selectArmy(value) {
     // Future: load different faction data. For now only Chaos Daemons exists.
@@ -1718,7 +1718,11 @@
         html += `<div class="stat-block">`;
       }
 
-      html += buildStatTable(mg);
+      // Check if Shining Aegis is equipped — override SV to 3
+      const shiningAegisKey = Object.keys(entry.wargear).find(k => entry.wargear[k] === 'Shining Aegis');
+      const svOverride = (shiningAegisKey && entry.wargear[shiningAegisKey]) ? 3 : null;
+
+      html += buildStatTable(mg, svOverride);
       html += `</div>`;
 
       // Weapons for this model group — configured view
@@ -1795,11 +1799,12 @@
 
   // ── Shared modal helpers ───────────────────────────────────────────────────
 
-  function buildStatTable(mg) {
+  function buildStatTable(mg, svOverride) {
     const inv = mg.INV ? `${mg.INV}+` : '—';
     const fnp = mg.FNP ? `${mg.FNP}+` : '—';
     const invCond = mg.INV_Condition ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
     const fnpCond = mg.FNP_Condition ? ` <span style="font-size:0.6rem;color:#666;">(${mg.FNP_Condition})</span>` : '';
+    const svDisplay = svOverride ? `${svOverride}+` : `${mg.SV}+`;
 
     return `<table class="stat-table">
       <thead>
@@ -1811,7 +1816,7 @@
         <tr>
           <td>${mg.M}</td>
           <td>${mg.T}</td>
-          <td>${mg.SV}+</td>
+          <td>${svDisplay}</td>
           <td class="inv-cell">${inv}${invCond}</td>
           <td class="fnp-cell">${fnp}${fnpCond}</td>
           <td>${mg.W}</td>
