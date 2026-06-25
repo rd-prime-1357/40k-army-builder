@@ -936,7 +936,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.7';
+  const VERSION = '5.8';
 
   function selectArmy(value) {
     // Future: load different faction data. For now only Chaos Daemons exists.
@@ -1044,6 +1044,17 @@
 
   function esc(str) { return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
   function cssId(str) { return str.replace(/[^a-zA-Z0-9]/g, '_'); }
+
+  // Weapon-family helpers. A multi-profile weapon is stored as separate rows
+  // sharing a base name with a profile suffix after a space-flanked dash
+  // ("Plasma gun – standard", "Axe of Khorne - sweep"). The family — not the
+  // profile — is the unit of selection and replacement, so options and the
+  // configured modal match on the base name. The split fires ONLY on a dash
+  // with whitespace on both sides (covers –, -, and the mojibake â), so
+  // compound names like "Multi-melta" or "Neo-volkite pistol" are untouched.
+  const PROFILE_SEP = /\s[–\-â]\s/;
+  function stripProfile(name) { return String(name || '').split(PROFILE_SEP)[0].trim(); }
+  function weaponBase(name)   { return stripProfile(name).toLowerCase(); }
 
   function groupByType(items, nameKey) {
     const groups = {};
@@ -1486,34 +1497,49 @@
     for (const [groupKey, opts] of Object.entries(groups)) {
       const stateKey = `group_${groupKey}`;
       const chosen   = entry.wargear[stateKey] || null;
-      html += `<div class="options-block"><div class="detail-section-label">Replace ${opts[0].weapon_replaced}</div>`;
+      // Collapse options that are the same family (e.g. "Axe of Khorne – strike"
+      // and "– sweep") to one selectable line; keep distinct families separate
+      // (e.g. Rod of sorcery vs Baleful sword stay two real choices).
+      const seenBase = new Set();
+      const famOpts  = [];
       for (const opt of opts) {
-        const isCh = chosen === opt.replacement_weapon_name;
+        const b = weaponBase(opt.replacement_weapon_name);
+        if (seenBase.has(b)) continue;
+        seenBase.add(b);
+        famOpts.push(opt);
+      }
+      html += `<div class="options-block"><div class="detail-section-label">Replace ${stripProfile(opts[0].weapon_replaced)}</div>`;
+      for (const opt of famOpts) {
+        const display = stripProfile(opt.replacement_weapon_name);
+        const isCh    = weaponBase(chosen) === weaponBase(opt.replacement_weapon_name);
         html += `<div class="option-item radio${isCh ? ' chosen' : ''}"
-                      onclick="editWargearGroup(${entry.listId},'${esc(stateKey)}','${esc(opt.replacement_weapon_name)}')">
+                      onclick="editWargearGroup(${entry.listId},'${esc(stateKey)}','${esc(display)}')">
           <div class="option-item-row">
             <div class="option-check">${isCh ? '●' : ''}</div>
-            <div class="option-item-name">${opt.replacement_weapon_name}</div>
+            <div class="option-item-name">${display}</div>
           </div>
         </div>`;
       }
       html += `</div>`;
     }
 
+    // Independent swaps keyed by the family being replaced, so a multi-profile
+    // weapon (e.g. Bilesword strike + sweep -> Doomsday bell) shows one line.
     const indepByWeapon = {};
     for (const opt of independent) {
-      if (!indepByWeapon[opt.weapon_replaced]) indepByWeapon[opt.weapon_replaced] = [];
-      indepByWeapon[opt.weapon_replaced].push(opt);
+      const key = weaponBase(opt.weapon_replaced);
+      if (!indepByWeapon[key]) indepByWeapon[key] = [];
+      indepByWeapon[key].push(opt);
     }
 
-    for (const [replaced, opts] of Object.entries(indepByWeapon)) {
-      const stateKey = `indep_${replaced}`;
+    for (const [replacedBase, opts] of Object.entries(indepByWeapon)) {
+      const stateKey = `indep_${replacedBase}`;
       const isCh     = !!entry.wargear[stateKey];
       html += `<div class="options-block"><div class="detail-section-label">Optional Swap</div>
         <div class="option-item${isCh ? ' chosen' : ''}" onclick="editWargearIndep(${entry.listId},'${esc(stateKey)}')">
           <div class="option-item-row">
             <div class="option-check">${isCh ? '✓' : ''}</div>
-            <div class="option-item-name">${replaced} → ${opts[0].replacement_weapon_name}</div>
+            <div class="option-item-name">${stripProfile(opts[0].weapon_replaced)} → ${stripProfile(opts[0].replacement_weapon_name)}</div>
           </div>
         </div>
       </div>`;
@@ -1671,9 +1697,11 @@
     // Determine which weapons are "active" based on wargear state
     const hasWargear = raw.wargear_options && raw.wargear_options.length > 0;
 
-    // Build set of active weapon names
-    const activeWeapons = new Set();
-    const replacedWeapons = new Set();
+    // Build sets of active / replaced weapon FAMILIES (base names). Matching on
+    // the family means selecting one profile of a weapon activates all of its
+    // profiles and removes all profiles of the weapon it replaced.
+    const activeBases = new Set();
+    const replacedBases = new Set();
 
     if (hasWargear) {
       // Process group choices (radio-style)
@@ -1692,18 +1720,18 @@
         const stateKey = `group_${groupKey}`;
         const chosen = entry.wargear[stateKey] || null;
         if (chosen) {
-          activeWeapons.add(chosen);
-          // Mark the replaced weapon
+          activeBases.add(weaponBase(chosen));
+          // Mark the replaced family
           const replacedOpt = opts[0];
-          if (replacedOpt) replacedWeapons.add(replacedOpt.weapon_replaced);
+          if (replacedOpt) replacedBases.add(weaponBase(replacedOpt.weapon_replaced));
         }
       }
 
       for (const opt of independent) {
-        const stateKey = `indep_${opt.weapon_replaced}`;
+        const stateKey = `indep_${weaponBase(opt.weapon_replaced)}`;
         if (entry.wargear[stateKey]) {
-          activeWeapons.add(opt.replacement_weapon_name);
-          replacedWeapons.add(opt.weapon_replaced);
+          activeBases.add(weaponBase(opt.replacement_weapon_name));
+          replacedBases.add(weaponBase(opt.weapon_replaced));
         }
       }
     }
@@ -1730,7 +1758,7 @@
 
       // Weapons for this model group — configured view
       const mgWeapons = raw.weapons.filter(w => w.model_group === mg.model_group);
-      html += buildWeaponSections(mgWeapons, 'configured', { activeWeapons, replacedWeapons, hasWargear }, raw, entry);
+      html += buildWeaponSections(mgWeapons, 'configured', { activeBases, replacedBases, hasWargear }, raw, entry);
     }
 
     // Abilities
@@ -1895,10 +1923,10 @@
     // Replacement options that aren't base equipment are dimmed
     if (!w.is_base_equipment) return true;
 
-    // If this weapon is a replacement option (appears in wargear_options as replacement),
-    // it's non-default and should be dimmed
+    // If this weapon is a replacement option (its family appears in
+    // wargear_options as a replacement), it's non-default and should be dimmed
     const isReplacement = raw && raw.wargear_options &&
-      raw.wargear_options.some(opt => opt.replacement_weapon_name === w.weapon_name);
+      raw.wargear_options.some(opt => weaponBase(opt.replacement_weapon_name) === weaponBase(w.weapon_name));
     if (isReplacement) return true;
 
     return false;
@@ -1908,7 +1936,7 @@
     if (mode === 'full') return false; // full view shows everything
 
     // Configured view: skip weapons that are not part of this unit's loadout
-    const { activeWeapons, replacedWeapons, hasWargear } = wargearState;
+    const { activeBases, replacedBases, hasWargear } = wargearState;
 
     // No wargear options — show everything
     if (!hasWargear) return false;
@@ -1918,13 +1946,17 @@
       return !entry || entry.god !== w.allegiance_condition;
     }
 
-    // If this weapon was replaced, skip it (unless it's the active replacement)
-    if (replacedWeapons.has(w.weapon_name) && !activeWeapons.has(w.weapon_name)) return true;
+    const wb = weaponBase(w.weapon_name);
 
-    // If this weapon is a replacement option that wasn't selected, skip it
+    // If this weapon's family was replaced, skip it (unless that same family is
+    // the active replacement) — hides every profile of the replaced weapon.
+    if (replacedBases.has(wb) && !activeBases.has(wb)) return true;
+
+    // If this weapon's family is a replacement option that wasn't selected, skip
+    // it — keeps unchosen replacement families (all profiles) out of the loadout.
     const isReplacement = raw && raw.wargear_options &&
-      raw.wargear_options.some(opt => opt.replacement_weapon_name === w.weapon_name);
-    if (isReplacement && !activeWeapons.has(w.weapon_name)) return true;
+      raw.wargear_options.some(opt => weaponBase(opt.replacement_weapon_name) === wb);
+    if (isReplacement && !activeBases.has(wb)) return true;
 
     return false;
   }
