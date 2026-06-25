@@ -1719,8 +1719,11 @@
       }
 
       // Check if Shining Aegis is equipped — override SV to 3
-      const shiningAegisKey = Object.keys(entry.wargear).find(k => entry.wargear[k] === 'Shining Aegis');
-      const svOverride = (shiningAegisKey && entry.wargear[shiningAegisKey]) ? 3 : null;
+      // Stored as a grouped choice value; name may vary in capitalisation so compare case-insensitively
+      const shiningAegisActive = Object.values(entry.wargear).some(
+        v => typeof v === 'string' && v.toLowerCase() === 'shining aegis'
+      );
+      const svOverride = shiningAegisActive ? 3 : null;
 
       html += buildStatTable(mg, svOverride);
       html += `</div>`;
