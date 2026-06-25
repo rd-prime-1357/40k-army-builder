@@ -936,7 +936,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.8';
+  const VERSION = '5.9';
 
   function selectArmy(value) {
     // Future: load different faction data. For now only Chaos Daemons exists.
@@ -1232,6 +1232,14 @@
     renderDetail();
   }
 
+  function editWargearBundle(listId, stateKey, label) {
+    const entry = armyList.find(e => e.listId === listId);
+    if (!entry) return;
+    // Default-bearing radio: always exactly one selection, so set (not toggle).
+    entry.wargear[stateKey] = label;
+    renderDetail();
+  }
+
   function editOtherOption(listId, optName) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
@@ -1460,7 +1468,8 @@
     }
 
     // Wargear options
-    if (raw && raw.wargear_options && raw.wargear_options.length > 0) {
+    if (raw && ((raw.wargear_options && raw.wargear_options.length > 0) ||
+                (raw.bundled_swaps && raw.bundled_swaps.length > 0))) {
       html += buildWargearHtml(entry, raw);
     }
 
@@ -1543,6 +1552,29 @@
           </div>
         </div>
       </div>`;
+    }
+
+    // Bundled / compound swaps: one mutually-exclusive group whose lines each
+    // add a SET of weapon families and remove a SET, with an explicit default
+    // radio. NR-style — every line is self-contained, no show/hide dependency.
+    if (raw.bundled_swaps && raw.bundled_swaps.length > 0) {
+      raw.bundled_swaps.forEach((bundle, gi) => {
+        const stateKey = `bundle_${gi}`;
+        const defLine  = bundle.options.find(o => o.is_default) || bundle.options[0];
+        const chosen   = entry.wargear[stateKey] || (defLine ? defLine.label : null);
+        html += `<div class="options-block"><div class="detail-section-label">${bundle.group_label || 'Weapons'}</div>`;
+        for (const line of bundle.options) {
+          const isCh = chosen === line.label;
+          html += `<div class="option-item radio${isCh ? ' chosen' : ''}"
+                        onclick="editWargearBundle(${entry.listId},'${esc(stateKey)}','${esc(line.label)}')">
+            <div class="option-item-row">
+              <div class="option-check">${isCh ? '●' : ''}</div>
+              <div class="option-item-name">${line.label}</div>
+            </div>
+          </div>`;
+        }
+        html += `</div>`;
+      });
     }
 
     return html;
@@ -1695,13 +1727,17 @@
     let html = '';
 
     // Determine which weapons are "active" based on wargear state
-    const hasWargear = raw.wargear_options && raw.wargear_options.length > 0;
+    const hasWargear = (raw.wargear_options && raw.wargear_options.length > 0) ||
+                       (raw.bundled_swaps && raw.bundled_swaps.length > 0);
 
     // Build sets of active / replaced weapon FAMILIES (base names). Matching on
     // the family means selecting one profile of a weapon activates all of its
     // profiles and removes all profiles of the weapon it replaced.
     const activeBases = new Set();
     const replacedBases = new Set();
+    // Union of every weapon family any bundle line can add. A bundle-managed
+    // family that isn't currently active is hidden from the configured loadout.
+    const bundleAddBases = new Set();
 
     if (hasWargear) {
       // Process group choices (radio-style)
@@ -1734,6 +1770,24 @@
           replacedBases.add(weaponBase(opt.weapon_replaced));
         }
       }
+
+      // Bundled / compound swaps. Each group resolves to exactly one chosen
+      // line (its default when state is unset). The chosen line's adds become
+      // active and its removes become replaced; every add the group COULD make
+      // is recorded so unchosen ones drop out of the loadout.
+      if (raw.bundled_swaps) {
+        raw.bundled_swaps.forEach((bundle, gi) => {
+          const stateKey = `bundle_${gi}`;
+          const defLine  = bundle.options.find(o => o.is_default) || bundle.options[0];
+          const chosenLabel = entry.wargear[stateKey] || (defLine ? defLine.label : null);
+          const line = bundle.options.find(o => o.label === chosenLabel) || defLine;
+          for (const b of bundle.options.flatMap(o => o.adds || [])) bundleAddBases.add(weaponBase(b));
+          if (line) {
+            for (const b of (line.adds    || [])) activeBases.add(weaponBase(b));
+            for (const b of (line.removes || [])) replacedBases.add(weaponBase(b));
+          }
+        });
+      }
     }
 
     for (let i = 0; i < raw.model_groups.length; i++) {
@@ -1758,7 +1812,7 @@
 
       // Weapons for this model group — configured view
       const mgWeapons = raw.weapons.filter(w => w.model_group === mg.model_group);
-      html += buildWeaponSections(mgWeapons, 'configured', { activeBases, replacedBases, hasWargear }, raw, entry);
+      html += buildWeaponSections(mgWeapons, 'configured', { activeBases, replacedBases, bundleAddBases, hasWargear }, raw, entry);
     }
 
     // Abilities
@@ -1936,7 +1990,7 @@
     if (mode === 'full') return false; // full view shows everything
 
     // Configured view: skip weapons that are not part of this unit's loadout
-    const { activeBases, replacedBases, hasWargear } = wargearState;
+    const { activeBases, replacedBases, bundleAddBases, hasWargear } = wargearState;
 
     // No wargear options — show everything
     if (!hasWargear) return false;
@@ -1957,6 +2011,9 @@
     const isReplacement = raw && raw.wargear_options &&
       raw.wargear_options.some(opt => weaponBase(opt.replacement_weapon_name) === wb);
     if (isReplacement && !activeBases.has(wb)) return true;
+
+    // Bundle-managed replacement family that wasn't chosen — skip all profiles.
+    if (bundleAddBases && bundleAddBases.has(wb) && !activeBases.has(wb)) return true;
 
     return false;
   }
