@@ -866,12 +866,11 @@
   <div class="banner-title">40K Army Builder</div>
   <div class="banner-sep">|</div>
 
-  <!-- Army selector — left-aligned with center panel -->
+  <!-- Army selector — two dependent selects (group → faction) -->
   <div class="banner-item">
     <span class="banner-label">Army</span>
-    <select class="banner-select" id="banner-army-select" onchange="selectArmy(this.value)">
-      <option value="chaos_daemons">Chaos Daemons</option>
-    </select>
+    <select class="banner-select" id="banner-group-select" onchange="onGroupChange(this.value)"></select>
+    <select class="banner-select" id="banner-faction-select" onchange="onFactionChange(this.value)"></select>
   </div>
 
   <!-- Army points selector — right-aligned with center panel -->
@@ -950,8 +949,104 @@
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
   const VERSION = '5.9';
 
-  function selectArmy(value) {
-    // Future: load different faction data. For now only Chaos Daemons exists.
+  // ── Army selector (two-step: group → faction) ───────────────────────────────
+
+  function buildGroupSelect() {
+    const gs = document.getElementById('banner-group-select');
+    gs.innerHTML = '';
+    factionTaxonomy.groups.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g.group;
+      opt.textContent = g.group;
+      gs.appendChild(opt);
+    });
+  }
+
+  // Populate the faction select for a group; unbuilt factions disabled.
+  // Returns the value that ends up selected (first built faction, else null).
+  function buildFactionSelect(groupName, preferredName) {
+    const fs = document.getElementById('banner-faction-select');
+    fs.innerHTML = '';
+    const group = factionTaxonomy.groups.find(g => g.group === groupName);
+    let toSelect = null;
+    group.factions.forEach(f => {
+      const opt = document.createElement('option');
+      opt.value = f.name;
+      opt.textContent = f.built ? f.name : f.name + ' (coming soon)';
+      opt.disabled = !f.built;
+      fs.appendChild(opt);
+      if (f.built && toSelect === null) toSelect = f.name;
+      if (f.built && f.name === preferredName) toSelect = f.name;
+    });
+    if (toSelect !== null) fs.value = toSelect;
+    return toSelect;
+  }
+
+  function factionRecord(groupName, factionName) {
+    const group = factionTaxonomy.groups.find(g => g.group === groupName);
+    return group ? group.factions.find(f => f.name === factionName) : null;
+  }
+
+  // Resolve the unit set for a faction record.
+  // Generic Space Marines → the Adeptus Astartes block, no chapter filter.
+  // A chapter (is_subfaction) → union(generic codex, chapter units); the
+  // chapter's version wins on unit_name.
+  function resolveUnits(faction) {
+    const generic = unitsByArmy['Adeptus Astartes'] || [];
+    if (!faction.is_subfaction) return (unitsByArmy[faction.data_army] || generic).slice();
+    const chapter = unitsByArmy[faction.data_army] || [];
+    const chapterNames = new Set(chapter.map(u => u.unit_name));
+    const merged = generic.filter(u => !chapterNames.has(u.unit_name)).concat(chapter);
+    return merged;
+  }
+
+  // Build the lightweight allUnits view + rawUnits from a resolved unit set.
+  function setActiveUnits(units) {
+    rawUnits = units;
+    allUnits = units.map(unit => {
+      const sizes    = unit.points ? unit.points.sizes : [];
+      const needsGod = GOD_UNITS.has(unit.unit_name);
+      const limit    = unit.instance_limit_override || instanceLimit(unit.unit_type);
+      const mg       = unit.model_groups && unit.model_groups[0];
+      const leaderEligible = mg && mg.leader_eligible_units  ? mg.leader_eligible_units  : [];
+      const coLeaderWith   = mg && mg.co_leader_eligible_with ? mg.co_leader_eligible_with : [];
+      return {
+        unit_name:     unit.unit_name,
+        unit_type:     unit.unit_type,
+        sizes,
+        needsGod,
+        limit,
+        leaderEligible,
+        coLeaderWith,
+        minPts: sizes.length > 0 ? sizes[0].first_unit : null,
+      };
+    });
+  }
+
+  // Activate a faction: resolve units, clear the in-progress list, re-render.
+  // CLEAR-ON-SWITCH: changing faction empties the current army list. Prevents
+  // illegal cross-faction lists; NR-style. (See open product question.)
+  function activateFaction(faction) {
+    currentFaction = faction;
+    setActiveUnits(resolveUnits(faction));
+    armyList = [];
+    selectedListId = null;
+    renderRoster();
+    renderList();
+    renderDetail();
+    renderBanner();
+  }
+
+  function onGroupChange(groupName) {
+    const selected = buildFactionSelect(groupName);
+    if (selected === null) return;              // group has no built factions
+    activateFaction(factionRecord(groupName, selected));
+  }
+
+  function onFactionChange(factionName) {
+    const groupName = document.getElementById('banner-group-select').value;
+    const rec = factionRecord(groupName, factionName);
+    if (rec && rec.built) activateFaction(rec);
   }
 
   function selectArmyPoints(value) {
@@ -979,6 +1074,12 @@
   let selectedListId  = null;
   let nextId          = 1;
 
+  // Army-data + taxonomy (populated in init)
+  let armyData        = null;   // full units.json: array of { army, units }
+  let unitsByArmy     = {};     // army name -> units[]  (index over armyData)
+  let factionTaxonomy = null;   // faction_taxonomy.json
+  let currentFaction  = null;   // active { name, data_army, is_subfaction }
+
   // Lookup tables
   let abilitiesLookup       = {};  // ability_name -> description
   let rulesLookup           = {};  // rule_name -> description
@@ -989,17 +1090,20 @@
 
   async function init() {
     try {
-      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes] = await Promise.all([
+      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes] = await Promise.all([
         fetch(`units.json?v=${VERSION}`),
         fetch(`abilities.json?v=${VERSION}`),
         fetch(`rules.json?v=${VERSION}`),
         fetch(`keywords.json?v=${VERSION}`),
         fetch(`weapon_abilities.json?v=${VERSION}`),
+        fetch(`faction_taxonomy.json?v=${VERSION}`),
       ]);
 
       if (!unitsRes.ok) throw new Error('Failed to load unit data');
+      if (!taxonomyRes.ok) throw new Error('Failed to load faction taxonomy');
 
-      const data = await unitsRes.json();
+      armyData = await unitsRes.json();
+      factionTaxonomy = await taxonomyRes.json();
 
       // Build lookup tables (fail gracefully if files missing)
       if (abilitiesRes.ok) {
@@ -1019,36 +1123,19 @@
         arr.forEach(w => { weaponAbilitiesLookup[w.weapon_ability_name] = w.weapon_ability_description; });
       }
 
-      const army = data[0];
-      document.getElementById('banner-army-select').value = 'chaos_daemons';
-      rawUnits = army.units;
+      // Index units by army name for fast resolution.
+      unitsByArmy = {};
+      armyData.forEach(block => { unitsByArmy[block.army] = block.units; });
 
-      allUnits = army.units.map(unit => {
-        const sizes    = unit.points ? unit.points.sizes : [];
-        const needsGod = GOD_UNITS.has(unit.unit_name);
-        const limit    = unit.instance_limit_override || instanceLimit(unit.unit_type);
-        const mg       = unit.model_groups && unit.model_groups[0];
-        const leaderEligible = mg && mg.leader_eligible_units  ? mg.leader_eligible_units  : [];
-        const coLeaderWith   = mg && mg.co_leader_eligible_with ? mg.co_leader_eligible_with : [];
-
-        return {
-          unit_name:     unit.unit_name,
-          unit_type:     unit.unit_type,
-          sizes,
-          needsGod,
-          limit,
-          leaderEligible,
-          coLeaderWith,
-          minPts: sizes.length > 0 ? sizes[0].first_unit : null,
-        };
-      });
-
-      renderRoster();
-      renderBanner();
+      // Build the two-step selector, default Adeptus Astartes → Space Marines.
+      buildGroupSelect();
+      const defaultGroup = 'Adeptus Astartes';
+      document.getElementById('banner-group-select').value = defaultGroup;
+      const selectedFaction = buildFactionSelect(defaultGroup, 'Space Marines');
+      activateFaction(factionRecord(defaultGroup, selectedFaction));
     } catch (err) {
       document.getElementById('roster').innerHTML =
         `<div class="error-msg">Could not load unit data: ${err.message}</div>`;
-      document.getElementById('banner-army-select').value = 'chaos_daemons';
     }
   }
 
