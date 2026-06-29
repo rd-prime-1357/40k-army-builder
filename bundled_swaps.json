@@ -1,0 +1,145 @@
+{
+  "_comment": "Bundled-swap definitions for compound/multi-weapon loadout options the Wahapedia parser cannot express as single-weapon swaps. Keyed by army_name + unit_name + model_group. convert_to_json.py merges these into units.json at build time, so they survive faction regeneration (they are NOT hand-injected into units.json). Each option_group is one mutually-exclusive radio with exactly one is_default endpoint that is always selected unless replaced. Each endpoint is self-contained: 'adds'/'removes' reference weapon-family base names (profiles fan out from these); 'grants' carry non-weapon consequences (e.g. a relic shield) shaped like Unit_Other_Options entries. All weapon names must match the base names in Unit_Weapons exactly.",
+  "bundles": [
+    {
+      "army_name": "Adeptus Astartes",
+      "unit_name": "Captain",
+      "model_group": "All",
+      "option_group": "Captain Wargear",
+      "endpoints": [
+        {
+          "id": "captain-base",
+          "label": "Bolt pistol, master-crafted bolter & close combat weapon",
+          "is_default": true,
+          "points_cost": 0,
+          "adds": [],
+          "removes": [],
+          "grants": []
+        },
+        {
+          "id": "captain-mcpw",
+          "label": "Master-crafted power weapon (melee swap)",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Master-crafted power weapon"],
+          "removes": ["Close combat weapon"],
+          "grants": []
+        },
+        {
+          "id": "captain-fist",
+          "label": "Power fist (melee swap)",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Power fist"],
+          "removes": ["Close combat weapon"],
+          "grants": []
+        },
+        {
+          "id": "captain-hbp-fist",
+          "label": "Heavy bolt pistol & power fist",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Heavy bolt pistol", "Power fist"],
+          "removes": ["Bolt pistol", "Master-crafted bolter", "Close combat weapon"],
+          "grants": []
+        },
+        {
+          "id": "captain-hbp-mcpw",
+          "label": "Heavy bolt pistol & master-crafted power weapon",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Heavy bolt pistol", "Master-crafted power weapon"],
+          "removes": ["Bolt pistol", "Master-crafted bolter", "Close combat weapon"],
+          "grants": []
+        },
+        {
+          "id": "captain-nvp-fist",
+          "label": "Neo-volkite pistol & power fist",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Neo-volkite pistol", "Power fist"],
+          "removes": ["Bolt pistol", "Master-crafted bolter", "Close combat weapon"],
+          "grants": []
+        },
+        {
+          "id": "captain-nvp-mcpw",
+          "label": "Neo-volkite pistol & master-crafted power weapon",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Neo-volkite pistol", "Master-crafted power weapon"],
+          "removes": ["Bolt pistol", "Master-crafted bolter", "Close combat weapon"],
+          "grants": []
+        },
+        {
+          "id": "captain-pp-fist",
+          "label": "Plasma pistol & power fist",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Plasma pistol", "Power fist"],
+          "removes": ["Bolt pistol", "Master-crafted bolter", "Close combat weapon"],
+          "grants": []
+        },
+        {
+          "id": "captain-pp-mcpw",
+          "label": "Plasma pistol & master-crafted power weapon",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Plasma pistol", "Master-crafted power weapon"],
+          "removes": ["Bolt pistol", "Master-crafted bolter", "Close combat weapon"],
+          "grants": []
+        },
+        {
+          "id": "captain-hbp-mcpw-shield",
+          "label": "Heavy bolt pistol, master-crafted power weapon & relic shield",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Heavy bolt pistol", "Master-crafted power weapon"],
+          "removes": ["Bolt pistol", "Master-crafted bolter", "Close combat weapon"],
+          "grants": [
+            {
+              "model_group": "All",
+              "option_name": "Relic shield",
+              "ability_name": "Relic Shield",
+              "carrier_notes": "The bearer has a Wounds characteristic of 7."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "army_name": "Chaos Daemons",
+      "unit_name": "Bloodthirster",
+      "model_group": "All",
+      "option_group": "Great Axe Replacement",
+      "endpoints": [
+        {
+          "id": "bloodthirster-base",
+          "label": "Great axe of Khorne",
+          "is_default": true,
+          "points_cost": 0,
+          "adds": [],
+          "removes": [],
+          "grants": []
+        },
+        {
+          "id": "bloodthirster-axe-bloodflail",
+          "label": "Axe of Khorne & bloodflail",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Axe of Khorne", "Bloodflail"],
+          "removes": ["Great axe of Khorne"],
+          "grants": []
+        },
+        {
+          "id": "bloodthirster-axe-lash",
+          "label": "Axe of Khorne & lash of Khorne",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": ["Axe of Khorne", "Lash of Khorne"],
+          "removes": ["Great axe of Khorne"],
+          "grants": []
+        }
+      ]
+    }
+  ]
+}

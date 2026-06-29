@@ -1,386 +1,1034 @@
 [
   {
-    "ability_name": "The Shadow of Chaos",
-    "ability_description": "If your Army Faction is Legiones Daemonica, certain areas of the battlefield are considered to be within your army's Shadow of Chaos. Your deployment zone is always within your army's Shadow of Chaos. At the start of any phase, if you control at least half of the objective markers within No Man's Land, until the end of that phase, No Man's Land is within your army's Shadow of Chaos. At the start of any phase, if you control at least half of the objective markers within your opponent's deployment zone, until the end of that phase, your opponent's deployment zone is within your army's Shadow of Chaos."
+    "ability_name": "An Honourable Death in Combat",
+    "ability_description": "Each time a model in this unit makes an attack, that attack has the [SUSTAINED HITS 1] ability if this unit is below its Starting Strength, or the [SUSTAINED HITS 2] ability if this unit is Below Half-strength."
   },
   {
-    "ability_name": "Greater Daemon of Khorne (Aura)",
-    "ability_description": "While a friendly Khorne Legiones Daemonica unit is within 6\\ of this model"
+    "ability_name": "Ancient Tactician",
+    "ability_description": "At the start of your Command phase, if this model is on the battlefield, you gain 1CP."
   },
   {
-    "ability_name": "Rage Embodied (Aura)",
-    "ability_description": "While a friendly Khorne Legiones Daemonica unit is within 6\\ of this model"
+    "ability_name": "Angelic Visage",
+    "ability_description": "Each time a melee attack targets this unit, subtract 1 from the Hit roll."
   },
   {
-    "ability_name": "Murderlust",
-    "ability_description": "This unit is eligible to declare a charge in a turn in which it Advanced."
+    "ability_name": "Angel’s Wrath",
+    "ability_description": "While this model is leading a unit, each time that unit ends a Charge move, until the end of the turn, add 1 to the Strength characteristic of melee weapons equipped by models in that unit."
   },
   {
-    "ability_name": "Daemon Lord of Khorne (Aura)",
-    "ability_description": "While a friendly Khorne Legiones Daemonica unit is within 6\\ of this model"
+    "ability_name": "Annihilator",
+    "ability_description": "Each time a ranged attack made by this model is allocated to a MONSTER or VEHICLE model, you can re-roll the Damage roll."
   },
   {
-    "ability_name": "Relentless Carnage",
-    "ability_description": "At the end of the Fight phase, you can select one enemy unit within Engagement Range of this model and roll eight D6: for each 4+, that enemy unit suffers 1 mortal wound."
+    "ability_name": "Annihilator Protocols",
+    "ability_description": "Melee weapons equipped by models in this unit have the [SUSTAINED HITS 2] ability when targeting MONSTER , VEHICLE or FORTIFICATION units."
   },
   {
-    "ability_name": "Lord of Decapitations",
-    "ability_description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [DEVASTATING WOUNDS] ability."
+    "ability_name": "Anvil of Endurance",
+    "ability_description": "While this model is leading a unit, each time a model in that unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6: on a 4+, do not remove the destroyed model from play. The destroyed model can fight after the attacking unit has finished making its attacks, and is then removed from play."
   },
   {
-    "ability_name": "Skulls for Khorne",
-    "ability_description": "Each time this model makes an attack that targets a Character unit, you can re-roll the Hit roll and you can re-roll the Wound roll. Each time this model destroys an enemy Character unit, you gain 1CP."
+    "ability_name": "Aquilon Optics",
+    "ability_description": "Each time this model is selected to shoot, you can re-roll one Hit roll, you can re-roll one Wound roll and you can re-roll one Damage roll when resolving those attacks."
   },
   {
-    "ability_name": "Bloodmaster",
-    "ability_description": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Wound roll."
+    "ability_name": "Armorium Cherub",
+    "ability_description": "Once per battle, after making a Hit roll for a model in this unit, you can change that roll to an unmodified 6."
   },
   {
-    "ability_name": "A Gory Path",
-    "ability_description": "Each time this model's unit Consolidates, it can move up to 6\\ instead of up to 3\\\".\""
+    "ability_name": "Armour of Faith",
+    "ability_description": "Once per phase, when an attack is allocated to this model and the saving throw is failed, you can change the Damage characteristic of that attack to 0."
   },
   {
-    "ability_name": "Skullmaster's Fury",
-    "ability_description": "While this model is leading a unit, each time that unit ends a Charge move, until the end of the turn, Juggernaut's bladed horns equipped by models in that unit have the [DEVASTATING WOUNDS] ability."
+    "ability_name": "Armour of Fate",
+    "ability_description": "The first time this model is destroyed, roll one D6 at the end of the phase: on a 3+, set this model back up on the battlefield as close as possible to where it was destroyed and not within Engagement Range of any enemy models, with 6 wounds remaining."
   },
   {
-    "ability_name": "Devastating Charge",
-    "ability_description": "Each time this model's unit ends a Charge move, each enemy unit within Engagement Range of that unit must take a Battle-shock test."
+    "ability_name": "Armoured Resilience",
+    "ability_description": "Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack."
   },
   {
-    "ability_name": "Blood Throne",
-    "ability_description": "At the start of the Fight phase, select one enemy unit within 18\\ of and visible to this model. Until the end of the phase"
+    "ability_name": "Assault Ramp",
+    "ability_description": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
   },
   {
-    "ability_name": "Champion Slayer",
-    "ability_description": "Each time this model makes a melee attack that targets a Character or Monster unit, you can re-roll the Wound roll. Each time this model destroys an enemy Character or Monster unit, this model regains up to D6 lost wounds."
+    "ability_name": "Assault Vehicle",
+    "ability_description": "Units can disembark from this TRANSPORT after it has Advanced. Units that do so count as having made a Normal move, and cannot declare a charge that turn."
   },
   {
-    "ability_name": "Pack Leader",
-    "ability_description": "While this model is leading a unit, you can re-roll Advance and Charge rolls made for that unit."
-  },
-  {
-    "ability_name": "Prey of the Blood God",
-    "ability_description": "At the start of the first battle round, select one enemy unit to be this model's prey. Each time a model in this model's unit makes a melee attack that targets its prey, you can re-roll the Wound roll. Each time this model's prey is destroyed, select one new enemy unit to be this model's prey."
-  },
-  {
-    "ability_name": "Bane of Cowards",
-    "ability_description": "Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more units from your army with this ability Falls Back, models in that enemy unit must take Desperate Escape tests. When doing so, if that enemy unit is also Battle-shocked, subtract 1 from each of those Desperate Escape tests."
-  },
-  {
-    "ability_name": "Brass Stampede",
-    "ability_description": "Each time this unit ends a Charge move, select one enemy unit within Engagement Range of this unit and roll one D6 for each model in this unit: for each 4+, that enemy unit suffers D3 mortal wounds."
-  },
-  {
-    "ability_name": "Hunters from the Warp",
-    "ability_description": "At the end of your opponent's turn, if this unit is not within Engagement Range of one or more enemy units, you can remove it from the battlefield and place it into Strategic Reserves."
-  },
-  {
-    "ability_name": "Skulls of the Fallen",
-    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit that was hit by one or more of those attacks. That unit must take a Battle-shock test."
-  },
-  {
-    "ability_name": "Shadow of Khorne (Aura)",
-    "ability_description": "The area of the battlefield within 6\\ of this Fortification is considered to be within your army's Shadow of Chaos. In addition"
-  },
-  {
-    "ability_name": "Cover",
-    "ability_description": "Each time a ranged attack is allocated to a model, if that model is not fully visible to every model in the attacking unit because of this Fortification, that model has the Benefit of Cover against that attack."
-  },
-  {
-    "ability_name": "Fortification",
-    "ability_description": "While an enemy unit is only within Engagement Range of one or more Fortifications from your army: that unit can still be selected as the target of ranged attacks, but each time such an attack is made, unless it is made with a Pistol, subtract 1 from the Hit roll. Models in that unit do not need to take Desperate Escape tests due to Falling Back while Battle-shocked, except for those that will move over enemy models when doing so."
-  },
-  {
-    "ability_name": "Greater Daemon of Tzeentch (Aura)",
-    "ability_description": "While a friendly Tzeentch Legiones Daemonica unit is within 6\\ of this model"
-  },
-  {
-    "ability_name": "One Head Looks Forward",
-    "ability_description": "At the end of your Command phase, if this model is on the battlefield, take a Leadership test for this model; if that test is passed, you gain 1CP."
-  },
-  {
-    "ability_name": "One Head Looks Back",
-    "ability_description": "Once per turn, when your opponent targets a unit from their army within 12\\ of this model with a stratagem"
-  },
-  {
-    "ability_name": "Daemon Lord of Tzeentch (Aura)",
-    "ability_description": "While a friendly Tzeentch Legiones Daemonica unit is within 6\\ of this model"
-  },
-  {
-    "ability_name": "Master of Magicks (Psychic)",
-    "ability_description": "In your Shooting phase, select one of the following abilities: [IGNORES COVER]; [LETHAL HITS]; [SUSTAINED HITS D3]. Until the end of the phase, this model's Bolt of Change has that ability."
-  },
-  {
-    "ability_name": "Formless Horror",
-    "ability_description": "Each time an enemy unit wishes to select this model as the target of an attack, that unit must first take a Battle-shock test. If that test is failed, in addition to being Battle-shocked, that enemy unit cannot target this model this phase."
-  },
-  {
-    "ability_name": "Mischief and Confusion",
-    "ability_description": "At the start of your opponent's Shooting phase, select one enemy unit within 12\\ of and visible to this model and roll one D6: on a 2-5"
-  },
-  {
-    "ability_name": "Fateskimmer",
-    "ability_description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [LETHAL HITS] ability."
-  },
-  {
-    "ability_name": "Rider of the Immaterial Winds",
-    "ability_description": "Once per battle, at the end of your opponent's turn, if this model's unit is not within Engagement Range of one or more enemy units, you can remove that unit from the battlefield and place it into Strategic Reserves."
-  },
-  {
-    "ability_name": "Fluxmaster",
-    "ability_description": "While this model is leading a unit, each time an attack is made against that unit, subtract 1 from the Hit roll."
-  },
-  {
-    "ability_name": "Altered Reality (Psychic)",
-    "ability_description": "Once per battle round, after a Hit roll, a Wound roll or a saving throw is made for this model, you can change the result of that roll to an unmodified 6."
-  },
-  {
-    "ability_name": "P'tarix's Sorcerous Syphon (Aura)",
-    "ability_description": "While an enemy unit is within 12\\ of this model"
-  },
-  {
-    "ability_name": "Xirat'p's Sorcerous Barrages (Psychic)",
-    "ability_description": "At the end of your Movement phase, roll one D6 for each enemy unit within 6\\ of this model: on a 2-3"
-  },
-  {
-    "ability_name": "Changecaster",
-    "ability_description": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
-  },
-  {
-    "ability_name": "Storm of Mutating Sorcery (Psychic)",
-    "ability_description": "In your Shooting phase, after this model has shot, select one enemy Infantry unit hit by one or more of those attacks. That unit must take a Battle-shock test."
-  },
-  {
-    "ability_name": "Blazing Warpfire (Psychic)",
-    "ability_description": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [ASSAULT] ability."
-  },
-  {
-    "ability_name": "Flames of Change (Psychic)",
-    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit (excluding Monsters and Vehicles) hit by one or more of those attacks, and roll one D6. On a 4+, until the end of your opponent's next turn, that enemy unit is aflame. While a unit is aflame, subtract 2\\ from its Move characteristic and subtract 2 from Advance and Charge rolls made for it.\""
-  },
-  {
-    "ability_name": "Split",
-    "ability_description": "Each time a Blue Horror or Pink Horror model in this unit is destroyed, after the attacking unit has finished making its attacks, if this unit is not destroyed, roll one D6 for that model. On a 4+, add the appropriate number of replacement models to this unit (see unit rules)."
-  },
-  {
-    "ability_name": "Sullen Malevolence (Aura)",
-    "ability_description": "While an enemy unit is within 6\\ of this unit"
-  },
-  {
-    "ability_name": "Exploding Horrors",
-    "ability_description": "Each time this unit is selected to fight, you can select one enemy unit within Engagement Range of it, then select one or more Brimstone Horror models in this unit. For each Brimstone Horror model you select, roll one D6: on a 4+, that model is destroyed and that enemy unit suffers 1 mortal wound."
-  },
-  {
-    "ability_name": "Bounding Leaps",
-    "ability_description": "This unit is eligible to shoot in a turn in which it Fell Back."
-  },
-  {
-    "ability_name": "Slashing Dive",
-    "ability_description": "In your Movement phase, after this unit ends a Normal move, you can select one enemy unit it moved over during that move and roll one D6 for each model in this unit: for each 4+, that enemy unit suffers 1 mortal wound."
-  },
-  {
-    "ability_name": "Eldritch Flames (Psychic)",
-    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit that was hit by one or more of those attacks. Until the end of the phase, that unit cannot have the Benefit of Cover."
-  },
-  {
-    "ability_name": "Greater Daemon of Nurgle (Aura)",
-    "ability_description": "While a friendly Nurgle Legiones Daemonica unit is within 6\\ of this model"
-  },
-  {
-    "ability_name": "Virulent Blessing (Psychic)",
-    "ability_description": "At the start of the Fight phase, you can select one enemy unit within 24\\ and visible to this model. Until the end of the phase"
-  },
-  {
-    "ability_name": "Deluge of Nurgle (Aura)",
-    "ability_description": "While an enemy unit is within 6\\ of this model"
-  },
-  {
-    "ability_name": "Daemon Lord of Nurgle (Aura)",
-    "ability_description": "While a friendly Nurgle Legiones Daemonica unit is within 6\\ of this model"
-  },
-  {
-    "ability_name": "Nurgle's Rot (Psychic)",
-    "ability_description": "At the end of your Movement phase, you can select one enemy unit within 12\\ of this model. Until the start of your next Movement phase"
-  },
-  {
-    "ability_name": "Poxbringer",
-    "ability_description": "While this model is leading a unit, each time a model in that unit makes an attack, a successful unmodified Hit roll of 5+ scores a Critical Hit."
-  },
-  {
-    "ability_name": "Feculent Despair (Aura Psychic)",
-    "ability_description": "While an enemy unit is within 6\\ of this model"
-  },
-  {
-    "ability_name": "Keep Counting!",
-    "ability_description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
-  },
-  {
-    "ability_name": "Meet Your Quota!",
+    "ability_name": "Astartes Banner",
     "ability_description": "While this model is leading a unit, add 1 to the Objective Control characteristic of models in that unit."
   },
   {
-    "ability_name": "Blessed by the Plague God",
-    "ability_description": "While this model is leading a unit, models in that unit have a 4+ invulnerable save."
+    "ability_name": "Aura of Fervour (Aura)",
+    "ability_description": "While a friendly ADEPTUS ASTARTES unit is within 6\" of this model, you can re-roll Battle-shock and Leadership tests taken for that unit."
   },
   {
-    "ability_name": "Tally of Pestilence",
-    "ability_description": "Keep a tally of how many enemy models are destroyed by Nurgle Legiones Daemonica models from your army during the battle. At the start of your Command phase, if this tally is 7 or more, you gain 1CP and the tally is reset to 0."
+    "ability_name": "Author of the Codex",
+    "ability_description": "At the Start of your Command phase, select two Author of the Codex abilities (see left). Until the start of your next Command phase, this model has those abilities."
   },
   {
-    "ability_name": "Jolly Gutpipes",
-    "ability_description": "While this model is leading a unit, add 1 to the Move characteristic of models in that unit and you can re-roll Advance rolls made for that unit."
+    "ability_name": "Ballistus Strike",
+    "ability_description": "Each time this model makes a ranged attack that targets a unit that is not Below Half-strength, you can re-roll the Hit roll."
   },
   {
-    "ability_name": "Disease of Mirth (Aura)",
-    "ability_description": "At the start of the Fight phase, every enemy unit (excluding Monsters and Vehicles) within 6\\ of this model must take a Battle-shock test.\""
+    "ability_name": "Battle-lust",
+    "ability_description": "Each time this model ends a Charge move, until the end of the turn, add 2 to the Attacks characteristic of this model’s Frostfang weapon."
   },
   {
-    "ability_name": "Beast Handler",
-    "ability_description": "While this model is leading a unit, you can re-roll charge rolls made for that unit. In addition, once per battle, you can target this unit with the Heroic Intervention stratagem, regardless of any other uses of that stratagem this phase. If you do, that use is -1 CP, and that use does not prevent any uses of that stratagem on other units this phase."
+    "ability_name": "Berserk Charge",
+    "ability_description": "This unit is eligible to declare a charge in a turn in which it Advanced."
   },
   {
-    "ability_name": "Seed the Garden of Nurgle",
-    "ability_description": "At the end of your Movement phase, if this model is within one Area Terrain feature, until the end of the battle, that Area Terrain feature is considered to be within your army's Shadow of Chaos."
-  },
-  {
-    "ability_name": "Infected Outbreak",
-    "ability_description": "If you control an objective marker at the end of your Command phase and this unit is within range of that objective marker, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
-  },
-  {
-    "ability_name": "Mischief Makers",
-    "ability_description": "Each time an enemy unit (excluding Titanic units) within Engagement Range of one or more units with this ability is selected to fight, until the end of the phase, each time a model in that enemy unit makes a melee attack, subtract 1 from the Hit roll."
-  },
-  {
-    "ability_name": "Grotesque Regeneration",
-    "ability_description": "At the end of each phase, if a Beasts of Nurgle model in this unit has lost any wounds but is not destroyed, that model regains all of its lost wounds."
-  },
-  {
-    "ability_name": "Death's Heads",
-    "ability_description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly Nurgle Legiones Daemonica unit makes an attack that targets that unit, you can re-roll the Wound roll."
-  },
-  {
-    "ability_name": "Shroud of Flies (Aura)",
-    "ability_description": "While a friendly Nurgle Legiones Daemonica unit is within 6\\ of this Fortification"
-  },
-  {
-    "ability_name": "Diseased Cover",
-    "ability_description": "Each time a ranged attack is allocated to a model, if that model is not fully visible to every model in the attacking unit because of this Fortification, that model has the Benefit of Cover against that attack."
-  },
-  {
-    "ability_name": "Greater Daemon of Slaanesh (Aura)",
-    "ability_description": "While a friendly Slaanesh Legiones Daemonica unit is within 6\\ of this model"
-  },
-  {
-    "ability_name": "No Prey Can Evade",
+    "ability_name": "Bestial Fury",
     "ability_description": "You can re-roll Advance and Charge rolls made for this model."
   },
   {
-    "ability_name": "Monarch of the Hunt",
-    "ability_description": "At the start of the first battle round, select one enemy unit to be this model's quarry. Each time this model makes a melee attack that targets its quarry, you can re-roll the Hit roll and you can re-roll the Wound roll. Each time this model's quarry is destroyed, select one new enemy unit to be this model's quarry."
+    "ability_name": "Bestial Rage",
+    "ability_description": "Each time an enemy unit is selected to shoot, after that unit has shot, if this model lost one or more wounds as a result of those attacks, this model can make a Bestial Rage move. To do so, roll one D6, adding 2 to the result: this model can be moved a number of inches up to the result, but must finish that move as close as possible to the closest enemy unit (excluding AIRCRAFT ), When doing so, this model can be moved within Engagement Range of that enemy unit. Each model can only make one Bestial Rage move per phase."
   },
   {
-    "ability_name": "Daemon Lord of Slaanesh (Aura)",
-    "ability_description": "While a friendly Slaanesh Legiones Daemonica unit is within 6\\ of this model"
+    "ability_name": "Black Rage",
+    "ability_description": "Each time this model makes a melee attack, you can re-roll the Hit roll. While this model’s unit is not within 6\" of one or more friendly Blood Angels Character models, or 12\" of one or more friendly Chaplain models, it cannot be selected to Fall Back and its Objective Control characteristic is 0."
   },
   {
-    "ability_name": "Mesmerising Form",
-    "ability_description": "Each time an attack targets this model, subtract 1 from the Hit roll."
+    "ability_name": "Blackstar Cluster Launcher",
+    "ability_description": "Each time this model ends a Normal move, you can select one enemy unit it moved over during that move and roll six D6: for each 5+, that unit suffers 1 mortal wound."
   },
   {
-    "ability_name": "Harmonic Alignment",
-    "ability_description": "While this model is leading a unit, in your Command phase, you can return D3 destroyed Bodyguard models to that unit."
+    "ability_name": "Blackwing Mantle",
+    "ability_description": "You can target this model’s unit with the Rapid Ingress and Heroic Intervention Stratagems for 0CP, even if you have already used that Stratagem on a different unit this phase."
   },
   {
-    "ability_name": "Discordant Disruption (Aura)",
-    "ability_description": "While an enemy Psyker unit is within 12\\ of this model"
+    "ability_name": "Bladeguard",
+    "ability_description": "At the start of the Fight phase, you can select one of the following abilities to apply to models in this unit until the end of the phase: Swords of the Chapter: Each time a model in this unit makes a melee attack, re-roll a Hit roll of 1. ; Shields of the Chapter: Each time an invulnerable saving throw is made for a model in this unit, re-roll a saving throw of 1."
   },
   {
-    "ability_name": "The Eternal Dance",
-    "ability_description": "At the start of the Fight phase, select one enemy unit within 6\\ of this model. Until the end of the phase"
+    "ability_name": "Blessing of the Omnissiah",
+    "ability_description": "In your Command phase, you can select one friendly Adeptus Astartes Vehicle model within 3\" of this model. That model regains up to D3 lost wounds and, until the start of your next Command phase, each time that Vehicle model makes an attack, add 1 to the Hit roll. Each model can only be selected for this ability once per turn."
   },
   {
-    "ability_name": "Dazzling Acrobatics",
-    "ability_description": "This model is eligible to declare a charge in a turn in which it Advanced or Fell Back."
+    "ability_name": "Blood Chalice",
+    "ability_description": "While this model is leading a unit, improve the Armour Penetration characteristic of melee weapons equipped by models in that unit by 1."
   },
   {
-    "ability_name": "Prince of Slaanesh",
-    "ability_description": "While this model is leading a unit, each time a model in that unit makes a melee attack, a successful unmodified Wound roll of 5+ scores a Critical Wound."
+    "ability_name": "Braziers of Judgement",
+    "ability_description": "While a Character model is leading this unit, each time an attack targets this unit, subtract 1 from the Hit roll."
   },
   {
-    "ability_name": "Delightful Agonies",
-    "ability_description": "The first time this model is destroyed, roll one D6 at the end of the phase. On a 2+, set this model back up on the battlefield, as close as possible to where it was destroyed and not within Engagement Range of any enemy units, with its full wounds remaining."
+    "ability_name": "Brutalis Charge",
+    "ability_description": "Each time this model ends a Charge move, select one enemy unit within Engagement Range of it and roll one D6: on a 2-3, that enemy unit suffers D3 mortal wounds; on a 4-5, that enemy unit suffers 3 mortal wounds; on a 6, that enemy unit suffers D3+3 mortal wounds."
   },
   {
-    "ability_name": "Swallow Energy (Psychic)",
-    "ability_description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against mortal wounds and Psychic Attacks."
+    "ability_name": "Catechism of Fire",
+    "ability_description": "Each time this model’s unit is selected to shoot, you can select one enemy unit within 12\" of and visible to this model. Until the end of the phase, ranged weapons equipped by models in this model’s unit have the [DEVASTATING WOUNDS] ability when targeting that enemy unit."
   },
   {
-    "ability_name": "Horrible Fascination (Psychic)",
-    "ability_description": "At the start of your opponent's Shooting phase, one Psyker model from your army with this ability can use it. If it does, select one enemy unit within 12\\ of and visible to that Psyker model and roll one D6: on a 1"
+    "ability_name": "Ceramite Cover",
+    "ability_description": "Each time a ranged attack is allocated to a model, if that model is not fully visible to every model in the attacking unit because of this FORTIFICATION , that model has the Benefit of Cover against that attack."
   },
   {
-    "ability_name": "Tormentbringer (Aura)",
-    "ability_description": "While a friendly Slaanesh Legiones Daemonica unit is within 6\\ of this model"
+    "ability_name": "Cerebrex Logic Engine",
+    "ability_description": "At the start of the Declare Battle Formations step, you can select one Adeptus Astartes Infantry unit from your army. Until the end of the battle, that unit gains the Scouts 6\" ability.; After both players have deployed their armies, you can select one ADEPTUS ASTARTES unit from your army and redeploy it. When doing so, you can set that unit up in Strategic Reserves if you wish, regardless of how many units are already in Strategic Reserves."
   },
   {
-    "ability_name": "Hysterical Frenzy",
-    "ability_description": "Each time a model in this model's unit is destroyed, if that model has not fought this phase, do not remove it from play. The destroyed model can fight after the attacking unit has finished making its attacks, and is then removed from play."
+    "ability_name": "Champion of the Kingsguard",
+    "ability_description": "Each time this model makes a melee attack that targets a CHARACTER unit, you can re-roll the Hit roll and you can re-roll the Wound roll."
   },
   {
-    "ability_name": "Tranceweaver",
-    "ability_description": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If the target of that attack is within range of an objective marker, you can re-roll the Hit roll instead."
+    "ability_name": "Close-quarters Firepower",
+    "ability_description": "Each time a model in this unit makes a ranged attack that targets the closest eligible target, improve the Armour Penetration characteristic of that attack by 1."
   },
   {
-    "ability_name": "Symphony of Pain (Psychic)",
-    "ability_description": "At the end of your Movement phase, you can select one enemy unit that is Battle-shocked and within 12\\ of this model. Until the end of the turn"
+    "ability_name": "Cold and Calculating",
+    "ability_description": "Each time a model in this model’s unit makes an attack that targets a MONSTER or VEHICLE unit, that attack has the [LETHAL HITS] ability. Each time a model in this model’s unit makes an attack that targets any other unit, that attack has the [SUSTAINED HITS 1] ability."
   },
   {
-    "ability_name": "Horrifying Beauty",
-    "ability_description": "At the start of the Fight phase, each enemy unit within Engagement Range of one or more units from your army with this ability must take a Battle-shock test, subtracting 1 from the result if that enemy unit is Below Half-strength."
+    "ability_name": "Combat Disembarkation",
+    "ability_description": "Each time a unit disembarks from this model after it has been set up on the battlefield, that unit is still eligible to declare a charge this turn."
   },
   {
-    "ability_name": "Soporific Musk",
-    "ability_description": "Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more units from your army with this ability Falls Back, models in that enemy unit must take Desperate Escape tests. When doing so, if that enemy unit is also Battle-shocked, subtract 1 from each of those Desperate Escape tests."
+    "ability_name": "Combat Squads",
+    "ability_description": "At the start of the Declare Battle Formations step, before any units have been set up, this unit can be split into two units, each containing five models."
   },
   {
-    "ability_name": "Unholy Speed",
-    "ability_description": "You can re-roll Advance and Charge rolls made for this unit."
+    "ability_name": "Combat Support",
+    "ability_description": "Once per turn, in your opponent’s Shooting phase, when a friendly Adeptus Astartes Phobos Infantry unit within 6\" of this model is selected as the target of an attack, one model from your army with this ability can use it. If it does, after that enemy unit has finished making its attacks, that model can shoot as if it were your Shooting phase, but when resolving those attacks it can only target that enemy unit [and only if it is an eligible target)."
   },
   {
-    "ability_name": "Cutting Down the Foe",
+    "ability_name": "Command Squad",
+    "ability_description": "While a CHARACTER model is leading this unit, each time an attack targets this unit, subtract 1 from the Wound roll."
+  },
+  {
+    "ability_name": "Condemnatory Annihilation",
+    "ability_description": "Each time this model’s unit has fought, if one or more enemy units were destroyed as a result of those attacks, each enemy unit within 6\" of this model must take a Battle-shock test."
+  },
+  {
+    "ability_name": "Crusade of Wrath",
+    "ability_description": "While this model is leading a unit, add 1 to the Attacks and Strength characteristics of melee weapons equipped by models in that unit."
+  },
+  {
+    "ability_name": "Cunning Hunters",
+    "ability_description": "Each time a model in this unit makes an attack, re-roll a Wound roll of 1. If the target is within range of an objective marker, you can re-roll the Wound roll instead."
+  },
+  {
+    "ability_name": "Curse of the Wulfen",
+    "ability_description": "While this unit is within 6\" of one or more friendly Space Wolves Character models (excluding Wulfen models) or within 12\" of one or more friendly Wolf Priest models, if it is not Battle-shocked, add 1 to the Objective Control characteristic of Infantry models in it and add 3 to the Objective Control characteristic of Vehicle models in it."
+  },
+  {
+    "ability_name": "Cut Off Their Escape",
+    "ability_description": "Each time an enemy unit (excluding MONSTERS and VEHICLES ) within Engagement Range of this model’s unit is selected to Fall Back, models in that enemy unit must take Desperate Escape tests as if their unit was Battle-shocked. When doing so, if that enemy unit is also Battle-shocked by other means, subtract 1 from each of those Desperate Escape tests."
+  },
+  {
+    "ability_name": "Dark Angels Bodyguard",
+    "ability_description": "While this model is within 3\" of one or more friendly Adeptus Astartes Infantry units, this model has the Lone Operative ability."
+  },
+  {
+    "ability_name": "Deadly Stalkers",
+    "ability_description": "Each time a model in this unit makes an attack that targets an enemy unit, if there are no other units from your opponent’s army within 6\" of that target, add 1 to the Wound roll."
+  },
+  {
+    "ability_name": "Deadly Terror",
+    "ability_description": "While this model is leading a unit, increase the range of that unit’s Terror Troops ability by 3\"."
+  },
+  {
+    "ability_name": "Death Mask of Sanguinius",
+    "ability_description": "At the start of the Fight phase, each enemy unit within 6\" of this model must take a Battle-shock test, subtracting 1 from that test when they do."
+  },
+  {
+    "ability_name": "Death to the Alien",
+    "ability_description": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If the target of that attack does not have the IMPERIUM or CHAOS keywords, you can re-roll the Hit roll instead."
+  },
+  {
+    "ability_name": "Death Vision of Sanguinius",
+    "ability_description": "If this model is destroyed by a melee attack, after the attacking unit has finished making its attacks, you can roll one D6, adding 2 to the result if the attacking unit contains the enemy WARLORD : on a 2-3, that enemy unit suffers D3 mortal wounds; on a 4-5, that enemy unit suffers 3 mortal wounds; on a 6+, that enemy unit suffers D3+3 mortal wounds."
+  },
+  {
+    "ability_name": "Deathwing",
+    "ability_description": "Each time a model in this unit makes an attack, you can ignore any or all modifiers to that attack’s Ballistic Skill or Weapon Skill characteristics and/or to the Hit roll. In addition, each time a model in this unit makes an attack that targets the enemy unit you selected at the start of your Command phase for the Oath of Moment ability, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Decimator Protocols",
+    "ability_description": "Each time a model in this unit makes a ranged attack, re-roll a Hit roll of 1. If the target of that attack is an enemy unit within range of an objective marker, you can re-roll the Hit roll instead."
+  },
+  {
+    "ability_name": "Deeds of Heroism",
+    "ability_description": "Once per battle, when this model is selected to fight, it can use this ability. If it does, until the end of the phase, add 1 to the Attacks characteristic of melee weapons equipped by models in this model’s unit."
+  },
+  {
+    "ability_name": "Defensive Array",
+    "ability_description": "You can target this FORTIFICATION with the Fire Overwatch Stratagem for 0CP, and can do so even if you have already targeted another unit with that Stratagem this turn. This FORTIFICATION can only be targeted with that Stratagem once per turn."
+  },
+  {
+    "ability_name": "Deployment Complete",
+    "ability_description": "Once this unit is set up on the battlefield and all units within it have disembarked, until the end of the battle, units cannot embark within this TRANSPORT ."
+  },
+  {
+    "ability_name": "Designer’s Note",
+    "ability_description": "This ability is triggered even when a model in this unit is destroyed as the result of failing a Hazardous test, meaning such a model may be able to shoot twice in the same phase"
+  },
+  {
+    "ability_name": "Destructor",
+    "ability_description": "Each time this model makes a ranged attack that targets an INFANTRY unit, improve the Armour Penetration characteristic of that attack by 1."
+  },
+  {
+    "ability_name": "Driven by Fury",
+    "ability_description": "In your opponent’s Shooting phase, each time an enemy unit has shot, if this model was hit by one or more of those attacks, it can make a Driven by Fury move. To do so, roll one D6 and add 2 to the roll: this model moves a number of inches up to the result, but must finish as close as possible to the closest enemy unit (excluding AIRCRAFT ). When doing so, this model can be moved within Engagement Range of that enemy unit. A model cannot make a Driven by Fury move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Driven by Fury move per phase."
+  },
+  {
+    "ability_name": "Drop Pod Assault",
+    "ability_description": "This model must start the battle in Reserves and can be set up in the Reinforcements step of your first, second or third Movement phase, regardless of any mission rules. Any units embarked within this model must immediately disembark after it has been set up on the battlefield, and they must be set up more than 9\" away from all enemy models."
+  },
+  {
+    "ability_name": "Duty Eternal",
+    "ability_description": "Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack."
+  },
+  {
+    "ability_name": "Echo of the Ravenspire",
+    "ability_description": "At the end of your opponent’s turn, if this model’s unit is not within Engagement Range of any enemy models, you can remove it from the battlefield and place it into Strategic Reserves."
+  },
+  {
+    "ability_name": "Emergency Combat Embarkation",
+    "ability_description": "Once per turn, in your opponent’s Charge phase, after an enemy unit has selected targets for its charge but before it makes a Charge move, you can select one ADEPTUS ASTARTES unit from your army that was selected as a target of that charge. Provided that unit is not within Engagement Range of one or more enemy units and every model in that unit is within 3\" of this TRANSPORT , it can embark within this TRANSPORT . The charging unit can then select new targets for its charge."
+  },
+  {
+    "ability_name": "Engulfing Fear (Psychic)",
+    "ability_description": "In your Shooting phase, you can select one enemy unit within 18\" of this model. That enemy unit must take a Battle-shock test."
+  },
+  {
+    "ability_name": "Enmity for the Unworthy",
+    "ability_description": "Each time a model in this unit makes an attack that targets a CHARACTER unit, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Evade and Survive",
+    "ability_description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, if this unit is not within Engagement Range of one or more enemy units, it can make a Normal move."
+  },
+  {
+    "ability_name": "Executioner",
+    "ability_description": "Each time this model makes an attack that targets a unit that is Below Half-strength, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Exemplar of Hate",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes a melee attack, you can re-roll the Hit roll."
+  },
+  {
+    "ability_name": "Exhortation of Rage",
+    "ability_description": "Each time this model’s unit is selected to fight, you can select one enemy unit within Engagement Range of this model’s unit and roll one D6: on a 4-5, that enemy unit suffers D3 mortal wounds; on a 6, that enemy unit suffers 3 mortal wounds."
+  },
+  {
+    "ability_name": "Exploit Their Cowardice",
+    "ability_description": "Each time an enemy unit within Engagement Range of this unit is selected to Fall Back, after it ends that Fall Back move, if this unit is not within Engagement Range of one or more enemy units, this unit can make a Normal move."
+  },
+  {
+    "ability_name": "Feared Interrogator",
+    "ability_description": "At the start of the Fight phase, each enemy CHARACTER unit within 6\" of this model must take a Battle-shock test, subtracting 1 from that test when they do. In addition, each time this model destroys an enemy CHARACTER model with a melee attack, you gain 1CP."
+  },
+  {
+    "ability_name": "Fearsome Assault",
+    "ability_description": "At the start of the Fight phase, each enemy unit within Engagement Range of one or more units with this ability must take a Battle-shock test, subtracting 1 from that test."
+  },
+  {
+    "ability_name": "Ferocious Assault",
+    "ability_description": "Each time this model makes an attack with its twin las-talon that targets the closest eligible MONSTER or VEHICLE unit, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Fervour of the Ancients (Aura)",
+    "ability_description": "While a friendly Space Wolves unit is within 6\" of this model, add 1 to Advance and Charge rolls made for that unit."
+  },
+  {
+    "ability_name": "Finest Hour",
+    "ability_description": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does, until the end of the phase, add 3 to the Attacks characteristic of melee weapons equipped by this model and those weapons have the [DEVASTATING WOUNDS] ability."
+  },
+  {
+    "ability_name": "Fire Support",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks, Until the end of the phase, each time a friendly model that disembarked from this Transport this turn makes an attack that targets that enemy unit, you can re-roll the Wound roll."
+  },
+  {
+    "ability_name": "For the Chapter!",
+    "ability_description": "Each time a model in this unit is destroyed, roll one D6: on a 3+, do not remove it from play. The destroyed model can shoot after the attacking model’s unit has finished making its attacks, and is then removed from play. When resolving these attacks, any Hazardous tests taken for that attack are automatically passed."
+  },
+  {
+    "ability_name": "For the Khan!",
+    "ability_description": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [ASSAULT] ability and melee weapons equipped by models in that unit have the [LANCE] ability."
+  },
+  {
+    "ability_name": "Forgefather",
+    "ability_description": "In your Shooting phase, select one enemy unit within 24\" of and visible to this model. Until the end of the phase, each time a friendly ADEPTUS ASTARTES model makes a ranged attack with a Torrent or Melta weapon that targets that enemy unit, you can re-roll the Wound roll."
+  },
+  {
+    "ability_name": "Forlorn Hero",
+    "ability_description": "While this model is leading a unit, unless that unit starts the battle embarked within a Transport, models in that unit have the Scouts 6\" ability."
+  },
+  {
+    "ability_name": "Fortification",
+    "ability_description": "While an enemy unit is only within Engagement Range of one or more FORTIFICATIONS from your army: That unit can still be selected as the target of ranged attacks, but each time such an attack is made, unless it is made with a Pistol, subtract 1 from the Hit roll. ; Models in that unit do not need to take Desperate Escape tests due to Falling Back while Battle-shocked, except for those that will move over enemy models when doing so."
+  },
+  {
+    "ability_name": "Fortis Doctrines",
+    "ability_description": "Each time a model in this unit makes an attack that targets a unit that is below its Starting Strength, add 1 to the Hit roll. If that attack targets a unit that is Below Half-strength, add 1 to the Hit roll and add 1 to the Wound roll instead."
+  },
+  {
+    "ability_name": "Fury of the First",
+    "ability_description": "Each time a model in this unit makes an attack that targets your Oath of Moment target, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Fury Unbound",
+    "ability_description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [LETHAL HITS] ability"
+  },
+  {
+    "ability_name": "Gene-seed Recovery",
+    "ability_description": "When this model’s Bodyguard unit is destroyed, roll one D6: on a 2+, you gain 1CP"
+  },
+  {
+    "ability_name": "Gift of the Iron Wolf",
+    "ability_description": "In your Command phase, you can select one friendly Adeptus Astartes Vehicle model within 3\" of this model. That model regains up to D3 lost wounds and, until the start of your next Command phase, select one ranged weapon equipped by that model to have the [RAPID FIRE 1] ability. Each model can only be selected for this ability or the Blessing of the Omnissiah ability once per turn."
+  },
+  {
+    "ability_name": "Glory of Ultramar",
+    "ability_description": "In your opponent’s Shooting phase, each time an enemy unit has shot, if any models from this unit were destroyed as a result of those attacks, this unit can make a Surge move. To do so, roll one D6: models in this unit move a number of inches up to the result, but this unit must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT ). When doing so, those models can be moved within Engagement Range of that enemy unit. This unit cannot make a Surge move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Surge move per phase."
+  },
+  {
+    "ability_name": "Grand Master of the Deathwing",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability."
+  },
+  {
+    "ability_name": "Grand Master of the Ravenwing",
+    "ability_description": "While this model is leading a unit, that unit is eligible to shoot and declare a charge in a turn in which it Advanced. If that unit is already eligible to shoot and declare a charge in a turn in which it Advanced, add 1 to Advance and Charge rolls made for that unit instead."
+  },
+  {
+    "ability_name": "Guardian of the Lost",
+    "ability_description": "While this model is leading a unit, each time an attack is allocated to a model in that unit, subtract 1 from the Damage characteristic of that attack."
+  },
+  {
+    "ability_name": "Guerrilla Tactics",
+    "ability_description": "At the end of your opponent’s turn, if this unit is more than 6\" away from all enemy models, you can remove this unit from the battlefield and place it into Strategic Reserves."
+  },
+  {
+    "ability_name": "Guile of the Wolf (Aura)",
+    "ability_description": "Each time your opponent targets a unit from their army with a Stratagem, if that unit is within 12\" of this model, increase the cost of that usage of that Stratagem by 1CP (this is not cumulative with any other rules that increase the CP cost of that Stratagem)."
+  },
+  {
+    "ability_name": "Hailstrike",
+    "ability_description": "Each time this model has shot, select one enemy unit (excluding MONSTERS and VEHICLES ) hit by one or more of those attacks. Until the end of the phase, each time a friendly ADEPTUS ASTARTES unit makes a ranged attack that targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1. The same enemy unit can only be affected by this ability once per phase."
+  },
+  {
+    "ability_name": "Hammer Blow",
+    "ability_description": "In the Fight phase, after this unit has fought, select one enemy MONSTER or VEHICLE unit hit by one or more of those attacks. Until the end of the next turn, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+  },
+  {
+    "ability_name": "Hammer of Wrath",
+    "ability_description": "Each time this unit ends a Charge move, select one enemy unit within Engagement Range of it, then roll one D6 for each model in this unit that is within Engagement Range of that enemy unit: for each 4+, that enemy unit suffers 1 mortal wound."
+  },
+  {
+    "ability_name": "Hammerstrike",
+    "ability_description": "Each time this model has shot, select one enemy unit that was hit by one or more attacks made by this model this phase. Until the end of the phase, that enemy unit cannot have the Benefit of Cover."
+  },
+  {
+    "ability_name": "Headhunters",
+    "ability_description": "At the start of the battle, select one unit from your opponent’s army to be this unit’s quarry. Weapons equipped by HEADTAKERS models in this unit have the [DEVASTATING WOUNDS] and [PRECISION] abilities while targeting its quarry. Each time this unit’s quarry is destroyed, select one new enemy unit to be this unit’s quarry. This ability can be used even if this unit is embarked within a Transport."
+  },
+  {
+    "ability_name": "Healing Balms",
+    "ability_description": "While this model is leading a unit, in your Command phase, you can return 1 destroyed model (excluding CHARACTER models) to that unit."
+  },
+  {
+    "ability_name": "Heirs of Azkaellon",
+    "ability_description": "While a Character model is leading this unit, each time a melee attack targets this unit, subtract 1 from the Wound roll."
+  },
+  {
+    "ability_name": "Heroic Last Stand",
+    "ability_description": "If this model is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 2+, do not remove it from play. The destroyed model can fight after the attacking unit has finished making its attacks, and is then removed from play."
+  },
+  {
+    "ability_name": "High King of Fenris",
+    "ability_description": "Once per battle round, in your Movement phase, you can select one friendly Space Wolves unit that is in Reserves. If you do, until the end of the phase, for the purpose of setting up that unit on the battlefield, treat the current battle round number as being one higher than it actually is."
+  },
+  {
+    "ability_name": "High Marshal",
+    "ability_description": "At the start of the Fight phase, select one enemy unit within Engagement Range of this model’s unit and roll one D6, adding 1 to the result for every five models in this model’s unit: on a 2-3, that enemy unit suffers D3 mortal wounds; on a 4-5, that enemy unit suffers 3 mortal wounds; on a 6+, that enemy unit suffers D3+3 mortal wounds."
+  },
+  {
+    "ability_name": "Honour of Ultramar",
+    "ability_description": "If this model is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 2+, do not remove it from play. This model can fight after the attacking unit has finished making its attacks. If one or more enemy models are destroyed as a result of those attacks, this model regains D3 lost wounds and is not destroyed; otherwise, it is removed from play."
+  },
+  {
+    "ability_name": "Honour or Death",
+    "ability_description": "While this unit contains a Ravenwing Champion, add 1 to Advance and Charge rolls made for this unit and you can target this unit with the Heroic Intervention Stratagem for 0CP."
+  },
+  {
+    "ability_name": "Hood of Hellfire",
+    "ability_description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against Psychic Attacks and mortal wounds."
+  },
+  {
+    "ability_name": "Hunting Hounds",
+    "ability_description": "While this unit is within 6\" of one or more friendly Space Wolves Character models (excluding Wulfen models), if this unit is not Battle-shocked, models in it have an Objective Control characteristic of 1."
+  },
+  {
+    "ability_name": "Icon of Obstinacy",
+    "ability_description": "Each time an attack targets this model’s unit, if the Strength characteristic of that attack is greater than or equal to the Toughness characteristic of that unit, subtract 1 from the Wound roll."
+  },
+  {
+    "ability_name": "Icon of Old Caliban (Aura)",
+    "ability_description": "While a friendly ADEPTUS ASTARTES unit is within 6\" of this model, models in that unit have the Stealth ability and each time a ranged attack targets that unit, that unit has the Benefit of Cover against that attack."
+  },
+  {
+    "ability_name": "Incendiary Terror",
+    "ability_description": "In your Shooting phase, after this unit has shot, you can select one enemy INFANTRY unit hit by one or more of those attacks made with a pyreblaster. That enemy unit must take a Battle-shock test, subtracting 1 from that test."
+  },
+  {
+    "ability_name": "Indomitable Assault",
+    "ability_description": "Each time a model in this unit makes a Consolidation move, it can move up to 6\" instead of up to 3\"."
+  },
+  {
+    "ability_name": "Indomitor Doctrines",
+    "ability_description": "Each time a model in this unit makes a ranged attack that targets the closest eligible target, or makes a melee attack in a turn in which it made a Charge move, improve the Strength characteristic of that attack by 2."
+  },
+  {
+    "ability_name": "Inner Circle",
+    "ability_description": "Each time an attack is allocated to a model in this unit, subtract 1 from the Damage characteristic of that attack."
+  },
+  {
+    "ability_name": "Inspirational Exemplar",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes a melee attack, an unmodified Hit roll of 5+ scores a Critical Hit."
+  },
+  {
+    "ability_name": "Inspiring Leader",
+    "ability_description": "This unit is eligible to shoot and declare a charge in a turn in which it Advanced or Fell Back."
+  },
+  {
+    "ability_name": "Interception Strike",
+    "ability_description": "Each time this model makes a ranged attack that targets an enemy unit within 12\" of one or more ADEPTUS ASTARTES units from your army, you can re-roll the Hit roll."
+  },
+  {
+    "ability_name": "Interceptor",
+    "ability_description": "Each time this model makes a ranged attack that targets a unit that can Fly, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Intractable Will",
+    "ability_description": "While this model is leading a unit, each time a model in that unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6. On a 4+, do not remove it from play; that destroyed model can fight after the attacking model’s unit has finished making its attacks, and is then removed from play."
+  },
+  {
+    "ability_name": "Iron Father",
+    "ability_description": "While this model is within 3\" of one or more friendly Adeptus Astartes Vehicle units, it has the Lone Operative ability."
+  },
+  {
+    "ability_name": "Iron Priest",
+    "ability_description": "While this model is within 3\" of one or more friendly Adeptus Astartes Vehicle units, this model has the Lone Operative ability."
+  },
+  {
+    "ability_name": "Judgement of the Omnissiah",
+    "ability_description": "Each time this model makes an attack that targets an enemy unit within Engagement Range of one or more friendly Adeptus Astartes Vehicle units, you can re-roll the Wound roll."
+  },
+  {
+    "ability_name": "Judgement of the Weak",
+    "ability_description": "Each time an enemy unit (excluding MONSTERS and VEHICLES ) within Engagement Range of this unit Falls Back, all models in that enemy unit must take a Desperate Escape test. When doing so, if that enemy unit is Battle-shocked, subtract 1 from each of those tests."
+  },
+  {
+    "ability_name": "Keep the Banner High",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Hit roll if that unit is below its Starting Strength, and add 1 to the Wound roll as well if that unit is Below Half-strength."
+  },
+  {
+    "ability_name": "Knight Champion of Macragge",
+    "ability_description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this model’s unit, if this unit is not within Engagement Range of one or more enemy units, it can make a Normal move of up to 6\"."
+  },
+  {
+    "ability_name": "Knights of Caliban",
+    "ability_description": "Each time this unit is selected to fight, if it made a Charge move this turn, until the end of the phase, melee weapons equipped by models in this unit have the [ANTI-MONSTER 4+] and [ANTI-VEHICLE 4+] abilities."
+  },
+  {
+    "ability_name": "Legacy of Jerulas",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly model that disembarked from this TRANSPORT this turn makes an attack that targets that enemy unit, re-roll a Hit roll of 1 and re-roll a Wound roll of 1."
+  },
+  {
+    "ability_name": "Legendary Tenacity",
+    "ability_description": "Each time an attack targets this model, if the Strength characteristic of that attack is greater than this model’s Toughness characteristic, subtract 1 from the Wound roll."
+  },
+  {
+    "ability_name": "Let Loose the Wolves",
+    "ability_description": "At the start of the Declare Battle Formations step, split this unit into two units, one containing all of its HEADTAKERS models and one containing all of its HUNTING WOLVES models, with new Starting Strengths accordingly."
+  },
+  {
+    "ability_name": "Lightning-fast Manoeuvres",
+    "ability_description": "Each time a ranged attack targets this model, subtract 1 from the Hit roll. If that attack was made by a model that can Fly, subtract 1 from the Wound roll as well."
+  },
+  {
+    "ability_name": "Litanies of the Devout",
+    "ability_description": "While this unit is leading a unit and contains a Chaplain Grimaldus model, each time a model in that unit makes a melee attack, you can re-roll the Hit roll."
+  },
+  {
+    "ability_name": "Litany of Hate",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll."
+  },
+  {
+    "ability_name": "Lord of the Pyroclasts",
+    "ability_description": "While an enemy unit is within Engagement Range of this model, halve the Objective Control characteristic of models in that enemy unit."
+  },
+  {
+    "ability_name": "Lost to Fury",
+    "ability_description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
+  },
+  {
+    "ability_name": "Mark the Target",
+    "ability_description": "Each time this unit Remains Stationary, until the start of your next Movement phase, ranged weapons equipped by models in this unit have the [DEVASTATING WOUNDS] ability."
+  },
+  {
+    "ability_name": "Martial Honour",
+    "ability_description": "The first time a model in this model’s unit makes a melee attack that destroys one or more enemy units, until the end of the battle, while this model’s unit is not Battle-shocked, add 5 to this model’s Objective Control characteristic."
+  },
+  {
+    "ability_name": "Mass of Doom",
+    "ability_description": "Each time this model’s unit makes a Charge move, until the end of the turn, melee weapons equipped by models in that unit have the [DEVASTATING WOUNDS] ability."
+  },
+  {
+    "ability_name": "Master of Deceit",
+    "ability_description": "After both players have deployed their armies, if your army includes one or more models with this ability, you can select up to three friendly Adeptus Astartes Infantry units and redeploy all of those units. When doing so, any of those units can be placed into Strategic Reserves, regardless of how many units are already in Strategic Reserves."
+  },
+  {
+    "ability_name": "Master of Prescience (Psychic)",
+    "ability_description": "While this model is leading a unit, each time an attack targets that unit, subtract 1 from the Hit roll. In addition, once per battle round, you can target that unit with one of the following Stratagems for OCP: Counter-offensive; Fire Overwatch; Go to Ground; Heroic Intervention"
+  },
+  {
+    "ability_name": "Master of Shadows",
+    "ability_description": "In your Command phase, you can select one unit from your opponent’s army. Until the start of your next Command phase, each time an ADEPTUS ASTARTES unit from your army declares a charge while it is within 12\" of that enemy unit, you can re-roll the Charge roll, but it must declare that enemy unit as a target of that charge (if possible)."
+  },
+  {
+    "ability_name": "Master of the Fleet",
+    "ability_description": "During the Declare Battle Formations step, if your army includes this model, select one Phobos, Gravis or Tacticus Adeptus Astartes Infantry unit from your army. That unit gains the Deep Strike ability."
+  },
+  {
+    "ability_name": "Master of the Forge",
+    "ability_description": "In your Command phase, select one friendly ADEPTUS ASTARTES VEHICLE model within 3\" of this model. That model regains up to 3 lost wounds and, until the start of your next Command phase, each time that VEHICLE model makes an attack, add 1 to the Hit roll. You cannot select a unit for this ability that has already been selected for the Blessing of the Omnissiah ability this phase, and vice versa."
+  },
+  {
+    "ability_name": "Master Tactician",
+    "ability_description": "At the start of your Command phase, if this model is your WARLORD and is on the battlefield, you gain 1CP."
+  },
+  {
+    "ability_name": "Masterful Tactician",
+    "ability_description": "At the start of your Command phase, if this model is on the battlefield, you gain 1CP."
+  },
+  {
+    "ability_name": "Mental Fortress (Psychic)",
+    "ability_description": "While this model is leading a unit, models in that unit have a 4+ invulnerable save."
+  },
+  {
+    "ability_name": "Meteoric Descent",
+    "ability_description": "In your Movement phase, when this unit is set up on the battlefield using the Deep Strike ability, it can perform a meteoric descent. If it does, this unit can be set up anywhere on the battlefield that is more than 6\" horizontally away from all enemy units, but until the end of the turn, it is not eligible to declare a charge."
+  },
+  {
+    "ability_name": "Miraculous Saviour",
+    "ability_description": "Once per battle, at the end of your opponent’s Charge phase, if this model is still in Reserves, you can select one enemy unit that made a Charge move this phase. Set this model up on the battlefield within Engagement Range of that enemy unit."
+  },
+  {
+    "ability_name": "Mission Tactics",
+    "ability_description": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability."
+  },
+  {
+    "ability_name": "Multi-spectrum Array",
+    "ability_description": "In your Shooting phase, after this unit has shot, select one enemy unit that was hit by one or more attacks made by this unit this phase. Until the end of the phase, each time a friendly ADEPTUS ASTARTES unit makes an attack that targets that enemy unit, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Murder-maker (Aura)",
+    "ability_description": "In the Fight phase, each time an attack targets a friendly Wulfen unit within 6\" of this model, if a model in that unit is destroyed as a result of that attack, if that model has not fought this phase, roll one D6: on a 4+, do not remove the destroyed model from play; it can fight after the attacking unit has finished making its attacks, and is then removed from play."
+  },
+  {
+    "ability_name": "Narthecium",
+    "ability_description": "While this unit contains a Ravenwing Apothecary, in your Command phase, you can return 1 destroyed model (excluding Character and Invader ATV models) to this unit."
+  },
+  {
+    "ability_name": "Oath of Moment",
+    "ability_description": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well."
+  },
+  {
+    "ability_name": "Oath of Rynn",
+    "ability_description": "Once per battle, at the start of either player’s Command phase, this model can use this ability. When it does, until the end of the turn, add 1 to the Attacks characteristic of weapons equipped by models in this model’s unit."
+  },
+  {
+    "ability_name": "Oathbound",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Hit roll. If that attack targets a unit that has this model’s Slayer’s Oath keyword (see above), add 1 to the Wound roll as well."
+  },
+  {
+    "ability_name": "Objective Secured",
+    "ability_description": "If you control an objective marker at the end of your Command phase and this unit is within range of that objective marker, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
+  },
+  {
+    "ability_name": "Omni-scramblers",
+    "ability_description": "Enemy units that are set up on the battlefield from Reserves cannot be set up within 12\" of this unit."
+  },
+  {
+    "ability_name": "Outrider Escort",
+    "ability_description": "Once per turn, in your opponent’s Shooting phase, when another friendly ADEPTUS ASTARTES MOUNTED unit within 6\" of this model is selected as the target of an attack, one model from your army with this ability can use it. If it does, after that enemy unit has finished making its attacks, that model can shoot as if it were your Shooting phase, but when resolving those attacks it can only target that enemy unit (and only if it is an eligible target)."
+  },
+  {
+    "ability_name": "Overcharged Engines",
+    "ability_description": "You can re-roll Advance rolls made for this model."
+  },
+  {
+    "ability_name": "Pinning Bombardment",
+    "ability_description": "In your Shooting phase, after this model has shot, if one or more of those attacks made with its Whirlwind vengeance launcher scored a hit against an enemy INFANTRY unit, that unit must take a Battle-shock test."
+  },
+  {
+    "ability_name": "Pious Fervour",
+    "ability_description": "Each time this model’s unit is selected to fight, until the end of the phase, add 1 to the Attacks characteristic of this model’s master-crafted power weapon for each enemy unit within 6\" of this model (to a maximum of +3)."
+  },
+  {
+    "ability_name": "Predatory Instinct",
+    "ability_description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, it can make a Normal move of up to D6\"."
+  },
+  {
+    "ability_name": "Press the Attack",
+    "ability_description": "Weapons equipped by models in this model’s unit have the [SUSTAINED HITS 1] ability."
+  },
+  {
+    "ability_name": "Primarch of the First Legion",
+    "ability_description": "At the start of your Command phase, select two Primarch of the First Legion abilities. Until the start of your next Command phase, this model has those abilities."
+  },
+  {
+    "ability_name": "Prioritised Eradication",
+    "ability_description": "Each time a model in this model’s unit makes a melee attack that destroys one or more enemy units, roll one D6: on a 4+, you gain 1CP."
+  },
+  {
+    "ability_name": "Priority Objective Identified",
+    "ability_description": "At the start of the first battle round, if your army includes one or more models with this ability, you can select one objective marker on the battlefield. Until the end of the battle, while one or more models with this ability are on the battlefield, each time a friendly ADEPTUS ASTARTES model makes an attack that targets an enemy unit that is within range of that objective marker, re-roll a Wound roll of 1."
+  },
+  {
+    "ability_name": "Priority Target Acquisition",
+    "ability_description": "Each time this model makes an attack with its twin las-talon that targets the closest eligible MONSTER or VEHICLE unit, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Psychic Hood",
+    "ability_description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against Psychic Attacks."
+  },
+  {
+    "ability_name": "Rampart",
+    "ability_description": "Once per battle, at the start of any phase, this model can use this ability. If it does, until the end of the phase, this model has a 2+ invulnerable save."
+  },
+  {
+    "ability_name": "Reaping Tally",
+    "ability_description": "This model’s twin heavy onslaught gatling cannon has the [SUSTAINED HITS 2] ability while targeting INFANTRY units."
+  },
+  {
+    "ability_name": "Recitation of Faith",
+    "ability_description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against mortal wounds."
+  },
+  {
+    "ability_name": "Redeemer of the Lost",
+    "ability_description": "While this model is leading a unit, each time a model in that unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6. On a 4+, do not remove it from play; that destroyed model can fight after the attacking model’s unit has finished making its attacks, and is then removed from play."
+  },
+  {
+    "ability_name": "Refuse to Yield",
+    "ability_description": "Each time an attack is allocated to this model, halve the Damage characteristic of that attack."
+  },
+  {
+    "ability_name": "Remorseless Persecution",
+    "ability_description": "While this model is leading a unit, that unit is eligible to declare a charge in a turn in which it Advanced."
+  },
+  {
+    "ability_name": "Reposition Under Covering Fire",
+    "ability_description": "In your Shooting phase, after this unit has shot, if it contains an Eliminator Sergeant equipped with an instigator bolt carbine, this unit can make a Normal move. If it does so, until the end of the turn, this unit is not eligible to declare a charge."
+  },
+  {
+    "ability_name": "Righteous Zeal",
+    "ability_description": "In your opponent’s Shooting phase, each time an enemy unit has shot, if any models in this unit were destroyed as a result of those attacks, this unit can make a Righteous Zeal move. To do so, roll one D6 and add 2 to the result: models in this unit move a number of inches up to this result, but this unit must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT ). When doing so, those models can be moved within Engagement Range of that enemy unit. This unit cannot make a Righteous Zeal move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Righteous Zeal move per phase."
+  },
+  {
+    "ability_name": "Rites of Battle",
+    "ability_description": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+  },
+  {
+    "ability_name": "Rites of Tempering",
+    "ability_description": "While this model is leading a unit, models in that unit have the Feel No Pain 5+ ability."
+  },
+  {
+    "ability_name": "Rotating Death",
+    "ability_description": "This model’s twin heavy onslaught gatling cannon has the [SUSTAINED HITS 2] ability when targeting INFANTRY units."
+  },
+  {
+    "ability_name": "Rugged Resilience",
+    "ability_description": "Each time an attack targets this unit, if the Strength characteristic of that attack is greater than the Toughness characteristic of this unit, subtract 1 from the Wound roll."
+  },
+  {
+    "ability_name": "Sanguinary Priest",
+    "ability_description": "While this model is leading a unit, models in that unit have the Feel No Pain 5+ ability."
+  },
+  {
+    "ability_name": "Savage Frenzy",
+    "ability_description": "Each time an enemy unit (excluding MONSTERS and VEHICLES ) within Engagement Range of this unit Falls Back, all models in that enemy unit must take a Desperate Escape test. When doing so, if that enemy unit is Battle-shocked, subtract 1 from each of those tests."
+  },
+  {
+    "ability_name": "Savage Fury",
+    "ability_description": "You can re-roll Charge rolls made for this unit."
+  },
+  {
+    "ability_name": "Second Company Banner",
+    "ability_description": "While this unit contains Ancient Gadriel, add 1 to the Objective Control characteristic of models in this unit. While this unit contains Ancient Gadriel and Captain Titus, improve the Leadership characteristic of models in this unit by 1 as well."
+  },
+  {
+    "ability_name": "Seeker of the Unfound",
+    "ability_description": "The first time this model is set up on the battlefield, select one objective marker on the battlefield. While this model is within range of that objective marker, this model has an Objective Control characteristic of 10, a Leadership characteristic of 5+ and the Feel No Pain 4+ ability."
+  },
+  {
+    "ability_name": "Self Repair",
+    "ability_description": "At the end of your Command phase, this model regains 1 lost wound."
+  },
+  {
+    "ability_name": "Sentinel Protocols",
+    "ability_description": "Each time you select this unit for the Fire Overwatch Stratagem, hits are scored on unmodified Hit rolls of 4+ when resolving that Stratagem."
+  },
+  {
+    "ability_name": "Shadowmaster",
+    "ability_description": "While this model is leading a unit, models in this unit cannot be targeted by ranged attacks unless the attacking model is within 12\"."
+  },
+  {
+    "ability_name": "Shock Assault",
+    "ability_description": "Each time a model in this unit targets an enemy unit with a melee attack, re-roll a Wound roll of 1. If that enemy unit is within range of an objective marker, you can re-roll the Wound roll instead."
+  },
+  {
+    "ability_name": "Shrouding (Psychic)",
+    "ability_description": "While this model is leading a unit, models in that unit have the Stealth ability and that unit cannot be targeted by ranged attacks unless the attacking model is within 12\"."
+  },
+  {
+    "ability_name": "Siege Captain",
+    "ability_description": "Each time this model makes an attack that targets a MONSTER , VEHICLE , or FORTIFICATION unit, improve the Strength, Armour Penetration and Damage characteristics of that attack by 2."
+  },
+  {
+    "ability_name": "Siege Shield",
+    "ability_description": "When making ranged attacks with its demolisher cannon, this model can target enemy units within Engagement Range of it (provided no other friendly units are also within Engagement Range of that enemy unit). In addition, when making ranged attacks, this model does not suffer the penalty to its Hit rolls for being within Engagement Range of one or more enemy units."
+  },
+  {
+    "ability_name": "Sigismund’s Heir",
+    "ability_description": "Each time this model’s unit declares a charge, if one or more targets of that charge have the CHARACTER keyword, add 2 to the Charge roll. Once per battle, when this model’s unit is selected to fight, if that unit is within Engagement Range of one or more enemy CHARACTER units, this model can use this ability. If it does, until the end of the phase, melee weapons equipped by this model have the [DEVASTATING WOUNDS] ability."
+  },
+  {
+    "ability_name": "Signum",
+    "ability_description": "Each time this unit Remains Stationary, until the start of your next Movement phase, ranged weapons equipped by models in this unit have the [IGNORES COVER] ability."
+  },
+  {
+    "ability_name": "Signum Array",
+    "ability_description": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [IGNORES COVER] ability."
+  },
+  {
+    "ability_name": "Silent Fury",
+    "ability_description": "Each time this model destroys an enemy CHARACTER model, until the end of the battle, add 1 to the Attacks characteristic of its executioner relic blade."
+  },
+  {
+    "ability_name": "Skilled Riders",
+    "ability_description": "Each time a model in this model’s unit makes a Normal, Advance, Fall Back or Charge move, it can move horizontally through terrain features."
+  },
+  {
+    "ability_name": "Slayer’s Oath",
+    "ability_description": "At the start of the battle, select one of the following keywords to be this model’s Slayer’s Oath: CHARACTER ; MONSTER ; VEHICLE . The first time this model’s unit destroys a unit with this model’s Slayer’s Oath keyword, if your Detachment rule has a Saga, until the end of the battle, this model’s unit receives the benefits of that Detachment rule as if that Saga had been completed."
+  },
+  {
+    "ability_name": "Spear of Chogoris",
+    "ability_description": "This model’s unit is eligible to shoot and declare a charge in a turn in which it Advanced or Fell Back. If that unit is already eligible to shoot and declare a charge in a turn in which it Advanced, add 1 to Advance and Charge rolls made for that unit instead."
+  },
+  {
+    "ability_name": "Spectrus Doctrines",
+    "ability_description": "At the end of your opponent’s turn, if this unit is more than 6\" away from all enemy units, you can remove this unit from the battlefield and place it into Strategic Reserves."
+  },
+  {
+    "ability_name": "Spiritual Leader",
+    "ability_description": "Once per battle, at the start of any phase, you can select one friendly ADEPTUS ASTARTES unit that is Battle-shocked and within 12\" of this model. That unit is no longer Battle-shocked."
+  },
+  {
+    "ability_name": "Stabilised Disembarkation",
+    "ability_description": "In your opponent’s Shooting phase, each time an enemy unit is selected to shoot, after that unit has shot, if any of those attacks targeted this TRANSPORT , it can use this ability. If it does, any units embarked within it can disembark. When doing so, models in those units can be set up anywhere on the battlefield wholly within 6\" of this TRANSPORT and not within Engagement Range of one or more enemy units."
+  },
+  {
+    "ability_name": "Stasis Bomb",
+    "ability_description": "Once per turn, one model from your army with this ability can use it after it ends a Normal move. If it does, you can select one enemy unit (excluding AIRCRAFT ) that model moved over this phase. That unit suffers D3 mortal wounds and you must roll one D6: on a 1-3, that unit cannot Advance or Fall Back in your opponent’s next Movement phase; on a 4-6, that unit must Remain Stationary in your opponent’s next Movement phase. Each model can only use this ability once per battle."
+  },
+  {
+    "ability_name": "Sternguard Focus",
+    "ability_description": "Each time a model in this unit makes an attack that targets your Oath of Moment target, you can re-roll the Wound roll."
+  },
+  {
+    "ability_name": "Storm of Vengeance",
+    "ability_description": "Once per turn, in your opponent’s Shooting phase, when a friendly Adeptus Astartes unit within 6\" of this model is destroyed, this model can use this ability (it cannot use this ability when it is itself destroyed). If it does, after the attacking unit has finished making its attacks, this model can shoot as if it were your Shooting phase, but when resolving those attacks it can only target that enemy unit (and only if it is an eligible target)."
+  },
+  {
+    "ability_name": "Strafing Run",
+    "ability_description": "Each time this model makes a ranged attack that targets a unit that cannot Fly, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Strategic Dispersal",
+    "ability_description": "In your Shooting phase, after this model’s unit has shot, if it is not within Engagement Range of one or more enemy units, it can make a Normal move of up to 6\". If it does, until the end of the turn, that unit is not eligible to declare a charge."
+  },
+  {
+    "ability_name": "Strategic Knowledge",
+    "ability_description": "While this model is leading a unit, that unit is eligible to shoot and declare a charge in a turn in which it Advanced or Fell Back."
+  },
+  {
+    "ability_name": "Strategium Command",
+    "ability_description": "After both players have deployed their armies, if this unit is on the battlefield (or any Transport it is embarked within is on the battlefield), select up to three ADEPTUS ASTARTES units from your army and redeploy them. When doing so, you can set those units up in Strategic Reserves, regardless of how many units are already in Strategic Reserves."
+  },
+  {
+    "ability_name": "Strikes of Retribution",
+    "ability_description": "Each time a melee attack is allocated to this model, after the attacking model’s unit has finished making its attacks, roll one D6 (to a maximum of six D6 per attacking unit): for each 4+, the attacking unit suffers 1 mortal wound."
+  },
+  {
+    "ability_name": "Suppression Fire",
+    "ability_description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks made with an accelerator autocannon. Until the start of your next turn, while this unit is on the battlefield, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+  },
+  {
+    "ability_name": "Supreme Grand Master",
+    "ability_description": "While this model is leading a unit, weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
+  },
+  {
+    "ability_name": "Surgical Precision",
+    "ability_description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+  },
+  {
+    "ability_name": "Tactical Instinct",
+    "ability_description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+  },
+  {
+    "ability_name": "Tactical Precision",
+    "ability_description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+  },
+  {
+    "ability_name": "Talonstrike Doctrines",
+    "ability_description": "Each time this unit is set up on the battlefield, until the end of the turn: Improve the Armour Penetration characteristic of weapons equipped by models in this unit by 1.; Melee weapons equipped by models in this unit have the [LANCE] ability."
+  },
+  {
+    "ability_name": "Target Elimination",
+    "ability_description": "Each time this unit is selected to shoot, it can use this ability. If it does, until the end of the phase, add 2 to the Attacks characteristic of bolt rifles equipped by models in this unit and you can only select one enemy unit as the target of all of this unit’s attacks."
+  },
+  {
+    "ability_name": "Target Priority",
+    "ability_description": "This model’s unit is eligible to shoot and declare a charge in a turn in which it Fell Back."
+  },
+  {
+    "ability_name": "Targeter Optics",
+    "ability_description": "Each time this unit Remains Stationary, until the start of your next Movement phase, ranged weapons equipped by models in this unit have the [IGNORES COVER] ability."
+  },
+  {
+    "ability_name": "Techmarine",
+    "ability_description": "While this model is within 3\" of one or more friendly Adeptus Astartes Vehicle units, this model has the Lone Operative ability."
+  },
+  {
+    "ability_name": "Teleport Homer",
+    "ability_description": "At the start of the battle, you can set up one Teleport Homer token for this unit anywhere on the battlefield that is not in your opponent’s deployment zone. If you do, once per battle, you can target this unit with the Rapid Ingress Stratagem for 0CP, but when resolving that Stratagem, you must set this unit up within 3\" horizontally of that token and not within 9\" horizontally of any enemy models. That token is then removed."
+  },
+  {
+    "ability_name": "Tempered Ferocity",
+    "ability_description": "While this model is leading a unit, weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability and, each time a model in that unit makes an attack that targets an enemy unit within 6\", re-roll a Hit roll of 1."
+  },
+  {
+    "ability_name": "Tempest’s Wrath (Psychic)",
+    "ability_description": "In your Shooting phase, after this model’s unit has shot, select one enemy unit (excluding MONSTERS and VEHICLES ) hit by one or more of those attacks made with this model’s Living Lightning weapon. Until the start of your next turn, that enemy unit is stormwracked. While a unit is stormwracked, subtract 6\" from the Range characteristic of ranged weapons equipped by models in that unit (to a minimum of 12\")."
+  },
+  {
+    "ability_name": "Templar Vows",
+    "ability_description": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced ."
+  },
+  {
+    "ability_name": "Temple Relics",
+    "ability_description": "In your Command phase, if this unit contains one or more Cenobyte Servitor models, select one Temple Relics ability (see left). Until the start of your next Command phase, this unit’s Chaplain Grimaldus model has that ability."
+  },
+  {
+    "ability_name": "Tempormortis",
+    "ability_description": "While this model is leading a unit, that unit has the Fights First ability."
+  },
+  {
+    "ability_name": "Terminatus Assault",
+    "ability_description": "At the start of the Fight phase, each enemy unit within Engagement Range of this unit must take a Battle-shock test."
+  },
+  {
+    "ability_name": "Terror Troops (Aura)",
+    "ability_description": "While an enemy unit (excluding MONSTERS and VEHICLES ) is within 3\" of one or more units with this ability, subtract 1 from the Objective Control characteristic of models in that enemy unit."
+  },
+  {
+    "ability_name": "The Emperor’s Shield",
+    "ability_description": "Each time an attack is allocated to this model, if the Strength characteristic of that attack is greater than the Toughness characteristic of this model, subtract 1 from the Wound roll."
+  },
+  {
+    "ability_name": "The Imperium’s Sword",
+    "ability_description": "You can re-roll Charge rolls made for this model’s unit."
+  },
+  {
+    "ability_name": "The Quickening (Psychic)",
+    "ability_description": "This model is eligible to declare a charge in a turn in which it Advanced."
+  },
+  {
+    "ability_name": "The Spiritshield Helm",
+    "ability_description": "This model has the Feel No Pain 3+ ability against Psychic Attacks and mortal wounds."
+  },
+  {
+    "ability_name": "Thunderous Charge",
+    "ability_description": "Each time a model in this unit makes a melee attack with its Wolf Guard weapon, if it made a Charge move this turn, add 1 to the Damage characteristic of that attack."
+  },
+  {
+    "ability_name": "Thunderous Impact",
     "ability_description": "Each time a model in this unit makes a melee attack, if this unit made a Charge move this turn, improve the Strength and Damage characteristics of that attack by 1."
   },
   {
-    "ability_name": "The Dark Master (Aura)",
-    "ability_description": "The area of the battlefield within 6\\ of this model is within your army's Shadow of Chaos.\""
+    "ability_name": "Thunderstrike",
+    "ability_description": "Each time this model has shot, select one enemy MONSTER or VEHICLE unit that was hit by one or more attacks made by this model this phase. Until the end of the phase, each time a friendly ADEPTUS ASTARTES unit makes a ranged attack that targets that enemy unit, add 1 to the Wound roll."
   },
   {
-    "ability_name": "Shadow Form",
-    "ability_description": "At the start of the battle round, select one Shadow Form ability. Until the end of the battle round, this model has that ability."
+    "ability_name": "To the Last",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Hit roll if that unit is below its Starting Strength, and add 1 to the Wound roll as well if that unit is Below Half-strength."
   },
   {
-    "ability_name": "Scuttling Walker",
-    "ability_description": "Each time this model makes a Normal or Advance move, it can move over friendly Monster and Vehicle models and terrain features that are 4\\ or less in height as if they were not there.\""
+    "ability_name": "Total Obliteration",
+    "ability_description": "Each time a ranged attack made by a model in this unit targets a MONSTER or VEHICLE model, you can re-roll the Hit roll, you can re-roll the Wound roll and you can re-roll the Damage roll."
   },
   {
-    "ability_name": "Daemonic Lord",
-    "ability_description": "While this model is within 3\\ of one or more friendly Legiones Daemonica Infantry units"
+    "ability_name": "Transfixing Gaze (Aura; Psychic)",
+    "ability_description": "While an enemy unit is within 6\" of this model, each time that unit is selected to Fall Back, it must take a Leadership test. If that test is failed, that unit must Remain Stationary this phase instead."
   },
   {
-    "ability_name": "Prince of Darkness (Aura)",
-    "ability_description": "While a friendly Legiones Daemonica unit is within 6\\ of this model"
+    "ability_name": "Trophy Taker",
+    "ability_description": "Each time this model destroys an enemy CHARACTER model, you gain 1CP."
   },
   {
-    "ability_name": "Unholy Vigour",
-    "ability_description": "Once per battle, at the start of any phase, this model can use this ability. If it does, until the end of the phase, this model has a 3+ invulnerable save."
+    "ability_name": "Ultramarines Bodyguard",
+    "ability_description": "While this model is within 3\" of one or more friendly Adeptus Astartes Infantry units, this model has the Lone Operative ability."
   },
   {
-    "ability_name": "Malefic Destruction",
-    "ability_description": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does, until the end of the phase, add 3 to the Attacks characteristic of this model's hellforged weapons."
+    "ability_name": "Ultramarines Honour Guard",
+    "ability_description": "While a Captain or Chapter Master model is leading this unit, each time an attack targets this unit, subtract 1 from the Wound roll."
   },
   {
-    "ability_name": "Harbinger of Death",
-    "ability_description": "Each time this model is selected to fight, select one of the following abilities. Until the end of the phase, this model's hellforged weapons have that ability: [LETHAL HITS], [PRECISION], or [SUSTAINED HITS 1]."
+    "ability_name": "Unbreakable Duty",
+    "ability_description": "While this model is within range of an objective marker and/or within 6\" of the centre of the battlefield, this model has the Feel No Pain 4+ ability."
+  },
+  {
+    "ability_name": "Unorthodox Strategist (Aura)",
+    "ability_description": "Each time your opponent targets a unit from their army with a Stratagem, if that unit is within 12\" of this model, increase the cost of that use of that Stratagem by 1CP (this is not cumulative with any other rules that would increase the CP cost of that Stratagem)."
+  },
+  {
+    "ability_name": "Unstoppable Champion",
+    "ability_description": "The first time this model is destroyed, roll one D6 at the end of the phase. On a 2+, set this model back up on the battlefield, as close as possible to where it was destroyed and not within Engagement Range of any enemy units, with 1 wound remaining."
+  },
+  {
+    "ability_name": "Unto the Anvil",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes a melee attack, you can re-roll the Wound roll."
+  },
+  {
+    "ability_name": "Unyielding in the Face of the Foe",
+    "ability_description": "While this unit is within range of an objective marker you control, each time an attack with a Damage characteristic of 1 is allocated to a model in this unit, add 1 to any armour saving throw made against that attack."
+  },
+  {
+    "ability_name": "Vanguard Assault",
+    "ability_description": "Each time this unit ends a Charge move, until the end of the turn, melee weapons equipped by models in this unit have the [LETHAL HITS] ability."
+  },
+  {
+    "ability_name": "Vehement Aggression",
+    "ability_description": "While this model is leading a unit, each time that unit is selected to fight, take a Leadership test for that unit: if passed, until the end of the phase, each time a model in that unit makes an attack, you can re-roll the Hit roll; if failed, until the end of the phase, each time a model in that unit makes an attack, re-roll a Hit roll of 1."
+  },
+  {
+    "ability_name": "Veil of Time (Psychic)",
+    "ability_description": "While this model is leading a unit, weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
+  },
+  {
+    "ability_name": "Vengeance of the Omnissiah",
+    "ability_description": "If a friendly Adeptus Astartes Vehicle model is destroyed within 12\" of this model, until the end of the battle, this model’s Omnissian power axe has an Attacks characteristic of 7."
+  },
+  {
+    "ability_name": "Vengeful Exhortation",
+    "ability_description": "While this model is leading a unit, each time a model in that unit is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 4+, do not remove it from play. The destroyed model can fight after the attacking unit has finished making its attacks, and is then removed from play."
+  },
+  {
+    "ability_name": "Violent Fury",
+    "ability_description": "If this model is equipped with two melee weapons, those weapon profiles have the [TWIN-LINKED] ability."
+  },
+  {
+    "ability_name": "Virtuous Onslaught",
+    "ability_description": "Each time a model in this unit makes an attack that targets the closest eligible target, re-roll a Wound roll of 1."
+  },
+  {
+    "ability_name": "Visions of Heresy",
+    "ability_description": "Once per turn, you can target this unit with the Fire Overwatch or the Heroic Intervention Stratagem for 0CP. While resolving that Stratagem, each time a model in this unit makes a ranged attack you can re-roll the Hit roll, or you can re-roll the Charge roll made for this unit (whichever applies)."
+  },
+  {
+    "ability_name": "Vivispectrum",
+    "ability_description": "If this model’s unit destroys an enemy unit as the result of a melee attack, until the end of the battle, this model has an Objective Control characteristic of 9."
+  },
+  {
+    "ability_name": "War Howl",
+    "ability_description": "While this model is leading a Blood Claws unit, each time a model in that unit makes a melee attack, you can re-roll the Wound roll. While this model is leading a Wolf Guard Headtakers unit, that unit is eligible to declare a charge in a turn in which it Advanced."
+  },
+  {
+    "ability_name": "Warden of the Imperium Nihilus",
+    "ability_description": "While this model is leading a unit, add 1 to Advance and Charge rolls made for that unit and each time a model in that unit makes an attack, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Watch Master",
+    "ability_description": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+  },
+  {
+    "ability_name": "Wind Walker (Psychic)",
+    "ability_description": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [ASSAULT] ability and each time that unit Advances, do not make an Advance roll. Instead, until the end of the phase, add 6\" to the Move characteristic of models in this unit."
+  },
+  {
+    "ability_name": "Wisdom of the Ancients (Aura)",
+    "ability_description": "While a friendly Adeptus Astartes Infantry unit is within 6\" of this model, each time a model in that unit makes an attack, re-roll a Hit roll of 1."
+  },
+  {
+    "ability_name": "Zealot’s Fervour",
+    "ability_description": "This model’s unit is eligible to charge in a turn in which it Fell Back."
   }
 ]

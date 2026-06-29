@@ -1,5 +1,37 @@
 [
   {
+    "keyword_name": "Anti-Chaos",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Anti-Character",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Anti-Fly",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Anti-Infantry",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Anti-Monster",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Anti-Psyker",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Anti-Vehicle",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Assault",
+    "keyword_description": "This weapon can be used to make attacks even if the bearer Advanced this turn."
+  },
+  {
     "keyword_name": "Blast",
     "keyword_description": "If the target unit has 6 or more models, this weapon makes a minimum of 3 attacks. If the target unit has 11 or more models, it makes a minimum of 6 attacks."
   },
@@ -12,52 +44,20 @@
     "keyword_description": "Make attacks with this weapon in addition to attacks with the model's other melee weapons."
   },
   {
-    "keyword_name": "Ignores Cover",
-    "keyword_description": "The target of this weapon cannot use the Benefit of Cover against attacks made with this weapon."
-  },
-  {
-    "keyword_name": "Torrent",
-    "keyword_description": "This weapon automatically hits its target."
-  },
-  {
-    "keyword_name": "Indirect Fire",
-    "keyword_description": "This weapon can target units that are not visible to the attacking model."
-  },
-  {
     "keyword_name": "Hazardous",
     "keyword_description": "After the model makes attacks with this weapon, roll one D6. On a 1, the bearer suffers 1 mortal wound."
   },
   {
-    "keyword_name": "Psychic",
-    "keyword_description": "This weapon is a Psychic weapon."
+    "keyword_name": "Heavy",
+    "keyword_description": null
   },
   {
-    "keyword_name": "Pistol",
-    "keyword_description": "This weapon can be used to make attacks in the Fight phase."
+    "keyword_name": "Ignores Cover",
+    "keyword_description": "The target of this weapon cannot use the Benefit of Cover against attacks made with this weapon."
   },
   {
-    "keyword_name": "Assault",
-    "keyword_description": "This weapon can be used to make attacks even if the bearer Advanced this turn."
-  },
-  {
-    "keyword_name": "Anti-Character 3+",
-    "keyword_description": "Each time an attack is made with this weapon against a Character unit, a Wound roll of 3+ is always a successful wound roll."
-  },
-  {
-    "keyword_name": "Anti-Monster 4+",
-    "keyword_description": "Each time an attack is made with this weapon against a Monster unit, a Wound roll of 4+ is always a successful wound roll."
-  },
-  {
-    "keyword_name": "Anti-Vehicle 4+",
-    "keyword_description": "Each time an attack is made with this weapon against a Vehicle unit, a Wound roll of 4+ is always a successful wound roll."
-  },
-  {
-    "keyword_name": "Anti-Psyker 2+",
-    "keyword_description": "Each time an attack is made with this weapon against a Psyker unit, a Wound roll of 2+ is always a successful wound roll."
-  },
-  {
-    "keyword_name": "Anti-Infantry 3+",
-    "keyword_description": "Each time an attack is made with this weapon against an Infantry unit, a Wound roll of 3+ is always a successful wound roll."
+    "keyword_name": "Indirect Fire",
+    "keyword_description": "This weapon can target units that are not visible to the attacking model."
   },
   {
     "keyword_name": "Lance",
@@ -68,19 +68,39 @@
     "keyword_description": "Critical Hits automatically wound the target."
   },
   {
+    "keyword_name": "Melta",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "One Shot",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Pistol",
+    "keyword_description": "This weapon can be used to make attacks in the Fight phase."
+  },
+  {
     "keyword_name": "Precision",
     "keyword_description": "Attacks made with this weapon can target a Character model in an enemy unit even if that Character is not the closest model."
   },
   {
-    "keyword_name": "Sustained Hits 1",
-    "keyword_description": "A Critical Hit scored with this weapon scores 1 additional hit."
+    "keyword_name": "Psychic",
+    "keyword_description": "This weapon is a Psychic weapon."
   },
   {
-    "keyword_name": "Sustained Hits 3",
-    "keyword_description": "A Critical Hit scored with this weapon scores 3 additional hits."
+    "keyword_name": "Rapid Fire",
+    "keyword_description": null
   },
   {
-    "keyword_name": "Sustained Hits D3",
-    "keyword_description": "A Critical Hit scored with this weapon scores D3 additional hits."
+    "keyword_name": "Sustained Hits",
+    "keyword_description": null
+  },
+  {
+    "keyword_name": "Torrent",
+    "keyword_description": "This weapon automatically hits its target."
+  },
+  {
+    "keyword_name": "Twin-Linked",
+    "keyword_description": null
   }
 ]

@@ -1,0 +1,54 @@
+[
+  {
+    "rule_name": "Deep Strike",
+    "rule_description": "During the Declare Battle Formations step, you can set up this unit in reserves instead of on the battlefield. If you do, at the end of your opponent's second turn, you can set up this unit anywhere on the battlefield that is more than 9\\ horizontally from all enemy models.\""
+  },
+  {
+    "rule_name": "Deadly Demise D6",
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers D6 mortal wounds.\""
+  },
+  {
+    "rule_name": "Deadly Demise D3",
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers D3 mortal wounds.\""
+  },
+  {
+    "rule_name": "Deadly Demise 1",
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers 1 mortal wound.\""
+  },
+  {
+    "rule_name": "Lone Operative",
+    "rule_description": "While this model is not attached to a unit"
+  },
+  {
+    "rule_name": "Stealth",
+    "rule_description": "Worsen the Ballistic Skill of ranged weapons that target this unit by 1."
+  },
+  {
+    "rule_name": "Infiltrators",
+    "rule_description": "During the Declare Battle Formations step, you can set up this unit anywhere on the battlefield that is more than 9\\ horizontally from the enemy deployment zone and all enemy models.\""
+  },
+  {
+    "rule_name": "Scouts 6\"",
+    "rule_description": "After both sides have deployed, this unit can make a Normal move of up to 6\\. It cannot end this move within 9\\\" of any enemy models.\""
+  },
+  {
+    "rule_name": "Scouts 9\"",
+    "rule_description": "After both sides have deployed, this unit can make a Normal move of up to 9\\. It cannot end this move within 9\\\" of any enemy models.\""
+  },
+  {
+    "rule_name": "Fights First",
+    "rule_description": "This unit fights before other units that do not have this ability in the Fight phase."
+  },
+  {
+    "rule_name": "Feel No Pain 5+",
+    "rule_description": "Each time a wound is allocated to a model in this unit, roll one D6. On a 5+, that wound is ignored."
+  },
+  {
+    "rule_name": "Feel No Pain 6+",
+    "rule_description": "Each time a wound is allocated to a model in this unit, roll one D6. On a 6, that wound is ignored."
+  },
+  {
+    "rule_name": "Leader",
+    "rule_description": "You can attach this unit to one of the units listed in its Leader ability, so long as both units are Battleline units or neither is a Battleline unit, and the unit being led is not already led by another Character."
+  }
+]

@@ -71,6 +71,7 @@ def clean(value):
     - "Yes" / "No" -> True / False
     - Numeric strings -> int (if no decimal) or leave as str for fields
       that intentionally store dice expressions (handled per-field below)
+    - Fixes backslash-escaped inch marks (6\\" or trailing 6\\) -> 6"
     """
     if value is None:
         return None
@@ -81,6 +82,15 @@ def clean(value):
         return True
     if v.lower() == "no":
         return False
+    # Fix backslash-escaped inch marks from Excel CSV export
+    v = v.replace('\\"', '"')
+    if v.endswith('\\'):
+        v = v[:-1] + '"'
+    # Fix UTF-8 em-dash/en-dash misread as latin1 (â\x80\x93 -> -)
+    v = v.replace('â', ' - ').replace('â', ' - ')
+    # Collapse any double spaces introduced
+    import re as _re
+    v = _re.sub(r'  +', ' ', v).strip()
     return v
 
 
@@ -124,6 +134,39 @@ def load_all(input_dir):
     return data
 
 
+def load_bundles(bundles_path):
+    """
+    Load the bundled-swap definition file and index it by (army_name, unit_name).
+    Optional: a missing file is not an error (a faction may have no bundles).
+    Each unit maps to its bundle record (option_group + endpoints), which the
+    converter attaches to the unit object as 'bundled_swaps'.
+    """
+    if not bundles_path or not os.path.isfile(bundles_path):
+        print(f"  No bundles file at {bundles_path} — building without bundled swaps.")
+        return {}
+    with open(bundles_path, encoding="utf-8") as f:
+        doc = json.load(f)
+    index = {}
+    for rec in doc.get("bundles", []):
+        army = (rec.get("army_name") or "").strip()
+        unit = (rec.get("unit_name") or "").strip()
+        if not army or not unit:
+            print(f"  WARNING: bundle record missing army_name/unit_name — skipped.")
+            continue
+        eps = rec.get("endpoints", [])
+        defaults = [e for e in eps if e.get("is_default")]
+        if len(defaults) != 1:
+            print(f"  WARNING: {army}/{unit} has {len(defaults)} default endpoints "
+                  f"(expected exactly 1) — check bundled_swaps.json.")
+        index[(army, unit)] = {
+            "model_group":  rec.get("model_group"),
+            "option_group": rec.get("option_group"),
+            "endpoints":    eps,
+        }
+    print(f"  Loaded bundled swaps for {len(index)} unit(s).")
+    return index
+
+
 # ---------------------------------------------------------------------------
 # Build keywords.json
 # ---------------------------------------------------------------------------
@@ -165,6 +208,46 @@ def build_rules(rows):
 
 
 # ---------------------------------------------------------------------------
+# Build abilities.json
+# ---------------------------------------------------------------------------
+
+def build_abilities(rows):
+    """
+    Simple lookup: list of { ability_name, ability_description }
+    """
+    result = []
+    for row in rows:
+        name = clean(row.get("Unit Ability Name"))
+        desc = clean(row.get("Unit Ability Description"))
+        if name:
+            result.append({
+                "ability_name": name,
+                "ability_description": desc
+            })
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Build weapon_abilities.json
+# ---------------------------------------------------------------------------
+
+def build_weapon_abilities(rows):
+    """
+    Simple lookup: list of { weapon_ability_name, weapon_ability_description }
+    """
+    result = []
+    for row in rows:
+        name = clean(row.get("Weapon Ability Name"))
+        desc = clean(row.get("Weapon Ability Description"))
+        if name:
+            result.append({
+                "weapon_ability_name": name,
+                "weapon_ability_description": desc
+            })
+    return result
+
+
+# ---------------------------------------------------------------------------
 # Build units.json
 # ---------------------------------------------------------------------------
 
@@ -180,6 +263,7 @@ def build_units(data):
     points_rows     = data["unit_points"]
     abilities_rows  = data["unit_abilities"]
     other_rows      = data["unit_other"]
+    bundles         = data.get("bundles", {})
 
     # ------------------------------------------------------------------
     # Index supporting tabs by (Army Name, Unit Name, Model Group)
@@ -387,10 +471,15 @@ def build_units(data):
                     continue
                 ability_obj = {
                     "model_group":       clean(row.get("Model Group")),
-                    "ability_name":      clean(row.get("Ability Name")),
-                    "ability_description": clean(row.get("Ability Description")),
+                    "ability_name":      clean(row.get("Unit Ability Name")),
+                    "ability_description": clean(row.get("Unit Ability Description")),
                 }
                 abilities.append(ability_obj)
+
+            # ----------------------------------------------------------
+            # bundled_swaps (merged from bundled_swaps.json, keyed army+unit)
+            # ----------------------------------------------------------
+            bundled_swaps = bundles.get((army_name, unit_name))
 
             # ----------------------------------------------------------
             # Assemble unit object
@@ -402,6 +491,7 @@ def build_units(data):
                 "weapons":        weapons,
                 "wargear_options": wargear_options,
                 "other_options":  other_options,
+                "bundled_swaps":  bundled_swaps,
                 "points":         points,
                 "abilities":      abilities,
             }
@@ -418,27 +508,44 @@ def build_units(data):
 # ---------------------------------------------------------------------------
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(
+        description="40K Army Builder — CSV to JSON conversion.")
+    parser.add_argument("--input-dir", default=INPUT_DIR,
+                        help="Folder containing the nine source CSVs.")
+    parser.add_argument("--output-dir", default=OUTPUT_DIR,
+                        help="Folder to write the JSON outputs into.")
+    parser.add_argument("--bundles", default=None,
+                        help="Path to bundled_swaps.json. Defaults to "
+                             "bundled_swaps.json in the input folder.")
+    args = parser.parse_args()
+
+    input_dir  = args.input_dir
+    output_dir = args.output_dir
+    bundles_path = args.bundles or os.path.join(input_dir, "bundled_swaps.json")
+
     print(f"\n40K Army Builder — CSV to JSON Conversion")
-    print(f"  Input:  {INPUT_DIR}")
-    print(f"  Output: {OUTPUT_DIR}")
+    print(f"  Input:  {input_dir}")
+    print(f"  Output: {output_dir}")
     print()
 
     # Verify directories exist
-    if not os.path.isdir(INPUT_DIR):
-        print(f"ERROR: Input directory not found: {INPUT_DIR}")
+    if not os.path.isdir(input_dir):
+        print(f"ERROR: Input directory not found: {input_dir}")
         sys.exit(1)
-    if not os.path.isdir(OUTPUT_DIR):
-        print(f"ERROR: Output directory not found: {OUTPUT_DIR}")
+    if not os.path.isdir(output_dir):
+        print(f"ERROR: Output directory not found: {output_dir}")
         sys.exit(1)
 
     print("Loading CSVs...")
-    data = load_all(INPUT_DIR)
+    data = load_all(input_dir)
+    data["bundles"] = load_bundles(bundles_path)
     print()
 
     # Build keywords.json
     print("Building keywords.json...")
     keywords = build_keywords(data["keywords"])
-    keywords_path = os.path.join(OUTPUT_DIR, "keywords.json")
+    keywords_path = os.path.join(output_dir, "keywords.json")
     with open(keywords_path, "w", encoding="utf-8") as f:
         json.dump(keywords, f, indent=2, ensure_ascii=False)
     print(f"  Written: {keywords_path} ({len(keywords)} keywords)")
@@ -446,15 +553,31 @@ def main():
     # Build rules.json
     print("Building rules.json...")
     rules = build_rules(data["rules"])
-    rules_path = os.path.join(OUTPUT_DIR, "rules.json")
+    rules_path = os.path.join(output_dir, "rules.json")
     with open(rules_path, "w", encoding="utf-8") as f:
         json.dump(rules, f, indent=2, ensure_ascii=False)
     print(f"  Written: {rules_path} ({len(rules)} rules)")
 
+    # Build abilities.json
+    print("Building abilities.json...")
+    abilities = build_abilities(data["unit_abilities"])
+    abilities_path = os.path.join(output_dir, "abilities.json")
+    with open(abilities_path, "w", encoding="utf-8") as f:
+        json.dump(abilities, f, indent=2, ensure_ascii=False)
+    print(f"  Written: {abilities_path} ({len(abilities)} abilities)")
+
+    # Build weapon_abilities.json
+    print("Building weapon_abilities.json...")
+    weapon_abilities = build_weapon_abilities(data["weapon_abilities"])
+    weapon_abilities_path = os.path.join(output_dir, "weapon_abilities.json")
+    with open(weapon_abilities_path, "w", encoding="utf-8") as f:
+        json.dump(weapon_abilities, f, indent=2, ensure_ascii=False)
+    print(f"  Written: {weapon_abilities_path} ({len(weapon_abilities)} weapon abilities)")
+
     # Build units.json
     print("Building units.json...")
     units = build_units(data)
-    units_path = os.path.join(OUTPUT_DIR, "units.json")
+    units_path = os.path.join(output_dir, "units.json")
     with open(units_path, "w", encoding="utf-8") as f:
         json.dump(units, f, indent=2, ensure_ascii=False)
     total_units = sum(len(a["units"]) for a in units)

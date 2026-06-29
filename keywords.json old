@@ -1,0 +1,86 @@
+[
+  {
+    "keyword_name": "Blast",
+    "keyword_description": "If the target unit has 6 or more models, this weapon makes a minimum of 3 attacks. If the target unit has 11 or more models, it makes a minimum of 6 attacks."
+  },
+  {
+    "keyword_name": "Devastating Wounds",
+    "keyword_description": "If a Critical Wound is scored, the target suffers a number of mortal wounds equal to the Damage characteristic of that attack, and the attack sequence ends."
+  },
+  {
+    "keyword_name": "Extra Attacks",
+    "keyword_description": "Make attacks with this weapon in addition to attacks with the model's other melee weapons."
+  },
+  {
+    "keyword_name": "Ignores Cover",
+    "keyword_description": "The target of this weapon cannot use the Benefit of Cover against attacks made with this weapon."
+  },
+  {
+    "keyword_name": "Torrent",
+    "keyword_description": "This weapon automatically hits its target."
+  },
+  {
+    "keyword_name": "Indirect Fire",
+    "keyword_description": "This weapon can target units that are not visible to the attacking model."
+  },
+  {
+    "keyword_name": "Hazardous",
+    "keyword_description": "After the model makes attacks with this weapon, roll one D6. On a 1, the bearer suffers 1 mortal wound."
+  },
+  {
+    "keyword_name": "Psychic",
+    "keyword_description": "This weapon is a Psychic weapon."
+  },
+  {
+    "keyword_name": "Pistol",
+    "keyword_description": "This weapon can be used to make attacks in the Fight phase."
+  },
+  {
+    "keyword_name": "Assault",
+    "keyword_description": "This weapon can be used to make attacks even if the bearer Advanced this turn."
+  },
+  {
+    "keyword_name": "Anti-Character 3+",
+    "keyword_description": "Each time an attack is made with this weapon against a Character unit, a Wound roll of 3+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Anti-Monster 4+",
+    "keyword_description": "Each time an attack is made with this weapon against a Monster unit, a Wound roll of 4+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Anti-Vehicle 4+",
+    "keyword_description": "Each time an attack is made with this weapon against a Vehicle unit, a Wound roll of 4+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Anti-Psyker 2+",
+    "keyword_description": "Each time an attack is made with this weapon against a Psyker unit, a Wound roll of 2+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Anti-Infantry 3+",
+    "keyword_description": "Each time an attack is made with this weapon against an Infantry unit, a Wound roll of 3+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Lance",
+    "keyword_description": "If the bearer made a Charge move this turn, add 1 to this weapon's Strength characteristic for that fight."
+  },
+  {
+    "keyword_name": "Lethal Hits",
+    "keyword_description": "Critical Hits automatically wound the target."
+  },
+  {
+    "keyword_name": "Precision",
+    "keyword_description": "Attacks made with this weapon can target a Character model in an enemy unit even if that Character is not the closest model."
+  },
+  {
+    "keyword_name": "Sustained Hits 1",
+    "keyword_description": "A Critical Hit scored with this weapon scores 1 additional hit."
+  },
+  {
+    "keyword_name": "Sustained Hits 3",
+    "keyword_description": "A Critical Hit scored with this weapon scores 3 additional hits."
+  },
+  {
+    "keyword_name": "Sustained Hits D3",
+    "keyword_description": "A Critical Hit scored with this weapon scores D3 additional hits."
+  }
+]
