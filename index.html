@@ -546,6 +546,18 @@
       line-height: 1.35;
     }
 
+    .stat-override {
+      color: #b8860b;
+      font-weight: 700;
+    }
+    .option-item.granted {
+      cursor: default;
+      background: rgba(184,134,11,0.06);
+    }
+    .option-item.granted .option-check {
+      color: #b8860b;
+    }
+
     /* Incomplete flag in detail */
     .incomplete-flag {
       font-size: 0.72rem;
@@ -1232,11 +1244,11 @@
     renderDetail();
   }
 
-  function editWargearBundle(listId, stateKey, label) {
+  function editWargearBundle(listId, stateKey, endpointId) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
     // Default-bearing radio: always exactly one selection, so set (not toggle).
-    entry.wargear[stateKey] = label;
+    entry.wargear[stateKey] = endpointId;
     renderDetail();
   }
 
@@ -1473,8 +1485,9 @@
       html += buildWargearHtml(entry, raw);
     }
 
-    // Other options
-    if (raw && raw.other_options && raw.other_options.length > 0) {
+    // Other options (and read-only grants surfaced by active bundle endpoints)
+    if (raw && ((raw.other_options && raw.other_options.length > 0) ||
+                activeBundleGrants(entry, raw).length > 0)) {
       html += buildOtherOptionsHtml(entry, raw);
     }
 
@@ -1485,6 +1498,35 @@
     </div>`;
 
     body.innerHTML = html;
+  }
+
+  // ── Bundle helpers ─────────────────────────────────────────────────────────
+  // A bundle group always resolves to exactly one endpoint: the stored choice,
+  // or its default when the state is unset. The radio can never be cleared.
+  function bundleChosenEndpoint(entry, bundle, gi) {
+    const eps = bundle.endpoints || [];
+    const def = eps.find(e => e.is_default) || eps[0] || null;
+    const chosenId = entry.wargear[`bundle_${gi}`] || (def ? def.id : null);
+    return eps.find(e => e.id === chosenId) || def;
+  }
+
+  // Every grant currently active from chosen bundle endpoints, across all groups.
+  function activeBundleGrants(entry, raw) {
+    const out = [];
+    (raw.bundled_swaps || []).forEach((bundle, gi) => {
+      const ep = bundleChosenEndpoint(entry, bundle, gi);
+      if (ep && ep.grants) out.push(...ep.grants);
+    });
+    return out;
+  }
+
+  // Merge stat_override maps (e.g. {W:'7'}) from all active grants.
+  function activeStatOverrides(entry, raw) {
+    const ov = {};
+    for (const g of activeBundleGrants(entry, raw)) {
+      if (g.stat_override) Object.assign(ov, g.stat_override);
+    }
+    return ov;
   }
 
   function buildWargearHtml(entry, raw) {
@@ -1554,23 +1596,27 @@
       </div>`;
     }
 
-    // Bundled / compound swaps: one mutually-exclusive group whose lines each
-    // add a SET of weapon families and remove a SET, with an explicit default
-    // radio. NR-style — every line is self-contained, no show/hide dependency.
+    // Bundled / compound swaps: one mutually-exclusive group whose endpoints
+    // each add a SET of weapon families and remove a SET, with an explicit
+    // default radio. Every endpoint is self-contained — no show/hide dependency.
+    // The radio is default-pre-selected and can never be cleared to nothing.
     if (raw.bundled_swaps && raw.bundled_swaps.length > 0) {
       raw.bundled_swaps.forEach((bundle, gi) => {
         const stateKey = `bundle_${gi}`;
-        const defLine  = bundle.options.find(o => o.is_default) || bundle.options[0];
-        const chosen   = entry.wargear[stateKey] || (defLine ? defLine.label : null);
-        html += `<div class="options-block"><div class="detail-section-label">${bundle.group_label || 'Weapons'}</div>`;
-        for (const line of bundle.options) {
-          const isCh = chosen === line.label;
+        const chosenEp = bundleChosenEndpoint(entry, bundle, gi);
+        const chosen   = chosenEp ? chosenEp.id : null;
+        html += `<div class="options-block"><div class="detail-section-label">${bundle.option_group || 'Weapons'}</div>`;
+        for (const ep of (bundle.endpoints || [])) {
+          const isCh = chosen === ep.id;
+          const pts  = ep.points_cost ? ` <span style="color:#888;font-size:0.7rem;">(+${ep.points_cost})</span>` : '';
           html += `<div class="option-item radio${isCh ? ' chosen' : ''}"
-                        onclick="editWargearBundle(${entry.listId},'${esc(stateKey)}','${esc(line.label)}')">
+                        onclick="editWargearBundle(${entry.listId},'${esc(stateKey)}','${esc(ep.id)}')">
             <div class="option-item-row">
               <div class="option-check">${isCh ? '●' : ''}</div>
-              <div class="option-item-name">${line.label}</div>
+              <div class="option-item-name">${ep.label}${pts}</div>
             </div>
+            ${(isCh && ep.grants && ep.grants.length) ? ep.grants.map(g =>
+              `<div class="option-item-note">Grants ${g.option_name}${g.carrier_notes ? ' — ' + g.carrier_notes : ''}</div>`).join('') : ''}
           </div>`;
         }
         html += `</div>`;
@@ -1582,7 +1628,7 @@
 
   function buildOtherOptionsHtml(entry, raw) {
     let html = `<div class="detail-section-label" style="margin-bottom:0.45rem;">Unit Options</div><div class="options-block">`;
-    for (const opt of raw.other_options) {
+    for (const opt of (raw.other_options || [])) {
       const isCh = !!entry.otherOptions[opt.option_name];
       html += `<div class="option-item${isCh ? ' chosen' : ''}"
                     onclick="editOtherOption(${entry.listId},'${esc(opt.option_name)}')">
@@ -1591,6 +1637,16 @@
           <div class="option-item-name">${opt.option_name}</div>
         </div>
         ${opt.carrier_notes ? `<div class="option-item-note">${opt.carrier_notes}</div>` : ''}
+      </div>`;
+    }
+    // Read-only lines granted by the currently chosen bundle endpoint(s).
+    for (const g of activeBundleGrants(entry, raw)) {
+      html += `<div class="option-item granted">
+        <div class="option-item-row">
+          <div class="option-check">◆</div>
+          <div class="option-item-name">${g.option_name} <span style="color:#888;font-size:0.65rem;">(granted)</span></div>
+        </div>
+        ${g.carrier_notes ? `<div class="option-item-note">${g.carrier_notes}</div>` : ''}
       </div>`;
     }
     html += `</div>`;
@@ -1772,19 +1828,16 @@
       }
 
       // Bundled / compound swaps. Each group resolves to exactly one chosen
-      // line (its default when state is unset). The chosen line's adds become
-      // active and its removes become replaced; every add the group COULD make
-      // is recorded so unchosen ones drop out of the loadout.
+      // endpoint (its default when state is unset). The chosen endpoint's adds
+      // become active and its removes become replaced; every add the group
+      // COULD make is recorded so unchosen ones drop out of the loadout.
       if (raw.bundled_swaps) {
         raw.bundled_swaps.forEach((bundle, gi) => {
-          const stateKey = `bundle_${gi}`;
-          const defLine  = bundle.options.find(o => o.is_default) || bundle.options[0];
-          const chosenLabel = entry.wargear[stateKey] || (defLine ? defLine.label : null);
-          const line = bundle.options.find(o => o.label === chosenLabel) || defLine;
-          for (const b of bundle.options.flatMap(o => o.adds || [])) bundleAddBases.add(weaponBase(b));
-          if (line) {
-            for (const b of (line.adds    || [])) activeBases.add(weaponBase(b));
-            for (const b of (line.removes || [])) replacedBases.add(weaponBase(b));
+          const ep = bundleChosenEndpoint(entry, bundle, gi);
+          for (const b of (bundle.endpoints || []).flatMap(e => e.adds || [])) bundleAddBases.add(weaponBase(b));
+          if (ep) {
+            for (const b of (ep.adds    || [])) activeBases.add(weaponBase(b));
+            for (const b of (ep.removes || [])) replacedBases.add(weaponBase(b));
           }
         });
       }
@@ -1800,14 +1853,15 @@
         html += `<div class="stat-block">`;
       }
 
-      // Check if Shining Aegis is equipped — override SV to 3
-      // Stored as a grouped choice value; name may vary in capitalisation so compare case-insensitively
+      // Stat overrides from equipped wargear/grants. Shining Aegis sets Sv 3;
+      // active bundle grants (e.g. Relic shield) carry their own stat_override.
       const shiningAegisActive = Object.values(entry.wargear).some(
         v => typeof v === 'string' && v.toLowerCase() === 'shining aegis'
       );
-      const svOverride = shiningAegisActive ? 3 : null;
+      const overrides = Object.assign({}, activeStatOverrides(entry, raw));
+      if (shiningAegisActive) overrides.SV = 3;
 
-      html += buildStatTable(mg, svOverride);
+      html += buildStatTable(mg, overrides);
       html += `</div>`;
 
       // Weapons for this model group — configured view
@@ -1884,12 +1938,19 @@
 
   // ── Shared modal helpers ───────────────────────────────────────────────────
 
-  function buildStatTable(mg, svOverride) {
+  function buildStatTable(mg, overrides) {
+    const ov  = overrides || {};
     const inv = mg.INV ? `${mg.INV}+` : '—';
     const fnp = mg.FNP ? `${mg.FNP}+` : '—';
     const invCond = mg.INV_Condition ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
     const fnpCond = mg.FNP_Condition ? ` <span style="font-size:0.6rem;color:#666;">(${mg.FNP_Condition})</span>` : '';
-    const svDisplay = svOverride ? `${svOverride}+` : `${mg.SV}+`;
+    const ovCell = (key, base, suffix='') => {
+      const has = ov[key] !== undefined && ov[key] !== null;
+      const val = has ? ov[key] : base;
+      return has ? `<span class="stat-override">${val}${suffix}</span>` : `${val}${suffix}`;
+    };
+    const svDisplay = ovCell('SV', mg.SV, '+');
+    const wDisplay  = ovCell('W',  mg.W);
 
     return `<table class="stat-table">
       <thead>
@@ -1904,7 +1965,7 @@
           <td>${svDisplay}</td>
           <td class="inv-cell">${inv}${invCond}</td>
           <td class="fnp-cell">${fnp}${fnpCond}</td>
-          <td>${mg.W}</td>
+          <td>${wDisplay}</td>
           <td>${mg.LD}+</td>
           <td>${mg.OC}</td>
         </tr>

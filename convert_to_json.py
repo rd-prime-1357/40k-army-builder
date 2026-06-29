@@ -17,6 +17,7 @@ Usage:
 import csv
 import json
 import os
+import re
 import sys
 from collections import defaultdict
 
@@ -62,6 +63,17 @@ def read_csv(filepath):
         print(f"ERROR: CSV file not found: {filepath}")
         sys.exit(1)
     return rows
+
+
+def weapon_base(name):
+    """Normalize a weapon name to its family base for matching: lowercase,
+    drop any ' - profile' suffix, collapse whitespace. Used to detect when a
+    flat wargear swap targets a family a bundle already manages."""
+    if not name:
+        return ""
+    s = str(name).lower()
+    s = re.split(r"\s+[\u2013\u2014-]\s+", s)[0]
+    return " ".join(s.split())
 
 
 def clean(value):
@@ -158,11 +170,13 @@ def load_bundles(bundles_path):
         if len(defaults) != 1:
             print(f"  WARNING: {army}/{unit} has {len(defaults)} default endpoints "
                   f"(expected exactly 1) — check bundled_swaps.json.")
-        index[(army, unit)] = {
+        # A unit may carry more than one independent mutually-exclusive group
+        # (e.g. a ranged axis and a melee axis). Accumulate groups into a list.
+        index.setdefault((army, unit), []).append({
             "model_group":  rec.get("model_group"),
             "option_group": rec.get("option_group"),
             "endpoints":    eps,
-        }
+        })
     print(f"  Loaded bundled swaps for {len(index)} unit(s).")
     return index
 
@@ -480,6 +494,35 @@ def build_units(data):
             # bundled_swaps (merged from bundled_swaps.json, keyed army+unit)
             # ----------------------------------------------------------
             bundled_swaps = bundles.get((army_name, unit_name))
+
+            # A bundle that manages a weapon family OWNS that slot; drop any flat
+            # wargear_option whose replaced family the bundle already removes
+            # (scoped to model group), so the same swap isn't offered twice.
+            if bundled_swaps:
+                removed_by_mg = {}
+                for grp in bundled_swaps:
+                    gmg = grp.get("model_group") or "All"
+                    bag = removed_by_mg.setdefault(gmg, set())
+                    for ep in grp.get("endpoints", []):
+                        for rem in ep.get("removes", []):
+                            bag.add(weapon_base(rem))
+
+                def _bundle_owns(wo):
+                    rb = weapon_base(wo.get("weapon_replaced"))
+                    if not rb:
+                        return False
+                    wmg = wo.get("model_group") or "All"
+                    for gmg, bag in removed_by_mg.items():
+                        if (gmg == "All" or gmg == wmg) and rb in bag:
+                            return True
+                    return False
+
+                kept = [wo for wo in wargear_options if not _bundle_owns(wo)]
+                dropped = len(wargear_options) - len(kept)
+                if dropped:
+                    print(f"  {army_name}/{unit_name}: suppressed {dropped} "
+                          f"wargear option(s) owned by a bundle.")
+                wargear_options = kept
 
             # ----------------------------------------------------------
             # Assemble unit object

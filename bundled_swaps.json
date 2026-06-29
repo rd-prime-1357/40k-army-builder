@@ -9,7 +9,7 @@
       "endpoints": [
         {
           "id": "captain-base",
-          "label": "Bolt pistol, master-crafted bolter & close combat weapon",
+          "label": "Default loadout",
           "is_default": true,
           "points_cost": 0,
           "adds": [],
@@ -18,7 +18,7 @@
         },
         {
           "id": "captain-mcpw",
-          "label": "Master-crafted power weapon (melee swap)",
+          "label": "Master-crafted power weapon",
           "is_default": false,
           "points_cost": 0,
           "adds": ["Master-crafted power weapon"],
@@ -27,7 +27,7 @@
         },
         {
           "id": "captain-fist",
-          "label": "Power fist (melee swap)",
+          "label": "Power fist",
           "is_default": false,
           "points_cost": 0,
           "adds": ["Power fist"],
@@ -100,7 +100,8 @@
               "model_group": "All",
               "option_name": "Relic shield",
               "ability_name": "Relic Shield",
-              "carrier_notes": "The bearer has a Wounds characteristic of 7."
+              "carrier_notes": "The bearer has a Wounds characteristic of 7.",
+              "stat_override": { "W": "7" }
             }
           ]
         }
