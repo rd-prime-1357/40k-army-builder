@@ -357,8 +357,11 @@ def fmt_range(rng):
 def build_weapons(data, selected, army_of, kw_defs_acc, flags):
     rows = []
     weapon_names_by_ds = defaultdict(list)
-    # base-equipment detection from the datasheet loadout prose
-    loadout_by_ds = {ds_id: strip_html(d.get("loadout", "")).lower()
+    # base-equipment detection from the datasheet loadout prose.
+    # Normalize the loadout text through norm_name so it matches the same
+    # hyphen->space treatment applied to weapon names below; otherwise
+    # hyphenated weapons (e.g. "master-crafted bolter") never match.
+    loadout_by_ds = {ds_id: norm_name(strip_html(d.get("loadout", "")))
                      for ds_id, d in selected.items()}
     wg = sorted(
         (w for w in data["wargear"] if w["datasheet_id"] in selected),
