@@ -216,18 +216,13 @@ def main():
             ai = ui = lei = None
         if ai is not None:
             for r in stats_rows[1:]:
-                if len(r) > max(ui, ai):
-                    nk = norm(r[ui])
-                    army_val = r[ai]
-                    existing = ds_army_by_norm.get(nk)
-                    # A unit name can appear in multiple stat rows (e.g. generic
-                    # "Adeptus Astartes" plus a chapter variant like "Black Templars").
-                    # The single MFM points row is generic and must file under the
-                    # generic army so the app's chapter->generic fallback resolves.
-                    # Prefer "Adeptus Astartes" whenever it appears among a name's rows;
-                    # otherwise keep the first-seen (chapter-only units stay correct).
-                    if existing is None or army_val == "Adeptus Astartes":
-                        ds_army_by_norm[nk] = army_val
+                if len(r) > ui:
+                    k = norm(r[ui]); a = r[ai]
+                    # Fix 1: prefer the generic (Adeptus Astartes) army when a unit
+                    # name appears under multiple armies. First-seen otherwise wins,
+                    # but a generic row always takes precedence over a chapter row.
+                    if k not in ds_army_by_norm or a == ARMY_DEFAULT:
+                        ds_army_by_norm[k] = a
 
     # build Unit_Points rows
     point_rows = []
@@ -268,9 +263,8 @@ def main():
         for r in stats_rows[1:]:
             if len(r) > max(ui, lei):
                 key = norm(r[ui])
-                # Datasheets_leader.csv (consumed by the transform) is authoritative.
-                # Only fill from MFM where the transform left the cell blank, so we
-                # never clobber the authoritative leader-attach lists.
+                # Non-destructive: transform is authoritative for leader lists from
+                # Datasheets_leader.csv; only backfill cells the transform left blank.
                 if key in support_by_norm and not (r[lei] or "").strip():
                     r[lei] = support_by_norm[key]
                     flags["support_filled"].append(r[ui])

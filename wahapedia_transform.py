@@ -50,11 +50,10 @@ KNOWN_CHAPTERS = {
 }
 GENERIC_ARMY_NAME = "Adeptus Astartes"
 
-# Sub-faction unit keywords that are only legitimate on datasheets belonging to a
-# specific chapter. Wahapedia sometimes tags these (as non-faction keywords) onto
-# generic datasheets where they don't belong (e.g. Deathwing on a generic
-# Sternguard Veteran Squad, Ravenwing on a generic Stormraven Gunship). Strip such
-# a keyword when the datasheet's resolved Army Name is not the owning chapter.
+# Sub-faction keywords that belong to a single owning chapter. When a datasheet
+# carries one of these but its resolved Army Name is NOT the owner, the keyword is
+# spurious bleed (e.g. generic Sternguard carrying Deathwing, generic Stormraven
+# carrying Ravenwing) and is stripped from the unit's Keyword Names.
 SUBFACTION_KEYWORD_ARMY = {
     "Deathwing": "Dark Angels",
     "Ravenwing": "Dark Angels",
@@ -160,6 +159,14 @@ def norm_name(s):
 
 _PARAM_TOKEN = re.compile(r"^(?:\d*[dD][36]\+?|\d+\+?)$")  # 1, 3+, D6, 2D6, D3+
 
+# Profile suffixes ("Typhoon missile launcher – frag") attach after a SPACED dash.
+# Strip them before base-equipment matching so the bare weapon name matches the
+# loadout prose. Splits only on a spaced dash, so internal hyphens (multi-melta)
+# survive.
+_SPACED_DASH = re.compile(r"\s+[\u2013\u2014-]\s+")
+def base_weapon_name(name):
+    return _SPACED_DASH.split(name or "", 1)[0]
+
 def _cap_word(w):
     # Capitalize across hyphens: 'anti-vehicle' -> 'Anti-Vehicle'
     return "-".join(seg[:1].upper() + seg[1:].lower() if seg else seg for seg in w.split("-"))
@@ -208,7 +215,7 @@ def load(args):
         "abilities": read_pipe(p("Datasheets_abilities.csv")),
         "abil_glossary": read_pipe(p("Abilities.csv")),
         "keywords": read_pipe(p("Datasheets_keywords.csv")),
-        "leader_attach": read_pipe(p("Datasheets_leader.csv")),
+        "leaders": read_pipe(p("Datasheets_leader.csv")),
     }
     return data
 
@@ -374,16 +381,7 @@ def build_weapons(data, selected, army_of, kw_defs_acc, flags):
             ws = bsws
         else:
             bs = bsws
-        # A weapon's loadout name omits any profile suffix (e.g. the loadout says
-        # "typhoon missile launcher" while the weapon rows are "Typhoon missile
-        # launcher – frag/krak"). Match on the profile-stripped base name too, so
-        # multi-profile base weapons are correctly flagged as base equipment and
-        # therefore display by default. Split only on a SPACED dash so internal
-        # hyphens (e.g. "multi-melta") are preserved.
-        base_name = re.split(r"\s+[–—-]\s+", name, maxsplit=1)[0]
-        ld_text = loadout_by_ds.get(ds) or ""
-        is_base = "Yes" if (ld_text and (norm_name(name) in ld_text
-                                         or norm_name(base_name) in ld_text)) else "No"
+        is_base = "Yes" if (loadout_by_ds.get(ds) and norm_name(base_weapon_name(name)) in loadout_by_ds[ds]) else "No"
         rows.append([
             army_of[ds], selected[ds]["name"], "All", wtype, name,
             fmt_range(w.get("range")), (w.get("A") or "").strip(), bs, ws,
@@ -396,7 +394,7 @@ def build_weapons(data, selected, army_of, kw_defs_acc, flags):
 # Stats
 # ----------------------------------------------------------------------------
 
-def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, flags, leader_rows=None):
+def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, leader_attach, flags):
     kw_by_ds = defaultdict(list)
     for k in kw_rows:
         if k["datasheet_id"] in selected:
@@ -422,65 +420,43 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, flag
         return role or "Infantry"
 
     rows = []
-
-    # --- Step 2b: additive ability inheritance for chapter variants ---
-    # Map each unit NAME to the ability list of its GENERIC (Adeptus Astartes)
-    # datasheet. A chapter-variant datasheet (e.g. Black Templars Sternguard) is a
-    # separate datasheet that carries only its own abilities in the source, so it
-    # otherwise loses the base abilities (Oath of Moment, Sternguard Focus). We
-    # union the generic abilities in front of the variant's own (base first, then
-    # chapter-specific), deduped by name.
-    generic_abils_by_name = {}
-    for gid, gd in selected.items():
-        if army_of.get(gid) == GENERIC_ARMY_NAME:
-            generic_abils_by_name[gd["name"]] = (
-                abil["unit_abil"].get(gid, []) + abil["unit_faction"].get(gid, []))
-
-    # --- Step 3: leader-eligible units from authoritative Datasheets_leader.csv ---
-    # leader_id|attached_id rows. For each leader datasheet, collect the names of
-    # all attachable units (resolved within this faction's selected datasheets).
-    leader_eligible_by_ds = defaultdict(list)
-    if leader_rows:
-        name_by_ds = {dsid: d["name"] for dsid, d in selected.items()}
-        seen_pairs = set()
-        for lr in leader_rows:
-            lid = (lr.get("leader_id") or "").strip()
-            aid = (lr.get("attached_id") or "").strip()
-            if lid in selected and aid in name_by_ds:
-                key = (lid, name_by_ds[aid])
-                if key not in seen_pairs:
-                    seen_pairs.add(key)
-                    leader_eligible_by_ds[lid].append(name_by_ds[aid])
-        for lid in leader_eligible_by_ds:
-            leader_eligible_by_ds[lid] = sorted(set(leader_eligible_by_ds[lid]))
-
     for ds_id, d in selected.items():
         mlist = sorted(models_by_ds.get(ds_id, []), key=lambda m: int(m.get("line", "0") or 0))
         if len(mlist) > 1:
             flags["multi_model_line"].append(
                 f"{d['name']}: {len(mlist)} model lines -> weapons emitted as Model Group 'All' (review split)")
         kw_sorted = [k for _, k in sorted(kw_by_ds.get(ds_id, []))]
-        # Step 2a: drop sub-faction keywords that don't belong to this datasheet's army.
-        filtered_kw = []
+        # Fix 2a: strip spurious sub-faction keyword bleed (e.g. Deathwing on a
+        # generic Adeptus Astartes datasheet) when this unit's army isn't the owner.
+        kept_kw = []
         for k in kw_sorted:
             owner = SUBFACTION_KEYWORD_ARMY.get(k)
-            if owner is not None and owner != army_of.get(ds_id):
+            if owner and army_of[ds_id] != owner:
                 flags["stripped_subfaction_kw"].append(
-                    f"{d['name']} [{army_of.get(ds_id)}]: stripped spurious '{k}' keyword")
+                    f"{d['name']} [{army_of[ds_id]}]: stripped '{k}' (owner={owner})")
                 continue
-            filtered_kw.append(k)
-        kw_str = ",".join(filtered_kw)
+            kept_kw.append(k)
+        kw_sorted = kept_kw
+        kw_str = ",".join(kw_sorted)
         ut = unit_type(ds_id)
-        # Step 2b: additive ability inheritance for chapter variants.
-        own_abils = abil["unit_abil"].get(ds_id, []) + abil["unit_faction"].get(ds_id, [])
-        if army_of.get(ds_id) != GENERIC_ARMY_NAME:
-            inherited = generic_abils_by_name.get(d["name"], [])
-            abil_names = ",".join(dict.fromkeys(inherited + own_abils))
-        else:
-            abil_names = ",".join(dict.fromkeys(own_abils))
-        leader_elig_str = ",".join(leader_eligible_by_ds.get(ds_id, []))
+        abil_names = ",".join(dict.fromkeys(
+            abil["unit_abil"].get(ds_id, []) + abil["unit_faction"].get(ds_id, [])))
         rule_str = ",".join(dict.fromkeys(abil["rule_names"].get(ds_id, [])))
         leader_ability = "Leader" if ds_id in abil["leader_flag"] else ""
+        # Fix 3: fill Leader Eligible Units from Datasheets_leader.csv. GW's leader
+        # map is authoritative for what a datasheet can lead; the generic Captain
+        # datasheet is the one chapter armies use, so its graph legitimately spans
+        # chapter bodyguards. Lists every attachable that exists in the build, deduped
+        # by name. Render-time filtering to the selected army is an app concern.
+        leader_elig = ""
+        if leader_ability:
+            names = []
+            for att in leader_attach.get(ds_id, []):
+                if att in selected:
+                    nm = selected[att]["name"]
+                    if nm not in names:
+                        names.append(nm)
+            leader_elig = " | ".join(sorted(names))
         fnp_v, fnp_c = abil["fnp"].get(ds_id, ("", ""))
         for m in (mlist or [None]):
             grp = "All" if len(mlist) <= 1 else strip_html(m.get("name", "")) if m else "All"
@@ -496,7 +472,7 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, flag
             rows.append([
                 army_of[ds_id], d["name"], grp, ut, mv, t, sv, inv, invc,
                 fnp_v, fnp_c, wv, ld, oc, leader_ability,
-                leader_elig_str,   # Leader Eligible Units (from Datasheets_leader.csv)
+                leader_elig,   # Leader Eligible Units (from Datasheets_leader.csv)
                 "",   # Co-Leader Eligible With (manual / surfaced)
                 "",   # Leader Restrictions     (manual / surfaced)
                 abil_names, rule_str, kw_str,
@@ -715,7 +691,33 @@ def main():
 
     kw_defs_acc = OrderedDict()  # weapon ability generic name -> "" (seeded later)
     weapons_rows, weapon_names_by_ds = build_weapons(data, selected, army_of, kw_defs_acc, flags)
-    stats_rows = build_stats(data, selected, army_of, abil, data["keywords"], weapon_names_by_ds, flags, data.get("leader_attach"))
+    # Fix 3: leader -> attached-bodyguard map from Datasheets_leader.csv.
+    leader_attach = defaultdict(list)
+    for r in data["leaders"]:
+        lid = (r.get("leader_id") or "").strip()
+        aid = (r.get("attached_id") or "").strip()
+        if lid and aid:
+            leader_attach[lid].append(aid)
+    stats_rows = build_stats(data, selected, army_of, abil, data["keywords"], weapon_names_by_ds, leader_attach, flags)
+
+    # Fix 2b: additive chapter-variant ability inheritance. A chapter variant unions
+    # the generic (Adeptus Astartes) same-named datasheet's abilities (base first)
+    # with its own, deduped. Operates on the assembled Unit Ability Names column (18).
+    AB = 18
+    generic_abil_by_name = {}
+    for row in stats_rows:
+        if row[0] == GENERIC_ARMY_NAME:
+            generic_abil_by_name.setdefault(
+                row[1], [a for a in row[AB].split(",") if a])
+    for row in stats_rows:
+        if row[0] != GENERIC_ARMY_NAME and row[1] in generic_abil_by_name:
+            own = [a for a in row[AB].split(",") if a]
+            merged = list(dict.fromkeys(generic_abil_by_name[row[1]] + own))
+            if merged != own:
+                flags["additive_chapter_abilities"].append(
+                    f"{row[1]} [{row[0]}]: inherited {merged}")
+            row[AB] = ",".join(merged)
+
     wargear_rows, other_rows = parse_options(data, selected, army_of, weapon_names_by_ds, flags)
 
     # seeds from completed faction
