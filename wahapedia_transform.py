@@ -479,6 +479,7 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
                 "",   # Co-Leader Eligible With (manual / surfaced)
                 "",   # Leader Restrictions     (manual / surfaced)
                 abil_names, rule_str, kw_str,
+                ds_id,   # Datasheet ID (Wahapedia stable id; durable saved-list ref)
             ])
     return rows
 
@@ -735,7 +736,7 @@ def main():
 
     O = lambda n: os.path.join(args.out_dir, n)
     write_csv(O("Unit_Stats.csv"),
-              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Unit Ability Names","Rule Names","Keyword Names"],
+              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Unit Ability Names","Rule Names","Keyword Names","Datasheet ID"],
               stats_rows, trailing_blank_cols=2)
     write_csv(O("Unit_Weapons.csv"),
               ["Army Name","Unit Name","Model Group","Weapon Type","Weapon Name","Range","A","BS","WS","S","AP","D","Weapon Ability Names","Weapon Keyword Names","Is Base Equipment","Allegiance_Condition"],

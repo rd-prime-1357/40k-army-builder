@@ -128,6 +128,17 @@ def split_list(value):
     return [item.strip() for item in v.split(",") if item.strip()]
 
 
+def slug_id(army_name, unit_name):
+    """Deterministic fallback unit id for sources that carry no Wahapedia
+    datasheet id (Gen-1 Daemons). Marked 'local:' so it's distinguishable
+    from a real Wahapedia id and easy to spot when a faction migrates to Gen-2.
+    Stable for a fixed (army, unit) pair; not rename-stable (the reason real
+    ids are preferred wherever the source provides them)."""
+    def _s(x):
+        return re.sub(r"[^a-z0-9]+", "-", (x or "").strip().lower()).strip("-")
+    return f"local:{_s(army_name)}:{_s(unit_name)}"
+
+
 def make_key(row, fields):
     """Build a tuple key from specified field names."""
     return tuple(clean(row.get(f, "")) for f in fields)
@@ -343,6 +354,12 @@ def build_units(data):
             # unit_type is the same across all model groups — take from first row
             unit_type = clean(stat_rows[0].get("Unit Type"))
 
+            # Stable saved-list reference key. Prefer the Wahapedia datasheet id
+            # (carried through transform); fall back to a deterministic local slug
+            # for Gen-1 sources that have none. Consistent across a unit's stat rows.
+            raw_id = clean(stat_rows[0].get("Datasheet ID"))
+            unit_id = raw_id if raw_id else slug_id(army_name, unit_name)
+
             # ----------------------------------------------------------
             # model_groups
             # ----------------------------------------------------------
@@ -528,6 +545,7 @@ def build_units(data):
             # Assemble unit object
             # ----------------------------------------------------------
             unit_obj = {
+                "unit_id":        unit_id,
                 "unit_name":      unit_name,
                 "unit_type":      unit_type,
                 "model_groups":   model_groups,
