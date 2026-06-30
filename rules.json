@@ -50,5 +50,29 @@
   {
     "rule_name": "Stealth",
     "rule_description": "STEALTH Some warriors are masters of disguise and concealment. If every model in a unit has this ability, then each time a ranged attack is made against it, subtract 1 from that attack’s Hit roll ."
+  },
+  {
+    "rule_name": "Deadly Demise D6",
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers D6 mortal wounds.\""
+  },
+  {
+    "rule_name": "Deadly Demise D3",
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers D3 mortal wounds.\""
+  },
+  {
+    "rule_name": "Deadly Demise 1",
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers 1 mortal wound.\""
+  },
+  {
+    "rule_name": "Scouts 9\"",
+    "rule_description": "After both sides have deployed, this unit can make a Normal move of up to 9\\. It cannot end this move within 9\" of any enemy models.\""
+  },
+  {
+    "rule_name": "Feel No Pain 5+",
+    "rule_description": "Each time a wound is allocated to a model in this unit, roll one D6. On a 5+, that wound is ignored."
+  },
+  {
+    "rule_name": "Feel No Pain 6+",
+    "rule_description": "Each time a wound is allocated to a model in this unit, roll one D6. On a 6, that wound is ignored."
   }
 ]

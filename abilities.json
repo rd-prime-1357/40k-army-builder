@@ -1030,5 +1030,385 @@
   {
     "ability_name": "Zealot’s Fervour",
     "ability_description": "This model’s unit is eligible to charge in a turn in which it Fell Back."
+  },
+  {
+    "ability_name": "The Shadow of Chaos",
+    "ability_description": "If your Army Faction is Legiones Daemonica, certain areas of the battlefield are considered to be within your army's Shadow of Chaos. Your deployment zone is always within your army's Shadow of Chaos. At the start of any phase, if you control at least half of the objective markers within No Man's Land, until the end of that phase, No Man's Land is within your army's Shadow of Chaos. At the start of any phase, if you control at least half of the objective markers within your opponent's deployment zone, until the end of that phase, your opponent's deployment zone is within your army's Shadow of Chaos."
+  },
+  {
+    "ability_name": "Greater Daemon of Khorne (Aura)",
+    "ability_description": "While a friendly Khorne Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Rage Embodied (Aura)",
+    "ability_description": "While a friendly Khorne Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Murderlust",
+    "ability_description": "This unit is eligible to declare a charge in a turn in which it Advanced."
+  },
+  {
+    "ability_name": "Daemon Lord of Khorne (Aura)",
+    "ability_description": "While a friendly Khorne Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Relentless Carnage",
+    "ability_description": "At the end of the Fight phase, you can select one enemy unit within Engagement Range of this model and roll eight D6: for each 4+, that enemy unit suffers 1 mortal wound."
+  },
+  {
+    "ability_name": "Lord of Decapitations",
+    "ability_description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [DEVASTATING WOUNDS] ability."
+  },
+  {
+    "ability_name": "Skulls for Khorne",
+    "ability_description": "Each time this model makes an attack that targets a Character unit, you can re-roll the Hit roll and you can re-roll the Wound roll. Each time this model destroys an enemy Character unit, you gain 1CP."
+  },
+  {
+    "ability_name": "Bloodmaster",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Wound roll."
+  },
+  {
+    "ability_name": "A Gory Path",
+    "ability_description": "Each time this model's unit Consolidates, it can move up to 6\\ instead of up to 3\".\""
+  },
+  {
+    "ability_name": "Skullmaster's Fury",
+    "ability_description": "While this model is leading a unit, each time that unit ends a Charge move, until the end of the turn, Juggernaut's bladed horns equipped by models in that unit have the [DEVASTATING WOUNDS] ability."
+  },
+  {
+    "ability_name": "Devastating Charge",
+    "ability_description": "Each time this model's unit ends a Charge move, each enemy unit within Engagement Range of that unit must take a Battle-shock test."
+  },
+  {
+    "ability_name": "Blood Throne",
+    "ability_description": "At the start of the Fight phase, select one enemy unit within 18\\ of and visible to this model. Until the end of the phase"
+  },
+  {
+    "ability_name": "Champion Slayer",
+    "ability_description": "Each time this model makes a melee attack that targets a Character or Monster unit, you can re-roll the Wound roll. Each time this model destroys an enemy Character or Monster unit, this model regains up to D6 lost wounds."
+  },
+  {
+    "ability_name": "Pack Leader",
+    "ability_description": "While this model is leading a unit, you can re-roll Advance and Charge rolls made for that unit."
+  },
+  {
+    "ability_name": "Prey of the Blood God",
+    "ability_description": "At the start of the first battle round, select one enemy unit to be this model's prey. Each time a model in this model's unit makes a melee attack that targets its prey, you can re-roll the Wound roll. Each time this model's prey is destroyed, select one new enemy unit to be this model's prey."
+  },
+  {
+    "ability_name": "Bane of Cowards",
+    "ability_description": "Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more units from your army with this ability Falls Back, models in that enemy unit must take Desperate Escape tests. When doing so, if that enemy unit is also Battle-shocked, subtract 1 from each of those Desperate Escape tests."
+  },
+  {
+    "ability_name": "Brass Stampede",
+    "ability_description": "Each time this unit ends a Charge move, select one enemy unit within Engagement Range of this unit and roll one D6 for each model in this unit: for each 4+, that enemy unit suffers D3 mortal wounds."
+  },
+  {
+    "ability_name": "Hunters from the Warp",
+    "ability_description": "At the end of your opponent's turn, if this unit is not within Engagement Range of one or more enemy units, you can remove it from the battlefield and place it into Strategic Reserves."
+  },
+  {
+    "ability_name": "Skulls of the Fallen",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit that was hit by one or more of those attacks. That unit must take a Battle-shock test."
+  },
+  {
+    "ability_name": "Shadow of Khorne (Aura)",
+    "ability_description": "The area of the battlefield within 6\\ of this Fortification is considered to be within your army's Shadow of Chaos. In addition"
+  },
+  {
+    "ability_name": "Cover",
+    "ability_description": "Each time a ranged attack is allocated to a model, if that model is not fully visible to every model in the attacking unit because of this Fortification, that model has the Benefit of Cover against that attack."
+  },
+  {
+    "ability_name": "Greater Daemon of Tzeentch (Aura)",
+    "ability_description": "While a friendly Tzeentch Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "One Head Looks Forward",
+    "ability_description": "At the end of your Command phase, if this model is on the battlefield, take a Leadership test for this model; if that test is passed, you gain 1CP."
+  },
+  {
+    "ability_name": "One Head Looks Back",
+    "ability_description": "Once per turn, when your opponent targets a unit from their army within 12\\ of this model with a stratagem"
+  },
+  {
+    "ability_name": "Daemon Lord of Tzeentch (Aura)",
+    "ability_description": "While a friendly Tzeentch Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Master of Magicks (Psychic)",
+    "ability_description": "In your Shooting phase, select one of the following abilities: [IGNORES COVER]; [LETHAL HITS]; [SUSTAINED HITS D3]. Until the end of the phase, this model's Bolt of Change has that ability."
+  },
+  {
+    "ability_name": "Formless Horror",
+    "ability_description": "Each time an enemy unit wishes to select this model as the target of an attack, that unit must first take a Battle-shock test. If that test is failed, in addition to being Battle-shocked, that enemy unit cannot target this model this phase."
+  },
+  {
+    "ability_name": "Mischief and Confusion",
+    "ability_description": "At the start of your opponent's Shooting phase, select one enemy unit within 12\\ of and visible to this model and roll one D6: on a 2-5"
+  },
+  {
+    "ability_name": "Fateskimmer",
+    "ability_description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [LETHAL HITS] ability."
+  },
+  {
+    "ability_name": "Rider of the Immaterial Winds",
+    "ability_description": "Once per battle, at the end of your opponent's turn, if this model's unit is not within Engagement Range of one or more enemy units, you can remove that unit from the battlefield and place it into Strategic Reserves."
+  },
+  {
+    "ability_name": "Fluxmaster",
+    "ability_description": "While this model is leading a unit, each time an attack is made against that unit, subtract 1 from the Hit roll."
+  },
+  {
+    "ability_name": "Altered Reality (Psychic)",
+    "ability_description": "Once per battle round, after a Hit roll, a Wound roll or a saving throw is made for this model, you can change the result of that roll to an unmodified 6."
+  },
+  {
+    "ability_name": "P'tarix's Sorcerous Syphon (Aura)",
+    "ability_description": "While an enemy unit is within 12\\ of this model"
+  },
+  {
+    "ability_name": "Xirat'p's Sorcerous Barrages (Psychic)",
+    "ability_description": "At the end of your Movement phase, roll one D6 for each enemy unit within 6\\ of this model: on a 2-3"
+  },
+  {
+    "ability_name": "Changecaster",
+    "ability_description": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
+  },
+  {
+    "ability_name": "Storm of Mutating Sorcery (Psychic)",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy Infantry unit hit by one or more of those attacks. That unit must take a Battle-shock test."
+  },
+  {
+    "ability_name": "Blazing Warpfire (Psychic)",
+    "ability_description": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [ASSAULT] ability."
+  },
+  {
+    "ability_name": "Flames of Change (Psychic)",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit (excluding Monsters and Vehicles) hit by one or more of those attacks, and roll one D6. On a 4+, until the end of your opponent's next turn, that enemy unit is aflame. While a unit is aflame, subtract 2\\ from its Move characteristic and subtract 2 from Advance and Charge rolls made for it.\""
+  },
+  {
+    "ability_name": "Split",
+    "ability_description": "Each time a Blue Horror or Pink Horror model in this unit is destroyed, after the attacking unit has finished making its attacks, if this unit is not destroyed, roll one D6 for that model. On a 4+, add the appropriate number of replacement models to this unit (see unit rules)."
+  },
+  {
+    "ability_name": "Sullen Malevolence (Aura)",
+    "ability_description": "While an enemy unit is within 6\\ of this unit"
+  },
+  {
+    "ability_name": "Exploding Horrors",
+    "ability_description": "Each time this unit is selected to fight, you can select one enemy unit within Engagement Range of it, then select one or more Brimstone Horror models in this unit. For each Brimstone Horror model you select, roll one D6: on a 4+, that model is destroyed and that enemy unit suffers 1 mortal wound."
+  },
+  {
+    "ability_name": "Bounding Leaps",
+    "ability_description": "This unit is eligible to shoot in a turn in which it Fell Back."
+  },
+  {
+    "ability_name": "Slashing Dive",
+    "ability_description": "In your Movement phase, after this unit ends a Normal move, you can select one enemy unit it moved over during that move and roll one D6 for each model in this unit: for each 4+, that enemy unit suffers 1 mortal wound."
+  },
+  {
+    "ability_name": "Eldritch Flames (Psychic)",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit that was hit by one or more of those attacks. Until the end of the phase, that unit cannot have the Benefit of Cover."
+  },
+  {
+    "ability_name": "Greater Daemon of Nurgle (Aura)",
+    "ability_description": "While a friendly Nurgle Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Virulent Blessing (Psychic)",
+    "ability_description": "At the start of the Fight phase, you can select one enemy unit within 24\\ and visible to this model. Until the end of the phase"
+  },
+  {
+    "ability_name": "Deluge of Nurgle (Aura)",
+    "ability_description": "While an enemy unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Daemon Lord of Nurgle (Aura)",
+    "ability_description": "While a friendly Nurgle Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Nurgle's Rot (Psychic)",
+    "ability_description": "At the end of your Movement phase, you can select one enemy unit within 12\\ of this model. Until the start of your next Movement phase"
+  },
+  {
+    "ability_name": "Poxbringer",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes an attack, a successful unmodified Hit roll of 5+ scores a Critical Hit."
+  },
+  {
+    "ability_name": "Feculent Despair (Aura Psychic)",
+    "ability_description": "While an enemy unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Keep Counting!",
+    "ability_description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
+  },
+  {
+    "ability_name": "Meet Your Quota!",
+    "ability_description": "While this model is leading a unit, add 1 to the Objective Control characteristic of models in that unit."
+  },
+  {
+    "ability_name": "Blessed by the Plague God",
+    "ability_description": "While this model is leading a unit, models in that unit have a 4+ invulnerable save."
+  },
+  {
+    "ability_name": "Tally of Pestilence",
+    "ability_description": "Keep a tally of how many enemy models are destroyed by Nurgle Legiones Daemonica models from your army during the battle. At the start of your Command phase, if this tally is 7 or more, you gain 1CP and the tally is reset to 0."
+  },
+  {
+    "ability_name": "Jolly Gutpipes",
+    "ability_description": "While this model is leading a unit, add 1 to the Move characteristic of models in that unit and you can re-roll Advance rolls made for that unit."
+  },
+  {
+    "ability_name": "Disease of Mirth (Aura)",
+    "ability_description": "At the start of the Fight phase, every enemy unit (excluding Monsters and Vehicles) within 6\\ of this model must take a Battle-shock test.\""
+  },
+  {
+    "ability_name": "Beast Handler",
+    "ability_description": "While this model is leading a unit, you can re-roll charge rolls made for that unit. In addition, once per battle, you can target this unit with the Heroic Intervention stratagem, regardless of any other uses of that stratagem this phase. If you do, that use is -1 CP, and that use does not prevent any uses of that stratagem on other units this phase."
+  },
+  {
+    "ability_name": "Seed the Garden of Nurgle",
+    "ability_description": "At the end of your Movement phase, if this model is within one Area Terrain feature, until the end of the battle, that Area Terrain feature is considered to be within your army's Shadow of Chaos."
+  },
+  {
+    "ability_name": "Infected Outbreak",
+    "ability_description": "If you control an objective marker at the end of your Command phase and this unit is within range of that objective marker, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
+  },
+  {
+    "ability_name": "Mischief Makers",
+    "ability_description": "Each time an enemy unit (excluding Titanic units) within Engagement Range of one or more units with this ability is selected to fight, until the end of the phase, each time a model in that enemy unit makes a melee attack, subtract 1 from the Hit roll."
+  },
+  {
+    "ability_name": "Grotesque Regeneration",
+    "ability_description": "At the end of each phase, if a Beasts of Nurgle model in this unit has lost any wounds but is not destroyed, that model regains all of its lost wounds."
+  },
+  {
+    "ability_name": "Death's Heads",
+    "ability_description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly Nurgle Legiones Daemonica unit makes an attack that targets that unit, you can re-roll the Wound roll."
+  },
+  {
+    "ability_name": "Shroud of Flies (Aura)",
+    "ability_description": "While a friendly Nurgle Legiones Daemonica unit is within 6\\ of this Fortification"
+  },
+  {
+    "ability_name": "Diseased Cover",
+    "ability_description": "Each time a ranged attack is allocated to a model, if that model is not fully visible to every model in the attacking unit because of this Fortification, that model has the Benefit of Cover against that attack."
+  },
+  {
+    "ability_name": "Greater Daemon of Slaanesh (Aura)",
+    "ability_description": "While a friendly Slaanesh Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "No Prey Can Evade",
+    "ability_description": "You can re-roll Advance and Charge rolls made for this model."
+  },
+  {
+    "ability_name": "Monarch of the Hunt",
+    "ability_description": "At the start of the first battle round, select one enemy unit to be this model's quarry. Each time this model makes a melee attack that targets its quarry, you can re-roll the Hit roll and you can re-roll the Wound roll. Each time this model's quarry is destroyed, select one new enemy unit to be this model's quarry."
+  },
+  {
+    "ability_name": "Daemon Lord of Slaanesh (Aura)",
+    "ability_description": "While a friendly Slaanesh Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Mesmerising Form",
+    "ability_description": "Each time an attack targets this model, subtract 1 from the Hit roll."
+  },
+  {
+    "ability_name": "Harmonic Alignment",
+    "ability_description": "While this model is leading a unit, in your Command phase, you can return D3 destroyed Bodyguard models to that unit."
+  },
+  {
+    "ability_name": "Discordant Disruption (Aura)",
+    "ability_description": "While an enemy Psyker unit is within 12\\ of this model"
+  },
+  {
+    "ability_name": "The Eternal Dance",
+    "ability_description": "At the start of the Fight phase, select one enemy unit within 6\\ of this model. Until the end of the phase"
+  },
+  {
+    "ability_name": "Dazzling Acrobatics",
+    "ability_description": "This model is eligible to declare a charge in a turn in which it Advanced or Fell Back."
+  },
+  {
+    "ability_name": "Prince of Slaanesh",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes a melee attack, a successful unmodified Wound roll of 5+ scores a Critical Wound."
+  },
+  {
+    "ability_name": "Delightful Agonies",
+    "ability_description": "The first time this model is destroyed, roll one D6 at the end of the phase. On a 2+, set this model back up on the battlefield, as close as possible to where it was destroyed and not within Engagement Range of any enemy units, with its full wounds remaining."
+  },
+  {
+    "ability_name": "Swallow Energy (Psychic)",
+    "ability_description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against mortal wounds and Psychic Attacks."
+  },
+  {
+    "ability_name": "Horrible Fascination (Psychic)",
+    "ability_description": "At the start of your opponent's Shooting phase, one Psyker model from your army with this ability can use it. If it does, select one enemy unit within 12\\ of and visible to that Psyker model and roll one D6: on a 1"
+  },
+  {
+    "ability_name": "Tormentbringer (Aura)",
+    "ability_description": "While a friendly Slaanesh Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Hysterical Frenzy",
+    "ability_description": "Each time a model in this model's unit is destroyed, if that model has not fought this phase, do not remove it from play. The destroyed model can fight after the attacking unit has finished making its attacks, and is then removed from play."
+  },
+  {
+    "ability_name": "Tranceweaver",
+    "ability_description": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If the target of that attack is within range of an objective marker, you can re-roll the Hit roll instead."
+  },
+  {
+    "ability_name": "Symphony of Pain (Psychic)",
+    "ability_description": "At the end of your Movement phase, you can select one enemy unit that is Battle-shocked and within 12\\ of this model. Until the end of the turn"
+  },
+  {
+    "ability_name": "Horrifying Beauty",
+    "ability_description": "At the start of the Fight phase, each enemy unit within Engagement Range of one or more units from your army with this ability must take a Battle-shock test, subtracting 1 from the result if that enemy unit is Below Half-strength."
+  },
+  {
+    "ability_name": "Soporific Musk",
+    "ability_description": "Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more units from your army with this ability Falls Back, models in that enemy unit must take Desperate Escape tests. When doing so, if that enemy unit is also Battle-shocked, subtract 1 from each of those Desperate Escape tests."
+  },
+  {
+    "ability_name": "Unholy Speed",
+    "ability_description": "You can re-roll Advance and Charge rolls made for this unit."
+  },
+  {
+    "ability_name": "Cutting Down the Foe",
+    "ability_description": "Each time a model in this unit makes a melee attack, if this unit made a Charge move this turn, improve the Strength and Damage characteristics of that attack by 1."
+  },
+  {
+    "ability_name": "The Dark Master (Aura)",
+    "ability_description": "The area of the battlefield within 6\\ of this model is within your army's Shadow of Chaos.\""
+  },
+  {
+    "ability_name": "Shadow Form",
+    "ability_description": "At the start of the battle round, select one Shadow Form ability. Until the end of the battle round, this model has that ability."
+  },
+  {
+    "ability_name": "Scuttling Walker",
+    "ability_description": "Each time this model makes a Normal or Advance move, it can move over friendly Monster and Vehicle models and terrain features that are 4\\ or less in height as if they were not there.\""
+  },
+  {
+    "ability_name": "Daemonic Lord",
+    "ability_description": "While this model is within 3\\ of one or more friendly Legiones Daemonica Infantry units"
+  },
+  {
+    "ability_name": "Prince of Darkness (Aura)",
+    "ability_description": "While a friendly Legiones Daemonica unit is within 6\\ of this model"
+  },
+  {
+    "ability_name": "Unholy Vigour",
+    "ability_description": "Once per battle, at the start of any phase, this model can use this ability. If it does, until the end of the phase, this model has a 3+ invulnerable save."
+  },
+  {
+    "ability_name": "Malefic Destruction",
+    "ability_description": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does, until the end of the phase, add 3 to the Attacks characteristic of this model's hellforged weapons."
+  },
+  {
+    "ability_name": "Harbinger of Death",
+    "ability_description": "Each time this model is selected to fight, select one of the following abilities. Until the end of the phase, this model's hellforged weapons have that ability: [LETHAL HITS], [PRECISION], or [SUSTAINED HITS 1]."
   }
 ]

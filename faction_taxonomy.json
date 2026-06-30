@@ -4,55 +4,183 @@
     {
       "group": "Adeptus Astartes",
       "factions": [
-        { "name": "Space Marines",  "data_army": "Adeptus Astartes", "is_subfaction": false, "built": true },
-        { "name": "Black Templars", "data_army": "Black Templars",   "is_subfaction": true,  "built": true },
-        { "name": "Blood Angels",   "data_army": "Blood Angels",     "is_subfaction": true,  "built": true },
-        { "name": "Dark Angels",    "data_army": "Dark Angels",      "is_subfaction": true,  "built": true },
-        { "name": "Deathwatch",     "data_army": "Deathwatch",       "is_subfaction": true,  "built": true },
-        { "name": "Imperial Fists", "data_army": "Imperial Fists",   "is_subfaction": true,  "built": true },
-        { "name": "Iron Hands",     "data_army": "Iron Hands",       "is_subfaction": true,  "built": true },
-        { "name": "Raven Guard",    "data_army": "Raven Guard",      "is_subfaction": true,  "built": true },
-        { "name": "Salamanders",    "data_army": "Salamanders",      "is_subfaction": true,  "built": true },
-        { "name": "Space Wolves",   "data_army": "Space Wolves",     "is_subfaction": true,  "built": true },
-        { "name": "Ultramarines",   "data_army": "Ultramarines",     "is_subfaction": true,  "built": true },
-        { "name": "White Scars",    "data_army": "White Scars",      "is_subfaction": true,  "built": true }
+        {
+          "name": "Space Marines",
+          "data_army": "Adeptus Astartes",
+          "is_subfaction": false,
+          "built": true
+        },
+        {
+          "name": "Black Templars",
+          "data_army": "Black Templars",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Blood Angels",
+          "data_army": "Blood Angels",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Dark Angels",
+          "data_army": "Dark Angels",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Deathwatch",
+          "data_army": "Deathwatch",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Imperial Fists",
+          "data_army": "Imperial Fists",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Iron Hands",
+          "data_army": "Iron Hands",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Raven Guard",
+          "data_army": "Raven Guard",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Salamanders",
+          "data_army": "Salamanders",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Space Wolves",
+          "data_army": "Space Wolves",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "Ultramarines",
+          "data_army": "Ultramarines",
+          "is_subfaction": true,
+          "built": true
+        },
+        {
+          "name": "White Scars",
+          "data_army": "White Scars",
+          "is_subfaction": true,
+          "built": true
+        }
       ]
     },
     {
       "group": "Imperium",
       "factions": [
-        { "name": "Adepta Sororitas",   "built": false },
-        { "name": "Adeptus Custodes",   "built": false },
-        { "name": "Adeptus Mechanicus", "built": false },
-        { "name": "Astra Militarum",    "built": false },
-        { "name": "Grey Knights",       "built": false },
-        { "name": "Imperial Agents",    "built": false },
-        { "name": "Imperial Knights",   "built": false }
+        {
+          "name": "Adepta Sororitas",
+          "built": false
+        },
+        {
+          "name": "Adeptus Custodes",
+          "built": false
+        },
+        {
+          "name": "Adeptus Mechanicus",
+          "built": false
+        },
+        {
+          "name": "Astra Militarum",
+          "built": false
+        },
+        {
+          "name": "Grey Knights",
+          "built": false
+        },
+        {
+          "name": "Imperial Agents",
+          "built": false
+        },
+        {
+          "name": "Imperial Knights",
+          "built": false
+        }
       ]
     },
     {
       "group": "Chaos",
       "factions": [
-        { "name": "Chaos Daemons",       "built": false },
-        { "name": "Chaos Knights",       "built": false },
-        { "name": "Chaos Space Marines", "built": false },
-        { "name": "Death Guard",         "built": false },
-        { "name": "Emperor's Children",  "built": false },
-        { "name": "Thousand Sons",       "built": false },
-        { "name": "World Eaters",        "built": false }
+        {
+          "name": "Chaos Daemons",
+          "built": true,
+          "data_army": "Chaos Daemons",
+          "is_subfaction": false
+        },
+        {
+          "name": "Chaos Knights",
+          "built": false
+        },
+        {
+          "name": "Chaos Space Marines",
+          "built": false
+        },
+        {
+          "name": "Death Guard",
+          "built": false
+        },
+        {
+          "name": "Emperor's Children",
+          "built": false
+        },
+        {
+          "name": "Thousand Sons",
+          "built": false
+        },
+        {
+          "name": "World Eaters",
+          "built": false
+        }
       ]
     },
     {
       "group": "Xenos",
       "factions": [
-        { "name": "Aeldari",            "built": false },
-        { "name": "Drukhari",           "built": false },
-        { "name": "Genestealer Cults",  "built": false },
-        { "name": "Leagues of Votann",  "built": false },
-        { "name": "Necrons",            "built": false },
-        { "name": "Orks",               "built": false },
-        { "name": "T'au Empire",        "built": false },
-        { "name": "Tyranids",           "built": false }
+        {
+          "name": "Aeldari",
+          "built": false
+        },
+        {
+          "name": "Drukhari",
+          "built": false
+        },
+        {
+          "name": "Genestealer Cults",
+          "built": false
+        },
+        {
+          "name": "Leagues of Votann",
+          "built": false
+        },
+        {
+          "name": "Necrons",
+          "built": false
+        },
+        {
+          "name": "Orks",
+          "built": false
+        },
+        {
+          "name": "T'au Empire",
+          "built": false
+        },
+        {
+          "name": "Tyranids",
+          "built": false
+        }
       ]
     }
   ]

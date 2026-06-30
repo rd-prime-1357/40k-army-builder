@@ -102,5 +102,37 @@
   {
     "keyword_name": "Twin-Linked",
     "keyword_description": null
+  },
+  {
+    "keyword_name": "Anti-Character 3+",
+    "keyword_description": "Each time an attack is made with this weapon against a Character unit, a Wound roll of 3+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Anti-Monster 4+",
+    "keyword_description": "Each time an attack is made with this weapon against a Monster unit, a Wound roll of 4+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Anti-Vehicle 4+",
+    "keyword_description": "Each time an attack is made with this weapon against a Vehicle unit, a Wound roll of 4+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Anti-Psyker 2+",
+    "keyword_description": "Each time an attack is made with this weapon against a Psyker unit, a Wound roll of 2+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Anti-Infantry 3+",
+    "keyword_description": "Each time an attack is made with this weapon against an Infantry unit, a Wound roll of 3+ is always a successful wound roll."
+  },
+  {
+    "keyword_name": "Sustained Hits 1",
+    "keyword_description": "A Critical Hit scored with this weapon scores 1 additional hit."
+  },
+  {
+    "keyword_name": "Sustained Hits 3",
+    "keyword_description": "A Critical Hit scored with this weapon scores 3 additional hits."
+  },
+  {
+    "keyword_name": "Sustained Hits D3",
+    "keyword_description": "A Critical Hit scored with this weapon scores D3 additional hits."
   }
 ]
