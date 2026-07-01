@@ -128,6 +128,19 @@ def split_list(value):
     return [item.strip() for item in v.split(",") if item.strip()]
 
 
+def split_multi(value):
+    """
+    Split on pipe OR comma. Leader-eligibility lists are pipe-joined by the
+    Wahapedia transform but comma-authored in hand-built reference data
+    (e.g. Chaos Daemons); this accepts either so both sources yield a proper
+    list of names rather than one un-splittable string.
+    """
+    v = clean(value)
+    if v is None:
+        return []
+    return [item.strip() for item in re.split(r"[|,]", v) if item.strip()]
+
+
 def slug_id(army_name, unit_name):
     """Deterministic fallback unit id for sources that carry no Wahapedia
     datasheet id (Gen-1 Daemons). Marked 'local:' so it's distinguishable
@@ -383,8 +396,8 @@ def build_units(data):
                     "OC":                       to_int(row.get("OC")),
                     # Leader fields
                     "leader_ability_name":      clean(row.get("Leader Ability Name")),
-                    "leader_eligible_units":    split_list(row.get("Leader Eligible Units", "")),
-                    "co_leader_eligible_with":  split_list(row.get("Co-Leader Eligible With", "")),
+                    "leader_eligible_units":    split_multi(row.get("Leader Eligible Units", "")),
+                    "co_leader_eligible_with":  split_multi(row.get("Co-Leader Eligible With", "")),
                     "leader_restrictions":      clean(row.get("Leader Restrictions")),
                     # Reference lists (names only)
                     "unit_ability_names":       split_list(row.get("Unit Ability Names", "")),

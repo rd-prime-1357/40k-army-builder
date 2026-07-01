@@ -21,7 +21,10 @@
             "OC": 3,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Aggressor Squad | Eradicator Squad | Heavy Intercessor Squad | Indomitor Kill Team"
+              "Aggressor Squad",
+              "Eradicator Squad",
+              "Heavy Intercessor Squad",
+              "Indomitor Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -1397,7 +1400,21 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Company Heroes | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad | Victrix Honour Guard"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Company Heroes",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad",
+              "Victrix Honour Guard"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -1856,7 +1873,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad | Deathwing Knights | Deathwing Terminator Squad | Terminator Assault Squad | Terminator Squad"
+              "Deathwatch Terminator Squad",
+              "Deathwing Knights",
+              "Deathwing Terminator Squad",
+              "Terminator Assault Squad",
+              "Terminator Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -2026,7 +2047,10 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessors With Jump Packs | Sanguinary Guard | Talonstrike Kill Team | Vanguard Veteran Squad With Jump Packs"
+              "Assault Intercessors With Jump Packs",
+              "Sanguinary Guard",
+              "Talonstrike Kill Team",
+              "Vanguard Veteran Squad With Jump Packs"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -2776,7 +2800,8 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Outrider Squad | Ravenwing Black Knights"
+              "Outrider Squad",
+              "Ravenwing Black Knights"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -3157,7 +3182,10 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessors With Jump Packs | Death Company Marines With Jump Packs | Talonstrike Kill Team | Vanguard Veteran Squad With Jump Packs"
+              "Assault Intercessors With Jump Packs",
+              "Death Company Marines With Jump Packs",
+              "Talonstrike Kill Team",
+              "Vanguard Veteran Squad With Jump Packs"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -3603,7 +3631,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad | Deathwing Knights | Deathwing Terminator Squad | Terminator Assault Squad | Terminator Squad"
+              "Deathwatch Terminator Squad",
+              "Deathwing Knights",
+              "Deathwing Terminator Squad",
+              "Terminator Assault Squad",
+              "Terminator Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -4069,7 +4101,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Eliminator Squad | Incursor Squad | Infiltrator Squad | Reiver Squad | Spectrus Kill Team"
+              "Eliminator Squad",
+              "Incursor Squad",
+              "Infiltrator Squad",
+              "Reiver Squad",
+              "Spectrus Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -4881,7 +4917,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad | Deathwing Knights | Deathwing Terminator Squad | Terminator Assault Squad | Terminator Squad"
+              "Deathwatch Terminator Squad",
+              "Deathwing Knights",
+              "Deathwing Terminator Squad",
+              "Terminator Assault Squad",
+              "Terminator Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -5216,7 +5256,15 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Decimus Kill Team | Desolation Squad | Devastator Squad | Fortis Kill Team | Intercessor Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Decimus Kill Team",
+              "Desolation Squad",
+              "Devastator Squad",
+              "Fortis Kill Team",
+              "Intercessor Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -6738,7 +6786,10 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Aggressor Squad | Eradicator Squad | Heavy Intercessor Squad | Indomitor Kill Team"
+              "Aggressor Squad",
+              "Eradicator Squad",
+              "Heavy Intercessor Squad",
+              "Indomitor Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -6913,7 +6964,21 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Death Company Marines | Death Company Marines with Bolt Rifles | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Death Company Marines",
+              "Death Company Marines with Bolt Rifles",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -8307,7 +8372,20 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Company Heroes | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Company Heroes",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -10664,7 +10742,20 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Desolation Squad | Devastator Squad | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Desolation Squad",
+              "Devastator Squad",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -10971,7 +11062,10 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Incursor Squad | Infiltrator Squad | Reiver Squad | Spectrus Kill Team"
+              "Incursor Squad",
+              "Infiltrator Squad",
+              "Reiver Squad",
+              "Spectrus Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -11322,7 +11416,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad | Deathwing Knights | Deathwing Terminator Squad | Terminator Assault Squad | Terminator Squad"
+              "Deathwatch Terminator Squad",
+              "Deathwing Knights",
+              "Deathwing Terminator Squad",
+              "Terminator Assault Squad",
+              "Terminator Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -11535,7 +11633,12 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Eliminator Squad | Incursor Squad | Infiltrator Squad | Reiver Squad | Scout Squad | Spectrus Kill Team"
+              "Eliminator Squad",
+              "Incursor Squad",
+              "Infiltrator Squad",
+              "Reiver Squad",
+              "Scout Squad",
+              "Spectrus Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -11971,7 +12074,18 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -13936,7 +14050,20 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Desolation Squad | Devastator Squad | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Desolation Squad",
+              "Devastator Squad",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -14044,7 +14171,20 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Desolation Squad | Devastator Squad | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Desolation Squad",
+              "Devastator Squad",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -14398,7 +14538,18 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -14485,7 +14636,21 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Death Company Marines | Death Company Marines with Bolt Rifles | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Death Company Marines",
+              "Death Company Marines with Bolt Rifles",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -14576,7 +14741,19 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Company Heroes | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad | Victrix Honour Guard"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Company Heroes",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad",
+              "Victrix Honour Guard"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -14794,7 +14971,19 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Desolation Squad | Devastator Squad | Fortis Kill Team | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Desolation Squad",
+              "Devastator Squad",
+              "Fortis Kill Team",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -14926,7 +15115,29 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Aggressor Squad | Assault Intercessor Squad | Bladeguard Veteran Squad | Company Heroes | Crusader Squad | Deathwatch Terminator Squad | Deathwatch Veterans | Deathwing Knights | Deathwing Terminator Squad | Decimus Kill Team | Eradicator Squad | Fortis Kill Team | Heavy Intercessor Squad | Indomitor Kill Team | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad | Terminator Assault Squad | Terminator Squad | Victrix Honour Guard"
+              "Aggressor Squad",
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Company Heroes",
+              "Crusader Squad",
+              "Deathwatch Terminator Squad",
+              "Deathwatch Veterans",
+              "Deathwing Knights",
+              "Deathwing Terminator Squad",
+              "Decimus Kill Team",
+              "Eradicator Squad",
+              "Fortis Kill Team",
+              "Heavy Intercessor Squad",
+              "Indomitor Kill Team",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad",
+              "Terminator Assault Squad",
+              "Terminator Squad",
+              "Victrix Honour Guard"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -15256,7 +15467,21 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Company Heroes | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Victrix Honour Guard | Wardens of Ultramar"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Company Heroes",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Victrix Honour Guard",
+              "Wardens of Ultramar"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -15600,7 +15825,10 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Aggressor Squad | Eradicator Squad | Heavy Intercessor Squad | Indomitor Kill Team"
+              "Aggressor Squad",
+              "Eradicator Squad",
+              "Heavy Intercessor Squad",
+              "Indomitor Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -15727,7 +15955,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad | Deathwing Knights | Deathwing Terminator Squad | Terminator Assault Squad | Terminator Squad"
+              "Deathwatch Terminator Squad",
+              "Deathwing Knights",
+              "Deathwing Terminator Squad",
+              "Terminator Assault Squad",
+              "Terminator Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -15842,7 +16074,10 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessors With Jump Packs | Sanguinary Guard | Talonstrike Kill Team | Vanguard Veteran Squad With Jump Packs"
+              "Assault Intercessors With Jump Packs",
+              "Sanguinary Guard",
+              "Talonstrike Kill Team",
+              "Vanguard Veteran Squad With Jump Packs"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -16222,7 +16457,21 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Desolation Squad | Devastator Squad | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Desolation Squad",
+              "Devastator Squad",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -17844,7 +18093,19 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Company Heroes | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad | Victrix Honour Guard"
+              "Assault Intercessor Squad",
+              "Company Heroes",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad",
+              "Victrix Honour Guard"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -18006,7 +18267,8 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Death Company Marines | Death Company Marines with Bolt Rifles"
+              "Death Company Marines",
+              "Death Company Marines with Bolt Rifles"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -18390,7 +18652,19 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -18480,7 +18754,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad | Deathwing Knights | Deathwing Terminator Squad | Terminator Assault Squad | Terminator Squad"
+              "Deathwatch Terminator Squad",
+              "Deathwing Knights",
+              "Deathwing Terminator Squad",
+              "Terminator Assault Squad",
+              "Terminator Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -18569,7 +18847,21 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Death Company Marines | Death Company Marines with Bolt Rifles | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Death Company Marines",
+              "Death Company Marines with Bolt Rifles",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -18670,7 +18962,19 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Hellblaster Squad | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Hellblaster Squad",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -19851,7 +20155,8 @@
             "OC": 2,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Outrider Squad | Ravenwing Black Knights"
+              "Outrider Squad",
+              "Ravenwing Black Knights"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -19974,7 +20279,18 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -20181,7 +20497,8 @@
             "OC": 2,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Outrider Squad | Ravenwing Black Knights"
+              "Outrider Squad",
+              "Ravenwing Black Knights"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -20579,7 +20896,8 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Blood Claws | Wolf Guard Headtakers"
+              "Blood Claws",
+              "Wolf Guard Headtakers"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -20666,7 +20984,9 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Blood Claws | Grey Hunters | Wolf Guard Headtakers"
+              "Blood Claws",
+              "Grey Hunters",
+              "Wolf Guard Headtakers"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -20790,7 +21110,9 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Blood Claws | Grey Hunters | Wolf Guard Headtakers"
+              "Blood Claws",
+              "Grey Hunters",
+              "Wolf Guard Headtakers"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -21410,7 +21732,9 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Blood Claws | Grey Hunters | Wolf Guard Headtakers"
+              "Blood Claws",
+              "Grey Hunters",
+              "Wolf Guard Headtakers"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -22411,7 +22735,9 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Blood Claws | Grey Hunters | Wolf Guard Headtakers"
+              "Blood Claws",
+              "Grey Hunters",
+              "Wolf Guard Headtakers"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -22493,7 +22819,9 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Blood Claws | Grey Hunters | Wolf Guard Headtakers"
+              "Blood Claws",
+              "Grey Hunters",
+              "Wolf Guard Headtakers"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -24782,7 +25110,8 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Veterans | Fortis Kill Team"
+              "Deathwatch Veterans",
+              "Fortis Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -24866,7 +25195,8 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Veterans | Fortis Kill Team"
+              "Deathwatch Veterans",
+              "Fortis Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -26017,7 +26347,20 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Company Heroes | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad | Victrix Honour Guard"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Company Heroes",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad",
+              "Victrix Honour Guard"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -26112,7 +26455,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Company Heroes | Infernus Squad | Tactical Squad | Victrix Honour Guard"
+              "Assault Intercessor Squad",
+              "Company Heroes",
+              "Infernus Squad",
+              "Tactical Squad",
+              "Victrix Honour Guard"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -26224,7 +26571,11 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad | Deathwing Knights | Deathwing Terminator Squad | Terminator Assault Squad | Terminator Squad"
+              "Deathwatch Terminator Squad",
+              "Deathwing Knights",
+              "Deathwing Terminator Squad",
+              "Terminator Assault Squad",
+              "Terminator Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -26303,7 +26654,10 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Aggressor Squad | Eradicator Squad | Heavy Intercessor Squad | Indomitor Kill Team"
+              "Aggressor Squad",
+              "Eradicator Squad",
+              "Heavy Intercessor Squad",
+              "Indomitor Kill Team"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -26396,7 +26750,12 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Bladeguard Veteran Squad | Company Heroes | Deathwatch Veterans | Inner Circle Companions | Sternguard Veteran Squad | Tactical Squad"
+              "Bladeguard Veteran Squad",
+              "Company Heroes",
+              "Deathwatch Veterans",
+              "Inner Circle Companions",
+              "Sternguard Veteran Squad",
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -26497,7 +26856,9 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessors With Jump Packs | Talonstrike Kill Team | Vanguard Veteran Squad With Jump Packs"
+              "Assault Intercessors With Jump Packs",
+              "Talonstrike Kill Team",
+              "Vanguard Veteran Squad With Jump Packs"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -26702,7 +27063,19 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Bladeguard Veteran Squad | Company Heroes | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad | Tactical Squad | Victrix Honour Guard"
+              "Assault Intercessor Squad",
+              "Bladeguard Veteran Squad",
+              "Company Heroes",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad",
+              "Tactical Squad",
+              "Victrix Honour Guard"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -26789,7 +27162,8 @@
             "OC": 2,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Outrider Squad | Ravenwing Black Knights"
+              "Outrider Squad",
+              "Ravenwing Black Knights"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -28209,7 +28583,13 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Intercessor Squad | Sword Brethren Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Intercessor Squad",
+              "Sword Brethren Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -28248,7 +28628,13 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Intercessor Squad | Sword Brethren Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Intercessor Squad",
+              "Sword Brethren Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -28366,7 +28752,16 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -28509,7 +28904,12 @@
             "OC": 3,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Decimus Kill Team | Fortis Kill Team | Intercessor Squad | Sword Brethren Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Intercessor Squad",
+              "Sword Brethren Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -28610,7 +29010,15 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -28712,7 +29120,16 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Assault Intercessor Squad | Crusader Squad | Deathwatch Veterans | Decimus Kill Team | Fortis Kill Team | Infernus Squad | Inner Circle Companions | Intercessor Squad | Sternguard Veteran Squad | Sword Brethren Squad"
+              "Assault Intercessor Squad",
+              "Crusader Squad",
+              "Deathwatch Veterans",
+              "Decimus Kill Team",
+              "Fortis Kill Team",
+              "Infernus Squad",
+              "Inner Circle Companions",
+              "Intercessor Squad",
+              "Sternguard Veteran Squad",
+              "Sword Brethren Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -29329,7 +29746,8 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Crusader Squad | Sword Brethren Squad"
+              "Crusader Squad",
+              "Sword Brethren Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -29461,7 +29879,8 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Crusader Squad | Sword Brethren Squad"
+              "Crusader Squad",
+              "Sword Brethren Squad"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
