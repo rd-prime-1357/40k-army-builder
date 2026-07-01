@@ -10,6 +10,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* Generic visibility toggle — screens, banner chrome, modals. */
+    .hidden { display: none !important; }
+
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: #0f0f0f;
@@ -1291,7 +1294,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.10';
+  const VERSION = '5.11';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
