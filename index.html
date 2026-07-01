@@ -1315,7 +1315,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.16';
+  const VERSION = '5.17';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1450,18 +1450,20 @@
   let rulesLookup           = {};  // rule_name -> description
   let keywordsLookup        = {};  // keyword_name -> description
   let weaponAbilitiesLookup = {};  // weapon_ability_name -> description
+  let coreGlossaryLookup    = {};  // core rule / weapon-ability BASE name -> description
 
   // ── Data load ──────────────────────────────────────────────────────────────
 
   async function init() {
     try {
-      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes] = await Promise.all([
+      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes, glossaryRes] = await Promise.all([
         fetch(`units.json?v=${VERSION}`),
         fetch(`abilities.json?v=${VERSION}`),
         fetch(`rules.json?v=${VERSION}`),
         fetch(`keywords.json?v=${VERSION}`),
         fetch(`weapon_abilities.json?v=${VERSION}`),
         fetch(`faction_taxonomy.json?v=${VERSION}`),
+        fetch(`core_glossary.json?v=${VERSION}`),
       ]);
 
       if (!unitsRes.ok) throw new Error('Failed to load unit data');
@@ -1486,6 +1488,12 @@
       if (weaponAbilitiesRes.ok) {
         const arr = await weaponAbilitiesRes.json();
         arr.forEach(w => { weaponAbilitiesLookup[w.weapon_ability_name] = w.weapon_ability_description; });
+      }
+      if (glossaryRes.ok) {
+        const g = await glossaryRes.json();
+        [...(g.weapon_abilities || []), ...(g.core_abilities || [])].forEach(e => {
+          coreGlossaryLookup[e.name] = e.description;
+        });
       }
 
       // Index units by army name for fast resolution.
@@ -2162,6 +2170,21 @@
 
   // ── Modal: Full view ───────────────────────────────────────────────────────
 
+  // Strip a trailing parameter so a weapon/core ability matches its base entry
+  // in the core glossary: "Rapid Fire 1"->"Rapid Fire", "Anti-Vehicle 4+"->"Anti",
+  // "Feel No Pain 5+"->"Feel No Pain", "Scouts 8\""->"Scouts".
+  function baseAbilityName(name) {
+    if (!name) return name;
+    if (/^Anti-/i.test(name)) return 'Anti';
+    return name.replace(/\s+(D?\d+\+?|\d+")\s*$/, '').trim();
+  }
+  // Description for a rule / weapon ability, trying datasheet lookups first, then
+  // the curated core-rules glossary (exact, then base name).
+  function glossaryDesc(name) {
+    return rulesLookup[name] || abilitiesLookup[name] || weaponAbilitiesLookup[name]
+        || coreGlossaryLookup[name] || coreGlossaryLookup[baseAbilityName(name)] || '';
+  }
+
   function buildModalFull(raw) {
     let html = '';
 
@@ -2223,7 +2246,7 @@
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allRuleNames) {
-        const desc = rulesLookup[name] || weaponAbilitiesLookup[name] || '';
+        const desc = glossaryDesc(name);
         html += `<div class="ability-row">
           <div class="ability-name">${name}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
@@ -2392,7 +2415,7 @@
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allRuleNames) {
-        const desc = rulesLookup[name] || weaponAbilitiesLookup[name] || '';
+        const desc = glossaryDesc(name);
         html += `<div class="ability-row">
           <div class="ability-name">${name}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
