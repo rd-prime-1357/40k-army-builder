@@ -1315,7 +1315,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.15';
+  const VERSION = '5.16';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2223,7 +2223,7 @@
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allRuleNames) {
-        const desc = rulesLookup[name] || '';
+        const desc = rulesLookup[name] || weaponAbilitiesLookup[name] || '';
         html += `<div class="ability-row">
           <div class="ability-name">${name}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
@@ -2374,6 +2374,16 @@
         if (!allRuleNames.includes(name)) allRuleNames.push(name);
       }
     }
+    // Roll-up: append the abilities of the unit's ACTIVE weapons (still shown
+    // per-weapon too). Uses the same skip predicate as the weapon tables, so a
+    // replaced weapon's abilities drop out of the roll-up automatically.
+    const wgStateRollup = { activeBases, replacedBases, bundleAddBases, hasWargear };
+    for (const w of raw.weapons) {
+      if (shouldSkipWeapon(w, 'configured', wgStateRollup, raw, entry)) continue;
+      for (const ab of (w.weapon_ability_names || [])) {
+        if (!allRuleNames.includes(ab)) allRuleNames.push(ab);
+      }
+    }
     if (allRuleNames.length > 0) {
       const sid = 'cfg-rules';
       html += `<div class="modal-section">
@@ -2382,7 +2392,7 @@
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allRuleNames) {
-        const desc = rulesLookup[name] || '';
+        const desc = rulesLookup[name] || weaponAbilitiesLookup[name] || '';
         html += `<div class="ability-row">
           <div class="ability-name">${name}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
