@@ -809,6 +809,26 @@
       font-size: 0.55rem;
       transition: transform 0.2s;
       color: #444;
+      flex-shrink: 0;
+      margin-left: 0.5rem;
+    }
+
+    .modal-section-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .modal-section-names {
+      text-transform: none;
+      letter-spacing: normal;
+      font-size: 0.7rem;
+      color: #9a9a9a;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .modal-section-header.open .modal-section-chevron { transform: rotate(90deg); }
@@ -893,7 +913,7 @@
     .banner-back { background:transparent; border:none; color:#cc9900; font-family:inherit; font-size:0.82rem; font-weight:600; cursor:pointer; letter-spacing:0.03em; padding:0; }
     .banner-back:hover { text-decoration:underline; }
     .banner-listname { font-size:0.9rem; font-weight:700; color:#e8e8e8; letter-spacing:0.03em; max-width:280px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .banner-changed { color:#cc2200; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-left:0.6rem; }
+    .banner-changed { color:#cc9900; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-left:0.6rem; }
     .list-item.ghost { opacity:0.8; }
     .list-item.ghost .list-item-name { color:#cc2200; text-decoration:line-through; }
     .ghost-tag { color:#cc2200; font-size:0.66rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-left:0.4rem; }
@@ -1295,7 +1315,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.13';
+  const VERSION = '5.14';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2175,7 +2195,7 @@
       const sid = 'full-abilities';
       html += `<div class="modal-section">
         <div class="modal-section-header" onclick="toggleSection('${sid}')">
-          Abilities <span class="modal-section-chevron">▶</span>
+          <span class="modal-section-heading"><span>Abilities</span><span class="modal-section-names">${allAbilityNames.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allAbilityNames) {
@@ -2199,7 +2219,7 @@
       const sid = 'full-rules';
       html += `<div class="modal-section">
         <div class="modal-section-header" onclick="toggleSection('${sid}')">
-          Rules <span class="modal-section-chevron">▶</span>
+          <span class="modal-section-heading"><span>Rules</span><span class="modal-section-names">${allRuleNames.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allRuleNames) {
@@ -2334,7 +2354,7 @@
       const sid = 'cfg-abilities';
       html += `<div class="modal-section">
         <div class="modal-section-header" onclick="toggleSection('${sid}')">
-          Abilities <span class="modal-section-chevron">▶</span>
+          <span class="modal-section-heading"><span>Abilities</span><span class="modal-section-names">${allAbilityNames.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allAbilityNames) {
@@ -2358,7 +2378,7 @@
       const sid = 'cfg-rules';
       html += `<div class="modal-section">
         <div class="modal-section-header" onclick="toggleSection('${sid}')">
-          Rules <span class="modal-section-chevron">▶</span>
+          <span class="modal-section-heading"><span>Rules</span><span class="modal-section-names">${allRuleNames.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allRuleNames) {
