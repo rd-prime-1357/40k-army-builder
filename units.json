@@ -3,6 +3,7 @@
     "army": "Adeptus Astartes",
     "units": [
       {
+        "unit_id": "000000060",
         "unit_name": "Apothecary Biologis",
         "unit_type": "Character",
         "model_groups": [
@@ -93,6 +94,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000065",
         "unit_name": "Land Raider",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -277,6 +279,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000066",
         "unit_name": "Land Raider Crusader",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -466,6 +469,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000068",
         "unit_name": "Suppressor Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -571,6 +575,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000070",
         "unit_name": "Tactical Squad",
         "unit_type": "Battleline",
         "model_groups": [
@@ -1209,6 +1214,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000071",
         "unit_name": "Bladeguard Veteran Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -1373,6 +1379,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000073",
         "unit_name": "Captain",
         "unit_type": "Character",
         "model_groups": [
@@ -1742,6 +1749,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000076",
         "unit_name": "Lieutenant With Combi-weapon",
         "unit_type": "Character",
         "model_groups": [
@@ -1830,6 +1838,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000079",
         "unit_name": "Librarian In Terminator Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -1999,6 +2008,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000083",
         "unit_name": "Captain With Jump Pack",
         "unit_type": "Character",
         "model_groups": [
@@ -2234,6 +2244,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000084",
         "unit_name": "Stormhawk Interceptor",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -2452,6 +2463,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000086",
         "unit_name": "Firestrike Servo-turrets",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -2554,6 +2566,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000087",
         "unit_name": "Drop Pod",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -2610,6 +2623,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000091",
         "unit_name": "Ballistus Dreadnought",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -2744,6 +2758,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000094",
         "unit_name": "Chaplain On Bike",
         "unit_type": "Mounted",
         "model_groups": [
@@ -2850,6 +2865,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000097",
         "unit_name": "Hammerfall Bunker",
         "unit_type": "Fortification",
         "model_groups": [
@@ -2985,6 +3001,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000103",
         "unit_name": "Eradicator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -3122,6 +3139,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000112",
         "unit_name": "Chaplain With Jump Pack",
         "unit_type": "Character",
         "model_groups": [
@@ -3450,6 +3468,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000114",
         "unit_name": "Storm Speeder Hammerstrike",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -3566,6 +3585,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000115",
         "unit_name": "Chaplain In Terminator Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -3667,6 +3687,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000117",
         "unit_name": "Dreadnought",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -3935,6 +3956,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000118",
         "unit_name": "Terminator Assault Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -4029,6 +4051,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000119",
         "unit_name": "Librarian In Phobos Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -4159,6 +4182,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000124",
         "unit_name": "Storm Speeder Hailstrike",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -4280,6 +4304,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000125",
         "unit_name": "Inceptor Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -4426,6 +4451,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000126",
         "unit_name": "Infernus Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -4534,6 +4560,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000128",
         "unit_name": "Infiltrator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -4665,6 +4692,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000129",
         "unit_name": "Razorback",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -4835,6 +4863,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000135",
         "unit_name": "Captain In Terminator Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -4980,6 +5009,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000136",
         "unit_name": "Brutalis Dreadnought",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -5168,6 +5198,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000140",
         "unit_name": "Techmarine",
         "unit_type": "Character",
         "model_groups": [
@@ -5292,6 +5323,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000147",
         "unit_name": "Vanguard Veteran Squad With Jump Packs",
         "unit_type": "Infantry",
         "model_groups": [
@@ -5527,6 +5559,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001156",
         "unit_name": "Invictor Tactical Warsuit",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -5695,6 +5728,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001157",
         "unit_name": "Intercessor Squad",
         "unit_type": "Battleline",
         "model_groups": [
@@ -6044,6 +6078,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001158",
         "unit_name": "Invader ATV",
         "unit_type": "Mounted",
         "model_groups": [
@@ -6180,6 +6215,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001159",
         "unit_name": "Incursor Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -6304,6 +6340,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001160",
         "unit_name": "Scout Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -6591,6 +6628,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001165",
         "unit_name": "Bladeguard Ancient",
         "unit_type": "Character",
         "model_groups": [
@@ -6682,6 +6720,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001172",
         "unit_name": "Captain In Gravis Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -6856,6 +6895,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001174",
         "unit_name": "Chaplain",
         "unit_type": "Character",
         "model_groups": [
@@ -6946,6 +6986,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001177",
         "unit_name": "Heavy Intercessor Squad",
         "unit_type": "Battleline",
         "model_groups": [
@@ -7085,6 +7126,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001183",
         "unit_name": "Terminator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -7317,6 +7359,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001188",
         "unit_name": "Vindicator",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -7457,6 +7500,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001190",
         "unit_name": "Stormtalon Gunship",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -7661,6 +7705,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001191",
         "unit_name": "Stormraven Gunship",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -7956,6 +8001,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001193",
         "unit_name": "Centurion Devastator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -8146,6 +8192,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001345",
         "unit_name": "Lieutenant In Reiver Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -8242,6 +8289,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001346",
         "unit_name": "Lieutenant",
         "unit_type": "Character",
         "model_groups": [
@@ -8508,6 +8556,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001606",
         "unit_name": "Assault Intercessor Squad",
         "unit_type": "Battleline",
         "model_groups": [
@@ -8751,6 +8800,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001610",
         "unit_name": "Storm Speeder Thunderstrike",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -8868,6 +8918,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001667",
         "unit_name": "Gladiator Reaper",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -9026,6 +9077,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001668",
         "unit_name": "Eliminator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -9197,6 +9249,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001825",
         "unit_name": "Gladiator Valiant",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -9354,6 +9407,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002098",
         "unit_name": "Hellblaster Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -9528,6 +9582,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002099",
         "unit_name": "Aggressor Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -9655,6 +9710,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002173",
         "unit_name": "Land Raider Redeemer",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -9844,6 +9900,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002202",
         "unit_name": "Devastator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -10305,6 +10362,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002255",
         "unit_name": "Sternguard Veteran Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -10588,6 +10646,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002266",
         "unit_name": "Librarian",
         "unit_type": "Character",
         "model_groups": [
@@ -10717,6 +10776,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002270",
         "unit_name": "Desolation Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -10893,6 +10953,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002530",
         "unit_name": "Lieutenant In Phobos Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -11003,6 +11064,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002568",
         "unit_name": "Impulsor",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -11242,6 +11304,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002677",
         "unit_name": "Ancient In Terminator Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -11454,6 +11517,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002701",
         "unit_name": "Captain In Phobos Armour",
         "unit_type": "Character",
         "model_groups": [
@@ -11563,6 +11627,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002703",
         "unit_name": "Centurion Assault Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -11713,6 +11778,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002705",
         "unit_name": "Gladiator Lancer",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -11887,6 +11953,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002707",
         "unit_name": "Judiciar",
         "unit_type": "Character",
         "model_groups": [
@@ -11979,6 +12046,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002712",
         "unit_name": "Outrider Squad",
         "unit_type": "Mounted",
         "model_groups": [
@@ -12191,6 +12259,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002714",
         "unit_name": "Predator Annihilator",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -12383,6 +12452,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002715",
         "unit_name": "Predator Destructor",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -12575,6 +12645,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002717",
         "unit_name": "Redemptor Dreadnought",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -12825,6 +12896,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002718",
         "unit_name": "Reiver Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -12985,6 +13057,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002721",
         "unit_name": "Repulsor",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -13175,6 +13248,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002722",
         "unit_name": "Repulsor Executioner",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -13430,6 +13504,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002723",
         "unit_name": "Rhino",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -13546,6 +13621,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002727",
         "unit_name": "Whirlwind",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -13687,6 +13763,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002772",
         "unit_name": "Company Heroes",
         "unit_type": "Infantry",
         "model_groups": [
@@ -13841,6 +13918,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002773",
         "unit_name": "Apothecary",
         "unit_type": "Character",
         "model_groups": [
@@ -13948,6 +14026,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002775",
         "unit_name": "Ancient",
         "unit_type": "Character",
         "model_groups": [
@@ -14071,6 +14150,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002776",
         "unit_name": "Assault Intercessors With Jump Packs",
         "unit_type": "Infantry",
         "model_groups": [
@@ -14300,6 +14380,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004179",
         "unit_name": "Judiciar Xacharus",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -14386,6 +14467,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004180",
         "unit_name": "Chaplain Kastiel",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -14476,6 +14558,7 @@
     "army": "Ultramarines",
     "units": [
       {
+        "unit_id": "000000121",
         "unit_name": "Uriel Ventris",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -14585,6 +14668,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000138",
         "unit_name": "Roboute Guilliman",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -14692,6 +14776,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001611",
         "unit_name": "Chief Librarian Tigurius",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -14823,6 +14908,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004183",
         "unit_name": "Marneus Calgar in Armour of Antilochus",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -14910,6 +14996,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004184",
         "unit_name": "Cato Sicarius",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -15039,6 +15126,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004185",
         "unit_name": "Victrix Honour Guard",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -15150,6 +15238,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004187",
         "unit_name": "Captain Titus",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -15264,6 +15353,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004188",
         "unit_name": "Wardens of Ultramar",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -15492,6 +15582,7 @@
     "army": "Iron Hands",
     "units": [
       {
+        "unit_id": "000000127",
         "unit_name": "Iron Father Feirros",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -15618,6 +15709,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004166",
         "unit_name": "Caanok Var",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -15732,6 +15824,7 @@
     "army": "Blood Angels",
     "units": [
       {
+        "unit_id": "000000151",
         "unit_name": "Commander Dante",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -15823,6 +15916,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000155",
         "unit_name": "Chief Librarian Mephiston",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -15967,6 +16061,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000156",
         "unit_name": "The Sanguinor",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -16036,6 +16131,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000157",
         "unit_name": "Astorath",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -16108,6 +16204,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000158",
         "unit_name": "Sanguinary Priest",
         "unit_type": "Character",
         "model_groups": [
@@ -16190,6 +16287,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000164",
         "unit_name": "Lemartes",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -16280,6 +16378,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000165",
         "unit_name": "Sanguinary Guard",
         "unit_type": "Infantry",
         "model_groups": [
@@ -16427,6 +16526,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000166",
         "unit_name": "Death Company Dreadnought",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -16610,6 +16710,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000168",
         "unit_name": "Baal Predator",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -16830,6 +16931,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000001997",
         "unit_name": "Death Company Marines",
         "unit_type": "Infantry",
         "model_groups": [
@@ -17107,6 +17209,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002285",
         "unit_name": "Death Company Marines with Bolt Rifles",
         "unit_type": "Infantry",
         "model_groups": [
@@ -17479,6 +17582,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002737",
         "unit_name": "Death Company Marines With Jump Packs",
         "unit_type": "Infantry",
         "model_groups": [
@@ -17722,6 +17826,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000003831",
         "unit_name": "Blood Angels Captain",
         "unit_type": "Character",
         "model_groups": [
@@ -17883,6 +17988,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000003832",
         "unit_name": "Death Company Captain",
         "unit_type": "Character",
         "model_groups": [
@@ -18047,6 +18153,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000003833",
         "unit_name": "Death Company Captain with Jump Pack",
         "unit_type": "Character",
         "model_groups": [
@@ -18265,6 +18372,7 @@
     "army": "Dark Angels",
     "units": [
       {
+        "unit_id": "000000218",
         "unit_name": "Azrael",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -18354,6 +18462,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000219",
         "unit_name": "Belial",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -18442,6 +18551,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000225",
         "unit_name": "Asmodai",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -18542,6 +18652,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000226",
         "unit_name": "Ezekiel",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -18671,6 +18782,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000230",
         "unit_name": "Deathwing Terminator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -18935,6 +19047,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000231",
         "unit_name": "Deathwing Knights",
         "unit_type": "Infantry",
         "model_groups": [
@@ -19081,6 +19194,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000238",
         "unit_name": "Ravenwing Darkshroud",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -19187,6 +19301,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000239",
         "unit_name": "Nephilim Jetfighter",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -19328,6 +19443,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000240",
         "unit_name": "Ravenwing Dark Talon",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -19427,6 +19543,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000241",
         "unit_name": "Ravenwing Black Knights",
         "unit_type": "Mounted",
         "model_groups": [
@@ -19572,6 +19689,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000242",
         "unit_name": "Land Speeder Vengeance",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -19715,6 +19833,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002291",
         "unit_name": "Sammael",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -19837,6 +19956,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002296",
         "unit_name": "Lazarus",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -19924,6 +20044,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002682",
         "unit_name": "Lion El’jonson",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -20042,6 +20163,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002748",
         "unit_name": "Ravenwing Command Squad",
         "unit_type": "Mounted",
         "model_groups": [
@@ -20220,6 +20342,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000003698",
         "unit_name": "Inner Circle Companions",
         "unit_type": "Infantry",
         "model_groups": [
@@ -20321,6 +20444,7 @@
     "army": "Space Wolves",
     "units": [
       {
+        "unit_id": "000000282",
         "unit_name": "Logan Grimnar",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -20437,6 +20561,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000285",
         "unit_name": "Ragnar Blackmane",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -20523,6 +20648,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000292",
         "unit_name": "Njal Stormcaller",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -20646,6 +20772,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000297",
         "unit_name": "Ulrik The Slayer",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -20751,6 +20878,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000302",
         "unit_name": "Bjorn The Fell-handed",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -20924,6 +21052,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000303",
         "unit_name": "Blood Claws",
         "unit_type": "Battleline",
         "model_groups": [
@@ -21072,6 +21201,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000305",
         "unit_name": "Grey Hunters",
         "unit_type": "Battleline",
         "model_groups": [
@@ -21262,6 +21392,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000306",
         "unit_name": "Iron Priest",
         "unit_type": "Character",
         "model_groups": [
@@ -21362,6 +21493,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000311",
         "unit_name": "Wulfen",
         "unit_type": "Infantry",
         "model_groups": [
@@ -21451,6 +21583,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000314",
         "unit_name": "Murderfang",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -21556,6 +21689,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000317",
         "unit_name": "Arjac Rockfist",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -21645,6 +21779,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000318",
         "unit_name": "Wolf Guard Terminators",
         "unit_type": "Infantry",
         "model_groups": [
@@ -21800,6 +21935,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000322",
         "unit_name": "Thunderwolf Cavalry",
         "unit_type": "Mounted",
         "model_groups": [
@@ -21973,6 +22109,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000000323",
         "unit_name": "Fenrisian Wolves",
         "unit_type": "Other",
         "model_groups": [
@@ -22031,6 +22168,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002801",
         "unit_name": "Venerable Dreadnought",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -22255,6 +22393,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004129",
         "unit_name": "Wolf Priest",
         "unit_type": "Character",
         "model_groups": [
@@ -22336,6 +22475,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004130",
         "unit_name": "Wolf Guard Battle Leader",
         "unit_type": "Character",
         "model_groups": [
@@ -22526,6 +22666,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004131",
         "unit_name": "Wolf Guard Headtakers",
         "unit_type": "Infantry",
         "model_groups": [
@@ -22673,6 +22814,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004132",
         "unit_name": "Wulfen with Storm Shields",
         "unit_type": "Infantry",
         "model_groups": [
@@ -22764,6 +22906,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004133",
         "unit_name": "Wulfen Dreadnought",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -22893,6 +23036,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004182",
         "unit_name": "Wolf Scouts",
         "unit_type": "Infantry",
         "model_groups": [
@@ -23188,6 +23332,7 @@
     "army": "Deathwatch",
     "units": [
       {
+        "unit_id": "000000358",
         "unit_name": "Corvus Blackstar",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -23379,6 +23524,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002779",
         "unit_name": "Spectrus Kill Team",
         "unit_type": "Infantry",
         "model_groups": [
@@ -23641,6 +23787,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002780",
         "unit_name": "Fortis Kill Team",
         "unit_type": "Infantry",
         "model_groups": [
@@ -24120,6 +24267,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002781",
         "unit_name": "Indomitor Kill Team",
         "unit_type": "Infantry",
         "model_groups": [
@@ -24343,6 +24491,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002783",
         "unit_name": "Deathwatch Veterans",
         "unit_type": "Battleline",
         "model_groups": [
@@ -24615,6 +24764,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000003871",
         "unit_name": "Watch Master",
         "unit_type": "Character",
         "model_groups": [
@@ -24698,6 +24848,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000003872",
         "unit_name": "Watch Captain Artemis",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -24786,6 +24937,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000003873",
         "unit_name": "Deathwatch Terminator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -25065,6 +25217,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000003874",
         "unit_name": "Talonstrike Kill Team",
         "unit_type": "Infantry",
         "model_groups": [
@@ -25391,6 +25544,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004175",
         "unit_name": "Decimus Kill Team",
         "unit_type": "Battleline",
         "model_groups": [
@@ -25845,6 +25999,7 @@
     "army": "Salamanders",
     "units": [
       {
+        "unit_id": "000002100",
         "unit_name": "Adrax Agatone",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -25939,6 +26094,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002726",
         "unit_name": "Vulkan He’stan",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -26050,6 +26206,7 @@
     "army": "Imperial Fists",
     "units": [
       {
+        "unit_id": "000002105",
         "unit_name": "Darnath Lysander",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -26128,6 +26285,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002473",
         "unit_name": "Tor Garadon",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -26220,6 +26378,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002713",
         "unit_name": "Pedro Kantor",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -26320,6 +26479,7 @@
     "army": "Raven Guard",
     "units": [
       {
+        "unit_id": "000002708",
         "unit_name": "Kayvaan Shrike",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -26421,6 +26581,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004148",
         "unit_name": "Aethon Shaan",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -26523,6 +26684,7 @@
     "army": "White Scars",
     "units": [
       {
+        "unit_id": "000002709",
         "unit_name": "Kor’sarro Khan",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -26609,6 +26771,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004167",
         "unit_name": "Suboden Khan",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -26742,6 +26905,7 @@
     "army": "Black Templars",
     "units": [
       {
+        "unit_id": "000002786",
         "unit_name": "Impulsor",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -27001,6 +27165,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002787",
         "unit_name": "Gladiator Lancer",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -27195,6 +27360,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002788",
         "unit_name": "Gladiator Valiant",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -27356,6 +27522,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002789",
         "unit_name": "Gladiator Reaper",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -27535,6 +27702,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002790",
         "unit_name": "Repulsor Executioner",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -27811,6 +27979,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002791",
         "unit_name": "Repulsor",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -28022,6 +28191,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002792",
         "unit_name": "Chaplain Grimaldus",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -28178,6 +28348,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002793",
         "unit_name": "Castellan",
         "unit_type": "Character",
         "model_groups": [
@@ -28320,6 +28491,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002794",
         "unit_name": "High Marshal Helbrecht",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -28420,6 +28592,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002795",
         "unit_name": "Emperor’s Champion",
         "unit_type": "Character",
         "model_groups": [
@@ -28521,6 +28694,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002796",
         "unit_name": "Marshal",
         "unit_type": "Character",
         "model_groups": [
@@ -28643,6 +28817,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002798",
         "unit_name": "Sword Brethren Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -28867,6 +29042,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000002799",
         "unit_name": "Crusader Squad",
         "unit_type": "Battleline",
         "model_groups": [
@@ -29135,6 +29311,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004135",
         "unit_name": "Execrator",
         "unit_type": "Character",
         "model_groups": [
@@ -29266,6 +29443,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004136",
         "unit_name": "Crusade Ancient",
         "unit_type": "Character",
         "model_groups": [
@@ -29351,6 +29529,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004137",
         "unit_name": "Sternguard Veteran Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -29622,6 +29801,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004138",
         "unit_name": "Terminator Squad",
         "unit_type": "Infantry",
         "model_groups": [
@@ -29842,6 +30022,7 @@
         "abilities": []
       },
       {
+        "unit_id": "000004139",
         "unit_name": "Land Raider Crusader",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -30030,6 +30211,7 @@
     "army": "Chaos Daemons",
     "units": [
       {
+        "unit_id": "local:chaos-daemons:skarbrand",
         "unit_name": "Skarbrand",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -30135,6 +30317,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:bloodthirster",
         "unit_name": "Bloodthirster",
         "unit_type": "Character",
         "model_groups": [
@@ -30357,6 +30540,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:skulltaker",
         "unit_name": "Skulltaker",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -30433,6 +30617,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:bloodmaster",
         "unit_name": "Bloodmaster",
         "unit_type": "Character",
         "model_groups": [
@@ -30505,6 +30690,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:skullmaster",
         "unit_name": "Skullmaster",
         "unit_type": "Character",
         "model_groups": [
@@ -30595,6 +30781,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:rendmaster-on-blood-throne",
         "unit_name": "Rendmaster on Blood Throne",
         "unit_type": "Character",
         "model_groups": [
@@ -30675,6 +30862,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:karanak",
         "unit_name": "Karanak",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -30769,6 +30957,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:bloodletters",
         "unit_name": "Bloodletters",
         "unit_type": "Battleline",
         "model_groups": [
@@ -30858,6 +31047,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:bloodcrushers",
         "unit_name": "Bloodcrushers",
         "unit_type": "Mounted",
         "model_groups": [
@@ -30970,6 +31160,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:flesh-hounds",
         "unit_name": "Flesh Hounds",
         "unit_type": "Beast",
         "model_groups": [
@@ -31061,6 +31252,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:skull-cannon",
         "unit_name": "Skull Cannon",
         "unit_type": "Mounted",
         "model_groups": [
@@ -31162,6 +31354,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:skull-altar",
         "unit_name": "Skull Altar",
         "unit_type": "Fortification",
         "model_groups": [
@@ -31216,6 +31409,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:kairos-fateweaver",
         "unit_name": "Kairos Fateweaver",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -31331,6 +31525,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:lord-of-change",
         "unit_name": "Lord of Change",
         "unit_type": "Character",
         "model_groups": [
@@ -31496,6 +31691,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:the-changeling",
         "unit_name": "The Changeling",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -31602,6 +31798,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:fateskimmer",
         "unit_name": "Fateskimmer",
         "unit_type": "Character",
         "model_groups": [
@@ -31733,6 +31930,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:fluxmaster",
         "unit_name": "Fluxmaster",
         "unit_type": "Character",
         "model_groups": [
@@ -31846,6 +32044,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:the-blue-scribes",
         "unit_name": "The Blue Scribes",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -31912,6 +32111,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:changecaster",
         "unit_name": "Changecaster",
         "unit_type": "Character",
         "model_groups": [
@@ -32024,6 +32224,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:exalted-flamer",
         "unit_name": "Exalted Flamer",
         "unit_type": "Character",
         "model_groups": [
@@ -32134,6 +32335,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:blue-horrors",
         "unit_name": "Blue Horrors",
         "unit_type": "Battleline",
         "model_groups": [
@@ -32248,6 +32450,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:pink-horrors",
         "unit_name": "Pink Horrors",
         "unit_type": "Battleline",
         "model_groups": [
@@ -32421,6 +32624,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:flamers",
         "unit_name": "Flamers",
         "unit_type": "Infantry",
         "model_groups": [
@@ -32514,6 +32718,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:screamers",
         "unit_name": "Screamers",
         "unit_type": "Beast",
         "model_groups": [
@@ -32592,6 +32797,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:burning-chariot",
         "unit_name": "Burning Chariot",
         "unit_type": "Mounted",
         "model_groups": [
@@ -32716,6 +32922,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:rotigus",
         "unit_name": "Rotigus",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -32830,6 +33037,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:great-unclean-one",
         "unit_name": "Great Unclean One",
         "unit_type": "Character",
         "model_groups": [
@@ -33022,6 +33230,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:poxbringer",
         "unit_name": "Poxbringer",
         "unit_type": "Character",
         "model_groups": [
@@ -33098,6 +33307,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:spoilpox-scrivener",
         "unit_name": "Spoilpox Scrivener",
         "unit_type": "Character",
         "model_groups": [
@@ -33190,6 +33400,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:epidemius",
         "unit_name": "Epidemius",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -33265,6 +33476,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:sloppity-bilepiper",
         "unit_name": "Sloppity Bilepiper",
         "unit_type": "Character",
         "model_groups": [
@@ -33339,6 +33551,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:horticulous-slimux",
         "unit_name": "Horticulous Slimux",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -33432,6 +33645,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:plaguebearers",
         "unit_name": "Plaguebearers",
         "unit_type": "Battleline",
         "model_groups": [
@@ -33523,6 +33737,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:nurglings",
         "unit_name": "Nurglings",
         "unit_type": "Battleline",
         "model_groups": [
@@ -33600,6 +33815,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:beasts-of-nurgle",
         "unit_name": "Beasts of Nurgle",
         "unit_type": "Beast",
         "model_groups": [
@@ -33677,6 +33893,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:plague-drones",
         "unit_name": "Plague Drones",
         "unit_type": "Mounted",
         "model_groups": [
@@ -33810,6 +34027,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:feculent-gnarlmaw",
         "unit_name": "Feculent Gnarlmaw",
         "unit_type": "Fortification",
         "model_groups": [
@@ -33864,6 +34082,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:shalaxi-helbane",
         "unit_name": "Shalaxi Helbane",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -34012,6 +34231,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:keeper-of-secrets",
         "unit_name": "Keeper of Secrets",
         "unit_type": "Character",
         "model_groups": [
@@ -34214,6 +34434,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:infernal-enrapturess",
         "unit_name": "Infernal Enrapturess",
         "unit_type": "Character",
         "model_groups": [
@@ -34323,6 +34544,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:the-masque-of-slaanesh",
         "unit_name": "The Masque of Slaanesh",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -34390,6 +34612,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:syll-esske",
         "unit_name": "Syll'Esske",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -34539,6 +34762,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:contorted-epitome",
         "unit_name": "Contorted Epitome",
         "unit_type": "Character",
         "model_groups": [
@@ -34631,6 +34855,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:tormentbringer",
         "unit_name": "Tormentbringer",
         "unit_type": "Character",
         "model_groups": [
@@ -34761,6 +34986,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:tranceweaver",
         "unit_name": "Tranceweaver",
         "unit_type": "Character",
         "model_groups": [
@@ -34837,6 +35063,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:daemonettes",
         "unit_name": "Daemonettes",
         "unit_type": "Battleline",
         "model_groups": [
@@ -34929,6 +35156,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:fiends",
         "unit_name": "Fiends",
         "unit_type": "Beast",
         "model_groups": [
@@ -35004,6 +35232,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:seekers",
         "unit_name": "Seekers",
         "unit_type": "Mounted",
         "model_groups": [
@@ -35119,6 +35348,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:hellflayers",
         "unit_name": "Hellflayers",
         "unit_type": "Mounted",
         "model_groups": [
@@ -35249,6 +35479,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:be-lakor",
         "unit_name": "Be'Lakor",
         "unit_type": "Epic Hero",
         "model_groups": [
@@ -35380,6 +35611,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:soul-grinder",
         "unit_name": "Soul Grinder",
         "unit_type": "Vehicle",
         "model_groups": [
@@ -35553,6 +35785,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:daemon-prince-of-chaos",
         "unit_name": "Daemon Prince of Chaos",
         "unit_type": "Character",
         "model_groups": [
@@ -35654,6 +35887,7 @@
         "abilities": []
       },
       {
+        "unit_id": "local:chaos-daemons:daemon-prince-of-chaos-with-wings",
         "unit_name": "Daemon Prince of Chaos with Wings",
         "unit_type": "Character",
         "model_groups": [

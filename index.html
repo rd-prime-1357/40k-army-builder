@@ -857,6 +857,44 @@
       border-top: 1px solid #2a2a2a;
       margin: 0.9rem 0;
     }
+
+    /* ── List management: home page, create modal, ghost rows ── */
+    .screen-home { flex:1; overflow-y:auto; padding:2rem 2.5rem; }
+    .home-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; max-width:900px; }
+    .home-title { font-size:1.4rem; font-weight:700; color:#cc9900; letter-spacing:0.04em; }
+    .home-actions { display:flex; gap:0.6rem; }
+    .home-btn { background:#8b0000; border:none; color:#fff; font-family:inherit; font-size:0.85rem; font-weight:700; letter-spacing:0.04em; padding:0.55rem 1.1rem; border-radius:4px; cursor:pointer; text-transform:uppercase; }
+    .home-btn:hover { background:#a80000; }
+    .home-btn.secondary { background:#242424; color:#cc9900; border:1px solid #3a3a3a; }
+    .home-btn.secondary:hover { border-color:#cc9900; }
+    .mylists { max-width:900px; display:flex; flex-direction:column; gap:0.5rem; }
+    .mylist-row { display:flex; align-items:center; gap:1rem; background:#161616; border:1px solid #2a2a2a; border-radius:5px; padding:0.85rem 1.1rem; cursor:pointer; transition:border-color 0.12s, background 0.12s; }
+    .mylist-row:hover { border-color:#8b0000; background:#1c1414; }
+    .mylist-main { flex:1; min-width:0; }
+    .mylist-name { font-size:0.98rem; font-weight:600; color:#e8e8e8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .mylist-meta { font-size:0.75rem; color:#888; margin-top:0.2rem; letter-spacing:0.02em; }
+    .mylist-faction { color:#cc9900; }
+    .mylist-pts { font-size:0.8rem; font-weight:600; color:#999; white-space:nowrap; }
+    .mylist-del { background:transparent; border:none; color:#666; font-size:1.25rem; cursor:pointer; padding:0 0.3rem; line-height:1; }
+    .mylist-del:hover { color:#cc2200; }
+    .home-empty { max-width:900px; color:#777; font-size:0.95rem; padding:2.5rem; text-align:center; border:1px dashed #333; border-radius:6px; }
+    .create-field { margin-bottom:1.1rem; }
+    .create-field label { display:block; font-size:0.72rem; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem; }
+    .create-input, .create-select { width:100%; background:#0f0f0f; border:1px solid #3a3a3a; color:#e0e0e0; font-family:inherit; font-size:0.9rem; padding:0.55rem 0.7rem; border-radius:4px; outline:none; }
+    .create-input:focus, .create-select:focus { border-color:#cc9900; }
+    .create-select option { background:#1a0000; }
+    .create-row { display:flex; gap:0.6rem; }
+    .create-row > * { flex:1; }
+    .create-footer { display:flex; justify-content:flex-end; gap:0.6rem; margin-top:1.6rem; }
+    .create-err { color:#cc2200; font-size:0.8rem; min-height:1rem; margin-top:0.3rem; }
+    .banner-back { background:transparent; border:none; color:#cc9900; font-family:inherit; font-size:0.82rem; font-weight:600; cursor:pointer; letter-spacing:0.03em; padding:0; }
+    .banner-back:hover { text-decoration:underline; }
+    .banner-listname { font-size:0.9rem; font-weight:700; color:#e8e8e8; letter-spacing:0.03em; max-width:280px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .banner-changed { color:#cc2200; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-left:0.6rem; }
+    .list-item.ghost { opacity:0.8; }
+    .list-item.ghost .list-item-name { color:#cc2200; text-decoration:line-through; }
+    .ghost-tag { color:#cc2200; font-size:0.66rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-left:0.4rem; }
+    .list-item-pts.ghost-pts { color:#cc2200; text-decoration:line-through; }
   </style>
 </head>
 <body>
@@ -866,15 +904,16 @@
   <div class="banner-title">40K Army Builder</div>
   <div class="banner-sep">|</div>
 
-  <!-- Army selector — two dependent selects (group → faction) -->
-  <div class="banner-item">
-    <span class="banner-label">Army</span>
-    <select class="banner-select" id="banner-group-select" onchange="onGroupChange(this.value)"></select>
-    <select class="banner-select" id="banner-faction-select" onchange="onFactionChange(this.value)"></select>
+  <!-- Builder chrome: back link + list name (faction is fixed per list, set at creation) -->
+  <div class="banner-item hidden" id="builder-chrome">
+    <button class="banner-back" onclick="showHome()">‹ My Lists</button>
+    <span class="banner-sep">|</span>
+    <span class="banner-listname" id="banner-listname"></span>
+    <span class="banner-changed hidden" id="banner-changed">list changed since saved</span>
   </div>
 
   <!-- Army points selector — right-aligned with center panel -->
-  <div class="banner-item-right">
+  <div class="banner-item-right hidden" id="banner-army-pts-wrap">
     <span class="banner-label">Army Points</span>
     <select class="banner-select" id="banner-army-pts-select" onchange="selectArmyPoints(this.value)">
       <option value="1000">1,000</option>
@@ -884,14 +923,25 @@
   </div>
 
   <!-- List points — far right -->
-  <div class="banner-points" id="banner-points">
+  <div class="banner-points hidden" id="banner-points">
     <span class="banner-label">List Points</span>
     <span class="banner-pts-value" id="banner-pts-value">0</span>
   </div>
 </div>
 
-<!-- Three-column layout -->
-<div class="layout">
+<!-- Home / landing screen -->
+<div class="screen-home hidden" id="screen-home">
+  <div class="home-head">
+    <div class="home-title">My Army Lists</div>
+    <div class="home-actions">
+      <button class="home-btn" onclick="openCreateModal()">+ New List</button>
+    </div>
+  </div>
+  <div id="mylists-container"></div>
+</div>
+
+<!-- Three-column layout (builder screen) -->
+<div class="layout hidden" id="screen-builder">
 
   <!-- Left: roster -->
   <div class="panel">
@@ -941,18 +991,312 @@
     </div>
     <div class="modal-body" id="modal-body"></div>
   </div>
+<!-- list storage module (list_store.js, inlined) -->
+<script>
+/* ===========================================================================
+ * 40K Army Builder — list storage + saved-list schema (Step 2)
+ *
+ * Self-contained. No DOM, no app globals. Splices into index.html's IIFE.
+ * All persistence goes through a swappable async backend so localStorage v1
+ * can become Drive/OneDrive later without touching callers.
+ *
+ * Three concerns, each independently testable:
+ *   1. SavedList schema + (de)serialize  — pure, dependency-injected
+ *   2. ListStore                          — async CRUD over a backend
+ *   3. createLocalStorageBackend          — the v1 backend
+ * ======================================================================== */
+
+(function (root) {
+  'use strict';
+
+  var SCHEMA_VERSION = 1;
+  var NS = '40kab:list:';   // one key per list: 40kab:list:<id>
+
+  // ── ids ──────────────────────────────────────────────────────────────────
+  function newListId() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+    return 'l-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+
+  // ── schema: in-memory armyList <-> persisted record ──────────────────────
+  //
+  // The persisted entry uses snake_case names that are deliberately decoupled
+  // from the runtime entry shape. Mapping field-by-field (not dumping the live
+  // object) means a future refactor of the in-memory entry cannot silently
+  // change the on-disk format — that contract is what schema_version guards.
+  //
+  // serializeEntries(armyList, primaryFaction, lookups)
+  //   lookups.unitIdFor(faction_ref, unit_name) -> id | null   (resolve at save)
+  function serializeEntries(armyList, primaryFaction, lookups) {
+    return armyList.map(function (e) {
+      var faction_ref = e.faction_ref || primaryFaction;
+      var uid = e.unit_id ||
+                (lookups && lookups.unitIdFor && lookups.unitIdFor(faction_ref, e.unit_name)) ||
+                null;
+      return {
+        entry_id:      e.listId,
+        faction_ref:   faction_ref,
+        unit_id:       uid,
+        unit_name:     e.unit_name,   // cached: display + name-fallback resolve
+        unit_type:     e.unit_type,   // cached: grouping when unresolved
+        size_idx:      e.sizeIdx,
+        god:           e.god != null ? e.god : null,
+        wargear:       e.wargear || {},
+        other_options: e.otherOptions || {},
+        attached_to:   e.attachedToListId != null ? e.attachedToListId : null,
+        points_cache:  e.points != null ? e.points : null  // display-only; recomputed on load
+      };
+    });
+  }
+
+  // buildRecord(meta, armyList, lookups) -> full SavedList record
+  //   meta: { id?, name, points_target, primary_faction, created? }
+  function buildRecord(meta, armyList, lookups) {
+    var now = Date.now();
+    return {
+      schema_version:  SCHEMA_VERSION,
+      id:              meta.id || newListId(),
+      name:            meta.name || 'Untitled',
+      points_target:   meta.points_target != null ? meta.points_target : null,
+      primary_faction: meta.primary_faction || null,
+      created:         meta.created || now,
+      modified:        now,
+      entries:         serializeEntries(armyList, meta.primary_faction, lookups)
+    };
+  }
+
+  // deserialize(record, resolvers) -> { armyList, warnings, maxEntryId }
+  //   resolvers.resolveUnit(faction_ref, unit_id, unit_name) -> unit | null
+  // Resolution order is id-first (survives renames), then cached name. A miss
+  // produces a flagged ghost entry — never dropped (flag-don't-drop).
+  function deserialize(record, resolvers) {
+    var warnings = [];
+    var maxEntryId = 0;
+    var armyList = (record.entries || []).map(function (s) {
+      if (s.entry_id != null && s.entry_id > maxEntryId) maxEntryId = s.entry_id;
+      var unit = resolvers && resolvers.resolveUnit
+        ? resolvers.resolveUnit(s.faction_ref, s.unit_id, s.unit_name)
+        : null;
+      var unresolved = !unit;
+      if (unresolved) {
+        warnings.push({
+          type: 'unresolved_unit',
+          entry_id: s.entry_id,
+          unit_id: s.unit_id,
+          unit_name: s.unit_name,
+          faction_ref: s.faction_ref
+        });
+      }
+      // On a successful id-match, prefer the unit's CURRENT name so a rename in
+      // the data flows through to the loaded list; fall back to the cached name.
+      var liveName = unit && unit.unit_name ? unit.unit_name : s.unit_name;
+      return {
+        listId:           s.entry_id,
+        unit_name:        liveName,
+        unit_type:        (unit && unit.unit_type) || s.unit_type || null,
+        sizeIdx:          s.size_idx != null ? s.size_idx : 0,
+        god:              s.god != null ? s.god : null,
+        points:           null,               // recomputed by the app on render
+        wargear:          s.wargear || {},
+        otherOptions:     s.other_options || {},
+        attachedToListId: s.attached_to != null ? s.attached_to : null,
+        faction_ref:      s.faction_ref || null,
+        unit_id:          s.unit_id || null,
+        unresolved:       unresolved          // drives the ghost-row flag
+      };
+    });
+    return { armyList: armyList, warnings: warnings, maxEntryId: maxEntryId };
+  }
+
+  // ── migration hook ───────────────────────────────────────────────────────
+  // v1 is the only shape today; the hook exists so the first schema change has
+  // a home and old blobs upgrade on load instead of crashing or misreading.
+  function migrate(record) {
+    if (!record || typeof record !== 'object') return null;
+    var v = record.schema_version || 0;
+    if (v === SCHEMA_VERSION) return record;
+    if (v > SCHEMA_VERSION) {
+      // Saved by a newer app build than this one. Surface, don't guess.
+      return { __incompatible: true, found_version: v, expected_version: SCHEMA_VERSION, raw: record };
+    }
+    // v < current: future per-step upgrades go here, e.g.
+    //   if (v < 2) { ...; record.schema_version = 2; }
+    return record;
+  }
+
+  // ── ListStore: async CRUD over a swappable backend ───────────────────────
+  // backend contract (all return Promises):
+  //   getItem(key)->string|null  setItem(key,val)  removeItem(key)  keys()->string[]
+  function ListStore(backend) {
+    this.backend = backend;
+  }
+  ListStore.prototype._key = function (id) { return NS + id; };
+
+  ListStore.prototype.put = function (record) {
+    var self = this;
+    return Promise.resolve().then(function () {
+      record.modified = Date.now();
+      var json = JSON.stringify(record);
+      return self.backend.setItem(self._key(record.id), json).then(function () { return record; });
+    });
+  };
+
+  ListStore.prototype.get = function (id) {
+    var self = this;
+    return Promise.resolve(self.backend.getItem(this._key(id))).then(function (raw) {
+      if (raw == null) return null;
+      var rec;
+      try { rec = JSON.parse(raw); }
+      catch (err) { return { __corrupt: true, id: id }; }
+      return migrate(rec);
+    });
+  };
+
+  ListStore.prototype.delete = function (id) {
+    return Promise.resolve(this.backend.removeItem(this._key(id))).then(function () { return true; });
+  };
+
+  // list() -> [{id,name,primary_faction,points_target,modified,created,entry_count}]
+  // Lightweight summaries for the browse surface. Scans namespaced keys; lists
+  // are few and small so a scan beats maintaining a separate index that can
+  // desync. Corrupt/incompatible records are skipped with a warning, not fatal.
+  ListStore.prototype.list = function () {
+    var self = this;
+    return Promise.resolve(self.backend.keys()).then(function (keys) {
+      var ours = keys.filter(function (k) { return k.indexOf(NS) === 0; });
+      return Promise.all(ours.map(function (k) {
+        return Promise.resolve(self.backend.getItem(k)).then(function (raw) {
+          if (raw == null) return null;
+          try {
+            var r = JSON.parse(raw);
+            return {
+              id: r.id,
+              name: r.name,
+              primary_faction: r.primary_faction,
+              points_target: r.points_target,
+              modified: r.modified,
+              created: r.created,
+              entry_count: (r.entries || []).length
+            };
+          } catch (err) {
+            if (typeof console !== 'undefined') console.warn('[ListStore] skipping corrupt record at', k);
+            return null;
+          }
+        });
+      })).then(function (rows) {
+        return rows.filter(Boolean).sort(function (a, b) { return (b.modified || 0) - (a.modified || 0); });
+      });
+    });
+  };
+
+  // ── localStorage backend (v1) ────────────────────────────────────────────
+  // Async-shaped over a synchronous store so the ListStore interface is
+  // backend-agnostic. A cloud backend implements the same four methods async.
+  function createLocalStorageBackend(storage) {
+    var ls = storage; // injectable for tests; defaults to window.localStorage
+    if (!ls && typeof localStorage !== 'undefined') ls = localStorage;
+    return {
+      getItem:    function (k) { return Promise.resolve(ls.getItem(k)); },
+      setItem:    function (k, v) {
+        return new Promise(function (resolve, reject) {
+          try { ls.setItem(k, v); resolve(); }
+          catch (err) { reject(err); }   // quota / private-mode failures surface to caller
+        });
+      },
+      removeItem: function (k) { return Promise.resolve(ls.removeItem(k)); },
+      keys:       function () {
+        var out = [];
+        for (var i = 0; i < ls.length; i++) out.push(ls.key(i));
+        return Promise.resolve(out);
+      }
+    };
+  }
+
+  // ── export / import (JSON file portability) ──────────────────────────────
+  // Single list or an array. exportRecords always emits an array for a stable
+  // file shape; importRecords accepts either and re-ids to avoid clobbering.
+  function exportRecords(records) {
+    return JSON.stringify({ format: '40kab-lists', schema_version: SCHEMA_VERSION, lists: records }, null, 2);
+  }
+  function importRecords(jsonText) {
+    var parsed = JSON.parse(jsonText);
+    var list = Array.isArray(parsed) ? parsed
+             : (parsed && parsed.lists) ? parsed.lists
+             : (parsed && parsed.id) ? [parsed]
+             : [];
+    return list.map(migrate).filter(function (r) { return r && !r.__incompatible; });
+  }
+
+  var API = {
+    SCHEMA_VERSION: SCHEMA_VERSION,
+    NS: NS,
+    newListId: newListId,
+    serializeEntries: serializeEntries,
+    buildRecord: buildRecord,
+    deserialize: deserialize,
+    migrate: migrate,
+    ListStore: ListStore,
+    createLocalStorageBackend: createLocalStorageBackend,
+    exportRecords: exportRecords,
+    importRecords: importRecords
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+  else root.ListStorage = API;
+
+})(typeof self !== 'undefined' ? self : this);
+
+</script>
+
+<!-- Create-list Modal -->
+<div class="modal-overlay hidden" id="create-modal" onclick="closeCreateOnOverlay(event)">
+  <div class="modal-box" style="max-width:440px;">
+    <div class="modal-header">
+      <div class="modal-title">New Army List</div>
+      <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="create-field">
+        <label>List Name</label>
+        <input class="create-input" id="create-name" type="text" placeholder="e.g. Strike Force Alpha" maxlength="80">
+      </div>
+      <div class="create-row">
+        <div class="create-field">
+          <label>Army Group</label>
+          <select class="create-select" id="create-group-select" onchange="onCreateGroupChange(this.value)"></select>
+        </div>
+        <div class="create-field">
+          <label>Faction</label>
+          <select class="create-select" id="create-faction-select"></select>
+        </div>
+      </div>
+      <div class="create-field" style="max-width:200px;">
+        <label>Points Target</label>
+        <select class="create-select" id="create-points">
+          <option value="1000">1,000</option>
+          <option value="2000" selected>2,000</option>
+          <option value="3000">3,000</option>
+        </select>
+      </div>
+      <div class="create-err" id="create-err"></div>
+      <div class="create-footer">
+        <button class="home-btn secondary" onclick="closeCreateModal()">Cancel</button>
+        <button class="home-btn" onclick="confirmCreateList()">Create List</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.9';
+  const VERSION = '5.10';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
   function buildGroupSelect() {
-    const gs = document.getElementById('banner-group-select');
+    const gs = document.getElementById('create-group-select');
     gs.innerHTML = '';
     factionTaxonomy.groups.forEach(g => {
       const opt = document.createElement('option');
@@ -965,7 +1309,7 @@
   // Populate the faction select for a group; unbuilt factions disabled.
   // Returns the value that ends up selected (first built faction, else null).
   function buildFactionSelect(groupName, preferredName) {
-    const fs = document.getElementById('banner-faction-select');
+    const fs = document.getElementById('create-faction-select');
     fs.innerHTML = '';
     const group = factionTaxonomy.groups.find(g => g.group === groupName);
     let toSelect = null;
@@ -1023,37 +1367,26 @@
     });
   }
 
-  // Activate a faction: resolve units, clear the in-progress list, re-render.
-  // CLEAR-ON-SWITCH: changing faction empties the current army list. Prevents
-  // illegal cross-faction lists; NR-style. (See open product question.)
-  function activateFaction(faction) {
+  // Set the active faction (resolve its unit set). Model 2: faction is fixed
+  // per list and set at creation; there is no clear-on-switch. Callers
+  // (create / open) manage the armyList contents themselves.
+  function setFaction(faction) {
     currentFaction = faction;
     setActiveUnits(resolveUnits(faction));
-    armyList = [];
-    selectedListId = null;
-    renderRoster();
-    renderList();
-    renderDetail();
-    renderBanner();
   }
 
-  function onGroupChange(groupName) {
-    const selected = buildFactionSelect(groupName);
-    if (selected === null) return;              // group has no built factions
-    activateFaction(factionRecord(groupName, selected));
-  }
-
-  function onFactionChange(factionName) {
-    const groupName = document.getElementById('banner-group-select').value;
-    const rec = factionRecord(groupName, factionName);
-    if (rec && rec.built) activateFaction(rec);
+  // Create-modal group -> faction cascade.
+  function onCreateGroupChange(groupName) {
+    buildFactionSelect(groupName);
   }
 
   function selectArmyPoints(value) {
     POINTS_CAP = Number(value);
+    if (currentListMeta) currentListMeta.points_target = POINTS_CAP;
     renderBanner();
     renderList();
     renderDetail();
+    scheduleSave();
   }
 
   const TYPE_ORDER = [
@@ -1073,6 +1406,14 @@
   let rawUnits        = [];
   let selectedListId  = null;
   let nextId          = 1;
+
+  // List-management state (step 3)
+  let store           = null;   // ListStorage.ListStore instance
+  let currentScreen   = 'home'; // 'home' | 'builder'
+  let currentListId   = null;   // active saved-list id
+  let currentListMeta = null;   // { name, points_target, primary_faction, created }
+  let saveTimer       = null;
+  let hasGhosts       = false;  // any unresolved (ghost) entries in the open list
 
   // Army-data + taxonomy (populated in init)
   let armyData        = null;   // full units.json: array of { army, units }
@@ -1127,12 +1468,15 @@
       unitsByArmy = {};
       armyData.forEach(block => { unitsByArmy[block.army] = block.units; });
 
-      // Build the two-step selector, default Adeptus Astartes → Space Marines.
+      // List store (localStorage-backed, swappable async interface).
+      store = new ListStorage.ListStore(ListStorage.createLocalStorageBackend());
+
+      // Populate the create-list selector (group -> faction cascade).
       buildGroupSelect();
-      const defaultGroup = 'Adeptus Astartes';
-      document.getElementById('banner-group-select').value = defaultGroup;
-      const selectedFaction = buildFactionSelect(defaultGroup, 'Space Marines');
-      activateFaction(factionRecord(defaultGroup, selectedFaction));
+      onCreateGroupChange(document.getElementById('create-group-select').value);
+
+      // Model 2: the front door is the home page, not the builder.
+      showHome();
     } catch (err) {
       document.getElementById('roster').innerHTML =
         `<div class="error-msg">Could not load unit data: ${err.message}</div>`;
@@ -1195,7 +1539,8 @@
   }
 
   function totalPoints() {
-    return armyList.reduce((sum, e) => sum + (e.points || 0), 0);
+    // Ghost (unresolved) entries are shown for information but not counted.
+    return armyList.reduce((sum, e) => sum + (e.unresolved ? 0 : (e.points || 0)), 0);
   }
 
   // ── Render roster ──────────────────────────────────────────────────────────
@@ -1278,8 +1623,10 @@
   }
 
   function clearList() {
+    if (armyList.length && !confirm('Remove all units from this list?')) return;
     armyList = [];
     selectedListId = null;
+    hasGhosts = false;
     renderAll();
   }
 
@@ -1366,6 +1713,7 @@
     renderRoster();
     renderList();
     renderDetail();
+    scheduleSave();
   }
 
   function renderBanner() {
@@ -1373,8 +1721,12 @@
     const overCap  = total > POINTS_CAP;
     const bannerEl = document.getElementById('banner-points');
     const ptsEl    = document.getElementById('banner-pts-value');
-    bannerEl.className = 'banner-points' + (overCap ? ' over-cap' : '');
+    bannerEl.className = 'banner-points' + (overCap ? ' over-cap' : '') + (currentScreen === 'home' ? ' hidden' : '');
     ptsEl.textContent  = total;
+    const nameEl = document.getElementById('banner-listname');
+    if (nameEl) nameEl.textContent = currentListMeta ? currentListMeta.name : '';
+    const chg = document.getElementById('banner-changed');
+    if (chg) chg.classList.toggle('hidden', !hasGhosts);
   }
 
   // ── Render army list ───────────────────────────────────────────────────────
@@ -1412,6 +1764,17 @@
       html += `<div class="list-type-group"><div class="list-type-label">${type}</div>`;
 
       for (const entry of typeGroups[type]) {
+        if (entry.unresolved) {
+          html += `<div class="bodyguard-block"><div class="list-item ghost">
+              <div class="list-item-info">
+                <div class="list-item-name">${escHtml(entry.unit_name)}<span class="ghost-tag">removed</span></div>
+                <div class="list-item-sub">not in current data — no longer counted</div>
+              </div>
+              <span class="list-item-pts ghost-pts">${entry.points != null ? entry.points + ' pts' : '—'}</span>
+              <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${entry.listId})" title="Remove">&times;</button>
+            </div></div>`;
+          continue;
+        }
         const hasError   = entryHasError(entry);
         const isActive   = entry.listId === selectedListId;
         const sub        = [entry.god, entry.sizeIdx !== undefined
@@ -2175,6 +2538,175 @@
     const isOpen = content.classList.contains('open');
     content.classList.toggle('open', !isOpen);
     if (header) header.classList.toggle('open', !isOpen);
+  }
+
+  // ── List management (step 3) ───────────────────────────────────────────────
+
+  function escHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s){ return escHtml(s).replace(/'/g,'&#39;').replace(/"/g,'&quot;'); }
+
+  function findFactionByName(name) {
+    for (const g of factionTaxonomy.groups) {
+      const f = g.factions.find(f => f.name === name);
+      if (f) return { group: g.group, faction: f };
+    }
+    return null;
+  }
+
+  function showHome() {
+    currentScreen = 'home';
+    currentListId = null;
+    currentListMeta = null;
+    document.getElementById('screen-home').classList.remove('hidden');
+    document.getElementById('screen-builder').classList.add('hidden');
+    document.getElementById('builder-chrome').classList.add('hidden');
+    document.getElementById('banner-army-pts-wrap').classList.add('hidden');
+    document.getElementById('banner-points').classList.add('hidden');
+    renderMyLists();
+  }
+
+  function showBuilder() {
+    currentScreen = 'builder';
+    document.getElementById('screen-home').classList.add('hidden');
+    document.getElementById('screen-builder').classList.remove('hidden');
+    document.getElementById('builder-chrome').classList.remove('hidden');
+    document.getElementById('banner-army-pts-wrap').classList.remove('hidden');
+    document.getElementById('banner-points').classList.remove('hidden');
+  }
+
+  function renderMyLists() {
+    const c = document.getElementById('mylists-container');
+    if (!store) { c.innerHTML = ''; return; }
+    store.list().then(rows => {
+      if (!rows.length) {
+        c.innerHTML = '<div class="home-empty">No saved lists yet. Click &ldquo;New List&rdquo; to start building.</div>';
+        return;
+      }
+      c.innerHTML = '<div class="mylists">' + rows.map(r => {
+        const when = r.modified ? new Date(r.modified).toLocaleDateString() : '';
+        const tgt  = r.points_target ? ('target ' + r.points_target) : '';
+        const n    = r.entry_count;
+        return '<div class="mylist-row" onclick="openList(\'' + r.id + '\')">'
+          + '<div class="mylist-main">'
+          +   '<div class="mylist-name">' + escHtml(r.name) + '</div>'
+          +   '<div class="mylist-meta"><span class="mylist-faction">' + escHtml(r.primary_faction || '—') + '</span> · '
+          +     n + ' unit' + (n === 1 ? '' : 's') + (when ? ' · ' + when : '') + '</div>'
+          + '</div>'
+          + '<span class="mylist-pts">' + tgt + '</span>'
+          + '<button class="mylist-del" title="Delete list" onclick="event.stopPropagation();deleteList(\'' + r.id + '\',\'' + escAttr(r.name) + '\')">&times;</button>'
+          + '</div>';
+      }).join('') + '</div>';
+    }).catch(e => { console.warn('list() failed', e); c.innerHTML = '<div class="home-empty">Could not read saved lists.</div>'; });
+  }
+
+  // ── Create ────────────────────────────────────────────────────────────────
+  function openCreateModal() {
+    document.getElementById('create-name').value = '';
+    document.getElementById('create-err').textContent = '';
+    document.getElementById('create-points').value = '2000';
+    const gs = document.getElementById('create-group-select');
+    if (gs.options.length) { gs.selectedIndex = 0; onCreateGroupChange(gs.value); }
+    document.getElementById('create-modal').classList.remove('hidden');
+    document.getElementById('create-name').focus();
+  }
+  function closeCreateModal() { document.getElementById('create-modal').classList.add('hidden'); }
+  function closeCreateOnOverlay(e) { if (e.target.id === 'create-modal') closeCreateModal(); }
+
+  function confirmCreateList() {
+    const err  = document.getElementById('create-err');
+    const name = document.getElementById('create-name').value.trim();
+    if (!name) { err.textContent = 'Enter a list name.'; return; }
+    const groupName   = document.getElementById('create-group-select').value;
+    const factionName = document.getElementById('create-faction-select').value;
+    const fac = factionRecord(groupName, factionName);
+    if (!fac || !fac.built) { err.textContent = 'Pick a playable faction.'; return; }
+    const target = Number(document.getElementById('create-points').value);
+
+    setFaction(fac);
+    armyList = []; selectedListId = null; nextId = 1; hasGhosts = false;
+    currentListId   = ListStorage.newListId();
+    currentListMeta = { name: name, points_target: target, primary_faction: fac.name, created: Date.now() };
+    POINTS_CAP = target;
+    document.getElementById('banner-army-pts-select').value = String(target);
+
+    closeCreateModal();
+    showBuilder();
+    renderAll();
+    saveNow();   // persist the empty named list so it appears on the home page
+  }
+
+  // ── Open / load (id-first resolve, ghost rows for misses) ─────────────────
+  function openList(id) {
+    if (!store) return;
+    store.get(id).then(rec => {
+      if (!rec) { alert('List not found.'); renderMyLists(); return; }
+      const found = findFactionByName(rec.primary_faction);
+      if (!found) { alert('The faction for this list (' + rec.primary_faction + ') is not available.'); return; }
+      setFaction(found.faction);
+
+      const resolvers = {
+        resolveUnit: function (faction_ref, unit_id, unit_name) {
+          let u = null;
+          if (unit_id)   u = rawUnits.find(x => x.unit_id === unit_id);
+          if (!u && unit_name) u = rawUnits.find(x => x.unit_name === unit_name);
+          return u ? { unit_name: u.unit_name, unit_type: u.unit_type } : null;
+        }
+      };
+      const out = ListStorage.deserialize(rec, resolvers);
+      armyList  = out.armyList;
+      nextId    = (out.maxEntryId || 0) + 1;
+
+      // Recompute points for resolved entries (reference model — never frozen);
+      // ghosts keep their saved cached points for display only.
+      const cacheById = {};
+      (rec.entries || []).forEach(e => { cacheById[e.entry_id] = e.points_cache; });
+      armyList.forEach(e => {
+        if (e.unresolved) e.points = (cacheById[e.listId] != null ? cacheById[e.listId] : null);
+        else              e.points = ptsForEntry(e);
+      });
+      hasGhosts = armyList.some(e => e.unresolved);
+
+      currentListId   = rec.id;
+      currentListMeta = { name: rec.name, points_target: rec.points_target, primary_faction: rec.primary_faction, created: rec.created };
+      POINTS_CAP = rec.points_target || 2000;
+      document.getElementById('banner-army-pts-select').value = String(POINTS_CAP);
+      selectedListId = null;
+
+      showBuilder();
+      renderAll();
+    }).catch(e => { console.warn('open failed', e); alert('Could not open this list.'); });
+  }
+
+  function deleteList(id, name) {
+    if (!confirm('Delete \u201c' + name + '\u201d? This cannot be undone.')) return;
+    store.delete(id).then(() => renderMyLists()).catch(e => console.warn('delete failed', e));
+  }
+
+  // ── Autosave (reference model; recomputed on load) ────────────────────────
+  function currentMeta() {
+    return {
+      id:              currentListId,
+      name:            currentListMeta ? currentListMeta.name : 'Untitled',
+      points_target:   POINTS_CAP,
+      primary_faction: currentListMeta ? currentListMeta.primary_faction : (currentFaction ? currentFaction.name : null),
+      created:         currentListMeta ? currentListMeta.created : Date.now()
+    };
+  }
+  var saveLookups = {
+    unitIdFor: function (faction_ref, unit_name) {
+      var u = rawUnits.find(function (x) { return x.unit_name === unit_name; });
+      return u ? (u.unit_id || null) : null;
+    }
+  };
+  function saveNow() {
+    if (!store || !currentListId) return;
+    var rec = ListStorage.buildRecord(currentMeta(), armyList, saveLookups);
+    store.put(rec).catch(function (e) { console.warn('save failed', e); });
+  }
+  function scheduleSave() {
+    if (currentScreen !== 'builder' || !currentListId) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveNow, 400);
   }
 
   init();
