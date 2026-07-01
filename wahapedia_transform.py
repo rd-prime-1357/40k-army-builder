@@ -442,9 +442,9 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
         kw_sorted = kept_kw
         kw_str = ",".join(kw_sorted)
         ut = unit_type(ds_id)
-        abil_names = ",".join(dict.fromkeys(
-            abil["unit_abil"].get(ds_id, []) + abil["unit_faction"].get(ds_id, [])))
-        rule_str = ",".join(dict.fromkeys(abil["rule_names"].get(ds_id, [])))
+        abil_names = ",".join(dict.fromkeys(abil["unit_abil"].get(ds_id, [])))
+        rule_str = ",".join(dict.fromkeys(
+            abil["rule_names"].get(ds_id, []) + abil["unit_faction"].get(ds_id, [])))
         leader_ability = "Leader" if ds_id in abil["leader_flag"] else ""
         # Fix 3: fill Leader Eligible Units from Datasheets_leader.csv. GW's leader
         # map is authoritative for what a datasheet can lead; the generic Captain

@@ -30,11 +30,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Surgical Precision",
-              "Vivispectrum",
-              "Oath of Moment"
+              "Vivispectrum"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -118,11 +118,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Assault Ramp",
-              "Oath of Moment"
+              "Assault Ramp"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -303,11 +303,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Assault Ramp",
-              "Oath of Moment"
+              "Assault Ramp"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -493,11 +493,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Suppression Fire",
-              "Oath of Moment"
+              "Suppression Fire"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -599,10 +599,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Combat Squads",
+              "Combat Squads"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -1238,10 +1239,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Bladeguard",
+              "Bladeguard"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Bladeguard Veteran Squad",
@@ -1420,11 +1422,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Rites of Battle",
-              "Finest Hour",
-              "Oath of Moment"
+              "Finest Hour"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -1788,14 +1790,14 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Priority Objective Identified",
-              "Evade and Survive",
-              "Oath of Moment"
+              "Evade and Survive"
             ],
             "rule_names": [
               "Feel No Pain 5+",
               "Infiltrators",
               "Lone Operative",
-              "Stealth"
+              "Stealth",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -1883,12 +1885,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Psychic Hood",
-              "Veil of Time (Psychic)",
-              "Oath of Moment"
+              "Veil of Time (Psychic)"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -2056,12 +2058,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Angel’s Wrath",
-              "Rites of Battle",
-              "Oath of Moment"
+              "Rites of Battle"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -2289,11 +2291,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Interceptor",
-              "Oath of Moment"
+              "Interceptor"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -2508,10 +2510,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Sentinel Protocols",
+              "Sentinel Protocols"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Artillery",
@@ -2613,12 +2616,12 @@
             "unit_ability_names": [
               "Drop Pod Assault",
               "Combat Disembarkation",
-              "Deployment Complete",
-              "Oath of Moment"
+              "Deployment Complete"
             ],
             "rule_names": [
               "Deadly Demise 1",
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -2668,11 +2671,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Ballistus Strike",
-              "Oath of Moment"
+              "Ballistus Strike"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -2807,11 +2810,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Litany of Hate",
-              "Catechism of Fire",
-              "Oath of Moment"
+              "Catechism of Fire"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -2913,11 +2916,11 @@
             "unit_ability_names": [
               "Fortification",
               "Ceramite Cover",
-              "Defensive Array",
-              "Oath of Moment"
+              "Defensive Array"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -3047,10 +3050,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Total Obliteration",
+              "Total Obliteration"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Eradicator Squad",
@@ -3191,12 +3195,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Litany of Hate",
-              "Exhortation of Rage",
-              "Oath of Moment"
+              "Exhortation of Rage"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -3517,12 +3521,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Hammerstrike",
-              "Oath of Moment"
+              "Hammerstrike"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -3641,12 +3645,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Litany of Hate",
-              "Recitation of Faith",
-              "Oath of Moment"
+              "Recitation of Faith"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -3740,11 +3744,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Wisdom of the Ancients (Aura)",
-              "Oath of Moment"
+              "Wisdom of the Ancients (Aura)"
             ],
             "rule_names": [
-              "Deadly Demise 1"
+              "Deadly Demise 1",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -4010,11 +4014,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Teleport Homer",
-              "Terminatus Assault",
-              "Oath of Moment"
+              "Terminatus Assault"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -4111,12 +4115,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Psychic Hood",
-              "Shrouding (Psychic)",
-              "Oath of Moment"
+              "Shrouding (Psychic)"
             ],
             "rule_names": [
               "Infiltrators",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -4239,12 +4243,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Hailstrike",
-              "Oath of Moment"
+              "Hailstrike"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -4361,11 +4365,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Meteoric Descent",
-              "Oath of Moment"
+              "Meteoric Descent"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -4508,10 +4512,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Incendiary Terror",
+              "Incendiary Terror"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Grenades",
@@ -4617,11 +4622,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Omni-scramblers",
-              "Oath of Moment"
+              "Omni-scramblers"
             ],
             "rule_names": [
-              "Infiltrators"
+              "Infiltrators",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -4749,11 +4754,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Fire Support",
-              "Oath of Moment"
+              "Fire Support"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -4927,12 +4932,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Rites of Battle",
-              "The Imperium’s Sword",
-              "Oath of Moment"
+              "The Imperium’s Sword"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -5070,11 +5075,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Brutalis Charge",
-              "Oath of Moment"
+              "Brutalis Charge"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -5271,11 +5276,11 @@
             "unit_ability_names": [
               "Techmarine",
               "Blessing of the Omnissiah",
-              "Vengeance of the Omnissiah",
-              "Oath of Moment"
+              "Vengeance of the Omnissiah"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -5392,11 +5397,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Vanguard Assault",
-              "Oath of Moment"
+              "Vanguard Assault"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -5628,12 +5633,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Combat Support",
-              "Oath of Moment"
+              "Combat Support"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Scouts 8\""
+              "Scouts 8\"",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -5798,10 +5803,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Objective Secured",
-              "Target Elimination",
+              "Target Elimination"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -6147,10 +6153,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Outrider Escort",
+              "Outrider Escort"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Grenades",
@@ -6284,11 +6291,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Multi-spectrum Array",
-              "Oath of Moment"
+              "Multi-spectrum Array"
             ],
             "rule_names": [
-              "Scouts 6\""
+              "Scouts 6\"",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -6409,12 +6416,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Guerrilla Tactics",
-              "Oath of Moment"
+              "Guerrilla Tactics"
             ],
             "rule_names": [
               "Infiltrators",
-              "Scouts 6\""
+              "Scouts 6\"",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -6700,11 +6707,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Astartes Banner",
-              "Deeds of Heroism",
-              "Oath of Moment"
+              "Deeds of Heroism"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -6795,11 +6802,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Rites of Battle",
-              "Refuse to Yield",
-              "Oath of Moment"
+              "Refuse to Yield"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -6984,11 +6991,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Litany of Hate",
-              "Spiritual Leader",
-              "Oath of Moment"
+              "Spiritual Leader"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -7072,10 +7079,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Unyielding in the Face of the Foe",
+              "Unyielding in the Face of the Foe"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -7213,11 +7221,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Teleport Homer",
-              "Fury of the First",
-              "Oath of Moment"
+              "Fury of the First"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -7445,11 +7453,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Siege Shield",
-              "Oath of Moment"
+              "Siege Shield"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -7586,12 +7594,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Strafing Run",
-              "Oath of Moment"
+              "Strafing Run"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Hover"
+              "Hover",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -7791,12 +7799,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Armoured Resilience",
-              "Oath of Moment"
+              "Armoured Resilience"
             ],
             "rule_names": [
               "Deadly Demise D6",
-              "Hover"
+              "Hover",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -8087,10 +8095,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Decimator Protocols",
+              "Decimator Protocols"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Centurion",
@@ -8281,12 +8290,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Tactical Precision",
-              "Deadly Terror",
-              "Oath of Moment"
+              "Deadly Terror"
             ],
             "rule_names": [
               "Leader",
-              "Scouts 6\""
+              "Scouts 6\"",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -8391,11 +8400,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Tactical Precision",
-              "Target Priority",
-              "Oath of Moment"
+              "Target Priority"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -8655,10 +8664,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Shock Assault",
+              "Shock Assault"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Assault Intercessor Squad",
@@ -8899,12 +8909,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Thunderstrike",
-              "Oath of Moment"
+              "Thunderstrike"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -9017,11 +9027,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Rotating Death",
-              "Oath of Moment"
+              "Rotating Death"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -9177,12 +9187,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Reposition Under Covering Fire",
-              "Mark the Target",
-              "Oath of Moment"
+              "Mark the Target"
             ],
             "rule_names": [
               "Infiltrators",
-              "Stealth"
+              "Stealth",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -9348,11 +9358,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Ferocious Assault",
-              "Oath of Moment"
+              "Ferocious Assault"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -9507,10 +9517,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "For the Chapter!",
-              "Designer’s Note",
+              "Designer’s Note"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Grenades",
@@ -9681,10 +9692,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Close-quarters Firepower",
+              "Close-quarters Firepower"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Aggressor Squad",
@@ -9809,11 +9821,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Assault Ramp",
-              "Oath of Moment"
+              "Assault Ramp"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -10001,10 +10013,11 @@
             "unit_ability_names": [
               "Signum",
               "Armorium Cherub",
-              "Designer’s Note",
+              "Designer’s Note"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Devastator Squad",
@@ -10461,10 +10474,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Sternguard Focus",
+              "Sternguard Focus"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Grenades",
@@ -10761,11 +10775,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Psychic Hood",
-              "Mental Fortress (Psychic)",
-              "Oath of Moment"
+              "Mental Fortress (Psychic)"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -10888,10 +10902,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Targeter Optics",
+              "Targeter Optics"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Desolation Squad",
@@ -11071,14 +11086,14 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Tactical Precision",
-              "Strategic Dispersal",
-              "Oath of Moment"
+              "Strategic Dispersal"
             ],
             "rule_names": [
               "Deep Strike",
               "Infiltrators",
               "Leader",
-              "Scouts 6\""
+              "Scouts 6\"",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -11179,12 +11194,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Assault Vehicle",
-              "Oath of Moment"
+              "Assault Vehicle"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Firing Deck 6"
+              "Firing Deck 6",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -11426,12 +11441,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Astartes Banner",
-              "Keep the Banner High",
-              "Oath of Moment"
+              "Keep the Banner High"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -11644,13 +11659,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Rites of Battle",
-              "Master of Deceit",
-              "Oath of Moment"
+              "Master of Deceit"
             ],
             "rule_names": [
               "Infiltrators",
               "Leader",
-              "Stealth"
+              "Stealth",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -11751,10 +11766,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Annihilator Protocols",
+              "Annihilator Protocols"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Centurion",
@@ -11902,11 +11918,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Aquilon Optics",
-              "Oath of Moment"
+              "Aquilon Optics"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -12091,11 +12107,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Tempormortis",
-              "Silent Fury",
-              "Oath of Moment"
+              "Silent Fury"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -12181,10 +12197,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Thunderous Impact",
+              "Thunderous Impact"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Grenades",
@@ -12210,10 +12227,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Thunderous Impact",
+              "Thunderous Impact"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Grenades",
@@ -12394,11 +12412,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Annihilator",
-              "Oath of Moment"
+              "Annihilator"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -12587,11 +12605,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Destructor",
-              "Oath of Moment"
+              "Destructor"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -12780,11 +12798,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Duty Eternal",
-              "Oath of Moment"
+              "Duty Eternal"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -13032,11 +13050,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Fearsome Assault",
-              "Terror Troops (Aura)",
-              "Oath of Moment"
+              "Terror Troops (Aura)"
             ],
             "rule_names": [
-              "Scouts 6\""
+              "Scouts 6\"",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -13192,11 +13210,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Emergency Combat Embarkation",
-              "Oath of Moment"
+              "Emergency Combat Embarkation"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -13383,11 +13401,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Executioner",
-              "Oath of Moment"
+              "Executioner"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -13639,12 +13657,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Self Repair",
-              "Oath of Moment"
+              "Self Repair"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Firing Deck 2"
+              "Firing Deck 2",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -13756,11 +13774,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Pinning Bombardment",
-              "Oath of Moment"
+              "Pinning Bombardment"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -13899,10 +13917,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Astartes Banner",
-              "Command Squad",
+              "Command Squad"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Ancient",
@@ -14069,11 +14088,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Narthecium",
-              "Gene-seed Recovery",
-              "Oath of Moment"
+              "Gene-seed Recovery"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -14190,11 +14209,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Astartes Banner",
-              "Unbreakable Duty",
-              "Oath of Moment"
+              "Unbreakable Duty"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -14311,11 +14330,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Hammer of Wrath",
-              "Oath of Moment"
+              "Hammer of Wrath"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -14555,11 +14574,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Tempormortis",
-              "Indomitable Assault",
-              "Oath of Moment"
+              "Indomitable Assault"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -14656,12 +14675,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Litany of Hate",
-              "Zealot’s Fervour",
-              "Oath of Moment"
+              "Zealot’s Fervour"
             ],
             "rule_names": [
               "Leader",
-              "Feel No Pain 5+"
+              "Feel No Pain 5+",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -14759,11 +14778,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Unorthodox Strategist (Aura)",
-              "Master of the Fleet",
-              "Oath of Moment"
+              "Master of the Fleet"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -14868,10 +14887,11 @@
             "unit_ability_names": [
               "Author of the Codex",
               "Ultramarines Bodyguard",
-              "Armour of Fate",
+              "Armour of Fate"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Character",
@@ -14989,11 +15009,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Hood of Hellfire",
-              "Master of Prescience (Psychic)",
-              "Oath of Moment"
+              "Master of Prescience (Psychic)"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -15143,12 +15163,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Inspiring Leader",
-              "Master Tactician",
-              "Oath of Moment"
+              "Master Tactician"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -15231,11 +15251,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Knight Champion of Macragge",
-              "Honour or Death",
-              "Oath of Moment"
+              "Honour or Death"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -15359,10 +15379,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Ultramarines Honour Guard",
-              "Glory of Ultramar",
+              "Glory of Ultramar"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Ancient",
@@ -15487,12 +15508,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Press the Attack",
-              "Honour of Ultramar",
-              "Oath of Moment"
+              "Honour of Ultramar"
             ],
             "rule_names": [
               "Feel No Pain 5+",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -15605,10 +15626,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Second Company Banner",
-              "Strategium Command",
+              "Strategium Command"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Epic Hero",
@@ -15644,10 +15666,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Second Company Banner",
-              "Strategium Command",
+              "Strategium Command"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Epic Hero",
@@ -15835,11 +15858,11 @@
             "unit_ability_names": [
               "Rites of Tempering",
               "Iron Father",
-              "Master of the Forge",
-              "Oath of Moment"
+              "Master of the Forge"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -15965,13 +15988,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Cold and Calculating",
-              "Cerebrex Logic Engine",
-              "Oath of Moment"
+              "Cerebrex Logic Engine"
             ],
             "rule_names": [
               "Deep Strike",
               "Feel No Pain 5+",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16083,12 +16106,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Warden of the Imperium Nihilus",
-              "Death Mask of Sanguinius",
-              "Oath of Moment"
+              "Death Mask of Sanguinius"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16173,13 +16196,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "The Quickening (Psychic)",
-              "Transfixing Gaze (Aura; Psychic)",
-              "Oath of Moment"
+              "Transfixing Gaze (Aura; Psychic)"
             ],
             "rule_names": [
               "Feel No Pain 4+",
               "Fights First",
-              "Lone Operative"
+              "Lone Operative",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16318,13 +16341,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Aura of Fervour (Aura)",
-              "Miraculous Saviour",
-              "Oath of Moment"
+              "Miraculous Saviour"
             ],
             "rule_names": [
               "Deep Strike",
               "Fights First",
-              "Lone Operative"
+              "Lone Operative",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16390,12 +16413,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Redeemer of the Lost",
-              "Mass of Doom",
-              "Oath of Moment"
+              "Mass of Doom"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16477,11 +16500,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Sanguinary Priest",
-              "Blood Chalice",
-              "Oath of Moment"
+              "Blood Chalice"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16560,13 +16583,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Guardian of the Lost",
-              "Fury Unbound",
-              "Oath of Moment"
+              "Fury Unbound"
             ],
             "rule_names": [
               "Deep Strike",
               "Feel No Pain 6+",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16649,11 +16672,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Angelic Visage",
-              "Heirs of Azkaellon",
-              "Oath of Moment"
+              "Heirs of Azkaellon"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16797,12 +16820,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Black Rage",
-              "Driven by Fury",
-              "Oath of Moment"
+              "Driven by Fury"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Feel No Pain 6+"
+              "Feel No Pain 6+",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -16980,11 +17003,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Overcharged Engines",
-              "Oath of Moment"
+              "Overcharged Engines"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -17202,11 +17225,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Black Rage",
-              "An Honourable Death in Combat",
-              "Oath of Moment"
+              "An Honourable Death in Combat"
             ],
             "rule_names": [
-              "Feel No Pain 6+"
+              "Feel No Pain 6+",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -17480,11 +17503,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Black Rage",
-              "Visions of Heresy",
-              "Oath of Moment"
+              "Visions of Heresy"
             ],
             "rule_names": [
-              "Feel No Pain 6+"
+              "Feel No Pain 6+",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -17853,12 +17876,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Black Rage",
-              "Savage Fury",
-              "Oath of Moment"
+              "Savage Fury"
             ],
             "rule_names": [
               "Deep Strike",
-              "Feel No Pain 6+"
+              "Feel No Pain 6+",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -18111,11 +18134,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Rites of Battle",
-              "Finest Hour",
-              "Oath of Moment"
+              "Finest Hour"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -18275,12 +18298,12 @@
             "unit_ability_names": [
               "Forlorn Hero",
               "Black Rage",
-              "Death Vision of Sanguinius",
-              "Oath of Moment"
+              "Death Vision of Sanguinius"
             ],
             "rule_names": [
               "Feel No Pain 6+",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -18440,13 +18463,13 @@
             "unit_ability_names": [
               "Lost to Fury",
               "Black Rage",
-              "Death Vision of Sanguinius",
-              "Oath of Moment"
+              "Death Vision of Sanguinius"
             ],
             "rule_names": [
               "Deep Strike",
               "Feel No Pain 6+",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -18670,11 +18693,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Supreme Grand Master",
-              "Masterful Tactician",
-              "Oath of Moment"
+              "Masterful Tactician"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -18764,12 +18787,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Grand Master of the Deathwing",
-              "Strikes of Retribution",
-              "Oath of Moment"
+              "Strikes of Retribution"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -18867,11 +18890,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Exemplar of Hate",
-              "Feared Interrogator",
-              "Oath of Moment"
+              "Feared Interrogator"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -18980,11 +19003,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Psychic Hood",
-              "Engulfing Fear (Psychic)",
-              "Oath of Moment"
+              "Engulfing Fear (Psychic)"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -19108,11 +19131,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Teleport Homer",
-              "Deathwing",
-              "Oath of Moment"
+              "Deathwing"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -19373,11 +19396,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Teleport Homer",
-              "Inner Circle",
-              "Oath of Moment"
+              "Inner Circle"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -19519,11 +19542,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Icon of Old Caliban (Aura)",
-              "Oath of Moment"
+              "Icon of Old Caliban (Aura)"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -19626,12 +19649,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Lightning-fast Manoeuvres",
-              "Oath of Moment"
+              "Lightning-fast Manoeuvres"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Hover"
+              "Hover",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -19768,12 +19791,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Stasis Bomb",
-              "Oath of Moment"
+              "Stasis Bomb"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Hover"
+              "Hover",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -19868,10 +19891,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Knights of Caliban",
+              "Knights of Caliban"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Dark Angels",
@@ -20014,11 +20038,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Storm of Vengeance",
-              "Oath of Moment"
+              "Storm of Vengeance"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -20162,11 +20186,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Grand Master of the Ravenwing",
-              "Cut Off Their Escape",
-              "Oath of Moment"
+              "Cut Off Their Escape"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -20296,11 +20320,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Intractable Will",
-              "The Spiritshield Helm",
-              "Oath of Moment"
+              "The Spiritshield Helm"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -20383,12 +20407,12 @@
             "unit_ability_names": [
               "Primarch of the First Legion",
               "The Emperor’s Shield",
-              "Dark Angels Bodyguard",
-              "Oath of Moment"
+              "Dark Angels Bodyguard"
             ],
             "rule_names": [
               "Deep Strike",
-              "Fights First"
+              "Fights First",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -20505,11 +20529,11 @@
             "unit_ability_names": [
               "Narthecium",
               "Astartes Banner",
-              "Honour or Death",
-              "Oath of Moment"
+              "Honour or Death"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -20681,10 +20705,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Braziers of Judgement",
-              "Enmity for the Unworthy",
+              "Enmity for the Unworthy"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Dark Angels",
@@ -20785,12 +20810,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "High King of Fenris",
-              "Guile of the Wolf (Aura)",
-              "Oath of Moment"
+              "Guile of the Wolf (Aura)"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -20903,11 +20928,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "War Howl",
-              "Battle-lust",
-              "Oath of Moment"
+              "Battle-lust"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -20992,11 +21017,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Wind Walker (Psychic)",
-              "Tempest’s Wrath (Psychic)",
-              "Oath of Moment"
+              "Tempest’s Wrath (Psychic)"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -21118,12 +21143,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Slayer’s Oath",
-              "Oathbound",
-              "Oath of Moment"
+              "Oathbound"
             ],
             "rule_names": [
               "Feel No Pain 6+",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -21222,12 +21247,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Legendary Tenacity",
-              "Ancient Tactician",
-              "Oath of Moment"
+              "Ancient Tactician"
             ],
             "rule_names": [
               "Deadly Demise 1",
-              "Feel No Pain 5+"
+              "Feel No Pain 5+",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -21395,10 +21420,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Berserk Charge",
+              "Berserk Charge"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -21544,10 +21570,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Cunning Hunters",
+              "Cunning Hunters"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -21741,11 +21768,11 @@
             "unit_ability_names": [
               "Iron Priest",
               "Gift of the Iron Wolf",
-              "Judgement of the Omnissiah",
-              "Oath of Moment"
+              "Judgement of the Omnissiah"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -21838,11 +21865,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Savage Frenzy",
+              "Savage Frenzy"
+            ],
+            "rule_names": [
               "Curse of the Wulfen",
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Imperium",
@@ -21929,13 +21957,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Murder-maker (Aura)",
-              "Bestial Fury",
-              "Curse of the Wulfen",
-              "Oath of Moment"
+              "Bestial Fury"
             ],
             "rule_names": [
               "Deadly Demise 1",
-              "Feel No Pain 6+"
+              "Feel No Pain 6+",
+              "Curse of the Wulfen",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -22037,12 +22065,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Anvil of Endurance",
-              "Champion of the Kingsguard",
-              "Oath of Moment"
+              "Champion of the Kingsguard"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -22124,11 +22152,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Rugged Resilience",
-              "Oath of Moment"
+              "Rugged Resilience"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -22280,10 +22308,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Thunderous Charge",
+              "Thunderous Charge"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Grenades",
@@ -22455,10 +22484,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Predatory Instinct",
-              "Hunting Hounds",
+              "Hunting Hounds"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Beasts",
@@ -22513,11 +22543,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Fervour of the Ancients (Aura)",
-              "Oath of Moment"
+              "Fervour of the Ancients (Aura)"
             ],
             "rule_names": [
-              "Deadly Demise 1"
+              "Deadly Demise 1",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -22743,11 +22773,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Healing Balms",
-              "Litany of Hate",
-              "Oath of Moment"
+              "Litany of Hate"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -22827,11 +22857,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Tempered Ferocity",
-              "Heroic Last Stand",
-              "Oath of Moment"
+              "Heroic Last Stand"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -23017,10 +23047,11 @@
             "unit_ability_names": [
               "Let Loose the Wolves",
               "Headhunters",
-              "Hunting Hounds",
+              "Hunting Hounds"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Beasts",
@@ -23053,10 +23084,11 @@
             "unit_ability_names": [
               "Let Loose the Wolves",
               "Headhunters",
-              "Hunting Hounds",
+              "Hunting Hounds"
+            ],
+            "rule_names": [
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Beasts",
@@ -23163,11 +23195,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Hammer Blow",
+              "Hammer Blow"
+            ],
+            "rule_names": [
               "Curse of the Wulfen",
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Imperium",
@@ -23256,13 +23289,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Bestial Rage",
-              "Violent Fury",
-              "Curse of the Wulfen",
-              "Oath of Moment"
+              "Violent Fury"
             ],
             "rule_names": [
               "Deadly Demise 1",
-              "Feel No Pain 6+"
+              "Feel No Pain 6+",
+              "Curse of the Wulfen",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -23386,12 +23419,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Deadly Stalkers",
-              "Hunting Hounds",
-              "Oath of Moment"
+              "Hunting Hounds"
             ],
             "rule_names": [
               "Infiltrators",
-              "Scouts 7\""
+              "Scouts 7\"",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -23422,12 +23455,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Deadly Stalkers",
-              "Hunting Hounds",
-              "Oath of Moment"
+              "Hunting Hounds"
             ],
             "rule_names": [
               "Infiltrators",
-              "Scouts 7\""
+              "Scouts 7\"",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -23681,14 +23714,14 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Blackstar Cluster Launcher",
-              "Mission Tactics",
-              "Oath of Moment"
+              "Blackstar Cluster Launcher"
             ],
             "rule_names": [
               "Deadly Demise D6",
               "Hover",
-              "Stealth"
+              "Stealth",
+              "Mission Tactics",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -23873,13 +23906,13 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Spectrus Doctrines",
-              "Mission Tactics",
-              "Oath of Moment"
+              "Spectrus Doctrines"
             ],
             "rule_names": [
               "Infiltrators",
-              "Scouts 6\""
+              "Scouts 6\"",
+              "Mission Tactics",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -24136,11 +24169,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Fortis Doctrines",
+              "Fortis Doctrines"
+            ],
+            "rule_names": [
               "Mission Tactics",
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Deathwatch",
@@ -24616,11 +24650,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Indomitor Doctrines",
+              "Indomitor Doctrines"
+            ],
+            "rule_names": [
               "Mission Tactics",
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Deathwatch",
@@ -24840,11 +24875,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Death to the Alien",
+              "Death to the Alien"
+            ],
+            "rule_names": [
               "Mission Tactics",
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -25117,12 +25153,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Strategic Knowledge",
-              "Watch Master",
-              "Mission Tactics",
-              "Oath of Moment"
+              "Watch Master"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Mission Tactics",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -25202,13 +25238,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Tactical Instinct",
-              "Unstoppable Champion",
-              "Oath of Moment",
-              "Mission Tactics"
+              "Unstoppable Champion"
             ],
             "rule_names": [
               "Feel No Pain 6+",
-              "Leader"
+              "Leader",
+              "Oath of Moment",
+              "Mission Tactics"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -25289,12 +25325,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Terminatus Assault",
-              "Teleport Homer",
-              "Mission Tactics",
-              "Oath of Moment"
+              "Teleport Homer"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Mission Tactics",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -25568,12 +25604,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Talonstrike Doctrines",
-              "Mission Tactics",
-              "Oath of Moment"
+              "Talonstrike Doctrines"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Mission Tactics",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -25604,12 +25640,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Talonstrike Doctrines",
-              "Mission Tactics",
-              "Oath of Moment"
+              "Talonstrike Doctrines"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Mission Tactics",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -25895,11 +25931,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Death to the Alien",
+              "Death to the Alien"
+            ],
+            "rule_names": [
               "Mission Tactics",
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -25930,11 +25967,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Death to the Alien",
+              "Death to the Alien"
+            ],
+            "rule_names": [
               "Mission Tactics",
               "Oath of Moment"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -26366,11 +26404,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Unto the Anvil",
-              "Lord of the Pyroclasts",
-              "Oath of Moment"
+              "Lord of the Pyroclasts"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -26465,12 +26503,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Forgefather",
-              "Seeker of the Unfound",
-              "Oath of Moment"
+              "Seeker of the Unfound"
             ],
             "rule_names": [
               "Feel No Pain 6+",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -26581,12 +26619,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Icon of Obstinacy",
-              "Rampart",
-              "Oath of Moment"
+              "Rampart"
             ],
             "rule_names": [
               "Deep Strike",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -26663,11 +26701,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Signum Array",
-              "Siege Captain",
-              "Oath of Moment"
+              "Siege Captain"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -26761,12 +26799,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Oath of Rynn",
-              "To the Last",
-              "Oath of Moment"
+              "To the Last"
             ],
             "rule_names": [
               "Feel No Pain 6+",
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -26864,14 +26902,14 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Shadowmaster",
-              "Echo of the Ravenspire",
-              "Oath of Moment"
+              "Echo of the Ravenspire"
             ],
             "rule_names": [
               "Deep Strike",
               "Leader",
               "Lone Operative",
-              "Stealth"
+              "Stealth",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -26964,13 +27002,13 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Master of Shadows",
-              "Blackwing Mantle",
-              "Oath of Moment"
+              "Blackwing Mantle"
             ],
             "rule_names": [
               "Deep Strike",
               "Lone Operative",
-              "Stealth"
+              "Stealth",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -27081,11 +27119,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "For the Khan!",
-              "Trophy Taker",
-              "Oath of Moment"
+              "Trophy Taker"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -27169,11 +27207,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Spear of Chogoris",
-              "Skilled Riders",
-              "Oath of Moment"
+              "Skilled Riders"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Oath of Moment"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -27300,13 +27338,12 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Assault Vehicle",
-              "Oath of Moment",
-              "Templar Vows"
+              "Assault Vehicle"
             ],
             "rule_names": [
               "Deadly Demise D3",
-              "Firing Deck 6"
+              "Firing Deck 6",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -27560,12 +27597,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Aquilon Optics",
-              "Oath of Moment",
-              "Templar Vows"
+              "Aquilon Optics"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -27756,12 +27792,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Ferocious Assault",
-              "Oath of Moment",
-              "Priority Target Acquisition",
-              "Templar Vows"
+              "Priority Target Acquisition"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -27918,12 +27953,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Rotating Death",
-              "Oath of Moment",
-              "Reaping Tally",
-              "Templar Vows"
+              "Reaping Tally"
             ],
             "rule_names": [
-              "Deadly Demise D3"
+              "Deadly Demise D3",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -28098,12 +28132,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Executioner",
-              "Oath of Moment",
-              "Interception Strike",
-              "Templar Vows"
+              "Interception Strike"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -28375,12 +28408,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Emergency Combat Embarkation",
-              "Oath of Moment",
-              "Stabilised Disembarkation",
-              "Templar Vows"
+              "Stabilised Disembarkation"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -28595,12 +28627,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Litanies of the Devout",
-              "Temple Relics",
-              "Templar Vows"
+              "Temple Relics"
             ],
             "rule_names": [
               "Feel No Pain 5+",
-              "Leader"
+              "Leader",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -28640,12 +28672,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Litanies of the Devout",
-              "Temple Relics",
-              "Templar Vows"
+              "Temple Relics"
             ],
             "rule_names": [
               "Feel No Pain 5+",
-              "Leader"
+              "Leader",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -28767,11 +28799,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Vehement Aggression",
-              "Prioritised Eradication",
-              "Templar Vows"
+              "Prioritised Eradication"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -28915,11 +28947,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Crusade of Wrath",
-              "High Marshal",
-              "Templar Vows"
+              "High Marshal"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -29024,12 +29056,12 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Armour of Faith",
-              "Sigismund’s Heir",
-              "Templar Vows"
+              "Sigismund’s Heir"
             ],
             "rule_names": [
               "Leader",
-              "Lone Operative"
+              "Lone Operative",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -29135,11 +29167,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Inspirational Exemplar",
-              "Pious Fervour",
-              "Templar Vows"
+              "Pious Fervour"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -29255,10 +29287,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Exploit Their Cowardice",
+              "Exploit Their Cowardice"
+            ],
+            "rule_names": [
               "Templar Vows"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Black Templars",
@@ -29480,10 +29513,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Righteous Zeal",
+              "Righteous Zeal"
+            ],
+            "rule_names": [
               "Templar Vows"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -29512,10 +29546,11 @@
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
             "unit_ability_names": [
-              "Righteous Zeal",
+              "Righteous Zeal"
+            ],
+            "rule_names": [
               "Templar Vows"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Battleline",
@@ -29753,11 +29788,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Remorseless Persecution",
-              "Condemnatory Annihilation",
-              "Templar Vows"
+              "Condemnatory Annihilation"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -29886,11 +29921,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Vengeful Exhortation",
-              "Martial Honour",
-              "Templar Vows"
+              "Martial Honour"
             ],
             "rule_names": [
-              "Leader"
+              "Leader",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -29970,11 +30005,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Sternguard Focus",
-              "Oath of Moment",
-              "Virtuous Onslaught",
+              "Virtuous Onslaught"
+            ],
+            "rule_names": [
               "Templar Vows"
             ],
-            "rule_names": [],
             "keyword_names": [
               "Adeptus Astartes",
               "Black Templars",
@@ -30243,12 +30278,11 @@
             "unit_ability_names": [
               "Teleport Homer",
               "Fury of the First",
-              "Oath of Moment",
-              "Judgement of the Weak",
-              "Templar Vows"
+              "Judgement of the Weak"
             ],
             "rule_names": [
-              "Deep Strike"
+              "Deep Strike",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
@@ -30463,12 +30497,11 @@
             "leader_restrictions": null,
             "unit_ability_names": [
               "Assault Ramp",
-              "Oath of Moment",
-              "Legacy of Jerulas",
-              "Templar Vows"
+              "Legacy of Jerulas"
             ],
             "rule_names": [
-              "Deadly Demise D6"
+              "Deadly Demise D6",
+              "Templar Vows"
             ],
             "keyword_names": [
               "Adeptus Astartes",
