@@ -918,6 +918,17 @@
     .list-item.ghost .list-item-name { color:#cc2200; text-decoration:line-through; }
     .ghost-tag { color:#cc2200; font-size:0.66rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-left:0.4rem; }
     .list-item-pts.ghost-pts { color:#cc2200; text-decoration:line-through; }
+
+    /* loadout options + counts */
+    .lo-scope-label { font-size:0.7rem; font-weight:700; color:#cc9900; text-transform:uppercase; letter-spacing:0.06em; margin:0.2rem 0 0.5rem; }
+    .lo-stepper { display:flex; align-items:center; gap:0.5rem; margin:0.3rem 0 0.9rem; }
+    .lo-step-btn { width:26px; height:26px; border:1px solid #3a3a3a; background:#1a1a1a; color:#e0e0e0; font-size:1rem; line-height:1; border-radius:4px; cursor:pointer; }
+    .lo-step-btn:hover { border-color:#cc9900; }
+    .lo-step-val { min-width:1.4rem; text-align:center; font-weight:700; font-size:0.95rem; }
+    .lo-step-lbl { font-size:0.82rem; color:#ccc; }
+    .lo-step-max { color:#777; font-size:0.72rem; }
+    .lo-makeup { font-size:0.85rem; color:#ddd; padding:0.2rem 0 0.4rem; }
+    .lo-wcount { color:#cc9900; font-weight:700; margin-left:0.35rem; }
   </style>
 </head>
 <body>
@@ -1315,7 +1326,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.17';
+  const VERSION = '5.18';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1379,6 +1390,7 @@
       const leaderEligible = mg && mg.leader_eligible_units  ? mg.leader_eligible_units  : [];
       const coLeaderWith   = mg && mg.co_leader_eligible_with ? mg.co_leader_eligible_with : [];
       return {
+        unit_id:       unit.unit_id,
         unit_name:     unit.unit_name,
         unit_type:     unit.unit_type,
         sizes,
@@ -1456,7 +1468,7 @@
 
   async function init() {
     try {
-      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes, glossaryRes] = await Promise.all([
+      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes, glossaryRes, loadoutsRes] = await Promise.all([
         fetch(`units.json?v=${VERSION}`),
         fetch(`abilities.json?v=${VERSION}`),
         fetch(`rules.json?v=${VERSION}`),
@@ -1464,6 +1476,7 @@
         fetch(`weapon_abilities.json?v=${VERSION}`),
         fetch(`faction_taxonomy.json?v=${VERSION}`),
         fetch(`core_glossary.json?v=${VERSION}`),
+        fetch(`unit_loadouts.json?v=${VERSION}`),
       ]);
 
       if (!unitsRes.ok) throw new Error('Failed to load unit data');
@@ -1494,6 +1507,10 @@
         [...(g.weapon_abilities || []), ...(g.core_abilities || [])].forEach(e => {
           coreGlossaryLookup[e.name] = e.description;
         });
+      }
+      if (loadoutsRes.ok) {
+        const l = await loadoutsRes.json();
+        for (const k of Object.keys(l)) if (k[0] !== '_') loadoutDefs[k] = l[k];
       }
 
       // Index units by army name for fast resolution.
@@ -1961,16 +1978,20 @@
       }
     }
 
-    // Wargear options
-    if (raw && ((raw.wargear_options && raw.wargear_options.length > 0) ||
-                (raw.bundled_swaps && raw.bundled_swaps.length > 0))) {
-      html += buildWargearHtml(entry, raw);
-    }
-
-    // Other options (and read-only grants surfaced by active bundle endpoints)
-    if (raw && ((raw.other_options && raw.other_options.length > 0) ||
-                activeBundleGrants(entry, raw).length > 0)) {
-      html += buildOtherOptionsHtml(entry, raw);
+    // Wargear options — loadout-defined units use the structured grouped UI;
+    // everything else uses the existing wargear/other-options rendering.
+    const loDef = loadoutFor(entry);
+    if (loDef) {
+      html += buildLoadoutHtml(entry, loDef);
+    } else {
+      if (raw && ((raw.wargear_options && raw.wargear_options.length > 0) ||
+                  (raw.bundled_swaps && raw.bundled_swaps.length > 0))) {
+        html += buildWargearHtml(entry, raw);
+      }
+      if (raw && ((raw.other_options && raw.other_options.length > 0) ||
+                  activeBundleGrants(entry, raw).length > 0)) {
+        html += buildOtherOptionsHtml(entry, raw);
+      }
     }
 
     // Points display
@@ -2185,6 +2206,171 @@
         || coreGlossaryLookup[name] || coreGlossaryLookup[baseAbilityName(name)] || '';
   }
 
+  // ── Structured loadout model: composition + options -> weapon counts ───────
+  let loadoutDefs = {};   // unit_id -> definition
+
+  function loMaxCount(opt, size) {
+    if (opt.per_n_models) return Math.floor(size / opt.per_n_models) * (opt.max_per_n || 1);
+    return opt.max_total != null ? opt.max_total : 0;
+  }
+  function loGroupCounts(def, size) {
+    let fixed = 0;
+    for (const g of def.model_groups) if (g.count.fixed != null) fixed += g.count.fixed;
+    const c = {};
+    for (const g of def.model_groups) c[g.name] = g.count.fixed != null ? g.count.fixed : Math.max(0, size - fixed);
+    return c;
+  }
+  function loadoutFor(entry) {
+    const u = allUnits.find(x => x.unit_name === entry.unit_name);
+    return (u && u.unit_id && loadoutDefs[u.unit_id]) || null;
+  }
+  function loadoutSize(entry, def) {
+    const u = allUnits.find(x => x.unit_name === entry.unit_name);
+    const s = u && u.sizes[entry.sizeIdx];
+    return s ? s.size : (def.size_brackets ? def.size_brackets[0] : 0);
+  }
+  function loadoutSelections(entry, def) {
+    const choiceById = {}, countById = {}, addById = {};
+    for (const o of def.options) {
+      const v = entry.wargear[o.id];
+      if (o.type === 'choice') choiceById[o.id] = v || null;
+      else if (o.type === 'count') countById[o.id] = (v && typeof v === 'object') ? v : (Number(v) || 0);
+      else if (o.type === 'add') addById[o.id] = Number(v) || 0;
+    }
+    return { choiceById, countById, addById };
+  }
+  // Verified rollup engine (see loadout_rollup.js / engine tests).
+  function loRollup(def, size, sel) {
+    const choiceBy = sel.choiceById || {}, countBy = sel.countById || {}, addBy = sel.addById || {};
+    const counts = loGroupCounts(def, size);
+    const byScope = {};
+    for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
+    const weapons = new Map(), equipment = new Map();
+    const add = (m, name, n) => { if (n > 0) m.set(name, (m.get(name) || 0) + n); };
+    let overAllocated = false;
+    for (const g of def.model_groups) {
+      const n = counts[g.name];
+      const opts = byScope[g.name] || [];
+      if (g.count.fixed === 1) {
+        const replaced = {};
+        for (const o of opts) if (o.type === 'choice') { const p = choiceBy[o.id]; if (p) replaced[o.replaces] = p; }
+        for (const w of g.default_weapons) add(weapons, replaced[w] || w, 1);
+        continue;
+      }
+      const addOpts = opts.filter(o => o.type === 'add');
+      const countOpts = opts.filter(o => o.type === 'count');
+      let reserved = 0;
+      for (const o of addOpts) {
+        const want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
+        add(equipment, o.equipment, want);
+        if (o.blocks_swap) reserved += want;
+      }
+      const pool = Math.max(0, n - reserved);
+      const swappedByWeapon = {}, emit = [];
+      for (const o of countOpts) {
+        const cap = loMaxCount(o, size), selv = countBy[o.id];
+        if (o.replacement_choices) {
+          const tally = (selv && typeof selv === 'object') ? selv : {};
+          let used = 0;
+          for (const k of Object.keys(tally)) { const c = Math.max(0, tally[k] | 0); if (c > 0 && o.replacement_choices.includes(k)) { emit.push({ replacement: k, n: c }); used += c; } }
+          used = Math.min(used, cap);
+          swappedByWeapon[o.replaces] = (swappedByWeapon[o.replaces] || 0) + used;
+        } else {
+          const want = Math.max(0, Math.min((selv | 0), cap));
+          if (want > 0) { emit.push({ replacement: o.replacement, n: want }); swappedByWeapon[o.replaces] = (swappedByWeapon[o.replaces] || 0) + want; }
+        }
+      }
+      const totalSwapped = Object.keys(swappedByWeapon).reduce((s, k) => s + swappedByWeapon[k], 0);
+      if (totalSwapped > pool) overAllocated = true;
+      for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[w] || 0)));
+      for (const e of emit) add(weapons, e.replacement, e.n);
+    }
+    return { weapons, equipment, overAllocated };
+  }
+
+  // Unit Options UI for loadout-defined units.
+  function buildLoadoutHtml(entry, def) {
+    const size = loadoutSize(entry, def);
+    const byScope = {};
+    for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
+    let html = `<div class="detail-section-label" style="color:#666;margin-bottom:0.6rem;">Wargear Options</div>`;
+    for (const g of def.model_groups) {
+      const opts = byScope[g.name] || [];
+      if (!opts.length) continue;
+      html += `<div class="options-block"><div class="lo-scope-label">${g.name}</div>`;
+      for (const o of opts) {
+        if (o.type === 'choice') {
+          const cur = entry.wargear[o.id] || null;
+          html += `<div class="detail-section-label">${o.group}</div>`;
+          html += loChoiceRow(entry.listId, o.id, '', 'Keep ' + o.replaces, !cur);
+          for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c);
+        } else if (o.type === 'count') {
+          const cur = Math.min(Number(entry.wargear[o.id] || 0), loMaxCount(o, size));
+          const max = loMaxCount(o, size);
+          const label = o.replacement || o.group;
+          html += `<div class="detail-section-label">${o.group}</div>
+            <div class="lo-stepper">
+              <button class="lo-step-btn" onclick="editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})">&minus;</button>
+              <span class="lo-step-val">${cur}</span>
+              <button class="lo-step-btn" onclick="editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})">+</button>
+              <span class="lo-step-lbl">${label} <span class="lo-step-max">(max ${max})</span></span>
+            </div>`;
+        }
+      }
+      html += `</div>`;
+    }
+    return html;
+  }
+  function loChoiceRow(listId, optId, value, label, chosen) {
+    return `<div class="option-item radio${chosen ? ' chosen' : ''}" onclick="editLoadoutChoice(${listId},'${esc(optId)}','${esc(value)}')">
+      <div class="option-item-row"><div class="option-check">${chosen ? '\u25CF' : ''}</div>
+      <div class="option-item-name">${label}</div></div></div>`;
+  }
+  function editLoadoutChoice(listId, optId, value) {
+    const e = armyList.find(x => x.listId === listId); if (!e) return;
+    e.wargear[optId] = value || null;
+    renderAll();
+  }
+  function editLoadoutCount(listId, optId, delta, max) {
+    const e = armyList.find(x => x.listId === listId); if (!e) return;
+    const cur = Number(e.wargear[optId] || 0);
+    e.wargear[optId] = Math.max(0, Math.min(cur + delta, max));
+    renderAll();
+  }
+
+  // Popup: model make-up + weapon counts for loadout-defined units.
+  function loadoutWeaponHtml(entry, def, raw) {
+    const size = loadoutSize(entry, def);
+    const roll = loRollup(def, size, loadoutSelections(entry, def));
+    const counts = loGroupCounts(def, size);
+    const makeup = def.model_groups.map(g => `${g.name} \u00d7${counts[g.name]}`).join(', ');
+    let html = `<div class="weapon-section"><div class="weapon-section-label">Model make-up</div>
+      <div class="lo-makeup">${makeup}</div></div>`;
+    if (roll.overAllocated) html += `<div class="over-limit-flag">\u26a0 Too many weapon swaps for this unit size</div>`;
+    const cmap = {};
+    for (const kv of roll.weapons.entries()) cmap[kv[0].toLowerCase()] = kv[1];
+    html += loWeaponTable('Ranged Weapons', raw.weapons.filter(w => w.weapon_type === 'Ranged'), cmap);
+    html += loWeaponTable('Melee Weapons', raw.weapons.filter(w => w.weapon_type === 'Melee'), cmap);
+    if (roll.equipment.size) {
+      const items = [...roll.equipment.entries()].map(kv => `${kv[0]} \u00d7${kv[1]}`).join(', ');
+      html += `<div class="weapon-section"><div class="weapon-section-label">Other wargear</div><div class="lo-makeup">${items}</div></div>`;
+    }
+    return html;
+  }
+  function loWeaponTable(label, weapons, cmap) {
+    const rows = weapons.map(w => ({ w, n: cmap[weaponBase(w.weapon_name)] || 0 })).filter(x => x.n > 0);
+    if (!rows.length) return '';
+    let html = `<div class="weapon-section"><div class="weapon-section-label">${label}</div>
+      <table class="weapon-table"><thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>BS/WS</th><th>S</th><th>AP</th><th>D</th><th>Abilities</th></tr></thead><tbody>`;
+    for (const r of rows) {
+      const w = r.w;
+      const bsws = w.BS || w.WS || '\u2014';
+      const ab = (w.weapon_ability_names && w.weapon_ability_names.length) ? w.weapon_ability_names.join(', ') : '\u2014';
+      html += `<tr><td class="weapon-name-cell">${w.weapon_name} <span class="lo-wcount">\u00d7${r.n}</span></td><td>${w.range}</td><td>${w.A}</td><td>${bsws}</td><td>${w.S}</td><td>${w.AP}</td><td>${w.D}</td><td class="weapon-abilities-cell">${ab}</td></tr>`;
+    }
+    return html + `</tbody></table></div>`;
+  }
+
   function buildModalFull(raw) {
     let html = '';
 
@@ -2361,10 +2547,15 @@
       html += buildStatTable(mg, overrides);
       html += `</div>`;
 
-      // Weapons for this model group — configured view
-      const mgWeapons = raw.weapons.filter(w => w.model_group === mg.model_group);
-      html += buildWeaponSections(mgWeapons, 'configured', { activeBases, replacedBases, bundleAddBases, hasWargear }, raw, entry);
+      // Weapons for this model group — configured view (skipped for loadout units,
+      // which render rollup-based weapon counts once, below).
+      if (!loadoutFor(entry)) {
+        const mgWeapons = raw.weapons.filter(w => w.model_group === mg.model_group);
+        html += buildWeaponSections(mgWeapons, 'configured', { activeBases, replacedBases, bundleAddBases, hasWargear }, raw, entry);
+      }
     }
+    const cfgLoDef = loadoutFor(entry);
+    if (cfgLoDef) html += loadoutWeaponHtml(entry, cfgLoDef, raw);
 
     // Abilities
     const allAbilityNames = [];

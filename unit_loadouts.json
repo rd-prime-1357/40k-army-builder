@@ -1,0 +1,188 @@
+{
+  "_schema": "Structured composition + weapon options per unit. Keyed 'Army|Unit'. model_groups define fixed/fill-to-size counts and each group's default weapons; options define swaps scoped to a model group as either a 1-for-1 'choice' or a size-scaled 'count'. Weapon counts roll up from group counts x default weapons, minus/plus applied swaps. Hand-authored for the Intercessor slice; a prose parser will populate this file for the wider roster later.",
+  "000001157": {
+    "size_brackets": [
+      5,
+      10
+    ],
+    "model_groups": [
+      {
+        "name": "Intercessor Sergeant",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Bolt rifle",
+          "Close combat weapon"
+        ]
+      },
+      {
+        "name": "Intercessor",
+        "count": {
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Bolt rifle",
+          "Close combat weapon"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "sgt_ranged",
+        "scope": "Intercessor Sergeant",
+        "group": "Ranged Weapon",
+        "type": "choice",
+        "replaces": "Bolt rifle",
+        "choices": [
+          "Astartes chainsword",
+          "Hand flamer",
+          "Plasma pistol",
+          "Power weapon"
+        ]
+      },
+      {
+        "id": "sgt_melee",
+        "scope": "Intercessor Sergeant",
+        "group": "Melee Weapon",
+        "type": "choice",
+        "replaces": "Close combat weapon",
+        "choices": [
+          "Astartes chainsword",
+          "Power fist",
+          "Power weapon",
+          "Thunder hammer"
+        ]
+      },
+      {
+        "id": "grenade_launcher",
+        "scope": "Intercessor",
+        "group": "Grenade Launcher",
+        "type": "count",
+        "replaces": "Bolt rifle",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 5,
+        "max_per_n": 1
+      }
+    ]
+  },
+  "000003584": {
+    "size_brackets": [
+      5,
+      7,
+      10
+    ],
+    "model_groups": [
+      {
+        "name": "Plague Champion",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Boltgun",
+          "Plague knives"
+        ]
+      },
+      {
+        "name": "Plague Marine",
+        "count": {
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Boltgun",
+          "Plague knives"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "champ_ranged",
+        "scope": "Plague Champion",
+        "group": "Ranged Weapon",
+        "type": "choice",
+        "replaces": "Boltgun",
+        "choices": [
+          "Bolt pistol",
+          "Plasma gun",
+          "Plasma pistol"
+        ]
+      },
+      {
+        "id": "champ_melee",
+        "scope": "Plague Champion",
+        "group": "Melee Weapon",
+        "type": "choice",
+        "replaces": "Plague knives",
+        "choices": [
+          "Bubotic weapons",
+          "Power fist"
+        ]
+      },
+      {
+        "id": "blight",
+        "scope": "Plague Marine",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun",
+        "replacement": "Blight launcher",
+        "per_n_models": 5,
+        "max_per_n": 1
+      },
+      {
+        "id": "spewer",
+        "scope": "Plague Marine",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun",
+        "replacement": "Plague spewer",
+        "per_n_models": 5,
+        "max_per_n": 1
+      },
+      {
+        "id": "special5",
+        "scope": "Plague Marine",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun",
+        "replacement_choices": [
+          "Meltagun",
+          "Plague belcher",
+          "Plasma gun"
+        ],
+        "per_n_models": 5,
+        "max_per_n": 1
+      },
+      {
+        "id": "bubotic",
+        "scope": "Plague Marine",
+        "group": "Melee Weapon",
+        "type": "count",
+        "replaces": "Boltgun",
+        "replacement": "Bubotic weapons",
+        "per_n_models": 5,
+        "max_per_n": 2
+      },
+      {
+        "id": "heavy",
+        "scope": "Plague Marine",
+        "group": "Melee Weapon",
+        "type": "count",
+        "replaces": "Boltgun",
+        "replacement": "Heavy plague weapon",
+        "per_n_models": 5,
+        "max_per_n": 2
+      },
+      {
+        "id": "icon",
+        "scope": "Plague Marine",
+        "group": "Icon",
+        "type": "add",
+        "equipment": "Icon of despair",
+        "max_total": 1,
+        "blocks_swap": true
+      }
+    ]
+  }
+}
