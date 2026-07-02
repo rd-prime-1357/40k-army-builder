@@ -929,6 +929,8 @@
     .lo-step-max { color:#777; font-size:0.72rem; }
     .lo-makeup { font-size:0.85rem; color:#ddd; padding:0.2rem 0 0.4rem; }
     .lo-wcount { color:#cc9900; font-weight:700; margin-left:0.35rem; }
+    .lo-pool { font-size:0.75rem; color:#999; margin:0.2rem 0 0.6rem; }
+    .lo-pool.over { color:#cc2200; font-weight:700; }
   </style>
 </head>
 <body>
@@ -1326,7 +1328,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.18';
+  const VERSION = '5.20';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2248,6 +2250,7 @@
     const weapons = new Map(), equipment = new Map();
     const add = (m, name, n) => { if (n > 0) m.set(name, (m.get(name) || 0) + n); };
     let overAllocated = false;
+    const poolsOut = {};
     for (const g of def.model_groups) {
       const n = counts[g.name];
       const opts = byScope[g.name] || [];
@@ -2262,7 +2265,8 @@
       let reserved = 0;
       for (const o of addOpts) {
         const want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
-        add(equipment, o.equipment, want);
+        if (o.adds_weapon) add(weapons, o.adds_weapon, want);
+        else if (o.equipment) add(equipment, o.equipment, want);
         if (o.blocks_swap) reserved += want;
       }
       const pool = Math.max(0, n - reserved);
@@ -2282,15 +2286,17 @@
       }
       const totalSwapped = Object.keys(swappedByWeapon).reduce((s, k) => s + swappedByWeapon[k], 0);
       if (totalSwapped > pool) overAllocated = true;
+      poolsOut[g.name] = { pool, used: totalSwapped };
       for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[w] || 0)));
       for (const e of emit) add(weapons, e.replacement, e.n);
     }
-    return { weapons, equipment, overAllocated };
+    return { weapons, equipment, overAllocated, pools: poolsOut };
   }
 
   // Unit Options UI for loadout-defined units.
   function buildLoadoutHtml(entry, def) {
     const size = loadoutSize(entry, def);
+    const roll = loRollup(def, size, loadoutSelections(entry, def));
     const byScope = {};
     for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
     let html = `<div class="detail-section-label" style="color:#666;margin-bottom:0.6rem;">Wargear Options</div>`;
@@ -2298,28 +2304,79 @@
       const opts = byScope[g.name] || [];
       if (!opts.length) continue;
       html += `<div class="options-block"><div class="lo-scope-label">${g.name}</div>`;
+      // Shared-pool status for body groups that have swap/add options.
+      const p = roll.pools && roll.pools[g.name];
+      const hasSwaps = opts.some(o => o.type === 'count');
+      if (p && hasSwaps) {
+        const over = p.used > p.pool;
+        html += `<div class="lo-pool${over ? ' over' : ''}">Special weapons: ${p.used} of ${p.pool} models${over ? ' — too many for this unit' : ''}</div>`;
+      }
       for (const o of opts) {
         if (o.type === 'choice') {
           const cur = entry.wargear[o.id] || null;
           html += `<div class="detail-section-label">${o.group}</div>`;
           html += loChoiceRow(entry.listId, o.id, '', 'Keep ' + o.replaces, !cur);
           for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c);
-        } else if (o.type === 'count') {
-          const cur = Math.min(Number(entry.wargear[o.id] || 0), loMaxCount(o, size));
+        } else if (o.type === 'count' && o.replacement_choices) {
           const max = loMaxCount(o, size);
-          const label = o.replacement || o.group;
-          html += `<div class="detail-section-label">${o.group}</div>
-            <div class="lo-stepper">
-              <button class="lo-step-btn" onclick="editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})">&minus;</button>
-              <span class="lo-step-val">${cur}</span>
-              <button class="lo-step-btn" onclick="editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})">+</button>
-              <span class="lo-step-lbl">${label} <span class="lo-step-max">(max ${max})</span></span>
-            </div>`;
+          const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
+          const sum = Object.keys(tally).reduce((a, k) => a + (Number(tally[k]) || 0), 0);
+          html += `<div class="detail-section-label">${o.group} <span class="lo-step-max">(up to ${max})</span></div>`;
+          for (const c of o.replacement_choices) {
+            const cur = Number(tally[c] || 0);
+            html += loStepper(`editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',-1,${max})`,
+                              `editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',1,${max})`, cur, c, '');
+          }
+        } else if (o.type === 'count') {
+          const max = loMaxCount(o, size);
+          const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
+          html += `<div class="detail-section-label">${o.group}</div>`;
+          html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
+                            `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, (o.replacement || o.group), `(max ${max})`);
+        } else if (o.type === 'add') {
+          const max = loMaxCount(o, size);
+          const label = o.adds_weapon || o.equipment || o.group;
+          if (o.max_total === 1 && !o.per_n_models) {
+            const on = Number(entry.wargear[o.id] || 0) > 0;
+            html += `<div class="detail-section-label">${o.group}</div>
+              <div class="option-item radio${on ? ' chosen' : ''}" onclick="editLoadoutAdd(${entry.listId},'${esc(o.id)}')">
+                <div class="option-item-row"><div class="option-check">${on ? '\u25CF' : ''}</div>
+                <div class="option-item-name">${label}</div></div></div>`;
+          } else {
+            const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
+            html += `<div class="detail-section-label">${o.group}</div>`;
+            html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
+                              `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, label, `(max ${max})`);
+          }
         }
       }
       html += `</div>`;
     }
     return html;
+  }
+  function loStepper(minusCall, plusCall, cur, label, sub) {
+    return `<div class="lo-stepper">
+      <button class="lo-step-btn" onclick="${minusCall}">\u2212</button>
+      <span class="lo-step-val">${cur}</span>
+      <button class="lo-step-btn" onclick="${plusCall}">+</button>
+      <span class="lo-step-lbl">${label} <span class="lo-step-max">${sub}</span></span>
+    </div>`;
+  }
+  function editLoadoutChoiceCount(listId, optId, choice, delta, groupMax) {
+    const e = armyList.find(x => x.listId === listId); if (!e) return;
+    let t = (e.wargear[optId] && typeof e.wargear[optId] === 'object') ? e.wargear[optId] : {};
+    const sum = Object.keys(t).reduce((a, k) => a + (Number(t[k]) || 0), 0);
+    const cur = Number(t[choice] || 0);
+    if (delta > 0 && sum >= groupMax) return;      // group cap is a firm rule
+    t = Object.assign({}, t); t[choice] = Math.max(0, cur + delta);
+    if (t[choice] === 0) delete t[choice];
+    e.wargear[optId] = t;
+    renderAll();
+  }
+  function editLoadoutAdd(listId, optId) {
+    const e = armyList.find(x => x.listId === listId); if (!e) return;
+    e.wargear[optId] = Number(e.wargear[optId] || 0) > 0 ? 0 : 1;
+    renderAll();
   }
   function loChoiceRow(listId, optId, value, label, chosen) {
     return `<div class="option-item radio${chosen ? ' chosen' : ''}" onclick="editLoadoutChoice(${listId},'${esc(optId)}','${esc(value)}')">

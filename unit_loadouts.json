@@ -60,15 +60,14 @@
         "id": "grenade_launcher",
         "scope": "Intercessor",
         "group": "Grenade Launcher",
-        "type": "count",
-        "replaces": "Bolt rifle",
-        "replacement": "Astartes grenade launcher",
+        "type": "add",
+        "adds_weapon": "Astartes grenade launcher",
         "per_n_models": 5,
         "max_per_n": 1
       }
     ]
   },
-  "000003584": {
+  "000001044": {
     "size_brackets": [
       5,
       7,

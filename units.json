@@ -36441,5 +36441,5175 @@
         "abilities": []
       }
     ]
+  },
+  {
+    "army": "Death Guard",
+    "units": [
+      {
+        "unit_id": "000001044",
+        "unit_name": "Plague Marines",
+        "unit_type": "Battleline",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": "6+",
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Infused with the Blessings of Nurgle"
+            ],
+            "rule_names": [
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Battleline",
+              "Chaos",
+              "Death Guard",
+              "Grenades",
+              "Infantry",
+              "Nurgle",
+              "Plague Marines"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blight launcher",
+            "range": "24\"",
+            "A": "D3",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Blast",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Boltgun",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Meltagun",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plague belcher",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plague spewer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – standard",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – supercharge",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bubotic weapons",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Heavy plague weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Plague knives",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Bolt pistol",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "plasma gun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "plasma pistol",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Plague knives",
+            "replacement_weapon_name": "Bubotic weapons",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Plague knives",
+            "replacement_weapon_name": "Power fist",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Blight launcher",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Plague spewer",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Meltagun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "E"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Plague belcher",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "E"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "plasma gun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "E"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Bubotic weapons",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Heavy plague weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
+            },
+            {
+              "size": 7,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 125
+            },
+            {
+              "size": 10,
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001046",
+        "unit_name": "Helbrute",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 9,
+            "SV": "2+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 8,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Diseased Malice",
+              "Froth-spattered Frenzy"
+            ],
+            "rule_names": [
+              "Deadly Demise 1",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Death Guard",
+              "Helbrute",
+              "Nurgle",
+              "Vehicle",
+              "Walker"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy flamer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Missile launcher – frag",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Missile launcher – krak",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Multi-melta",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma cannon",
+            "range": "36\"",
+            "A": "D3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Blast",
+              "Hazardous",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin autocannon",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [
+              "Twin-Linked",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Sustained Hits 1",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Helbrute fist",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 12,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Helbrute hammer",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 14,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power scourge",
+            "range": "Melee",
+            "A": "8",
+            "BS": null,
+            "WS": "3",
+            "S": 7,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Multi-melta",
+            "replacement_weapon_name": "Plasma cannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Multi-melta",
+            "replacement_weapon_name": "Twin autocannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Multi-melta",
+            "replacement_weapon_name": "Twin lascannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Multi-melta",
+            "replacement_weapon_name": "Twin heavy bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Multi-melta",
+            "replacement_weapon_name": "additional Helbrute fist",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Helbrute fists",
+            "replacement_weapon_name": "missile launcher",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Helbrute fists",
+            "replacement_weapon_name": "Helbrute hammer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Helbrute fists",
+            "replacement_weapon_name": "Power scourge",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "D"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Heavy flamer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "D"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001047",
+        "unit_name": "Chaos Rhino",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 9,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": "6+",
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Fire Support"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Firing Deck 2",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Death Guard",
+              "Dedicated Transport",
+              "Nurgle",
+              "Rhino",
+              "Smoke",
+              "Transport",
+              "Vehicle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc launcher",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "additional combi-bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001048",
+        "unit_name": "Chaos Spawn",
+        "unit_type": "Beast",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 7,
+            "SV": "4+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": "5+",
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "7+",
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Lethal Ichor"
+            ],
+            "rule_names": [
+              "Deadly Demise 1",
+              "Feel No Pain 5+",
+              "Scouts 6\"",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Beast",
+              "Chaos",
+              "Chaos Spawn",
+              "Death Guard",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hideous mutations",
+            "range": "Melee",
+            "A": "D6+2",
+            "BS": null,
+            "WS": "4",
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 2,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001049",
+        "unit_name": "Chaos Land Raider",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 12,
+            "SV": "2+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 16,
+            "LD": "6+",
+            "OC": 5,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Assault Ramp"
+            ],
+            "rule_names": [
+              "Deadly Demise D6",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Death Guard",
+              "Land Raider",
+              "Nurgle",
+              "Smoke",
+              "Transport",
+              "Vehicle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc launcher",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Soulshatter lascannon",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Sustained Hits 1",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "4",
+            "S": 8,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Havoc launcher",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 220,
+              "second_unit": 220,
+              "third_plus": 240
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001050",
+        "unit_name": "Chaos Predator Annihilator",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 10,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 11,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Metalophagic Infection"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Death Guard",
+              "Nurgle",
+              "Predator Annihilator",
+              "Smoke",
+              "Vehicle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc launcher",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Predator twin lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 14,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "lascannons",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "heavy bolters",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Havoc launcher",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 135,
+              "second_unit": 135,
+              "third_plus": 145
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001052",
+        "unit_name": "Daemon Prince of Nurgle",
+        "unit_type": "Monster",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 12,
+            "SV": "2+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Death Guard Defenders",
+              "Fevered Strategist",
+              "Miasma of Pestilence (Aura)"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Daemon",
+              "Daemon Prince",
+              "Death Guard",
+              "Monster",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Infernal cannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "2",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hellforged weapons – strike",
+            "range": "Melee",
+            "A": "7",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hellforged weapons – sweep",
+            "range": "Melee",
+            "A": "14",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000001053",
+        "unit_name": "Typhus",
+        "unit_type": "Epic Hero",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 7,
+            "SV": "2+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 6,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Blightlord Terminators",
+              "Deathshroud Terminators",
+              "Poxwalkers"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "The Destroyer Hive",
+              "Eater Plague (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Epic Hero",
+              "Infantry",
+              "Nurgle",
+              "Psyker",
+              "Terminator",
+              "Typhus"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Lakrimae – strike",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 9,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Lakrimae – sweep",
+            "range": "Melee",
+            "A": "12",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001054",
+        "unit_name": "Lord of Contagion",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 7,
+            "SV": "2+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 6,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Blightlord Terminators",
+              "Deathshroud Terminators"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Vector of Disease",
+              "Unholy Resilience"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Grenades",
+              "Infantry",
+              "Lord of Contagion",
+              "Nurgle",
+              "Terminator"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Manreaper – strike",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 9,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Manreaper – sweep",
+            "range": "Melee",
+            "A": "10",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000001055",
+        "unit_name": "Malignant Plaguecaster",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Plague Marines",
+              "Poxwalkers"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Gift of Contagion (Psychic)",
+              "Pestilent Fallout (Psychic)"
+            ],
+            "rule_names": [
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Infantry",
+              "Malignant Plaguecaster",
+              "Nurgle",
+              "Psyker"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plague Wind – witchfire",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 4,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Psychic",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plague Wind – focused witchfire",
+            "range": "12\"",
+            "A": "D6+3",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -2,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Psychic",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Corrupted staff",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001056",
+        "unit_name": "Poxwalkers",
+        "unit_type": "Infantry",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 4,
+            "SV": "7+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": "5+",
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": "8+",
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Curse of the Walking Pox"
+            ],
+            "rule_names": [
+              "Infiltrators",
+              "Feel No Pain 5+",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Death Guard",
+              "Infantry",
+              "Nurgle",
+              "Poxwalkers"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Improvised weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "5",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
+            },
+            {
+              "size": 20,
+              "first_unit": 130,
+              "second_unit": 130,
+              "third_plus": 130
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001057",
+        "unit_name": "Foetid Bloat-drone",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 9,
+            "SV": "3+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Hovering Death"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Death Guard",
+              "Fly",
+              "Foetid Bloat-drone",
+              "Nurgle",
+              "Vehicle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plaguespitter",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Fleshmower",
+            "range": "Melee",
+            "A": "10",
+            "BS": null,
+            "WS": "3",
+            "S": 7,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Plague probe",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000001058",
+        "unit_name": "Noxious Blightbringer",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Plague Marines",
+              "Poxwalkers"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Sickening Vitality",
+              "Tocsin of Misery (Aura)"
+            ],
+            "rule_names": [
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Infantry",
+              "Noxious Blightbringer",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Pistol",
+              "Hazardous"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Cursed plague bell",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Psyker 2+",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001367",
+        "unit_name": "Foul Blightspawn",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Plague Marines"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Blinding Spray",
+              "Putrefying Stink"
+            ],
+            "rule_names": [
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Foul Blightspawn",
+              "Grenades",
+              "Infantry",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plague sprayer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001368",
+        "unit_name": "Biologus Putrifier",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Plague Marines"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Foul Infusion",
+              "Extraction of Fresh Disease"
+            ],
+            "rule_names": [
+              "Deadly Demise 1",
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Biologus Putrifier",
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Grenades",
+              "Infantry",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hyper blight grenades",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Assault",
+              "Blast",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Injector pistol",
+            "range": "3\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Pistol",
+              "Precision"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Plague knives",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001369",
+        "unit_name": "Plague Surgeon",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Plague Marines"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Tainted Narthecium",
+              "Inflamed Infections"
+            ],
+            "rule_names": [
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Infantry",
+              "Nurgle",
+              "Plague Surgeon"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Balesword",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 50,
+              "second_unit": 50,
+              "third_plus": 50
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001370",
+        "unit_name": "Tallyman",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Plague Marines"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Malicious Calculations",
+              "Sevenfold Chant"
+            ],
+            "rule_names": [
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Infantry",
+              "Nurgle",
+              "Tallyman"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001371",
+        "unit_name": "Deathshroud Terminators",
+        "unit_type": "Infantry",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 7,
+            "SV": "2+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Silent Bodyguard",
+              "Death Approaches"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Death Guard",
+              "Deathshroud Terminators",
+              "Infantry",
+              "Nurgle",
+              "Terminator"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plaguespurt gauntlet",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Ignores Cover",
+              "Pistol",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Manreaper – strike",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Manreaper – sweep",
+            "range": "Melee",
+            "A": "8",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "additional plaguespurt gauntlet",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "icon of despair",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 170
+            },
+            {
+              "size": 6,
+              "first_unit": 320,
+              "second_unit": 320,
+              "third_plus": 330
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001372",
+        "unit_name": "Blightlord Terminators",
+        "unit_type": "Infantry",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 7,
+            "SV": "2+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 3,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Blistering Fusillade"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Blightlord Terminators",
+              "Chaos",
+              "Death Guard",
+              "Infantry",
+              "Nurgle",
+              "Terminator"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blight launcher",
+            "range": "24\"",
+            "A": "D3",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Blast",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plague spewer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Reaper autocannon",
+            "range": "36\"",
+            "A": "4",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bubotic blade",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Flail of corruption",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Combi-bolter",
+            "replacement_weapon_name": "Blight launcher",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Combi-bolter",
+            "replacement_weapon_name": "Reaper autocannon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Combi-bolter",
+            "replacement_weapon_name": "Plague spewer",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 115,
+              "second_unit": 115,
+              "third_plus": 115
+            },
+            {
+              "size": 5,
+              "first_unit": 185,
+              "second_unit": 185,
+              "third_plus": 185
+            },
+            {
+              "size": 10,
+              "first_unit": 370,
+              "second_unit": 370,
+              "third_plus": 370
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001374",
+        "unit_name": "Myphitic Blight-hauler",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 9,
+            "SV": "3+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Tank Hunters"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Death Guard",
+              "Myphitic Blight-hauler",
+              "Nurgle",
+              "Smoke",
+              "Vehicle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bile spurt",
+            "range": "12\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Missile launcher – frag",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Missile launcher – krak",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Multi-melta",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Gnashing maw",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000001376",
+        "unit_name": "Plagueburst Crawler",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 10,
+            "SV": "2+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 12,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Spore-laced Shock Waves"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Death Guard",
+              "Nurgle",
+              "Plagueburst Crawler",
+              "Vehicle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Entropy cannon",
+            "range": "36\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy slugger",
+            "range": "36\"",
+            "A": "4",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plagueburst mortar",
+            "range": "48\"",
+            "A": "D6+3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Blast",
+              "Indirect Fire",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plaguespitter",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Rothail volley gun",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Rapid Fire 3"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Heavy slugger",
+            "replacement_weapon_name": "Rothail volley gun",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 185,
+              "second_unit": 210,
+              "third_plus": 210
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001377",
+        "unit_name": "Mortarion",
+        "unit_type": "Epic Hero",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 12,
+            "SV": "2+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": "5+",
+            "FNP_Condition": null,
+            "W": 16,
+            "LD": "5+",
+            "OC": 6,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Lord of the Death Guard",
+              "Host of Plagues"
+            ],
+            "rule_names": [
+              "Deadly Demise D6",
+              "Deep Strike",
+              "Feel No Pain 5+",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Daemon",
+              "Death Guard",
+              "Epic Hero",
+              "Fly",
+              "Grenades",
+              "Monster",
+              "Mortarion",
+              "Nurgle",
+              "Primarch",
+              "Psyker"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Lantern",
+            "range": "24\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 10,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Pistol",
+              "Sustained Hits D3"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Rotwind",
+            "range": "24\"",
+            "A": "D6+3",
+            "BS": "2",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast",
+              "Devastating Wounds",
+              "Lethal Hits",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Silence – strike",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 14,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Silence – sweep",
+            "range": "Melee",
+            "A": "15",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 400,
+              "second_unit": 400,
+              "third_plus": 400
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000002460",
+        "unit_name": "Lord of Virulence",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 7,
+            "SV": "2+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 6,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Blightlord Terminators",
+              "Deathshroud Terminators"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Virulent Aura",
+              "Blight Bombardment"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Infantry",
+              "Lord of Virulence",
+              "Nurgle",
+              "Terminator"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin plague spewer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Ignores Cover",
+              "Torrent",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000002461",
+        "unit_name": "Chaos Predator Destructor",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 10,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 11,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Hail of Corrosive Disease"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Death Guard",
+              "Nurgle",
+              "Predator Destructor",
+              "Smoke",
+              "Vehicle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc launcher",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Predator autocannon",
+            "range": "48\"",
+            "A": "4",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "heavy bolters",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "lascannons",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Havoc launcher",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 145,
+              "second_unit": 145,
+              "third_plus": 155
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000002462",
+        "unit_name": "Miasmic Malignifier",
+        "unit_type": "Fortification",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "-",
+            "T": 10,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 12,
+            "LD": "6+",
+            "OC": 0,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Putrescent Fog (Aura)",
+              "Diseased Cover",
+              "Fortification"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Death Guard",
+              "Fortification",
+              "Miasmic Malignifier",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Miasmic gouts",
+            "range": "9\"",
+            "A": "2D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 105
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000002749",
+        "unit_name": "Daemon Prince of Nurgle with Wings",
+        "unit_type": "Monster",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 11,
+            "SV": "2+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Horrifying Visage",
+              "Enfeebling Miasma (Aura)"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Deep Strike",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Daemon",
+              "Daemon Prince with Wings",
+              "Death Guard",
+              "Fly",
+              "Monster",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Infernal cannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "2",
+            "WS": null,
+            "S": 7,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hellforged weapons – strike",
+            "range": "Melee",
+            "A": "7",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hellforged weapons – sweep",
+            "range": "Melee",
+            "A": "14",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000002750",
+        "unit_name": "Icon Bearer",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "5+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Plague Marines"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Unclean Icon",
+              "Blessed Icon of Disease"
+            ],
+            "rule_names": [
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Grenades",
+              "Icon Bearer",
+              "Infantry",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Boltgun",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Plague knife",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 45,
+              "second_unit": 45,
+              "third_plus": 45
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004109",
+        "unit_name": "Lord of Poxes",
+        "unit_type": "Character",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 6,
+            "SV": "3+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": "6+",
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Plague Marines"
+            ],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Gift of Poxes",
+              "Shroud of Disease"
+            ],
+            "rule_names": [
+              "Leader",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Death Guard",
+              "Grenades",
+              "Infantry",
+              "Lord of Poxes",
+              "Nurgle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Great plague blade",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000004110",
+        "unit_name": "Foetid Bloat-drone with Heavy Blight Launcher",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 9,
+            "SV": "3+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": "6+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Explosive Blight"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Death Guard",
+              "Fly",
+              "Foetid Bloat-drone with Heavy Blight Launcher",
+              "Nurgle",
+              "Vehicle"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy blight launcher",
+            "range": "36\"",
+            "A": "D6+2",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Blast",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Plague probe",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000004111",
+        "unit_name": "Rotigus",
+        "unit_type": "Epic Hero",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 12,
+            "SV": "5+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": "6+",
+            "FNP_Condition": null,
+            "W": 22,
+            "LD": "6+",
+            "OC": 5,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Virulent Blessing (Psychic)",
+              "Deluge of Nurgle (Aura)"
+            ],
+            "rule_names": [
+              "Deadly Demise D6",
+              "Deep Strike",
+              "Feel No Pain 6+",
+              "Pact of Decay"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Daemon",
+              "Epic Hero",
+              "Monster",
+              "Nurgle",
+              "Plague Legions",
+              "Psyker",
+              "Rotigus",
+              "Summoned"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Streams of brackish filth",
+            "range": "12\"",
+            "A": "2D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 8,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Gnarlrod – strike",
+            "range": "Melee",
+            "A": "7",
+            "BS": null,
+            "WS": "2",
+            "S": 10,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Gnarlrod – sweep",
+            "range": "Melee",
+            "A": "14",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 280,
+              "second_unit": 280,
+              "third_plus": 280
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004112",
+        "unit_name": "Great Unclean One",
+        "unit_type": "Monster",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 12,
+            "SV": "5+",
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": "6+",
+            "FNP_Condition": null,
+            "W": 20,
+            "LD": "6+",
+            "OC": 5,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Daemon Lord of Nurgle (Aura)",
+              "Nurgle’s Rot (Psychic)"
+            ],
+            "rule_names": [
+              "Deadly Demise D6",
+              "Deep Strike",
+              "Feel No Pain 6+",
+              "Pact of Decay"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Daemon",
+              "Great Unclean One",
+              "Monster",
+              "Nurgle",
+              "Plague Legions",
+              "Psyker",
+              "Summoned"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plague flail",
+            "range": "6\"",
+            "A": "D6+1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Putrid vomit",
+            "range": "12\"",
+            "A": "D6+3",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bileblade",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Extra Attacks",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bilesword – strike",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 10,
+            "AP": -2,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bilesword – sweep",
+            "range": "Melee",
+            "A": "12",
+            "BS": null,
+            "WS": "2",
+            "S": 7,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Doomsday bell",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 7,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Reverberating Summons"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Plague flail",
+            "replacement_weapon_name": "Bileblade",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "bilesword",
+            "replacement_weapon_name": "Doomsday bell",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 265,
+              "second_unit": 265,
+              "third_plus": 280
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004113",
+        "unit_name": "Plaguebearers",
+        "unit_type": "Battleline",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": "7+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": "7+",
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Infected Outbreak"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Pact of Decay"
+            ],
+            "keyword_names": [
+              "Battleline",
+              "Chaos",
+              "Daemon",
+              "Infantry",
+              "Nurgle",
+              "Plague Legions",
+              "Plaguebearers",
+              "Summoned"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Plaguesword",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "instrument of Chaos",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "daemonic icon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 115,
+              "second_unit": 115,
+              "third_plus": 115
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004114",
+        "unit_name": "Plague Drones",
+        "unit_type": "Mounted",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 8,
+            "SV": "6+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": "7+",
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Death’s Heads"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Pact of Decay"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Fly",
+              "Mounted",
+              "Nurgle",
+              "Plague Drones",
+              "Plague Legions",
+              "Summoned"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Death’s heads",
+            "range": "12\"",
+            "A": "D3",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Foul mouthparts",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "4",
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Extra Attacks",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Plaguesword",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "instrument of Chaos",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "daemonic icon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
+            },
+            {
+              "size": 6,
+              "first_unit": 220,
+              "second_unit": 220,
+              "third_plus": 220
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004115",
+        "unit_name": "Beasts of Nurgle",
+        "unit_type": "Beast",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 9,
+            "SV": "6+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 7,
+            "LD": "7+",
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Grotesque Regeneration"
+            ],
+            "rule_names": [
+              "Deadly Demise 1",
+              "Deep Strike",
+              "Scouts 6\"",
+              "Pact of Decay"
+            ],
+            "keyword_names": [
+              "Beast",
+              "Beasts of Nurgle",
+              "Chaos",
+              "Daemon",
+              "Nurgle",
+              "Plague Legions",
+              "Summoned"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Putrid appendages",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": null,
+        "abilities": []
+      },
+      {
+        "unit_id": "000004116",
+        "unit_name": "Nurglings",
+        "unit_type": "Other",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 3,
+            "SV": "7+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": "8+",
+            "OC": 0,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Mischief Makers"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Infiltrators",
+              "Pact of Decay"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Nurgle",
+              "Nurglings",
+              "Plague Legions",
+              "Summoned",
+              "Swarm"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Diseased claws and teeth",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "5",
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 45,
+              "second_unit": 45,
+              "third_plus": 45
+            },
+            {
+              "size": 6,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004209",
+        "unit_name": "Defiler",
+        "unit_type": "Vehicle",
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 11,
+            "SV": "3+",
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 18,
+            "LD": "6+",
+            "OC": 5,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "leader_restrictions": null,
+            "unit_ability_names": [
+              "Scuttling Walker",
+              "Barrage of Filth"
+            ],
+            "rule_names": [
+              "Deadly Demise D6",
+              "Nurgle’s Gift (Aura)"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Death Guard",
+              "Defiler",
+              "Nurgle",
+              "Vehicle",
+              "Walker"
+            ]
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Ectoplasma destructor",
+            "range": "36\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Blast",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Excruciator cannon",
+            "range": "36\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hades battle cannon",
+            "range": "48\"",
+            "A": "D6+3",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [
+              "Blast",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hades lascannon",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy baleflamer",
+            "range": "12\"",
+            "A": "D6+3",
+            "BS": "N/A",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy missile launcher – krak",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -2,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy missile launcher – frag",
+            "range": "48\"",
+            "A": "2D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast",
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy reaper autocannon",
+            "range": "48\"",
+            "A": "4",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Lethal Hits",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Magma cutters",
+            "range": "12\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Lethal Hits",
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Electroscourge",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 12,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Extra Attacks",
+              "Sustained Hits 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Shearing claws – strike",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 16,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Shearing claws – sweep",
+            "range": "Melee",
+            "A": "10",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lethal Hits"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Hades battle cannon",
+            "replacement_weapon_name": "Ectoplasma destructor",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Heavy baleflamer",
+            "replacement_weapon_name": "Hades lascannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Heavy baleflamer",
+            "replacement_weapon_name": "Heavy reaper autocannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Heavy baleflamer",
+            "replacement_weapon_name": "electroscourge (a model cannot be equipped with more than one electroscourge)",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "heavy missile launcher",
+            "replacement_weapon_name": "Hades lascannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "D"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "heavy missile launcher",
+            "replacement_weapon_name": "Heavy reaper autocannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "D"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "heavy missile launcher",
+            "replacement_weapon_name": "electroscourge (a model cannot be equipped with more than one electroscourge)",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "D"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 290,
+              "second_unit": 320,
+              "third_plus": 320
+            }
+          ]
+        },
+        "abilities": []
+      }
+    ]
   }
 ]

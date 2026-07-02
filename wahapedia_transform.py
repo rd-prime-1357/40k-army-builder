@@ -679,7 +679,10 @@ def main():
     ap.add_argument("--seed-dir", default=".", help="folder with a completed faction's lookup CSVs (Keywords/Rules/Weapon_Abilities) for description reuse")
     ap.add_argument("--out-dir", default="out", help="output folder")
     ap.add_argument("--faction", default="SM", help="Wahapedia faction id (SM = Space Marines)")
+    ap.add_argument("--army-name", default="Adeptus Astartes", help="Generic army name for units without a chapter keyword (use the faction name for non-SM factions, e.g. 'Death Guard')")
     args = ap.parse_args()
+    global GENERIC_ARMY_NAME
+    GENERIC_ARMY_NAME = args.army_name
 
     os.makedirs(args.out_dir, exist_ok=True)
     flags = defaultdict(list)

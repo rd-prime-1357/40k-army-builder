@@ -130,7 +130,8 @@
         },
         {
           "name": "Death Guard",
-          "built": false
+          "built": true,
+          "data_army": "Death Guard"
         },
         {
           "name": "Emperor's Children",
