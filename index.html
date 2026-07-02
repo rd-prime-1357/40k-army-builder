@@ -931,6 +931,7 @@
     .lo-wcount { color:#cc9900; font-weight:700; margin-left:0.35rem; }
     .lo-pool { font-size:0.75rem; color:#999; margin:0.2rem 0 0.6rem; }
     .lo-pool.over { color:#cc2200; font-weight:700; }
+    .lo-substep-note { font-size:0.7rem; color:#888; margin:0 0 0.3rem; }
   </style>
 </head>
 <body>
@@ -1328,7 +1329,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.20';
+  const VERSION = '5.22';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2311,17 +2312,17 @@
         const over = p.used > p.pool;
         html += `<div class="lo-pool${over ? ' over' : ''}">Special weapons: ${p.used} of ${p.pool} models${over ? ' — too many for this unit' : ''}</div>`;
       }
+      let lastGroup = null;
       for (const o of opts) {
+        if (o.group !== lastGroup) { html += `<div class="detail-section-label">${o.group}</div>`; lastGroup = o.group; }
         if (o.type === 'choice') {
           const cur = entry.wargear[o.id] || null;
-          html += `<div class="detail-section-label">${o.group}</div>`;
           html += loChoiceRow(entry.listId, o.id, '', 'Keep ' + o.replaces, !cur);
           for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c);
         } else if (o.type === 'count' && o.replacement_choices) {
           const max = loMaxCount(o, size);
           const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
-          const sum = Object.keys(tally).reduce((a, k) => a + (Number(tally[k]) || 0), 0);
-          html += `<div class="detail-section-label">${o.group} <span class="lo-step-max">(up to ${max})</span></div>`;
+          html += `<div class="lo-substep-note">pick up to ${max}</div>`;
           for (const c of o.replacement_choices) {
             const cur = Number(tally[c] || 0);
             html += loStepper(`editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',-1,${max})`,
@@ -2330,7 +2331,6 @@
         } else if (o.type === 'count') {
           const max = loMaxCount(o, size);
           const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
-          html += `<div class="detail-section-label">${o.group}</div>`;
           html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
                             `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, (o.replacement || o.group), `(max ${max})`);
         } else if (o.type === 'add') {
@@ -2338,13 +2338,11 @@
           const label = o.adds_weapon || o.equipment || o.group;
           if (o.max_total === 1 && !o.per_n_models) {
             const on = Number(entry.wargear[o.id] || 0) > 0;
-            html += `<div class="detail-section-label">${o.group}</div>
-              <div class="option-item radio${on ? ' chosen' : ''}" onclick="editLoadoutAdd(${entry.listId},'${esc(o.id)}')">
+            html += `<div class="option-item radio${on ? ' chosen' : ''}" onclick="editLoadoutAdd(${entry.listId},'${esc(o.id)}')">
                 <div class="option-item-row"><div class="option-check">${on ? '\u25CF' : ''}</div>
-                <div class="option-item-name">${label}</div></div></div>`;
+                <div class="option-item-name">${label}</div></div>`;
           } else {
             const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
-            html += `<div class="detail-section-label">${o.group}</div>`;
             html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
                               `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, label, `(max ${max})`);
           }
@@ -2646,13 +2644,22 @@
       }
     }
     // Roll-up: append the abilities of the unit's ACTIVE weapons (still shown
-    // per-weapon too). Uses the same skip predicate as the weapon tables, so a
-    // replaced weapon's abilities drop out of the roll-up automatically.
-    const wgStateRollup = { activeBases, replacedBases, bundleAddBases, hasWargear };
-    for (const w of raw.weapons) {
-      if (shouldSkipWeapon(w, 'configured', wgStateRollup, raw, entry)) continue;
-      for (const ab of (w.weapon_ability_names || [])) {
-        if (!allRuleNames.includes(ab)) allRuleNames.push(ab);
+    // per-weapon too). Loadout units use the rollup's equipped set; others use
+    // the old skip predicate so replaced weapons drop out.
+    const rollDef = loadoutFor(entry);
+    if (rollDef) {
+      const rr = loRollup(rollDef, loadoutSize(entry, rollDef), loadoutSelections(entry, rollDef));
+      const active = {};
+      for (const kv of rr.weapons.entries()) active[kv[0].toLowerCase()] = kv[1];
+      for (const w of raw.weapons) {
+        if (!(active[weaponBase(w.weapon_name)] > 0)) continue;
+        for (const ab of (w.weapon_ability_names || [])) if (!allRuleNames.includes(ab)) allRuleNames.push(ab);
+      }
+    } else {
+      const wgStateRollup = { activeBases, replacedBases, bundleAddBases, hasWargear };
+      for (const w of raw.weapons) {
+        if (shouldSkipWeapon(w, 'configured', wgStateRollup, raw, entry)) continue;
+        for (const ab of (w.weapon_ability_names || [])) if (!allRuleNames.includes(ab)) allRuleNames.push(ab);
       }
     }
     if (allRuleNames.length > 0) {
