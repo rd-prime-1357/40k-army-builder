@@ -39510,7 +39510,22 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            },
+            {
+              "size": 2,
+              "first_unit": 200,
+              "second_unit": 200,
+              "third_plus": 200
+            }
+          ]
+        },
         "abilities": []
       },
       {

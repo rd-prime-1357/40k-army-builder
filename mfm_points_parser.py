@@ -33,6 +33,16 @@ import re
 import sys
 from collections import OrderedDict
 
+# Manual name overrides: MFM name -> datasheet name
+POINT_NAME_OVERRIDES = {
+    'Myphitic Blight-Haulers': 'Myphitic Blight-hauler',
+    'Death Guard Chaos Lord': None,             # Legends, skip
+    'Death Guard Chaos Lord In Terminator Armour': None,  # Legends
+    'Death Guard Cultists': None,               # Legends
+    'Death Guard Possessed': None,              # Legends
+    'Death Guard Sorcerer In Terminator Armour': None,    # Legends
+}
+
 ARMY_DEFAULT = "Adeptus Astartes"
 
 COST_RE = re.compile(r"^[•\-\*]\s*(\d+)\s*models?\s*(\d+)\s*pts", re.I)
@@ -231,10 +241,19 @@ def main():
         if not info["tiers"] or not any(t for t in info["tiers"]):
             flags["no_costs"].append(info["name"])
             continue
+        # Apply name overrides before any matching
+        display_name = info["name"].title() if info["name"].isupper() else info["name"]
+        override = POINT_NAME_OVERRIDES.get(display_name)
+        if override is None and display_name in POINT_NAME_OVERRIDES:
+            # Explicitly mapped to None = skip (Legends)
+            continue
+        if override:
+            display_name = override
+            nkey = norm(display_name)
         army = ds_army_by_norm.get(nkey, args.army)
         if ds_army_by_norm and nkey not in ds_army_by_norm:
-            flags["mfm_no_datasheet"].append(info["name"])
-        point_rows.append(to_points_row(army, info["name"].title() if info["name"].isupper() else info["name"], info))
+            flags["mfm_no_datasheet"].append(display_name)
+        point_rows.append(to_points_row(army, display_name, info))
         seen.add(nkey)
 
     # datasheets with no MFM points
