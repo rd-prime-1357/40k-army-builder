@@ -813,7 +813,7 @@
     "options": [
       {
         "id": "cnt_1",
-        "scope": "Eradicator Sergeant",
+        "scope": "Eradicators",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Melta rifle",
@@ -2980,7 +2980,7 @@
       },
       {
         "id": "cnt_3",
-        "scope": "Scout Sergeant",
+        "scope": "Scouts",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Boltgun",
@@ -2990,7 +2990,7 @@
       },
       {
         "id": "cc_4",
-        "scope": "Scout Sergeant",
+        "scope": "Scouts",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Boltgun",
@@ -3101,7 +3101,7 @@
     "options": [
       {
         "id": "cnt_1",
-        "scope": "Heavy Intercessor Sergeant",
+        "scope": "Heavy Intercessors",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Heavy bolt rifle",
@@ -3143,7 +3143,7 @@
     "options": [
       {
         "id": "cc_1",
-        "scope": "Terminator Sergeant",
+        "scope": "Terminators",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Storm bolter",
@@ -4242,7 +4242,7 @@
       },
       {
         "id": "cc_2",
-        "scope": "Sternguard Veteran Sergeant",
+        "scope": "Sternguard Veterans",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Sternguard bolt rifle",
@@ -5793,7 +5793,7 @@
     "options": [
       {
         "id": "add_1",
-        "scope": "Kill Team Intercessors",
+        "scope": "MODELS MAXIMUM",
         "group": "Astartes Grenade Launcher – Frag",
         "type": "add",
         "adds_weapon": "Astartes grenade launcher – frag",
@@ -7268,7 +7268,7 @@
       },
       {
         "id": "cc_2",
-        "scope": "Sternguard Veteran Squad Leader",
+        "scope": "Sternguard Veterans",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Sternguard bolt rifle",
@@ -7315,7 +7315,7 @@
     "options": [
       {
         "id": "cc_1",
-        "scope": "Terminator Squad Leader",
+        "scope": "Terminators",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Storm bolter",

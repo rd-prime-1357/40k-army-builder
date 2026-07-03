@@ -267,15 +267,58 @@ def parse_sentence(text, unit_name):
     return [], f'UNMATCHED: {t[:120]}'
 
 # ── scope resolver ────────────────────────────────────────────────────────────
+_LEADER_WORDS = ('sergeant', 'champion', 'superior', 'sarge', 'leader', 'alpha', 'prime')
+
+def _sing(w):
+    return w[:-1] if len(w) > 3 and w.endswith('s') else w
+
+def _scope_words(s):
+    return set(_sing(w) for w in re.findall(r"[a-z0-9]+", s.lower()))
+
 def resolve_scope(scope_hint, model_groups):
-    """Match a scope_hint from option text to one of the unit's parsed model group names."""
+    """Match a scope_hint from option text to one of the unit's parsed model group names.
+
+    Word-based, singular-normalised scoring. A plain body-model hint (e.g.
+    'Sternguard Veteran') must resolve to the body group ('Sternguard Veterans'),
+    NOT to a leader group whose name merely contains it ('Sternguard Veteran
+    Sergeant'). Substring matching got this wrong; scoring by word overlap plus a
+    leader/body preference gets it right.
+    """
     sh = scope_hint.lower().strip()
-    for g in model_groups:
-        gn = g['name'].lower()
-        if sh == gn or sh in gn or gn in sh:
-            return g['name']
-    # 'body' or anything unrecognised -> fill-to-size group
+    if not model_groups:
+        return 'All'
     fills = [g for g in model_groups if g.get('fills')]
+    fixed = [g for g in model_groups if g.get('fixed') == 1]
+    if sh == 'single':
+        return fixed[0]['name'] if fixed else model_groups[0]['name']
+    if sh in ('body', 'all', ''):
+        return fills[0]['name'] if fills else model_groups[-1]['name']
+
+    hw = _scope_words(sh)
+    hint_is_leader = any(w in hw for w in _LEADER_WORDS)
+    best, best_score = None, -1
+    for g in model_groups:
+        gw = _scope_words(g['name'])
+        if not gw:
+            continue
+        if hw == gw:
+            score = 100
+        elif hw <= gw:
+            score = 80 - (len(gw) - len(hw))      # fewer extra words in group = closer
+        elif gw <= hw:
+            score = 70 - (len(hw) - len(gw))
+        else:
+            overlap = len(hw & gw)
+            if not overlap:
+                continue
+            score = 40 + overlap - len(gw - hw)
+        is_leader_group = (g.get('fixed') == 1)
+        if hint_is_leader == is_leader_group:      # leader hint→leader group, body hint→body group
+            score += 5
+        if score > best_score:
+            best_score, best = score, g['name']
+    if best is not None:
+        return best
     return fills[0]['name'] if fills else (model_groups[-1]['name'] if model_groups else 'All')
 
 # ── weapon normaliser ─────────────────────────────────────────────────────────
