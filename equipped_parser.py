@@ -192,7 +192,7 @@ def main():
             continue
         groups = ld[uid].get('model_groups', [])
         gnames = [g.get('name', '') for g in groups]
-        acc = {g.get('name'): {'w': [], 'g': []} for g in groups}
+        acc = {g.get('name'): {'w': [], 'g': [], 'c': {}} for g in groups}
         touched = False
         for ln in elines:
             parsed = parse_equipped_line(ln)
@@ -225,6 +225,8 @@ def main():
                         for nm in names:
                             if nm not in acc[g]['w']:
                                 acc[g]['w'].append(nm)
+                            if cnt > 1:
+                                acc[g]['c'][nm] = cnt
                     else:
                         if core not in acc[g]['g']:
                             acc[g]['g'].append(core)
@@ -239,6 +241,8 @@ def main():
                 g['default_weapons'] = acc[nm]['w']
                 if acc[nm]['g']:
                     g['default_wargear'] = acc[nm]['g']
+                if acc[nm]['c']:
+                    g['default_weapon_counts'] = acc[nm]['c']
                 group_sets += 1
         ld[uid]['_defaults_source'] = 'equipped'
         updated += 1

@@ -220,7 +220,10 @@
           "Twin heavy bolter",
           "Godhammer lascannon",
           "Armoured tracks"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Godhammer lascannon": 2
+        }
       }
     ],
     "options": [
@@ -875,7 +878,10 @@
           "Krakstorm grenade launcher",
           "Melta destroyer",
           "Close combat weapon"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Krakstorm grenade launcher": 2
+        }
       }
     ],
     "options": [],
@@ -1056,7 +1062,10 @@
           "Onslaught gatling cannon",
           "Twin ironhail heavy stubber",
           "Close combat weapon"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Fragstorm grenade launcher": 2
+        }
       }
     ],
     "options": [],
@@ -2576,7 +2585,10 @@
           "Soulshatter lascannon",
           "Twin heavy bolter",
           "Armoured tracks"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Soulshatter lascannon": 2
+        }
       }
     ],
     "options": [
@@ -3246,7 +3258,10 @@
           "Typhoon missile launcher – frag",
           "Typhoon missile launcher – krak",
           "Armoured hull"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Stormstrike missile launcher": 2
+        }
       }
     ],
     "options": [
@@ -3653,7 +3668,10 @@
           "Heavy slugger",
           "Plagueburst mortar",
           "Armoured tracks"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Entropy cannon": 2
+        }
       }
     ],
     "options": [
@@ -4102,7 +4120,10 @@
           "Flamestorm cannon",
           "Twin assault cannon",
           "Armoured tracks"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Flamestorm cannon": 2
+        }
       }
     ],
     "options": [
@@ -5264,7 +5285,11 @@
           "twin macro-accelerator cannon",
           "Thunderhawk heavy cannon",
           "Thunderhawk cluster bombs"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Lascannon": 2,
+          "Twin heavy bolter": 4
+        }
       }
     ],
     "options": [
@@ -5888,7 +5913,10 @@
         "default_weapons": [
           "Storm bolter",
           "Armoured hull"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Storm bolter": 2
+        }
       }
     ],
     "options": [
@@ -5949,7 +5977,10 @@
           "Lancer laser destroyer",
           "Storm bolter",
           "Armoured hull"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Storm bolter": 2
+        }
       }
     ],
     "options": [
@@ -6001,7 +6032,10 @@
           "Multi-melta",
           "Twin las-talon",
           "Armoured hull"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Multi-melta": 2
+        }
       }
     ],
     "options": [
@@ -6043,7 +6077,10 @@
           "Tempest bolter",
           "Twin heavy onslaught gatling cannon",
           "Armoured hull"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Tempest bolter": 2
+        }
       }
     ],
     "options": [
@@ -7321,7 +7358,10 @@
           "Hurricane bolter",
           "Twin assault cannon",
           "Armoured tracks"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Hurricane bolter": 2
+        }
       }
     ],
     "options": [
@@ -7907,7 +7947,10 @@
           "Heavy baleflamer",
           "Shearing claws – strike",
           "Shearing claws – sweep"
-        ]
+        ],
+        "default_weapon_counts": {
+          "Excruciator cannon": 2
+        }
       }
     ],
     "options": [
