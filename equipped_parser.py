@@ -72,6 +72,13 @@ def match_group(frag, gnames):
     for g in gnames:
         if norm(g).rstrip('s') == p.rstrip('s'):
             return g
+    # Named-model groups carry a role suffix, e.g. "Ancient Gadriel - EPIC HERO".
+    # The equipped-with subject is just the model name ("Ancient Gadriel"), so match
+    # on the group name before the " - " suffix.
+    for g in gnames:
+        gb = re.split(r'\s+-\s+', norm(g))[0].strip()
+        if gb == p or gb.rstrip('s') == p.rstrip('s'):
+            return g
     return None
 
 
