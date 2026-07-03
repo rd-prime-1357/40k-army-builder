@@ -501,6 +501,7 @@
 
     /* Wargear / other options */
     .options-block { margin-bottom: 1.1rem; }
+    .options-block.leader-block { border:1px solid #3a3a3a; border-radius:6px; background:#161616; padding:0.6rem 0.7rem 0.35rem; margin-bottom:1.35rem; }
 
     .option-item {
       background: #1a1a1a;
@@ -1329,7 +1330,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.23';
+  const VERSION = '5.24';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2302,10 +2303,14 @@
     const byScope = {};
     for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
     let html = `<div class="detail-section-label" style="color:#666;margin-bottom:0.6rem;">Wargear Options</div>`;
+    // Leader/champion block = first model group with a fixed count of 1 (Sergeant, Champion, etc.).
+    let leaderName = null;
+    for (const g of def.model_groups) { if (g.count && g.count.fixed === 1) { leaderName = g.name; break; } }
     for (const g of def.model_groups) {
       const opts = byScope[g.name] || [];
       if (!opts.length) continue;
-      html += `<div class="options-block"><div class="lo-scope-label">${g.name}</div>`;
+      const isLeader = g.name === leaderName;
+      html += `<div class="options-block${isLeader ? ' leader-block' : ''}"><div class="lo-scope-label">${g.name}</div>`;
       // Shared-pool status for body groups that have swap/add options.
       const p = roll.pools && roll.pools[g.name];
       const hasSwaps = opts.some(o => o.type === 'count');
