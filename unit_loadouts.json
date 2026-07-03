@@ -7835,14 +7835,8 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Archeotech laspistol",
-          "Astropathic Blast",
           "Bolt rifle",
-          "Heavy bolt pistol",
-          "Close combat weapon",
-          "Force stave",
-          "Power weapon",
-          "Master-crafted power weapon"
+          "Close combat weapon"
         ]
       },
       {
@@ -7851,14 +7845,11 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Archeotech laspistol",
-          "Astropathic Blast",
-          "Bolt rifle",
           "Heavy bolt pistol",
-          "Close combat weapon",
-          "Force stave",
-          "Power weapon",
           "Master-crafted power weapon"
+        ],
+        "default_wargear": [
+          "storm shield"
         ]
       },
       {
@@ -7868,13 +7859,10 @@
         },
         "default_weapons": [
           "Archeotech laspistol",
-          "Astropathic Blast",
-          "Bolt rifle",
-          "Heavy bolt pistol",
-          "Close combat weapon",
-          "Force stave",
-          "Power weapon",
-          "Master-crafted power weapon"
+          "Power weapon"
+        ],
+        "default_wargear": [
+          "refractor field"
         ]
       },
       {
@@ -7884,13 +7872,7 @@
         },
         "default_weapons": [
           "Archeotech laspistol",
-          "Astropathic Blast",
-          "Bolt rifle",
-          "Heavy bolt pistol",
-          "Close combat weapon",
-          "Force stave",
-          "Power weapon",
-          "Master-crafted power weapon"
+          "Power weapon"
         ]
       },
       {
@@ -7899,14 +7881,8 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Archeotech laspistol",
           "Astropathic Blast",
-          "Bolt rifle",
-          "Heavy bolt pistol",
-          "Close combat weapon",
-          "Force stave",
-          "Power weapon",
-          "Master-crafted power weapon"
+          "Force stave"
         ]
       },
       {
@@ -7916,18 +7892,13 @@
         },
         "default_weapons": [
           "Archeotech laspistol",
-          "Astropathic Blast",
-          "Bolt rifle",
-          "Heavy bolt pistol",
-          "Close combat weapon",
-          "Force stave",
-          "Power weapon",
-          "Master-crafted power weapon"
+          "Close combat weapon"
         ]
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000004209": {
     "size_brackets": [
