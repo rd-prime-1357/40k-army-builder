@@ -501,7 +501,7 @@
 
     /* Wargear / other options */
     .options-block { margin-bottom: 1.1rem; }
-    .options-block.leader-block { border:1px solid #3a3a3a; border-radius:6px; background:#161616; padding:0.6rem 0.7rem 0.35rem; margin-bottom:1.35rem; }
+    .options-block.leader-block { border:1px solid #5a5a5a; border-left:3px solid #6e6e6e; border-radius:6px; background:#202022; padding:0.6rem 0.75rem 0.4rem; margin-bottom:1.35rem; }
 
     .option-item {
       background: #1a1a1a;
@@ -1330,7 +1330,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.24';
+  const VERSION = '5.25';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2302,7 +2302,7 @@
     const roll = loRollup(def, size, loadoutSelections(entry, def));
     const byScope = {};
     for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
-    let html = `<div class="detail-section-label" style="color:#666;margin-bottom:0.6rem;">Wargear Options</div>`;
+    let html = '';
     // Leader/champion block = first model group with a fixed count of 1 (Sergeant, Champion, etc.).
     let leaderName = null;
     for (const g of def.model_groups) { if (g.count && g.count.fixed === 1) { leaderName = g.name; break; } }
@@ -2356,7 +2356,8 @@
       }
       html += `</div>`;
     }
-    return html;
+    if (!html) return '';
+    return `<div class="detail-section-label" style="color:#666;margin-bottom:0.6rem;">Wargear Options</div>` + html;
   }
   function loStepper(minusCall, plusCall, cur, label, sub) {
     return `<div class="lo-stepper">
