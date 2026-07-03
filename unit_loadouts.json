@@ -65,7 +65,8 @@
         "per_n_models": 5,
         "max_per_n": 1
       }
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000001044": {
     "size_brackets": [
@@ -182,7 +183,8 @@
         "max_total": 1,
         "blocks_swap": true
       }
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000060": {
     "size_brackets": [
@@ -201,149 +203,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000000061": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Assault Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Assault Marines",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Assault Sergeant",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Grav-pistol",
-          "Hand flamer",
-          "Inferno pistol",
-          "Plasma pistol – standard"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Assault Sergeant",
-        "group": "Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Astartes chainsword",
-        "choices": [
-          "Power fist",
-          "Power weapon",
-          "Thunder hammer"
-        ]
-      },
-      {
-        "id": "cnt_3",
-        "scope": "Assault Marines",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Astartes chainsword",
-        "replacement": "Eviscerator",
-        "per_n_models": 5,
-        "max_per_n": 1
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: The Assault Sergeant can do one of the following: Replace its bolt pistol and Astartes chainsword with 1 twin lightning ",
-      "UNMATCHED: Up to 2 Assault Marines can each have their bolt pistol and Astartes chainsword replaced with one of the following: 1 pl"
-    ]
-  },
-  "000000063": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Apothecary on Bike",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000064": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Assault Sergeant with Jump Pack",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Assault Marines with Jump Packs",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Assault Sergeant with Jump Pack",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Grav-pistol",
-          "Hand flamer",
-          "Inferno pistol",
-          "Plasma pistol – standard"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Assault Sergeant with Jump Pack",
-        "group": "Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Astartes chainsword",
-        "choices": [
-          "Power fist",
-          "Power weapon",
-          "Thunder hammer"
-        ]
-      },
-      {
-        "id": "cnt_3",
-        "scope": "Assault Marines with Jump Packs",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Astartes chainsword",
-        "replacement": "Eviscerator",
-        "per_n_models": 5,
-        "max_per_n": 1
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: The Assault Sergeant with Jump Pack can do one of the following: Replace its bolt pistol and Astartes chainsword with 1 ",
-      "UNMATCHED: Up to 2 Assault Marines with Jump Packs can each have their bolt pistol and Astartes chainsword replaced with one of the"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000065": {
     "size_brackets": [
@@ -356,8 +217,8 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Godhammer lascannon",
           "Twin heavy bolter",
+          "Godhammer lascannon",
           "Armoured tracks"
         ]
       }
@@ -388,7 +249,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000066": {
     "size_brackets": [
@@ -435,55 +297,6 @@
     ],
     "_parser_flags": []
   },
-  "000000067": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Raider Excelsior",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Land Raider Excelsior",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_2",
-        "scope": "Land Raider Excelsior",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Land Raider Excelsior",
-        "group": "Multi-Melta",
-        "type": "add",
-        "adds_weapon": "Multi-melta",
-        "max_total": 1
-      },
-      {
-        "id": "add_4",
-        "scope": "Land Raider Excelsior",
-        "group": "Combi-Weapon",
-        "type": "add",
-        "adds_weapon": "Combi-weapon",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
   "000000068": {
     "size_brackets": [
       3
@@ -513,7 +326,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000070": {
     "size_brackets": [
@@ -591,7 +405,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000071": {
     "size_brackets": [
@@ -633,23 +448,8 @@
         ]
       }
     ],
-    "_parser_flags": []
-  },
-  "000000072": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Caestus Assault Ram",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000073": {
     "size_brackets": [
@@ -707,7 +507,8 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: relic shield (choice) on Captain"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000076": {
     "size_brackets": [
@@ -726,7 +527,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000079": {
     "size_brackets": [
@@ -759,7 +561,8 @@
         "_note": "add_choice: no base weapon replaced; pick one to add"
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000083": {
     "size_brackets": [
@@ -813,7 +616,8 @@
     ],
     "_parser_flags": [
       "UNMATCHED: If this model is equipped with a heavy bolt pistol and an Astartes chainsword, it can be equipped with 1 relic shield. T"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000084": {
     "size_brackets": [
@@ -826,9 +630,9 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Las-talon",
-          "Skyhammer missile launcher",
           "Twin assault cannon",
+          "Skyhammer missile launcher",
+          "Las-talon",
           "Armoured hull"
         ]
       }
@@ -856,32 +660,8 @@
         ]
       }
     ],
-    "_parser_flags": []
-  },
-  "000000085": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Rhino Primaris",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Rhino Primaris",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000086": {
     "size_brackets": [
@@ -903,7 +683,8 @@
     "options": [],
     "_parser_flags": [
       "UNMATCHED: Any number of models can each have their twin Firestrike las-talon replaced with 1 twin Firestrike autocannon."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000087": {
     "size_brackets": [
@@ -941,95 +722,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000000092": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sicaran Venator",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Sicaran Venator",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Sicaran Venator",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Sicaran Venator",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000000093": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Typhon",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Typhon",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "ach_2",
-        "scope": "Typhon",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000094": {
     "size_brackets": [
@@ -1049,53 +743,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000000095": {
-    "size_brackets": [
-      4
-    ],
-    "model_groups": [
-      {
-        "name": "Chapter Champion",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Ancient",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Honour Guard",
-        "count": {
-          "fixed": 2
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000096": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Carab Culln the Risen - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000097": {
     "size_brackets": [
@@ -1126,43 +775,8 @@
         ]
       }
     ],
-    "_parser_flags": []
-  },
-  "000000098": {
-    "size_brackets": [
-      1,
-      2,
-      3
-    ],
-    "model_groups": [
-      {
-        "name": "Tarantula Sentry Battery",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: This model's twin heavy bolter replaced with 1 twin lascannon."
-    ]
-  },
-  "000000099": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Tarantula Air Defence Battery",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000103": {
     "size_brackets": [
@@ -1205,181 +819,8 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": []
-  },
-  "000000104": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Relic Terminator Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Relic Terminators",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Relic Terminator Sergeant",
-        "group": "Combi-Bolter Options",
-        "type": "choice",
-        "replaces": "Combi-bolter",
-        "choices": [
-          "Plasma Blaster",
-          "Volkite Charger"
-        ]
-      },
-      {
-        "id": "cc_2",
-        "scope": "Relic Terminator Sergeant",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Combi-bolter",
-        "replacement_choices": [
-          "Heavy flamer",
-          "Reaper autocannon"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Relic Terminators",
-        "group": "Grenade Harness.",
-        "type": "add",
-        "adds_weapon": "Grenade Harness.",
-        "per_n_models": 5,
-        "max_per_n": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: plasma blaster (choice) on Relic Terminator Squad",
-      "WEAPON_NOT_FOUND: volkite charger (choice) on Relic Terminator Squad",
-      "WEAPON_NOT_FOUND: grenade harness. (add) on Relic Terminator Squad",
-      "UNMATCHED: Any number of models can each have their power fist replaced with 1 power weapon.",
-      "UNMATCHED: Any number of models can each have their power fist replaced with one 1 chainfist.",
-      "UNMATCHED: Any number of models can each have their combi-bolter and power fist replaced with 1 twin lightning claws."
-    ]
-  },
-  "000000107": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Javelin Attack Speeder",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Javelin Attack Speeder",
-        "group": "Javelin Missile Launcher Options",
-        "type": "choice",
-        "replaces": "Javelin Missile Launcher",
-        "choices": [
-          "Lascannon"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Javelin Attack Speeder",
-        "group": "Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Heavy bolter",
-        "choices": [
-          "Multi-melta"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: javelin missile launcher (single.replaces) on Javelin Attack Speeder",
-      "UNMATCHED: This model can be equipped with up to 2 hunter-killer missiles."
-    ]
-  },
-  "000000110": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Rapier Carrier",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Rapier Carrier",
-        "group": "Quad Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Quad Heavy Bolter",
-        "choices": [
-          "Graviton Cannon",
-          "Laser Destroyer",
-          "Quad Launcher"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: quad heavy bolter (choice.replaces) on Rapier Carrier",
-      "WEAPON_NOT_FOUND: graviton cannon (choice) on Rapier Carrier",
-      "WEAPON_NOT_FOUND: laser destroyer (choice) on Rapier Carrier",
-      "WEAPON_NOT_FOUND: quad launcher (choice) on Rapier Carrier"
-    ]
-  },
-  "000000111": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Mortis Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Mortis Dreadnought",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Assault cannon",
-          "Dreadnought Inferno Cannons",
-          "Heavy plasma cannon – standard",
-          "Missile launcher – frag",
-          "Multi-melta",
-          "Twin autocannon",
-          "Twin lascannon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: dreadnought inferno cannons (choice) on Mortis Dreadnought"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000112": {
     "size_brackets": [
@@ -1416,47 +857,8 @@
         ]
       }
     ],
-    "_parser_flags": []
-  },
-  "000000113": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Storm Eagle Gunship",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Storm Eagle Gunship",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin multi-melta",
-          "Typhoon missile launcher – frag"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Storm Eagle Gunship",
-        "group": "Twin Hellstrike Missile Launchers Options",
-        "type": "choice",
-        "replaces": "Twin Hellstrike Missile Launchers",
-        "choices": [
-          "Twin lascannon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin hellstrike missile launchers (single.replaces) on Storm Eagle Gunship"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000114": {
     "size_brackets": [
@@ -1477,7 +879,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000115": {
     "size_brackets": [
@@ -1509,63 +912,8 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: relic shield (single.replacement) on Chaplain In Terminator Armour"
-    ]
-  },
-  "000000116": {
-    "size_brackets": [
-      3,
-      6
     ],
-    "model_groups": [
-      {
-        "name": "Biker Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Space Marine Bikers",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Attack Bike",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Biker Sergeant",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Astartes chainsword",
-          "Boltgun",
-          "Combi-weapon",
-          "Hand flamer",
-          "Grav-pistol",
-          "Inferno pistol",
-          "Plasma pistol – standard",
-          "Storm bolter",
-          "Power fist",
-          "Power weapon",
-          "Thunder hammer"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Any number of Space Marine Bikers can each have their bolt pistol replaced with 1 Astartes chainsword.",
-      "UNMATCHED: Up to 2 Space Marine Bikers can each have their bolt pistol replaced with one of the following: 1 flamer 1 grav-gun 1 me",
-      "UNMATCHED: An Attack Bike's heavy bolter can be replaced with 1 multi-melta."
-    ]
+    "_defaults_source": "equipped"
   },
   "000000117": {
     "size_brackets": [
@@ -1611,7 +959,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000118": {
     "size_brackets": [
@@ -1626,6 +975,9 @@
         },
         "default_weapons": [
           "Thunder hammer"
+        ],
+        "default_wargear": [
+          "storm shield"
         ]
       },
       {
@@ -1635,13 +987,17 @@
         },
         "default_weapons": [
           "Thunder hammer"
+        ],
+        "default_wargear": [
+          "storm shield"
         ]
       }
     ],
     "options": [],
     "_parser_flags": [
       "UNMATCHED: Any number of models can each have their thunder hammer and storm shield replaced with 1 twin lightning claws."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000119": {
     "size_brackets": [
@@ -1662,56 +1018,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000000120": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Venerable Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Venerable Dreadnought",
-        "group": "Assault Cannon Options",
-        "type": "choice",
-        "replaces": "Assault cannon",
-        "choices": [
-          "Heavy plasma cannon – standard",
-          "Multi-melta",
-          "Twin autocannon",
-          "Twin heavy bolter",
-          "Twin Heavy Flamer",
-          "Twin lascannon",
-          "Dreadnought Inferno Cannon"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Venerable Dreadnought",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Heavy flamer",
-          "Dreadnought combat weapon",
-          "Missile launcher – frag",
-          "Twin autocannon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin heavy flamer (choice) on Venerable Dreadnought (Legendary)",
-      "WEAPON_NOT_FOUND: dreadnought inferno cannon (choice) on Venerable Dreadnought (Legendary)"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000121": {
     "size_brackets": [
@@ -1733,67 +1041,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000000122": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Dreadnought Drop Pod",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000123": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sicaran Punisher",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Sicaran Punisher",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Sicaran Punisher",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Sicaran Punisher",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
   "000000124": {
     "size_brackets": [
       1
@@ -1813,7 +1060,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000125": {
     "size_brackets": [
@@ -1845,7 +1093,8 @@
     "options": [],
     "_parser_flags": [
       "UNMATCHED: All models in this unit can each have their assault bolters replaced with 1 plasma exterminators."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000126": {
     "size_brackets": [
@@ -1877,7 +1126,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000127": {
     "size_brackets": [
@@ -1933,7 +1183,8 @@
     "_parser_flags": [
       "UNMATCHED: 1 Infiltrator can be equipped with 1 helix gauntlet.*",
       "UNMATCHED: 1 Infiltrator can be equipped with 1 Infiltrator comms array.*"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000129": {
     "size_brackets": [
@@ -1979,97 +1230,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
-  },
-  "000000131": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Leviathan Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Leviathan Dreadnought",
-        "group": "Heavy Flamer Options",
-        "type": "choice",
-        "replaces": "Heavy flamer",
-        "choices": [
-          "Twin Volkite Calivers"
-        ]
-      },
-      {
-        "id": "add_2",
-        "scope": "Leviathan Dreadnought",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Each of this model's grav-flux bombards can be replaced with one of the following 1 cyclonic melta lance 1 storm cannon ",
-      "WEAPON_NOT_FOUND: twin volkite calivers (single.replacement) on Leviathan Dreadnought"
-    ]
-  },
-  "000000132": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Speeder Storm",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000134": {
-    "size_brackets": [
-      4
-    ],
-    "model_groups": [
-      {
-        "name": "Astartes Servitors",
-        "count": {
-          "fixed": 4
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cc_1",
-        "scope": "Astartes Servitors",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Servitor Servo-Arm",
-        "replacement_choices": [
-          "Heavy bolter",
-          "Close combat weapon",
-          "Multi-melta",
-          "Close combat weapon",
-          "Plasma cannon – standard",
-          "Close combat weapon"
-        ],
-        "max_total_all": true
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: servitor servo-arm (count.replaces) on Astartes Servitors",
-      "REVIEW_MAX_TOTAL: Astartes Servitors — \"any/all\" scope needs max_total set"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000135": {
     "size_brackets": [
@@ -2109,7 +1271,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000136": {
     "size_brackets": [
@@ -2122,9 +1285,9 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Brutalis bolt rifles",
-          "Twin heavy bolter",
           "Twin Icarus ironhail heavy stubber",
+          "Twin heavy bolter",
+          "Brutalis bolt rifles",
           "Brutalis fists"
         ]
       }
@@ -2151,54 +1314,8 @@
         ]
       }
     ],
-    "_parser_flags": []
-  },
-  "000000137": {
-    "size_brackets": [
-      3,
-      6
-    ],
-    "model_groups": [
-      {
-        "name": "Scout Biker Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Scout Bikers",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Scout Biker Sergeant",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Astartes chainsword",
-          "Boltgun",
-          "Combi-weapon",
-          "Hand flamer",
-          "Grav-pistol",
-          "Inferno pistol",
-          "Plasma pistol – standard",
-          "Storm bolter",
-          "Power fist",
-          "Power weapon",
-          "Thunder hammer"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Any number of models can each have their twin boltgun replaced with 1 Astartes grenade launcher."
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000138": {
     "size_brackets": [
@@ -2220,48 +1337,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000000139": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Thunderhawk Gunship",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Thunderhawk Gunship",
-        "group": "Thunderhawk Heavy Cannon Options",
-        "type": "choice",
-        "replaces": "Thunderhawk Heavy Cannon",
-        "choices": [
-          "Turbo-Laser Destructor"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Thunderhawk Gunship",
-        "group": "Thunderhawk Cluster Bombs Options",
-        "type": "choice",
-        "replaces": "Thunderhawk Cluster Bombs",
-        "choices": [
-          "Hellstrike Missile Battery"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: thunderhawk heavy cannon (single.replaces) on Thunderhawk Gunship",
-      "WEAPON_NOT_FOUND: turbo-laser destructor (single.replacement) on Thunderhawk Gunship",
-      "WEAPON_NOT_FOUND: thunderhawk cluster bombs (single.replaces) on Thunderhawk Gunship",
-      "WEAPON_NOT_FOUND: hellstrike missile battery (single.replacement) on Thunderhawk Gunship"
-    ]
-  },
   "000000140": {
     "size_brackets": [
       1
@@ -2281,40 +1356,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000000146": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Hunter",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Hunter",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_2",
-        "scope": "Hunter",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000147": {
     "size_brackets": [
@@ -2346,23 +1389,8 @@
     "options": [],
     "_parser_flags": [
       "UNMATCHED: Any number of models can each have their bolt pistol replaced one of the following: 1 storm shield 1 grav-pistol 1 hand "
-    ]
-  },
-  "000000148": {
-    "size_brackets": [
-      1
     ],
-    "model_groups": [
-      {
-        "name": "Imperial Space Marine",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
+    "_defaults_source": "equipped"
   },
   "000000151": {
     "size_brackets": [
@@ -2380,66 +1408,6 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000000152": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Captain Tycho - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000153": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Tycho the Lost - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000154": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Librarian Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Librarian Dreadnought",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Heavy flamer",
-          "Meltagun"
-        ]
-      }
-    ],
     "_parser_flags": []
   },
   "000000155": {
@@ -2514,67 +1482,6 @@
           "Absolvor bolt pistol",
           "Astartes chainsword"
         ]
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000159": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sanguinary Priest on Bike",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Sanguinary Priest on Bike",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Boltgun",
-          "Combi-weapon",
-          "Grav-pistol",
-          "Hand flamer",
-          "Inferno pistol",
-          "Plasma pistol – standard",
-          "Storm bolter"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Sanguinary Priest on Bike",
-        "group": "Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Astartes chainsword",
-        "choices": [
-          "Power fist",
-          "Power weapon",
-          "Thunder hammer"
-        ]
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000000160": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Brother Corbulo - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
       }
     ],
     "options": [],
@@ -2675,68 +1582,6 @@
     ],
     "_parser_flags": []
   },
-  "000000167": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Furioso Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Furioso Dreadnought",
-        "group": "Heavy Frag Cannon And Furioso Fist Options",
-        "type": "choice",
-        "replaces": "Heavy Frag Cannon And Furioso Fist",
-        "choices": [
-          "Blood talons - strike",
-          "Meltagun",
-          "Twin Furioso Fist And",
-          "Meltagun"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Furioso Dreadnought",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Heavy flamer"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Furioso Dreadnought",
-        "group": "Meltagun Options",
-        "type": "choice",
-        "replaces": "Meltagun",
-        "choices": [
-          "Heavy flamer"
-        ]
-      },
-      {
-        "id": "add_4",
-        "scope": "Furioso Dreadnought",
-        "group": "Magna-Grapple",
-        "type": "add",
-        "adds_weapon": "Magna-Grapple",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: heavy frag cannon and furioso fist (choice.replaces) on Furioso Dreadnought",
-      "WEAPON_NOT_FOUND: twin furioso fist and (choice) on Furioso Dreadnought",
-      "WEAPON_NOT_FOUND: magna-grapple (add) on Furioso Dreadnought"
-    ]
-  },
   "000000168": {
     "size_brackets": [
       1
@@ -2793,22 +1638,6 @@
         "_note": "add_choice: no base weapon replaced; pick one to add"
       }
     ],
-    "_parser_flags": []
-  },
-  "000000169": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Gabriel Seth - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
     "_parser_flags": []
   },
   "000000218": {
@@ -3157,82 +1986,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000000283": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Logan Grimnar on Stormrider - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000284": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Lord on Thunderwolf",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Wolf Lord on Thunderwolf",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Combi-weapon",
-          "Master-Crafted Boltgun",
-          "Plasma pistol – standard",
-          "Storm bolter",
-          "Power fist",
-          "Relic weapon",
-          "Thunder hammer"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Wolf Lord on Thunderwolf",
-        "group": "Relic Weapon Options",
-        "type": "choice",
-        "replaces": "Relic weapon",
-        "choices": [
-          "Plasma pistol – standard",
-          "Power fist",
-          "Thunder hammer",
-          "Relic Shield And",
-          "Close combat weapon"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Wolf Lord on Thunderwolf",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Twin lightning claws"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: master-crafted boltgun (choice) on Wolf Lord on Thunderwolf",
-      "WEAPON_NOT_FOUND: relic shield and (choice) on Wolf Lord on Thunderwolf"
-    ]
-  },
   "000000285": {
     "size_brackets": [
       1
@@ -3247,54 +2000,6 @@
           "Bolt pistol",
           "Frostfang"
         ]
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000286": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Krom Dragongaze",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000287": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Harald Deathwolf - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000000288": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Canis Wolfborn - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
       }
     ],
     "options": [],
@@ -3340,123 +2045,6 @@
     ],
     "options": [],
     "_parser_flags": []
-  },
-  "000000300": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Guard Battle Leader in Terminator Armour",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Wolf Guard Battle Leader in Terminator Armour",
-        "group": "Power Weapon Options",
-        "type": "choice",
-        "replaces": "Power weapon",
-        "choices": [
-          "Chainfist",
-          "Power fist",
-          "Relic Shield And",
-          "Close combat weapon",
-          "Thunder hammer"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Wolf Guard Battle Leader in Terminator Armour",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Twin lightning claws"
-        ]
-      },
-      {
-        "id": "cho_3",
-        "scope": "Wolf Guard Battle Leader in Terminator Armour",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Chainfist",
-          "Power fist",
-          "Power weapon",
-          "Thunder hammer",
-          "Combi-weapon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: relic shield and (choice) on Wolf Guard Battle Leader In Terminator Armour"
-    ]
-  },
-  "000000301": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Guard Battle Leader on Thunderworlf",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Wolf Guard Battle Leader on Thunderworlf",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Twin lightning claws"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Wolf Guard Battle Leader on Thunderworlf",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Combi-weapon",
-          "Master-Crafted Boltgun",
-          "Plasma pistol – standard",
-          "Storm bolter",
-          "Power fist",
-          "Relic weapon",
-          "Thunder hammer"
-        ]
-      },
-      {
-        "id": "cho_3",
-        "scope": "Wolf Guard Battle Leader on Thunderworlf",
-        "group": "Relic Weapon Options",
-        "type": "choice",
-        "replaces": "Relic weapon",
-        "choices": [
-          "Plasma pistol – standard",
-          "Power fist",
-          "Thunder hammer",
-          "Storm Shield And",
-          "Close combat weapon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: master-crafted boltgun (choice) on Wolf Guard Battle Leader On Thunderwolf",
-      "WEAPON_NOT_FOUND: storm shield and (choice) on Wolf Guard Battle Leader On Thunderwolf"
-    ]
   },
   "000000302": {
     "size_brackets": [
@@ -3540,22 +2128,6 @@
     ],
     "_parser_flags": []
   },
-  "000000304": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Lukas the Trickster - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
   "000000305": {
     "size_brackets": [
       10
@@ -3629,106 +2201,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000000308": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Iron Priest on Thunderwolf",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Iron Priest on Thunderwolf",
-        "group": "Boltgun Options",
-        "type": "choice",
-        "replaces": "Boltgun",
-        "choices": [
-          "Bolt pistol",
-          "Helfrost pistol – dispersed"
-        ]
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000000310": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Scout Pack Leader",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Wolf Scouts",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cc_1",
-        "scope": "Wolf Scout Pack Leader",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Boltgun",
-        "replacement_choices": [
-          "Bolt pistol",
-          "Power weapon",
-          "Plasma pistol – standard",
-          "Boltgun"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      },
-      {
-        "id": "cc_2",
-        "scope": "Wolf Scout Pack Leader",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Boltgun",
-        "replacement_choices": [
-          "Flamer",
-          "Grav-gun",
-          "Heavy bolter",
-          "Meltagun",
-          "Missile launcher – frag",
-          "Plasma gun – standard"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      },
-      {
-        "id": "cc_3",
-        "scope": "Wolf Scouts",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Boltgun",
-        "replacement_choices": [
-          "Astartes shotgun",
-          "Combat knife"
-        ],
-        "max_total_all": true
-      }
-    ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Wolf Scouts (Legendary) — \"any/all\" scope needs max_total set",
-      "UNMATCHED: The Wolf Scout Pack Leader's bolt pistol and boltgun can be replaced with with 1 twin lightning claws, or two different "
-    ]
-  },
   "000000311": {
     "size_brackets": [
       5,
@@ -3769,49 +2241,6 @@
     ],
     "options": [],
     "_parser_flags": []
-  },
-  "000000315": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Guard Pack Leader",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Wolf Guard",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cc_1",
-        "scope": "Wolf Guard",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Bolt pistol",
-        "replacement_choices": [
-          "Boltgun",
-          "Combi-weapon",
-          "Plasma pistol – standard",
-          "Storm bolter",
-          "Storm Shield"
-        ],
-        "max_total_all": true
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count_choice) on Wolf Guard",
-      "REVIEW_MAX_TOTAL: Wolf Guard — \"any/all\" scope needs max_total set"
-    ]
   },
   "000000317": {
     "size_brackets": [
@@ -3875,24 +2304,6 @@
       "UNMATCHED: Any number of models can each have their storm bolter replaced with 1 storm shield.",
       "UNMATCHED: For every 5 models in this unit, 1 Wolf Guard Terminator can replace its storm bolter and master-crafted power weapon wi",
       "WEAPON_NOT_FOUND: of the following: 1 relic greataxe 1 twin lightning claws (single.replacement) on Wolf Guard Terminators"
-    ]
-  },
-  "000000321": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Stormwolf",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: This model's 2 skyhammer missile launchers can replaced with one of the following: 2 twin heavy bolters 2 twin multi-mel"
     ]
   },
   "000000322": {
@@ -3972,135 +2383,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000000324": {
-    "size_brackets": [
-      5,
-      10,
-      15
-    ],
-    "model_groups": [
-      {
-        "name": "Skyclaw Pack Leader",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Skyclaws",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Skyclaw Pack Leader",
-        "group": "Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Astartes chainsword",
-        "choices": [
-          "Power fist",
-          "Power weapon"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Skyclaw Pack Leader",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Plasma pistol – standard"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Up to 2 Skyclaws can each have their bolt pistol and Astartes chainsword replaced with one of the following: 1 plasma pi"
-    ]
-  },
-  "000000325": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Stormfang Gunship",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Stormfang Gunship",
-        "group": "Skyhammer Missile Launcher Options",
-        "type": "choice",
-        "replaces": "Skyhammer missile launcher",
-        "choices": [
-          "Twin multi-melta",
-          "Twin heavy bolter"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Stormfang Gunship",
-        "group": "Twin Stormstrike Missile Launcher Options",
-        "type": "choice",
-        "replaces": "Twin Stormstrike Missile Launcher",
-        "choices": [
-          "Twin lascannon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin stormstrike missile launcher (single.replaces) on Stormfang Gunship"
-    ]
-  },
-  "000000326": {
-    "size_brackets": [
-      5,
-      6
-    ],
-    "model_groups": [
-      {
-        "name": "Long Fang Pack Leader",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Long Fangs",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Long Fang Pack Leader",
-        "group": "Close Combat Weapon Options",
-        "type": "choice",
-        "replaces": "Close combat weapon",
-        "choices": [
-          "Astartes chainsword",
-          "Power fist",
-          "Power weapon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Any number of Long Fangs can each have their boltgun replaced with one of the following: 1 grav-cannon 1 heavy bolter 1 ",
-      "UNMATCHED: The Long Fang Pack Leader's boltgun can be replace with one of the following 1 flamer 1 grav-gun 1 meltagun 1 plasma gun"
-    ]
-  },
   "000000358": {
     "size_brackets": [
       1
@@ -4165,234 +2447,6 @@
       "WEAPON_NOT_FOUND: infernum halo-launcher (add_choice) on Corvus Blackstar"
     ]
   },
-  "000001037": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Death Guard Chaos Lord",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Death Guard Chaos Lord",
-        "group": "Plague Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Plague Bolt Pistol",
-        "choices": [
-          "Combi-weapon",
-          "Plague Combi-Bolter",
-          "Plague Fist",
-          "Plague-Encrusted Exalted Weapon",
-          "Plasma pistol – standard"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Death Guard Chaos Lord",
-        "group": "Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Astartes chainsword",
-        "choices": [
-          "Plague Fist",
-          "Plague-Encrusted Exalted Weapon"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Death Guard Chaos Lord",
-        "group": "Plague Bolt Pistol And Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Plague Bolt Pistol And Astartes Chainsword",
-        "choices": [
-          "Twin Lighting Claws"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: plague bolt pistol (choice.replaces) on Death Guard Chaos Lord",
-      "WEAPON_NOT_FOUND: plague combi-bolter (choice) on Death Guard Chaos Lord",
-      "WEAPON_NOT_FOUND: plague fist (choice) on Death Guard Chaos Lord",
-      "WEAPON_NOT_FOUND: plague-encrusted exalted weapon (choice) on Death Guard Chaos Lord",
-      "WEAPON_NOT_FOUND: plague fist (choice) on Death Guard Chaos Lord",
-      "WEAPON_NOT_FOUND: plague-encrusted exalted weapon (choice) on Death Guard Chaos Lord",
-      "WEAPON_NOT_FOUND: plague bolt pistol and astartes chainsword (single.replaces) on Death Guard Chaos Lord",
-      "WEAPON_NOT_FOUND: twin lighting claws (single.replacement) on Death Guard Chaos Lord"
-    ]
-  },
-  "000001038": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Death Guard Chaos Lord in Terminator Armour",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Death Guard Chaos Lord in Terminator Armour",
-        "group": "Plague Combi-Bolter Options",
-        "type": "choice",
-        "replaces": "Plague Combi-Bolter",
-        "choices": [
-          "Combi-weapon",
-          "Plague-Encrusted Exalted Weapon"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Death Guard Chaos Lord in Terminator Armour",
-        "group": "Plague-Encrusted Exalted Weapon Options",
-        "type": "choice",
-        "replaces": "Plague-Encrusted Exalted Weapon",
-        "choices": [
-          "Chainfist",
-          "Plague Fist"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Death Guard Chaos Lord in Terminator Armour",
-        "group": "Plague Combi-Bolter And Plague-Encrusted Exalted Weapon Options",
-        "type": "choice",
-        "replaces": "Plague Combi-Bolter And Plague-Encrusted Exalted Weapon",
-        "choices": [
-          "Twin Lighting Claws"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: plague combi-bolter (choice.replaces) on Death Guard Chaos Lord In Terminator Armour",
-      "WEAPON_NOT_FOUND: plague-encrusted exalted weapon (choice) on Death Guard Chaos Lord In Terminator Armour",
-      "WEAPON_NOT_FOUND: plague-encrusted exalted weapon (choice.replaces) on Death Guard Chaos Lord In Terminator Armour",
-      "WEAPON_NOT_FOUND: plague fist (choice) on Death Guard Chaos Lord In Terminator Armour",
-      "WEAPON_NOT_FOUND: plague combi-bolter and plague-encrusted exalted weapon (single.replaces) on Death Guard Chaos Lord In Terminator Armour",
-      "WEAPON_NOT_FOUND: twin lighting claws (single.replacement) on Death Guard Chaos Lord In Terminator Armour"
-    ]
-  },
-  "000001041": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Death Guard Sorcerer in Terminator Armour",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Death Guard Sorcerer in Terminator Armour",
-        "group": "Plague Combi-Bolter Options",
-        "type": "choice",
-        "replaces": "Plague Combi-Bolter",
-        "choices": [
-          "Combi-weapon",
-          "Plague-Encrusted Exalted Weapon"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Death Guard Sorcerer in Terminator Armour",
-        "group": "Force Weapon Options",
-        "type": "choice",
-        "replaces": "Force weapon",
-        "choices": [
-          "Chainfist",
-          "Plague Fist",
-          "Plague-Encrusted Exalted Weapon"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Death Guard Sorcerer in Terminator Armour",
-        "group": "Plague Combi-Bolter And Force Weapon Options",
-        "type": "choice",
-        "replaces": "Plague Combi-Bolter And Force Weapon",
-        "choices": [
-          "Twin Lighting Claws"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: plague combi-bolter (choice.replaces) on Death Guard Sorcerer In Terminator Armour",
-      "WEAPON_NOT_FOUND: plague-encrusted exalted weapon (choice) on Death Guard Sorcerer In Terminator Armour",
-      "WEAPON_NOT_FOUND: plague fist (choice) on Death Guard Sorcerer In Terminator Armour",
-      "WEAPON_NOT_FOUND: plague-encrusted exalted weapon (choice) on Death Guard Sorcerer In Terminator Armour",
-      "WEAPON_NOT_FOUND: plague combi-bolter and force weapon (single.replaces) on Death Guard Sorcerer In Terminator Armour",
-      "WEAPON_NOT_FOUND: twin lighting claws (single.replacement) on Death Guard Sorcerer In Terminator Armour"
-    ]
-  },
-  "000001043": {
-    "size_brackets": [
-      10,
-      20
-    ],
-    "model_groups": [
-      {
-        "name": "Death Guard Cultist Champion",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Death Guard Cultists",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: For every 10 models in the unit, 1 Death Guard Cultist's Cultist firearm can be replaced with 1 flamer.",
-      "UNMATCHED: For every 10 models in the unit, 1 Death Guard Cultist's Cultist firearm can be replaced with 1 heavy stubber.",
-      "UNMATCHED: For every 10 models in the unit, 1 Death Guard Cultist's Cultist firearm can be replaced with 1 grenade launcher."
-    ]
-  },
-  "000001045": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Possessed Champion",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Possessed",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: 1 model can be equipped with 1 diseased icon."
-    ]
-  },
   "000001046": {
     "size_brackets": [
       1
@@ -4405,8 +2459,8 @@
         },
         "default_weapons": [
           "Multi-melta",
-          "Close combat weapon",
-          "Helbrute fist"
+          "Helbrute fist",
+          "Close combat weapon"
         ]
       }
     ],
@@ -4443,7 +2497,8 @@
       "WEAPON_NOT_FOUND: additional helbrute fist (choice) on Helbrute",
       "UNMATCHED: 1 of this model's Helbrute fists can be replaced with 1 missile launcher",
       "UNMATCHED: For each Helbrute fist this model is equipped with, it can be equipped with one of the following: 1 combi-bolter* 1 heav"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000001047": {
     "size_brackets": [
@@ -4485,7 +2540,8 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: additional combi-bolter (add_choice) on Chaos Rhino"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000001048": {
     "size_brackets": [
@@ -4503,7 +2559,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001049": {
     "size_brackets": [
@@ -4544,7 +2601,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001050": {
     "size_brackets": [
@@ -4557,7 +2615,6 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Lascannon",
           "Predator twin lascannon",
           "Armoured tracks"
         ]
@@ -4597,7 +2654,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001052": {
     "size_brackets": [
@@ -4617,7 +2675,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001053": {
     "size_brackets": [
@@ -4636,7 +2695,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001054": {
     "size_brackets": [
@@ -4655,7 +2715,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001055": {
     "size_brackets": [
@@ -4676,7 +2737,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001056": {
     "size_brackets": [
@@ -4695,7 +2757,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001057": {
     "size_brackets": [
@@ -4725,7 +2788,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001058": {
     "size_brackets": [
@@ -4745,76 +2809,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000001153": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Cerberus",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Cerberus",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "ach_2",
-        "scope": "Cerberus",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000001154": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Vanguard Veteran Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Vanguard Veterans",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: Any number of models can each have their bolt pistol replaced one of the following: 1 storm shield 1 grav-pistol 1 hand "
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001156": {
     "size_brackets": [
@@ -4847,7 +2843,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001158": {
     "size_brackets": [
@@ -4861,8 +2858,8 @@
         },
         "default_weapons": [
           "Bolt pistol",
-          "Onslaught gatling cannon",
           "Twin bolt rifle",
+          "Onslaught gatling cannon",
           "Close combat weapon"
         ]
       }
@@ -4879,7 +2876,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001159": {
     "size_brackets": [
@@ -4913,7 +2911,8 @@
     "options": [],
     "_parser_flags": [
       "UNMATCHED: One Incursor can be equipped with 1 haywire mine."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000001160": {
     "size_brackets": [
@@ -4993,136 +2992,8 @@
     ],
     "_parser_flags": [
       "REVIEW_MAX_TOTAL: Scout Squad — \"any/all\" scope needs max_total set"
-    ]
-  },
-  "000001161": {
-    "size_brackets": [
-      1
     ],
-    "model_groups": [
-      {
-        "name": "Sicaran Arcus",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Sicaran Arcus",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Sicaran Arcus",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Sicaran Arcus",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000001162": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sergeant Telion - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000001163": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sicaran Omega",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Sicaran Omega",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Sicaran Omega",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Sicaran Omega",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000001164": {
-    "size_brackets": [
-      2
-    ],
-    "model_groups": [
-      {
-        "name": "Techmarine Gunner",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Thunderfire Cannon",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
+    "_defaults_source": "equipped"
   },
   "000001165": {
     "size_brackets": [
@@ -5141,130 +3012,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000001166": {
-    "size_brackets": [
-      2,
-      5
-    ],
-    "model_groups": [
-      {
-        "name": "Veteran Biker Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Veteran Bikers",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Veteran Biker Sergeant",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Boltgun",
-          "Combi-weapon",
-          "Grav-pistol",
-          "Plasma pistol – standard",
-          "Storm bolter"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Veteran Biker Sergeant",
-        "group": "Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Astartes chainsword",
-        "choices": [
-          "Power fist",
-          "Power weapon",
-          "Thunder hammer"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Any number of Veteran Bikers' bolt pistols can each be replaced with one of the following: 1 grav-pistol 1 plasma pistol",
-      "UNMATCHED: Any number of Veteran Bikers' Astartes chainswords can each be replaced with one of the following: 1 flamer 1 grav-gun 1"
-    ]
-  },
-  "000001167": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Company Champion on Bike",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000001168": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Speeder Tempest",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000001169": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Speeder Tornado",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Land Speeder Tornado",
-        "group": "Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Heavy bolter",
-        "choices": [
-          "Multi-melta"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Land Speeder Tornado",
-        "group": "Assault Cannon Options",
-        "type": "choice",
-        "replaces": "Assault cannon",
-        "choices": [
-          "Heavy flamer"
-        ]
-      }
-    ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001172": {
     "size_brackets": [
@@ -5285,7 +3034,8 @@
     "options": [],
     "_parser_flags": [
       "UNMATCHED: This model's master-crafted heavy bolt rifle and master-crafted power weapon can be replaced with: 1 boltstorm gauntlet,"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000001174": {
     "size_brackets": [
@@ -5304,96 +3054,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000001175": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Kratos",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Kratos",
-        "group": "Kratos Battle Cannon Options",
-        "type": "choice",
-        "replaces": "Kratos Battle Cannon",
-        "choices": [
-          "Melta Blast-Gun",
-          "Volkite Cardanelle"
-        ]
-      },
-      {
-        "id": "cc_2",
-        "scope": "Kratos",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Heavy bolter",
-        "replacement_choices": [
-          "Autocannons",
-          "Lascannon",
-          "Volkite Calivers"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      },
-      {
-        "id": "cc_3",
-        "scope": "Kratos",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Heavy bolter",
-        "replacement_choices": [
-          "Heavy flamer",
-          "Lascannon",
-          "Volkite Culverins"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      },
-      {
-        "id": "ach_4",
-        "scope": "Kratos",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Combi-weapon",
-          "Havoc launcher",
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Twin Boltgun"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_5",
-        "scope": "Kratos",
-        "group": "Hunter Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter Killer Missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: kratos battle cannon (choice.replaces) on Kratos",
-      "WEAPON_NOT_FOUND: melta blast-gun (choice) on Kratos",
-      "WEAPON_NOT_FOUND: volkite cardanelle (choice) on Kratos",
-      "WEAPON_NOT_FOUND: autocannons (count_choice) on Kratos",
-      "WEAPON_NOT_FOUND: volkite calivers (count_choice) on Kratos",
-      "WEAPON_NOT_FOUND: volkite culverins (count_choice) on Kratos",
-      "WEAPON_NOT_FOUND: twin boltgun (add_choice) on Kratos",
-      "WEAPON_NOT_FOUND: hunter killer missile (add) on Kratos"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001177": {
     "size_brackets": [
@@ -5436,82 +3098,8 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": []
-  },
-  "000001178": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Vindicator Laser Destroyer",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Vindicator Laser Destroyer",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000001179": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sokar-pattern Stormbird",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000001182": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Ancient on Bike",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Ancient on Bike",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Boltgun",
-          "Combi-weapon",
-          "Grav-pistol",
-          "Plasma pistol – standard",
-          "Storm bolter",
-          "Power fist",
-          "Power weapon",
-          "Thunder hammer"
-        ]
-      }
-    ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001183": {
     "size_brackets": [
@@ -5571,92 +3159,6 @@
       "UNMATCHED: Any number of models can each have their power fist replaced with 1 chainfist."
     ]
   },
-  "000001184": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Terminus Ultra",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Terminus Ultra",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_2",
-        "scope": "Terminus Ultra",
-        "group": "Multi-Melta",
-        "type": "add",
-        "adds_weapon": "Multi-melta",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Terminus Ultra",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000001185": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sicaran Battle Tank",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Sicaran Battle Tank",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Sicaran Battle Tank",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Sicaran Battle Tank",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
   "000001188": {
     "size_brackets": [
       1
@@ -5691,39 +3193,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
-  },
-  "000001189": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Mastodon",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Mastodon",
-        "group": "Heavy Flamer Options",
-        "type": "choice",
-        "replaces": "Heavy flamer",
-        "choices": [
-          "Heavy bolter",
-          "Lascannon",
-          "Volkite Culverins"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: volkite culverins (choice) on Mastodon",
-      "UNMATCHED: This model's 2 lascannons can be replaced with on of the following: 2 heavy bolters 2 heavy flamers 2 volkite culverins"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001190": {
     "size_brackets": [
@@ -5756,7 +3227,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001191": {
     "size_brackets": [
@@ -5809,60 +3281,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
-  },
-  "000001192": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Chaplain Venerable Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Chaplain Venerable Dreadnought",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Heavy flamer",
-          "Dreadnought combat weapon",
-          "Assault cannon",
-          "Dreadnought Inferno Cannon",
-          "Heavy plasma cannon – standard",
-          "Multi-melta",
-          "Twin lascannon"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Chaplain Venerable Dreadnought",
-        "group": "Assault Cannon Options",
-        "type": "choice",
-        "replaces": "Assault cannon",
-        "choices": [
-          "Dreadnought Inferno Cannon",
-          "Heavy plasma cannon – standard",
-          "Multi-melta",
-          "Storm bolter",
-          "Dreadnought combat weapon",
-          "Heavy flamer",
-          "Dreadnought combat weapon",
-          "Twin lascannon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: dreadnought inferno cannon (choice) on Chaplain Venerable Dreadnought",
-      "WEAPON_NOT_FOUND: dreadnought inferno cannon (choice) on Chaplain Venerable Dreadnought"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001193": {
     "size_brackets": [
@@ -5876,8 +3296,8 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Centurion bolters",
           "Grav-cannon",
+          "Centurion bolters",
           "Centurion fists"
         ]
       },
@@ -5887,8 +3307,8 @@
           "fills_to_size": true
         },
         "default_weapons": [
-          "Centurion bolters",
           "Grav-cannon",
+          "Centurion bolters",
           "Centurion fists"
         ]
       }
@@ -5910,40 +3330,8 @@
     "_parser_flags": [
       "UNMATCHED: Any number of models can each have their Centurion bolters replaced with 1 Centurion missile launcher.",
       "REVIEW_MAX_TOTAL: Centurion Devastator Squad — \"any/all\" scope needs max_total set"
-    ]
-  },
-  "000001344": {
-    "size_brackets": [
-      1
     ],
-    "model_groups": [
-      {
-        "name": "Librarian with Jump Pack",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Librarian with Jump Pack",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Boltgun",
-          "Combi-weapon",
-          "Grav-pistol",
-          "Hand flamer",
-          "Inferno pistol",
-          "Plasma pistol – standard",
-          "Storm bolter"
-        ]
-      }
-    ],
-    "_parser_flags": []
+    "_defaults_source": "equipped"
   },
   "000001345": {
     "size_brackets": [
@@ -5962,7 +3350,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001346": {
     "size_brackets": [
@@ -6028,79 +3417,8 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: neo volkite pistol, 1 master-crafted power weapon and 1 storm shield (single.replacement) on Lieutenant"
-    ]
-  },
-  "000001347": {
-    "size_brackets": [
-      1
     ],
-    "model_groups": [
-      {
-        "name": "Land Raider Prometheus",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Land Raider Prometheus",
-        "group": "Multi-Melta",
-        "type": "add",
-        "adds_weapon": "Multi-melta",
-        "max_total": 1
-      },
-      {
-        "id": "add_2",
-        "scope": "Land Raider Prometheus",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Land Raider Prometheus",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000001348": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Librarian on Bike",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Librarian on Bike",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Boltgun",
-          "Combi-weapon",
-          "Grav-pistol",
-          "Plasma pistol – standard",
-          "Storm bolter"
-        ]
-      }
-    ],
-    "_parser_flags": []
+    "_defaults_source": "equipped"
   },
   "000001367": {
     "size_brackets": [
@@ -6119,7 +3437,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001368": {
     "size_brackets": [
@@ -6139,7 +3458,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001369": {
     "size_brackets": [
@@ -6158,7 +3478,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001370": {
     "size_brackets": [
@@ -6178,7 +3499,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001371": {
     "size_brackets": [
@@ -6213,7 +3535,8 @@
     "_parser_flags": [
       "UNMATCHED: The Deathshroud Champion can be equipped with 1 additional plaguespurt gauntlet.",
       "UNMATCHED: The Deathshroud Champion can be equipped with 1 icon of despair."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000001372": {
     "size_brackets": [
@@ -6288,7 +3611,8 @@
     "_parser_flags": [
       "UNMATCHED: For every 5 models in this unit, up to 3 models' combi-bolters can each be replaced with 1 combi-weapon.",
       "UNMATCHED: If this unit contains only 3 models, 1 Blightlord Terminator's combi-bolter and bubotic blade can be replaced with 1 pla"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000001374": {
     "size_brackets": [
@@ -6311,7 +3635,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001376": {
     "size_brackets": [
@@ -6353,7 +3678,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001377": {
     "size_brackets": [
@@ -6374,110 +3700,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000001423": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Ravenwing Talonmaster",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000001523": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Scout Sniper Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Scout Snipers",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: 1 Scout Sniper's scout sniper rifle can be replaced with 1 missile launcher."
-    ]
-  },
-  "000001524": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sergeant Chronus - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000001527": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Techmarine on Bike",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Techmarine on Bike",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Boltgun",
-          "Combi-weapon",
-          "Grav-pistol",
-          "Plasma pistol – standard",
-          "Storm bolter"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Techmarine on Bike",
-        "group": "Omnissian Power Axe Options",
-        "type": "choice",
-        "replaces": "Omnissian power axe",
-        "choices": [
-          "Astartes chainsword",
-          "Power fist",
-          "Thunder hammer"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: This model must be equipped with one of the following: 1 servo arm 1 conversion beamer 1 flamer, 1 plasma cutter and 2 s"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001606": {
     "size_brackets": [
@@ -6531,150 +3755,8 @@
         ]
       }
     ],
-    "_parser_flags": []
-  },
-  "000001607": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Raider Achilles",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Land Raider Achilles",
-        "group": "Twin Volkite Culverins Options",
-        "type": "choice",
-        "replaces": "Twin Volkite Culverins",
-        "choices": [
-          "Twin multi-melta"
-        ]
-      },
-      {
-        "id": "add_2",
-        "scope": "Land Raider Achilles",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Land Raider Achilles",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin volkite culverins (single.replaces) on Land Raider Achilles"
-    ]
-  },
-  "000001608": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Raider Proteus",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Land Raider Proteus",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Multi-melta",
-          "Twin heavy bolter",
-          "Twin Heavy Flamer"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Land Raider Proteus",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Land Raider Proteus",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      },
-      {
-        "id": "add_4",
-        "scope": "Land Raider Proteus",
-        "group": "Explorator Augury Web",
-        "type": "add",
-        "adds_weapon": "Explorator Augury Web",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin heavy flamer (add_choice) on Land Raider Proteus",
-      "WEAPON_NOT_FOUND: explorator augury web (add) on Land Raider Proteus"
-    ]
-  },
-  "000001609": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Fire Raptor Gunship",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Fire Raptor Gunship",
-        "group": "Twin Hellstrike Missile Launchers Options",
-        "type": "choice",
-        "replaces": "Twin Hellstrike Missile Launchers",
-        "choices": [
-          "Twin lascannon"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Fire Raptor Gunship",
-        "group": "Twin Autocannon Options",
-        "type": "choice",
-        "replaces": "Twin autocannon",
-        "choices": [
-          "Quad Heavy Bolters"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin hellstrike missile launchers (single.replaces) on Fire Raptor Gunship",
-      "WEAPON_NOT_FOUND: quad heavy bolters (single.replacement) on Fire Raptor Gunship"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001610": {
     "size_brackets": [
@@ -6695,7 +3777,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001611": {
     "size_brackets": [
@@ -6717,61 +3800,6 @@
     ],
     "options": [],
     "_parser_flags": []
-  },
-  "000001666": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Falchion",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Falchion",
-        "group": "Quad Lascannons Options",
-        "type": "choice",
-        "replaces": "Quad Lascannons",
-        "choices": [
-          "Laser Destroyers"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Falchion",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin Heavy Flamer"
-        ]
-      },
-      {
-        "id": "ach_3",
-        "scope": "Falchion",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: quad lascannons (single.replaces) on Falchion",
-      "WEAPON_NOT_FOUND: laser destroyers (single.replacement) on Falchion",
-      "WEAPON_NOT_FOUND: twin heavy flamer (single.replacement) on Falchion"
-    ]
   },
   "000001667": {
     "size_brackets": [
@@ -6853,7 +3881,8 @@
     ],
     "_parser_flags": [
       "UNMATCHED: All Eliminators in this unit can each have their bolt sniper rifle replaced with 1 las fusil."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000001825": {
     "size_brackets": [
@@ -6891,36 +3920,6 @@
       }
     ],
     "_parser_flags": []
-  },
-  "000001991": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Terrax-pattern Termite",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Terrax-pattern Termite",
-        "group": "Combi-Bolter Options",
-        "type": "choice",
-        "replaces": "Combi-bolter",
-        "choices": [
-          "Heavy flamer",
-          "Twin Volkite Chargers"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin volkite chargers (choice) on Terrax-pattern Termite"
-    ]
   },
   "000001997": {
     "size_brackets": [
@@ -6973,26 +3972,6 @@
       "UNMATCHED: For every 5 models in this unit, 1 model's Astartes chainsword can be replaced with equipped with 1 eviscerator."
     ]
   },
-  "000002076": {
-    "size_brackets": [
-      1,
-      2,
-      3
-    ],
-    "model_groups": [
-      {
-        "name": "Attack Bikes",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: Any number of models can each have their heavy bolter replaced with 1 multi-melta."
-    ]
-  },
   "000002098": {
     "size_brackets": [
       5,
@@ -7036,7 +4015,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002099": {
     "size_brackets": [
@@ -7050,7 +4030,8 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Flamestorm gauntlets"
+          "Flamestorm gauntlets",
+          "Twin power fists"
         ]
       },
       {
@@ -7059,14 +4040,16 @@
           "fills_to_size": true
         },
         "default_weapons": [
-          "Flamestorm gauntlets"
+          "Flamestorm gauntlets",
+          "Twin power fists"
         ]
       }
     ],
     "options": [],
     "_parser_flags": [
       "UNMATCHED: All models in this unit can each have their flamestorm gauntlets replaced with 1 auto boltstorm gauntlets and 1 fragstor"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002100": {
     "size_brackets": [
@@ -7086,101 +4069,6 @@
     ],
     "options": [],
     "_parser_flags": []
-  },
-  "000002102": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Speeder Typhoon",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Land Speeder Typhoon",
-        "group": "Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Heavy bolter",
-        "choices": [
-          "Multi-melta"
-        ]
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000002103": {
-    "size_brackets": [
-      5
-    ],
-    "model_groups": [
-      {
-        "name": "Apothecary",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Company Ancient",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Company Champion",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Company Veterans",
-        "count": {
-          "fixed": 2
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cc_1",
-        "scope": "Company Veterans",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Bolt pistol",
-        "replacement_choices": [
-          "Hand flamer",
-          "Grav-pistol",
-          "Inferno pistol",
-          "Plasma pistol – standard"
-        ],
-        "max_total_all": true
-      },
-      {
-        "id": "cho_2",
-        "scope": "Company Ancient",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Boltgun",
-          "Combi-weapon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Command Squad — \"any/all\" scope needs max_total set",
-      "UNMATCHED: Any number of Company Veterans can each have their bolt pistol replaced with 1 Astartes shield.",
-      "UNMATCHED: Any number of Company Veterans can each have their bolt pistol and boltgun replaced with 1 twin lightning claws.",
-      "UNMATCHED: Any number of Company Veterans can each have their boltgun replaced with one of the following: 1 Astartes chainsword 1 A"
-    ]
   },
   "000002105": {
     "size_brackets": [
@@ -7243,7 +4131,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002202": {
     "size_brackets": [
@@ -7278,78 +4167,8 @@
     "_parser_flags": [
       "UNMATCHED: Up to 4 Devastator Marines can each have their boltgun replaced with one of the following: 1 grav-cannon 1 heavy bolter ",
       "UNMATCHED: The Devastator Sergeant's bolt pistol and boltgun can be replaced with two different weapons from the following list:* 1"
-    ]
-  },
-  "000002234": {
-    "size_brackets": [
-      1
     ],
-    "model_groups": [
-      {
-        "name": "Primaris Company Champion",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000002252": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Spartan",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Spartan",
-        "group": "Quad Lascannons Options",
-        "type": "choice",
-        "replaces": "Quad Lascannons",
-        "choices": [
-          "Laser Destroyers"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Spartan",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin Heavy Flamer"
-        ]
-      },
-      {
-        "id": "ach_3",
-        "scope": "Spartan",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: quad lascannons (single.replaces) on Spartan",
-      "WEAPON_NOT_FOUND: laser destroyers (single.replacement) on Spartan",
-      "WEAPON_NOT_FOUND: twin heavy flamer (single.replacement) on Spartan"
-    ]
+    "_defaults_source": "equipped"
   },
   "000002255": {
     "size_brackets": [
@@ -7418,39 +4237,6 @@
       "UNMATCHED: Any number of Sternguard Veterans can each have their Sternguard bolt rifle replaced with 1 combi-weapon."
     ]
   },
-  "000002258": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Stalker",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Stalker",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_2",
-        "scope": "Stalker",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
   "000002266": {
     "size_brackets": [
       1
@@ -7470,159 +4256,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000002267": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Deathstorm Drop Pod",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Deathstorm Drop Pod",
-        "group": "Deathstorm Cannon Array Options",
-        "type": "choice",
-        "replaces": "Deathstorm Cannon Array",
-        "choices": [
-          "Deathstorm Missile Array"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: deathstorm cannon array (single.replaces) on Deathstorm Drop Pod",
-      "WEAPON_NOT_FOUND: deathstorm missile array (single.replacement) on Deathstorm Drop Pod"
-    ]
-  },
-  "000002268": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Deimos Predator",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Deimos Predator",
-        "group": "Plasma Destroyer Options",
-        "type": "choice",
-        "replaces": "Plasma Destroyer",
-        "choices": [
-          "Conversion Beam Cannon",
-          "Infernus Cannon",
-          "Magna-Melta Cannon"
-        ]
-      },
-      {
-        "id": "ach_2",
-        "scope": "Deimos Predator",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_3",
-        "scope": "Deimos Predator",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      },
-      {
-        "id": "add_4",
-        "scope": "Deimos Predator",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: plasma destroyer (choice.replaces) on Deimos Predator",
-      "WEAPON_NOT_FOUND: conversion beam cannon (choice) on Deimos Predator",
-      "WEAPON_NOT_FOUND: infernus cannon (choice) on Deimos Predator",
-      "WEAPON_NOT_FOUND: magna-melta cannon (choice) on Deimos Predator"
-    ]
-  },
-  "000002269": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Deredeo Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Deredeo Dreadnought",
-        "group": "Anvilus Autocannon Battery Options",
-        "type": "choice",
-        "replaces": "Anvilus Autocannon Battery",
-        "choices": [
-          "Arachnus Heavy Lascannon Battery",
-          "Hellfire Plasma Carronade",
-          "Volkite Falconet Battery"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Deredeo Dreadnought",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin Heavy Flamer"
-        ]
-      },
-      {
-        "id": "ach_3",
-        "scope": "Deredeo Dreadnought",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Aiolos Missile Launcher",
-          "Boreas Air Defence Missiles"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: anvilus autocannon battery (choice.replaces) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: arachnus heavy lascannon battery (choice) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: hellfire plasma carronade (choice) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: volkite falconet battery (choice) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: twin heavy flamer (single.replacement) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: aiolos missile launcher (add_choice) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: boreas air defence missiles (add_choice) on Deredeo Dreadnought"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002270": {
     "size_brackets": [
@@ -7668,7 +4303,8 @@
     ],
     "_parser_flags": [
       "UNMATCHED: All of the models in this unit can each have their superfrag rocket launcher replaced with 1 superkrak rocket launcher."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002285": {
     "size_brackets": [
@@ -7781,59 +4417,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000002302": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Deathwing Ancient",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Deathwing Apothecary",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Deathwing Champion",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Deathwing Command Terminators",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Deathwing Command Terminators",
-        "group": "Watcher In The Dark",
-        "type": "add",
-        "adds_weapon": "Watcher In The Dark",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Any number of Deathwing Command Terminators can each have their storm bolter and power fist replaced with one of the fol",
-      "UNMATCHED: Any number of Deathwing Command Terminators can each have their power fist replaced with 1 chainfist.",
-      "UNMATCHED: 1 Deathwing Command Terminator's power fist can be replaced with 1 power weapon.",
-      "UNMATCHED: For every 5 models in this unit, 1 Deathwing Command Terminator can replace its storm bolter with one of the following: ",
-      "WEAPON_NOT_FOUND: watcher in the dark (add) on Deathwing Command Squad"
-    ]
-  },
   "000002460": {
     "size_brackets": [
       1
@@ -7851,7 +4434,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002461": {
     "size_brackets": [
@@ -7903,7 +4487,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002462": {
     "size_brackets": [
@@ -7921,25 +4506,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000002468": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Deathwing Strikemaster",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: This model's storm bolter and master-crafted power weapon can be replaced with either 1 twin lightning claws, or two dif"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002473": {
     "size_brackets": [
@@ -7978,7 +4546,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002568": {
     "size_brackets": [
@@ -8080,23 +4649,8 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: terminator storm shield (choice) on Ancient In Terminator Armour"
-    ]
-  },
-  "000002678": {
-    "size_brackets": [
-      1
     ],
-    "model_groups": [
-      {
-        "name": "Chaplain Cassius - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
+    "_defaults_source": "equipped"
   },
   "000002682": {
     "size_brackets": [
@@ -8119,54 +4673,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000002700": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Astraeus",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Astraeus",
-        "group": "Astraeus Las-Rippers Options",
-        "type": "choice",
-        "replaces": "Astraeus Las-Rippers",
-        "choices": [
-          "Plasma Eradicators"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Astraeus",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin lascannon"
-        ]
-      },
-      {
-        "id": "add_3",
-        "scope": "Astraeus",
-        "group": "Ironhail Heavy Stubber",
-        "type": "add",
-        "adds_weapon": "Ironhail heavy stubber",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: astraeus las-rippers (single.replaces) on Astraeus",
-      "WEAPON_NOT_FOUND: plasma eradicators (single.replacement) on Astraeus"
-    ]
-  },
   "000002701": {
     "size_brackets": [
       1
@@ -8185,70 +4691,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
-  },
-  "000002702": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Captain on Bike",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Captain on Bike",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Combi-weapon",
-          "Hand flamer",
-          "Inferno pistol",
-          "Master-Crafted Boltgun",
-          "Plasma pistol – standard",
-          "Storm bolter",
-          "Relic Shield*",
-          "Relic weapon",
-          "Power fist",
-          "Thunder hammer"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Captain on Bike",
-        "group": "Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Astartes chainsword",
-        "choices": [
-          "Close combat weapon",
-          "Relic Shield*",
-          "Power fist",
-          "Relic weapon"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Captain on Bike",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Twin lightning claws"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: master-crafted boltgun (choice) on Captain on Bike",
-      "WEAPON_NOT_FOUND: relic shield* (choice) on Captain on Bike",
-      "WEAPON_NOT_FOUND: relic shield* (choice) on Captain on Bike"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002703": {
     "size_brackets": [
@@ -8262,9 +4706,9 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Centurion bolters",
           "Twin flamer",
-          "Siege drills"
+          "Siege drills",
+          "Centurion bolters"
         ]
       },
       {
@@ -8273,9 +4717,9 @@
           "fills_to_size": true
         },
         "default_weapons": [
-          "Centurion bolters",
           "Twin flamer",
-          "Siege drills"
+          "Siege drills",
+          "Centurion bolters"
         ]
       }
     ],
@@ -8283,73 +4727,8 @@
     "_parser_flags": [
       "UNMATCHED: Any number of models can each have their twin flamer replaced with 1 twin meltagun.",
       "UNMATCHED: Any number of models can each have their Centurion bolters replaced with 1 Centurion assault launcher."
-    ]
-  },
-  "000002704": {
-    "size_brackets": [
-      1
     ],
-    "model_groups": [
-      {
-        "name": "Fellblade",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Fellblade",
-        "group": "Quad Lascannons Options",
-        "type": "choice",
-        "replaces": "Quad Lascannons",
-        "choices": [
-          "Laser Destroyers",
-          "Quad Heavy Bolters"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Fellblade",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin Heavy Flamer"
-        ]
-      },
-      {
-        "id": "add_3",
-        "scope": "Fellblade",
-        "group": "Havoc Launcher",
-        "type": "add",
-        "adds_weapon": "Havoc launcher",
-        "max_total": 1
-      },
-      {
-        "id": "ach_4",
-        "scope": "Fellblade",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Combi-weapon",
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: quad lascannons (choice.replaces) on Fellblade",
-      "WEAPON_NOT_FOUND: laser destroyers (choice) on Fellblade",
-      "WEAPON_NOT_FOUND: quad heavy bolters (choice) on Fellblade",
-      "WEAPON_NOT_FOUND: twin heavy flamer (single.replacement) on Fellblade"
-    ]
+    "_defaults_source": "equipped"
   },
   "000002705": {
     "size_brackets": [
@@ -8398,76 +4777,6 @@
     ],
     "_parser_flags": []
   },
-  "000002706": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Ironclad Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Ironclad Dreadnought",
-        "group": "Seismic Hammer Options",
-        "type": "choice",
-        "replaces": "Seismic Hammer",
-        "choices": [
-          "Dreadnought Chainfist"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Ironclad Dreadnought",
-        "group": "Dreadnought Combat Weapon Options",
-        "type": "choice",
-        "replaces": "Dreadnought combat weapon",
-        "choices": [
-          "Hurricane bolter"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Ironclad Dreadnought",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Heavy flamer"
-        ]
-      },
-      {
-        "id": "sng_4",
-        "scope": "Ironclad Dreadnought",
-        "group": "Meltagun Options",
-        "type": "choice",
-        "replaces": "Meltagun",
-        "choices": [
-          "Heavy flamer"
-        ]
-      },
-      {
-        "id": "add_5",
-        "scope": "Ironclad Dreadnought",
-        "group": "Ironclad Assault Launchers",
-        "type": "add",
-        "adds_weapon": "Ironclad Assault Launchers",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: seismic hammer (single.replaces) on Ironclad Dreadnought",
-      "WEAPON_NOT_FOUND: dreadnought chainfist (single.replacement) on Ironclad Dreadnought",
-      "UNMATCHED: This model can be equipped with up to 2 hunter-killer missiles.",
-      "WEAPON_NOT_FOUND: ironclad assault launchers (add) on Ironclad Dreadnought"
-    ]
-  },
   "000002707": {
     "size_brackets": [
       1
@@ -8485,7 +4794,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002708": {
     "size_brackets": [
@@ -8525,66 +4835,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000002710": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Raider Helios",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Land Raider Helios",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      },
-      {
-        "id": "add_2",
-        "scope": "Land Raider Helios",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000002711": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Speeder",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Land Speeder",
-        "group": "Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Heavy bolter",
-        "choices": [
-          "Multi-melta"
-        ]
-      }
-    ],
-    "_parser_flags": []
-  },
   "000002712": {
     "size_brackets": [
       3,
@@ -8597,12 +4847,9 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Bolt pistol",
           "Heavy bolt pistol",
-          "Onslaught gatling cannon",
           "Twin bolt rifle",
-          "Astartes chainsword",
-          "Close combat weapon"
+          "Astartes chainsword"
         ]
       },
       {
@@ -8611,12 +4858,9 @@
           "fills_to_size": true
         },
         "default_weapons": [
-          "Bolt pistol",
           "Heavy bolt pistol",
-          "Onslaught gatling cannon",
           "Twin bolt rifle",
-          "Astartes chainsword",
-          "Close combat weapon"
+          "Astartes chainsword"
         ]
       },
       {
@@ -8626,10 +4870,8 @@
         },
         "default_weapons": [
           "Bolt pistol",
-          "Heavy bolt pistol",
-          "Onslaught gatling cannon",
           "Twin bolt rifle",
-          "Astartes chainsword",
+          "Onslaught gatling cannon",
           "Close combat weapon"
         ]
       }
@@ -8637,7 +4879,8 @@
     "options": [],
     "_parser_flags": [
       "UNMATCHED: An Invader ATV's onslaught gatling cannon can be replaced with 1 multi-melta."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002713": {
     "size_brackets": [
@@ -8670,7 +4913,6 @@
         },
         "default_weapons": [
           "Predator twin lascannon",
-          "Lascannon",
           "Armoured tracks"
         ]
       }
@@ -8705,7 +4947,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002715": {
     "size_brackets": [
@@ -8753,7 +4996,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002717": {
     "size_brackets": [
@@ -8766,10 +5010,9 @@
           "fixed": 1
         },
         "default_weapons": [
+          "Twin fragstorm grenade launcher",
           "Heavy flamer",
           "Heavy onslaught gatling cannon",
-          "Onslaught gatling cannon",
-          "Twin fragstorm grenade launcher",
           "Redemptor fist"
         ]
       }
@@ -8814,7 +5057,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002718": {
     "size_brackets": [
@@ -8849,80 +5093,8 @@
       "UNMATCHED: If the Reiver Sergeant is equipped with 1 bolt carbine, it can be equipped with 1 combat knife.",
       "UNMATCHED: All models in this unit can each be equipped with 1 Reiver grav-chute.",
       "UNMATCHED: All models in this unit can each be equipped with 1 grapnel launcher."
-    ]
-  },
-  "000002719": {
-    "size_brackets": [
-      1
     ],
-    "model_groups": [
-      {
-        "name": "Relic Contemptor Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Relic Contemptor Dreadnought",
-        "group": "Cyclone Missile Launcher – Frag",
-        "type": "add",
-        "adds_weapon": "Cyclone missile launcher – frag",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Each of this model's heavy plasma cannons can be replaced with one of the following: 1 conversion beam cannon 1 kheres-p",
-      "UNMATCHED: Each of this model's combi-bolters can be replaced with one of the following: 1 graviton blaster 1 heavy flamer 1 plasma"
-    ]
-  },
-  "000002720": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Relic Razorback",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Relic Razorback",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Multi-melta",
-          "Twin assault cannon",
-          "Twin lascannon"
-        ]
-      },
-      {
-        "id": "add_2",
-        "scope": "Relic Razorback",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Relic Razorback",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
+    "_defaults_source": "equipped"
   },
   "000002721": {
     "size_brackets": [
@@ -9045,46 +5217,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
-  },
-  "000002724": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Thunderhawk Transporter",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000002725": {
-    "size_brackets": [
-      5
-    ],
-    "model_groups": [
-      {
-        "name": "Veteran Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Tyrannic War Veterans",
-        "count": {
-          "fixed": 4
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002726": {
     "size_brackets": [
@@ -9118,7 +5252,18 @@
         },
         "default_weapons": [
           "Whirlwind vengeance launcher",
-          "Armoured tracks"
+          "Armoured tracks",
+          "Ironhail heavy stubber",
+          "Storm bolter",
+          "Twin heavy bolter",
+          "Armoured hull",
+          "Lascannon"
+        ],
+        "default_wargear": [
+          "Astraeus las-rippers",
+          "twin macro-accelerator cannon",
+          "Thunderhawk heavy cannon",
+          "Thunderhawk cluster bombs"
         ]
       }
     ],
@@ -9140,56 +5285,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
-  },
-  "000002728": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Whirlwind Scorpius",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Whirlwind Scorpius",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_2",
-        "scope": "Whirlwind Scorpius",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000002729": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Xiphon Interceptor",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002737": {
     "size_brackets": [
@@ -9278,22 +5375,6 @@
     ],
     "_parser_flags": []
   },
-  "000002738": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sanguinary Priest",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
   "000002748": {
     "size_brackets": [
       3
@@ -9371,7 +5452,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002750": {
     "size_brackets": [
@@ -9390,7 +5472,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002772": {
     "size_brackets": [
@@ -9405,10 +5488,7 @@
         "default_weapons": [
           "Bolt Pistol",
           "Bolt rifle",
-          "Master-crafted bolt rifle",
-          "Master-crafted heavy bolter",
-          "Close combat weapon",
-          "Master-crafted power weapon"
+          "Close combat weapon"
         ]
       },
       {
@@ -9418,10 +5498,6 @@
         },
         "default_weapons": [
           "Bolt Pistol",
-          "Bolt rifle",
-          "Master-crafted bolt rifle",
-          "Master-crafted heavy bolter",
-          "Close combat weapon",
           "Master-crafted power weapon"
         ]
       },
@@ -9432,16 +5508,15 @@
         },
         "default_weapons": [
           "Bolt Pistol",
-          "Bolt rifle",
-          "Master-crafted bolt rifle",
           "Master-crafted heavy bolter",
           "Close combat weapon",
-          "Master-crafted power weapon"
+          "Master-crafted bolt rifle"
         ]
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002773": {
     "size_brackets": [
@@ -9461,7 +5536,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002775": {
     "size_brackets": [
@@ -9492,7 +5568,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002776": {
     "size_brackets": [
@@ -9555,7 +5632,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002779": {
     "size_brackets": [
@@ -9854,7 +5932,8 @@
     "_parser_flags": [
       "WEAPON_NOT_FOUND: orbital comms array (add_choice) on Impulsor",
       "WEAPON_NOT_FOUND: shield dome (add_choice) on Impulsor"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002787": {
     "size_brackets": [
@@ -9905,7 +5984,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002788": {
     "size_brackets": [
@@ -9946,7 +6026,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002789": {
     "size_brackets": [
@@ -9987,7 +6068,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002790": {
     "size_brackets": [
@@ -10001,7 +6083,6 @@
         },
         "default_weapons": [
           "Heavy onslaught gatling cannon",
-          "Ironhail heavy stubber",
           "Macro plasma incinerator – standard",
           "Macro plasma incinerator – supercharge",
           "Repulsor Executioner defensive array",
@@ -10043,7 +6124,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002791": {
     "size_brackets": [
@@ -10094,7 +6176,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002792": {
     "size_brackets": [
@@ -10413,1343 +6496,6 @@
       "WEAPON_NOT_FOUND: blizzard shield and (choice) on Venerable Dreadnought"
     ]
   },
-  "000002802": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Guard Pack Leader with Jump Pack",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Wolf Guard Pack Leader with Jump Pack",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Twin lightning claws"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: This model's bolt pistol and Astartes chainsword can be replaced with two different weapons from the following list:* 1 "
-    ]
-  },
-  "000002803": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Guard Pack Leader in Terminator Armour",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Wolf Guard Pack Leader in Terminator Armour",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Twin lightning claws"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Wolf Guard Pack Leader in Terminator Armour",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Combi-weapon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: This model's storm bolter and power weapon can be replaced with two different options from the following list:* 1 assaul"
-    ]
-  },
-  "000002804": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Guard Pack Leader",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Wolf Guard Pack Leader",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Twin lightning claws"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: This model's bolt pistol and boltgun can be replaced with two different weapons from the following list:* 1 bolt pistol "
-    ]
-  },
-  "000002805": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Cyberwolf",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000002806": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Hound of Morkai Pack Leader",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Hound of Morkai",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000003585": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Chaos Thunderhawk",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Chaos Thunderhawk",
-        "group": "Thunderhawk Heavy Cannon Options",
-        "type": "choice",
-        "replaces": "Thunderhawk Heavy Cannon",
-        "choices": [
-          "Turbo-Laser Destructor"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Chaos Thunderhawk",
-        "group": "Thunderhawk Cluster Bombs Options",
-        "type": "choice",
-        "replaces": "Thunderhawk Cluster Bombs",
-        "choices": [
-          "Hellstrike Missile Battery"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: thunderhawk heavy cannon (single.replaces) on Chaos Thunderhawk",
-      "WEAPON_NOT_FOUND: turbo-laser destructor (single.replacement) on Chaos Thunderhawk",
-      "WEAPON_NOT_FOUND: thunderhawk cluster bombs (single.replaces) on Chaos Thunderhawk",
-      "WEAPON_NOT_FOUND: hellstrike missile battery (single.replacement) on Chaos Thunderhawk"
-    ]
-  },
-  "000003586": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Greater Blight Drone",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000003592": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Chaos Lord on Palanquin of Nurgle",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Chaos Lord on Palanquin of Nurgle",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Plasma pistol – standard",
-          "Combi-bolter",
-          "Combi-weapon",
-          "Accursed Weapon",
-          "Power fist"
-        ]
-      },
-      {
-        "id": "cho_2",
-        "scope": "Chaos Lord on Palanquin of Nurgle",
-        "group": "Astartes Chainsword Options",
-        "type": "choice",
-        "replaces": "Astartes chainsword",
-        "choices": [
-          "Bolt pistol",
-          "Plasma pistol – standard",
-          "Accursed Weapon",
-          "Power fist"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Chaos Lord on Palanquin of Nurgle",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Paired Accursed Weapons"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: accursed weapon (choice) on Chaos Lord On Palanquin Of Nurgle",
-      "WEAPON_NOT_FOUND: accursed weapon (choice) on Chaos Lord On Palanquin Of Nurgle",
-      "WEAPON_NOT_FOUND: paired accursed weapons (single.replacement) on Chaos Lord On Palanquin Of Nurgle"
-    ]
-  },
-  "000003593": {
-    "size_brackets": [
-      7
-    ],
-    "model_groups": [
-      {
-        "name": "Nightmare Hulks",
-        "count": {
-          "fixed": 4
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Gellerpox Mutants",
-        "count": {
-          "fixed": 3
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000003594": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Hell Blade",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Hell Blade",
-        "group": "Twin Autocannon Options",
-        "type": "choice",
-        "replaces": "Twin autocannon",
-        "choices": [
-          "Twin lascannon"
-        ]
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000003595": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Hell Talon",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Hell Talon",
-        "group": "Autocannon Options",
-        "type": "choice",
-        "replaces": "Autocannon",
-        "choices": [
-          "Havoc launcher"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: autocannon (single.replaces) on Hell Talon"
-    ]
-  },
-  "000003596": {
-    "size_brackets": [
-      16
-    ],
-    "model_groups": [
-      {
-        "name": "Mutoid Vermin",
-        "count": {
-          "fixed": 16
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000003600": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sorcerer on Palanquin of Nurgle",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Sorcerer on Palanquin of Nurgle",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Plasma pistol – standard",
-          "Combi-bolter",
-          "Combi-weapon",
-          "Accursed Weapon",
-          "Astartes chainsword",
-          "Power fist"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: accursed weapon (choice) on Sorcerer On Palanquin Of Nurgle"
-    ]
-  },
-  "000003604": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Terrax-pattern Termite",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Terrax-pattern Termite",
-        "group": "Combi-Bolter Options",
-        "type": "choice",
-        "replaces": "Combi-bolter",
-        "choices": [
-          "Heavy flamer",
-          "Twin Volkite Chargers"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin volkite chargers (choice) on Terrax-pattern Termite"
-    ]
-  },
-  "000003608": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Raider Achilles",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Land Raider Achilles",
-        "group": "Twin Volkite Culverins Options",
-        "type": "choice",
-        "replaces": "Twin Volkite Culverins",
-        "choices": [
-          "Twin multi-melta"
-        ]
-      },
-      {
-        "id": "add_2",
-        "scope": "Land Raider Achilles",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Land Raider Achilles",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin volkite culverins (single.replaces) on Land Raider Achilles"
-    ]
-  },
-  "000003612": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Land Raider Proteus",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Land Raider Proteus",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Multi-melta",
-          "Twin heavy bolter",
-          "Twin Heavy Flamer"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Land Raider Proteus",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Land Raider Proteus",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      },
-      {
-        "id": "add_4",
-        "scope": "Land Raider Proteus",
-        "group": "Explorator Augury Web",
-        "type": "add",
-        "adds_weapon": "Explorator Augury Web",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin heavy flamer (add_choice) on Land Raider Proteus",
-      "WEAPON_NOT_FOUND: explorator augury web (add) on Land Raider Proteus"
-    ]
-  },
-  "000003616": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Fire Raptor Gunship",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Fire Raptor Gunship",
-        "group": "Twin Hellstrike Missile Launchers Options",
-        "type": "choice",
-        "replaces": "Twin Hellstrike Missile Launchers",
-        "choices": [
-          "Twin lascannon"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Fire Raptor Gunship",
-        "group": "Twin Autocannon Options",
-        "type": "choice",
-        "replaces": "Twin autocannon",
-        "choices": [
-          "Quad Heavy Bolters"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin hellstrike missile launchers (single.replaces) on Fire Raptor Gunship",
-      "WEAPON_NOT_FOUND: quad heavy bolters (single.replacement) on Fire Raptor Gunship"
-    ]
-  },
-  "000003620": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Spartan",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Spartan",
-        "group": "Quad Lascannons Options",
-        "type": "choice",
-        "replaces": "Quad Lascannons",
-        "choices": [
-          "Laser Destroyers"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Spartan",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin Heavy Flamer"
-        ]
-      },
-      {
-        "id": "ach_3",
-        "scope": "Spartan",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: quad lascannons (single.replaces) on Spartan",
-      "WEAPON_NOT_FOUND: laser destroyers (single.replacement) on Spartan",
-      "WEAPON_NOT_FOUND: twin heavy flamer (single.replacement) on Spartan"
-    ]
-  },
-  "000003624": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Deredeo Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Deredeo Dreadnought",
-        "group": "Anvilus Autocannon Battery Options",
-        "type": "choice",
-        "replaces": "Anvilus Autocannon Battery",
-        "choices": [
-          "Arachnus Heavy Lascannon Battery",
-          "Hellfire Plasma Carronade",
-          "Volkite Falconet Battery"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Deredeo Dreadnought",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin Heavy Flamer"
-        ]
-      },
-      {
-        "id": "ach_3",
-        "scope": "Deredeo Dreadnought",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Aiolos Missile Launcher",
-          "Boreas Air Defence Missiles"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: anvilus autocannon battery (choice.replaces) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: arachnus heavy lascannon battery (choice) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: hellfire plasma carronade (choice) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: volkite falconet battery (choice) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: twin heavy flamer (single.replacement) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: aiolos missile launcher (add_choice) on Deredeo Dreadnought",
-      "WEAPON_NOT_FOUND: boreas air defence missiles (add_choice) on Deredeo Dreadnought"
-    ]
-  },
-  "000003628": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Cerberus",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Cerberus",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "ach_2",
-        "scope": "Cerberus",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000003632": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Kratos",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Kratos",
-        "group": "Kratos Battle Cannon Options",
-        "type": "choice",
-        "replaces": "Kratos Battle Cannon",
-        "choices": [
-          "Melta Blast-Gun",
-          "Volkite Cardanelle"
-        ]
-      },
-      {
-        "id": "cc_2",
-        "scope": "Kratos",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Heavy bolter",
-        "replacement_choices": [
-          "Autocannons",
-          "Lascannon",
-          "Volkite Calivers"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      },
-      {
-        "id": "cc_3",
-        "scope": "Kratos",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Heavy bolter",
-        "replacement_choices": [
-          "Heavy flamer",
-          "Lascannon",
-          "Volkite Culverins"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      },
-      {
-        "id": "ach_4",
-        "scope": "Kratos",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Combi-weapon",
-          "Havoc launcher",
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Twin Boltgun"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_5",
-        "scope": "Kratos",
-        "group": "Hunter Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter Killer Missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: kratos battle cannon (choice.replaces) on Kratos",
-      "WEAPON_NOT_FOUND: melta blast-gun (choice) on Kratos",
-      "WEAPON_NOT_FOUND: volkite cardanelle (choice) on Kratos",
-      "WEAPON_NOT_FOUND: autocannons (count_choice) on Kratos",
-      "WEAPON_NOT_FOUND: volkite calivers (count_choice) on Kratos",
-      "WEAPON_NOT_FOUND: volkite culverins (count_choice) on Kratos",
-      "WEAPON_NOT_FOUND: twin boltgun (add_choice) on Kratos",
-      "WEAPON_NOT_FOUND: hunter killer missile (add) on Kratos"
-    ]
-  },
-  "000003636": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sokar-pattern Stormbird",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000003640": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sicaran Battle Tank",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Sicaran Battle Tank",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Sicaran Battle Tank",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Sicaran Battle Tank",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000003644": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Mastodon",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Mastodon",
-        "group": "Heavy Flamer Options",
-        "type": "choice",
-        "replaces": "Heavy flamer",
-        "choices": [
-          "Heavy bolter",
-          "Lascannon",
-          "Volkite Culverins"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: volkite culverins (choice) on Mastodon",
-      "UNMATCHED: This model's 2 lascannons can be replaced with on of the following: 2 heavy bolters 2 heavy flamers 2 volkite culverins"
-    ]
-  },
-  "000003648": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Leviathan Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Leviathan Dreadnought",
-        "group": "Heavy Flamer Options",
-        "type": "choice",
-        "replaces": "Heavy flamer",
-        "choices": [
-          "Twin Volkite Calivers"
-        ]
-      },
-      {
-        "id": "add_2",
-        "scope": "Leviathan Dreadnought",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Each of this model's grav-flux bombards can be replaced with one of the following 1 cyclonic melta lance 1 storm cannon ",
-      "WEAPON_NOT_FOUND: twin volkite calivers (single.replacement) on Leviathan Dreadnought"
-    ]
-  },
-  "000003652": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Fellblade",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Fellblade",
-        "group": "Quad Lascannons Options",
-        "type": "choice",
-        "replaces": "Quad Lascannons",
-        "choices": [
-          "Laser Destroyers",
-          "Quad Heavy Bolters"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Fellblade",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin Heavy Flamer"
-        ]
-      },
-      {
-        "id": "add_3",
-        "scope": "Fellblade",
-        "group": "Havoc Launcher",
-        "type": "add",
-        "adds_weapon": "Havoc launcher",
-        "max_total": 1
-      },
-      {
-        "id": "ach_4",
-        "scope": "Fellblade",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Combi-weapon",
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: quad lascannons (choice.replaces) on Fellblade",
-      "WEAPON_NOT_FOUND: laser destroyers (choice) on Fellblade",
-      "WEAPON_NOT_FOUND: quad heavy bolters (choice) on Fellblade",
-      "WEAPON_NOT_FOUND: twin heavy flamer (single.replacement) on Fellblade"
-    ]
-  },
-  "000003656": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Relic Contemptor Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Relic Contemptor Dreadnought",
-        "group": "Cyclone Missile Launcher – Frag",
-        "type": "add",
-        "adds_weapon": "Cyclone missile launcher – frag",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Each of this model's heavy plasma cannons can be replaced with one of the following: 1 conversion beam cannon 1 kheres-p",
-      "UNMATCHED: Each of this model's combi-bolters can be replaced with one of the following: 1 graviton blaster 1 heavy flamer 1 plasma"
-    ]
-  },
-  "000003660": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Whirlwind Scorpius",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "add_1",
-        "scope": "Whirlwind Scorpius",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_2",
-        "scope": "Whirlwind Scorpius",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000003664": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Xiphon Interceptor",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
-  "000003668": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Rapier Carrier",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Rapier Carrier",
-        "group": "Quad Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Quad Heavy Bolter",
-        "choices": [
-          "Graviton Cannon",
-          "Laser Destroyer",
-          "Quad Launcher"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: quad heavy bolter (choice.replaces) on Rapier Carrier",
-      "WEAPON_NOT_FOUND: graviton cannon (choice) on Rapier Carrier",
-      "WEAPON_NOT_FOUND: laser destroyer (choice) on Rapier Carrier",
-      "WEAPON_NOT_FOUND: quad launcher (choice) on Rapier Carrier"
-    ]
-  },
-  "000003672": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Storm Eagle Gunship",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cho_1",
-        "scope": "Storm Eagle Gunship",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin multi-melta",
-          "Typhoon missile launcher – frag"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Storm Eagle Gunship",
-        "group": "Twin Hellstrike Missile Launchers Options",
-        "type": "choice",
-        "replaces": "Twin Hellstrike Missile Launchers",
-        "choices": [
-          "Twin lascannon"
-        ]
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: twin hellstrike missile launchers (single.replaces) on Storm Eagle Gunship"
-    ]
-  },
-  "000003676": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sicaran Venator",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Sicaran Venator",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Sicaran Venator",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Sicaran Venator",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000003680": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Typhon",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Typhon",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "ach_2",
-        "scope": "Typhon",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000003684": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sicaran Punisher",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "ach_1",
-        "scope": "Sicaran Punisher",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Lascannon"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      },
-      {
-        "id": "add_2",
-        "scope": "Sicaran Punisher",
-        "group": "Hunter-Killer Missile",
-        "type": "add",
-        "adds_weapon": "Hunter-killer missile",
-        "max_total": 1
-      },
-      {
-        "id": "add_3",
-        "scope": "Sicaran Punisher",
-        "group": "Storm Bolter",
-        "type": "add",
-        "adds_weapon": "Storm bolter",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": []
-  },
-  "000003688": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Falchion",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Falchion",
-        "group": "Quad Lascannons Options",
-        "type": "choice",
-        "replaces": "Quad Lascannons",
-        "choices": [
-          "Laser Destroyers"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Falchion",
-        "group": "Twin Heavy Bolter Options",
-        "type": "choice",
-        "replaces": "Twin heavy bolter",
-        "choices": [
-          "Twin Heavy Flamer"
-        ]
-      },
-      {
-        "id": "ach_3",
-        "scope": "Falchion",
-        "group": "Wargear",
-        "type": "choice",
-        "replaces": null,
-        "choices": [
-          "Heavy bolter",
-          "Heavy flamer",
-          "Multi-melta",
-          "Storm bolter"
-        ],
-        "_note": "add_choice: no base weapon replaced; pick one to add"
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: quad lascannons (single.replaces) on Falchion",
-      "WEAPON_NOT_FOUND: laser destroyers (single.replacement) on Falchion",
-      "WEAPON_NOT_FOUND: twin heavy flamer (single.replacement) on Falchion"
-    ]
-  },
   "000003698": {
     "size_brackets": [
       3,
@@ -11895,184 +6641,6 @@
     ],
     "_parser_flags": []
   },
-  "000003835": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Death Company Dreadnought",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Death Company Dreadnought",
-        "group": "Storm Bolter Options",
-        "type": "choice",
-        "replaces": "Storm bolter",
-        "choices": [
-          "Heavy flamer"
-        ]
-      },
-      {
-        "id": "sng_2",
-        "scope": "Death Company Dreadnought",
-        "group": "Meltagun Options",
-        "type": "choice",
-        "replaces": "Meltagun",
-        "choices": [
-          "Heavy flamer"
-        ]
-      },
-      {
-        "id": "sng_3",
-        "scope": "Death Company Dreadnought",
-        "group": "Furioso Fists Options",
-        "type": "choice",
-        "replaces": "Furioso Fists",
-        "choices": [
-          "Blood talons - strike"
-        ]
-      },
-      {
-        "id": "add_4",
-        "scope": "Death Company Dreadnought",
-        "group": "Smoke Launchers",
-        "type": "add",
-        "adds_weapon": "Smoke Launchers",
-        "max_total": 1
-      }
-    ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: furioso fists (single.replaces) on Death Company Dreadnought with Magna-grapple",
-      "WEAPON_NOT_FOUND: smoke launchers (add) on Death Company Dreadnought with Magna-grapple"
-    ]
-  },
-  "000003836": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Death Company Marines",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cc_1",
-        "scope": "Death Company Marines",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Boltgun",
-        "replacement_choices": [
-          "Astartes chainsword",
-          "Bolt pistol",
-          "Thunder hammer"
-        ],
-        "max_total_all": true
-      },
-      {
-        "id": "cc_2",
-        "scope": "Death Company Marines",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Bolt pistol",
-        "replacement_choices": [
-          "Hand flamer",
-          "Inferno pistol",
-          "Plasma pistol – standard"
-        ],
-        "max_total_all": true
-      },
-      {
-        "id": "cc_3",
-        "scope": "Death Company Marines",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Astartes chainsword",
-        "replacement_choices": [
-          "Power fist",
-          "Power weapon"
-        ],
-        "max_total_all": true
-      }
-    ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Death Company Marines with Boltguns — \"any/all\" scope needs max_total set",
-      "REVIEW_MAX_TOTAL: Death Company Marines with Boltguns — \"any/all\" scope needs max_total set",
-      "REVIEW_MAX_TOTAL: Death Company Marines with Boltguns — \"any/all\" scope needs max_total set"
-    ]
-  },
-  "000003837": {
-    "size_brackets": [
-      5,
-      10
-    ],
-    "model_groups": [
-      {
-        "name": "Death Company Marines with Jump Packs",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "cc_1",
-        "scope": "Death Company Marines with Jump Packs",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Boltgun",
-        "replacement_choices": [
-          "Astartes chainsword",
-          "Bolt pistol",
-          "Thunder hammer"
-        ],
-        "max_total_all": true
-      },
-      {
-        "id": "cc_2",
-        "scope": "Death Company Marines with Jump Packs",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Bolt pistol",
-        "replacement_choices": [
-          "Hand flamer",
-          "Inferno pistol",
-          "Plasma pistol – standard"
-        ],
-        "max_total_all": true
-      },
-      {
-        "id": "cc_3",
-        "scope": "Death Company Marines with Jump Packs",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Astartes chainsword",
-        "replacement_choices": [
-          "Power fist",
-          "Power weapon"
-        ],
-        "max_total_all": true
-      }
-    ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Death Company Marines with Boltguns and Jump Packs — \"any/all\" scope needs max_total set",
-      "REVIEW_MAX_TOTAL: Death Company Marines with Boltguns and Jump Packs — \"any/all\" scope needs max_total set",
-      "REVIEW_MAX_TOTAL: Death Company Marines with Boltguns and Jump Packs — \"any/all\" scope needs max_total set"
-    ]
-  },
   "000003871": {
     "size_brackets": [
       1
@@ -12203,55 +6771,6 @@
       "UNMATCHED: Any number of models can each have their assault bolters replaced with 1 plasma exterminators."
     ]
   },
-  "000003875": {
-    "size_brackets": [
-      11
-    ],
-    "model_groups": [
-      {
-        "name": "Chaplain Cassius - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Kill Team Veterans: Vael Donatus Zameon Gydrael Rodricus Grytt Antor Delassio Edryc Setorax Jensus Natorian Drenn Redblade Ennox Sorrlock",
-        "count": {
-          "fixed": 8
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Kill Team Terminator (Garran Branatar)",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Kill Team Biker (Jetek Suberei)",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: Chaplain Cassius is equipped with: artificer crozius; bolt pistol.",
-      "UNMATCHED: Vael Donatus is equipped with: boltgun; bolt pistol; close combat weapon.",
-      "UNMATCHED: Zameon Gydrael is equipped with: Long Vigil ranged weapon; Long Vigil melee weapon.",
-      "UNMATCHED: Rodricus Grytt is equipped with: frag cannon; bolt pistol; close combat weapon.",
-      "UNMATCHED: Antor Delassio is equipped with: Long Vigil ranged weapon; Long Vigil melee weapon, jump pack.",
-      "UNMATCHED: Edryc Setorax is equipped with: twin lightning claws, jump pack.",
-      "UNMATCHED: Jensus Natorian is equipped with: psychic Cleanse; bolt pistol; force weapon; psychic hood.",
-      "UNMATCHED: Drenn Redblade is equipped with: Long Vigil melee weapon; boltgun.",
-      "UNMATCHED: Garran Branatar is equipped with: heavy flamer; Long Vigil ranged weapon; power fist.",
-      "UNMATCHED: Ennox Sorrlock is equipped with: Long Vigil ranged weapon; close combat weapon.",
-      "UNMATCHED: Jetek Suberei is equipped with: Deathwatch twin boltgun; Long Vigil melee weapon."
-    ]
-  },
   "000004109": {
     "size_brackets": [
       1
@@ -12270,7 +6789,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000004110": {
     "size_brackets": [
@@ -12289,7 +6809,8 @@
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000004111": {
     "size_brackets": [
@@ -12724,7 +7245,8 @@
     ],
     "_parser_flags": [
       "UNMATCHED: Any number of Sternguard Veterans can each have their Sternguard bolt rifle replaced with 1 combi-weapon."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000004138": {
     "size_brackets": [
@@ -12782,7 +7304,8 @@
     ],
     "_parser_flags": [
       "UNMATCHED: Any number of models can each have their power fist replaced with 1 chainfist."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000004139": {
     "size_brackets": [
@@ -12827,7 +7350,8 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000004148": {
     "size_brackets": [
@@ -12847,85 +7371,6 @@
     ],
     "options": [],
     "_parser_flags": []
-  },
-  "000004154": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Sword Brother",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Initiates",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      },
-      {
-        "name": "Neophytes",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [
-      {
-        "id": "sng_1",
-        "scope": "Sword Brother",
-        "group": "Bolt Pistol Options",
-        "type": "choice",
-        "replaces": "Bolt pistol",
-        "choices": [
-          "Twin lightning claws"
-        ]
-      },
-      {
-        "id": "cc_2",
-        "scope": "Initiates",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Boltgun",
-        "replacement_choices": [
-          "Flamer",
-          "Plasma gun – standard",
-          "Meltagun",
-          "Grav-gun"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      },
-      {
-        "id": "cc_3",
-        "scope": "Initiates",
-        "group": "Special Weapon",
-        "type": "count",
-        "replaces": "Boltgun",
-        "replacement_choices": [
-          "Power weapon",
-          "Power fist",
-          "Heavy bolter",
-          "Heavy flamer",
-          "Grav-cannon",
-          "Lascannon",
-          "Missile launcher – frag",
-          "Multi-melta",
-          "Plasma cannon – standard"
-        ],
-        "per_n_models": 5,
-        "max_per_n": 1
-      }
-    ],
-    "_parser_flags": [
-      "UNMATCHED: Any number of Neophytes can each have their boltgun replaced with one of the following: 1 Astartes shotgun 1 combat knif",
-      "UNMATCHED: Any number of Initiates can each have their boltgun replaced with 1 Astartes chainsword."
-    ]
   },
   "000004166": {
     "size_brackets": [
@@ -13444,22 +7889,6 @@
     "options": [],
     "_parser_flags": []
   },
-  "000004204": {
-    "size_brackets": [
-      1
-    ],
-    "model_groups": [
-      {
-        "name": "Ferren Areios - EPIC HERO",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": []
-      }
-    ],
-    "options": [],
-    "_parser_flags": []
-  },
   "000004209": {
     "size_brackets": [
       1
@@ -13471,11 +7900,11 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Excruciator cannon",
           "Hades battle cannon",
-          "Heavy baleflamer",
+          "Excruciator cannon",
           "Heavy missile launcher – krak",
           "Heavy missile launcher – frag",
+          "Heavy baleflamer",
           "Shearing claws – strike",
           "Shearing claws – sweep"
         ]
@@ -13527,6 +7956,7 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   }
 }
