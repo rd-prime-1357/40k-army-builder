@@ -1331,7 +1331,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.26';
+  const VERSION = '5.27';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2219,10 +2219,21 @@
     return opt.max_total != null ? opt.max_total : 0;
   }
   function loGroupCounts(def, size) {
-    let fixed = 0;
-    for (const g of def.model_groups) if (g.count.fixed != null) fixed += g.count.fixed;
+    // First pass: resolve every group that isn't fills-to-size, tallying how many
+    // models they reserve. fixed = its count; per_bracket = the count for the
+    // chosen size; optional = 0 for now (a priced include/exclude toggle lands
+    // with the optional-group pricing work). Second pass: fills groups take the
+    // remainder.
+    let reserved = 0;
     const c = {};
-    for (const g of def.model_groups) c[g.name] = g.count.fixed != null ? g.count.fixed : Math.max(0, size - fixed);
+    for (const g of def.model_groups) {
+      const ct = g.count || {};
+      if (ct.fixed != null) { c[g.name] = ct.fixed; reserved += ct.fixed; }
+      else if (ct.per_bracket) { const v = ct.per_bracket[String(size)] || 0; c[g.name] = v; reserved += v; }
+      else if (ct.optional) { c[g.name] = 0; }
+      else c[g.name] = null;   // fills_to_size — resolved below
+    }
+    for (const g of def.model_groups) if (c[g.name] === null) c[g.name] = Math.max(0, size - reserved);
     return c;
   }
   function loadoutFor(entry) {
