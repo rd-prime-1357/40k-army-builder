@@ -29,7 +29,9 @@ def clean(t):
     t = strip_html(t)
     t = t.replace('\u2019', "'").replace('\u2018', "'") \
          .replace('\u201c', '"').replace('\u201d', '"') \
-         .replace('\u2013', '-').replace('\u2014', '-')
+         .replace('\u2013', '-').replace('\u2014', '-') \
+         .replace('\u2010', '-').replace('\u2011', '-') \
+         .replace('\u2012', '-').replace('\u2015', '-')
     return re.sub(r'\s+', ' ', t).strip()
 
 def base_name(n):
@@ -55,22 +57,34 @@ def find_weapon(raw, unit_weapons_base, unit_weapons_full):
     return None
 
 # ── composition parser ────────────────────────────────────────────────────────
+def is_comp_annotation(text):
+    """True for composition lines that are notes, not model groups.
+    e.g. '10 MODELS MAXIMUM' — a size annotation Wahapedia lists as a comp line."""
+    t = text.strip()
+    if re.match(r'^\d+\s+models?\s+maximum$', t, re.I):
+        return True
+    return False
+
 def parse_comp_row(text):
-    """'1 Intercessor Sergeant' → (1, 'Intercessor Sergeant', fixed)
-       '4-9 Intercessors' → (None, 'Intercessors', fills_to_size)"""
-    m = re.match(r'^(\d+)(?:-\d+)?\s+(.+)$', text.strip())
+    """'1 Intercessor Sergeant' -> fixed 1
+       '4-9 Intercessors'      -> fills_to_size (body range, low >= 1)
+       '0-1 Chapter Ancient'   -> optional, min 0, max 1 (build-choice toggle)
+       '0-6 Hunting Wolves'    -> optional, min 0, max 6
+    Returns a group dict, or None if the line isn't a countable model group."""
+    m = re.match(r'^(\d+)(?:-(\d+))?\s+(.+)$', text.strip())
     if not m:
         return None
     lo = int(m.group(1))
-    name = m.group(2).strip()
-    fixed = None
-    fills = False
-    m2 = re.match(r'^(\d+)-(\d+)\s+', text.strip())
-    if m2:
-        fills = True
+    hi = int(m.group(2)) if m.group(2) is not None else None
+    name = m.group(3).strip()
+    g = {'name': name, 'fixed': None, 'fills': False, 'optional': False, 'max': None}
+    if hi is None:
+        g['fixed'] = lo                    # single integer -> fixed count
+    elif lo == 0:
+        g['optional'] = True; g['max'] = hi  # '0-N' -> optional group (toggle / capped)
     else:
-        fixed = lo
-    return {'name': name, 'fixed': fixed, 'fills': fills}
+        g['fills'] = True                  # 'A-B', A>=1 -> body, fills to size
+    return g
 
 # ── sentence classifiers ──────────────────────────────────────────────────────
 # Each returns a list of option dicts (possibly empty), or None if no match.
@@ -354,17 +368,83 @@ def normalise_weapon(raw, idx, global_idx=None):
                 return canon, True
     return raw.title(), False
 
+# ── OR alternative-profile merge ────────────────────────────────────────────────
+def _norm_group_key(name):
+    """Normalise a group name for cross-profile alignment: lowercase, strip a
+    trailing footnote marker, and singular/plural-fold the last word incl. the
+    irregular -ves plural (wolves -> wolf)."""
+    n = re.sub(r'[\*\u2020\u2021]+$', '', name.strip()).lower()
+    words = n.split()
+    if words:
+        last = words[-1]
+        if last.endswith('ves'):
+            last = last[:-3] + 'f'
+        elif last.endswith('s') and len(last) > 1:
+            last = last[:-1]
+        words[-1] = last
+    return ' '.join(words)
+
+def merge_or_profiles(profiles, size_brackets, flags):
+    """Fold N alternative composition profiles (split on a bare 'OR' line) into
+    one group list. Profile i maps to size bracket i. A group whose count is the
+    same across all profiles becomes a fixed count; a group whose count varies
+    becomes a per-bracket count keyed by bracket size. This is more faithful to
+    the rules than a fills-to-size body: in an OR unit each bracket is one exact
+    legal composition."""
+    lengths = {len(p) for p in profiles}
+    if len(lengths) != 1:
+        flags.append(f'OR_PROFILE_SHAPE_MISMATCH: profiles have group counts {sorted(len(p) for p in profiles)}; using first profile only')
+        return profiles[0]
+    ngroups = lengths.pop()
+    if len(profiles) != len(size_brackets):
+        flags.append(f'OR_PROFILE_BRACKET_MISMATCH: {len(profiles)} profiles vs {len(size_brackets)} brackets')
+    # canonical name per position: from the profile with the largest total count
+    totals = [sum((g.get('fixed') or 0) for g in p) for p in profiles]
+    canon_idx = totals.index(max(totals))
+    # sanity: each profile's total should equal its bracket
+    for i, p in enumerate(profiles):
+        if i < len(size_brackets) and totals[i] != size_brackets[i]:
+            flags.append(f'OR_PROFILE_SUM_MISMATCH: profile {i} sums {totals[i]} != bracket {size_brackets[i]}')
+    merged = []
+    for j in range(ngroups):
+        keys = {_norm_group_key(profiles[i][j]['name']) for i in range(len(profiles))}
+        if len(keys) != 1:
+            flags.append(f'OR_PROFILE_NAME_MISMATCH at position {j}: {[profiles[i][j]["name"] for i in range(len(profiles))]}')
+        name = profiles[canon_idx][j]['name']
+        counts = [profiles[i][j].get('fixed') for i in range(len(profiles))]
+        g = {'name': name, 'fixed': None, 'fills': False, 'optional': False, 'max': None, 'per_bracket': None}
+        if len(set(counts)) == 1:
+            g['fixed'] = counts[0]
+        else:
+            g['per_bracket'] = {str(size_brackets[i]): counts[i] for i in range(len(profiles)) if i < len(size_brackets)}
+        merged.append(g)
+    return merged
+
 # ── main per-unit assembler ────────────────────────────────────────────────────
 def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, option_texts, global_idx=None):
     flags = []
-    # model groups
-    model_groups = []
+    # model groups — split composition into alternative profiles on a bare 'OR',
+    # skipping annotation lines ('N MODELS MAXIMUM').
+    profiles = [[]]
     for row in comp_rows:
+        if row.strip().upper() == 'OR':
+            profiles.append([])
+            continue
+        if is_comp_annotation(row):
+            continue
         p = parse_comp_row(row)
         if p:
-            model_groups.append(p)
+            profiles[-1].append(p)
         else:
             flags.append(f'COMP_PARSE_FAIL: {row}')
+    profiles = [p for p in profiles if p]
+    if not profiles:
+        flags.append('NO_MODEL_GROUPS')
+        return None, flags
+    if len(profiles) == 1:
+        model_groups = profiles[0]
+    else:
+        model_groups = merge_or_profiles(profiles, size_brackets, flags)
     if not model_groups:
         flags.append('NO_MODEL_GROUPS')
         return None, flags
@@ -459,11 +539,20 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     entry['max_total'] = op.get('max_total', 1)
                 options.append(entry)
 
+    def emit_count(g):
+        if g.get('per_bracket'):
+            return {'per_bracket': g['per_bracket']}
+        if g.get('optional'):
+            return {'optional': True, 'max': g.get('max')}
+        if g.get('fixed') is not None:
+            return {'fixed': g['fixed']}
+        return {'fills_to_size': True}
+
     defn = {
         'size_brackets': size_brackets,
         'model_groups': [
             {'name': g['name'],
-             'count': {'fixed': g['fixed']} if g.get('fixed') is not None else {'fills_to_size': True},
+             'count': emit_count(g),
              'default_weapons': []}   # populated below from pipeline's is_base field
             for g in model_groups
         ],

@@ -4887,7 +4887,8 @@
       {
         "name": "Invader ATV",
         "count": {
-          "fills_to_size": true
+          "optional": true,
+          "max": 1
         },
         "default_weapons": [
           "Bolt pistol",
@@ -5664,9 +5665,60 @@
     ],
     "model_groups": [
       {
-        "name": "MODELS MAXIMUM",
+        "name": "Kill Team Infiltrators",
         "count": {
-          "fixed": 10
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Bolt sniper rifle",
+          "Deathwatch marksman bolt carbine",
+          "Deathwatch occulus bolt carbine",
+          "Special-issue bolt pistol",
+          "Close combat weapon",
+          "Combat knife",
+          "Paired combat blades"
+        ]
+      },
+      {
+        "name": "Kill Team Infiltrators with bolt sniper rifles",
+        "count": {
+          "optional": true,
+          "max": 3
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Bolt sniper rifle",
+          "Deathwatch marksman bolt carbine",
+          "Deathwatch occulus bolt carbine",
+          "Special-issue bolt pistol",
+          "Close combat weapon",
+          "Combat knife",
+          "Paired combat blades"
+        ]
+      },
+      {
+        "name": "Kill Team Infiltrators with Deathwatch occulus bolt carbines",
+        "count": {
+          "optional": true,
+          "max": 4
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Bolt sniper rifle",
+          "Deathwatch marksman bolt carbine",
+          "Deathwatch occulus bolt carbine",
+          "Special-issue bolt pistol",
+          "Close combat weapon",
+          "Combat knife",
+          "Paired combat blades"
+        ]
+      },
+      {
+        "name": "Kill Team Infiltrators with combat knives",
+        "count": {
+          "optional": true,
+          "max": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -5682,10 +5734,6 @@
     ],
     "options": [],
     "_parser_flags": [
-      "COMP_PARSE_FAIL: 3‑10 Kill Team Infiltrators",
-      "COMP_PARSE_FAIL: 0‑3 Kill Team Infiltrators with bolt sniper rifles",
-      "COMP_PARSE_FAIL: 0‑4 Kill Team Infiltrators with Deathwatch occulus bolt carbines",
-      "COMP_PARSE_FAIL: 0‑4 Kill Team Infiltrators with combat knives",
       "UNMATCHED: One model equipped with a Deathwatch marksman bolt carbine can be equipped with one of the following: 1 helix gauntlet 1",
       "UNMATCHED: One model can replace its bolt sniper rifle with 1 instigator bolt carbine.",
       "UNMATCHED: Any number of models can each replace their bolt sniper rifle with 1 las fusil.",
@@ -5697,24 +5745,6 @@
       10
     ],
     "model_groups": [
-      {
-        "name": "MODELS MAXIMUM",
-        "count": {
-          "fixed": 10
-        },
-        "default_weapons": [
-          "Bolt pistol",
-          "Castellan launcher",
-          "Deathwatch bolt rifle",
-          "Heavy bolt pistol",
-          "Plasma incinerator – standard",
-          "Plasma incinerator – supercharge",
-          "Pyreblaster",
-          "Superfrag rocket launcher",
-          "Astartes chainsword",
-          "Close combat weapon"
-        ]
-      },
       {
         "name": "Kill Team Sergeant",
         "count": {
@@ -5754,7 +5784,8 @@
       {
         "name": "Kill Team Intercessors with plasma incinerators",
         "count": {
-          "fills_to_size": true
+          "optional": true,
+          "max": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -5772,7 +5803,46 @@
       {
         "name": "Kill Team Intercessors with heavy bolt pistols",
         "count": {
-          "fills_to_size": true
+          "optional": true,
+          "max": 4
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Castellan launcher",
+          "Deathwatch bolt rifle",
+          "Heavy bolt pistol",
+          "Plasma incinerator – standard",
+          "Plasma incinerator – supercharge",
+          "Pyreblaster",
+          "Superfrag rocket launcher",
+          "Astartes chainsword",
+          "Close combat weapon"
+        ]
+      },
+      {
+        "name": "Kill Team Intercessors with pyreblasters",
+        "count": {
+          "optional": true,
+          "max": 4
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Castellan launcher",
+          "Deathwatch bolt rifle",
+          "Heavy bolt pistol",
+          "Plasma incinerator – standard",
+          "Plasma incinerator – supercharge",
+          "Pyreblaster",
+          "Superfrag rocket launcher",
+          "Astartes chainsword",
+          "Close combat weapon"
+        ]
+      },
+      {
+        "name": "Kill Team Intercessors with superfrag rocket launchers",
+        "count": {
+          "optional": true,
+          "max": 2
         },
         "default_weapons": [
           "Bolt pistol",
@@ -5791,7 +5861,7 @@
     "options": [
       {
         "id": "add_1",
-        "scope": "MODELS MAXIMUM",
+        "scope": "Kill Team Intercessors with heavy bolt pistols",
         "group": "Astartes Grenade Launcher – Frag",
         "type": "add",
         "adds_weapon": "Astartes grenade launcher – frag",
@@ -5800,8 +5870,6 @@
       }
     ],
     "_parser_flags": [
-      "COMP_PARSE_FAIL: 0‑4 Kill Team Intercessors with pyreblasters",
-      "COMP_PARSE_FAIL: 0‑2 Kill Team Intercessors with superfrag rocket launchers",
       "UNMATCHED: The Kill Team Sergeant can replace its Deathwatch bolt rifle with one of the following: 1 Astartes chainsword 1 hand fla",
       "UNMATCHED: The Kill Team Sergeant can replace its close combat weapon with one of the following: 1 Astartes chainsword 1 power fist",
       "UNMATCHED: One model equipped with a plasma incinerator can replace its bolt pistol with 1 plasma pistol.",
@@ -5815,9 +5883,39 @@
     ],
     "model_groups": [
       {
-        "name": "MODELS MAXIMUM",
+        "name": "Kill Team Heavy Intercessors",
         "count": {
-          "fixed": 10
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Deathwatch heavy bolt rifle",
+          "Flamestorm gauntlets",
+          "Melta rifle",
+          "Close combat weapon",
+          "Twin power fists"
+        ]
+      },
+      {
+        "name": "Kill Team Heavy Intercessors with power fists",
+        "count": {
+          "optional": true,
+          "max": 3
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Deathwatch heavy bolt rifle",
+          "Flamestorm gauntlets",
+          "Melta rifle",
+          "Close combat weapon",
+          "Twin power fists"
+        ]
+      },
+      {
+        "name": "Kill Team Heavy Intercessors with melta rifles",
+        "count": {
+          "optional": true,
+          "max": 3
         },
         "default_weapons": [
           "Bolt pistol",
@@ -5831,9 +5929,6 @@
     ],
     "options": [],
     "_parser_flags": [
-      "COMP_PARSE_FAIL: 3‑10 Kill Team Heavy Intercessors",
-      "COMP_PARSE_FAIL: 0‑3 Kill Team Heavy Intercessors with power fists",
-      "COMP_PARSE_FAIL: 0‑3 Kill Team Heavy Intercessors with melta rifles",
       "UNMATCHED: For every 5 models in this unit, 1 model can replace its Deathwatch heavy bolt rifle with 1 Deathwatch heavy bolter.",
       "UNMATCHED: 1 model can replace its melta rifle with 1 multi-melta.",
       "UNMATCHED: Any number of models can each have their flamestorm gauntlets replaced with 1 auto boltstorm gauntlets and 1 fragstorm g"
@@ -6759,9 +6854,9 @@
     ],
     "model_groups": [
       {
-        "name": "MODELS MAXIMUM",
+        "name": "Kill Team Sergeant with Jump Pack",
         "count": {
-          "fixed": 10
+          "fixed": 1
         },
         "default_weapons": [
           "Assault bolters",
@@ -6771,9 +6866,22 @@
         ]
       },
       {
-        "name": "Kill Team Sergeant with Jump Pack",
+        "name": "Kill Team Intercessors with Jump Packs",
         "count": {
-          "fixed": 1
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Assault bolters",
+          "Heavy bolt pistol",
+          "Astartes chainsword",
+          "Close combat weapon"
+        ]
+      },
+      {
+        "name": "Kill Team Heavy Intercessors with Jump Packs",
+        "count": {
+          "optional": true,
+          "max": 5
         },
         "default_weapons": [
           "Assault bolters",
@@ -6785,8 +6893,6 @@
     ],
     "options": [],
     "_parser_flags": [
-      "COMP_PARSE_FAIL: 2‑9 Kill Team Intercessors with Jump Packs",
-      "COMP_PARSE_FAIL: 0‑5 Kill Team Heavy Intercessors with Jump Packs",
       "UNMATCHED: The Kill Team Sergeant with Jump Pack can replace its heavy bolt pistol with one of the following: 1 hand flamer 1 plasm",
       "UNMATCHED: The Kill Team Sergeant with Jump Pack can replace its Astartes chainsword with one of the following: 1 power fist 1 powe",
       "UNMATCHED: For every 5 models in this unit, 1 model can replace its heavy bolt pistol with 1 plasma pistol.",
@@ -7083,7 +7189,8 @@
       {
         "name": "Hunting Wolves",
         "count": {
-          "fills_to_size": true
+          "optional": true,
+          "max": 6
         },
         "default_weapons": [
           "Teeth and claws"
@@ -7466,69 +7573,12 @@
         ]
       },
       {
-        "name": "Gravis Veteran",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": [
-          "Bolt pistol",
-          "Deathwatch marksman bolt carbine",
-          "Infernus heavy bolter – heavy bolter",
-          "Infernus heavy bolter – heavy flamer",
-          "Plasma pistol - standard",
-          "Plasma pistol - supercharge",
-          "Special-issue bolt pistol",
-          "Stalker bolt rifle",
-          "Close combat weapon",
-          "Heavy thunder hammer",
-          "Power weapon",
-          "Xenophase blade"
-        ]
-      },
-      {
-        "name": "Deathwatch Veterans",
-        "count": {
-          "fixed": 3
-        },
-        "default_weapons": [
-          "Bolt pistol",
-          "Deathwatch marksman bolt carbine",
-          "Infernus heavy bolter – heavy bolter",
-          "Infernus heavy bolter – heavy flamer",
-          "Plasma pistol - standard",
-          "Plasma pistol - supercharge",
-          "Special-issue bolt pistol",
-          "Stalker bolt rifle",
-          "Close combat weapon",
-          "Heavy thunder hammer",
-          "Power weapon",
-          "Xenophase blade"
-        ]
-      },
-      {
-        "name": "Kill Team Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": [
-          "Bolt pistol",
-          "Deathwatch marksman bolt carbine",
-          "Infernus heavy bolter – heavy bolter",
-          "Infernus heavy bolter – heavy flamer",
-          "Plasma pistol - standard",
-          "Plasma pistol - supercharge",
-          "Special-issue bolt pistol",
-          "Stalker bolt rifle",
-          "Close combat weapon",
-          "Heavy thunder hammer",
-          "Power weapon",
-          "Xenophase blade"
-        ]
-      },
-      {
         "name": "Gravis Veterans",
         "count": {
-          "fixed": 2
+          "per_bracket": {
+            "5": 1,
+            "10": 2
+          }
         },
         "default_weapons": [
           "Bolt pistol",
@@ -7548,7 +7598,10 @@
       {
         "name": "Deathwatch Veterans",
         "count": {
-          "fixed": 7
+          "per_bracket": {
+            "5": 3,
+            "10": 7
+          }
         },
         "default_weapons": [
           "Bolt pistol",
@@ -7568,7 +7621,6 @@
     ],
     "options": [],
     "_parser_flags": [
-      "COMP_PARSE_FAIL: OR",
       "UNMATCHED: For every 5 models in the unit, up to 1 model's infernus heavy bolter can be replaced with one of the following: 1 frag ",
       "UNMATCHED: For every 5 models in the unit, up to 1 model's heavy thunder hammer can be replaced with 1 power weapon and 1 Astartes ",
       "UNMATCHED: For every 5 models in the unit, up to 1 model's stalker bolt rifle can be replaced with 1 plasma incinerator.",
@@ -7635,46 +7687,10 @@
       {
         "name": "Wolf Scouts",
         "count": {
-          "fixed": 4
-        },
-        "default_weapons": [
-          "Plasma pistol – standard",
-          "Plasma pistol – supercharge",
-          "Combat blade",
-          "Power weapon",
-          "Teeth and claws"
-        ]
-      },
-      {
-        "name": "Hunting Wolf",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": [
-          "Plasma pistol – standard",
-          "Plasma pistol – supercharge",
-          "Combat blade",
-          "Power weapon",
-          "Teeth and claws"
-        ]
-      },
-      {
-        "name": "Wolf Scout Pack Leader",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": [
-          "Plasma pistol – standard",
-          "Plasma pistol – supercharge",
-          "Combat blade",
-          "Power weapon",
-          "Teeth and claws"
-        ]
-      },
-      {
-        "name": "Wolf Scouts",
-        "count": {
-          "fixed": 9
+          "per_bracket": {
+            "6": 4,
+            "12": 9
+          }
         },
         "default_weapons": [
           "Plasma pistol – standard",
@@ -7687,7 +7703,10 @@
       {
         "name": "Hunting Wolves",
         "count": {
-          "fixed": 2
+          "per_bracket": {
+            "6": 1,
+            "12": 2
+          }
         },
         "default_weapons": [
           "Plasma pistol – standard",
@@ -7700,7 +7719,6 @@
     ],
     "options": [],
     "_parser_flags": [
-      "COMP_PARSE_FAIL: OR",
       "UNMATCHED: 1 Wolf Scout's plasma pistol can be replaced with 1 plasma gun.",
       "UNMATCHED: 1 Wolf Scout equipped with a plasma pistol can be equipped with 1 haywire mine (That model's plasma pistol cannot be rep",
       "UNMATCHED: 1 Wolf Scout's plasma pistol and combat blade can be replaced with 1 bolt pistol, 1 Thunderclap and 1 runic stave.",
@@ -7756,7 +7774,8 @@
       {
         "name": "Chapter Ancient - EPIC HERO",
         "count": {
-          "fills_to_size": true
+          "optional": true,
+          "max": 1
         },
         "default_weapons": [
           "Master-crafted power weapon"
@@ -7768,7 +7787,8 @@
       {
         "name": "Chapter Champion - EPIC HERO",
         "count": {
-          "fills_to_size": true
+          "optional": true,
+          "max": 1
         },
         "default_weapons": [
           "Blades of honour"
