@@ -479,21 +479,14 @@
         "type": "choice",
         "replaces": "Bolt pistol",
         "choices": [
+          "Heavy bolt pistol + Power fist",
+          "Heavy bolt pistol + Master-crafted power weapon",
+          "Neo-volkite pistol + Power fist",
+          "Neo-volkite pistol + Master-crafted power weapon",
+          "Plasma pistol – standard + Power fist",
+          "Plasma pistol – standard + Master-crafted power weapon",
           "Heavy bolt pistol",
-          "Power fist",
-          "Heavy bolt pistol",
-          "Master-crafted power weapon",
-          "Neo-volkite pistol",
-          "Power fist",
-          "Neo-volkite pistol",
-          "Master-crafted power weapon",
-          "Plasma pistol – standard",
-          "Power fist",
-          "Plasma pistol – standard",
-          "Master-crafted power weapon",
-          "Heavy bolt pistol",
-          "Master-crafted power weapon",
-          "Relic Shield"
+          "Master-crafted power weapon + Relic Shield"
         ]
       },
       {
@@ -509,7 +502,7 @@
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: relic shield (choice) on Captain"
+      "WEAPON_NOT_FOUND: relic shield (compound choice) on Captain"
     ],
     "_defaults_source": "equipped"
   },
@@ -958,10 +951,8 @@
         "type": "choice",
         "replaces": "Dreadnought combat weapon",
         "choices": [
-          "Missile launcher – frag",
-          "Close combat weapon",
-          "Heavy flamer",
-          "Dreadnought combat weapon"
+          "Missile launcher – frag + Close combat weapon",
+          "Heavy flamer + Dreadnought combat weapon"
         ]
       }
     ],
@@ -3150,8 +3141,7 @@
         "replacement_choices": [
           "Assault cannon",
           "Heavy flamer",
-          "Cyclone missile launcher – frag",
-          "Storm bolter"
+          "Cyclone missile launcher – frag"
         ],
         "per_n_models": 5,
         "max_per_n": 1
@@ -4232,12 +4222,9 @@
           "Combi-weapon",
           "Power weapon",
           "Power fist",
-          "Astartes chainsword",
-          "Sternguard bolt rifle",
-          "Power weapon",
-          "Sternguard bolt rifle",
-          "Power fist",
-          "Sternguard bolt rifle"
+          "Astartes chainsword + Sternguard bolt rifle",
+          "Power weapon + Sternguard bolt rifle",
+          "Power fist + Sternguard bolt rifle"
         ]
       },
       {
@@ -4663,13 +4650,12 @@
         "replaces": "Storm bolter",
         "choices": [
           "Twin lightning claws",
-          "Thunder hammer",
-          "Terminator Storm Shield"
+          "Thunder hammer + Terminator Storm Shield"
         ]
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: terminator storm shield (choice) on Ancient In Terminator Armour"
+      "WEAPON_NOT_FOUND: terminator storm shield (compound choice) on Ancient In Terminator Armour"
     ],
     "_defaults_source": "equipped"
   },
@@ -5373,27 +5359,16 @@
         "replaces": "Heavy bolt pistol",
         "replacement_choices": [
           "Hand flamer",
-          "Astartes chainsword",
           "Hand flamer",
-          "Power fist",
           "Hand flamer",
-          "Power weapon",
           "Heavy bolt pistol",
-          "Power fist",
           "Heavy bolt pistol",
-          "Power weapon",
           "Inferno pistol",
-          "Astartes chainsword",
           "Inferno pistol",
-          "Power fist",
           "Inferno pistol",
-          "Power weapon",
           "Plasma pistol – standard",
-          "Astartes chainsword",
           "Plasma pistol – standard",
-          "Power fist",
-          "Plasma pistol – standard",
-          "Power weapon"
+          "Plasma pistol – standard"
         ],
         "per_n_models": 5,
         "max_per_n": 1
@@ -6600,17 +6575,15 @@
         "replaces": "Assault cannon",
         "choices": [
           "Fenrisian greataxe – strike",
-          "Blizzard Shield And",
-          "Storm bolter",
+          "Blizzard Shield + Storm bolter",
           "Fenrisian greataxe – strike",
-          "Blizzard Shield And",
-          "Heavy flamer"
+          "Blizzard Shield + Heavy flamer"
         ]
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: blizzard shield and (choice) on Venerable Dreadnought",
-      "WEAPON_NOT_FOUND: blizzard shield and (choice) on Venerable Dreadnought"
+      "WEAPON_NOT_FOUND: blizzard shield (compound choice) on Venerable Dreadnought",
+      "WEAPON_NOT_FOUND: blizzard shield (compound choice) on Venerable Dreadnought"
     ]
   },
   "000003698": {
@@ -6832,11 +6805,8 @@
         "replaces": "Power fist",
         "replacement_choices": [
           "Storm bolter",
-          "Power weapon",
           "Storm bolter",
-          "Chainfist",
           "Thunder hammer",
-          "Storm Shield",
           "Twin lightning claws"
         ],
         "max_total_all": true
@@ -6844,7 +6814,6 @@
     ],
     "_parser_flags": [
       "UNMATCHED: Up to 3 Deathwatch Terminators can each have their storm bolter replaced with one of the following: 1 assault cannon 1 h",
-      "WEAPON_NOT_FOUND: storm shield (count_choice) on Deathwatch Terminator Squad",
       "REVIEW_MAX_TOTAL: Deathwatch Terminator Squad — \"any/all\" scope needs max_total set"
     ]
   },
@@ -7351,12 +7320,9 @@
           "Combi-weapon",
           "Power fist",
           "Power weapon",
-          "Astartes chainsword",
-          "Sternguard bolt rifle",
-          "Power fist",
-          "Sternguard bolt rifle",
-          "Power weapon",
-          "Sternguard bolt rifle"
+          "Astartes chainsword + Sternguard bolt rifle",
+          "Power fist + Sternguard bolt rifle",
+          "Power weapon + Sternguard bolt rifle"
         ]
       },
       {
@@ -7415,8 +7381,7 @@
         "replacement_choices": [
           "Assault cannon",
           "Heavy flamer",
-          "Cyclone missile launcher – frag",
-          "Storm bolter"
+          "Cyclone missile launcher – frag"
         ],
         "per_n_models": 5,
         "max_per_n": 1

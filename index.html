@@ -1331,7 +1331,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.27';
+  const VERSION = '5.28';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2263,6 +2263,8 @@
     for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
     const weapons = new Map(), equipment = new Map();
     const add = (m, name, n) => { if (n > 0) m.set(name, (m.get(name) || 0) + n); };
+    // A choice replacement may be a compound ('Power fist + Sternguard bolt rifle'): add each weapon.
+    const addRepl = (m, name, n) => { if (n > 0 && name) for (const w of String(name).split(' + ')) add(m, w, n); };
     const wcnt = (g, w) => (g.default_weapon_counts && g.default_weapon_counts[w]) || 1;
     let overAllocated = false;
     const poolsOut = {};
@@ -2272,7 +2274,7 @@
       if (g.count.fixed === 1) {
         const replaced = {};
         for (const o of opts) if (o.type === 'choice') { const p = choiceBy[o.id]; if (p) replaced[o.replaces] = p; }
-        for (const w of g.default_weapons) add(weapons, replaced[w] || w, wcnt(g, w));
+        for (const w of g.default_weapons) { if (replaced[w]) addRepl(weapons, replaced[w], wcnt(g, w)); else add(weapons, w, wcnt(g, w)); }
         continue;
       }
       const addOpts = opts.filter(o => o.type === 'add');
@@ -2303,7 +2305,7 @@
       if (totalSwapped > pool) overAllocated = true;
       poolsOut[g.name] = { pool, used: totalSwapped };
       for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[w] || 0)) * wcnt(g, w));
-      for (const e of emit) add(weapons, e.replacement, e.n);
+      for (const e of emit) addRepl(weapons, e.replacement, e.n);
     }
     return { weapons, equipment, overAllocated, pools: poolsOut };
   }

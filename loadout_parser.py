@@ -89,11 +89,31 @@ def parse_comp_row(text):
 # ── sentence classifiers ──────────────────────────────────────────────────────
 # Each returns a list of option dicts (possibly empty), or None if no match.
 
+def _strip_footnote(s):
+    return re.sub(r'[\*\u2020\u2021]+', '', s or '')
+
 def _choices_from_list(text, sep=r'\s+(?=\d+\s)'):
-    """'1 bolt pistol 1 chainsword 1 plasma gun' -> ['bolt pistol','chainsword','plasma gun']"""
-    # split on whitespace followed by a digit (new item)
+    """Split a 'one of the following' list into choices. An item written
+    'X and 1 Y' is a compound pick (two weapons at once) and is kept as one
+    choice, rendered 'X + Y' -- not split into two bogus single choices."""
+    text = _strip_footnote(text)
     parts = re.split(r'\s+(?=\d+\s)', text.strip())
-    return [qty_name(p) for p in parts if p.strip()]
+    merged = []
+    for p in parts:
+        p = p.strip()
+        if not p:
+            continue
+        if merged and re.search(r'\band$', merged[-1]):
+            merged[-1] = re.sub(r'\s+and$', '', merged[-1]) + ' + ' + p
+        else:
+            merged.append(p)
+    out = []
+    for item in merged:
+        if ' + ' in item:
+            out.append(' + '.join(qty_name(w) for w in item.split(' + ')))
+        else:
+            out.append(qty_name(item))
+    return out
 
 def classify_sgl_choice(text, unit_name):
     """'The <group>'s <weapon> can be replaced with one of the following: <list>'"""
@@ -477,9 +497,17 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["replaces"]} (choice.replaces) on {unit_name}')
                 choices_out = []
                 for c in op['choices']:
-                    cn, cok = normalise_weapon(c, weapon_idx, global_idx)
-                    if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (choice) on {unit_name}')
-                    choices_out.append(cn)
+                    if ' + ' in c:
+                        parts = []
+                        for w in c.split(' + '):
+                            wn, wok = normalise_weapon(w, weapon_idx, global_idx)
+                            if not wok: flags.append(f'WEAPON_NOT_FOUND: {w} (compound choice) on {unit_name}')
+                            parts.append(wn)
+                        choices_out.append(' + '.join(parts))
+                    else:
+                        cn, cok = normalise_weapon(c, weapon_idx, global_idx)
+                        if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (choice) on {unit_name}')
+                        choices_out.append(cn)
                 options.append({'id': new_id('cho'), 'scope': scope, 'group': repl.title() + ' Options',
                                 'type': 'choice', 'replaces': repl, 'choices': choices_out})
             elif ot == 'single':
