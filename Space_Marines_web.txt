@@ -11301,3 +11301,64 @@ KEYWORDS – ALL MODELS: INFANTRY, EPIC HERO, GRENADES, IMPERIUM, TACTICUS, WARD
 DAINAL KORNELIUS: PSYKER
 FACTION KEYWORDS:
 ADEPTUS ASTARTES, ULTRAMARINES
+
+Victrix Honour Guard
+M
+6"
+T
+4
+Sv
+2+
+W
+3
+Ld
+6+
+OC
+2
+RANGED WEAPONS
+RANGE
+A
+BS
+S
+AP
+D
+Master-crafted bolt carbine
+24"
+2
+2+
+4
+-1
+2
+MELEE WEAPONS
+RANGE
+A
+WS
+S
+AP
+D
+Blades of honour precision twin-linked
+Melee
+6
+2+
+5
+-2
+2
+Master-crafted power weapon
+Melee
+5
+2+
+5
+-2
+2
+UNIT COMPOSITION
+0-1 Chapter Ancient – EPIC HERO
+0-1 Chapter Champion – EPIC HERO
+1-6 Victrix Honour Guard
+The Chapter Ancient is equipped with: 1 master-crafted power weapon; banner of Macragge.
+The Chapter Champion is equipped with: 1 blades of honour.
+Each Victrix Honour Guard model is equipped with: 1 master-crafted bolt carbine; 1 master-crafted power weapon.
+3 models	110
+6 models	220
+KEYWORDS – ALL MODELS: INFANTRY, IMPERIUM, TACTICUS, VICTRIX HONOUR GUARD
+FACTION KEYWORDS:
+ADEPTUS ASTARTES, ULTRAMARINES

@@ -1,0 +1,64 @@
+Wolf Guard Headtakers
+M
+7"
+T
+4
+Sv
+3+
+W
+3
+Ld
+6+
+OC
+1
+RANGED WEAPONS
+RANGE
+A
+BS
+S
+AP
+D
+Heavy bolt pistol pistol
+18"
+1
+3+
+4
+-1
+1
+MELEE WEAPONS
+RANGE
+A
+WS
+S
+AP
+D
+Master-crafted power weapon
+Melee
+4
+3+
+5
+-2
+2
+Paired master-crafted power weapons
+Melee
+6
+3+
+5
+-2
+2
+Teeth and claws
+Melee
+3
+4+
+4
+0
+1
+UNIT COMPOSITION
+3-6 Wolf Guard Headtakers
+0-6 Hunting Wolves
+Every Wolf Guard Headtaker is equipped with: heavy bolt pistol; master-crafted power weapon; storm shield.
+Every Hunting Wolf is equipped with: teeth and claws.
+3 Wolf Guard Headtakers	85
+KEYWORDS: INFANTRY, IMPERIUM, TACTICUS, WOLF GUARD, HEADTAKERS
+FACTION KEYWORDS:
+ADEPTUS ASTARTES, SPACE WOLVES

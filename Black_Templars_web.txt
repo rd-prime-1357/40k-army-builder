@@ -1,0 +1,166 @@
+Chaplain Grimaldus
+M
+6"
+T
+4
+Sv
+3+
+W
+4
+Ld
+5+
+OC
+1
+GRIMALDUS
+(⌀40mm)
+INVULNERABLE SAVE
+4+
+6"
+4
+3+
+1
+8+
+1
+CENOBYTE SERVITOR
+(⌀28.5mm)
+INVULNERABLE SAVE
+4+
+RANGED WEAPONS
+RANGE
+A
+BS
+S
+AP
+D
+Plasma pistol – standard pistol
+12"
+1
+2+
+7
+-2
+1
+Plasma pistol – supercharge hazardous pistol
+12"
+1
+2+
+8
+-3
+2
+MELEE WEAPONS
+RANGE
+A
+WS
+S
+AP
+D
+Artificer crozius
+Melee
+6
+2+
+6
+-2
+2
+Close combat weapon
+Melee
+1
+4+
+3
+0
+1
+UNIT COMPOSITION
+1 Chaplain Grimaldus – EPIC HERO
+3 Cenobyte Servitors*
+Chaplain Grimaldus is equipped with: plasma pistol; artificer crozius.
+Every Cenobyte Servitor is equipped with: close combat weapon.
+4 models	110
+KEYWORDS – ALL MODELS: INFANTRY, IMPERIUM, TACTICUS
+FACTION KEYWORDS:
+ADEPTUS ASTARTES, BLACK TEMPLARS
+
+Crusader Squad
+M
+6"
+T
+4
+Sv
+4+
+W
+2
+Ld
+6+
+OC
+2
+RANGED WEAPONS
+RANGE
+A
+BS
+S
+AP
+D
+Bolt pistol pistol
+12"
+1
+3+
+4
+0
+1
+Bolt rifle assault heavy
+24"
+2
+3+
+4
+-1
+1
+Heavy bolt pistol pistol
+18"
+1
+3+
+4
+-1
+1
+Neophyte firearm assault
+18"
+2
+3+
+4
+0
+1
+MELEE WEAPONS
+RANGE
+A
+WS
+S
+AP
+D
+Astartes chainsword sustained hits 1
+Melee
+4
+3+
+4
+-1
+1
+Close combat weapon
+Melee
+3
+3+
+4
+0
+1
+Master-crafted power weapon lethal hits
+Melee
+3
+2+
+5
+-2
+2
+UNIT COMPOSITION
+1 Sword Brother
+5-11 Initiates
+4-8 Neophytes
+The Sword Brother is equipped with: heavy bolt pistol; master-crafted power weapon.
+Every Initiate is equipped with: bolt pistol; bolt rifle; close combat weapon.
+Every Neophyte is equipped with: bolt pistol; Astartes chainsword.
+1 Sword Brother, 5 Initiates and 4 Neophytes	150
+KEYWORDS: INFANTRY, BATTLELINE, GRENADES, IMPERIUM, TACTICUS, CRUSADER SQUAD
+FACTION KEYWORDS:
+ADEPTUS ASTARTES, BLACK TEMPLARS

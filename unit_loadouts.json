@@ -5414,7 +5414,6 @@
           "Bolt pistol",
           "Plasma talon – standard",
           "Plasma talon – supercharge",
-          "Black Knight combat weapon",
           "Master-crafted power weapon"
         ]
       },
@@ -5427,8 +5426,7 @@
           "Bolt pistol",
           "Plasma talon – standard",
           "Plasma talon – supercharge",
-          "Black Knight combat weapon",
-          "Master-crafted power weapon"
+          "Black Knight combat weapon"
         ]
       },
       {
@@ -5440,8 +5438,7 @@
           "Bolt pistol",
           "Plasma talon – standard",
           "Plasma talon – supercharge",
-          "Black Knight combat weapon",
-          "Master-crafted power weapon"
+          "Black Knight combat weapon"
         ]
       }
     ],
@@ -5457,7 +5454,8 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002749": {
     "size_brackets": [
@@ -6229,8 +6227,7 @@
         "default_weapons": [
           "Plasma pistol – standard",
           "Plasma pistol – supercharge",
-          "Artificer crozius",
-          "Close combat weapon"
+          "Artificer crozius"
         ]
       },
       {
@@ -6239,15 +6236,13 @@
           "fixed": 3
         },
         "default_weapons": [
-          "Plasma pistol – standard",
-          "Plasma pistol – supercharge",
-          "Artificer crozius",
           "Close combat weapon"
         ]
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002793": {
     "size_brackets": [
@@ -6418,11 +6413,7 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Bolt pistol",
-          "Bolt rifle",
           "Heavy bolt pistol",
-          "Astartes chainsword",
-          "Close combat weapon",
           "Master-crafted power weapon"
         ]
       },
@@ -6434,10 +6425,7 @@
         "default_weapons": [
           "Bolt pistol",
           "Bolt rifle",
-          "Heavy bolt pistol",
-          "Astartes chainsword",
-          "Close combat weapon",
-          "Master-crafted power weapon"
+          "Close combat weapon"
         ]
       },
       {
@@ -6447,11 +6435,7 @@
         },
         "default_weapons": [
           "Bolt pistol",
-          "Bolt rifle",
-          "Heavy bolt pistol",
-          "Astartes chainsword",
-          "Close combat weapon",
-          "Master-crafted power weapon"
+          "Astartes chainsword"
         ]
       }
     ],
@@ -6471,7 +6455,8 @@
       "UNMATCHED: Any number of Neophytes can each have their bolt pistol and Astartes chainsword replaced with 1 Neophyte firearm and 1 c",
       "UNMATCHED: Any number of Initiates can each have their bolt rifle replaced with 1 heavy bolt pistol and 1 Astartes chainsword.",
       "UNMATCHED: For every 10 models in this unit, up to 2 Initiates can each have their bolt rifle replaced with one of the following: 1"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002801": {
     "size_brackets": [
@@ -7089,8 +7074,10 @@
         },
         "default_weapons": [
           "Heavy bolt pistol",
-          "Master-crafted power weapon",
-          "Teeth and claws"
+          "Master-crafted power weapon"
+        ],
+        "default_wargear": [
+          "storm shield"
         ]
       },
       {
@@ -7099,8 +7086,6 @@
           "fills_to_size": true
         },
         "default_weapons": [
-          "Heavy bolt pistol",
-          "Master-crafted power weapon",
           "Teeth and claws"
         ]
       }
@@ -7108,7 +7093,8 @@
     "options": [],
     "_parser_flags": [
       "UNMATCHED: All of the models in this unit can each have their master-crafted power weapon and storm shield replaced with 1 paired m"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000004132": {
     "size_brackets": [
@@ -7773,9 +7759,10 @@
           "fills_to_size": true
         },
         "default_weapons": [
-          "Master-crafted bolt carbine",
-          "Blades of honour",
           "Master-crafted power weapon"
+        ],
+        "default_wargear": [
+          "banner of Macragge"
         ]
       },
       {
@@ -7784,9 +7771,7 @@
           "fills_to_size": true
         },
         "default_weapons": [
-          "Master-crafted bolt carbine",
-          "Blades of honour",
-          "Master-crafted power weapon"
+          "Blades of honour"
         ]
       },
       {
@@ -7796,13 +7781,13 @@
         },
         "default_weapons": [
           "Master-crafted bolt carbine",
-          "Blades of honour",
           "Master-crafted power weapon"
         ]
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000004187": {
     "size_brackets": [

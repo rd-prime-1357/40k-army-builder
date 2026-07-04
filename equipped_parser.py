@@ -52,6 +52,7 @@ def variants(tok):
 
 DETERMINERS = re.compile(r'^\s*(the|an|a|every|each|all|one|two|three|1|2|3)\s+', re.I)
 WILDCARD = re.compile(r'\b(this|every|all|each)\s+models?\b', re.I)
+OTHER = re.compile(r'\b(every|all|each)\s+other\s+models?\b', re.I)
 END_COMP = re.compile(r'^\s*(\d+\s+models?\b|keywords\b|faction\s+keywords\b|attached\s+units\b|leader\b)', re.I)
 EQUIP = re.compile(r'\b(is|are)\s+equipped\s+with\b', re.I)
 
@@ -64,20 +65,35 @@ def strip_determiners(s):
     return s
 
 
+def group_key(g):
+    # Normalize a group name for matching: drop the " - ROLE" suffix and any
+    # trailing datasheet footnote marker (e.g. "Cenobyte Servitors*").
+    gb = re.split(r'\s+-\s+', norm(g))[0].strip()
+    return re.sub(r'[\*\u2020\u2021]+$', '', gb).strip()
+
+
+def sing_forms(s):
+    # Candidate singular/plural forms for tolerant group matching, incl. the
+    # irregular -ves plural (wolves -> wolf/wolfe).
+    out = {s}
+    if s.endswith('ves'):
+        out.add(s[:-3] + 'f'); out.add(s[:-3] + 'fe')
+    if s.endswith('es'):
+        out.add(s[:-2])
+    if s.endswith('s'):
+        out.add(s[:-1])
+    return out
+
+
 def match_group(frag, gnames):
     p = norm(strip_determiners(frag))
+    # "Each <group> model is equipped with" leaves a trailing "model(s)" on the
+    # subject after the leading determiner is stripped; drop it so the subject
+    # matches the group name (e.g. "victrix honour guard model" -> "...guard").
+    p = re.sub(r'\s+models?$', '', p).strip()
+    pf = sing_forms(p)
     for g in gnames:
-        if norm(g) == p:
-            return g
-    for g in gnames:
-        if norm(g).rstrip('s') == p.rstrip('s'):
-            return g
-    # Named-model groups carry a role suffix, e.g. "Ancient Gadriel - EPIC HERO".
-    # The equipped-with subject is just the model name ("Ancient Gadriel"), so match
-    # on the group name before the " - " suffix.
-    for g in gnames:
-        gb = re.split(r'\s+-\s+', norm(g))[0].strip()
-        if gb == p or gb.rstrip('s') == p.rstrip('s'):
+        if sing_forms(group_key(g)) & pf:
             return g
     return None
 
@@ -200,25 +216,38 @@ def main():
         groups = ld[uid].get('model_groups', [])
         gnames = [g.get('name', '') for g in groups]
         acc = {g.get('name'): {'w': [], 'g': [], 'c': {}} for g in groups}
-        touched = False
+        ex, ba = ex_by_id.get(uid, {}), ba_by_id.get(uid, {})
+        # Pre-pass: classify each line and collect explicitly-named groups, so an
+        # "every other model" line can target the complement (all groups not named
+        # by a specific line, e.g. Ravenwing Command: Champion named -> other =
+        # Apothecary + Ancient).
+        plines, named = [], set()
         for ln in elines:
             parsed = parse_equipped_line(ln)
             if not parsed:
                 continue
             subject, tokens = parsed
-            if WILDCARD.search(subject):
-                targets = gnames
+            if OTHER.search(subject):
+                plines.append(('other', None, tokens))
+            elif WILDCARD.search(subject):
+                plines.append(('all', gnames, tokens))
             else:
-                targets = []
+                tg = []
                 for frag in re.split(r'\band\b', subject, flags=re.I):
                     frag = frag.strip()
                     if not frag:
                         continue
                     g = match_group(frag, gnames)
-                    (targets.append(g) if g else unmatched_groups.append((uid, frag)))
+                    if g:
+                        tg.append(g); named.add(g)
+                    else:
+                        unmatched_groups.append((uid, frag))
+                plines.append(('specific', tg, tokens))
+        touched = False
+        for kind, tg, tokens in plines:
+            targets = [g for g in gnames if g not in named] if kind == 'other' else tg
             if not targets:
                 continue
-            ex, ba = ex_by_id.get(uid, {}), ba_by_id.get(uid, {})
             for tok in tokens:
                 cnt, core = 1, tok
                 mnum = re.match(r'^(\d+)\s+(.*\S)$', tok)
