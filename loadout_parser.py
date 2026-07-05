@@ -583,6 +583,10 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 per_n = op.get('per_n_models')
                 max_pn = op.get('max_per_n', 1)
                 is_choice = 'choice' in ot
+                # per-N replacements are the datasheet's "special weapon" slot; any-number
+                # swaps are their own thing (e.g. power fist -> chainfist), so they get a
+                # source-derived heading instead of sharing 'Special Weapon'.
+                grp_label = (repl.title() + ' Options') if is_any else 'Special Weapon'
                 if is_choice:
                     choices_out = []
                     for c in op['replacement_choices']:
@@ -592,7 +596,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                             cn, cok = normalise_weapon(c, weapon_idx, global_idx)
                             if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (count_choice) on {unit_name}')
                             choices_out.append(cn)
-                    entry = {'id': new_id('cc'), 'scope': scope, 'group': 'Special Weapon',
+                    entry = {'id': new_id('cc'), 'scope': scope, 'group': grp_label,
                              'type': 'count', 'replaces': repl, 'replacement_choices': choices_out}
                 else:
                     if is_any:
@@ -600,7 +604,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     else:
                         rep, ok2 = normalise_weapon(op['replacement'], weapon_idx, global_idx)
                         if not ok2: flags.append(f'WEAPON_NOT_FOUND: {op["replacement"]} (count.rep) on {unit_name}')
-                    entry = {'id': new_id('cnt'), 'scope': scope, 'group': 'Special Weapon',
+                    entry = {'id': new_id('cnt'), 'scope': scope, 'group': grp_label,
                              'type': 'count', 'replaces': repl, 'replacement': rep}
                 if per_n:
                     entry['per_n_models'] = per_n; entry['max_per_n'] = max_pn

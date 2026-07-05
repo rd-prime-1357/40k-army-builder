@@ -691,7 +691,7 @@
       {
         "id": "cnt_1",
         "scope": "Firestrike Servo-turrets",
-        "group": "Special Weapon",
+        "group": "Twin Firestrike Las-Talon Options",
         "type": "count",
         "replaces": "Twin Firestrike las-talon",
         "replacement": "Twin Firestrike autocannon",
@@ -1013,7 +1013,7 @@
       {
         "id": "cnt_1",
         "scope": "Assault Terminators",
-        "group": "Special Weapon",
+        "group": "Thunder Hammer + Storm Shield Options",
         "type": "count",
         "replaces": "Thunder hammer + Storm Shield",
         "replacement": "Twin lightning claws",
@@ -1123,7 +1123,7 @@
       {
         "id": "cnt_1",
         "scope": "Inceptors",
-        "group": "Special Weapon",
+        "group": "Assault Bolters Options",
         "type": "count",
         "replaces": "Assault bolters",
         "replacement": "Plasma exterminators – standard",
@@ -1564,7 +1564,7 @@
       {
         "id": "cnt_1",
         "scope": "Sanguinary Guard",
-        "group": "Special Weapon",
+        "group": "Encarmine Blade Options",
         "type": "count",
         "replaces": "Encarmine blade",
         "replacement": "Encarmine spear",
@@ -1797,7 +1797,7 @@
       {
         "id": "cnt_1",
         "scope": "Deathwing Terminators",
-        "group": "Special Weapon",
+        "group": "Power Fist Options",
         "type": "count",
         "replaces": "Power fist",
         "replacement": "Chainfist",
@@ -1857,7 +1857,7 @@
       {
         "id": "cnt_2",
         "scope": "Deathwing Knights",
-        "group": "Special Weapon",
+        "group": "Mace Of Absolution Options",
         "type": "count",
         "replaces": "Mace of absolution",
         "replacement": "Power weapon",
@@ -2282,7 +2282,7 @@
       {
         "id": "cnt_1",
         "scope": "Wulfen",
-        "group": "Special Weapon",
+        "group": "Death Totem Options",
         "type": "count",
         "replaces": "Death Totem",
         "replacement": "Stormfrag auto-launcher",
@@ -2363,7 +2363,7 @@
       {
         "id": "cnt_1",
         "scope": "Wolf Guard Terminators",
-        "group": "Special Weapon",
+        "group": "Storm Bolter Options",
         "type": "count",
         "replaces": "Storm bolter",
         "replacement": "Storm Shield",
@@ -2419,7 +2419,7 @@
       {
         "id": "cc_1",
         "scope": "Thunderwolf Cavalry",
-        "group": "Special Weapon",
+        "group": "Bolt Pistol Options",
         "type": "count",
         "replaces": "Bolt pistol",
         "replacement_choices": [
@@ -3039,7 +3039,7 @@
       {
         "id": "cc_2",
         "scope": "Scouts",
-        "group": "Special Weapon",
+        "group": "Boltgun Options",
         "type": "count",
         "replaces": "Boltgun",
         "replacement_choices": [
@@ -3226,7 +3226,7 @@
       {
         "id": "cnt_2",
         "scope": "Terminators",
-        "group": "Special Weapon",
+        "group": "Power Fist Options",
         "type": "count",
         "replaces": "Power fist",
         "replacement": "Chainfist",
@@ -3406,7 +3406,7 @@
       {
         "id": "cnt_1",
         "scope": "Devastator Centurions",
-        "group": "Special Weapon",
+        "group": "Centurion Bolters Options",
         "type": "count",
         "replaces": "Centurion bolters",
         "replacement": "Centurion missile launcher",
@@ -3415,7 +3415,7 @@
       {
         "id": "cc_2",
         "scope": "Devastator Centurions",
-        "group": "Special Weapon",
+        "group": "Grav-Cannon Options",
         "type": "count",
         "replaces": "Grav-cannon",
         "replacement_choices": [
@@ -3979,7 +3979,7 @@
       {
         "id": "cnt_2",
         "scope": "Eliminators",
-        "group": "Special Weapon",
+        "group": "Bolt Sniper Rifle Options",
         "type": "count",
         "replaces": "Bolt sniper rifle",
         "replacement": "Las fusil",
@@ -4154,7 +4154,7 @@
       {
         "id": "cnt_1",
         "scope": "Aggressors",
-        "group": "Special Weapon",
+        "group": "Flamestorm Gauntlets Options",
         "type": "count",
         "replaces": "Flamestorm gauntlets",
         "replacement": "Auto boltstorm gauntlets + Fragstorm grenade launcher",
@@ -4283,7 +4283,7 @@
       {
         "id": "cc_1",
         "scope": "Devastator Marines",
-        "group": "Special Weapon",
+        "group": "Boltgun Options",
         "type": "count",
         "replaces": "Boltgun",
         "replacement_choices": [
@@ -4352,7 +4352,7 @@
       {
         "id": "cnt_2",
         "scope": "Sternguard Veterans",
-        "group": "Special Weapon",
+        "group": "Sternguard Bolt Rifle Options",
         "type": "count",
         "replaces": "Sternguard bolt rifle",
         "replacement": "Combi-weapon",
@@ -4430,7 +4430,7 @@
       {
         "id": "cnt_1",
         "scope": "Desolation Marines",
-        "group": "Special Weapon",
+        "group": "Superfrag Rocket Launcher Options",
         "type": "count",
         "replaces": "Superfrag rocket launcher",
         "replacement": "Superkrak rocket launcher",
@@ -4870,7 +4870,7 @@
       {
         "id": "cnt_1",
         "scope": "Assault Centurions",
-        "group": "Special Weapon",
+        "group": "Twin Flamer Options",
         "type": "count",
         "replaces": "Twin flamer",
         "replacement": "Twin meltagun",
@@ -4879,7 +4879,7 @@
       {
         "id": "cnt_2",
         "scope": "Assault Centurions",
-        "group": "Special Weapon",
+        "group": "Centurion Bolters Options",
         "type": "count",
         "replaces": "Centurion bolters",
         "replacement": "Centurion Assault Launcher",
@@ -5253,7 +5253,7 @@
       {
         "id": "cnt_1",
         "scope": "Reivers",
-        "group": "Special Weapon",
+        "group": "Combat Knife Options",
         "type": "count",
         "replaces": "Combat knife",
         "replacement": "Bolt carbine + Close combat weapon",
@@ -6069,7 +6069,7 @@
       {
         "id": "cnt_1",
         "scope": "Kill Team Heavy Intercessors",
-        "group": "Special Weapon",
+        "group": "Flamestorm Gauntlets Options",
         "type": "count",
         "replaces": "Flamestorm gauntlets",
         "replacement": "Auto boltstorm gauntlets + Fragstorm grenade launcher",
@@ -6611,7 +6611,7 @@
       {
         "id": "cnt_1",
         "scope": "Sword Brothers",
-        "group": "Special Weapon",
+        "group": "Astartes Chainsword Options",
         "type": "count",
         "replaces": "Astartes chainsword",
         "replacement": "Master-crafted power weapon",
@@ -6703,7 +6703,7 @@
       {
         "id": "cnt_2",
         "scope": "Neophytes",
-        "group": "Special Weapon",
+        "group": "Bolt Pistol + Astartes Chainsword Options",
         "type": "count",
         "replaces": "Bolt pistol + Astartes chainsword",
         "replacement": "Neophyte firearm + Close combat weapon",
@@ -6712,7 +6712,7 @@
       {
         "id": "cnt_3",
         "scope": "Initiates",
-        "group": "Special Weapon",
+        "group": "Bolt Rifle Options",
         "type": "count",
         "replaces": "Bolt rifle",
         "replacement": "Heavy bolt pistol + Astartes chainsword",
@@ -6996,7 +6996,7 @@
       {
         "id": "cc_1",
         "scope": "Deathwatch Terminators",
-        "group": "Special Weapon",
+        "group": "Storm Bolter Options",
         "type": "count",
         "replaces": "Storm bolter",
         "replacement_choices": [
@@ -7011,7 +7011,7 @@
       {
         "id": "cc_2",
         "scope": "Deathwatch Terminators",
-        "group": "Special Weapon",
+        "group": "Power Fist + Storm Bolter Options",
         "type": "count",
         "replaces": "Power fist + Storm bolter",
         "replacement_choices": [
@@ -7074,7 +7074,7 @@
       {
         "id": "cnt_1",
         "scope": "Kill Team Intercessors with Jump Packs",
-        "group": "Special Weapon",
+        "group": "Assault Bolters Options",
         "type": "count",
         "replaces": "Assault bolters",
         "replacement": "Plasma exterminators – standard",
@@ -7389,7 +7389,7 @@
       {
         "id": "cnt_1",
         "scope": "Wolf Guard Headtakers",
-        "group": "Special Weapon",
+        "group": "Master-Crafted Power Weapon + Storm Shield Options",
         "type": "count",
         "replaces": "Master-crafted power weapon + Storm Shield",
         "replacement": "Paired master-crafted power weapons",
@@ -7421,7 +7421,7 @@
       {
         "id": "cnt_1",
         "scope": "Wulfen",
-        "group": "Special Weapon",
+        "group": "Death Totem Options",
         "type": "count",
         "replaces": "Death Totem",
         "replacement": "Stormfrag auto-launcher",
@@ -7567,7 +7567,7 @@
       {
         "id": "cnt_2",
         "scope": "Sternguard Veterans",
-        "group": "Special Weapon",
+        "group": "Sternguard Bolt Rifle Options",
         "type": "count",
         "replaces": "Sternguard bolt rifle",
         "replacement": "Combi-weapon",
@@ -7635,7 +7635,7 @@
       {
         "id": "cnt_2",
         "scope": "Terminators",
-        "group": "Special Weapon",
+        "group": "Power Fist Options",
         "type": "count",
         "replaces": "Power fist",
         "replacement": "Chainfist",
