@@ -698,9 +698,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Firestrike Servo-turrets — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000087": {
@@ -1023,8 +1021,7 @@
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count.replaces) on Terminator Assault Squad",
-      "REVIEW_MAX_TOTAL: Terminator Assault Squad — \"any/all\" scope needs max_total set"
+      "WEAPON_NOT_FOUND: storm shield (count.replaces) on Terminator Assault Squad"
     ],
     "_defaults_source": "equipped"
   },
@@ -1133,9 +1130,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Inceptor Squad — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000126": {
@@ -1587,7 +1582,6 @@
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Sanguinary Guard — \"any/all\" scope needs max_total set",
       "UNMATCHED: One model can be equipped with 1 Sanguinary banner."
     ]
   },
@@ -1819,7 +1813,6 @@
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Deathwing Terminator Squad — \"any/all\" scope needs max_total set",
       "UNMATCHED: For every 5 models in this unit, 1 Deathwing Terminator can replace its storm bolter with one of the following: 1 assaul",
       "WEAPON_NOT_FOUND: watcher in the dark (add) on Deathwing Terminator Squad"
     ]
@@ -1880,7 +1873,6 @@
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Deathwing Knights — \"any/all\" scope needs max_total set",
       "WEAPON_NOT_FOUND: watcher in the dark (add) on Deathwing Knights"
     ]
   },
@@ -2298,8 +2290,7 @@
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: death totem (count.replaces) on Wulfen",
-      "REVIEW_MAX_TOTAL: Wulfen — \"any/all\" scope needs max_total set"
+      "WEAPON_NOT_FOUND: death totem (count.replaces) on Wulfen"
     ]
   },
   "000000314": {
@@ -2391,7 +2382,6 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: storm shield (count.rep) on Wolf Guard Terminators",
-      "REVIEW_MAX_TOTAL: Wolf Guard Terminators — \"any/all\" scope needs max_total set",
       "UNMATCHED: For every 5 models in this unit, 1 Wolf Guard Terminator can replace its storm bolter and master-crafted power weapon wi",
       "WEAPON_NOT_FOUND: of the following: 1 relic greataxe 1 twin lightning claws (single.replacement) on Wolf Guard Terminators"
     ]
@@ -2450,8 +2440,7 @@
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count_choice) on Thunderwolf Cavalry",
-      "REVIEW_MAX_TOTAL: Thunderwolf Cavalry — \"any/all\" scope needs max_total set"
+      "WEAPON_NOT_FOUND: storm shield (count_choice) on Thunderwolf Cavalry"
     ]
   },
   "000000323": {
@@ -3083,9 +3072,7 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Scout Squad — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000001165": {
@@ -3256,9 +3243,7 @@
         ]
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Terminator Squad — \"any/all\" scope needs max_total set"
-    ]
+    "_parser_flags": []
   },
   "000001188": {
     "size_brackets": [
@@ -3440,10 +3425,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Centurion Devastator Squad — \"any/all\" scope needs max_total set",
-      "REVIEW_MAX_TOTAL: Centurion Devastator Squad — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000001345": {
@@ -4004,9 +3986,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Eliminator Squad — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000001825": {
@@ -4181,9 +4161,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Aggressor Squad — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000002100": {
@@ -4316,11 +4294,11 @@
           "Multi-melta",
           "Plasma cannon – standard"
         ],
-        "max_total_all": true
+        "max_total_all": true,
+        "up_to": 4
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Devastator Squad — \"any/all\" scope needs max_total set",
       "UNMATCHED: The Devastator Sergeant's bolt pistol and boltgun can be replaced with two different weapons from the following list:* 1"
     ],
     "_defaults_source": "equipped"
@@ -4394,9 +4372,7 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Sternguard Veteran Squad — \"any/all\" scope needs max_total set"
-    ]
+    "_parser_flags": []
   },
   "000002266": {
     "size_brackets": [
@@ -4471,9 +4447,7 @@
         ]
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Desolation Squad — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000002285": {
@@ -4913,9 +4887,7 @@
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Centurion Assault Squad — \"any/all\" scope needs max_total set",
-      "WEAPON_NOT_FOUND: centurion assault launcher (count.rep) on Centurion Assault Squad",
-      "REVIEW_MAX_TOTAL: Centurion Assault Squad — \"any/all\" scope needs max_total set"
+      "WEAPON_NOT_FOUND: centurion assault launcher (count.rep) on Centurion Assault Squad"
     ],
     "_defaults_source": "equipped"
   },
@@ -5289,7 +5261,6 @@
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Reiver Squad — \"any/all\" scope needs max_total set",
       "UNMATCHED: If the Reiver Sergeant is equipped with 1 bolt carbine, it can be equipped with 1 combat knife.",
       "UNMATCHED: All models in this unit can each be equipped with 1 Reiver grav-chute.",
       "UNMATCHED: All models in this unit can each be equipped with 1 grapnel launcher."
@@ -6107,8 +6078,7 @@
     ],
     "_parser_flags": [
       "UNMATCHED: For every 5 models in this unit, 1 model can replace its Deathwatch heavy bolt rifle with 1 Deathwatch heavy bolter.",
-      "UNMATCHED: 1 model can replace its melta rifle with 1 multi-melta.",
-      "REVIEW_MAX_TOTAL: Indomitor Kill Team — \"any/all\" scope needs max_total set"
+      "UNMATCHED: 1 model can replace its melta rifle with 1 multi-melta."
     ]
   },
   "000002783": {
@@ -6679,7 +6649,6 @@
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Sword Brethren Squad — \"any/all\" scope needs max_total set",
       "UNMATCHED: For every 5 models in this unit, up to 2 Sword Brothers can each have their heavy bolt pistol replaced with 1 pyre pisto"
     ]
   },
@@ -6751,8 +6720,6 @@
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Crusader Squad — \"any/all\" scope needs max_total set",
-      "REVIEW_MAX_TOTAL: Crusader Squad — \"any/all\" scope needs max_total set",
       "UNMATCHED: For every 10 models in this unit, up to 2 Initiates can each have their bolt rifle replaced with one of the following: 1"
     ],
     "_defaults_source": "equipped"
@@ -7038,7 +7005,8 @@
           "Plasma cannon – standard",
           "Cyclone missile launcher – frag + Storm bolter"
         ],
-        "max_total_all": true
+        "max_total_all": true,
+        "up_to": 3
       },
       {
         "id": "cc_2",
@@ -7056,9 +7024,7 @@
       }
     ],
     "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Deathwatch Terminator Squad — \"any/all\" scope needs max_total set",
-      "WEAPON_NOT_FOUND: storm shield (count_choice) on Deathwatch Terminator Squad",
-      "REVIEW_MAX_TOTAL: Deathwatch Terminator Squad — \"any/all\" scope needs max_total set"
+      "WEAPON_NOT_FOUND: storm shield (count_choice) on Deathwatch Terminator Squad"
     ]
   },
   "000003874": {
@@ -7118,8 +7084,7 @@
     "_parser_flags": [
       "UNMATCHED: The Kill Team Sergeant with Jump Pack can replace its heavy bolt pistol with one of the following: 1 hand flamer 1 plasm",
       "UNMATCHED: The Kill Team Sergeant with Jump Pack can replace its Astartes chainsword with one of the following: 1 power fist 1 powe",
-      "UNMATCHED: For every 5 models in this unit, 1 model can replace its heavy bolt pistol with 1 plasma pistol.",
-      "REVIEW_MAX_TOTAL: Talonstrike Kill Team — \"any/all\" scope needs max_total set"
+      "UNMATCHED: For every 5 models in this unit, 1 model can replace its heavy bolt pistol with 1 plasma pistol."
     ]
   },
   "000004109": {
@@ -7432,8 +7397,7 @@
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count.replaces) on Wolf Guard Headtakers",
-      "REVIEW_MAX_TOTAL: Wolf Guard Headtakers — \"any/all\" scope needs max_total set"
+      "WEAPON_NOT_FOUND: storm shield (count.replaces) on Wolf Guard Headtakers"
     ],
     "_defaults_source": "equipped"
   },
@@ -7465,8 +7429,7 @@
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: death totem (count.replaces) on Wulfen with Storm Shields",
-      "REVIEW_MAX_TOTAL: Wulfen with Storm Shields — \"any/all\" scope needs max_total set"
+      "WEAPON_NOT_FOUND: death totem (count.replaces) on Wulfen with Storm Shields"
     ]
   },
   "000004133": {
@@ -7624,9 +7587,7 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Sternguard Veteran Squad — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004138": {
@@ -7691,9 +7652,7 @@
         ]
       }
     ],
-    "_parser_flags": [
-      "REVIEW_MAX_TOTAL: Terminator Squad — \"any/all\" scope needs max_total set"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004139": {

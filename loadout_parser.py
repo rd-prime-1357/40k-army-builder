@@ -227,7 +227,7 @@ def classify_any_number(text, unit_name):
     Source and replacement are passed as raw text so build_loadout can split
     compound weapons ('A and B') with the unit's weapon index in hand."""
     m = re.match(
-        r"(?:Any number of|All of the|All|Up to \d+)\s+"
+        r"(?:Any number of|All of the|All|Up to (?P<upto>\d+))\s+"
         r"(?P<scope>.+?)"
         r"(?:\s+in this unit)?"
         r" can (?:each )?have their (?P<repl>.+?) replaced with\s+"
@@ -235,6 +235,7 @@ def classify_any_number(text, unit_name):
         text, re.I)
     if not m:
         return None
+    up_to = int(m.group('upto')) if m.group('upto') else None
     scope_raw = m.group('scope').strip()
     if re.fullmatch(r'(?:of the |the )?models?|units?', scope_raw, re.I):
         scope_hint = 'body'
@@ -247,11 +248,12 @@ def classify_any_number(text, unit_name):
         if choices:
             return [{'_type': 'any_count_choice', '_scope_hint': scope_hint,
                      'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
-                     'replacement_choices': choices}]
+                     'up_to': up_to, 'replacement_choices': choices}]
     elif m.group('rep'):
         rep_raw = m.group('rep').strip()
         return [{'_type': 'any_count', '_scope_hint': scope_hint,
                  'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+                 'up_to': up_to,
                  'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw}]
     return None
 
@@ -603,9 +605,11 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 if per_n:
                     entry['per_n_models'] = per_n; entry['max_per_n'] = max_pn
                 else:
-                    # 'any number' / 'all' — use unit size as total max; mark for review
+                    # 'any number' / 'all' / 'up to N' — cap resolves at render time
+                    # to the scoped group's model count (min with up_to when present).
                     entry['max_total_all'] = True
-                    flags.append(f'REVIEW_MAX_TOTAL: {unit_name} — "any/all" scope needs max_total set')
+                    if op.get('up_to') is not None:
+                        entry['up_to'] = op['up_to']
                 options.append(entry)
             elif ot == 'add_choice':
                 # "equipped with one of the following" — treated as a single-model choice

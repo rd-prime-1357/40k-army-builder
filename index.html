@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1336,7 +1335,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.30';
+  const VERSION = '5.31';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2219,9 +2218,14 @@
   // ── Structured loadout model: composition + options -> weapon counts ───────
   let loadoutDefs = {};   // unit_id -> definition
 
-  function loMaxCount(opt, size) {
+  function loMaxCount(opt, size, groupN) {
     if (opt.per_n_models) return Math.floor(size / opt.per_n_models) * (opt.max_per_n || 1);
-    return opt.max_total != null ? opt.max_total : 0;
+    if (opt.max_total != null) return opt.max_total;
+    if (opt.max_total_all) {
+      const g = (groupN != null) ? groupN : size;   // eligible models in the scoped group
+      return opt.up_to != null ? Math.min(opt.up_to, g) : g;
+    }
+    return 0;
   }
   function loGroupCounts(def, size) {
     // First pass: resolve every group that isn't fills-to-size, tallying how many
@@ -2324,15 +2328,16 @@
       }
       const pool = Math.max(0, n - reserved);
       const swappedByWeapon = {}, emit = [];
-      let swapModels = 0;
-      // A compound source ('Power fist + Storm bolter') removes EACH named weapon
-      // from every swapped model, but still counts as one swap against the pool.
+      // Each source weapon is consumed independently: a model may swap each of the
+      // weapons it carries once. So the binding limit is per source weapon, not the
+      // sum of all swaps. A compound source ('Power fist + Storm bolter') charges
+      // each named weapon; the same weapon consumed by two options (e.g. a special
+      // weapon and a separate swap that both need the power fist) sums correctly.
       const chargeSource = (replaces, cnt) => {
         for (const src of String(replaces).split(' + ')) swappedByWeapon[src] = (swappedByWeapon[src] || 0) + cnt;
-        swapModels += cnt;
       };
       for (const o of countOpts) {
-        const cap = loMaxCount(o, size), selv = countBy[o.id];
+        const cap = loMaxCount(o, size, n), selv = countBy[o.id];
         if (o.replacement_choices) {
           const tally = (selv && typeof selv === 'object') ? selv : {};
           let used = 0;
@@ -2344,9 +2349,12 @@
           if (want > 0) { emit.push({ replacement: o.replacement, n: want }); chargeSource(o.replaces, want); }
         }
       }
-      const totalSwapped = swapModels;
-      if (totalSwapped > pool) overAllocated = true;
-      poolsOut[g.name] = { pool, used: totalSwapped };
+      let maxSrcUsed = 0;
+      for (const k of Object.keys(swappedByWeapon)) {
+        if (swappedByWeapon[k] > maxSrcUsed) maxSrcUsed = swappedByWeapon[k];
+        if (swappedByWeapon[k] > pool) overAllocated = true;
+      }
+      poolsOut[g.name] = { pool, used: maxSrcUsed };
       for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[w] || 0)) * wcnt(g, w));
       for (const e of emit) addRepl(weapons, e.replacement, e.n);
     }
@@ -2368,6 +2376,7 @@
     for (const o of def.options)
       if (o.type === 'add' && o.requires_weapon && !reqOkUI(o) && Number(entry.wargear[o.id] || 0) > 0) entry.wargear[o.id] = 0;
     const roll = loRollup(def, size, loadoutSelections(entry, def));
+    const grpCounts = loGroupCounts(def, size);
     const byScope = {};
     for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
     let html = '';
@@ -2403,7 +2412,7 @@
           html += loChoiceRow(entry.listId, o.id, '', 'Keep ' + o.replaces, !cur);
           for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c);
         } else if (o.type === 'count' && o.replacement_choices) {
-          const max = loMaxCount(o, size);
+          const max = loMaxCount(o, size, grpCounts[g.name]);
           const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
           html += `<div class="lo-substep-note">pick up to ${max}</div>`;
           for (const c of o.replacement_choices) {
@@ -2412,12 +2421,12 @@
                               `editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',1,${max})`, cur, c, '');
           }
         } else if (o.type === 'count') {
-          const max = loMaxCount(o, size);
+          const max = loMaxCount(o, size, grpCounts[g.name]);
           const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
           html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
                             `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, (o.replacement || o.group), `(max ${max})`);
         } else if (o.type === 'add') {
-          const max = loMaxCount(o, size);
+          const max = loMaxCount(o, size, grpCounts[g.name]);
           const label = o.adds_weapon || o.equipment || o.group;
           const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
           if (o.max_total === 1 && !o.per_n_models) {
