@@ -562,6 +562,10 @@
     .option-item.granted .option-check {
       color: #b8860b;
     }
+    .option-item.radio.disabled {
+      cursor: default; opacity: 0.4;
+    }
+    .option-item.radio.disabled:hover { border-color: #333; background: transparent; }
 
     /* Incomplete flag in detail */
     .incomplete-flag {
@@ -1331,7 +1335,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.28';
+  const VERSION = '5.29';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2261,6 +2265,20 @@
     const counts = loGroupCounts(def, size);
     const byScope = {};
     for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
+    // Unit-wide shared pools: options carrying the same pool_id draw from one cap.
+    // The option with per_n_models defines the cap; others (e.g. a leader toggle)
+    // just consume from it. leaderUsed tracks how much the fixed-1 leader took, so
+    // body controls can shrink their ceiling accordingly.
+    const poolCap = {}, poolUsed = {}, poolLeaderUsed = {};
+    for (const o of def.options) if (o.pool_id && o.per_n_models) poolCap[o.pool_id] = loMaxCount(o, size);
+    // requires_weapon: a pooled/add option is legal only while the named weapon is
+    // still equipped on its model (i.e. no active choice in the same scope replaced it).
+    const reqOk = (opt) => {
+      if (!opt.requires_weapon) return true;
+      for (const o of def.options)
+        if (o.scope === opt.scope && o.type === 'choice' && o.replaces === opt.requires_weapon && choiceBy[o.id]) return false;
+      return true;
+    };
     const weapons = new Map(), equipment = new Map();
     const add = (m, name, n) => { if (n > 0) m.set(name, (m.get(name) || 0) + n); };
     // A choice replacement may be a compound ('Power fist + Sternguard bolt rifle'): add each weapon.
@@ -2275,13 +2293,30 @@
         const replaced = {};
         for (const o of opts) if (o.type === 'choice') { const p = choiceBy[o.id]; if (p) replaced[o.replaces] = p; }
         for (const w of g.default_weapons) { if (replaced[w]) addRepl(weapons, replaced[w], wcnt(g, w)); else add(weapons, w, wcnt(g, w)); }
+        // Leader can also carry pooled/add weapons (e.g. a Sergeant grenade launcher).
+        for (const o of opts) if (o.type === 'add') {
+          let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
+          if (!reqOk(o)) want = 0;
+          if (o.pool_id) {
+            const rem = (poolCap[o.pool_id] != null ? poolCap[o.pool_id] : Infinity) - (poolUsed[o.pool_id] || 0);
+            want = Math.min(want, Math.max(0, rem));
+            poolUsed[o.pool_id] = (poolUsed[o.pool_id] || 0) + want;
+            poolLeaderUsed[o.pool_id] = (poolLeaderUsed[o.pool_id] || 0) + want;
+          }
+          if (want > 0) { if (o.adds_weapon) add(weapons, o.adds_weapon, want); else if (o.equipment) add(equipment, o.equipment, want); }
+        }
         continue;
       }
       const addOpts = opts.filter(o => o.type === 'add');
       const countOpts = opts.filter(o => o.type === 'count');
       let reserved = 0;
       for (const o of addOpts) {
-        const want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
+        let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
+        if (o.pool_id) {
+          const rem = (poolCap[o.pool_id] != null ? poolCap[o.pool_id] : Infinity) - (poolUsed[o.pool_id] || 0);
+          want = Math.min(want, Math.max(0, rem));
+          poolUsed[o.pool_id] = (poolUsed[o.pool_id] || 0) + want;
+        }
         if (o.adds_weapon) add(weapons, o.adds_weapon, want);
         else if (o.equipment) add(equipment, o.equipment, want);
         if (o.blocks_swap) reserved += want;
@@ -2307,12 +2342,23 @@
       for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[w] || 0)) * wcnt(g, w));
       for (const e of emit) addRepl(weapons, e.replacement, e.n);
     }
+    for (const pid in poolCap) poolsOut['pool:' + pid] = { pool: poolCap[pid], used: poolUsed[pid] || 0, leaderUsed: poolLeaderUsed[pid] || 0 };
     return { weapons, equipment, overAllocated, pools: poolsOut };
   }
 
   // Unit Options UI for loadout-defined units.
   function buildLoadoutHtml(entry, def) {
     const size = loadoutSize(entry, def);
+    // A pooled/add option whose prerequisite weapon has been swapped away is
+    // cleared before rollup — frees its shared-pool slot so the body ceiling recovers.
+    const reqOkUI = (o) => {
+      if (!o.requires_weapon) return true;
+      for (const x of def.options)
+        if (x.scope === o.scope && x.type === 'choice' && x.replaces === o.requires_weapon && entry.wargear[x.id]) return false;
+      return true;
+    };
+    for (const o of def.options)
+      if (o.type === 'add' && o.requires_weapon && !reqOkUI(o) && Number(entry.wargear[o.id] || 0) > 0) entry.wargear[o.id] = 0;
     const roll = loRollup(def, size, loadoutSelections(entry, def));
     const byScope = {};
     for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
@@ -2331,6 +2377,15 @@
       if (p && hasSwaps) {
         const over = p.used > p.pool;
         html += `<div class="lo-pool${over ? ' over' : ''}">Special weapons: ${p.used} of ${p.pool} models${over ? ' — too many for this unit' : ''}</div>`;
+      }
+      // Unit-wide shared pool status (e.g. grenade launchers shared by Sergeant + body).
+      const pooledHere = opts.find(o => o.pool_id);
+      if (pooledHere) {
+        const pp = roll.pools && roll.pools['pool:' + pooledHere.pool_id];
+        if (pp && pp.pool > 0) {
+          const over = pp.used > pp.pool;
+          html += `<div class="lo-pool${over ? ' over' : ''}">${pooledHere.group}: ${pp.used} of ${pp.pool}${over ? ' — too many for this unit' : ''}</div>`;
+        }
       }
       let lastGroup = null;
       for (const o of opts) {
@@ -2356,15 +2411,25 @@
         } else if (o.type === 'add') {
           const max = loMaxCount(o, size);
           const label = o.adds_weapon || o.equipment || o.group;
+          const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
           if (o.max_total === 1 && !o.per_n_models) {
+            const disabled = !reqOkUI(o) || (poolInfo && poolInfo.pool === 0);
             const on = Number(entry.wargear[o.id] || 0) > 0;
-            html += `<div class="option-item radio${on ? ' chosen' : ''}" onclick="editLoadoutAdd(${entry.listId},'${esc(o.id)}')">
-                <div class="option-item-row"><div class="option-check">${on ? '\u25CF' : ''}</div>
-                <div class="option-item-name">${label}</div></div>`;
+            if (disabled) {
+              const why = !reqOkUI(o) ? ` — needs ${o.requires_weapon}` : '';
+              html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
+                <div class="option-item-name">${label}${why}</div></div></div>`;
+            } else {
+              html += `<div class="option-item radio${on ? ' chosen' : ''}" onclick="editLoadoutAdd(${entry.listId},'${esc(o.id)}')">
+                  <div class="option-item-row"><div class="option-check">${on ? '\u25CF' : ''}</div>
+                  <div class="option-item-name">${label}</div></div></div>`;
+            }
           } else {
-            const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
-            html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
-                              `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, label, `(max ${max})`);
+            let mx = max;
+            if (poolInfo) mx = Math.max(0, poolInfo.pool - poolInfo.leaderUsed);
+            const cur = Math.min(Number(entry.wargear[o.id] || 0), mx);
+            html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${mx})`,
+                              `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${mx})`, cur, label, `(max ${mx})`);
           }
         }
       }
