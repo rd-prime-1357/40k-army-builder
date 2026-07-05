@@ -56,6 +56,40 @@ def find_weapon(raw, unit_weapons_base, unit_weapons_full):
             return canon
     return None
 
+def _is_exact_weapon(raw, idx, global_idx=None):
+    """True only if the WHOLE name is an exact base key in the unit or global weapon
+    index. Deliberately does NOT use the loose prefix fallback, so 'combi-bolter and
+    power fist' is NOT mistaken for 'combi-bolter' — but a real 'and'-named weapon
+    like 'Teeth and claws' IS recognised as a single weapon and won't be split."""
+    b = base_name(raw)
+    if b in idx:
+        return True
+    if global_idx and b in global_idx:
+        return True
+    return False
+
+def split_compound_source(raw, idx, global_idx=None):
+    """Split a replaced-weapon phrase into parts. 'storm bolter and power fist' ->
+    ['storm bolter', 'power fist']; 'Teeth and claws' (a real weapon) -> ['teeth and
+    claws']. Only splits when the whole phrase is not itself a known weapon."""
+    if _is_exact_weapon(raw, idx, global_idx):
+        return [base_name(raw)]
+    parts = [p.strip() for p in re.split(r'\s+and\s+', raw.strip()) if p.strip()]
+    if len(parts) > 1:
+        return [base_name(p) for p in parts]
+    return [base_name(raw)]
+
+def split_compound_replacement(raw):
+    """Split a replacement phrase into parts. '1 auto boltstorm gauntlets and 1
+    fragstorm grenade launcher' -> ['auto boltstorm gauntlets', 'fragstorm grenade
+    launcher']. Only splits on ' and ' when every part is count-led ('N weapon'),
+    so a single 'and'-named weapon ('1 Slaughter and Carnage - strike') is kept
+    whole."""
+    parts = [p.strip() for p in re.split(r'\s+and\s+', raw.strip()) if p.strip()]
+    if len(parts) > 1 and all(re.match(r'^\d+\s+\S', p) for p in parts):
+        return [qty_name(p) for p in parts]
+    return [qty_name(raw)]
+
 # ── composition parser ────────────────────────────────────────────────────────
 def is_comp_annotation(text):
     """True for composition lines that are notes, not model groups.
@@ -186,28 +220,39 @@ def classify_per_n(text, unit_name):
     return None
 
 def classify_any_number(text, unit_name):
-    """'Any number of models …' or 'All models …' or 'Up to N models …'"""
+    """'Any number of models …' / 'All [of the] models …' / 'Up to N models …',
+    including the named-model forms ('Any number of Sternguard Veterans …').
+    The scope between the lead-in and 'can … have their' is captured verbatim and
+    resolved to a model group later; it need not be the literal word 'models'.
+    Source and replacement are passed as raw text so build_loadout can split
+    compound weapons ('A and B') with the unit's weapon index in hand."""
     m = re.match(
-        r"(?:Any number of (?:(?P<model>\w[\w\s\-]+?) )?(?:models?|units?)"
-        r"|All (?:(?P<model2>\w[\w\s\-]+?) )?(?:models?)"
-        r"|Up to \d+ (?:(?P<model3>\w[\w\s\-]+?) )?(?:models?))"
+        r"(?:Any number of|All of the|All|Up to \d+)\s+"
+        r"(?P<scope>.+?)"
         r"(?:\s+in this unit)?"
-        r" can (?:each )?have their (?P<repl>.+?) replaced with"
-        r"(?: one of the following[:\s]+(?P<list>.+)|(?P<rep>\d+\s+\S.*?)$)",
+        r" can (?:each )?have their (?P<repl>.+?) replaced with\s+"
+        r"(?:one of the following[:\s]+(?P<list>.+)|(?P<rep>\d+\s+\S.*?)(?:\.|$))",
         text, re.I)
     if not m:
         return None
-    scope_hint = (m.group('model') or m.group('model2') or m.group('model3') or 'body').strip()
-    replaces = qty_name(m.group('repl'))
+    scope_raw = m.group('scope').strip()
+    if re.fullmatch(r'(?:of the |the )?models?|units?', scope_raw, re.I):
+        scope_hint = 'body'
+    else:
+        # tolerate a trailing 'models'/'units' after a named model, if present
+        scope_hint = re.sub(r'\s+(?:models?|units?)$', '', scope_raw, flags=re.I).strip() or 'body'
+    repl_raw = m.group('repl').strip()
     if m.group('list'):
         choices = _choices_from_list(m.group('list'))
         if choices:
             return [{'_type': 'any_count_choice', '_scope_hint': scope_hint,
-                     'replaces': replaces, 'replacement_choices': choices}]
+                     'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+                     'replacement_choices': choices}]
     elif m.group('rep'):
-        replacement = qty_name(m.group('rep'))
+        rep_raw = m.group('rep').strip()
         return [{'_type': 'any_count', '_scope_hint': scope_hint,
-                 'replaces': replaces, 'replacement': replacement}]
+                 'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+                 'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw}]
     return None
 
 def classify_add(text, unit_name):
@@ -518,22 +563,41 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 options.append({'id': new_id('sng'), 'scope': scope, 'group': repl.title() + ' Options',
                                 'type': 'choice', 'replaces': repl, 'choices': [rep]})
             elif ot in ('count', 'count_choice', 'any_count', 'any_count_choice'):
-                repl, ok = normalise_weapon(op['replaces'], weapon_idx, global_idx)
-                if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["replaces"]} (count.replaces) on {unit_name}')
+                is_any = ot.startswith('any_')
+                # source (replaces): compound-aware only for the any-number family
+                def _norm_parts(parts, ctx):
+                    out = []
+                    for p in parts:
+                        pn, pok = normalise_weapon(p, weapon_idx, global_idx)
+                        if not pok: flags.append(f'WEAPON_NOT_FOUND: {p} ({ctx}) on {unit_name}')
+                        out.append(pn)
+                    return ' + '.join(out)
+                if is_any:
+                    src_parts = split_compound_source(op.get('replaces_raw', op['replaces']), weapon_idx, global_idx)
+                    repl = _norm_parts(src_parts, 'count.replaces')
+                else:
+                    repl, ok = normalise_weapon(op['replaces'], weapon_idx, global_idx)
+                    if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["replaces"]} (count.replaces) on {unit_name}')
                 per_n = op.get('per_n_models')
                 max_pn = op.get('max_per_n', 1)
                 is_choice = 'choice' in ot
                 if is_choice:
                     choices_out = []
                     for c in op['replacement_choices']:
-                        cn, cok = normalise_weapon(c, weapon_idx, global_idx)
-                        if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (count_choice) on {unit_name}')
-                        choices_out.append(cn)
+                        if ' + ' in c:
+                            choices_out.append(_norm_parts(c.split(' + '), 'count_choice'))
+                        else:
+                            cn, cok = normalise_weapon(c, weapon_idx, global_idx)
+                            if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (count_choice) on {unit_name}')
+                            choices_out.append(cn)
                     entry = {'id': new_id('cc'), 'scope': scope, 'group': 'Special Weapon',
                              'type': 'count', 'replaces': repl, 'replacement_choices': choices_out}
                 else:
-                    rep, ok2 = normalise_weapon(op['replacement'], weapon_idx, global_idx)
-                    if not ok2: flags.append(f'WEAPON_NOT_FOUND: {op["replacement"]} (count.rep) on {unit_name}')
+                    if is_any:
+                        rep = _norm_parts(split_compound_replacement(op.get('replacement_raw', op['replacement'])), 'count.rep')
+                    else:
+                        rep, ok2 = normalise_weapon(op['replacement'], weapon_idx, global_idx)
+                        if not ok2: flags.append(f'WEAPON_NOT_FOUND: {op["replacement"]} (count.rep) on {unit_name}')
                     entry = {'id': new_id('cnt'), 'scope': scope, 'group': 'Special Weapon',
                              'type': 'count', 'replaces': repl, 'replacement': rep}
                 if per_n:

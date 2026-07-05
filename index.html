@@ -1335,7 +1335,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.29';
+  const VERSION = '5.30';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2323,6 +2323,13 @@
       }
       const pool = Math.max(0, n - reserved);
       const swappedByWeapon = {}, emit = [];
+      let swapModels = 0;
+      // A compound source ('Power fist + Storm bolter') removes EACH named weapon
+      // from every swapped model, but still counts as one swap against the pool.
+      const chargeSource = (replaces, cnt) => {
+        for (const src of String(replaces).split(' + ')) swappedByWeapon[src] = (swappedByWeapon[src] || 0) + cnt;
+        swapModels += cnt;
+      };
       for (const o of countOpts) {
         const cap = loMaxCount(o, size), selv = countBy[o.id];
         if (o.replacement_choices) {
@@ -2330,13 +2337,13 @@
           let used = 0;
           for (const k of Object.keys(tally)) { const c = Math.max(0, tally[k] | 0); if (c > 0 && o.replacement_choices.includes(k)) { emit.push({ replacement: k, n: c }); used += c; } }
           used = Math.min(used, cap);
-          swappedByWeapon[o.replaces] = (swappedByWeapon[o.replaces] || 0) + used;
+          chargeSource(o.replaces, used);
         } else {
           const want = Math.max(0, Math.min((selv | 0), cap));
-          if (want > 0) { emit.push({ replacement: o.replacement, n: want }); swappedByWeapon[o.replaces] = (swappedByWeapon[o.replaces] || 0) + want; }
+          if (want > 0) { emit.push({ replacement: o.replacement, n: want }); chargeSource(o.replaces, want); }
         }
       }
-      const totalSwapped = Object.keys(swappedByWeapon).reduce((s, k) => s + swappedByWeapon[k], 0);
+      const totalSwapped = swapModels;
       if (totalSwapped > pool) overAllocated = true;
       poolsOut[g.name] = { pool, used: totalSwapped };
       for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[w] || 0)) * wcnt(g, w));
