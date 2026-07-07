@@ -333,10 +333,22 @@ def build_units(data):
         abilities_by_key[key].append(row)
 
     # Points: keyed by (army, unit) only
+    def _norm_join(s):
+        # Case/space-insensitive join key. The MFM points parser title-cases
+        # ALL-CAPS source names (e.g. "Daemon Prince Of Nurgle",
+        # "Foetid Bloat-Drone"), which never match Wahapedia's casing on an
+        # exact join. Points rows only supply numbers; the display name comes
+        # from units.json, so normalizing the *match* is safe and fixes the
+        # whole casing class at once.
+        return re.sub(r"\s+", " ", (s or "")).strip().casefold()
+
     points_by_key = {}
+    points_by_norm = {}
     for row in points_rows:
         key = make_key(row, ["Army Name", "Unit Name"])
         points_by_key[key] = row
+        points_by_norm[(_norm_join(str(row.get("Army Name", ""))),
+                        _norm_join(str(row.get("Unit Name", ""))))] = row
 
     # ------------------------------------------------------------------
     # Group stats rows by army, then by unit
@@ -473,6 +485,9 @@ def build_units(data):
             # points (flat object, keyed by army + unit name only)
             # ----------------------------------------------------------
             points_row = points_by_key.get((army_name, unit_name))
+            if not points_row:
+                points_row = points_by_norm.get(
+                    (_norm_join(str(army_name)), _norm_join(str(unit_name))))
             if points_row:
                 # Size slots: ordered, trailing-blank (D27). Build a list of the
                 # size brackets that are actually populated, in order.
