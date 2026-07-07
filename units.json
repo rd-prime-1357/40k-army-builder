@@ -1853,7 +1853,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -2589,7 +2598,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
+            },
+            {
+              "size": 2,
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 150
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -6266,7 +6290,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -15223,7 +15256,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 140,
+              "second_unit": 140,
+              "third_plus": 140
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -15618,9 +15660,11 @@
             "leader_ability_name": null,
             "leader_eligible_units": [
               "ASSAULT INTERCESSOR SQUAD",
+              "ASSAULT SQUAD",
               "BLADEGUARD VETERAN SQUAD",
               "INTERCESSOR SQUAD",
-              "STERNGUARD VETERAN SQUAD WHITE SCARS"
+              "STERNGUARD VETERAN SQUAD",
+              "VANGUARD VETERAN SQUAD WHITE SCARS"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -15658,9 +15702,11 @@
             "leader_ability_name": null,
             "leader_eligible_units": [
               "ASSAULT INTERCESSOR SQUAD",
+              "ASSAULT SQUAD",
               "BLADEGUARD VETERAN SQUAD",
               "INTERCESSOR SQUAD",
-              "STERNGUARD VETERAN SQUAD WHITE SCARS"
+              "STERNGUARD VETERAN SQUAD",
+              "VANGUARD VETERAN SQUAD WHITE SCARS"
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
@@ -15821,7 +15867,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 6,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
+            }
+          ]
+        },
         "abilities": []
       }
     ]
@@ -22743,7 +22798,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 165,
+              "second_unit": 165,
+              "third_plus": 165
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -26582,7 +26646,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            }
+          ]
+        },
         "abilities": []
       }
     ]
@@ -27178,7 +27251,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 55,
+              "second_unit": 55,
+              "third_plus": 55
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -37986,7 +38068,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 195,
+              "second_unit": 195,
+              "third_plus": 195
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -38171,7 +38262,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 120
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -38482,7 +38582,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 110
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -39923,7 +40032,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -40324,7 +40442,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 170
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -40520,7 +40647,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -40602,7 +40738,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 135
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -41202,7 +41347,22 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            },
+            {
+              "size": 2,
+              "first_unit": 140,
+              "second_unit": 140,
+              "third_plus": 140
+            }
+          ]
+        },
         "abilities": []
       },
       {
