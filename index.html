@@ -1335,7 +1335,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.32';
+  const VERSION = '5.33';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1959,7 +1959,7 @@
       html += `</div>`;
     } else if (sizes.length === 1) {
       html += `<div class="detail-section-label">Unit Size</div>
-        <div style="font-size:0.82rem;color:#888;margin-bottom:1.1rem;">${sizes[0].size} model${sizes[0].size===1?'':'s'} (fixed)</div>`;
+        <div style="font-size:0.82rem;color:#888;margin-bottom:1.1rem;">${sizes[0].size} model${sizes[0].size===1?'':'s'}</div>`;
     }
 
     // Leader assignment
