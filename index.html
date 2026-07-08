@@ -881,6 +881,15 @@
       letter-spacing: 0.05em;
     }
 
+    .keyword-model-line, .keyword-faction-line {
+      font-size: 0.65rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.4rem;
+    }
+    .keyword-faction-line { color: #9a7a4a; }
+
     .model-group-divider {
       border: none;
       border-top: 1px solid #2a2a2a;
@@ -1335,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.33';
+  const VERSION = '5.34';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2599,6 +2608,30 @@
       html += `</div></div>`;
     }
 
+    // Wargear Abilities — conferred by default (non-optional) gear (e.g. invuln saves)
+    const allWargearAbilities = [];
+    for (const mg of raw.model_groups) {
+      for (const name of (mg.wargear_ability_names || [])) {
+        if (!allWargearAbilities.includes(name)) allWargearAbilities.push(name);
+      }
+    }
+    if (allWargearAbilities.length > 0) {
+      const sid = 'full-wargear-abilities';
+      html += `<div class="modal-section">
+        <div class="modal-section-header" onclick="toggleSection('${sid}')">
+          <span class="modal-section-heading"><span>Wargear Abilities</span><span class="modal-section-names">${allWargearAbilities.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
+        </div>
+        <div class="modal-section-content" id="${sid}">`;
+      for (const name of allWargearAbilities) {
+        const desc = glossaryDesc(name);
+        html += `<div class="ability-row">
+          <div class="ability-name">${name}</div>
+          ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
+        </div>`;
+      }
+      html += `</div></div>`;
+    }
+
     // Keywords — always visible, no collapse
     const allKeywordNames = [];
     for (const mg of raw.model_groups) {
@@ -2606,13 +2639,33 @@
         if (!allKeywordNames.includes(name)) allKeywordNames.push(name);
       }
     }
-    if (allKeywordNames.length > 0) {
+    // Faction keywords (rendered "Faction: X") and model-specific keywords
+    // (rendered "MODEL: kw") mirror the datasheet's separate lines.
+    const allFactionKw = [];
+    const modelKwLines = [];
+    for (const mg of raw.model_groups) {
+      for (const name of (mg.faction_keyword_names || [])) {
+        if (!allFactionKw.includes(name)) allFactionKw.push(name);
+      }
+      for (const mk of (mg.model_keyword_names || [])) {
+        const line = `${mk.model}: ${mk.keywords.join(', ')}`;
+        if (!modelKwLines.includes(line)) modelKwLines.push(line);
+      }
+    }
+    if (allKeywordNames.length > 0 || allFactionKw.length > 0 || modelKwLines.length > 0) {
       html += `<div class="modal-section"><div class="modal-section-label">Keywords</div>`;
       html += `<div class="keyword-list">`;
       for (const name of allKeywordNames) {
         html += `<span class="keyword-pill">${name}</span>`;
       }
-      html += `</div></div>`;
+      html += `</div>`;
+      for (const line of modelKwLines) {
+        html += `<div class="keyword-model-line">${line}</div>`;
+      }
+      if (allFactionKw.length > 0) {
+        html += `<div class="keyword-faction-line">Faction: ${allFactionKw.join(', ')}</div>`;
+      }
+      html += `</div>`;
     }
 
     return html;

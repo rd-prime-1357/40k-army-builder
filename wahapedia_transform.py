@@ -272,6 +272,7 @@ def index_abilities(data, selected, flags):
     unit_abil = defaultdict(list)     # datasheet abilities (name+desc on row)
     unit_faction = defaultdict(list)  # faction abilities carried by this datasheet (per-unit display)
     rule_names = defaultdict(list)    # Core USR instances
+    wargear_abil = defaultdict(list)  # ds_id -> [wargear ability names carried by default gear]
     fnp = {}                          # ds_id -> (value, condition)
     leader_flag = set()               # ds_id has Leader
     # lookups
@@ -318,6 +319,8 @@ def index_abilities(data, selected, flags):
         elif atype == "Wargear":
             if name:
                 weapon_abil_defs.setdefault(name, desc)
+                if name not in wargear_abil[ds]:
+                    wargear_abil[ds].append(name)
         else:
             # Special / Fortification / Primarch / Wargear profile / Без заголовка
             flags["unclassified_abilities"].append(
@@ -328,6 +331,7 @@ def index_abilities(data, selected, flags):
         "leader_flag": leader_flag, "unit_abil_defs": unit_abil_defs,
         "weapon_abil_defs": weapon_abil_defs, "rule_defs": rule_defs,
         "faction_abilities": faction_abilities,
+        "wargear_abil": wargear_abil,
     }
 
 # ----------------------------------------------------------------------------
@@ -401,14 +405,19 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
     kw_by_ds = defaultdict(list)
     for k in kw_rows:
         if k["datasheet_id"] in selected:
-            kw_by_ds[k["datasheet_id"]].append((int(k.get("line", "0") or 0), k.get("keyword", "").strip()))
+            kw_by_ds[k["datasheet_id"]].append((
+                int(k.get("line", "0") or 0),
+                k.get("keyword", "").strip(),
+                (k.get("model", "") or "").strip(),
+                (k.get("is_faction_keyword", "") or "").strip().lower() == "true",
+            ))
     models_by_ds = defaultdict(list)
     for m in data["models"]:
         if m["datasheet_id"] in selected:
             models_by_ds[m["datasheet_id"]].append(m)
 
     def unit_type(ds_id):
-        kws = {k for _, k in kw_by_ds.get(ds_id, [])}
+        kws = {k for _, k, _, _ in kw_by_ds.get(ds_id, [])}
         for kw in ("Epic Hero", "Fortification", "Vehicle", "Monster", "Beast", "Mounted"):
             if kw in kws:
                 return kw
@@ -428,19 +437,34 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
         if len(mlist) > 1:
             flags["multi_model_line"].append(
                 f"{d['name']}: {len(mlist)} model lines -> weapons emitted as Model Group 'All' (review split)")
-        kw_sorted = [k for _, k in sorted(kw_by_ds.get(ds_id, []))]
-        # Fix 2a: strip spurious sub-faction keyword bleed (e.g. Deathwing on a
-        # generic Adeptus Astartes datasheet) when this unit's army isn't the owner.
-        kept_kw = []
-        for k in kw_sorted:
-            owner = SUBFACTION_KEYWORD_ARMY.get(k)
+        # Keywords split three ways to mirror the datasheet: unit-wide (ALL
+        # MODELS), faction (rendered "Faction: X"), and model-specific
+        # (e.g. "DAINAL KORNELIUS: PSYKER"). Fix 2a sub-faction strip still
+        # applies. All-models order kept alphabetical to match prior output.
+        ALLMODELS = {"", "ALL", "ALL MODELS"}
+        allmodel_kw, faction_kw = [], []
+        model_kw = OrderedDict()  # model name -> [keywords]
+        for _line, kw, model, is_fac in sorted(kw_by_ds.get(ds_id, [])):
+            owner = SUBFACTION_KEYWORD_ARMY.get(kw)
             if owner and army_of[ds_id] != owner:
                 flags["stripped_subfaction_kw"].append(
-                    f"{d['name']} [{army_of[ds_id]}]: stripped '{k}' (owner={owner})")
+                    f"{d['name']} [{army_of[ds_id]}]: stripped '{kw}' (owner={owner})")
                 continue
-            kept_kw.append(k)
-        kw_sorted = kept_kw
-        kw_str = ",".join(kw_sorted)
+            if is_fac:
+                if kw not in faction_kw:
+                    faction_kw.append(kw)
+            elif model.upper() in ALLMODELS:
+                if kw not in allmodel_kw:
+                    allmodel_kw.append(kw)
+            else:
+                model_kw.setdefault(model, [])
+                if kw not in model_kw[model]:
+                    model_kw[model].append(kw)
+        kw_str = ",".join(allmodel_kw)
+        faction_kw_str = ",".join(faction_kw)
+        # "MODEL: kwA, kwB | MODEL2: kwC"  (pipe between models, ": " then ", ")
+        model_kw_str = " | ".join(f"{m}: {', '.join(kws)}" for m, kws in model_kw.items())
+        wargear_str = ",".join(dict.fromkeys(abil["wargear_abil"].get(ds_id, [])))
         ut = unit_type(ds_id)
         abil_names = ",".join(dict.fromkeys(abil["unit_abil"].get(ds_id, [])))
         rule_str = ",".join(dict.fromkeys(
@@ -479,6 +503,7 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
                 "",   # Co-Leader Eligible With (manual / surfaced)
                 "",   # Leader Restrictions     (manual / surfaced)
                 abil_names, rule_str, kw_str,
+                faction_kw_str, model_kw_str, wargear_str,
                 ds_id,   # Datasheet ID (Wahapedia stable id; durable saved-list ref)
             ])
     return rows
@@ -739,7 +764,7 @@ def main():
 
     O = lambda n: os.path.join(args.out_dir, n)
     write_csv(O("Unit_Stats.csv"),
-              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Unit Ability Names","Rule Names","Keyword Names","Datasheet ID"],
+              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Unit Ability Names","Rule Names","Keyword Names","Faction Keyword Names","Model Keyword Names","Wargear Ability Names","Datasheet ID"],
               stats_rows, trailing_blank_cols=2)
     write_csv(O("Unit_Weapons.csv"),
               ["Army Name","Unit Name","Model Group","Weapon Type","Weapon Name","Range","A","BS","WS","S","AP","D","Weapon Ability Names","Weapon Keyword Names","Is Base Equipment","Allegiance_Condition"],

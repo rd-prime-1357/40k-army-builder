@@ -37,14 +37,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Apothecary",
               "Biologis",
               "Character",
               "Gravis",
               "Imperium",
               "Infantry"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -125,13 +129,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Land Raider",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -310,7 +318,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Land Raider",
@@ -318,7 +325,12 @@
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -500,7 +512,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Fly",
               "Grenades",
               "Imperium",
@@ -508,7 +519,12 @@
               "Jump Pack",
               "Smoke",
               "Suppressor Squad"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -605,13 +621,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tactical Squad"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -1245,13 +1265,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Bladeguard Veteran Squad",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -1429,13 +1453,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Relic Shield"
             ]
           }
         ],
@@ -1800,7 +1830,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Grenades",
               "Imperium",
@@ -1808,7 +1837,12 @@
               "Lieutenant",
               "Lieutenant with Combi-weapon",
               "Phobos"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -1902,14 +1936,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Imperium",
               "Infantry",
               "Librarian",
               "Psyker",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -2075,7 +2113,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Fly",
@@ -2084,6 +2121,13 @@
               "Infantry",
               "Jump Pack",
               "Tacticus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Relic Shield"
             ]
           }
         ],
@@ -2307,14 +2351,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Aircraft",
               "Fly",
               "Imperium",
               "Smoke",
               "Stormhawk Interceptor",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -2525,12 +2573,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Artillery",
               "Firestrike Servo-turrets",
               "Imperium",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -2648,13 +2700,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Dedicated Transport",
               "Drop Pod",
               "Imperium",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [],
@@ -2702,13 +2758,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Ballistus Dreadnought",
               "Dreadnought",
               "Imperium",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -2841,13 +2901,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Chaplain",
               "Character",
               "Grenades",
               "Imperium",
               "Mounted"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -2947,12 +3011,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Fortification",
               "Hammerfall Bunker",
               "Imperium",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -3080,13 +3148,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Eradicator Squad",
               "Gravis",
               "Grenades",
               "Imperium",
               "Infantry"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -3227,14 +3299,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Chaplain",
               "Character",
               "Fly",
               "Imperium",
               "Infantry",
               "Jump Pack"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -3553,12 +3629,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Fly",
               "Imperium",
               "Storm Speeder Hammerstrike",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -3677,12 +3757,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Chaplain",
               "Character",
               "Imperium",
               "Infantry",
               "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Relic Shield"
             ]
           }
         ],
@@ -3775,13 +3861,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Dreadnought",
               "Imperium",
               "Smoke",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -4045,11 +4135,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Infantry",
               "Terminator Assault Squad",
               "Terminators"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           }
         ],
@@ -4147,7 +4243,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Grenades",
               "Imperium",
@@ -4155,7 +4250,12 @@
               "Librarian",
               "Phobos",
               "Psyker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -4275,12 +4375,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Fly",
               "Imperium",
               "Storm Speeder Hailstrike",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -4396,14 +4500,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Fly",
               "Gravis",
               "Imperium",
               "Inceptor Squad",
               "Infantry",
               "Jump Pack"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -4542,13 +4650,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Infantry",
               "Infernus Squad",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -4653,13 +4765,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Infantry",
               "Infiltrator Squad",
               "Phobos",
               "Smoke"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Helix Gauntlet",
+              "Infiltrator Comms Array"
             ]
           }
         ],
@@ -4785,14 +4904,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Dedicated Transport",
               "Imperium",
               "Razorback",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -4964,13 +5087,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Imperium",
               "Infantry",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -5106,13 +5233,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Brutalis Dreadnought",
               "Dreadnought",
               "Imperium",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -5307,14 +5438,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus",
               "Techmarine"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -5428,7 +5563,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Fly",
               "Grenades",
               "Imperium",
@@ -5436,6 +5570,13 @@
               "Jump Pack",
               "Vanguard Veteran Squad",
               "Vanguard Veteran Squad with Jump Packs"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           }
         ],
@@ -5665,13 +5806,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Invictor Tactical Warsuit",
               "Phobos",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -5833,14 +5978,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
               "Grenades",
               "Imperium",
               "Infantry",
               "Intercessor Squad",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -6183,12 +6332,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Invader ATV",
               "Mounted"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -6331,13 +6484,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Incursor Squad",
               "Infantry",
               "Phobos",
               "Smoke"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Haywire Mine"
             ]
           }
         ],
@@ -6457,13 +6616,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Infantry",
               "Scout Squad",
               "Smoke"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -6747,7 +6910,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Ancient",
               "Bladeguard Ancient",
               "Character",
@@ -6755,7 +6917,12 @@
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -6842,14 +7009,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Gravis",
               "Grenades",
               "Imperium",
               "Infantry"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -7031,14 +7202,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Chaplain",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -7118,14 +7293,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
               "Gravis",
               "Grenades",
               "Heavy Intercessor Squad",
               "Imperium",
               "Infantry"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -7261,12 +7440,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Infantry",
               "Terminator",
               "Terminator Squad"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -7493,12 +7676,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Smoke",
               "Vehicle",
               "Vindicator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -7635,13 +7822,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Aircraft",
               "Fly",
               "Imperium",
               "Stormtalon Gunship",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -7840,14 +8031,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Aircraft",
               "Fly",
               "Imperium",
               "Stormraven Gunship",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -8134,12 +8329,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Centurion",
               "Centurion Devastator Squad",
               "Imperium",
               "Infantry"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -8331,7 +8530,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Grenades",
               "Imperium",
@@ -8340,7 +8538,12 @@
               "Lieutenant in Reiver Armour",
               "Phobos",
               "Smoke"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -8440,13 +8643,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Lieutenant",
               "Tacticus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           }
         ],
@@ -8703,14 +8912,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Assault Intercessor Squad",
               "Battleline",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -8950,12 +9163,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Fly",
               "Imperium",
               "Storm Speeder Thunderstrike",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -9067,12 +9284,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Gladiator Reaper",
               "Imperium",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -9228,13 +9449,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Eliminator Squad",
               "Grenades",
               "Imperium",
               "Infantry",
               "Phobos"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -9398,12 +9623,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Gladiator Valiant",
               "Imperium",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -9556,13 +9785,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Hellblaster Squad",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -9731,12 +9964,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Aggressor Squad",
               "Gravis",
               "Imperium",
               "Infantry"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -9861,7 +10098,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Land Raider",
@@ -9869,7 +10105,12 @@
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -10052,12 +10293,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Devastator Squad",
               "Grenades",
               "Imperium",
               "Infantry"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -10513,13 +10758,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Infantry",
               "Sternguard Veteran Squad",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -10815,7 +11064,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Grenades",
               "Imperium",
@@ -10823,7 +11071,12 @@
               "Librarian",
               "Psyker",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -10941,13 +11194,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Desolation Squad",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -11129,14 +11386,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Lieutenant",
               "Phobos"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -11235,12 +11496,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Dedicated Transport",
               "Imperium",
               "Impulsor",
               "Transport",
               "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Orbital Comms Array (Aura)",
+              "Shield Dome"
             ]
           }
         ],
@@ -11482,12 +11750,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Ancient",
               "Character",
               "Imperium",
               "Infantry",
               "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Terminator Storm Shield"
             ]
           }
         ],
@@ -11701,14 +11975,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Phobos"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -11805,11 +12083,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Centurion",
               "Centurion Assault Squad",
               "Imperium",
               "Infantry"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Centurion Assault Launcher"
             ]
           }
         ],
@@ -11958,12 +12242,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Gladiator Lancer",
               "Imperium",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -12147,13 +12435,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Imperium",
               "Infantry",
               "Judiciar",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -12236,12 +12528,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Mounted",
               "Outrider Squad"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           },
           {
             "model_group": "INVADER ATV",
@@ -12266,12 +12562,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Mounted",
               "Outrider Squad"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -12452,12 +12752,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Predator Annihilator",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -12645,12 +12949,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Predator Destructor",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -12838,13 +13146,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Dreadnought",
               "Imperium",
               "Redemptor Dreadnought",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -13090,13 +13402,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Infantry",
               "Phobos",
               "Reiver Squad",
               "Smoke"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Grapnel Launcher",
+              "Reiver Grav-chute"
             ]
           }
         ],
@@ -13250,13 +13569,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Repulsor",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -13441,13 +13764,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Repulsor Executioner",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -13698,14 +14025,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Dedicated Transport",
               "Imperium",
               "Rhino",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -13814,12 +14145,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Smoke",
               "Vehicle",
               "Whirlwind"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -13956,14 +14291,24 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Ancient",
               "Company Heroes",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "ANCIENT",
+                "keywords": [
+                  "Ancient"
+                ]
+              }
+            ],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -14128,14 +14473,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Apothecary",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -14249,14 +14598,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Ancient",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -14370,7 +14723,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Assault Intercessors With Jump Packs",
               "Fly",
               "Grenades",
@@ -14378,7 +14730,12 @@
               "Infantry",
               "Jump Pack",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -14614,8 +14971,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Ravens",
               "Character",
               "Epic Hero",
               "Imperium",
@@ -14623,7 +14978,13 @@
               "Judiciar",
               "Tacticus",
               "Xacharus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Ravens"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -14716,8 +15077,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Ravens",
               "Chaplain",
               "Character",
               "Epic Hero",
@@ -14726,7 +15085,13 @@
               "Infantry",
               "Kastiel",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Ravens"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -14818,16 +15183,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Epic Hero",
               "Imperium",
               "Infantry",
               "Tacticus",
-              "Ultramarines",
               "Uriel Ventris"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Ultramarines"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -14926,15 +15295,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Epic Hero",
               "Imperium",
               "Monster",
               "Primarch",
-              "Roboute Guilliman",
+              "Roboute Guilliman"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "Ultramarines"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -15049,16 +15422,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Chief Librarian Tigurius",
               "Epic Hero",
               "Imperium",
               "Infantry",
               "Psyker",
-              "Tacticus",
+              "Tacticus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "Ultramarines"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -15204,16 +15581,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Chapter Master",
               "Character",
               "Epic Hero",
               "Imperium",
               "Infantry",
               "Marneus Calgar",
-              "Terminator",
+              "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "Ultramarines"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -15300,7 +15681,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Cato",
               "Character",
@@ -15308,9 +15688,14 @@
               "Imperium",
               "Infantry",
               "Sicarius",
-              "Tacticus",
+              "Tacticus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "Ultramarines"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -15427,16 +15812,33 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Ancient",
-              "Champion",
-              "Epic Hero",
-              "Epic Hero",
               "Imperium",
               "Infantry",
               "Tacticus",
-              "Ultramarines",
               "Victrix Honour Guard"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Ultramarines"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "CHAPTER ANCIENT",
+                "keywords": [
+                  "Ancient",
+                  "Epic Hero"
+                ]
+              },
+              {
+                "model": "CHAPTER CHAMPION",
+                "keywords": [
+                  "Champion",
+                  "Epic Hero"
+                ]
+              }
+            ],
+            "wargear_ability_names": [
+              "Banner of Macragge"
             ]
           }
         ],
@@ -15558,7 +15960,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Epic Hero",
@@ -15566,9 +15967,14 @@
               "Imperium",
               "Infantry",
               "Tacticus",
-              "Titus",
+              "Titus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "Ultramarines"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -15676,15 +16082,28 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Epic Hero",
               "Grenades",
               "Imperium",
               "Infantry",
-              "Psyker",
               "Tacticus",
-              "Ultramarines",
               "Wardens of Ultramar"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Ultramarines"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "DAINAL KORNELIUS",
+                "keywords": [
+                  "Psyker"
+                ]
+              }
+            ],
+            "wargear_ability_names": [
+              "Refractor Field",
+              "Storm Shield"
             ]
           },
           {
@@ -15718,15 +16137,28 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Epic Hero",
               "Grenades",
               "Imperium",
               "Infantry",
-              "Psyker",
               "Tacticus",
-              "Ultramarines",
               "Wardens of Ultramar"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Ultramarines"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "DAINAL KORNELIUS",
+                "keywords": [
+                  "Psyker"
+                ]
+              }
+            ],
+            "wargear_ability_names": [
+              "Refractor Field",
+              "Storm Shield"
             ]
           }
         ],
@@ -15920,15 +16352,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Epic Hero",
               "Gravis",
               "Imperium",
               "Infantry",
-              "Iron Father Feirros",
+              "Iron Father Feirros"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "Iron Hands"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -16052,16 +16488,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Caanok Var",
               "Captain",
               "Character",
               "Epic Hero",
               "Imperium",
               "Infantry",
-              "Iron Hands",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Iron Hands"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -16169,8 +16609,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Chapter Master",
               "Character",
               "Commander Dante",
@@ -16181,7 +16619,13 @@
               "Infantry",
               "Jump Pack",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -16260,8 +16704,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Character",
               "Chief Librarian Mephiston",
               "Epic Hero",
@@ -16270,7 +16712,13 @@
               "Infantry",
               "Psyker",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -16405,8 +16853,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Character",
               "Epic Hero",
               "Fly",
@@ -16415,7 +16861,13 @@
               "Jump Pack",
               "Tacticus",
               "The Sanguinor"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -16476,9 +16928,7 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Astorath",
-              "Blood Angels",
               "Chaplain",
               "Character",
               "Epic Hero",
@@ -16487,7 +16937,13 @@
               "Infantry",
               "Jump Pack",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -16562,15 +17018,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Sanguinary Priest",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -16647,8 +17107,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Chaplain",
               "Character",
               "Epic Hero",
@@ -16659,7 +17117,13 @@
               "Jump Pack",
               "Lemartes",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -16734,8 +17198,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Fly",
               "Grenades",
               "Imperium",
@@ -16743,6 +17205,14 @@
               "Jump Pack",
               "Sanguinary Guard",
               "Tacticus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Sanguinary Banner"
             ]
           }
         ],
@@ -16883,15 +17353,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Death Company",
               "Death Company Dreadnought",
               "Dreadnought",
               "Imperium",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -17065,13 +17539,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Baal Predator",
-              "Blood Angels",
               "Imperium",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -17287,15 +17765,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Death Company",
               "Death Company Marines",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -17565,15 +18047,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Death Company",
               "Death Company Marines with Bolt Rifles",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -17939,8 +18425,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Death Company",
               "Death Company Marines with Jump Packs",
               "Fly",
@@ -17949,7 +18433,13 @@
               "Infantry",
               "Jump Pack",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -18196,15 +18686,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Captain",
               "Character",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -18361,8 +18855,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Captain",
               "Character",
               "Death Company",
@@ -18370,7 +18862,13 @@
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -18527,8 +19025,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Blood Angels",
               "Captain",
               "Character",
               "Death Company",
@@ -18538,7 +19034,13 @@
               "Infantry",
               "Jump Pack",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Blood Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -18755,17 +19257,23 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Azrael",
               "Chapter Master",
               "Character",
-              "Dark Angels",
               "Deathwing",
               "Epic Hero",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "The Lion Helm"
             ]
           }
         ],
@@ -18850,17 +19358,21 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Belial",
               "Captain",
               "Character",
-              "Dark Angels",
               "Deathwing",
               "Epic Hero",
               "Imperium",
               "Infantry",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -18952,18 +19464,22 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Asmodai",
               "Chaplain",
               "Character",
-              "Dark Angels",
               "Deathwing",
               "Epic Hero",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -19065,9 +19581,7 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
-              "Dark Angels",
               "Deathwing",
               "Epic Hero",
               "Ezekiel",
@@ -19076,6 +19590,14 @@
               "Infantry",
               "Librarian",
               "Psyker"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Book of Salvation"
             ]
           }
         ],
@@ -19193,13 +19715,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Dark Angels",
               "Deathwing",
               "Deathwing Terminator Squad",
               "Imperium",
               "Infantry",
               "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Watcher in the Dark"
             ]
           }
         ],
@@ -19458,13 +19986,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Dark Angels",
               "Deathwing",
               "Deathwing Knights",
               "Imperium",
               "Infantry",
               "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Watcher in the Dark"
             ]
           }
         ],
@@ -19604,14 +20138,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Dark Angels",
               "Fly",
               "Imperium",
               "Ravenwing",
               "Ravenwing Darkshroud",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -19712,15 +20250,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Aircraft",
-              "Dark Angels",
               "Fly",
               "Imperium",
               "Nephilim Jetfighter",
               "Ravenwing",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -19854,15 +20396,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Aircraft",
-              "Dark Angels",
               "Dark Talon",
               "Fly",
               "Imperium",
               "Ravenwing",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -19952,14 +20498,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Dark Angels",
               "Grenades",
               "Imperium",
               "Mounted",
               "Ravenwing",
               "Ravenwing Black Knights"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20100,14 +20650,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Dark Angels",
               "Fly",
               "Imperium",
               "Land Speeder Vengeance",
               "Ravenwing",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20248,10 +20802,8 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
-              "Dark Angels",
               "Epic Hero",
               "Fly",
               "Grenades",
@@ -20259,7 +20811,13 @@
               "Mounted",
               "Ravenwing",
               "Sammael"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20382,10 +20940,8 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
-              "Dark Angels",
               "Deathwing",
               "Epic Hero",
               "Grenades",
@@ -20393,7 +20949,13 @@
               "Infantry",
               "Lazarus",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20470,15 +21032,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
-              "Dark Angels",
               "Epic Hero",
               "Imperium",
               "Lion El’Jonson",
               "Monster",
               "Primarch"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20591,15 +21157,25 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Character",
-              "Dark Angels",
               "Grenades",
               "Imperium",
               "Mounted",
               "Ravenwing",
               "Ravenwing Command Squad"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "RAVENWING CHAMPION",
+                "keywords": [
+                  "Character"
+                ]
+              }
+            ],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20766,14 +21342,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Dark Angels",
               "Deathwing",
               "Imperium",
               "Infantry",
               "Inner Circle Companions",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Dark Angels"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20873,16 +21453,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Chapter Master",
               "Character",
               "Epic Hero",
               "Imperium",
               "Infantry",
               "Logan Grimnar",
-              "Space Wolves",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20990,7 +21574,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Epic Hero",
@@ -20998,9 +21581,14 @@
               "Imperium",
               "Infantry",
               "Ragnar Blackmane",
-              "Space Wolves",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -21079,16 +21667,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Epic Hero",
               "Imperium",
               "Infantry",
               "Njal Stormcaller",
               "Psyker",
-              "Space Wolves",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -21206,16 +21798,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Epic Hero",
               "Grenades",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Ulrik the Slayer",
               "Wolf Priest"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -21310,17 +21906,21 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Bjorn the Fell-handed",
               "Character",
               "Dreadnought",
               "Epic Hero",
               "Imperium",
               "Smoke",
-              "Space Wolves",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -21481,15 +22081,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
               "Blood Claws",
               "Grenades",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -21631,15 +22235,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
               "Grenades",
               "Grey Hunters",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -21830,14 +22438,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Imperium",
               "Infantry",
               "Iron Priest",
-              "Space Wolves",
               "Techmarine"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -21927,11 +22539,17 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Wulfen"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Death Totem"
             ]
           }
         ],
@@ -22021,17 +22639,21 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Dreadnought",
               "Epic Hero",
               "Imperium",
               "Murderfang",
-              "Space Wolves",
               "Vehicle",
               "Walker",
               "Wulfen"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -22128,15 +22750,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Arjac Rockfist",
               "Character",
               "Epic Hero",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -22214,13 +22840,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Terminator",
               "Wolf Guard",
               "Wolf Guard Terminators"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           }
         ],
@@ -22369,12 +23001,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Mounted",
-              "Space Wolves",
               "Thunderwolf Cavalry"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           }
         ],
@@ -22545,12 +23183,16 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Beasts",
               "Fenrisian Wolves",
-              "Imperium",
+              "Imperium"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "Space Wolves"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -22605,14 +23247,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Dreadnought",
               "Imperium",
               "Smoke",
-              "Space Wolves",
               "Vehicle",
               "Venerable Dreadnought",
               "Walker"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Blizzard Shield"
             ]
           }
         ],
@@ -22844,14 +23492,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Character",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Tacticus",
               "Wolf Priest"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -22928,14 +23580,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battle Leader",
               "Character",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Tacticus",
               "Wolf Guard"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           }
         ],
@@ -23116,17 +23774,33 @@
             "rule_names": [
               "Oath of Moment"
             ],
-            "keyword_names": [
+            "keyword_names": [],
+            "faction_keyword_names": [
               "Adeptus Astartes",
-              "Beasts",
-              "Headtakers",
-              "Hunting Wolves",
-              "Imperium",
-              "Imperium",
-              "Infantry",
-              "Space Wolves",
-              "Tacticus",
-              "Wolf Guard"
+              "Space Wolves"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "HUNTING WOLVES",
+                "keywords": [
+                  "Beasts",
+                  "Hunting Wolves",
+                  "Imperium"
+                ]
+              },
+              {
+                "model": "WOLF GUARD HEADTAKERS",
+                "keywords": [
+                  "Headtakers",
+                  "Imperium",
+                  "Infantry",
+                  "Tacticus",
+                  "Wolf Guard"
+                ]
+              }
+            ],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           },
           {
@@ -23153,17 +23827,33 @@
             "rule_names": [
               "Oath of Moment"
             ],
-            "keyword_names": [
+            "keyword_names": [],
+            "faction_keyword_names": [
               "Adeptus Astartes",
-              "Beasts",
-              "Headtakers",
-              "Hunting Wolves",
-              "Imperium",
-              "Imperium",
-              "Infantry",
-              "Space Wolves",
-              "Tacticus",
-              "Wolf Guard"
+              "Space Wolves"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "HUNTING WOLVES",
+                "keywords": [
+                  "Beasts",
+                  "Hunting Wolves",
+                  "Imperium"
+                ]
+              },
+              {
+                "model": "WOLF GUARD HEADTAKERS",
+                "keywords": [
+                  "Headtakers",
+                  "Imperium",
+                  "Infantry",
+                  "Tacticus",
+                  "Wolf Guard"
+                ]
+              }
+            ],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           }
         ],
@@ -23266,12 +23956,18 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Imperium",
               "Infantry",
-              "Space Wolves",
               "Wulfen",
               "Wulfen with Storm Shields"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Death Totem"
             ]
           }
         ],
@@ -23362,13 +24058,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Dreadnought",
               "Imperium",
-              "Space Wolves",
               "Vehicle",
               "Walker",
               "Wulfen"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Blizzard Shield"
             ]
           }
         ],
@@ -23491,14 +24193,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Infantry",
               "Phobos",
               "Smoke",
-              "Space Wolves",
               "Wolf Scouts"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Haywire Mine"
             ]
           },
           {
@@ -23527,14 +24235,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Grenades",
               "Imperium",
               "Infantry",
               "Phobos",
               "Smoke",
-              "Space Wolves",
               "Wolf Scouts"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Space Wolves"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Haywire Mine"
             ]
           }
         ],
@@ -23788,14 +24502,21 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Aircraft",
               "Corvus Blackstar",
-              "Deathwatch",
               "Fly",
               "Imperium",
               "Transport",
               "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Auspex Array",
+              "Infernum Halo-launcher"
             ]
           }
         ],
@@ -23979,8 +24700,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Deathwatch",
               "Grenades",
               "Imperium",
               "Infantry",
@@ -23988,6 +24707,16 @@
               "Phobos",
               "Smoke",
               "Spectrus Kill Team"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Helix Gauntlet",
+              "Infiltrator Comms Array",
+              "Instigator Bolt Carbine"
             ]
           }
         ],
@@ -24240,15 +24969,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Deathwatch",
               "Fortis Kill Team",
               "Grenades",
               "Imperium",
               "Infantry",
               "Kill Team",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -24721,15 +25454,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Deathwatch",
               "Gravis",
               "Grenades",
               "Imperium",
               "Indomitor Kill Team",
               "Infantry",
               "Kill Team"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -24946,14 +25683,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
-              "Deathwatch",
               "Deathwatch Veterans",
               "Grenades",
               "Imperium",
               "Infantry",
               "Kill Team"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Astartes Shield"
             ]
           }
         ],
@@ -25225,15 +25968,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
-              "Deathwatch",
               "Grenades",
               "Imperium",
               "Infantry",
               "Watch Master"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -25311,16 +26058,20 @@
               "Mission Tactics"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
-              "Deathwatch",
               "Epic Hero",
               "Grenades",
               "Imperium",
               "Infantry",
               "Watch Captain Artemis"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -25397,13 +26148,19 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Deathwatch",
               "Deathwatch Terminator Squad",
               "Imperium",
               "Infantry",
               "Kill Team",
               "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Storm Shield"
             ]
           }
         ],
@@ -25676,8 +26433,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Deathwatch",
               "Fly",
               "Grenades",
               "Imperium",
@@ -25685,7 +26440,13 @@
               "Jump Pack",
               "Kill Team",
               "Talonstrike Kill Team"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           },
           {
             "model_group": "KILL TEAM HEAVY INTERCESSORS WITH JUMP PACKS",
@@ -25712,8 +26473,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Deathwatch",
               "Fly",
               "Grenades",
               "Imperium",
@@ -25721,7 +26480,13 @@
               "Jump Pack",
               "Kill Team",
               "Talonstrike Kill Team"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -26002,16 +26767,33 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
-              "Deathwatch",
               "Decimus Kill Team",
-              "Gravis",
               "Grenades",
               "Imperium",
               "Infantry",
-              "Kill Team",
-              "Tacticus"
+              "Kill Team"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "GRAVIS VETERANS",
+                "keywords": [
+                  "Gravis"
+                ]
+              },
+              {
+                "model": "KILL TEAM SERGEANT AND DEATHWATCH VETERANS",
+                "keywords": [
+                  "Tacticus"
+                ]
+              }
+            ],
+            "wargear_ability_names": [
+              "Astartes Shield"
             ]
           },
           {
@@ -26038,16 +26820,33 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
-              "Deathwatch",
               "Decimus Kill Team",
-              "Gravis",
               "Grenades",
               "Imperium",
               "Infantry",
-              "Kill Team",
-              "Tacticus"
+              "Kill Team"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Deathwatch"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "GRAVIS VETERANS",
+                "keywords": [
+                  "Gravis"
+                ]
+              },
+              {
+                "model": "KILL TEAM SERGEANT AND DEATHWATCH VETERANS",
+                "keywords": [
+                  "Tacticus"
+                ]
+              }
+            ],
+            "wargear_ability_names": [
+              "Astartes Shield"
             ]
           }
         ],
@@ -26475,16 +27274,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Adrax Agatone",
               "Captain",
               "Character",
               "Epic Hero",
               "Imperium",
               "Infantry",
-              "Salamanders",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Salamanders"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -26575,17 +27378,21 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Epic Hero",
               "Grenades",
               "Imperium",
               "Infantry",
-              "Salamanders",
               "Tacticus",
               "Vulkan He’stan"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Salamanders"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -26700,16 +27507,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Darnath Lysander",
               "Epic Hero",
-              "Imperial Fists",
               "Imperium",
               "Infantry",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Imperial Fists"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -26781,16 +27592,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Epic Hero",
               "Gravis",
-              "Imperial Fists",
               "Imperium",
               "Infantry",
               "Tor Garadon"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Imperial Fists"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -26880,17 +27695,21 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Chapter Master",
               "Character",
               "Epic Hero",
               "Grenades",
-              "Imperial Fists",
               "Imperium",
               "Infantry",
               "Pedro Kantor",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Imperial Fists"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -26985,7 +27804,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Chapter Master",
               "Character",
               "Epic Hero",
@@ -26994,9 +27812,14 @@
               "Infantry",
               "Jump Pack",
               "Kayvaan Shrike",
-              "Phobos",
+              "Phobos"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "Raven Guard"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -27084,7 +27907,6 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Aethon Shaan",
               "Chapter Master",
               "Character",
@@ -27093,9 +27915,14 @@
               "Imperium",
               "Infantry",
               "Jump Pack",
-              "Raven Guard",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Raven Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -27199,16 +28026,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Epic Hero",
               "Imperium",
               "Infantry",
               "Kor’sarro Khan",
-              "Tacticus",
+              "Tacticus"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "White Scars"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -27296,16 +28127,20 @@
               "Oath of Moment"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Captain",
               "Character",
               "Epic Hero",
               "Grenades",
               "Imperium",
               "Mounted",
-              "Suboden Khan",
+              "Suboden Khan"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
               "White Scars"
-            ]
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -27428,13 +28263,20 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Dedicated Transport",
               "Imperium",
               "Impulsor",
               "Transport",
               "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Orbital Comms Array (Aura)",
+              "Shield Dome"
             ]
           }
         ],
@@ -27686,13 +28528,17 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Gladiator Lancer",
               "Imperium",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -27881,13 +28727,17 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Gladiator Valiant",
               "Imperium",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -28042,13 +28892,17 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Gladiator Reaper",
               "Imperium",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -28221,14 +29075,18 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Imperium",
               "Repulsor Executioner",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -28497,14 +29355,18 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Imperium",
               "Repulsor",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -28717,16 +29579,26 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
-              "Chaplain Grimaldus",
-              "Character",
-              "Epic Hero",
-              "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "GRIMALDUS",
+                "keywords": [
+                  "Chaplain Grimaldus",
+                  "Character",
+                  "Epic Hero",
+                  "Grenades"
+                ]
+              }
+            ],
+            "wargear_ability_names": []
           },
           {
             "model_group": "CENOBYTE SERVITOR",
@@ -28762,16 +29634,26 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
-              "Chaplain Grimaldus",
-              "Character",
-              "Epic Hero",
-              "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [
+              {
+                "model": "GRIMALDUS",
+                "keywords": [
+                  "Chaplain Grimaldus",
+                  "Character",
+                  "Epic Hero",
+                  "Grenades"
+                ]
+              }
+            ],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -28888,8 +29770,6 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Castellan",
               "Character",
               "Grenades",
@@ -28897,7 +29777,13 @@
               "Infantry",
               "Lieutenant",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -29036,8 +29922,6 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Chapter Master",
               "Character",
               "Epic Hero",
@@ -29046,7 +29930,13 @@
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -29146,15 +30036,19 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Character",
               "Emperor’s Champion",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -29256,8 +30150,6 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Captain",
               "Character",
               "Grenades",
@@ -29265,7 +30157,13 @@
               "Infantry",
               "Marshal",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -29375,14 +30273,18 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Grenades",
               "Imperium",
               "Infantry",
               "Sword Brethren Squad",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -29601,15 +30503,19 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
-              "Black Templars",
               "Crusader Squad",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           },
           {
             "model_group": "OTHER MODELS",
@@ -29634,15 +30540,19 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Battleline",
-              "Black Templars",
               "Crusader Squad",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -29877,8 +30787,6 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Chaplain",
               "Character",
               "Execrator",
@@ -29886,7 +30794,13 @@
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -30010,16 +30924,20 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
               "Ancient",
-              "Black Templars",
               "Character",
               "Crusade Ancient",
               "Grenades",
               "Imperium",
               "Infantry",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -30093,14 +31011,18 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Grenades",
               "Imperium",
               "Infantry",
               "Sternguard Veteran Squad",
               "Tacticus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -30367,13 +31289,17 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Imperium",
               "Infantry",
               "Terminator",
               "Terminator Squad"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -30586,8 +31512,6 @@
               "Templar Vows"
             ],
             "keyword_names": [
-              "Adeptus Astartes",
-              "Black Templars",
               "Grenades",
               "Imperium",
               "Land Raider",
@@ -30595,7 +31519,13 @@
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Adeptus Astartes",
+              "Black Templars"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -36557,11 +37487,17 @@
             "keyword_names": [
               "Battleline",
               "Chaos",
-              "Death Guard",
               "Grenades",
               "Infantry",
               "Nurgle",
               "Plague Marines"
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Icon of Despair (Aura)"
             ]
           }
         ],
@@ -36992,12 +37928,16 @@
             ],
             "keyword_names": [
               "Chaos",
-              "Death Guard",
               "Helbrute",
               "Nurgle",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -37368,14 +38308,18 @@
             ],
             "keyword_names": [
               "Chaos",
-              "Death Guard",
               "Dedicated Transport",
               "Nurgle",
               "Rhino",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -37519,9 +38463,13 @@
               "Beast",
               "Chaos",
               "Chaos Spawn",
-              "Death Guard",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -37586,13 +38534,17 @@
             ],
             "keyword_names": [
               "Chaos",
-              "Death Guard",
               "Land Raider",
               "Nurgle",
               "Smoke",
               "Transport",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -37776,12 +38728,16 @@
             ],
             "keyword_names": [
               "Chaos",
-              "Death Guard",
               "Nurgle",
               "Predator Annihilator",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38006,10 +38962,14 @@
               "Character",
               "Daemon",
               "Daemon Prince",
-              "Death Guard",
               "Monster",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38117,14 +39077,18 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Epic Hero",
               "Infantry",
               "Nurgle",
               "Psyker",
               "Terminator",
               "Typhus"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38214,13 +39178,17 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Grenades",
               "Infantry",
               "Lord of Contagion",
               "Nurgle",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38309,12 +39277,16 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Infantry",
               "Malignant Plaguecaster",
               "Nurgle",
               "Psyker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38438,11 +39410,15 @@
             ],
             "keyword_names": [
               "Chaos",
-              "Death Guard",
               "Infantry",
               "Nurgle",
               "Poxwalkers"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38516,12 +39492,16 @@
             "keyword_names": [
               "Chaos",
               "Daemon",
-              "Death Guard",
               "Fly",
               "Foetid Bloat-drone",
               "Nurgle",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38629,11 +39609,15 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Infantry",
               "Noxious Blightbringer",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38740,12 +39724,16 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Foul Blightspawn",
               "Grenades",
               "Infantry",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38835,11 +39823,15 @@
               "Biologus Putrifier",
               "Chaos",
               "Character",
-              "Death Guard",
               "Grenades",
               "Infantry",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -38948,11 +39940,15 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Infantry",
               "Nurgle",
               "Plague Surgeon"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -39041,11 +40037,15 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Infantry",
               "Nurgle",
               "Tallyman"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -39146,11 +40146,17 @@
             ],
             "keyword_names": [
               "Chaos",
-              "Death Guard",
               "Deathshroud Terminators",
               "Infantry",
               "Nurgle",
               "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Icon of Despair (Aura)"
             ]
           }
         ],
@@ -39283,11 +40289,15 @@
             "keyword_names": [
               "Blightlord Terminators",
               "Chaos",
-              "Death Guard",
               "Infantry",
               "Nurgle",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -39522,12 +40532,16 @@
             "keyword_names": [
               "Chaos",
               "Daemon",
-              "Death Guard",
               "Myphitic Blight-hauler",
               "Nurgle",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -39668,11 +40682,15 @@
             "keyword_names": [
               "Chaos",
               "Daemon",
-              "Death Guard",
               "Nurgle",
               "Plagueburst Crawler",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -39843,7 +40861,6 @@
               "Chaos",
               "Character",
               "Daemon",
-              "Death Guard",
               "Epic Hero",
               "Fly",
               "Grenades",
@@ -39852,7 +40869,12 @@
               "Nurgle",
               "Primarch",
               "Psyker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -39982,12 +41004,16 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Infantry",
               "Lord of Virulence",
               "Nurgle",
               "Terminator"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -40074,12 +41100,16 @@
             ],
             "keyword_names": [
               "Chaos",
-              "Death Guard",
               "Nurgle",
               "Predator Destructor",
               "Smoke",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -40302,11 +41332,15 @@
             ],
             "keyword_names": [
               "Chaos",
-              "Death Guard",
               "Fortification",
               "Miasmic Malignifier",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -40379,11 +41413,15 @@
               "Character",
               "Daemon",
               "Daemon Prince with Wings",
-              "Death Guard",
               "Fly",
               "Monster",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -40488,12 +41526,16 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Grenades",
               "Icon Bearer",
               "Infantry",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -40581,12 +41623,16 @@
             "keyword_names": [
               "Chaos",
               "Character",
-              "Death Guard",
               "Grenades",
               "Infantry",
               "Lord of Poxes",
               "Nurgle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -40690,12 +41736,16 @@
             "keyword_names": [
               "Chaos",
               "Daemon",
-              "Death Guard",
               "Fly",
               "Foetid Bloat-drone with Heavy Blight Launcher",
               "Nurgle",
               "Vehicle"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -40788,11 +41838,15 @@
               "Epic Hero",
               "Monster",
               "Nurgle",
-              "Plague Legions",
               "Psyker",
               "Rotigus",
               "Summoned"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Plague Legions"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -40905,10 +41959,14 @@
               "Great Unclean One",
               "Monster",
               "Nurgle",
-              "Plague Legions",
               "Psyker",
               "Summoned"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Plague Legions"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -41086,9 +42144,16 @@
               "Daemon",
               "Infantry",
               "Nurgle",
-              "Plague Legions",
               "Plaguebearers",
               "Summoned"
+            ],
+            "faction_keyword_names": [
+              "Plague Legions"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Daemonic Icon",
+              "Instrument of Chaos"
             ]
           }
         ],
@@ -41182,8 +42247,15 @@
               "Mounted",
               "Nurgle",
               "Plague Drones",
-              "Plague Legions",
               "Summoned"
+            ],
+            "faction_keyword_names": [
+              "Plague Legions"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Daemonic Icon",
+              "Instrument of Chaos"
             ]
           }
         ],
@@ -41320,9 +42392,13 @@
               "Chaos",
               "Daemon",
               "Nurgle",
-              "Plague Legions",
               "Summoned"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Plague Legions"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -41399,10 +42475,14 @@
               "Daemon",
               "Nurgle",
               "Nurglings",
-              "Plague Legions",
               "Summoned",
               "Swarm"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Plague Legions"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -41477,12 +42557,16 @@
             "keyword_names": [
               "Chaos",
               "Daemon",
-              "Death Guard",
               "Defiler",
               "Nurgle",
               "Vehicle",
               "Walker"
-            ]
+            ],
+            "faction_keyword_names": [
+              "Death Guard"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": []
           }
         ],
         "weapons": [

@@ -117,6 +117,28 @@ def to_int(value):
         return v  # Return as string if not cleanly an int (safety fallback)
 
 
+def split_model_keywords(value):
+    """
+    Parse the "Model Keyword Names" field into a list of {model, keywords}.
+    Encoding: "MODEL: kwA, kwB | MODEL2: kwC"  (pipe between models).
+    Returns [] when blank.
+    """
+    v = clean(value)
+    if v is None:
+        return []
+    out = []
+    for chunk in str(v).split("|"):
+        chunk = chunk.strip()
+        if not chunk or ":" not in chunk:
+            continue
+        model, kws = chunk.split(":", 1)
+        model = model.strip()
+        kw_list = [k.strip() for k in kws.split(",") if k.strip()]
+        if model and kw_list:
+            out.append({"model": model, "keywords": kw_list})
+    return out
+
+
 def split_list(value):
     """
     Convert a comma-separated string to a list of stripped strings.
@@ -415,6 +437,9 @@ def build_units(data):
                     "unit_ability_names":       split_list(row.get("Unit Ability Names", "")),
                     "rule_names":               split_list(row.get("Rule Names", "")),
                     "keyword_names":            split_list(row.get("Keyword Names", "")),
+                    "faction_keyword_names":    split_list(row.get("Faction Keyword Names", "")),
+                    "model_keyword_names":      split_model_keywords(row.get("Model Keyword Names", "")),
+                    "wargear_ability_names":    split_list(row.get("Wargear Ability Names", "")),
                 }
                 model_groups.append(model_group_obj)
 
