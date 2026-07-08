@@ -271,6 +271,7 @@ def index_abilities(data, selected, flags):
     # per-datasheet routed abilities
     unit_abil = defaultdict(list)     # datasheet abilities (name+desc on row)
     unit_faction = defaultdict(list)  # faction abilities carried by this datasheet (per-unit display)
+    unit_abil_desc = defaultdict(dict)  # ds_id -> {name: desc}  (this datasheet's OWN text; fixes name-collision)
     rule_names = defaultdict(list)    # Core USR instances
     wargear_abil = defaultdict(list)  # ds_id -> [wargear ability names carried by default gear]
     fnp = {}                          # ds_id -> (value, condition)
@@ -311,11 +312,13 @@ def index_abilities(data, selected, flags):
             if name:
                 unit_abil[ds].append(name)
                 unit_abil_defs.setdefault(name, desc)
+                unit_abil_desc[ds][name] = desc
         elif atype == "Faction":
             if name:
                 unit_faction[ds].append(name)        # show under this unit
                 faction_abilities.setdefault(name, desc)
                 unit_abil_defs.setdefault(name, desc)  # glossary definition
+                unit_abil_desc[ds][name] = desc
         elif atype == "Wargear":
             if name:
                 weapon_abil_defs.setdefault(name, desc)
@@ -332,6 +335,7 @@ def index_abilities(data, selected, flags):
         "weapon_abil_defs": weapon_abil_defs, "rule_defs": rule_defs,
         "faction_abilities": faction_abilities,
         "wargear_abil": wargear_abil,
+        "unit_abil_desc": unit_abil_desc,
     }
 
 # ----------------------------------------------------------------------------
@@ -776,6 +780,14 @@ def main():
               ["Army Name","Unit Name","Model Group","Option Name","Points Cost","Max Per Unit","Carrier Notes","Ability Name","Is Mutually Exclusive","Exclusion Group"],
               other_rows)
     write_csv(O("Unit_Abilities.csv"), ["Unit Ability Name","Unit Ability Description"], unit_abil_rows, trailing_blank_cols=5)
+    # Per-datasheet ability text (fixes the name-collision where one description
+    # leaked onto every unit sharing an ability name). Keyed by datasheet id.
+    detail_rows = []
+    for ds, m in abil["unit_abil_desc"].items():
+        for nm, ds_desc in m.items():
+            detail_rows.append([ds, nm, ds_desc])
+    write_csv(O("Unit_Ability_Details.csv"),
+              ["Datasheet ID","Unit Ability Name","Unit Ability Description"], detail_rows)
     write_csv(O("Rules.csv"), ["Rule Name","Rule Description"], rules_rows, trailing_blank_cols=1)
     write_csv(O("Keywords.csv"), ["Keyword Name","Keyword Description"], keywords_rows)
     write_csv(O("Weapon_Abilities.csv"), ["Weapon Ability Name","Weapon Ability Description"], weapon_abil_rows)

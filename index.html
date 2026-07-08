@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.34';
+  const VERSION = '5.36';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2575,7 +2575,7 @@
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allAbilityNames) {
-        const desc = abilitiesLookup[name] || '';
+        const desc = (raw.unit_ability_details && raw.unit_ability_details[name]) || abilitiesLookup[name] || '';
         html += `<div class="ability-row">
           <div class="ability-name">${name}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
@@ -2783,7 +2783,7 @@
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allAbilityNames) {
-        const desc = abilitiesLookup[name] || '';
+        const desc = (raw.unit_ability_details && raw.unit_ability_details[name]) || abilitiesLookup[name] || '';
         html += `<div class="ability-row">
           <div class="ability-name">${name}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
@@ -2835,20 +2835,60 @@
       html += `</div></div>`;
     }
 
+    // Wargear Abilities — conferred by default (non-optional) gear (e.g. invuln saves)
+    const cfgWargearAbilities = [];
+    for (const mg of raw.model_groups) {
+      for (const name of (mg.wargear_ability_names || [])) {
+        if (!cfgWargearAbilities.includes(name)) cfgWargearAbilities.push(name);
+      }
+    }
+    if (cfgWargearAbilities.length > 0) {
+      const sid = 'cfg-wargear-abilities';
+      html += `<div class="modal-section">
+        <div class="modal-section-header" onclick="toggleSection('${sid}')">
+          <span class="modal-section-heading"><span>Wargear Abilities</span><span class="modal-section-names">${cfgWargearAbilities.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
+        </div>
+        <div class="modal-section-content" id="${sid}">`;
+      for (const name of cfgWargearAbilities) {
+        const desc = glossaryDesc(name);
+        html += `<div class="ability-row">
+          <div class="ability-name">${name}</div>
+          ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
+        </div>`;
+      }
+      html += `</div></div>`;
+    }
+
     // Keywords — always visible
     const allKeywordNames = [];
+    const cfgFactionKw = [];
+    const cfgModelKwLines = [];
     for (const mg of raw.model_groups) {
       for (const name of mg.keyword_names) {
         if (!allKeywordNames.includes(name)) allKeywordNames.push(name);
       }
+      for (const name of (mg.faction_keyword_names || [])) {
+        if (!cfgFactionKw.includes(name)) cfgFactionKw.push(name);
+      }
+      for (const mk of (mg.model_keyword_names || [])) {
+        const line = `${mk.model}: ${mk.keywords.join(', ')}`;
+        if (!cfgModelKwLines.includes(line)) cfgModelKwLines.push(line);
+      }
     }
-    if (allKeywordNames.length > 0) {
+    if (allKeywordNames.length > 0 || cfgFactionKw.length > 0 || cfgModelKwLines.length > 0) {
       html += `<div class="modal-section"><div class="modal-section-label">Keywords</div>`;
       html += `<div class="keyword-list">`;
       for (const name of allKeywordNames) {
         html += `<span class="keyword-pill">${name}</span>`;
       }
-      html += `</div></div>`;
+      html += `</div>`;
+      for (const line of cfgModelKwLines) {
+        html += `<div class="keyword-model-line">${line}</div>`;
+      }
+      if (cfgFactionKw.length > 0) {
+        html += `<div class="keyword-faction-line">Faction: ${cfgFactionKw.join(', ')}</div>`;
+      }
+      html += `</div>`;
     }
 
     return html;
@@ -2867,7 +2907,10 @@
       const val = has ? ov[key] : base;
       return has ? `<span class="stat-override">${val}${suffix}</span>` : `${val}${suffix}`;
     };
-    const svDisplay = ovCell('SV', mg.SV, '+');
+    // SV and LD carry a trailing '+' in the data while INV/FNP are bare numbers;
+    // strip any existing '+' so we don't render a doubled '++'.
+    const cleanPlus = v => String(v == null ? '' : v).replace(/\+\s*$/, '');
+    const svDisplay = ovCell('SV', cleanPlus(mg.SV), '+');
     const wDisplay  = ovCell('W',  mg.W);
 
     return `<table class="stat-table">
@@ -2884,7 +2927,7 @@
           <td class="inv-cell">${inv}${invCond}</td>
           <td class="fnp-cell">${fnp}${fnpCond}</td>
           <td>${wDisplay}</td>
-          <td>${mg.LD}+</td>
+          <td>${cleanPlus(mg.LD)}+</td>
           <td>${mg.OC}</td>
         </tr>
       </tbody>

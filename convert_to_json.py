@@ -41,6 +41,7 @@ CSV_FILES = {
     "unit_wargear":      "Unit_Wargear_Options.csv",
     "unit_points":       "Unit_Points.csv",
     "unit_abilities":    "Unit_Abilities.csv",
+    "unit_ability_details": "Unit_Ability_Details.csv",
     "unit_other":        "Unit_Other_Options.csv",
     "rules":             "Rules.csv",
     "keywords":          "Keywords.csv",
@@ -183,10 +184,16 @@ def make_key(row, fields):
 # Load all CSVs
 # ---------------------------------------------------------------------------
 
+OPTIONAL_CSV = {"unit_ability_details"}
+
+
 def load_all(input_dir):
     data = {}
     for key, filename in CSV_FILES.items():
         filepath = os.path.join(input_dir, filename)
+        if key in OPTIONAL_CSV and not os.path.exists(filepath):
+            data[key] = []
+            continue
         data[key] = read_csv(filepath)
         print(f"  Loaded {len(data[key])} rows from {filename}")
     return data
@@ -323,6 +330,15 @@ def build_units(data):
     points_rows     = data["unit_points"]
     abilities_rows  = data["unit_abilities"]
     other_rows      = data["unit_other"]
+
+    # Per-datasheet ability text (fixes the name-collision B1): ds_id -> {name: desc}
+    ability_details_by_ds = {}
+    for row in data.get("unit_ability_details", []):
+        ds = clean(row.get("Datasheet ID"))
+        nm = clean(row.get("Unit Ability Name"))
+        ds_desc = row.get("Unit Ability Description", "")
+        if ds and nm:
+            ability_details_by_ds.setdefault(ds, {})[nm] = ds_desc
     bundles         = data.get("bundles", {})
 
     # ------------------------------------------------------------------
@@ -601,6 +617,7 @@ def build_units(data):
                 "unit_id":        unit_id,
                 "unit_name":      unit_name,
                 "unit_type":      unit_type,
+                "unit_ability_details": ability_details_by_ds.get(unit_id, {}),
                 "model_groups":   model_groups,
                 "weapons":        weapons,
                 "wargear_options": wargear_options,
