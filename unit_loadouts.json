@@ -5664,15 +5664,25 @@
         ]
       },
       {
-        "name": "Company Veterans",
+        "name": "Company Veteran (Master-crafted heavy bolter)",
         "count": {
-          "fixed": 2
+          "fixed": 1
         },
         "default_weapons": [
           "Bolt Pistol",
           "Master-crafted heavy bolter",
-          "Close combat weapon",
-          "Master-crafted bolt rifle"
+          "Close combat weapon"
+        ]
+      },
+      {
+        "name": "Company Veteran (Master-crafted bolt rifle)",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Bolt Pistol",
+          "Master-crafted bolt rifle",
+          "Close combat weapon"
         ]
       }
     ],

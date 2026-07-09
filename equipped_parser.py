@@ -51,6 +51,7 @@ def variants(tok):
 
 
 DETERMINERS = re.compile(r'^\s*(the|an|a|every|each|all|one|two|three|1|2|3)\s+', re.I)
+SINGLE = re.compile(r'^\s*(one|an|a|1)\s+', re.I)  # "One Company Veteran ..." = a single model
 WILDCARD = re.compile(r'\b(this|every|all|each)\s+models?\b', re.I)
 OTHER = re.compile(r'\b(every|all|each)\s+other\s+models?\b', re.I)
 END_COMP = re.compile(r'^\s*(\d+\s+models?\b|keywords\b|faction\s+keywords\b|attached\s+units\b|leader\b)', re.I)
@@ -221,16 +222,16 @@ def main():
         # "every other model" line can target the complement (all groups not named
         # by a specific line, e.g. Ravenwing Command: Champion named -> other =
         # Apothecary + Ancient).
-        plines, named = [], set()
+        plines, named, singleflags = [], set(), []
         for ln in elines:
             parsed = parse_equipped_line(ln)
             if not parsed:
                 continue
             subject, tokens = parsed
             if OTHER.search(subject):
-                plines.append(('other', None, tokens))
+                plines.append(('other', None, tokens)); singleflags.append(False)
             elif WILDCARD.search(subject):
-                plines.append(('all', gnames, tokens))
+                plines.append(('all', gnames, tokens)); singleflags.append(False)
             else:
                 tg = []
                 for frag in re.split(r'\band\b', subject, flags=re.I):
@@ -243,6 +244,82 @@ def main():
                     else:
                         unmatched_groups.append((uid, frag))
                 plines.append(('specific', tg, tokens))
+                singleflags.append(bool(SINGLE.match(subject)) and len(tg) == 1)
+
+        # Heterogeneous fixed-group split (B9). A group of N identical models
+        # breaks when the composition gives DIFFERENT weapons to individual models
+        # via repeated singular lines ("One Company Veteran ... heavy bolter" /
+        # "One ... bolt rifle"). Kept as one group, the rollup multiplies every
+        # listed weapon by N, doubling the per-model weapons. When a fixed-N group
+        # gets exactly N such singular lines and carries no scoped options, split
+        # it into N one-model sub-groups, each with its own weapons, named by its
+        # distinguishing weapon. Guarded to fire only on that exact shape.
+        opt_scopes = {o.get('scope') for o in ld[uid].get('options', [])}
+
+        def _fixedN(c):
+            return c.get('fixed') if isinstance(c, dict) and isinstance(c.get('fixed'), int) else None
+
+        single_idx = {}
+        for i, (kind, tgt, toks) in enumerate(plines):
+            if kind == 'specific' and singleflags[i] and len(tgt) == 1:
+                single_idx.setdefault(tgt[0], []).append(i)
+        for gname, idxs in single_idx.items():
+            gc = next((g.get('count', {}) for g in groups if g['name'] == gname), {})
+            n = _fixedN(gc)
+            if not n or n < 2 or len(idxs) != n or gname in opt_scopes:
+                continue
+            # resolve each singular line's weapons; find its distinguishing weapon
+            resolved = []
+            for i in idxs:
+                names = []
+                for tok in plines[i][2]:
+                    mnum = re.match(r'^(\d+)\s+(.*\S)$', tok)
+                    core = mnum.group(2) if mnum else tok
+                    names.append((core, resolve(core, ex, ba, g_ex, g_ba),
+                                  int(mnum.group(1)) if mnum else 1))
+                resolved.append(names)
+            common = None
+            for names in resolved:
+                s = {w for _, ws, _ in names for w in ws}
+                common = s if common is None else (common & s)
+            gidx = next(k for k, g in enumerate(groups) if g['name'] == gname)
+            template = groups[gidx]
+            base_name = re.split(r'\s+-\s+', gname)[0].strip()
+            base_name = re.sub(r'[\*\u2020\u2021]+$', '', base_name).strip()
+            singular = base_name[:-1] if base_name.endswith('s') and not base_name.endswith('ss') else base_name
+            subgroups = []
+            for j, i in enumerate(idxs):
+                distinguishing = next((w for _, ws, _ in resolved[j] for w in ws if w not in common), None)
+                label = f"{singular} ({distinguishing})" if distinguishing else f"{singular} {j + 1}"
+                ng = dict(template)
+                ng['name'] = label
+                ng['count'] = {'fixed': 1}
+                ng.pop('default_weapons', None); ng.pop('default_weapon_counts', None); ng.pop('default_wargear', None)
+                w, gw, c = [], [], {}
+                for core, ws, cnt in resolved[j]:
+                    if ws:
+                        for nm2 in ws:
+                            if nm2 not in w:
+                                w.append(nm2)
+                            if cnt > 1:
+                                c[nm2] = cnt
+                    elif core not in gw:
+                        gw.append(core); wargear_routed.append((uid, core))
+                if w:
+                    ng['default_weapons'] = w
+                if gw:
+                    ng['default_wargear'] = gw
+                if c:
+                    ng['default_weapon_counts'] = c
+                subgroups.append(ng)
+            groups[gidx:gidx + 1] = subgroups
+            gnames = [g['name'] for g in groups]
+            acc = {g['name']: acc.get(g['name'], {'w': [], 'g': [], 'c': {}}) for g in groups}
+            # drop the singular lines for this group so the normal pass skips them
+            plines = [pl for k, pl in enumerate(plines) if k not in idxs]
+            singleflags = [singleflags[k] for k in range(len(singleflags)) if k not in idxs]
+            group_sets += len(subgroups)
+
         touched = False
         for kind, tg, tokens in plines:
             targets = [g for g in gnames if g not in named] if kind == 'other' else tg
