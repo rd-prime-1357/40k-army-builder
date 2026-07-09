@@ -421,16 +421,42 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
             models_by_ds[m["datasheet_id"]].append(m)
 
     def unit_type(ds_id):
-        kws = {k for _, k, _, _ in kw_by_ds.get(ds_id, [])}
-        for kw in ("Epic Hero", "Fortification", "Vehicle", "Monster", "Beast", "Mounted"):
-            if kw in kws:
+        # B8: classify from the unit's SHARED keywords (all-models) plus the
+        # keywords of its namesake model (a model whose name matches the unit
+        # name). Keywords carried only by attached bodyguard / auxiliary models
+        # (e.g. Victrix's Chapter Ancient/Champion, Ravenwing Champion) must NOT
+        # promote the whole unit. Faction keywords are excluded (they never carry
+        # a battlefield role). The Leader ability is the authoritative Character
+        # signal — a unit that attaches to others is a Character regardless of
+        # which model happens to hold the Character keyword.
+        ALLMODELS = {"", "ALL", "ALL MODELS"}
+        unit_name_uc = (selected[ds_id].get("name") or "").strip().upper()
+        classify = set()
+        for _line, kw, model, is_fac in kw_by_ds.get(ds_id, []):
+            if is_fac:
+                continue
+            m = (model or "").strip().upper()
+            namesake = bool(m) and (m in unit_name_uc or unit_name_uc in m)
+            if m in ALLMODELS or namesake:
+                classify.add(kw)
+        if "Epic Hero" in classify:
+            return "Epic Hero"
+        # Leader ability => the unit attaches to others => Character, and this
+        # outranks a Mounted/Monster/etc. body (a biker Chaplain is a Character,
+        # not "Mounted"). A *bare* Character keyword without a Leader ability does
+        # NOT override a Monster/Vehicle body — checked after the big-6 below —
+        # so Daemon Princes / Great Unclean One stay under Monster.
+        if ds_id in abil["leader_flag"]:
+            return "Character"
+        for kw in ("Fortification", "Vehicle", "Monster", "Beast", "Mounted"):
+            if kw in classify:
                 return kw
-        if "Character" in kws:
+        if "Character" in classify:
             return "Character"
         role = (selected[ds_id].get("role") or "").strip()
         if role == "Battleline":
             return "Battleline"
-        if "Infantry" in kws:
+        if "Infantry" in classify:
             return "Infantry"
         flags["unit_type_fallback"].append(f"{selected[ds_id]['name']} -> role '{role}'")
         return role or "Infantry"
