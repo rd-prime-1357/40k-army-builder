@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.38';
+  const VERSION = '5.39';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2000,7 +2000,18 @@
     // everything else uses the existing wargear/other-options rendering.
     const loDef = loadoutFor(entry);
     if (loDef) {
-      html += buildLoadoutHtml(entry, loDef);
+      html += buildLoadoutHtml(entry, loDef, raw);
+      // A loadout-defined unit can still own a bundle for compound swaps the
+      // loadout parser can't express (e.g. Captain's pistol+melee combos and the
+      // relic-shield grant). Render the bundle picker + grants alongside; the
+      // loadout options the bundle covers are suppressed inside buildLoadoutHtml.
+      if (raw && raw.bundled_swaps && raw.bundled_swaps.length > 0) {
+        html += buildWargearHtml(entry, raw);
+        if ((raw.other_options && raw.other_options.length > 0) ||
+            activeBundleGrants(entry, raw).length > 0) {
+          html += buildOtherOptionsHtml(entry, raw);
+        }
+      }
     } else {
       if (raw && ((raw.wargear_options && raw.wargear_options.length > 0) ||
                   (raw.bundled_swaps && raw.bundled_swaps.length > 0))) {
@@ -2048,6 +2059,31 @@
       if (g.stat_override) Object.assign(ov, g.stat_override);
     }
     return ov;
+  }
+
+  // Weapon add/remove from the chosen bundle endpoints. Loadout-defined units
+  // (e.g. Captain) roll up weapons from loadout selections and don't otherwise
+  // know about bundles, so this delta is applied to the weapon display so a
+  // bundle choice actually changes the shown weapons.
+  function activeBundleWeaponDelta(entry, raw) {
+    const removes = [], adds = [];
+    (raw.bundled_swaps || []).forEach((bundle, gi) => {
+      const ep = bundleChosenEndpoint(entry, bundle, gi);
+      if (!ep) return;
+      for (const r of (ep.removes || [])) removes.push(r);
+      for (const a of (ep.adds || [])) adds.push(a);
+    });
+    return { removes, adds };
+  }
+
+  // Base weapon families any bundle endpoint can remove — these slots are owned
+  // by the bundle, so the parser-generated loadout options for them are hidden.
+  function bundleManagedFamilies(raw) {
+    const fam = new Set();
+    for (const b of ((raw && raw.bundled_swaps) || []))
+      for (const ep of (b.endpoints || []))
+        for (const r of (ep.removes || [])) fam.add(weaponBase(r));
+    return fam;
   }
 
   function buildWargearHtml(entry, raw) {
@@ -2372,8 +2408,18 @@
   }
 
   // Unit Options UI for loadout-defined units.
-  function buildLoadoutHtml(entry, def) {
+  function buildLoadoutHtml(entry, def, raw) {
     const size = loadoutSize(entry, def);
+    // Options whose replaced weapon is owned by a bundle are hidden here (the
+    // bundle picker is the single control for those slots) and any stale
+    // selection on them is cleared so it can't leak into the rollup.
+    const managed = bundleManagedFamilies(raw);
+    const suppressed = (o) => o.replaces && managed.has(weaponBase(o.replaces));
+    if (managed.size) {
+      for (const o of def.options)
+        if (suppressed(o) && entry.wargear[o.id] != null)
+          entry.wargear[o.id] = (o.type === 'choice') ? null : 0;
+    }
     // A pooled/add option whose prerequisite weapon has been swapped away is
     // cleared before rollup — frees its shared-pool slot so the body ceiling recovers.
     const reqOkUI = (o) => {
@@ -2387,7 +2433,7 @@
     const roll = loRollup(def, size, loadoutSelections(entry, def));
     const grpCounts = loGroupCounts(def, size);
     const byScope = {};
-    for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
+    for (const o of def.options) { if (suppressed(o)) continue; (byScope[o.scope] = byScope[o.scope] || []).push(o); }
     let html = '';
     // Leader/champion block = first model group with a fixed count of 1 (Sergeant, Champion, etc.).
     let leaderName = null;
@@ -2516,6 +2562,11 @@
     if (roll.overAllocated) html += `<div class="over-limit-flag">\u26a0 Too many weapon swaps for this unit size</div>`;
     const cmap = {};
     for (const kv of roll.weapons.entries()) cmap[kv[0].toLowerCase()] = kv[1];
+    // Fold in the chosen bundle endpoint's add/remove so bundle-owned units
+    // (Captain) show the swapped weapons, not the default loadout.
+    const bd = activeBundleWeaponDelta(entry, raw);
+    for (const r of bd.removes) delete cmap[weaponBase(r)];
+    for (const a of bd.adds) cmap[weaponBase(a)] = (cmap[weaponBase(a)] || 0) + 1;
     html += loWeaponTable('Ranged Weapons', raw.weapons.filter(w => w.weapon_type === 'Ranged'), cmap);
     html += loWeaponTable('Melee Weapons', raw.weapons.filter(w => w.weapon_type === 'Melee'), cmap);
     if (roll.equipment.size) {
