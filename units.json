@@ -39810,7 +39810,7 @@
       {
         "unit_id": "000001052",
         "unit_name": "Daemon Prince of Nurgle",
-        "unit_type": "Monster",
+        "unit_type": "Character",
         "unit_ability_details": {
           "Nurgle’s Gift (Aura)": "If your Army Faction is DEATH GUARD , while an enemy unit is within Contagion Range of one or more Death Guard models from your army, it is Afflicted (see below). CONTAGION RANGE Contagion Range changes over the course of the battle: AFFLICTED During the Declare Battle Formations step, select one of the Plagues below. Until the end of the battle, while an enemy unit is Afflicted, subtract 1 from the Toughness characteristic of models in that unit, and that unit has the effect of your chosen Plague. Skullsquirm Blight This horrifying affliction sees the minds and senses of the victim gnawed gradually away from within. Each time a model in this unit makes an attack, subtract 1 from the Hit roll . Rattlejoint Ague Limbs shuddering with fever palsy, bones turned brittle as glass, these warriors can barely act to defend themselves. Worsen the Save characteristic of models in this unit by 1. Scabrous Soulrot Victims of this insidious ailment become glassy eyed and morose as their very animus and essence decay. Worsen the Move, Leadership, and Objective Control characteristics of models in this unit by 1 (this rule can only worsen a model’s Objective Control characteristic to a minimum of 1).",
           "Death Guard Defenders": "While this model is within 3\" of one or more friendly Death Guard Infantry units, this model has the Lone Operative ability.",
@@ -42352,7 +42352,7 @@
       {
         "unit_id": "000002749",
         "unit_name": "Daemon Prince of Nurgle with Wings",
-        "unit_type": "Monster",
+        "unit_type": "Character",
         "unit_ability_details": {
           "Nurgle’s Gift (Aura)": "If your Army Faction is DEATH GUARD , while an enemy unit is within Contagion Range of one or more Death Guard models from your army, it is Afflicted (see below). CONTAGION RANGE Contagion Range changes over the course of the battle: AFFLICTED During the Declare Battle Formations step, select one of the Plagues below. Until the end of the battle, while an enemy unit is Afflicted, subtract 1 from the Toughness characteristic of models in that unit, and that unit has the effect of your chosen Plague. Skullsquirm Blight This horrifying affliction sees the minds and senses of the victim gnawed gradually away from within. Each time a model in this unit makes an attack, subtract 1 from the Hit roll . Rattlejoint Ague Limbs shuddering with fever palsy, bones turned brittle as glass, these warriors can barely act to defend themselves. Worsen the Save characteristic of models in this unit by 1. Scabrous Soulrot Victims of this insidious ailment become glassy eyed and morose as their very animus and essence decay. Worsen the Move, Leadership, and Objective Control characteristics of models in this unit by 1 (this rule can only worsen a model’s Objective Control characteristic to a minimum of 1).",
           "Horrifying Visage": "Each time this model ends a Charge move, select one enemy unit within Engagement Range of it. That unit must take a Battle-shock test, subtracting 1 from that test.",
@@ -42919,7 +42919,7 @@
       {
         "unit_id": "000004112",
         "unit_name": "Great Unclean One",
-        "unit_type": "Monster",
+        "unit_type": "Character",
         "unit_ability_details": {
           "Pact of Decay": "When mustering your army, unless specifically stated otherwise, you cannot select Plague Legions as your Army Faction.",
           "Daemon Lord of Nurgle (Aura)": "While a friendly Plague Legions unit is within 6\" of this model, add 1 to the Toughness characteristic of models in that unit.",

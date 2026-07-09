@@ -441,18 +441,19 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
                 classify.add(kw)
         if "Epic Hero" in classify:
             return "Epic Hero"
-        # Leader ability => the unit attaches to others => Character, and this
-        # outranks a Mounted/Monster/etc. body (a biker Chaplain is a Character,
-        # not "Mounted"). A *bare* Character keyword without a Leader ability does
-        # NOT override a Monster/Vehicle body — checked after the big-6 below —
-        # so Daemon Princes / Great Unclean One stay under Monster.
-        if ds_id in abil["leader_flag"]:
+        # A unit carrying the Character keyword on its whole body (all-models, or
+        # a single-model unit) is a Character even if it's also a Monster/Vehicle/
+        # Mounted — Daemon Prince, Great Unclean One. Monster rules still apply;
+        # it just lives under Characters. The Leader ability additionally catches
+        # multi-model attach-characters whose Character keyword sits on only one
+        # model (Ravenwing Command Squad). Model-specific Character keywords on a
+        # subset of a multi-model unit are excluded from `classify`, so a lone
+        # non-character model can't promote the unit (the original B8 bug).
+        if "Character" in classify or ds_id in abil["leader_flag"]:
             return "Character"
         for kw in ("Fortification", "Vehicle", "Monster", "Beast", "Mounted"):
             if kw in classify:
                 return kw
-        if "Character" in classify:
-            return "Character"
         role = (selected[ds_id].get("role") or "").strip()
         if role == "Battleline":
             return "Battleline"
