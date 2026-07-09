@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.39';
+  const VERSION = '5.40';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2886,10 +2886,19 @@
       html += `</div></div>`;
     }
 
-    // Wargear Abilities — conferred by default (non-optional) gear (e.g. invuln saves)
+    // Wargear Abilities — the CONFIGURED popup lists only what this build actually
+    // has: always-on gear abilities, plus optional (grant-conferred) ones whose
+    // grant is currently chosen. Abilities tied to a bundle grant are "optional"
+    // and hidden unless active; the left-panel popup still shows all possibilities.
+    const optionalWA = new Set();
+    for (const b of (raw.bundled_swaps || []))
+      for (const ep of (b.endpoints || []))
+        for (const g of (ep.grants || [])) if (g.ability_name) optionalWA.add(g.ability_name);
+    const activeWA = new Set(activeBundleGrants(entry, raw).map(g => g.ability_name).filter(Boolean));
     const cfgWargearAbilities = [];
     for (const mg of raw.model_groups) {
       for (const name of (mg.wargear_ability_names || [])) {
+        if (optionalWA.has(name) && !activeWA.has(name)) continue;
         if (!cfgWargearAbilities.includes(name)) cfgWargearAbilities.push(name);
       }
     }
