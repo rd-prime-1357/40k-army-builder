@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.44';
+  const VERSION = '5.45';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2302,7 +2302,15 @@
 
   function buildOtherOptionsHtml(entry, raw) {
     let html = `<div class="detail-section-label" style="margin-bottom:0.45rem;">Unit Options</div><div class="options-block">`;
+    // Some options are double-sourced: present both as a loadout group and as a
+    // B14 other_option (e.g. Watcher in the Dark on Deathwing units). The loadout
+    // group is canonical, so suppress the matching other_option here to avoid a
+    // duplicate control. Match on normalized label.
+    const _lo = loadoutFor(entry);
+    const _loLabels = new Set((_lo && _lo.options ? _lo.options : [])
+      .map(o => (o.label || o.group || '').trim().toLowerCase()));
     for (const opt of (raw.other_options || [])) {
+      if (_loLabels.has((opt.option_name || '').trim().toLowerCase())) continue;
       const isCh = !!entry.otherOptions[opt.option_name];
       html += `<div class="option-item${isCh ? ' chosen' : ''}"
                     onclick="editOtherOption(${entry.listId},'${esc(opt.option_name)}')">
