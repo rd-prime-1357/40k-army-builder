@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.41';
+  const VERSION = '5.42';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2052,13 +2052,79 @@
     return out;
   }
 
-  // Merge stat_override maps (e.g. {W:'7'}) from all active grants.
+  // Read a rules/wargear ability's text into a structured characteristic
+  // override. Recognizes the fixed 40K phrasings that set a model stat; anything
+  // else returns {}. This is the general reader that replaces per-effect
+  // hardcoding (e.g. the old Shining Aegis special-case).
+  function statOverrideFromText(text) {
+    const out = {};
+    if (!text) return out;
+    const t = String(text);
+    let m;
+    if ((m = t.match(/(\d)\+\s*invulnerable save/i)) ||
+        (m = t.match(/invulnerable save of\s*(\d)\+/i)))      out.INV = m[1];
+    if ((m = t.match(/Wounds characteristic of\s*(\d+)/i)))   out.W   = m[1];
+    if ((m = t.match(/Save characteristic of\s*(\d)\+/i)))    out.SV  = m[1];
+    if ((m = t.match(/Feel No Pain\s*(\d)\+/i)))              out.FNP = m[1];
+    return out;
+  }
+
+  // Merge stat overrides from all active grants. The reader derives the effect
+  // from the grant's rules text; an explicit authored stat_override wins if
+  // present (escape hatch for text the reader can't parse).
   function activeStatOverrides(entry, raw) {
     const ov = {};
     for (const g of activeBundleGrants(entry, raw)) {
+      Object.assign(ov, statOverrideFromText(g.carrier_notes));
       if (g.stat_override) Object.assign(ov, g.stat_override);
     }
     return ov;
+  }
+
+  // Characteristic overrides conferred by the unit's currently-active weapons and
+  // wargear selections, read from their ability text. Handles both abilities
+  // carried on an active weapon profile and an active wargear whose NAME is
+  // itself a defined weapon ability with no profile of its own (e.g. the Shining
+  // aegis shield). Replaces the former Shining Aegis hardcode.
+  function activeWeaponStatOverrides(raw, mg, activeBases, replacedBases) {
+    const ov = {};
+    const abilNames = new Set();
+    for (const w of raw.weapons) {
+      if (w.model_group !== mg.model_group) continue;
+      const base = weaponBase(w.weapon_name);
+      const active = activeBases.has(base) || (w.is_base_equipment && !replacedBases.has(base));
+      if (active) for (const n of (w.weapon_ability_names || [])) abilNames.add(n);
+    }
+    // An active wargear whose NAME is itself a defined weapon ability but which
+    // has no weapon profile (e.g. the Shining aegis shield). Skip anything the
+    // broad wargear-ability surface already owns (Storm Shield, Shield Dome,
+    // Watcher in the Dark, …) — those are handled/asterisked by that pass, not
+    // here, so we don't double-apply or mis-apply a bearer-only/conditional one.
+    const covered = broadWargearAbilitySet();
+    for (const key of Object.keys(weaponAbilitiesLookup)) {
+      if (covered.has(key)) continue;
+      if (activeBases.has(key.toLowerCase())) abilNames.add(key);
+    }
+    for (const n of abilNames) Object.assign(ov, statOverrideFromText(weaponAbilitiesLookup[n]));
+    return ov;
+  }
+
+  // The set of ability names surfaced via any unit's wargear_ability_names — the
+  // "broad" conferred-wargear surface deferred to its own pass (B12-broad/E17).
+  // Cached; recomputed only if the unit set changes.
+  let _broadWargearAbilSet = null, _broadWargearAbilSrc = null;
+  function broadWargearAbilitySet() {
+    if (_broadWargearAbilSet && _broadWargearAbilSrc === armyData) return _broadWargearAbilSet;
+    const s = new Set();
+    for (const blk of (armyData || [])) {
+      for (const u of (blk.units || [])) {
+        for (const g of (u.model_groups || [])) {
+          for (const n of (g.wargear_ability_names || [])) s.add(n);
+        }
+      }
+    }
+    _broadWargearAbilSet = s; _broadWargearAbilSrc = armyData;
+    return s;
   }
 
   // Weapon add/remove from the chosen bundle endpoints. Loadout-defined units
@@ -2824,13 +2890,14 @@
         html += `<div class="stat-block">`;
       }
 
-      // Stat overrides from equipped wargear/grants. Shining Aegis sets Sv 3;
-      // active bundle grants (e.g. Relic shield) carry their own stat_override.
-      const shiningAegisActive = Object.values(entry.wargear).some(
-        v => typeof v === 'string' && v.toLowerCase() === 'shining aegis'
+      // Stat overrides from equipped wargear/grants, all read from ability text:
+      // active weapon/wargear abilities (e.g. Shining aegis -> Sv 3+) plus active
+      // bundle grants (e.g. relic shield -> W, storm shield -> INV).
+      const overrides = Object.assign(
+        {},
+        activeWeaponStatOverrides(raw, mg, activeBases, replacedBases),
+        activeStatOverrides(entry, raw)
       );
-      const overrides = Object.assign({}, activeStatOverrides(entry, raw));
-      if (shiningAegisActive) overrides.SV = 3;
 
       html += buildStatTable(mg, overrides);
       html += `</div>`;
