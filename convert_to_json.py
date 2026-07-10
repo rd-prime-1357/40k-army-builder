@@ -228,6 +228,7 @@ def load_bundles(bundles_path):
         index.setdefault((army, unit), []).append({
             "model_group":  rec.get("model_group"),
             "option_group": rec.get("option_group"),
+            "loadout_relation": rec.get("loadout_relation", "owns"),
             "endpoints":    eps,
         })
     print(f"  Loaded bundled swaps for {len(index)} unit(s).")

@@ -1654,6 +1654,7 @@
           {
             "model_group": "All",
             "option_group": "Captain Wargear",
+            "loadout_relation": "owns",
             "endpoints": [
               {
                 "id": "captain-base",
@@ -9024,70 +9025,52 @@
             "is_base_equipment": false
           }
         ],
-        "wargear_options": [
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": [
           {
             "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Master-crafted bolter",
-            "replacement_weapon_name": "plasma pistol",
-            "points_cost": null,
-            "is_choice": true,
-            "option_group": "A"
-          },
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Master-crafted bolter",
-            "replacement_weapon_name": "Master-crafted power weapon",
-            "points_cost": null,
-            "is_choice": true,
-            "option_group": "A"
-          },
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Master-crafted bolter",
-            "replacement_weapon_name": "Power fist",
-            "points_cost": null,
-            "is_choice": true,
-            "option_group": "A"
-          },
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Bolt pistol",
-            "replacement_weapon_name": "Heavy bolt pistol",
-            "points_cost": null,
-            "is_choice": false,
-            "option_group": null
-          },
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Close combat weapon",
-            "replacement_weapon_name": "Master-crafted power weapon",
-            "points_cost": null,
-            "is_choice": true,
-            "option_group": "D"
-          },
-          {
-            "model_group": "All",
-            "models_per_trigger": null,
-            "max_substitutions_per_trigger": null,
-            "weapon_replaced": "Close combat weapon",
-            "replacement_weapon_name": "Power fist",
-            "points_cost": null,
-            "is_choice": true,
-            "option_group": "D"
+            "option_group": "Lieutenant Wargear",
+            "loadout_relation": "alternative",
+            "endpoints": [
+              {
+                "id": "lt-base",
+                "label": "Default loadout",
+                "is_default": true,
+                "points_cost": 0,
+                "adds": [],
+                "removes": [],
+                "grants": []
+              },
+              {
+                "id": "lt-nvp-mcpw-shield",
+                "label": "Neo-volkite pistol, master-crafted power weapon & storm shield",
+                "is_default": false,
+                "points_cost": 0,
+                "adds": [
+                  "Neo-volkite pistol",
+                  "Master-crafted power weapon"
+                ],
+                "removes": [
+                  "Bolt pistol",
+                  "Master-crafted bolter",
+                  "Close combat weapon"
+                ],
+                "grants": [
+                  {
+                    "model_group": "All",
+                    "option_name": "Storm shield",
+                    "ability_name": "Storm Shield",
+                    "carrier_notes": "The bearer has a 4+ invulnerable save.",
+                    "stat_override": {
+                      "INV": "4"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ],
-        "other_options": [],
-        "bundled_swaps": null,
         "points": {
           "sizes": [
             {

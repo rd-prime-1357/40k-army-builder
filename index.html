@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.40';
+  const VERSION = '5.41';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2086,6 +2086,25 @@
     return fam;
   }
 
+  // Whether a bundle currently owns the shared weapon slots, so the loadout
+  // options for those slots must be hidden. An 'owns' bundle (Captain) always
+  // does; an 'alternative' bundle (Lieutenant's atomic 3-for-3) does so only
+  // while its non-default endpoint is chosen — that's the cross-exclusivity:
+  // picking the atomic swap hides the per-slot swaps, and clearing it brings
+  // them back.
+  function bundleSuppressesLoadout(entry, raw) {
+    const bs = (raw && raw.bundled_swaps) || [];
+    for (let gi = 0; gi < bs.length; gi++) {
+      const bundle = bs[gi];
+      if ((bundle.loadout_relation || 'owns') === 'owns') return true;
+      const eps = bundle.endpoints || [];
+      const def = eps.find(e => e.is_default) || eps[0];
+      const ep = bundleChosenEndpoint(entry, bundle, gi);
+      if (ep && def && ep.id !== def.id) return true;
+    }
+    return false;
+  }
+
   function buildWargearHtml(entry, raw) {
     const options  = raw.wargear_options;
     const groups   = {};
@@ -2414,12 +2433,19 @@
     // bundle picker is the single control for those slots) and any stale
     // selection on them is cleared so it can't leak into the rollup.
     const managed = bundleManagedFamilies(raw);
-    const suppressed = (o) => o.replaces && managed.has(weaponBase(o.replaces));
-    if (managed.size) {
-      for (const o of def.options)
-        if (suppressed(o) && entry.wargear[o.id] != null)
-          entry.wargear[o.id] = (o.type === 'choice') ? null : 0;
-    }
+    const ownsNow = bundleSuppressesLoadout(entry, raw);
+    const validW = new Set(((raw && raw.weapons) || []).map(w => weaponBase(w.weapon_name)));
+    // A choice option whose replacements don't resolve to any real weapon profile
+    // is a broken compound the loadout parser couldn't express (e.g. the
+    // Lieutenant's "neo-volkite + power weapon + storm shield" crammed into a
+    // single swap) — the bundle now owns it, so drop it entirely.
+    const brokenChoice = (o) => o.type === 'choice' && Array.isArray(o.choices) &&
+      o.choices.every(c => !validW.has(weaponBase(c)));
+    const suppressed = (o) =>
+      brokenChoice(o) || (ownsNow && o.replaces && managed.has(weaponBase(o.replaces)));
+    for (const o of def.options)
+      if (suppressed(o) && entry.wargear[o.id] != null)
+        entry.wargear[o.id] = (o.type === 'choice') ? null : 0;
     // A pooled/add option whose prerequisite weapon has been swapped away is
     // cleared before rollup — frees its shared-pool slot so the body ceiling recovers.
     const reqOkUI = (o) => {
@@ -2958,18 +2984,22 @@
 
   function buildStatTable(mg, overrides) {
     const ov  = overrides || {};
-    const inv = mg.INV ? `${mg.INV}+` : '—';
-    const fnp = mg.FNP ? `${mg.FNP}+` : '—';
-    const invCond = mg.INV_Condition ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
-    const fnpCond = mg.FNP_Condition ? ` <span style="font-size:0.6rem;color:#666;">(${mg.FNP_Condition})</span>` : '';
+    // SV and LD carry a trailing '+' in the data while INV/FNP are bare numbers;
+    // strip any existing '+' so we don't render a doubled '++'.
+    const cleanPlus = v => String(v == null ? '' : v).replace(/\+\s*$/, '');
     const ovCell = (key, base, suffix='') => {
       const has = ov[key] !== undefined && ov[key] !== null;
       const val = has ? ov[key] : base;
       return has ? `<span class="stat-override">${val}${suffix}</span>` : `${val}${suffix}`;
     };
-    // SV and LD carry a trailing '+' in the data while INV/FNP are bare numbers;
-    // strip any existing '+' so we don't render a doubled '++'.
-    const cleanPlus = v => String(v == null ? '' : v).replace(/\+\s*$/, '');
+    // INV/FNP: an override (e.g. storm shield -> 4+ invuln) replaces the cell and
+    // its condition text; otherwise show the base value or an em dash.
+    const invOv = ov.INV !== undefined && ov.INV !== null;
+    const fnpOv = ov.FNP !== undefined && ov.FNP !== null;
+    const inv = invOv ? `<span class="stat-override">${cleanPlus(ov.INV)}+</span>` : (mg.INV ? `${mg.INV}+` : '\u2014');
+    const fnp = fnpOv ? `<span class="stat-override">${cleanPlus(ov.FNP)}+</span>` : (mg.FNP ? `${mg.FNP}+` : '\u2014');
+    const invCond = (!invOv && mg.INV_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
+    const fnpCond = (!fnpOv && mg.FNP_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.FNP_Condition})</span>` : '';
     const svDisplay = ovCell('SV', cleanPlus(mg.SV), '+');
     const wDisplay  = ovCell('W',  mg.W);
 
