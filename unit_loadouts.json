@@ -1802,18 +1802,30 @@
         "max_total_all": true
       },
       {
-        "id": "add_2",
+        "id": "cc_2",
         "scope": "Deathwing Terminators",
-        "group": "Watcher In The Dark",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Storm bolter",
+        "replacement_choices": [
+          "Assault cannon",
+          "Heavy flamer",
+          "Plasma cannon – standard",
+          "Storm bolter + Cyclone missile launcher – frag"
+        ],
+        "per_n_models": 5,
+        "max_per_n": 1
+      },
+      {
+        "id": "add_3",
+        "scope": "Deathwing Terminators",
+        "group": "Watcher in the Dark",
         "type": "add",
-        "adds_weapon": "Watcher In The Dark",
+        "equipment": "Watcher in the Dark",
         "max_total": 1
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: For every 5 models in this unit, 1 Deathwing Terminator can replace its storm bolter with one of the following: 1 assaul",
-      "WEAPON_NOT_FOUND: watcher in the dark (add) on Deathwing Terminator Squad"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000231": {
@@ -5880,12 +5892,29 @@
         ]
       }
     ],
-    "options": [],
+    "options": [
+      {
+        "id": "cnt_1",
+        "scope": "Kill Team Infiltrators",
+        "group": "Bolt Sniper Rifle Options",
+        "type": "count",
+        "replaces": "Bolt sniper rifle",
+        "replacement": "Las fusil",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
+        "scope": "Kill Team Infiltrators",
+        "group": "Combat Knife Options",
+        "type": "count",
+        "replaces": "Combat knife",
+        "replacement": "Deathwatch bolt carbine + Close combat weapon",
+        "max_total_all": true
+      }
+    ],
     "_parser_flags": [
       "UNMATCHED: One model equipped with a Deathwatch marksman bolt carbine can be equipped with one of the following: 1 helix gauntlet 1",
-      "UNMATCHED: One model can replace its bolt sniper rifle with 1 instigator bolt carbine.",
-      "UNMATCHED: Any number of models can each replace their bolt sniper rifle with 1 las fusil.",
-      "UNMATCHED: Any number of models can each replace their combat knife with 1 Deathwatch bolt carbine and 1 close combat weapon."
+      "UNMATCHED: One model can replace its bolt sniper rifle with 1 instigator bolt carbine."
     ],
     "_defaults_source": "equipped"
   },
@@ -5995,21 +6024,45 @@
     ],
     "options": [
       {
-        "id": "add_1",
-        "scope": "Kill Team Intercessors with heavy bolt pistols",
-        "group": "Astartes Grenade Launcher – Frag",
-        "type": "add",
-        "adds_weapon": "Astartes grenade launcher – frag",
-        "per_n_models": 5,
-        "max_per_n": 1
+        "id": "cho_1",
+        "scope": "Kill Team Sergeant",
+        "group": "Deathwatch Bolt Rifle Options",
+        "type": "choice",
+        "replaces": "Deathwatch bolt rifle",
+        "choices": [
+          "Astartes chainsword",
+          "Hand flamer",
+          "Plasma pistol - standard",
+          "Power weapon"
+        ]
+      },
+      {
+        "id": "cho_2",
+        "scope": "Kill Team Sergeant",
+        "group": "Close Combat Weapon Options",
+        "type": "choice",
+        "replaces": "Close combat weapon",
+        "choices": [
+          "Astartes chainsword",
+          "Power fist",
+          "Power weapon",
+          "Thunder hammer"
+        ]
+      },
+      {
+        "id": "cnt_3",
+        "scope": "Kill Team Intercessors",
+        "group": "Superfrag Rocket Launcher Options",
+        "type": "count",
+        "replaces": "Superfrag rocket launcher",
+        "replacement": "Superkrak rocket launcher",
+        "max_total_all": true
       }
     ],
     "_parser_flags": [
-      "UNMATCHED: The Kill Team Sergeant can replace its Deathwatch bolt rifle with one of the following: 1 Astartes chainsword 1 hand fla",
-      "UNMATCHED: The Kill Team Sergeant can replace its close combat weapon with one of the following: 1 Astartes chainsword 1 power fist",
+      "UNMATCHED: For every 5 models in this unit, 1 model equipped with a Deathwatch bolt rifle can be equipped with 1 Astartes grenade l",
       "UNMATCHED: One model equipped with a plasma incinerator can replace its bolt pistol with 1 plasma pistol.",
-      "UNMATCHED: 1 model can replace its superfrag rocket launcher with 1 vengor launcher.",
-      "UNMATCHED: Any number of models can each replace their superfrag rocket launcher with 1 superkrak rocket launcher."
+      "UNMATCHED: 1 model can replace its superfrag rocket launcher with 1 vengor launcher."
     ],
     "_defaults_source": "equipped"
   },
@@ -7068,7 +7121,39 @@
     ],
     "options": [
       {
-        "id": "cnt_1",
+        "id": "cho_1",
+        "scope": "Kill Team Sergeant with Jump Pack",
+        "group": "Heavy Bolt Pistol Options",
+        "type": "choice",
+        "replaces": "Heavy bolt pistol",
+        "choices": [
+          "Hand flamer",
+          "Plasma pistol - standard"
+        ]
+      },
+      {
+        "id": "cho_2",
+        "scope": "Kill Team Sergeant with Jump Pack",
+        "group": "Astartes Chainsword Options",
+        "type": "choice",
+        "replaces": "Astartes chainsword",
+        "choices": [
+          "Power fist",
+          "Power weapon"
+        ]
+      },
+      {
+        "id": "cnt_3",
+        "scope": "Kill Team Intercessors with Jump Packs",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Heavy bolt pistol",
+        "replacement": "Plasma pistol - standard",
+        "per_n_models": 5,
+        "max_per_n": 1
+      },
+      {
+        "id": "cnt_4",
         "scope": "Kill Team Intercessors with Jump Packs",
         "group": "Assault Bolters Options",
         "type": "count",
@@ -7077,11 +7162,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: The Kill Team Sergeant with Jump Pack can replace its heavy bolt pistol with one of the following: 1 hand flamer 1 plasm",
-      "UNMATCHED: The Kill Team Sergeant with Jump Pack can replace its Astartes chainsword with one of the following: 1 power fist 1 powe",
-      "UNMATCHED: For every 5 models in this unit, 1 model can replace its heavy bolt pistol with 1 plasma pistol."
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004109": {
@@ -7819,13 +7900,52 @@
         ]
       }
     ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: For every 5 models in the unit, up to 1 model's infernus heavy bolter can be replaced with one of the following: 1 frag ",
-      "UNMATCHED: For every 5 models in the unit, up to 1 model's heavy thunder hammer can be replaced with 1 power weapon and 1 Astartes ",
-      "UNMATCHED: For every 5 models in the unit, up to 1 model's stalker bolt rifle can be replaced with 1 plasma incinerator.",
-      "UNMATCHED: For every 5 models in the unit, up to 1 model's Deathwatch marksman bolt carbine can be replaced with 1 combat knife."
+    "options": [
+      {
+        "id": "cc_1",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Infernus heavy bolter – heavy bolter",
+        "replacement_choices": [
+          "Frag cannon",
+          "Hellstorm bolt rifle + Astartes grenade launcher – frag"
+        ],
+        "per_n_models": 5,
+        "max_per_n": 1
+      },
+      {
+        "id": "cnt_2",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Heavy thunder hammer",
+        "replacement": "Power weapon",
+        "per_n_models": 5,
+        "max_per_n": 1
+      },
+      {
+        "id": "cnt_3",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Stalker bolt rifle",
+        "replacement": "Plasma incinerator – standard",
+        "per_n_models": 5,
+        "max_per_n": 1
+      },
+      {
+        "id": "cnt_4",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Deathwatch marksman bolt carbine",
+        "replacement": "Combat knife",
+        "per_n_models": 5,
+        "max_per_n": 1
+      }
     ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004179": {

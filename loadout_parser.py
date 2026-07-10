@@ -42,6 +42,7 @@ def base_name(n):
 def qty_name(text):
     """'1 bolt rifle' → 'bolt rifle'; '1 Plasma pistol – standard' → 'plasma pistol'."""
     t = re.sub(r'^\d+\s+', '', text.strip())
+    t = t.strip(' .,;')            # drop stray list punctuation ('frag cannon.' -> 'frag cannon')
     return base_name(t)
 
 def find_weapon(raw, unit_weapons_base, unit_weapons_full):
@@ -131,6 +132,9 @@ def _choices_from_list(text, sep=r'\s+(?=\d+\s)'):
     'X and 1 Y' is a compound pick (two weapons at once) and is kept as one
     choice, rendered 'X + Y' -- not split into two bogus single choices."""
     text = _strip_footnote(text)
+    # drop a trailing rules note in parentheses, e.g.
+    # '... 1 cyclone missile launcher (this model's storm bolter cannot be replaced)'
+    text = re.sub(r'\s*\([^)]*\)\s*$', '', text)
     parts = re.split(r'\s+(?=\d+\s)', text.strip())
     merged = []
     for p in parts:
@@ -179,15 +183,20 @@ def classify_sgl_single(text, unit_name):
 def classify_per_n(text, unit_name):
     """'For every N models …  X can be replaced with …'"""
     m = re.match(
-        r"For every (?P<n>\d+) models? in this unit[,.]?\s+(?P<rest>.+)",
+        r"For every (?P<n>\d+) models? in (?:this|the) unit[,.]?\s+(?P<rest>.+)",
         text, re.I)
     if not m:
         return None
     per_n = int(m.group('n'))
     rest = m.group('rest').strip()
-    # replaced with one of the following
+    # A conditional per-model scope ('1 model equipped with a bolt rifle can be
+    # equipped with ...') is a distinct requires-weapon shape — leave it for that
+    # pass rather than mis-scoping it here.
+    if re.search(r'\bequipped with a\b', rest, re.I):
+        return None
+    # passive: '[up to N] <model>'s <weapon> can be replaced with one of the following: <list>'
     m2 = re.match(
-        r"(?:\d+\s+)?(?P<model>.+?)'s? (?P<repl>.+?) can be replaced with one of the following[:\s]+(?P<list>.+)",
+        r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?)'s? (?P<repl>.+?) can be replaced with one of the following[:\s]+(?P<list>.+)",
         rest, re.I)
     if m2:
         scope_hint = m2.group('model').strip()
@@ -197,14 +206,37 @@ def classify_per_n(text, unit_name):
             return [{'_type': 'count_choice', '_scope_hint': scope_hint,
                      'replaces': replaces, 'replacement_choices': choices,
                      'per_n_models': per_n, 'max_per_n': 1}]
-    # replaced with single
+    # active: '[up to N] <model> can replace its <weapon> with one of the following: <list>'
+    m2a = re.match(
+        r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?) can replace (?:its|their) (?P<repl>.+?) with one of the following[:\s]+(?P<list>.+)",
+        rest, re.I)
+    if m2a:
+        scope_hint = m2a.group('model').strip()
+        replaces = qty_name(m2a.group('repl'))
+        choices = _choices_from_list(m2a.group('list'))
+        if choices:
+            return [{'_type': 'count_choice', '_scope_hint': scope_hint,
+                     'replaces': replaces, 'replacement_choices': choices,
+                     'per_n_models': per_n, 'max_per_n': 1}]
+    # passive single: '[up to N] <model>'s <weapon> can be replaced with <single>'
     m3 = re.match(
-        r"(?:\d+\s+)?(?:model|(?P<model>.+?))'s? (?P<repl>.+?) can be replaced with (?P<rep>\d+\s+\S.*?)$",
+        r"(?:up to \d+\s+)?(?:\d+\s+)?(?:model|(?P<model>.+?))'s? (?P<repl>.+?) can be replaced with (?P<rep>\d+\s+\S.*?)$",
         rest, re.I)
     if m3:
         scope_hint = (m3.group('model') or 'body').strip()
         replaces = qty_name(m3.group('repl'))
         replacement = qty_name(m3.group('rep'))
+        return [{'_type': 'count', '_scope_hint': scope_hint,
+                 'replaces': replaces, 'replacement': replacement,
+                 'per_n_models': per_n, 'max_per_n': 1}]
+    # active single: '[up to N] <model> can replace its <weapon> with <single>'
+    m3a = re.match(
+        r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?) can replace (?:its|their) (?P<repl>.+?) with (?P<rep>\d+\s+\S.*?)$",
+        rest, re.I)
+    if m3a:
+        scope_hint = m3a.group('model').strip()
+        replaces = qty_name(m3a.group('repl'))
+        replacement = qty_name(m3a.group('rep'))
         return [{'_type': 'count', '_scope_hint': scope_hint,
                  'replaces': replaces, 'replacement': replacement,
                  'per_n_models': per_n, 'max_per_n': 1}]
@@ -230,7 +262,7 @@ def classify_any_number(text, unit_name):
         r"(?:Any number of|All of the|All|Up to (?P<upto>\d+))\s+"
         r"(?P<scope>.+?)"
         r"(?:\s+in this unit)?"
-        r" can (?:each )?have their (?P<repl>.+?) replaced with\s+"
+        r" can (?:each )?(?:have their (?P<repl>.+?) replaced with|replace their (?P<repl2>.+?) with)\s+"
         r"(?:one of the following[:\s]+(?P<list>.+)|(?P<rep>\d+\s+\S.*?)(?:\.|$))",
         text, re.I)
     if not m:
@@ -242,7 +274,7 @@ def classify_any_number(text, unit_name):
     else:
         # tolerate a trailing 'models'/'units' after a named model, if present
         scope_hint = re.sub(r'\s+(?:models?|units?)$', '', scope_raw, flags=re.I).strip() or 'body'
-    repl_raw = m.group('repl').strip()
+    repl_raw = (m.group('repl') or m.group('repl2') or '').strip()
     if m.group('list'):
         choices = _choices_from_list(m.group('list'))
         if choices:
@@ -256,6 +288,34 @@ def classify_any_number(text, unit_name):
                  'up_to': up_to,
                  'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw}]
     return None
+
+def classify_active_swap(text, unit_name):
+    """Active-voice replacement (mirror of the passive '<weapon> can be replaced with'):
+       'The Kill Team Sergeant can replace its X with one of the following: <list>'
+       'The Kill Team Sergeant with Jump Pack can replace its X with 1 Y'
+    Only the DEFINITE lead-in ('The'/'This') is handled — that scopes to a named,
+    single model (typically the sergeant/leader group), where a plain 'choice'/'single'
+    is exactly right. Indefinite single-model swaps ('One model / 1 model can replace
+    its X …') need a 1-model cap and are left for a follow-up shape; a conditional
+    per-model scope ('One model equipped with a …') is a requires-weapon shape and is
+    likewise left for that pass."""
+    m = re.match(
+        r"(?:The|This)\s+(?P<model>.+?) can replace (?:its|their) (?P<repl>.+?) with"
+        r"(?: one of the following[:\s]+(?P<list>.+)|\s+(?P<rep>\d+\s+\S.*?)(?:\.|$))",
+        text, re.I)
+    if not m:
+        return None
+    model = m.group('model').strip()
+    if re.search(r'\bequipped with a\b', model, re.I):
+        return None
+    replaces = qty_name(m.group('repl'))
+    if m.group('list'):
+        choices = _choices_from_list(m.group('list'))
+        if not choices:
+            return None
+        return [{'_type': 'choice', '_scope_hint': model, 'replaces': replaces, 'choices': choices}]
+    return [{'_type': 'single', '_scope_hint': model, 'replaces': replaces,
+             'replacement': qty_name(m.group('rep'))}]
 
 def classify_add(text, unit_name):
     """'This model can be equipped with …'  /  'This unit …'"""
@@ -330,6 +390,7 @@ CLASSIFIERS = [
     classify_sgl_single,
     classify_per_n,
     classify_any_number,
+    classify_active_swap,
     classify_add,
     classify_this_model_choice,
     classify_this_model_add_choice,
@@ -488,7 +549,7 @@ def merge_or_profiles(profiles, size_brackets, flags):
     return merged
 
 # ── main per-unit assembler ────────────────────────────────────────────────────
-def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, option_texts, global_idx=None):
+def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, option_texts, global_idx=None, equipment_items=None):
     flags = []
     # model groups — split composition into alternative profiles on a bare 'OR',
     # skipping annotation lines ('N MODELS MAXIMUM').
@@ -629,6 +690,22 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
             elif ot == 'add':
 
                 what, ok = normalise_weapon(op['adds'], weapon_idx, global_idx)
+                # A non-weapon wargear item (e.g. 'Watcher in the Dark') that fails the
+                # weapon lookup but is a known equipment/ability item is added as gear,
+                # not flagged as a missing weapon.
+                as_equipment = (not ok) and equipment_items is not None \
+                    and base_name(op['adds']) in equipment_items
+                if as_equipment:
+                    item = equipment_items[base_name(op['adds'])]
+                    entry = {'id': new_id('add'), 'scope': scope, 'group': item,
+                             'type': 'add', 'equipment': item}
+                    per_n = op.get('per_n_models')
+                    if per_n:
+                        entry['per_n_models'] = per_n; entry['max_per_n'] = op.get('max_per_n', 1)
+                    else:
+                        entry['max_total'] = op.get('max_total', 1)
+                    options.append(entry)
+                    continue
                 if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["adds"]} (add) on {unit_name}')
                 per_n = op.get('per_n_models')
                 entry = {'id': new_id('add'), 'scope': scope, 'group': what.title(),
@@ -746,6 +823,22 @@ def main():
                     if b not in global_weapon_idx:
                         global_weapon_idx[b] = w['weapon_name']
 
+    # Equipment allowlist: wargear items that confer abilities but are not weapons
+    # (e.g. 'Watcher in the Dark'). base_name -> canonical display name. Sourced from
+    # weapon_abilities.json next to this script when present.
+    equipment_items = {}
+    wa_path = os.path.join(os.path.dirname(os.path.abspath(args.datasheets)) or '.', 'weapon_abilities.json')
+    if not os.path.exists(wa_path):
+        wa_path = 'weapon_abilities.json'
+    if os.path.exists(wa_path):
+        try:
+            for row in json.load(open(wa_path)):
+                nm = row.get('weapon_ability_name') if isinstance(row, dict) else None
+                if nm:
+                    equipment_items[base_name(nm)] = nm
+        except Exception:
+            pass
+
     for uid in sorted(target_ids):
         name = ds_name.get(uid, '')
         if uid in existing:
@@ -759,7 +852,7 @@ def main():
         sz = sizes.get(uid, [])
         defn, flags = build_loadout(
             uid, name, comp.get(uid, []), sz, weapons_list, opts_by_ds.get(uid, []),
-            global_idx=global_weapon_idx)
+            global_idx=global_weapon_idx, equipment_items=equipment_items)
         if defn:
             # fill default_weapons from pipeline base flags
             for g in defn['model_groups']:
