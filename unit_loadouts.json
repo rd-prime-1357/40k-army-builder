@@ -1777,7 +1777,6 @@
         },
         "default_weapons": [
           "Storm bolter",
-          "Power fist",
           "Power weapon"
         ]
       },
@@ -1788,8 +1787,7 @@
         },
         "default_weapons": [
           "Storm bolter",
-          "Power fist",
-          "Power weapon"
+          "Power fist"
         ]
       }
     ],
@@ -1815,7 +1813,8 @@
     "_parser_flags": [
       "UNMATCHED: For every 5 models in this unit, 1 Deathwing Terminator can replace its storm bolter with one of the following: 1 assaul",
       "WEAPON_NOT_FOUND: watcher in the dark (add) on Deathwing Terminator Squad"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000231": {
     "size_brackets": [
@@ -1828,8 +1827,7 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Great weapon of the Unforgiven",
-          "Mace of absolution"
+          "Great weapon of the Unforgiven"
         ]
       },
       {
@@ -1838,7 +1836,6 @@
           "fixed": 4
         },
         "default_weapons": [
-          "Great weapon of the Unforgiven",
           "Mace of absolution"
         ]
       }
@@ -1874,7 +1871,8 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: watcher in the dark (add) on Deathwing Knights"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000238": {
     "size_brackets": [
@@ -1992,7 +1990,8 @@
     "options": [],
     "_parser_flags": [
       "UNMATCHED: For every 3 models in this unit, 1 model can replace its plasma talon with 1 Astartes grenade launcher."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000242": {
     "size_brackets": [
@@ -2187,7 +2186,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000305": {
     "size_brackets": [
@@ -2240,7 +2240,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000306": {
     "size_brackets": [
@@ -2384,7 +2385,8 @@
       "WEAPON_NOT_FOUND: storm shield (count.rep) on Wolf Guard Terminators",
       "UNMATCHED: For every 5 models in this unit, 1 Wolf Guard Terminator can replace its storm bolter and master-crafted power weapon wi",
       "WEAPON_NOT_FOUND: of the following: 1 relic greataxe 1 twin lightning claws (single.replacement) on Wolf Guard Terminators"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000322": {
     "size_brackets": [
@@ -2441,7 +2443,8 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: storm shield (count_choice) on Thunderwolf Cavalry"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000000323": {
     "size_brackets": [
@@ -3243,7 +3246,8 @@
         ]
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000001188": {
     "size_brackets": [
@@ -4372,7 +4376,8 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000002266": {
     "size_brackets": [
@@ -5819,13 +5824,8 @@
         },
         "default_weapons": [
           "Bolt pistol",
-          "Bolt sniper rifle",
           "Deathwatch marksman bolt carbine",
-          "Deathwatch occulus bolt carbine",
-          "Special-issue bolt pistol",
-          "Close combat weapon",
-          "Combat knife",
-          "Paired combat blades"
+          "Close combat weapon"
         ]
       },
       {
@@ -5886,7 +5886,8 @@
       "UNMATCHED: One model can replace its bolt sniper rifle with 1 instigator bolt carbine.",
       "UNMATCHED: Any number of models can each replace their bolt sniper rifle with 1 las fusil.",
       "UNMATCHED: Any number of models can each replace their combat knife with 1 Deathwatch bolt carbine and 1 close combat weapon."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002780": {
     "size_brackets": [
@@ -5900,14 +5901,7 @@
         },
         "default_weapons": [
           "Bolt pistol",
-          "Castellan launcher",
           "Deathwatch bolt rifle",
-          "Heavy bolt pistol",
-          "Plasma incinerator – standard",
-          "Plasma incinerator – supercharge",
-          "Pyreblaster",
-          "Superfrag rocket launcher",
-          "Astartes chainsword",
           "Close combat weapon"
         ]
       },
@@ -5918,14 +5912,7 @@
         },
         "default_weapons": [
           "Bolt pistol",
-          "Castellan launcher",
           "Deathwatch bolt rifle",
-          "Heavy bolt pistol",
-          "Plasma incinerator – standard",
-          "Plasma incinerator – supercharge",
-          "Pyreblaster",
-          "Superfrag rocket launcher",
-          "Astartes chainsword",
           "Close combat weapon"
         ]
       },
@@ -6023,7 +6010,8 @@
       "UNMATCHED: One model equipped with a plasma incinerator can replace its bolt pistol with 1 plasma pistol.",
       "UNMATCHED: 1 model can replace its superfrag rocket launcher with 1 vengor launcher.",
       "UNMATCHED: Any number of models can each replace their superfrag rocket launcher with 1 superkrak rocket launcher."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002781": {
     "size_brackets": [
@@ -6038,10 +6026,7 @@
         "default_weapons": [
           "Bolt pistol",
           "Deathwatch heavy bolt rifle",
-          "Flamestorm gauntlets",
-          "Melta rifle",
-          "Close combat weapon",
-          "Twin power fists"
+          "Close combat weapon"
         ]
       },
       {
@@ -6089,7 +6074,8 @@
     "_parser_flags": [
       "UNMATCHED: For every 5 models in this unit, 1 model can replace its Deathwatch heavy bolt rifle with 1 Deathwatch heavy bolter.",
       "UNMATCHED: 1 model can replace its melta rifle with 1 multi-melta."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002783": {
     "size_brackets": [
@@ -6148,7 +6134,8 @@
       "UNMATCHED: For every 5 models in this unit, 1 model can have its boltgun and power weapon replaced with 1 frag cannon and 1 close c",
       "UNMATCHED: For every 5 models in this unit, 1 model can have its boltgun and power weapon replaced with 1 infernus heavy bolter and",
       "UNMATCHED: 1 model's boltgun and power weapon can be replaced with 1 Black Shield blades."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000002786": {
     "size_brackets": [
@@ -6987,8 +6974,8 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Storm bolter",
-          "Power fist"
+          "Power fist",
+          "Storm bolter"
         ]
       },
       {
@@ -6997,8 +6984,8 @@
           "fills_to_size": true
         },
         "default_weapons": [
-          "Storm bolter",
-          "Power fist"
+          "Power fist",
+          "Storm bolter"
         ]
       }
     ],
@@ -7035,7 +7022,8 @@
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: storm shield (count_choice) on Deathwatch Terminator Squad"
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000003874": {
     "size_brackets": [
@@ -7048,10 +7036,8 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Assault bolters",
           "Heavy bolt pistol",
-          "Astartes chainsword",
-          "Close combat weapon"
+          "Astartes chainsword"
         ]
       },
       {
@@ -7095,7 +7081,8 @@
       "UNMATCHED: The Kill Team Sergeant with Jump Pack can replace its heavy bolt pistol with one of the following: 1 hand flamer 1 plasm",
       "UNMATCHED: The Kill Team Sergeant with Jump Pack can replace its Astartes chainsword with one of the following: 1 power fist 1 powe",
       "UNMATCHED: For every 5 models in this unit, 1 model can replace its heavy bolt pistol with 1 plasma pistol."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000004109": {
     "size_brackets": [
@@ -7228,7 +7215,8 @@
     "_parser_flags": [
       "UNMATCHED: 1 Plaguebearer that is not equipped with a daemonic icon can be equipped with 1 instrument of Chaos.",
       "UNMATCHED: 1 Plaguebearer that is not equipped with an instrument of Chaos can be equipped with 1 daemonic icon."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000004114": {
     "size_brackets": [
@@ -7263,7 +7251,8 @@
     "_parser_flags": [
       "UNMATCHED: 1 Plague Drone that is not equipped with a daemonic icon can be equipped with 1 instrument of Chaos.",
       "UNMATCHED: 1 Plague Drone that is not equipped with an instrument of Chaos can be equipped with 1 daemonic icon."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000004115": {
     "size_brackets": [
@@ -7786,18 +7775,9 @@
           "fixed": 1
         },
         "default_weapons": [
-          "Bolt pistol",
-          "Deathwatch marksman bolt carbine",
-          "Infernus heavy bolter – heavy bolter",
-          "Infernus heavy bolter – heavy flamer",
           "Plasma pistol - standard",
           "Plasma pistol - supercharge",
-          "Special-issue bolt pistol",
-          "Stalker bolt rifle",
-          "Close combat weapon",
-          "Heavy thunder hammer",
-          "Power weapon",
-          "Xenophase blade"
+          "Power weapon"
         ]
       },
       {
@@ -7809,18 +7789,10 @@
           }
         },
         "default_weapons": [
-          "Bolt pistol",
-          "Deathwatch marksman bolt carbine",
           "Infernus heavy bolter – heavy bolter",
           "Infernus heavy bolter – heavy flamer",
-          "Plasma pistol - standard",
-          "Plasma pistol - supercharge",
-          "Special-issue bolt pistol",
-          "Stalker bolt rifle",
-          "Close combat weapon",
-          "Heavy thunder hammer",
-          "Power weapon",
-          "Xenophase blade"
+          "Bolt pistol",
+          "Close combat weapon"
         ]
       },
       {
@@ -7853,7 +7825,8 @@
       "UNMATCHED: For every 5 models in the unit, up to 1 model's heavy thunder hammer can be replaced with 1 power weapon and 1 Astartes ",
       "UNMATCHED: For every 5 models in the unit, up to 1 model's stalker bolt rifle can be replaced with 1 plasma incinerator.",
       "UNMATCHED: For every 5 models in the unit, up to 1 model's Deathwatch marksman bolt carbine can be replaced with 1 combat knife."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000004179": {
     "size_brackets": [
@@ -7907,9 +7880,7 @@
         "default_weapons": [
           "Plasma pistol – standard",
           "Plasma pistol – supercharge",
-          "Combat blade",
-          "Power weapon",
-          "Teeth and claws"
+          "Power weapon"
         ]
       },
       {
@@ -7923,9 +7894,7 @@
         "default_weapons": [
           "Plasma pistol – standard",
           "Plasma pistol – supercharge",
-          "Combat blade",
-          "Power weapon",
-          "Teeth and claws"
+          "Combat blade"
         ]
       },
       {
@@ -7937,10 +7906,6 @@
           }
         },
         "default_weapons": [
-          "Plasma pistol – standard",
-          "Plasma pistol – supercharge",
-          "Combat blade",
-          "Power weapon",
           "Teeth and claws"
         ]
       }
@@ -7951,7 +7916,8 @@
       "UNMATCHED: 1 Wolf Scout equipped with a plasma pistol can be equipped with 1 haywire mine (That model's plasma pistol cannot be rep",
       "UNMATCHED: 1 Wolf Scout's plasma pistol and combat blade can be replaced with 1 bolt pistol, 1 Thunderclap and 1 runic stave.",
       "UNMATCHED: If this unit contains 12 models, 1 Wolf Scout's plasma pistol can be replaced with 1 instigator bolt carbine."
-    ]
+    ],
+    "_defaults_source": "equipped"
   },
   "000004183": {
     "size_brackets": [

@@ -16,7 +16,7 @@ by the stat block, i.e. a lone 'M' line) so that roster names appearing inside
 region is bounded to the block between UNIT COMPOSITION and the points line, so
 a neighbouring datasheet's wargear-option text cannot leak in.
 """
-import json, re, unicodedata, argparse
+import json, re, unicodedata, argparse, csv
 
 
 def norm(s):
@@ -107,6 +107,40 @@ def parse_equipped_line(line):
     rest = m.group(2).strip().rstrip('.')
     tokens = [t.strip() for t in re.split(r'[;,]', rest) if t.strip()]
     return subject, tokens
+
+
+# ── Datasheets.csv loadout-column adapter (gap-fill source) ────────────────────
+# The pasted *_web.txt composition dumps are incomplete (whole datasheets missing),
+# so segment() leaves those units with the flat all-groups baseline. The
+# Datasheets.csv `loadout` column carries the same "... is equipped with:" prose
+# for every unit, in HTML. This adapter turns that prose into the same per-clause
+# equipped lines segment() would have produced, so the existing partition machinery
+# can consume it unchanged. Used only to fill gaps (web.txt takes precedence).
+_TAG = re.compile(r'<[^>]+>')
+_CLAUSE = re.compile(r'<b>\s*(.*?is\s+equipped\s+with:?)\s*</b>\s*(.*?)(?=<b>|$)', re.I | re.S)
+
+
+def _detag(t):
+    return re.sub(r'\s+', ' ', _TAG.sub(' ', t or '')).strip()
+
+
+def loadout_lines_from_datasheets(path):
+    """uid -> [equipped-line string]. Each <b>Subject is equipped with:</b> weapons
+    clause becomes one 'Subject is equipped with: weapons' line for parse_equipped_line."""
+    out = {}
+    for r in csv.reader(open(path), delimiter='|'):
+        if len(r) < 7:
+            continue
+        uid, prose = r[0], r[6]
+        lines = []
+        for m in _CLAUSE.finditer(prose or ''):
+            subj = _detag(m.group(1))
+            weps = _detag(m.group(2)).rstrip('.')
+            if subj and weps:
+                lines.append(f'{subj} {weps}')
+        if lines:
+            out[uid] = lines
+    return out
 
 
 def load_roster(units_path):
@@ -201,12 +235,34 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--report', required=True)
     ap.add_argument('--no-prune', action='store_true')
+    ap.add_argument('--datasheets', default=None,
+                    help='Datasheets.csv; gap-fills the loadout partition for multi-group '
+                         'units the web.txt composition dump misses (web.txt takes precedence).')
     args = ap.parse_args()
 
     name2id, ex_by_id, ba_by_id, roster_ids, g_ex, g_ba = load_roster(args.units)
     ld = json.load(open(args.loadouts))
     text = open(args.composition, encoding='utf-8').read()
     owner_lines, dropped_lines = segment(text, name2id)
+
+    # Gap-fill from Datasheets.csv loadout prose. Only multi-group units the web.txt
+    # dump didn't cover: single-group units are already correct (flat == the one group),
+    # and web.txt-covered units are left untouched so nothing regresses.
+    ds_filled = []
+    if args.datasheets:
+        ds_lines = loadout_lines_from_datasheets(args.datasheets)
+        for uid, elines in ds_lines.items():
+            if uid in owner_lines:
+                continue
+            entry = ld.get(uid)
+            if not isinstance(entry, dict):
+                continue
+            if entry.get('_defaults_source') == 'equipped':
+                continue  # already partitioned by a web.txt pass — don't re-touch
+            if len(entry.get('model_groups', [])) < 2:
+                continue
+            owner_lines[uid] = elines
+            ds_filled.append(uid)
 
     updated, group_sets = 0, 0
     wargear_routed, unmatched_groups, multi_count = [], [], []
@@ -372,7 +428,13 @@ def main():
         f.write(f'Units updated with per-group defaults: {updated}\n')
         f.write(f'Model-group default sets written: {group_sets}\n')
         f.write(f'Orphan loadout entries pruned: {len(pruned)}\n')
+        f.write(f'Multi-group units gap-filled from Datasheets.csv: {len(ds_filled)}\n')
         f.write(f'Equipped-with lines on dropped (non-roster) datasheets: {dropped_lines}\n\n')
+        if ds_filled:
+            f.write('## Gap-filled from Datasheets.csv loadout prose\n')
+            for uid in sorted(ds_filled):
+                f.write(f'- {uid}\n')
+            f.write('\n')
         if wargear_routed:
             f.write('## Tokens routed to default_wargear (verify: real wargear vs missing weapon)\n')
             for uid, tok in sorted(set(wargear_routed)):
@@ -390,6 +452,7 @@ def main():
             f.write('\n')
 
     print(f'updated={updated} group_sets={group_sets} pruned={len(pruned)} '
+          f'ds_filled={len(ds_filled)} '
           f'wargear_routed={len(set(wargear_routed))} unmatched_groups={len(unmatched_groups)} '
           f'dropped_lines={dropped_lines}')
 
