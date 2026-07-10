@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.42';
+  const VERSION = '5.43';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1756,7 +1756,22 @@
   function editOtherOption(listId, optName) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
-    entry.otherOptions[optName] = !entry.otherOptions[optName];
+    const on = !entry.otherOptions[optName];
+    entry.otherOptions[optName] = on;
+    // B14: options that share an exclusion_group are mutually exclusive
+    // ("...can be equipped with one of the following"). Turning one on clears
+    // the others in its group; turning it off just leaves the group empty
+    // (the whole add is optional).
+    if (on) {
+      const raw = allUnits.find(u => u.unit_name === entry.unit_name);
+      const opt = raw && (raw.other_options || []).find(o => o.option_name === optName);
+      if (opt && opt.exclusion_group) {
+        for (const o of raw.other_options) {
+          if (o.option_name !== optName && o.exclusion_group === opt.exclusion_group)
+            entry.otherOptions[o.option_name] = false;
+        }
+      }
+    }
     renderDetail();
   }
 
@@ -2077,6 +2092,20 @@
     for (const g of activeBundleGrants(entry, raw)) {
       Object.assign(ov, statOverrideFromText(g.carrier_notes));
       if (g.stat_override) Object.assign(ov, g.stat_override);
+    }
+    return ov;
+  }
+
+  // B14: a checked optional wargear item (Other Options) confers its stat
+  // through the same reader, from the carrier_notes the transform attached.
+  // Only unconditional set-value text is present there (the transform blanks
+  // conditional/summon cases), so e.g. a checked Helix Gauntlet -> Feel No Pain
+  // 6+, while Watcher in the Dark carries no text and confers nothing here.
+  function activeOtherOptionOverrides(entry, raw) {
+    const ov = {};
+    for (const opt of (raw.other_options || [])) {
+      if (entry.otherOptions[opt.option_name] && opt.carrier_notes)
+        Object.assign(ov, statOverrideFromText(opt.carrier_notes));
     }
     return ov;
   }
@@ -2896,7 +2925,8 @@
       const overrides = Object.assign(
         {},
         activeWeaponStatOverrides(raw, mg, activeBases, replacedBases),
-        activeStatOverrides(entry, raw)
+        activeStatOverrides(entry, raw),
+        activeOtherOptionOverrides(entry, raw)
       );
 
       html += buildStatTable(mg, overrides);

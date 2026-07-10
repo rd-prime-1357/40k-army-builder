@@ -4899,10 +4899,7 @@
        "Adeptus Astartes"
       ],
       "model_keyword_names": [],
-      "wargear_ability_names": [
-       "Helix Gauntlet",
-       "Infiltrator Comms Array"
-      ]
+      "wargear_ability_names": []
      }
     ],
     "weapons": [
@@ -4956,29 +4953,29 @@
       "is_base_equipment": true
      }
     ],
-    "wargear_options": [
+    "wargear_options": [],
+    "other_options": [
      {
       "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "helix gauntlet.*",
+      "option_name": "Helix Gauntlet",
       "points_cost": null,
-      "is_choice": false,
-      "option_group": null
+      "max_per_unit": 1,
+      "carrier_notes": "Models in the bearer’s unit have the Feel No Pain 6+ ability.",
+      "ability_name": "Helix Gauntlet",
+      "is_mutually_exclusive": false,
+      "exclusion_group": null
      },
      {
       "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "Infiltrator comms array.*",
+      "option_name": "Infiltrator Comms Array",
       "points_cost": null,
-      "is_choice": false,
-      "option_group": null
+      "max_per_unit": 1,
+      "carrier_notes": "Each time you target the bearer’s unit with a Stratagem, roll one D6: on a 5+, you gain 1CP.",
+      "ability_name": "Infiltrator Comms Array",
+      "is_mutually_exclusive": false,
+      "exclusion_group": null
      }
     ],
-    "other_options": [],
     "bundled_swaps": null,
     "points": {
      "sizes": [
@@ -6658,9 +6655,7 @@
        "Adeptus Astartes"
       ],
       "model_keyword_names": [],
-      "wargear_ability_names": [
-       "Haywire Mine"
-      ]
+      "wargear_ability_names": []
      }
     ],
     "weapons": [
@@ -6717,19 +6712,19 @@
       "is_base_equipment": true
      }
     ],
-    "wargear_options": [
+    "wargear_options": [],
+    "other_options": [
      {
       "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "haywire mine",
+      "option_name": "Haywire Mine",
       "points_cost": null,
-      "is_choice": false,
-      "option_group": null
+      "max_per_unit": 1,
+      "carrier_notes": "Once per battle, at the start of any phase, you can select one enemy unit within 3\" of the bearer and roll one D6: on a 2+, that enemy unit suffers D3 mortal wounds, or 2D3 mortal wounds instead if it is a Vehicle unit.",
+      "ability_name": "Haywire Mine",
+      "is_mutually_exclusive": false,
+      "exclusion_group": null
      }
     ],
-    "other_options": [],
     "bundled_swaps": null,
     "points": {
      "sizes": [
@@ -13718,10 +13713,7 @@
        "Adeptus Astartes"
       ],
       "model_keyword_names": [],
-      "wargear_ability_names": [
-       "Grapnel Launcher",
-       "Reiver Grav-chute"
-      ]
+      "wargear_ability_names": []
      }
     ],
     "weapons": [
@@ -13803,29 +13795,30 @@
       "points_cost": null,
       "is_choice": false,
       "option_group": null
-     },
-     {
-      "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": "Any",
-      "weapon_replaced": null,
-      "replacement_weapon_name": "Reiver grav-chute",
-      "points_cost": null,
-      "is_choice": false,
-      "option_group": null
-     },
-     {
-      "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": "Any",
-      "weapon_replaced": null,
-      "replacement_weapon_name": "grapnel launcher",
-      "points_cost": null,
-      "is_choice": false,
-      "option_group": null
      }
     ],
-    "other_options": [],
+    "other_options": [
+     {
+      "model_group": "All",
+      "option_name": "Reiver Grav-chute",
+      "points_cost": null,
+      "max_per_unit": 1,
+      "carrier_notes": "The bearer has the Deep Strike ability.",
+      "ability_name": "Reiver Grav-chute",
+      "is_mutually_exclusive": false,
+      "exclusion_group": null
+     },
+     {
+      "model_group": "All",
+      "option_name": "Grapnel Launcher",
+      "points_cost": null,
+      "max_per_unit": 1,
+      "carrier_notes": "Each time the bearer’s unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance the bearer can be moved during that move.",
+      "ability_name": "Grapnel Launcher",
+      "is_mutually_exclusive": false,
+      "exclusion_group": null
+     }
+    ],
     "bundled_swaps": null,
     "points": {
      "sizes": [
@@ -17648,9 +17641,7 @@
        "Blood Angels"
       ],
       "model_keyword_names": [],
-      "wargear_ability_names": [
-       "Sanguinary Banner"
-      ]
+      "wargear_ability_names": []
      }
     ],
     "weapons": [
@@ -17742,19 +17733,20 @@
       "points_cost": null,
       "is_choice": false,
       "option_group": null
-     },
-     {
-      "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "Sanguinary banner",
-      "points_cost": null,
-      "is_choice": false,
-      "option_group": null
      }
     ],
-    "other_options": [],
+    "other_options": [
+     {
+      "model_group": "All",
+      "option_name": "Sanguinary Banner",
+      "points_cost": null,
+      "max_per_unit": 1,
+      "carrier_notes": "Add 1 to the Objective Control characteristic of models in the bearer’s unit.",
+      "ability_name": "Sanguinary Banner",
+      "is_mutually_exclusive": false,
+      "exclusion_group": null
+     }
+    ],
     "bundled_swaps": null,
     "points": null,
     "abilities": []
@@ -20229,9 +20221,7 @@
        "Dark Angels"
       ],
       "model_keyword_names": [],
-      "wargear_ability_names": [
-       "Watcher in the Dark"
-      ]
+      "wargear_ability_names": []
      }
     ],
     "weapons": [
@@ -20442,19 +20432,20 @@
       "points_cost": null,
       "is_choice": true,
       "option_group": "B"
-     },
-     {
-      "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "Watcher in the Dark",
-      "points_cost": null,
-      "is_choice": false,
-      "option_group": null
      }
     ],
-    "other_options": [],
+    "other_options": [
+     {
+      "model_group": "All",
+      "option_name": "Watcher in the Dark",
+      "points_cost": null,
+      "max_per_unit": 1,
+      "carrier_notes": null,
+      "ability_name": "Watcher in the Dark",
+      "is_mutually_exclusive": false,
+      "exclusion_group": null
+     }
+    ],
     "bundled_swaps": null,
     "points": null,
     "abilities": []
@@ -20505,9 +20496,7 @@
        "Dark Angels"
       ],
       "model_keyword_names": [],
-      "wargear_ability_names": [
-       "Watcher in the Dark"
-      ]
+      "wargear_ability_names": []
      }
     ],
     "weapons": [
@@ -20600,19 +20589,20 @@
       "points_cost": null,
       "is_choice": false,
       "option_group": null
-     },
-     {
-      "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "Watcher in the Dark",
-      "points_cost": null,
-      "is_choice": false,
-      "option_group": null
      }
     ],
-    "other_options": [],
+    "other_options": [
+     {
+      "model_group": "All",
+      "option_name": "Watcher in the Dark",
+      "points_cost": null,
+      "max_per_unit": 1,
+      "carrier_notes": null,
+      "ability_name": "Watcher in the Dark",
+      "is_mutually_exclusive": false,
+      "exclusion_group": null
+     }
+    ],
     "bundled_swaps": null,
     "points": null,
     "abilities": []
@@ -25178,10 +25168,7 @@
        "Deathwatch"
       ],
       "model_keyword_names": [],
-      "wargear_ability_names": [
-       "Auspex Array",
-       "Infernum Halo-launcher"
-      ]
+      "wargear_ability_names": []
      }
     ],
     "weapons": [
@@ -25306,29 +25293,30 @@
       "points_cost": null,
       "is_choice": false,
       "option_group": null
-     },
-     {
-      "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "auspex array",
-      "points_cost": null,
-      "is_choice": true,
-      "option_group": "D"
-     },
-     {
-      "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "infernum halo-launcher",
-      "points_cost": null,
-      "is_choice": true,
-      "option_group": "D"
      }
     ],
-    "other_options": [],
+    "other_options": [
+     {
+      "model_group": "All",
+      "option_name": "Auspex Array",
+      "points_cost": null,
+      "max_per_unit": 1,
+      "carrier_notes": "Ranged weapons equipped by the bearer have the [IGNORES COVER] ability.",
+      "ability_name": "Auspex Array",
+      "is_mutually_exclusive": true,
+      "exclusion_group": "D"
+     },
+     {
+      "model_group": "All",
+      "option_name": "Infernum Halo-launcher",
+      "points_cost": null,
+      "max_per_unit": 1,
+      "carrier_notes": "The bearer has the SMOKE keyword.",
+      "ability_name": "Infernum Halo-launcher",
+      "is_mutually_exclusive": true,
+      "exclusion_group": "D"
+     }
+    ],
     "bundled_swaps": null,
     "points": null,
     "abilities": []
@@ -25383,8 +25371,6 @@
       ],
       "model_keyword_names": [],
       "wargear_ability_names": [
-       "Helix Gauntlet",
-       "Infiltrator Comms Array",
        "Instigator Bolt Carbine"
       ]
      }
@@ -25582,29 +25568,29 @@
       "is_base_equipment": true
      }
     ],
-    "wargear_options": [
+    "wargear_options": [],
+    "other_options": [
      {
       "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "helix gauntlet",
+      "option_name": "Helix Gauntlet",
       "points_cost": null,
-      "is_choice": true,
-      "option_group": "A"
+      "max_per_unit": 1,
+      "carrier_notes": "Models in the bearer’s unit have the Feel No Pain 6+ ability.",
+      "ability_name": "Helix Gauntlet",
+      "is_mutually_exclusive": true,
+      "exclusion_group": "A"
      },
      {
       "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": null,
-      "replacement_weapon_name": "Infiltrator comms array",
+      "option_name": "Infiltrator Comms Array",
       "points_cost": null,
-      "is_choice": true,
-      "option_group": "A"
+      "max_per_unit": 1,
+      "carrier_notes": "Each time you target the bearer’s unit with a Stratagem, roll one D6: on a 5+, you gain 1CP.",
+      "ability_name": "Infiltrator Comms Array",
+      "is_mutually_exclusive": true,
+      "exclusion_group": "A"
      }
     ],
-    "other_options": [],
     "bundled_swaps": null,
     "points": null,
     "abilities": []

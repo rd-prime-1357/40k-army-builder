@@ -556,6 +556,41 @@ _EQUIP_ONE = re.compile(r"equipped with\s+1\s+(?P<item>.+?)\.?$", re.I)
 _EQUIP_CHOICE = re.compile(r"equipped with one of the following", re.I)
 _HAS_AND = re.compile(r"\band\b|,", re.I)
 
+# B14: optional per-model wargear-item adds ("1 X can be equipped with 1 Y").
+# A footnote asterisk ("helix gauntlet.*") is a constraint marker, not part of
+# the name — strip it. _leadN pulls the "1"/"2" count that caps the add.
+_FOOTNOTE = re.compile(r"\.?\s*\*+\s*$")
+_LEAD_N = re.compile(r"^\s*(\d+)\s+")
+# Set-value characteristic phrases the runtime reader turns into a stat override
+# (mirror of statOverrideFromText in index.html). Used to decide whether an
+# item's ability text is a stat-conferrer at all.
+_SETVAL = re.compile(
+    r"\d\+\s*invulnerable save|invulnerable save of\s*\d\+|"
+    r"Wounds characteristic of\s*\d+|Save characteristic of\s*\d\+|"
+    r"Feel No Pain\s*\d\+", re.I)
+# Conditional / summon triggers. If a set-value phrase sits inside one of these,
+# it is NOT an unconditional confer (e.g. Watcher in the Dark's summoned FNP 4+),
+# so we must not hand it to the reader. The broad guarded pass is B15's job.
+_CONDITIONAL = re.compile(
+    r"once per battle|at the start of|at the end of|\bsummon\b|just after|"
+    r"each time|roll one d6|you can (?:select|summon)", re.I)
+
+def _footnote_strip(s):
+    return _FOOTNOTE.sub("", (s or "").strip()).strip()
+
+def _lead_count(s):
+    m = _LEAD_N.match(s or "")
+    return m.group(1) if m else "1"
+
+def _carrier_notes(desc):
+    """Ability text safe to feed the runtime stat reader. Blocks a set-value
+    phrase that is gated by a conditional/summon clause; passes everything else
+    (either an unconditional confer like Helix Gauntlet, or non-stat text that
+    the reader ignores and we keep only for display)."""
+    if _SETVAL.search(desc) and _CONDITIONAL.search(desc):
+        return ""
+    return desc
+
 def _strip_count(s):
     return re.sub(r"^\d+\s+", "", s).strip().rstrip(".")
 
@@ -575,9 +610,13 @@ def resolve_weapon(name, ds_weapon_names, ds_norm_index, flags, unit, where):
         return name, False
     return name, False
 
-def parse_options(data, selected, army_of, weapon_names_by_ds, flags):
+def parse_options(data, selected, army_of, weapon_names_by_ds, wargear_abils, flags):
+    # wargear_abils: name.lower() -> (proper Name, description) for type=Wargear
+    # abilities. An add whose item resolves to no weapon profile but matches one
+    # of these is an optional wargear ITEM (B14) -> Other Options, not a weapon.
     wargear_rows = []
     other_rows = []
+    routed_items = []   # (army, unit, ability_name) moved off the always-on surface
     ds_norm_index = {}
     for ds, names in weapon_names_by_ds.items():
         idx = defaultdict(list)
@@ -642,14 +681,46 @@ def parse_options(data, selected, army_of, weapon_names_by_ds, flags):
 
             # ---- ADDITION (equip-with), choice list ----
             if not is_replacement and _EQUIP_CHOICE.search(lead) and items:
+                # Classify every member first: a weapon-profile match stays a
+                # weapon add; a no-profile match against a wargear ability is an
+                # item. A group mixing the two (e.g. Impulsor's C: two weapon
+                # systems + shield dome + orbital comms) needs cross-channel
+                # mutual-exclusion we don't model yet -> leave whole group as-is
+                # (B14b) so we never emit half an exclusive set.
+                cls = []
                 for it in items:
-                    repl = _strip_count(it)
+                    repl = _footnote_strip(_strip_count(it))
                     if re.search(r"\band\b", repl, re.I):
-                        flags["compound_replacement"].append(f"{unit} [grp {grp}]: compound add '{it}'")
+                        cls.append(("compound", it, repl, "", ""))
                         continue
                     canon, matched = rw(repl, f"grp {grp} add")
+                    key = repl.lower()
+                    if not matched and key in wargear_abils:
+                        cls.append(("item", it, repl, canon, key))
+                    else:
+                        cls.append(("weapon", it, repl, canon, key))
+                kinds = {c[0] for c in cls}
+                if "item" in kinds and "weapon" in kinds:
+                    flags["b14b_mixed_group"].append(
+                        f"{unit} [grp {grp}]: weapon+item exclusive group -> left in Wargear Options (B14b)")
+                if ("item" in kinds) and ("weapon" not in kinds):
+                    for kind, it, repl, canon, key in cls:
+                        if kind == "compound":
+                            flags["compound_replacement"].append(f"{unit} [grp {grp}]: compound add '{it}'")
+                            continue
+                        nm, desc = wargear_abils[key]
+                        other_rows.append([army, unit, "All", nm, "", "1",
+                                           _carrier_notes(desc), nm, "Yes", grp])
+                        routed_items.append((army, unit, nm))
+                    group_letter += 1
+                    continue
+                # all-weapon (or mixed): original behaviour
+                for kind, it, repl, canon, key in cls:
+                    if kind == "compound":
+                        flags["compound_replacement"].append(f"{unit} [grp {grp}]: compound add '{it}'")
+                        continue
                     wargear_rows.append([army, unit, "All", mpt, mst, "", canon, "", "Yes", grp])
-                    if not matched:
+                    if kind == "item":
                         flags["nonweapon_or_unmatched"].append(f"{unit}: add '{repl}' (no weapon profile; wargear item)")
                 group_letter += 1
                 continue
@@ -658,11 +729,21 @@ def parse_options(data, selected, army_of, weapon_names_by_ds, flags):
             if not is_replacement and "equipped with" in low and not items:
                 eq = _EQUIP_ONE.search(lead)
                 item = _strip_count(strip_html(eq.group("item"))) if eq else lead
+                item = _footnote_strip(item)
                 if re.search(r"\band\b", item, re.I) or len(item) > 60:
                     flags["unparsed_options"].append(f"{unit} [grp {grp}]: '{lead[:160]}'")
                     group_letter += 1
                     continue
                 canon, matched = rw(item, "equip-add")
+                key = item.lower()
+                if not matched and key in wargear_abils:
+                    # Optional per-model wargear item (B14) -> Other Options.
+                    nm, desc = wargear_abils[key]
+                    other_rows.append([army, unit, "All", nm, "", _lead_count(strip_html(eq.group("item")) if eq else "1"),
+                                       _carrier_notes(desc), nm, "No", ""])
+                    routed_items.append((army, unit, nm))
+                    group_letter += 1
+                    continue
                 wargear_rows.append([army, unit, "All", mpt, mst, "", canon, "", "No", ""])
                 if not matched:
                     flags["nonweapon_or_unmatched"].append(f"{unit}: equip '{item}' (no weapon profile; wargear item)")
@@ -704,7 +785,7 @@ def parse_options(data, selected, army_of, weapon_names_by_ds, flags):
             # ---- fallback ----
             flags["unparsed_options"].append(f"{unit} [grp {grp}]: '{lead[:160]}' | items={items}")
             group_letter += 1
-    return wargear_rows, other_rows
+    return wargear_rows, other_rows, routed_items
 
 # ----------------------------------------------------------------------------
 # Lookups assembly
@@ -781,7 +862,27 @@ def main():
                     f"{row[1]} [{row[0]}]: inherited {merged}")
             row[AB] = ",".join(merged)
 
-    wargear_rows, other_rows = parse_options(data, selected, army_of, weapon_names_by_ds, flags)
+    # B14: wargear-ability lookup (name.lower -> (Name, desc)) for the item vs
+    # weapon discrimination in parse_options.
+    wargear_abils = {nm.lower(): (nm, desc) for nm, desc in abil["weapon_abil_defs"].items() if nm}
+    wargear_rows, other_rows, routed_items = parse_options(
+        data, selected, army_of, weapon_names_by_ds, wargear_abils, flags)
+
+    # B14: an item routed to Other Options is optional, so its ability must not
+    # sit on the always-on Wargear Ability Names surface (col 23). Remove it for
+    # the units that gained the option; it now confers only when selected.
+    routed_by_unit = defaultdict(set)
+    for army, unit, nm in routed_items:
+        routed_by_unit[(army, unit)].add(nm)
+    if routed_by_unit:
+        for row in stats_rows:
+            drop = routed_by_unit.get((row[0], row[1]))
+            if not drop:
+                continue
+            kept = [a for a in row[23].split(",") if a and a not in drop]
+            if len(kept) != len([a for a in row[23].split(",") if a]):
+                row[23] = ",".join(kept)
+                flags["b14_surface_subtracted"].append(f"{row[1]} [{row[0]}]: removed {sorted(drop)} from always-on wargear abilities")
 
     # seeds from completed faction
     seed_kw = read_existing_lookup(os.path.join(args.seed_dir, "Keywords.csv"), "Keyword Name", "Keyword Description")
