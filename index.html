@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.43';
+  const VERSION = '5.44';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2018,14 +2018,17 @@
       html += buildLoadoutHtml(entry, loDef, raw);
       // A loadout-defined unit can still own a bundle for compound swaps the
       // loadout parser can't express (e.g. Captain's pistol+melee combos and the
-      // relic-shield grant). Render the bundle picker + grants alongside; the
-      // loadout options the bundle covers are suppressed inside buildLoadoutHtml.
+      // relic-shield grant). Render the bundle picker alongside; the loadout
+      // options the bundle covers are suppressed inside buildLoadoutHtml.
       if (raw && raw.bundled_swaps && raw.bundled_swaps.length > 0) {
         html += buildWargearHtml(entry, raw);
-        if ((raw.other_options && raw.other_options.length > 0) ||
-            activeBundleGrants(entry, raw).length > 0) {
-          html += buildOtherOptionsHtml(entry, raw);
-        }
+      }
+      // Other Options (B14 item-adds like Helix Gauntlet, Auspex Array, Watcher)
+      // are independent of bundles — render whenever present, or when a chosen
+      // bundle endpoint grants read-only lines.
+      if (raw && ((raw.other_options && raw.other_options.length > 0) ||
+                  activeBundleGrants(entry, raw).length > 0)) {
+        html += buildOtherOptionsHtml(entry, raw);
       }
     } else {
       if (raw && ((raw.wargear_options && raw.wargear_options.length > 0) ||
