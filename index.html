@@ -1389,7 +1389,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.49';
+  const VERSION = '5.50';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2204,6 +2204,77 @@
     return s;
   }
 
+  // B15: read an ability's text into a stat override, keeping only the parts
+  // that are unconditional. Splits into sentences and drops any sentence carrying
+  // a conditional/summon marker, so e.g. the Lion Helm's unit-wide invuln (a plain
+  // sentence) is kept while its once-per-battle summoned Feel No Pain is rejected.
+  const _condMarker =
+    /(once per (?:battle|turn|game)|in addition|instead of|each time|against |summon|when it does|until the end of)/i;
+  function unconditionalStatOverride(text) {
+    const out = {};
+    if (!text) return out;
+    for (const sentence of String(text).split(/\.\s+/)) {
+      if (_condMarker.test(sentence)) continue;
+      Object.assign(out, statOverrideFromText(sentence));
+    }
+    return out;
+  }
+
+  // Largest model count declared on a unit's variant record (0 if none present).
+  function unitMaxModels(raw) {
+    const u = allUnits.find(x => x.unit_name === raw.unit_name);
+    const sizes = (u && u.sizes) || [];
+    return sizes.reduce((m, s) => Math.max(m, s.size || 0), 0);
+  }
+  // A model group is a confident single-model group (its "bearer" is the only
+  // model) when the unit is a Vehicle/Monster, or it has one group whose max size
+  // is 1, or it is a lone Character/Epic Hero record that carries no size bracket.
+  function isSingleModelGroup(raw) {
+    const t = raw.unit_type || '';
+    if (t === 'Vehicle' || t === 'Monster') return true;
+    if (raw.model_groups.length !== 1) return false;
+    const mx = unitMaxModels(raw);
+    if (mx === 1) return true;
+    if (mx === 0 && (t === 'Character' || t === 'Epic Hero')) return true;
+    return false;
+  }
+
+  // B15: always-on conferred wargear characteristics for one model group, read
+  // from wargear_ability_names (the default, non-optional gear surface). Guards:
+  //  - skip abilities that are ALSO an optional bundle/other-option grant on this
+  //    unit — the active-grant path owns those (they aren't unconditionally on);
+  //  - "models in the unit have…" -> uniform (write the value); "the bearer has…"
+  //    on a single-model group -> the bearer is the only model (write); "the
+  //    bearer has…" on a multi-model group -> only one model gets it, so this is
+  //    NOT a whole-group value — left for the E17 asterisk (write nothing);
+  //  - only INV and FNP are written. W and SV are held: the shared glossary text
+  //    hardcodes a datasheet-specific Wounds/Save value (e.g. "Storm Shield -> a
+  //    Wounds characteristic of 4") that is wrong on other carriers (it would drop
+  //    a Wolf Guard Battle Leader from W5 to W4). Those need a per-carrier rules
+  //    call before they can be applied broadly.
+  function broadWargearStatOverrides(raw, mg) {
+    const ov = {};
+    const names = mg.wargear_ability_names || [];
+    if (!names.length) return ov;
+    const gated = new Set();
+    for (const b of (raw.bundled_swaps || []))
+      for (const ep of (b.endpoints || []))
+        for (const g of (ep.grants || [])) if (g.ability_name) gated.add(g.ability_name);
+    for (const o of (raw.other_options || [])) if (o.ability_name) gated.add(o.ability_name);
+    const single = isSingleModelGroup(raw);
+    for (const n of names) {
+      if (gated.has(n)) continue;
+      const text = glossaryDesc(n);
+      const uniform = /models in (?:the )?(?:bearer.?s )?unit have/i.test(text);
+      const bearer  = /the bearer has/i.test(text);
+      if (!uniform && bearer && !single) continue;   // per-model on multi-model -> E17
+      const parsed = unconditionalStatOverride(text);
+      if (parsed.INV != null) ov.INV = parsed.INV;
+      if (parsed.FNP != null) ov.FNP = parsed.FNP;
+    }
+    return ov;
+  }
+
   // Weapon add/remove from the chosen bundle endpoints. Loadout-defined units
   // (e.g. Captain) roll up weapons from loadout selections and don't otherwise
   // know about bundles, so this delta is applied to the weapon display so a
@@ -2794,7 +2865,7 @@
         html += `<div class="stat-block">`;
       }
 
-      html += buildStatTable(mg);
+      html += buildStatTable(mg, broadWargearStatOverrides(raw, mg));
       html += `</div>`;
 
       // Weapons for this model group
@@ -2994,6 +3065,7 @@
       // bundle grants (e.g. relic shield -> W, storm shield -> INV).
       const overrides = Object.assign(
         {},
+        broadWargearStatOverrides(raw, mg),
         activeWeaponStatOverrides(raw, mg, activeBases, replacedBases),
         activeStatOverrides(entry, raw),
         activeOtherOptionOverrides(entry, raw)
