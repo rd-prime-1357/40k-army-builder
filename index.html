@@ -915,6 +915,8 @@
     .mylist-pts { font-size:0.8rem; font-weight:600; color:#999; white-space:nowrap; }
     .mylist-del { background:transparent; border:none; color:#666; font-size:1.25rem; cursor:pointer; padding:0 0.3rem; line-height:1; }
     .mylist-del:hover { color:#cc2200; }
+    .mylist-exp { background:transparent; border:none; color:#666; font-size:1.05rem; cursor:pointer; padding:0 0.3rem; line-height:1; }
+    .mylist-exp:hover { color:#cc9900; }
     .home-empty { max-width:900px; color:#777; font-size:0.95rem; padding:2.5rem; text-align:center; border:1px dashed #333; border-radius:6px; }
     .create-field { margin-bottom:1.1rem; }
     .create-field label { display:block; font-size:0.72rem; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem; }
@@ -925,8 +927,11 @@
     .create-row > * { flex:1; }
     .create-footer { display:flex; justify-content:flex-end; gap:0.6rem; margin-top:1.6rem; }
     .create-err { color:#cc2200; font-size:0.8rem; min-height:1rem; margin-top:0.3rem; }
+    .create-msg { color:#4a9; font-size:0.8rem; min-height:1rem; margin-top:0.3rem; }
     .banner-back { background:transparent; border:none; color:#cc9900; font-family:inherit; font-size:0.82rem; font-weight:600; cursor:pointer; letter-spacing:0.03em; padding:0; }
     .banner-back:hover { text-decoration:underline; }
+    .banner-act { background:transparent; border:none; color:#cc9900; font-family:inherit; font-size:0.82rem; font-weight:600; cursor:pointer; letter-spacing:0.03em; padding:0; margin-left:0.6rem; }
+    .banner-act:hover { text-decoration:underline; }
     .banner-listname { font-size:0.9rem; font-weight:700; color:#e8e8e8; letter-spacing:0.03em; max-width:280px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .banner-changed { color:#cc9900; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-left:0.6rem; }
     .list-item.ghost { opacity:0.8; }
@@ -962,6 +967,9 @@
     <span class="banner-sep">|</span>
     <span class="banner-listname" id="banner-listname"></span>
     <span class="banner-changed hidden" id="banner-changed">list changed since saved</span>
+    <span class="banner-sep">|</span>
+    <button class="banner-act" onclick="exportCurrentList()" title="Download this list as a .json file">Export</button>
+    <button class="banner-act" onclick="copyCurrentList()" title="Copy this list to the clipboard">Copy</button>
   </div>
 
   <!-- Army points selector — right-aligned with center panel -->
@@ -986,6 +994,7 @@
   <div class="home-head">
     <div class="home-title">My Army Lists</div>
     <div class="home-actions">
+      <button class="home-btn secondary" onclick="openImportModal()">Import</button>
       <button class="home-btn" onclick="openCreateModal()">+ New List</button>
     </div>
   </div>
@@ -1340,11 +1349,37 @@
   </div>
 </div>
 
+<!-- Import-list Modal -->
+<div class="modal-overlay hidden" id="import-modal" onclick="closeImportOnOverlay(event)">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-header">
+      <div class="modal-title">Import Army List</div>
+      <button class="modal-close" onclick="closeImportModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="create-field">
+        <label>Choose a .json file</label>
+        <input class="create-input" id="import-file" type="file" accept="application/json,.json" onchange="onImportFile(event)">
+      </div>
+      <div class="create-field">
+        <label>&hellip; or paste list text</label>
+        <textarea class="create-input" id="import-text" rows="6" placeholder="Paste exported list JSON here" style="resize:vertical;font-family:monospace;font-size:0.78rem;"></textarea>
+      </div>
+      <div class="create-err" id="import-err"></div>
+      <div class="create-msg" id="import-msg"></div>
+      <div class="create-footer">
+        <button class="home-btn secondary" onclick="closeImportModal()">Cancel</button>
+        <button class="home-btn" onclick="doImport()">Import</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.46';
+  const VERSION = '5.47';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3316,6 +3351,7 @@
           +     n + ' unit' + (n === 1 ? '' : 's') + (when ? ' · ' + when : '') + '</div>'
           + '</div>'
           + '<span class="mylist-pts">' + tgt + '</span>'
+          + '<button class="mylist-exp" title="Export list" onclick="event.stopPropagation();exportListById(\'' + r.id + '\',\'' + escAttr(r.name) + '\')">&#8623;</button>'
           + '<button class="mylist-del" title="Delete list" onclick="event.stopPropagation();deleteList(\'' + r.id + '\',\'' + escAttr(r.name) + '\')">&times;</button>'
           + '</div>';
       }).join('') + '</div>';
@@ -3403,6 +3439,139 @@
   function deleteList(id, name) {
     if (!confirm('Delete \u201c' + name + '\u201d? This cannot be undone.')) return;
     store.delete(id).then(() => renderMyLists()).catch(e => console.warn('delete failed', e));
+  }
+
+  // ── Export / Import (JSON portability) ────────────────────────────────────
+  // Reuses the module's exportRecords/importRecords + migrate hook. The file
+  // shape is the module envelope with an added app_version diagnostic stamp.
+  // Import always mints a fresh id so it can never clobber a surviving list.
+  function serialiseForExport(records) {
+    var env = JSON.parse(ListStorage.exportRecords(records));
+    env.app_version = VERSION;
+    return JSON.stringify(env, null, 2);
+  }
+  function safeFileName(name) {
+    var s = String(name || 'army-list').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    return (s || 'army-list') + '.json';
+  }
+  function downloadText(filename, text) {
+    var blob = new Blob([text], { type: 'application/json' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+  }
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        function () { flashBanner('Copied to clipboard'); },
+        function () { fallbackCopy(text); }
+      );
+    } else { fallbackCopy(text); }
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); flashBanner('Copied to clipboard'); }
+    catch (e) { alert('Could not copy automatically — the JSON is in the Export file instead.'); }
+    document.body.removeChild(ta);
+  }
+  var _flashTimer = null;
+  function flashBanner(msg) {
+    var el = document.getElementById('banner-changed');
+    if (!el) return;
+    var prevHidden = el.classList.contains('hidden');
+    var prevText   = el.textContent;
+    el.textContent = msg; el.classList.remove('hidden');
+    if (_flashTimer) clearTimeout(_flashTimer);
+    _flashTimer = setTimeout(function () {
+      el.textContent = prevText;
+      if (prevHidden) el.classList.add('hidden');
+    }, 1600);
+  }
+
+  // Live export of the open list — captures unsaved edits via buildRecord.
+  function currentExportRecord() {
+    return ListStorage.buildRecord(currentMeta(), armyList, saveLookups);
+  }
+  function exportCurrentList() {
+    if (!currentListId) return;
+    var rec = currentExportRecord();
+    downloadText(safeFileName(rec.name), serialiseForExport([rec]));
+  }
+  function copyCurrentList() {
+    if (!currentListId) return;
+    copyText(serialiseForExport([currentExportRecord()]));
+  }
+  // Export a saved list from the home page (persisted record).
+  function exportListById(id, name) {
+    if (!store) return;
+    store.get(id).then(function (rec) {
+      if (!rec) { alert('List not found.'); return; }
+      downloadText(safeFileName(rec.name || name), serialiseForExport([rec]));
+    }).catch(function (e) { console.warn('export failed', e); alert('Could not export this list.'); });
+  }
+
+  // ── Import modal ──────────────────────────────────────────────────────────
+  function openImportModal() {
+    document.getElementById('import-file').value = '';
+    document.getElementById('import-text').value = '';
+    document.getElementById('import-err').textContent = '';
+    document.getElementById('import-msg').textContent = '';
+    document.getElementById('import-modal').classList.remove('hidden');
+  }
+  function closeImportModal() { document.getElementById('import-modal').classList.add('hidden'); }
+  function closeImportOnOverlay(e) { if (e.target.id === 'import-modal') closeImportModal(); }
+  function onImportFile(e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () { document.getElementById('import-text').value = r.result; };
+    r.onerror = function () { document.getElementById('import-err').textContent = 'Could not read that file.'; };
+    r.readAsText(f);
+  }
+  function doImport() {
+    var err = document.getElementById('import-err');
+    var msg = document.getElementById('import-msg');
+    err.textContent = ''; msg.textContent = '';
+    var text = document.getElementById('import-text').value.trim();
+    if (!text) { err.textContent = 'Choose a file or paste list text first.'; return; }
+
+    // Count what came in vs what survives migrate, so a newer-schema file is
+    // reported (surface, don't silently drop) rather than importing nothing.
+    var parsed;
+    try { parsed = JSON.parse(text); }
+    catch (e) { err.textContent = 'That is not valid JSON — check you pasted the whole file.'; return; }
+    var incoming = Array.isArray(parsed) ? parsed
+                 : (parsed && parsed.lists) ? parsed.lists
+                 : (parsed && parsed.id) ? [parsed] : [];
+    if (!incoming.length) { err.textContent = 'No army list found in that file.'; return; }
+
+    var records = ListStorage.importRecords(text);   // migrated, incompatible dropped
+    var dropped = incoming.length - records.length;
+    if (!records.length) {
+      err.textContent = dropped
+        ? 'This list was saved by a newer version of the app. Update the app, then import again.'
+        : 'No importable list found in that file.';
+      return;
+    }
+
+    // Re-id every record so import can never overwrite a surviving list.
+    var now = Date.now();
+    records.forEach(function (rec) { rec.id = ListStorage.newListId(); rec.modified = now; });
+
+    Promise.all(records.map(function (rec) { return store.put(rec); }))
+      .then(function () {
+        renderMyLists();
+        var n = records.length;
+        var note = 'Imported ' + n + ' list' + (n === 1 ? '' : 's') + '.';
+        if (dropped) note += ' ' + dropped + ' skipped (newer app version).';
+        msg.textContent = note;
+        setTimeout(closeImportModal, 1200);
+      })
+      .catch(function (e) { console.warn('import failed', e); err.textContent = 'Could not save the imported list.'; });
   }
 
   // ── Autosave (reference model; recomputed on load) ────────────────────────
