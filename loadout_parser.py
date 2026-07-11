@@ -39,6 +39,13 @@ def base_name(n):
     n = re.sub(r'\s+[–-]\s+\S.*$', '', n).strip()
     return n.lower()
 
+def base_display(name):
+    """Option-facing display form of a matched weapon: drop a ' – <profile>' /
+    ' - <profile>' suffix so a multi-profile weapon (e.g. 'Astartes grenade
+    launcher – frag') is conferred/gated as the whole weapon ('Astartes grenade
+    launcher'), matching the hand-authored convention. Title-case is preserved."""
+    return re.sub(r'\s+[–-]\s+\S.*$', '', name).strip()
+
 def qty_name(text):
     """'1 bolt rifle' → 'bolt rifle'; '1 Plasma pistol – standard' → 'plasma pistol'."""
     t = re.sub(r'^\d+\s+', '', text.strip())
@@ -190,9 +197,30 @@ def classify_per_n(text, unit_name):
     per_n = int(m.group('n'))
     rest = m.group('rest').strip()
     # A conditional per-model scope ('1 model equipped with a bolt rifle can be
-    # equipped with ...') is a distinct requires-weapon shape — leave it for that
-    # pass rather than mis-scoping it here.
-    if re.search(r'\bequipped with a\b', rest, re.I):
+    # equipped with ...') carries a requires_weapon gate. Handle the two shapes we
+    # see (add / replace); if it's a conditional shape we don't recognise, flag it
+    # (return None) rather than fall through to the generic matchers, which would
+    # mis-scope 'model equipped with a <weapon>' as the model-group name.
+    if re.search(r'\bequipped with an?\b', rest, re.I):
+        mc = re.match(
+            r"(?:\d+\s+)?models?\s+equipped with an?\s+(?P<req>.+?)\s+"
+            r"can be equipped with\s+(?P<what>\d+\s+\S.*?)(?:\.|$)",
+            rest, re.I)
+        if mc:
+            return [{'_type': 'add', '_scope_hint': 'body',
+                     'adds': qty_name(mc.group('what')),
+                     'per_n_models': per_n, 'max_per_n': 1,
+                     'requires_weapon': mc.group('req').strip()}]
+        mcr = re.match(
+            r"(?:\d+\s+)?models?\s+equipped with an?\s+(?P<req>.+?)\s+"
+            r"can replace (?:its|their)\s+(?P<repl>.+?)\s+with\s+(?P<rep>\d+\s+\S.*?)(?:\.|$)",
+            rest, re.I)
+        if mcr:
+            return [{'_type': 'count', '_scope_hint': 'body',
+                     'replaces': qty_name(mcr.group('repl')),
+                     'replacement': qty_name(mcr.group('rep')),
+                     'per_n_models': per_n, 'max_per_n': 1,
+                     'requires_weapon': mcr.group('req').strip()}]
         return None
     # passive: '[up to N] <model>'s <weapon> can be replaced with one of the following: <list>'
     m2 = re.match(
@@ -317,6 +345,29 @@ def classify_active_swap(text, unit_name):
     return [{'_type': 'single', '_scope_hint': model, 'replaces': replaces,
              'replacement': qty_name(m.group('rep'))}]
 
+def classify_one_model_swap(text, unit_name):
+    """Indefinite single-model swaps that need a 1-model cap:
+       'One model can replace its X with 1 Y'   /   '1 model can replace its X with 1 Y'
+    and the conditional (requires-weapon) variant:
+       'One model equipped with a W can replace its X with 1 Y'
+    A plain choice/count without a cap would let the whole body swap; these are
+    capped at exactly one model via max_total:1. The 'equipped with a W' clause is
+    carried as requires_weapon — a dormant gate until the engine honours it on
+    count options (banked engine turn)."""
+    m = re.match(
+        r"(?:One|1)\s+model(?:\s+equipped with an?\s+(?P<req>.+?))?"
+        r"\s+can replace (?:its|their)\s+(?P<repl>.+?)\s+with\s+(?P<rep>\d+\s+\S.*?)(?:\.|$)",
+        text, re.I)
+    if not m:
+        return None
+    op = {'_type': 'count', '_scope_hint': 'body',
+          'replaces': qty_name(m.group('repl')),
+          'replacement': qty_name(m.group('rep')),
+          'max_total': 1}
+    if m.group('req'):
+        op['requires_weapon'] = m.group('req').strip()
+    return [op]
+
 def classify_add(text, unit_name):
     """'This model can be equipped with …'  /  'This unit …'"""
     m = re.match(
@@ -391,6 +442,7 @@ CLASSIFIERS = [
     classify_per_n,
     classify_any_number,
     classify_active_swap,
+    classify_one_model_swap,
     classify_add,
     classify_this_model_choice,
     classify_this_model_add_choice,
@@ -647,7 +699,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 # per-N replacements are the datasheet's "special weapon" slot; any-number
                 # swaps are their own thing (e.g. power fist -> chainfist), so they get a
                 # source-derived heading instead of sharing 'Special Weapon'.
-                grp_label = (repl.title() + ' Options') if is_any else 'Special Weapon'
+                grp_label = 'Special Weapon' if (per_n and not is_any) else (repl.title() + ' Options')
                 if is_choice:
                     choices_out = []
                     for c in op['replacement_choices']:
@@ -669,12 +721,19 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                              'type': 'count', 'replaces': repl, 'replacement': rep}
                 if per_n:
                     entry['per_n_models'] = per_n; entry['max_per_n'] = max_pn
+                elif op.get('max_total') is not None:
+                    # indefinite single-model swap — a fixed cap of exactly N models
+                    # ('One model can replace its X with 1 Y').
+                    entry['max_total'] = op['max_total']
                 else:
                     # 'any number' / 'all' / 'up to N' — cap resolves at render time
                     # to the scoped group's model count (min with up_to when present).
                     entry['max_total_all'] = True
                     if op.get('up_to') is not None:
                         entry['up_to'] = op['up_to']
+                if op.get('requires_weapon'):
+                    rw, _rwok = normalise_weapon(op['requires_weapon'], weapon_idx, global_idx)
+                    entry['requires_weapon'] = base_display(rw)
                 options.append(entry)
             elif ot == 'add_choice':
                 # "equipped with one of the following" — treated as a single-model choice
@@ -707,6 +766,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     options.append(entry)
                     continue
                 if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["adds"]} (add) on {unit_name}')
+                if ok: what = base_display(what)
                 per_n = op.get('per_n_models')
                 entry = {'id': new_id('add'), 'scope': scope, 'group': what.title(),
                          'type': 'add', 'adds_weapon': what}
@@ -714,6 +774,9 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     entry['per_n_models'] = per_n; entry['max_per_n'] = op.get('max_per_n', 1)
                 else:
                     entry['max_total'] = op.get('max_total', 1)
+                if op.get('requires_weapon'):
+                    rw, _rwok = normalise_weapon(op['requires_weapon'], weapon_idx, global_idx)
+                    entry['requires_weapon'] = base_display(rw)
                 options.append(entry)
 
     def emit_count(g):

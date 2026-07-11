@@ -5899,11 +5899,20 @@
         "group": "Bolt Sniper Rifle Options",
         "type": "count",
         "replaces": "Bolt sniper rifle",
+        "replacement": "Instigator bolt carbine",
+        "max_total": 1
+      },
+      {
+        "id": "cnt_2",
+        "scope": "Kill Team Infiltrators",
+        "group": "Bolt Sniper Rifle Options",
+        "type": "count",
+        "replaces": "Bolt sniper rifle",
         "replacement": "Las fusil",
         "max_total_all": true
       },
       {
-        "id": "cnt_2",
+        "id": "cnt_3",
         "scope": "Kill Team Infiltrators",
         "group": "Combat Knife Options",
         "type": "count",
@@ -5913,8 +5922,7 @@
       }
     ],
     "_parser_flags": [
-      "UNMATCHED: One model equipped with a Deathwatch marksman bolt carbine can be equipped with one of the following: 1 helix gauntlet 1",
-      "UNMATCHED: One model can replace its bolt sniper rifle with 1 instigator bolt carbine."
+      "UNMATCHED: One model equipped with a Deathwatch marksman bolt carbine can be equipped with one of the following: 1 helix gauntlet 1"
     ],
     "_defaults_source": "equipped"
   },
@@ -6050,7 +6058,36 @@
         ]
       },
       {
-        "id": "cnt_3",
+        "id": "add_3",
+        "scope": "Kill Team Intercessors",
+        "group": "Astartes Grenade Launcher",
+        "type": "add",
+        "adds_weapon": "Astartes grenade launcher",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "requires_weapon": "Deathwatch bolt rifle"
+      },
+      {
+        "id": "cnt_4",
+        "scope": "Kill Team Intercessors",
+        "group": "Bolt Pistol Options",
+        "type": "count",
+        "replaces": "Bolt pistol",
+        "replacement": "Plasma pistol - standard",
+        "max_total": 1,
+        "requires_weapon": "Plasma incinerator"
+      },
+      {
+        "id": "cnt_5",
+        "scope": "Kill Team Intercessors",
+        "group": "Superfrag Rocket Launcher Options",
+        "type": "count",
+        "replaces": "Superfrag rocket launcher",
+        "replacement": "Vengor launcher",
+        "max_total": 1
+      },
+      {
+        "id": "cnt_6",
         "scope": "Kill Team Intercessors",
         "group": "Superfrag Rocket Launcher Options",
         "type": "count",
@@ -6059,11 +6096,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: For every 5 models in this unit, 1 model equipped with a Deathwatch bolt rifle can be equipped with 1 Astartes grenade l",
-      "UNMATCHED: One model equipped with a plasma incinerator can replace its bolt pistol with 1 plasma pistol.",
-      "UNMATCHED: 1 model can replace its superfrag rocket launcher with 1 vengor launcher."
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000002781": {
