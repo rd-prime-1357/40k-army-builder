@@ -86,6 +86,32 @@ def sing_forms(s):
     return out
 
 
+def _sing_word(w):
+    # Singularize one word for the loose (per-word) fallback below. Deliberately
+    # conservative: strip a single trailing "s" (rifles -> rifle), map -ves/-ies,
+    # leave -ss words (e.g. "cutlass") alone. Applied to BOTH sides, so words that
+    # aren't true plurals (e.g. "occulus" -> "occulu") still collapse identically.
+    if w.endswith('ies') and len(w) > 3:
+        return w[:-3] + 'y'
+    if w.endswith('ves') and len(w) > 3:
+        return w[:-3] + 'fe'
+    if w.endswith('ss'):
+        return w
+    if w.endswith('s') and len(w) > 1:
+        return w[:-1]
+    return w
+
+
+def loose_key(s):
+    # Whole-phrase key with every word singularized, so a plural that sits
+    # MID-phrase matches its singular ("... Intercessor with plasma incinerator"
+    # vs group "... Intercessors with plasma incinerators"). sing_forms only
+    # normalizes the trailing word, which binds base groups but misses variant
+    # sub-groups (B17 true-1b).
+    p = re.sub(r'\s+models?$', '', norm(strip_determiners(s))).strip()
+    return ' '.join(_sing_word(w) for w in p.split())
+
+
 def match_group(frag, gnames):
     p = norm(strip_determiners(frag))
     # "Each <group> model is equipped with" leaves a trailing "model(s)" on the
@@ -96,6 +122,13 @@ def match_group(frag, gnames):
     for g in gnames:
         if sing_forms(group_key(g)) & pf:
             return g
+    # Fallback: per-word-singularized whole-phrase equality, accepted only when
+    # exactly one group matches (no ambiguity). Catches variant sub-groups whose
+    # only difference from the subject is a mid-phrase plural.
+    fk = loose_key(frag)
+    hits = [g for g in gnames if loose_key(g) == fk]
+    if len(hits) == 1:
+        return hits[0]
     return None
 
 
