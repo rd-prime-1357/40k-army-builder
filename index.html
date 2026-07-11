@@ -555,6 +555,17 @@
       color: #b8860b;
       font-weight: 700;
     }
+    .stat-asterisk {
+      color: #b8860b;
+      font-weight: 700;
+      margin-left: 1px;
+    }
+    .stat-asterisk-legend {
+      font-size: 0.6rem;
+      color: #999;
+      text-align: right;
+      margin-top: 2px;
+    }
     .option-item.granted {
       cursor: default;
       background: rgba(184,134,11,0.06);
@@ -1389,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.50';
+  const VERSION = '5.51';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2275,6 +2286,38 @@
     return ov;
   }
 
+  // E17: the counterpart to broadWargearStatOverrides. A default (non-optional)
+  // wargear ability that confers a per-model INV/FNP ("the bearer has a 4+
+  // invulnerable save") on a MULTI-model group applies to one model only, so it
+  // can't be shown as a whole-group statline number — B15 deliberately writes
+  // nothing there. This flags exactly those cells so the statline can mark them
+  // with an asterisk pointing at the Wargear Abilities section. Same guards as
+  // B15: skip grant-gated abilities; only unconditional values (a conditional /
+  // once-per-battle aura yields nothing after the sentence filter, so it's never
+  // asterisked). Returns { INV: true?, FNP: true? }.
+  function bearerOnlyStatFlags(raw, mg) {
+    const flags = {};
+    const names = mg.wargear_ability_names || [];
+    if (!names.length) return flags;
+    if (isSingleModelGroup(raw)) return flags;   // bearer is the whole group -> B15 wrote it
+    const gated = new Set();
+    for (const b of (raw.bundled_swaps || []))
+      for (const ep of (b.endpoints || []))
+        for (const g of (ep.grants || [])) if (g.ability_name) gated.add(g.ability_name);
+    for (const o of (raw.other_options || [])) if (o.ability_name) gated.add(o.ability_name);
+    for (const n of names) {
+      if (gated.has(n)) continue;
+      const text = glossaryDesc(n);
+      const uniform = /models in (?:the )?(?:bearer.?s )?unit have/i.test(text);
+      const bearer  = /the bearer has/i.test(text);
+      if (uniform || !bearer) continue;   // uniform -> whole-group (B15); non-bearer -> not this case
+      const parsed = unconditionalStatOverride(text);
+      if (parsed.INV != null) flags.INV = true;
+      if (parsed.FNP != null) flags.FNP = true;
+    }
+    return flags;
+  }
+
   // Weapon add/remove from the chosen bundle endpoints. Loadout-defined units
   // (e.g. Captain) roll up weapons from loadout selections and don't otherwise
   // know about bundles, so this delta is applied to the weapon display so a
@@ -2865,7 +2908,7 @@
         html += `<div class="stat-block">`;
       }
 
-      html += buildStatTable(mg, broadWargearStatOverrides(raw, mg));
+      html += buildStatTable(mg, broadWargearStatOverrides(raw, mg), bearerOnlyStatFlags(raw, mg));
       html += `</div>`;
 
       // Weapons for this model group
@@ -3071,7 +3114,7 @@
         activeOtherOptionOverrides(entry, raw)
       );
 
-      html += buildStatTable(mg, overrides);
+      html += buildStatTable(mg, overrides, bearerOnlyStatFlags(raw, mg));
       html += `</div>`;
 
       // Weapons for this model group — configured view (skipped for loadout units,
@@ -3221,8 +3264,9 @@
 
   // ── Shared modal helpers ───────────────────────────────────────────────────
 
-  function buildStatTable(mg, overrides) {
+  function buildStatTable(mg, overrides, flags) {
     const ov  = overrides || {};
+    const fl  = flags || {};
     // SV and LD carry a trailing '+' in the data while INV/FNP are bare numbers;
     // strip any existing '+' so we don't render a doubled '++'.
     const cleanPlus = v => String(v == null ? '' : v).replace(/\+\s*$/, '');
@@ -3235,12 +3279,19 @@
     // its condition text; otherwise show the base value or an em dash.
     const invOv = ov.INV !== undefined && ov.INV !== null;
     const fnpOv = ov.FNP !== undefined && ov.FNP !== null;
+    // E17: a per-model bearer value that can't be shown as a whole-group number is
+    // marked with an asterisk (only when the cell isn't already carrying a real
+    // override value). The asterisk points at the Wargear Abilities section.
+    const invStar = (!invOv && fl.INV) ? '<sup class="stat-asterisk">*</sup>' : '';
+    const fnpStar = (!fnpOv && fl.FNP) ? '<sup class="stat-asterisk">*</sup>' : '';
     const inv = invOv ? `<span class="stat-override">${cleanPlus(ov.INV)}+</span>` : (mg.INV ? `${mg.INV}+` : '\u2014');
     const fnp = fnpOv ? `<span class="stat-override">${cleanPlus(ov.FNP)}+</span>` : (mg.FNP ? `${mg.FNP}+` : '\u2014');
     const invCond = (!invOv && mg.INV_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
     const fnpCond = (!fnpOv && mg.FNP_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.FNP_Condition})</span>` : '';
     const svDisplay = ovCell('SV', cleanPlus(mg.SV), '+');
     const wDisplay  = ovCell('W',  mg.W);
+    const legend = (invStar || fnpStar)
+      ? `<div class="stat-asterisk-legend">* see Wargear Abilities</div>` : '';
 
     return `<table class="stat-table">
       <thead>
@@ -3253,14 +3304,14 @@
           <td>${mg.M}</td>
           <td>${mg.T}</td>
           <td>${svDisplay}</td>
-          <td class="inv-cell">${inv}${invCond}</td>
-          <td class="fnp-cell">${fnp}${fnpCond}</td>
+          <td class="inv-cell">${inv}${invStar}${invCond}</td>
+          <td class="fnp-cell">${fnp}${fnpStar}${fnpCond}</td>
           <td>${wDisplay}</td>
           <td>${cleanPlus(mg.LD)}+</td>
           <td>${mg.OC}</td>
         </tr>
       </tbody>
-    </table>`;
+    </table>${legend}`;
   }
 
   function buildWeaponSections(weapons, mode, wargearState, raw, entry) {
