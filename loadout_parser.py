@@ -421,6 +421,21 @@ def classify_all_models_add(text, unit_name):
              'adds': qty_name(m.group('what')),
              'per_n_models': 1, 'max_per_n': 1}]
 
+def classify_one_model_add(text, unit_name):
+    """'One model can be equipped with N <item>.'  /  '1 model can be equipped with N <item>.'
+    An indefinite single-model item add: exactly one model in the unit may take it.
+    Body-scoped, capped at one model via max_total:1. Same emission path as classify_add;
+    build_loadout resolves <item> to an equipment add when it's a known wargear item
+    (e.g. 'Sanguinary Banner') or to a weapon add otherwise. Distinct from
+    classify_one_model_swap (verb 'replace', not 'be equipped with')."""
+    m = re.match(
+        r"(?:One|1)\s+model can be equipped with (?P<what>\d+\s+\S.*?)(?:\.|$)",
+        text, re.I)
+    if not m:
+        return None
+    what = qty_name(m.group('what'))
+    return [{'_type': 'add', '_scope_hint': 'body', 'adds': what, 'max_total': 1}]
+
 def classify_add(text, unit_name):
     """'This model can be equipped with …'  /  'This unit …'"""
     m = re.match(
@@ -492,6 +507,7 @@ NOTE_PAT = re.compile(
 CLASSIFIERS = [
     classify_conditional_add,
     classify_all_models_add,
+    classify_one_model_add,
     classify_sgl_choice,
     classify_sgl_single,
     classify_per_n,

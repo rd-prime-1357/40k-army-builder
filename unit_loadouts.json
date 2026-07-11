@@ -1579,11 +1579,17 @@
         "replacement": "Inferno pistol",
         "per_n_models": 3,
         "max_per_n": 1
+      },
+      {
+        "id": "add_3",
+        "scope": "Sanguinary Guard",
+        "group": "Sanguinary Banner",
+        "type": "add",
+        "equipment": "Sanguinary Banner",
+        "max_total": 1
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: One model can be equipped with 1 Sanguinary banner."
-    ]
+    "_parser_flags": []
   },
   "000000166": {
     "size_brackets": [
