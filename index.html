@@ -906,6 +906,8 @@
     .home-btn:hover { background:#a80000; }
     .home-btn.secondary { background:#242424; color:#cc9900; border:1px solid #3a3a3a; }
     .home-btn.secondary:hover { border-color:#cc9900; }
+    .home-sort { background:#242424; color:#cc9900; border:1px solid #3a3a3a; font-family:inherit; font-size:0.8rem; font-weight:700; letter-spacing:0.03em; padding:0.5rem 0.6rem; border-radius:4px; cursor:pointer; text-transform:uppercase; }
+    .home-sort:hover { border-color:#cc9900; }
     .mylists { max-width:900px; display:flex; flex-direction:column; gap:0.5rem; }
     .mylist-row { display:flex; align-items:center; gap:1rem; background:#161616; border:1px solid #2a2a2a; border-radius:5px; padding:0.85rem 1.1rem; cursor:pointer; transition:border-color 0.12s, background 0.12s; }
     .mylist-row:hover { border-color:#8b0000; background:#1c1414; }
@@ -996,6 +998,11 @@
     <div class="home-title">My Army Lists</div>
     <div class="home-actions">
       <span class="home-flash hidden" id="home-flash"></span>
+      <select class="home-sort hidden" id="mylists-sort" onchange="setMyListsSort(this.value)" title="Sort saved lists">
+        <option value="recent">Recent</option>
+        <option value="name">Name A–Z</option>
+        <option value="faction">Faction</option>
+      </select>
       <button class="home-btn secondary hidden" id="backup-all-btn" onclick="exportAllLists()" title="Download all saved lists as one .json backup">Back up all</button>
       <button class="home-btn secondary" onclick="openImportModal()">Import</button>
       <button class="home-btn" onclick="openCreateModal()">+ New List</button>
@@ -1382,7 +1389,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.48';
+  const VERSION = '5.49';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3335,16 +3342,40 @@
     document.getElementById('banner-points').classList.remove('hidden');
   }
 
+  var _myListsSort = 'recent';
+  function setMyListsSort(v) {
+    _myListsSort = (v === 'name' || v === 'faction') ? v : 'recent';
+    renderMyLists();
+  }
+  function sortMyListRows(rows) {
+    var by = _myListsSort;
+    return rows.slice().sort(function (a, b) {
+      if (by === 'name') {
+        return String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' });
+      }
+      if (by === 'faction') {
+        var f = String(a.primary_faction || '').localeCompare(String(b.primary_faction || ''), undefined, { sensitivity: 'base' });
+        if (f !== 0) return f;
+        return String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' });
+      }
+      // recent: newest modified first; missing dates sink
+      return (b.modified || 0) - (a.modified || 0);
+    });
+  }
+
   function renderMyLists() {
     const c = document.getElementById('mylists-container');
     if (!store) { c.innerHTML = ''; return; }
     store.list().then(rows => {
       const backupBtn = document.getElementById('backup-all-btn');
+      const sortSel   = document.getElementById('mylists-sort');
       if (backupBtn) backupBtn.classList.toggle('hidden', !rows.length);
+      if (sortSel) { sortSel.classList.toggle('hidden', !rows.length); sortSel.value = _myListsSort; }
       if (!rows.length) {
         c.innerHTML = '<div class="home-empty">No saved lists yet. Click &ldquo;New List&rdquo; to start building.</div>';
         return;
       }
+      rows = sortMyListRows(rows);
       c.innerHTML = '<div class="mylists">' + rows.map(r => {
         const when = r.modified ? new Date(r.modified).toLocaleDateString() : '';
         const tgt  = r.points_target ? ('target ' + r.points_target) : '';
