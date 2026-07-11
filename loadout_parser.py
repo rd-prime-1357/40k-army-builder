@@ -368,6 +368,26 @@ def classify_one_model_swap(text, unit_name):
         op['requires_weapon'] = m.group('req').strip()
     return [op]
 
+def classify_conditional_add_choice(text, unit_name):
+    """'One model equipped with a <weapon> can be equipped with one of the following: …'
+    An exclusive one-model equipment choice gated on the bearer still carrying <weapon>.
+    Emits one capped add (max_total:1) per list item; all items in the sentence share a
+    pool (assigned in build_loadout) so picking one locks out the others, and each carries
+    requires_weapon so the whole choice disappears if the bearer weapon is swapped away."""
+    m = re.match(
+        r"(?:One|1)\s+model\s+equipped with an?\s+(?P<req>.+?)\s+"
+        r"can be equipped with one of the following[:\s]+(?P<list>.+)",
+        text, re.I)
+    if not m:
+        return None
+    choices = _choices_from_list(m.group('list'))
+    if not choices:
+        return None
+    req = m.group('req').strip()
+    return [{'_type': 'add', '_scope_hint': 'body', 'adds': c,
+             'requires_weapon': req, 'max_total': 1, '_pool': True}
+            for c in choices]
+
 def classify_add(text, unit_name):
     """'This model can be equipped with …'  /  'This unit …'"""
     m = re.match(
@@ -443,6 +463,7 @@ CLASSIFIERS = [
     classify_any_number,
     classify_active_swap,
     classify_one_model_swap,
+    classify_conditional_add_choice,
     classify_add,
     classify_this_model_choice,
     classify_this_model_add_choice,
@@ -647,6 +668,12 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
         if flag:
             flags.append(flag)
             continue
+        # ops flagged _pool from one sentence share a single unit-wide pool cap.
+        if any(o.get('_pool') for o in raw_ops):
+            _pid = new_id('pool')
+            for o in raw_ops:
+                if o.get('_pool'):
+                    o['pool_id'] = _pid
         for op in raw_ops:
             ot = op['_type']
             scope = resolve_scope(op.get('_scope_hint', 'body'), model_groups)
@@ -763,6 +790,10 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                         entry['per_n_models'] = per_n; entry['max_per_n'] = op.get('max_per_n', 1)
                     else:
                         entry['max_total'] = op.get('max_total', 1)
+                    if op.get('pool_id'): entry['pool_id'] = op['pool_id']
+                    if op.get('requires_weapon'):
+                        rw, _rwok = normalise_weapon(op['requires_weapon'], weapon_idx, global_idx)
+                        entry['requires_weapon'] = base_display(rw)
                     options.append(entry)
                     continue
                 if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["adds"]} (add) on {unit_name}')
@@ -774,6 +805,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     entry['per_n_models'] = per_n; entry['max_per_n'] = op.get('max_per_n', 1)
                 else:
                     entry['max_total'] = op.get('max_total', 1)
+                if op.get('pool_id'): entry['pool_id'] = op['pool_id']
                 if op.get('requires_weapon'):
                     rw, _rwok = normalise_weapon(op['requires_weapon'], weapon_idx, global_idx)
                     entry['requires_weapon'] = base_display(rw)

@@ -1344,7 +1344,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.45';
+  const VERSION = '5.46';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2444,8 +2444,13 @@
     // The option with per_n_models defines the cap; others (e.g. a leader toggle)
     // just consume from it. leaderUsed tracks how much the fixed-1 leader took, so
     // body controls can shrink their ceiling accordingly.
-    const poolCap = {}, poolUsed = {}, poolLeaderUsed = {};
-    for (const o of def.options) if (o.pool_id && o.per_n_models) poolCap[o.pool_id] = loMaxCount(o, size);
+    const poolCap = {}, poolUsed = {}, poolLeaderUsed = {}, poolFromPerN = {};
+    for (const o of def.options) if (o.pool_id && o.per_n_models) { poolCap[o.pool_id] = loMaxCount(o, size); poolFromPerN[o.pool_id] = true; }
+    // A pool whose members all use max_total (no per_n_models defining member) still
+    // needs a cap; otherwise two pooled adds sharing a pool_id can't lock each other
+    // out. Bound it by the largest member max_total (per_n members take precedence).
+    for (const o of def.options) if (o.pool_id && !o.per_n_models && o.max_total != null && !poolFromPerN[o.pool_id])
+      poolCap[o.pool_id] = Math.max(poolCap[o.pool_id] || 0, o.max_total);
     // requires_weapon: a pooled/add option is legal only while the named weapon is
     // still equipped on its model (i.e. no active choice in the same scope replaced it).
     const reqOk = (opt) => {
@@ -2507,6 +2512,7 @@
         for (const src of String(replaces).split(' + ')) swappedByWeapon[src] = (swappedByWeapon[src] || 0) + cnt;
       };
       for (const o of countOpts) {
+        if (!reqOk(o)) continue;   // gated on a missing weapon → emits nothing, charges nothing
         const cap = loMaxCount(o, size, n), selv = countBy[o.id];
         if (o.replacement_choices) {
           const tally = (selv && typeof selv === 'object') ? selv : {};
@@ -2560,8 +2566,11 @@
         if (x.scope === o.scope && x.type === 'choice' && x.replaces === o.requires_weapon && entry.wargear[x.id]) return false;
       return true;
     };
-    for (const o of def.options)
+    for (const o of def.options) {
       if (o.type === 'add' && o.requires_weapon && !reqOkUI(o) && Number(entry.wargear[o.id] || 0) > 0) entry.wargear[o.id] = 0;
+      if (o.type === 'count' && o.requires_weapon && !reqOkUI(o)
+          && !o.replacement_choices && Number(entry.wargear[o.id] || 0) > 0) entry.wargear[o.id] = 0;
+    }
     const roll = loRollup(def, size, loadoutSelections(entry, def));
     const grpCounts = loGroupCounts(def, size);
     const byScope = {};
@@ -2608,10 +2617,15 @@
                               `editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',1,${max})`, cur, c, '');
           }
         } else if (o.type === 'count') {
+          if (o.requires_weapon && !reqOkUI(o)) {
+            html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
+              <div class="option-item-name">${o.replacement || o.group} — needs ${o.requires_weapon}</div></div></div>`;
+          } else {
           const max = loMaxCount(o, size, grpCounts[g.name]);
           const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
           html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
                             `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, (o.replacement || o.group), `(max ${max})`);
+          }
         } else if (o.type === 'add') {
           const max = loMaxCount(o, size, grpCounts[g.name]);
           const label = o.adds_weapon || o.equipment || o.group;
