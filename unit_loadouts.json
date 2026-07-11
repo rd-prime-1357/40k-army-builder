@@ -5275,13 +5275,54 @@
         "replaces": "Combat knife",
         "replacement": "Bolt carbine + Close combat weapon",
         "max_total_all": true
+      },
+      {
+        "id": "add_2",
+        "scope": "Reiver Sergeant",
+        "group": "Combat Knife",
+        "type": "add",
+        "adds_weapon": "Combat knife",
+        "max_total": 1,
+        "requires_weapon": "Bolt carbine"
+      },
+      {
+        "id": "add_3",
+        "scope": "Reiver Sergeant",
+        "group": "Reiver Grav-chute",
+        "type": "add",
+        "equipment": "Reiver Grav-chute",
+        "per_n_models": 1,
+        "max_per_n": 1
+      },
+      {
+        "id": "add_4",
+        "scope": "Reivers",
+        "group": "Reiver Grav-chute",
+        "type": "add",
+        "equipment": "Reiver Grav-chute",
+        "per_n_models": 1,
+        "max_per_n": 1
+      },
+      {
+        "id": "add_5",
+        "scope": "Reiver Sergeant",
+        "group": "Grapnel Launcher",
+        "type": "add",
+        "equipment": "Grapnel Launcher",
+        "per_n_models": 1,
+        "max_per_n": 1
+      },
+      {
+        "id": "add_6",
+        "scope": "Reivers",
+        "group": "Grapnel Launcher",
+        "type": "add",
+        "equipment": "Grapnel Launcher",
+        "per_n_models": 1,
+        "max_per_n": 1
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: If the Reiver Sergeant is equipped with 1 bolt carbine, it can be equipped with 1 combat knife.",
-      "UNMATCHED: All models in this unit can each be equipped with 1 Reiver grav-chute.",
-      "UNMATCHED: All models in this unit can each be equipped with 1 grapnel launcher."
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000002721": {

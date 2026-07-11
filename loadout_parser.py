@@ -388,6 +388,39 @@ def classify_conditional_add_choice(text, unit_name):
              'requires_weapon': req, 'max_total': 1, '_pool': True}
             for c in choices]
 
+def classify_conditional_add(text, unit_name):
+    """'If the <model> is equipped with <req>, it can be equipped with <what>.'
+    A single-model conditional add gated on the bearer still carrying <req>. Emits
+    one capped add (max_total:1) scoped to <model>, carrying requires_weapon so the
+    add disappears if the gate weapon is not present. (Reiver Sergeant: keeps a
+    combat knife only when it took the bolt carbine.)"""
+    m = re.match(
+        r"If (?:the )?(?P<model>.+?) is equipped with (?P<req>\d+\s+\S.*?),?\s+"
+        r"it can be equipped with (?P<what>\d+\s+\S.*?)(?:\.|$)",
+        text, re.I)
+    if not m:
+        return None
+    return [{'_type': 'add', '_scope_hint': m.group('model').strip(),
+             'adds': qty_name(m.group('what')),
+             'requires_weapon': qty_name(m.group('req')),
+             'max_total': 1}]
+
+def classify_all_models_add(text, unit_name):
+    """'All models in this unit can each be equipped with 1 <item>.'
+    A unit-wide, per-model item add: every model may independently take one. Emits
+    one per-model add per model group (fanned out in build_loadout via _all_groups),
+    each capped at one per model (per_n_models 1 / max_per_n 1) so the cap follows
+    each group's own size. Separate option lines are independent (not mutually
+    exclusive)."""
+    m = re.match(
+        r"All models in this unit can each be equipped with (?P<what>\d+\s+\S.*?)(?:\.|$)",
+        text, re.I)
+    if not m:
+        return None
+    return [{'_type': 'add', '_all_groups': True,
+             'adds': qty_name(m.group('what')),
+             'per_n_models': 1, 'max_per_n': 1}]
+
 def classify_add(text, unit_name):
     """'This model can be equipped with …'  /  'This unit …'"""
     m = re.match(
@@ -457,6 +490,8 @@ NOTE_PAT = re.compile(
     r'^\*|cannot be taken|only if one|only one|^note:|^designer', re.I)
 
 CLASSIFIERS = [
+    classify_conditional_add,
+    classify_all_models_add,
     classify_sgl_choice,
     classify_sgl_single,
     classify_per_n,
@@ -668,6 +703,18 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
         if flag:
             flags.append(flag)
             continue
+        # _all_groups ops ('All models in this unit can each be equipped with X')
+        # fan out to one per-model add per model group, each scoped to that group so
+        # its cap follows the group's own size.
+        _expanded = []
+        for o in raw_ops:
+            if o.get('_all_groups'):
+                for g in model_groups:
+                    o2 = dict(o); o2.pop('_all_groups'); o2['_scope_hint'] = g['name']
+                    _expanded.append(o2)
+            else:
+                _expanded.append(o)
+        raw_ops = _expanded
         # ops flagged _pool from one sentence share a single unit-wide pool cap.
         if any(o.get('_pool') for o in raw_ops):
             _pid = new_id('pool')
