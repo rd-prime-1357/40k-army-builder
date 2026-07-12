@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.51';
+  const VERSION = '5.52';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2574,6 +2574,62 @@
     for (const g of def.model_groups) if (c[g.name] === null) c[g.name] = Math.max(0, size - reserved);
     return c;
   }
+  // ── requires_weapon: carrier counting (B19) ───────────────────────────────
+  // A gated option ("one model equipped with a bolt rifle can take X") is legal
+  // only while enough models in its scope group still carry the named weapon.
+  // Carriers = models holding it as default gear, minus models that swapped it
+  // away (choice OR count swaps), plus models that gained it from a swap or add.
+  // Matching is on the base weapon name, so "Plasma incinerator" matches the
+  // "– standard"/"– supercharge" profiles; compound replacements ("A + B") are
+  // split and each part counted.
+  function loWeaponParts(name) { return String(name || '').split(' + ').map(weaponBase).filter(Boolean); }
+  function loHasWeapon(name, want) { return loWeaponParts(name).includes(weaponBase(want)); }
+  function loSelCount(opt, sel, size, groupN) {
+    const v = (sel.countById || {})[opt.id];
+    let raw = 0;
+    if (v && typeof v === 'object') { for (const k of Object.keys(v)) raw += Math.max(0, v[k] | 0); }
+    else raw = Math.max(0, Number(v) || 0);
+    return Math.min(raw, loMaxCount(opt, size, groupN));
+  }
+  function loCarriers(def, size, sel, scope, weapon) {
+    const g = (def.model_groups || []).find(x => x.name === scope);
+    if (!g) return 0;
+    const n = loGroupCounts(def, size)[scope] || 0;
+    if (n <= 0) return 0;
+    let carriers = (g.default_weapons || []).some(w => loHasWeapon(w, weapon)) ? n : 0;
+    let gained = 0;
+    for (const o of def.options) {
+      if (o.scope !== scope) continue;
+      if (o.type === 'choice') {
+        const picked = (sel.choiceById || {})[o.id];
+        if (!picked) continue;
+        if (o.replaces && loHasWeapon(o.replaces, weapon)) carriers -= n;   // choice groups are single-model
+        if (loHasWeapon(picked, weapon)) gained += n;
+      } else if (o.type === 'count') {
+        const c = loSelCount(o, sel, size, n);
+        if (c <= 0) continue;
+        if (o.replaces && loHasWeapon(o.replaces, weapon)) carriers -= c;
+        if (o.replacement_choices) {
+          const tally = ((sel.countById || {})[o.id] && typeof sel.countById[o.id] === 'object') ? sel.countById[o.id] : {};
+          for (const k of Object.keys(tally))
+            if (loHasWeapon(k, weapon)) gained += Math.max(0, tally[k] | 0);
+        } else if (o.replacement && loHasWeapon(o.replacement, weapon)) gained += c;
+      } else if (o.type === 'add' && o.adds_weapon && loHasWeapon(o.adds_weapon, weapon)) {
+        gained += Math.max(0, Number((sel.addById || {})[o.id]) || 0);
+      }
+    }
+    return Math.max(0, Math.min(n, Math.max(0, carriers) + gained));
+  }
+  // How many carriers a gated option needs: 1 by default, or one per model taking it.
+  function loReqCarriers(def, size, sel, opt) {
+    if (!opt.requires_weapon) return Infinity;
+    return loCarriers(def, size, sel, opt.scope, opt.requires_weapon);
+  }
+  function loReqOk(def, size, sel, opt) {
+    if (!opt.requires_weapon) return true;
+    return loReqCarriers(def, size, sel, opt) >= 1;
+  }
+
   function loadoutFor(entry) {
     const u = allUnits.find(x => x.unit_name === entry.unit_name);
     return (u && u.unit_id && loadoutDefs[u.unit_id]) || null;
@@ -2610,14 +2666,12 @@
     // out. Bound it by the largest member max_total (per_n members take precedence).
     for (const o of def.options) if (o.pool_id && !o.per_n_models && o.max_total != null && !poolFromPerN[o.pool_id])
       poolCap[o.pool_id] = Math.max(poolCap[o.pool_id] || 0, o.max_total);
-    // requires_weapon: a pooled/add option is legal only while the named weapon is
-    // still equipped on its model (i.e. no active choice in the same scope replaced it).
-    const reqOk = (opt) => {
-      if (!opt.requires_weapon) return true;
-      for (const o of def.options)
-        if (o.scope === opt.scope && o.type === 'choice' && o.replaces === opt.requires_weapon && choiceBy[o.id]) return false;
-      return true;
-    };
+    // requires_weapon: a gated option is legal only while enough models in its scope
+    // group still carry the named weapon — counting choice AND count swaps, in both
+    // directions (a swap can remove the weapon or grant it).
+    const selAll = { choiceById: choiceBy, countById: countBy, addById: addBy };
+    const reqOk    = (opt) => loReqOk(def, size, selAll, opt);
+    const reqCap   = (opt) => opt.requires_weapon ? loReqCarriers(def, size, selAll, opt) : Infinity;
     const weapons = new Map(), equipment = new Map();
     const add = (m, name, n) => { if (n > 0) m.set(name, (m.get(name) || 0) + n); };
     // A choice replacement may be a compound ('Power fist + Sternguard bolt rifle'): add each weapon.
@@ -2635,7 +2689,7 @@
         // Leader can also carry pooled/add weapons (e.g. a Sergeant grenade launcher).
         for (const o of opts) if (o.type === 'add') {
           let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
-          if (!reqOk(o)) want = 0;
+          want = Math.min(want, reqCap(o));
           if (o.pool_id) {
             const rem = (poolCap[o.pool_id] != null ? poolCap[o.pool_id] : Infinity) - (poolUsed[o.pool_id] || 0);
             want = Math.min(want, Math.max(0, rem));
@@ -2651,6 +2705,7 @@
       let reserved = 0;
       for (const o of addOpts) {
         let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
+        want = Math.min(want, reqCap(o));   // body adds were never gated before B19
         if (o.pool_id) {
           const rem = (poolCap[o.pool_id] != null ? poolCap[o.pool_id] : Infinity) - (poolUsed[o.pool_id] || 0);
           want = Math.min(want, Math.max(0, rem));
@@ -2672,7 +2727,7 @@
       };
       for (const o of countOpts) {
         if (!reqOk(o)) continue;   // gated on a missing weapon → emits nothing, charges nothing
-        const cap = loMaxCount(o, size, n), selv = countBy[o.id];
+        const cap = Math.min(loMaxCount(o, size, n), reqCap(o)), selv = countBy[o.id];
         if (o.replacement_choices) {
           const tally = (selv && typeof selv === 'object') ? selv : {};
           let used = 0;
@@ -2719,12 +2774,10 @@
         entry.wargear[o.id] = (o.type === 'choice') ? null : 0;
     // A pooled/add option whose prerequisite weapon has been swapped away is
     // cleared before rollup — frees its shared-pool slot so the body ceiling recovers.
-    const reqOkUI = (o) => {
-      if (!o.requires_weapon) return true;
-      for (const x of def.options)
-        if (x.scope === o.scope && x.type === 'choice' && x.replaces === o.requires_weapon && entry.wargear[x.id]) return false;
-      return true;
-    };
+    const reqOkUI = (o) => o.requires_weapon
+      ? loReqOk(def, size, loadoutSelections(entry, def), o) : true;
+    const reqCapUI = (o) => o.requires_weapon
+      ? loReqCarriers(def, size, loadoutSelections(entry, def), o) : Infinity;
     for (const o of def.options) {
       if (o.type === 'add' && o.requires_weapon && !reqOkUI(o) && Number(entry.wargear[o.id] || 0) > 0) entry.wargear[o.id] = 0;
       if (o.type === 'count' && o.requires_weapon && !reqOkUI(o)
@@ -2780,13 +2833,13 @@
             html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
               <div class="option-item-name">${o.replacement || o.group} — needs ${o.requires_weapon}</div></div></div>`;
           } else {
-          const max = loMaxCount(o, size, grpCounts[g.name]);
+          const max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
           const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
           html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
                             `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, (o.replacement || o.group), `(max ${max})`);
           }
         } else if (o.type === 'add') {
-          const max = loMaxCount(o, size, grpCounts[g.name]);
+          const max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
           const label = o.adds_weapon || o.equipment || o.group;
           const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
           if (o.max_total === 1 && !o.per_n_models) {
