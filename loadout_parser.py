@@ -191,6 +191,15 @@ def classify_sgl_single(text, unit_name):
     replacement = qty_name(m.group('rep'))
     return [{'_type': 'single', '_scope_hint': model, 'replaces': replaces, 'replacement': replacement}]
 
+def _per_n_scope(raw):
+    """Normalise the model phrase of a per-N line to a scope hint. A bare
+    'model'/'models' means the body group; a named model keeps its name (a trailing
+    'models' is dropped, e.g. 'Sword Brothers models' -> 'Sword Brothers')."""
+    s = (raw or '').strip()
+    if re.fullmatch(r"(?:of the |the )?models?", s, re.I):
+        return 'body'
+    return re.sub(r'\s+models?$', '', s, flags=re.I).strip() or 'body'
+
 def classify_per_n(text, unit_name):
     """'For every N models …  X can be replaced with …'"""
     m = re.match(
@@ -200,6 +209,8 @@ def classify_per_n(text, unit_name):
         return None
     per_n = int(m.group('n'))
     rest = m.group('rest').strip()
+    # source-data typo: '... can be replaced with equipped with 1 eviscerator.'
+    rest = re.sub(r'replaced with equipped with', 'replaced with', rest, flags=re.I)
     # A conditional per-model scope ('1 model equipped with a bolt rifle can be
     # equipped with ...') carries a requires_weapon gate. Handle the two shapes we
     # see (add / replace); if it's a conditional shape we don't recognise, flag it
@@ -252,18 +263,45 @@ def classify_per_n(text, unit_name):
                      'replaces': replaces, 'replaces_raw': m2a.group('repl').strip(),
                      'replacement_choices': choices,
                      'per_n_models': per_n, 'max_per_n': 1}]
-    # passive single: '[up to N] <model>'s <weapon> can be replaced with <single>'
+    # B26 — passive-possessive: '[up to N] <model>s can each have their <weapon(s)>
+    # replaced with <single | one of the following: list>'. The source may be a
+    # compound ('boltgun and power weapon'); build_loadout splits it. 'up to N'/'N'
+    # sets the per-bracket cap.
+    m2b = re.match(
+        r"(?:up to (?P<upto>\d+)\s+|(?P<cnt>\d+)\s+)?(?P<model>.+?) can (?:each )?"
+        r"have (?:their|its) (?P<repl>.+?) replaced with "
+        r"(?:(?:one|1) of the following[:\s]+(?P<list>.+)|(?P<rep>\d+\s+\S.*?)(?:\.|$))",
+        rest, re.I)
+    if m2b:
+        scope_hint = _per_n_scope(m2b.group('model'))
+        max_pn = int(m2b.group('upto') or m2b.group('cnt') or 1)
+        repl_raw = m2b.group('repl').strip()
+        if m2b.group('list'):
+            choices = _choices_from_list(m2b.group('list'))
+            if choices:
+                return [{'_type': 'count_choice', '_scope_hint': scope_hint,
+                         'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+                         'replacement_choices': choices,
+                         'per_n_models': per_n, 'max_per_n': max_pn}]
+        elif m2b.group('rep'):
+            rep_raw = m2b.group('rep').strip()
+            return [{'_type': 'count', '_scope_hint': scope_hint,
+                     'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+                     'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw,
+                     'per_n_models': per_n, 'max_per_n': max_pn}]
+    # passive single: '[up to N] <model>'s <weapon> can [each] be replaced with <single>'
     m3 = re.match(
-        r"(?:up to \d+\s+)?(?:\d+\s+)?(?:model|(?P<model>.+?))'s? (?P<repl>.+?) can be replaced with (?P<rep>\d+\s+\S.*?)$",
+        r"(?:up to (?P<upto>\d+)\s+|(?P<cnt>\d+)\s+)?(?:model|(?P<model>.+?))'s? (?P<repl>.+?) can (?:each )?be replaced with (?P<rep>\d+\s+\S.*?)$",
         rest, re.I)
     if m3:
-        scope_hint = (m3.group('model') or 'body').strip()
+        scope_hint = _per_n_scope(m3.group('model') or 'body')
+        max_pn = int(m3.group('upto') or m3.group('cnt') or 1)
         replaces = qty_name(m3.group('repl'))
         replacement = qty_name(m3.group('rep'))
         return [{'_type': 'count', '_scope_hint': scope_hint,
                  'replaces': replaces, 'replaces_raw': m3.group('repl').strip(),
                  'replacement': replacement, 'replacement_raw': m3.group('rep').strip(),
-                 'per_n_models': per_n, 'max_per_n': 1}]
+                 'per_n_models': per_n, 'max_per_n': max_pn}]
     # active single: '[up to N] <model> can replace its <weapon> with <single>'
     m3a = re.match(
         r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?) can replace (?:its|their) (?P<repl>.+?) with (?P<rep>\d+\s+\S.*?)$",

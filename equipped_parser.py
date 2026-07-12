@@ -215,12 +215,17 @@ def resolve(tok, ex, ba, g_ex, g_ba):
 
 
 def find_titles(lines, name2id):
-    """Return list of (index, uid) for lines that are datasheet titles:
-    a roster-name line whose next non-blank line is the stat header 'M'."""
+    """Return list of (index, uid) for every datasheet title block in the file:
+    a name line whose next non-blank line (past an optional base-size '(⌀..)' line)
+    is the stat header 'M'. uid is the roster id, or None for a datasheet that is
+    not on the roster (Legends/Forge World entries). Off-roster blocks must still
+    be listed: they own their own UNIT COMPOSITION anchors, and if they are invisible
+    the anchor is attributed to the previous roster unit and its equipped line bleeds
+    into that unit's defaults (B27 — the Whirlwind picked up the Astraeus and the
+    Thunderhawk this way)."""
     titles = []
     for i, ln in enumerate(lines):
-        key = norm_name(ln)
-        if key not in name2id:
+        if not ln.strip() or '\u2300' in ln:   # blank, or the base-size "(⌀..)" line
             continue
         j = i + 1
         while j < len(lines) and not lines[j].strip():
@@ -230,7 +235,7 @@ def find_titles(lines, name2id):
             while j < len(lines) and not lines[j].strip():
                 j += 1
         if j < len(lines) and lines[j].strip().upper() == 'M':   # must reach stat header
-            titles.append((i, name2id[key]))
+            titles.append((i, name2id.get(norm_name(ln))))
     return titles
 
 
@@ -244,7 +249,7 @@ def segment(text, name2id):
         uid = None
         for idx, tuid in titles:
             if idx < a:
-                uid = tuid
+                uid = tuid          # may be None: an off-roster datasheet owns this anchor
             else:
                 break
         # bounded region: anchor -> first composition-end line
@@ -495,6 +500,7 @@ def main():
             nm = g.get('name')
             if acc.get(nm) and (acc[nm]['w'] or acc[nm]['g']):
                 g['default_weapons'] = acc[nm]['w']
+                g.pop('default_wargear', None); g.pop('default_weapon_counts', None)
                 if acc[nm]['g']:
                     g['default_wargear'] = acc[nm]['g']
                 if acc[nm]['c']:
