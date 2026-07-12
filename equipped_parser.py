@@ -260,6 +260,60 @@ def segment(text, name2id):
     return owner_seen, dropped
 
 
+# ── weapon-family normalisation (B24) ─────────────────────────────────────────
+# A multi-profile weapon is stored in units.json as one row per profile
+# ("Plasma pistol – standard" / "– supercharge"). The app treats the FAMILY, not
+# the profile, as the unit of selection, replacement and display: every consumer
+# of the loadout rollup looks weapons up by base name. So every weapon name held
+# in unit_loadouts.json — default_weapons, default_weapon_counts keys, and the
+# option replaces/replacement/choices fields — must be the base name. A profile
+# suffix left in place makes a swap consume only one profile of the weapon it
+# replaces (the sibling profile stays on the model) and makes the weapon vanish
+# from the unit's weapon table. This runs over the whole file on every pass, so
+# the invariant holds regardless of when an entry was parsed.
+_PROFILE_SUFFIX = re.compile(r'\s+[\u2013\u2014-]\s+\S.*$')
+
+def strip_profile(name):
+    return _PROFILE_SUFFIX.sub('', (name or '')).strip()
+
+def _fold_compound(name):
+    """Base-name each part of a compound ('A – x + B – y' -> 'A + B')."""
+    if not isinstance(name, str):
+        return name
+    return ' + '.join(strip_profile(p) for p in name.split(' + ') if p.strip())
+
+def _dedupe(seq):
+    out, seen = [], set()
+    for x in seq:
+        if x not in seen:
+            seen.add(x); out.append(x)
+    return out
+
+def normalise_profiles(ld):
+    for uid, entry in ld.items():
+        if not isinstance(entry, dict):
+            continue
+        for g in entry.get('model_groups', []):
+            if isinstance(g.get('default_weapons'), list):
+                g['default_weapons'] = _dedupe(strip_profile(w) for w in g['default_weapons'])
+            dwc = g.get('default_weapon_counts')
+            if isinstance(dwc, dict):
+                folded = {}
+                for k, v in dwc.items():
+                    b = strip_profile(k)
+                    folded[b] = max(folded.get(b, 0), v)   # profiles of one weapon share a count
+                g['default_weapon_counts'] = folded
+            if isinstance(g.get('default_wargear'), list):
+                g['default_wargear'] = _dedupe(strip_profile(w) for w in g['default_wargear'])
+        for opt in entry.get('options', []):
+            for f in ('replaces', 'replacement', 'adds_weapon', 'requires_weapon'):
+                if isinstance(opt.get(f), str):
+                    opt[f] = _fold_compound(opt[f])
+            for f in ('choices', 'replacement_choices'):
+                if isinstance(opt.get(f), list):
+                    opt[f] = [_fold_compound(c) for c in opt[f]]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--composition', required=True)
@@ -453,6 +507,8 @@ def main():
     if not args.no_prune:
         for k in [k for k, v in ld.items() if isinstance(v, dict) and k not in roster_ids]:
             pruned.append(k); del ld[k]
+
+    normalise_profiles(ld)
 
     json.dump(ld, open(args.out, 'w'), indent=2, ensure_ascii=False)
 

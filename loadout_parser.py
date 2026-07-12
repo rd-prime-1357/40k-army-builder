@@ -93,7 +93,7 @@ def split_compound_replacement(raw):
     launcher']. Only splits on ' and ' when every part is count-led ('N weapon'),
     so a single 'and'-named weapon ('1 Slaughter and Carnage - strike') is kept
     whole."""
-    parts = [p.strip() for p in re.split(r'\s+and\s+', raw.strip()) if p.strip()]
+    parts = [p.strip(' ,') for p in re.split(r'\s*,\s*|\s+and\s+', raw.strip()) if p.strip(' ,')]
     if len(parts) > 1 and all(re.match(r'^\d+\s+\S', p) for p in parts):
         return [qty_name(p) for p in parts]
     return [qty_name(raw)]
@@ -150,6 +150,10 @@ def _choices_from_list(text, sep=r'\s+(?=\d+\s)'):
             continue
         if merged and re.search(r'\band$', merged[-1]):
             merged[-1] = re.sub(r'\s+and$', '', merged[-1]) + ' + ' + p
+        elif merged and merged[-1].endswith(','):
+            # '1 boltgun, 1 Astartes shield and 1 close combat weapon' is ONE choice
+            # of three weapons, not a choice of 'boltgun' plus something else.
+            merged[-1] = merged[-1][:-1].strip() + ' + ' + p
         else:
             merged.append(p)
     out = []
@@ -163,7 +167,7 @@ def _choices_from_list(text, sep=r'\s+(?=\d+\s)'):
 def classify_sgl_choice(text, unit_name):
     """'The <group>'s <weapon> can be replaced with one of the following: <list>'"""
     m = re.match(
-        r"The (?P<model>.+?)'s (?P<repl>.+?) can be replaced with one of the following[:\s]+(?P<list>.+)",
+        r"The (?P<model>.+?)'s (?P<repl>.+?) can be replaced with (?:one|1) of the following[:\s]+(?P<list>.+)",
         text, re.I)
     if not m:
         return None
@@ -224,7 +228,7 @@ def classify_per_n(text, unit_name):
         return None
     # passive: '[up to N] <model>'s <weapon> can be replaced with one of the following: <list>'
     m2 = re.match(
-        r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?)'s? (?P<repl>.+?) can be replaced with one of the following[:\s]+(?P<list>.+)",
+        r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?)'s? (?P<repl>.+?) can be replaced with (?:one|1) of the following[:\s]+(?P<list>.+)",
         rest, re.I)
     if m2:
         scope_hint = m2.group('model').strip()
@@ -232,11 +236,12 @@ def classify_per_n(text, unit_name):
         choices = _choices_from_list(m2.group('list'))
         if choices:
             return [{'_type': 'count_choice', '_scope_hint': scope_hint,
-                     'replaces': replaces, 'replacement_choices': choices,
+                     'replaces': replaces, 'replaces_raw': m2.group('repl').strip(),
+                     'replacement_choices': choices,
                      'per_n_models': per_n, 'max_per_n': 1}]
     # active: '[up to N] <model> can replace its <weapon> with one of the following: <list>'
     m2a = re.match(
-        r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?) can replace (?:its|their) (?P<repl>.+?) with one of the following[:\s]+(?P<list>.+)",
+        r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?) can replace (?:its|their) (?P<repl>.+?) with (?:one|1) of the following[:\s]+(?P<list>.+)",
         rest, re.I)
     if m2a:
         scope_hint = m2a.group('model').strip()
@@ -244,7 +249,8 @@ def classify_per_n(text, unit_name):
         choices = _choices_from_list(m2a.group('list'))
         if choices:
             return [{'_type': 'count_choice', '_scope_hint': scope_hint,
-                     'replaces': replaces, 'replacement_choices': choices,
+                     'replaces': replaces, 'replaces_raw': m2a.group('repl').strip(),
+                     'replacement_choices': choices,
                      'per_n_models': per_n, 'max_per_n': 1}]
     # passive single: '[up to N] <model>'s <weapon> can be replaced with <single>'
     m3 = re.match(
@@ -255,7 +261,8 @@ def classify_per_n(text, unit_name):
         replaces = qty_name(m3.group('repl'))
         replacement = qty_name(m3.group('rep'))
         return [{'_type': 'count', '_scope_hint': scope_hint,
-                 'replaces': replaces, 'replacement': replacement,
+                 'replaces': replaces, 'replaces_raw': m3.group('repl').strip(),
+                 'replacement': replacement, 'replacement_raw': m3.group('rep').strip(),
                  'per_n_models': per_n, 'max_per_n': 1}]
     # active single: '[up to N] <model> can replace its <weapon> with <single>'
     m3a = re.match(
@@ -266,7 +273,8 @@ def classify_per_n(text, unit_name):
         replaces = qty_name(m3a.group('repl'))
         replacement = qty_name(m3a.group('rep'))
         return [{'_type': 'count', '_scope_hint': scope_hint,
-                 'replaces': replaces, 'replacement': replacement,
+                 'replaces': replaces, 'replaces_raw': m3a.group('repl').strip(),
+                 'replacement': replacement, 'replacement_raw': m3a.group('rep').strip(),
                  'per_n_models': per_n, 'max_per_n': 1}]
     # equipped with (add)
     m4 = re.match(
@@ -291,7 +299,7 @@ def classify_any_number(text, unit_name):
         r"(?P<scope>.+?)"
         r"(?:\s+in this unit)?"
         r" can (?:each )?(?:have their (?P<repl>.+?) replaced with|replace their (?P<repl2>.+?) with)\s+"
-        r"(?:one of the following[:\s]+(?P<list>.+)|(?P<rep>\d+\s+\S.*?)(?:\.|$))",
+        r"(?:(?:one|1) of the following[:\s]+(?P<list>.+)|(?P<rep>\d+\s+\S.*?)(?:\.|$))",
         text, re.I)
     if not m:
         return None
@@ -329,7 +337,7 @@ def classify_active_swap(text, unit_name):
     likewise left for that pass."""
     m = re.match(
         r"(?:The|This)\s+(?P<model>.+?) can replace (?:its|their) (?P<repl>.+?) with"
-        r"(?: one of the following[:\s]+(?P<list>.+)|\s+(?P<rep>\d+\s+\S.*?)(?:\.|$))",
+        r"(?: (?:one|1) of the following[:\s]+(?P<list>.+)|\s+(?P<rep>\d+\s+\S.*?)(?:\.|$))",
         text, re.I)
     if not m:
         return None
@@ -376,7 +384,7 @@ def classify_conditional_add_choice(text, unit_name):
     requires_weapon so the whole choice disappears if the bearer weapon is swapped away."""
     m = re.match(
         r"(?:One|1)\s+model\s+equipped with an?\s+(?P<req>.+?)\s+"
-        r"can be equipped with one of the following[:\s]+(?P<list>.+)",
+        r"can be equipped with (?:one|1) of the following[:\s]+(?P<list>.+)",
         text, re.I)
     if not m:
         return None
@@ -451,7 +459,7 @@ def classify_this_model_choice(text, unit_name):
     """'This model's X can be replaced with one of the following: …'
        'This model's X can be replaced with <single>'"""
     m = re.match(
-        r"This model's (?P<repl>.+?) can be replaced with one of the following[:\s]+(?P<list>.+)",
+        r"This model's (?P<repl>.+?) can be replaced with (?:one|1) of the following[:\s]+(?P<list>.+)",
         text, re.I)
     if m:
         choices = _choices_from_list(m.group('list'))
@@ -470,7 +478,7 @@ def classify_this_model_choice(text, unit_name):
 def classify_this_model_add_choice(text, unit_name):
     """'This model can be equipped with one of the following: …'"""
     m = re.match(
-        r"This (?:model|unit) can be equipped with one of the following[:\s]+(?P<list>.+)",
+        r"This (?:model|unit) can be equipped with (?:one|1) of the following[:\s]+(?P<list>.+)",
         text, re.I)
     if m:
         choices = _choices_from_list(m.group('list'))
@@ -490,16 +498,14 @@ def classify_n_model_swap(text, unit_name):
     1-model unit like the Helbrute) computed zero. Now emits a fixed cap of N via
     max_total, keeping the 'Special Weapon' heading these slots had.
 
-    A compound source ('X and Y can be replaced with…') is deliberately left
-    UNMATCHED — the second replaced weapon would be silently dropped (B23)."""
+    A compound source ('X and Y can be replaced with…') is carried through as
+    replaces_raw and split into a compound 'A + B' source by build_loadout (B23)."""
     m = re.match(
         r"(?P<n>\d+)\s+(?:of\s+)?(?P<model>.+?)'s? (?P<repl>.+?) can be replaced with"
-        r"(?: one of the following[:\s]+(?P<list>.+)|\s+(?P<rep>\d+\s+\S.*?)(?:\.|$))",
+        r"(?: (?:one|1) of the following[:\s]+(?P<list>.+)|\s+(?P<rep>\d+\s+\S.*?)(?:\.|$))",
         text, re.I)
     if not m: return None
     repl_raw = m.group('repl').strip()
-    if re.search(r'\band\b', repl_raw, re.I):
-        return None
     n = int(m.group('n'))
     model = m.group('model').strip().lower()
     if model in ('model', 'models'):
@@ -513,11 +519,14 @@ def classify_n_model_swap(text, unit_name):
         choices = _choices_from_list(m.group('list'))
         if choices:
             return [{'_type': 'count_choice', '_scope_hint': scope,
-                     'replaces': replaces, 'replacement_choices': choices,
+                     'replaces': replaces, 'replaces_raw': repl_raw,
+                     'replacement_choices': choices,
                      'max_total': n, '_special_slot': True}]
     elif m.group('rep'):
+        rep_raw = m.group('rep').strip()
         return [{'_type': 'count', '_scope_hint': scope,
-                 'replaces': replaces, 'replacement': qty_name(m.group('rep')),
+                 'replaces': replaces, 'replaces_raw': repl_raw,
+                 'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw,
                  'max_total': n, '_special_slot': True}]
     return None
 
@@ -617,6 +626,9 @@ def build_weapon_index(unit_weapons_list):
             idx[b] = w
     return idx
 
+def _squash(s):
+    return re.sub(r'[^a-z0-9]', '', (s or '').lower())
+
 def normalise_weapon(raw, idx, global_idx=None):
     """Map a parsed weapon name to canonical form. Falls back to global index then strips plural s."""
     b = base_name(raw)
@@ -637,6 +649,15 @@ def normalise_weapon(raw, idx, global_idx=None):
         # prefix fallback in global
         for k, canon in global_idx.items():
             if k.startswith(b) or b.startswith(k):
+                return canon, True
+    # squashed fallback: ignore spaces/hyphens ('powerfist' -> 'power fist')
+    sq = _squash(b)
+    if sq:
+        for k, canon in idx.items():
+            if _squash(k) == sq:
+                return canon, True
+        for k, canon in (global_idx or {}).items():
+            if _squash(k) == sq:
                 return canon, True
     return raw.title(), False
 
@@ -762,47 +783,46 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
             scope = resolve_scope(op.get('_scope_hint', 'body'), model_groups)
             # single-model scope: ensure only fixed=1 groups are targeted
             single_group = next((g for g in model_groups if g['name'] == scope and g.get('fixed') == 1), None)
-            if ot == 'choice':
+            if ot in ('choice', 'single'):
+                # The engine keys a choice's source by exact weapon name, so it cannot
+                # yet consume a compound source ('A and B can be replaced with C').
+                # Flag it and act on the first weapon only (B23b, engine turn).
+                src_parts = split_compound_source(op.get('replaces_raw', op['replaces']), weapon_idx, global_idx)
+                if len(src_parts) > 1:
+                    flags.append(f'COMPOUND_SOURCE_UNSUPPORTED: {op.get("replaces_raw", op["replaces"])} on {unit_name}')
                 repl, ok = normalise_weapon(op['replaces'], weapon_idx, global_idx)
-                if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["replaces"]} (choice.replaces) on {unit_name}')
+                if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["replaces"]} ({ot}.replaces) on {unit_name}')
+                repl = base_display(repl)
+                raw_choices = op['choices'] if ot == 'choice' else [op['replacement']]
                 choices_out = []
-                for c in op['choices']:
-                    if ' + ' in c:
-                        parts = []
-                        for w in c.split(' + '):
-                            wn, wok = normalise_weapon(w, weapon_idx, global_idx)
-                            if not wok: flags.append(f'WEAPON_NOT_FOUND: {w} (compound choice) on {unit_name}')
-                            parts.append(wn)
-                        choices_out.append(' + '.join(parts))
-                    else:
-                        cn, cok = normalise_weapon(c, weapon_idx, global_idx)
-                        if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (choice) on {unit_name}')
-                        choices_out.append(cn)
-                options.append({'id': new_id('cho'), 'scope': scope, 'group': repl.title() + ' Options',
+                for c in raw_choices:
+                    parts = []
+                    for w in c.split(' + '):
+                        wn, wok = normalise_weapon(w, weapon_idx, global_idx)
+                        if not wok: flags.append(f'WEAPON_NOT_FOUND: {w} ({ot}.choices) on {unit_name}')
+                        parts.append(base_display(wn))
+                    choices_out.append(' + '.join(parts))
+                options.append({'id': new_id('cho' if ot == 'choice' else 'sng'), 'scope': scope,
+                                'group': repl.title() + ' Options',
                                 'type': 'choice', 'replaces': repl, 'choices': choices_out})
-            elif ot == 'single':
-                repl, ok = normalise_weapon(op['replaces'], weapon_idx, global_idx)
-                if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["replaces"]} (single.replaces) on {unit_name}')
-                rep, ok2 = normalise_weapon(op['replacement'], weapon_idx, global_idx)
-                if not ok2: flags.append(f'WEAPON_NOT_FOUND: {op["replacement"]} (single.replacement) on {unit_name}')
-                options.append({'id': new_id('sng'), 'scope': scope, 'group': repl.title() + ' Options',
-                                'type': 'choice', 'replaces': repl, 'choices': [rep]})
             elif ot in ('count', 'count_choice', 'any_count', 'any_count_choice'):
                 is_any = ot.startswith('any_')
-                # source (replaces): compound-aware only for the any-number family
                 def _norm_parts(parts, ctx):
                     out = []
                     for p in parts:
                         pn, pok = normalise_weapon(p, weapon_idx, global_idx)
                         if not pok: flags.append(f'WEAPON_NOT_FOUND: {p} ({ctx}) on {unit_name}')
-                        out.append(pn)
+                        out.append(base_display(pn))
                     return ' + '.join(out)
-                if is_any:
-                    src_parts = split_compound_source(op.get('replaces_raw', op['replaces']), weapon_idx, global_idx)
-                    repl = _norm_parts(src_parts, 'count.replaces')
-                else:
-                    repl, ok = normalise_weapon(op['replaces'], weapon_idx, global_idx)
-                    if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["replaces"]} (count.replaces) on {unit_name}')
+                # source (replaces): compound-aware for the whole count family (B23).
+                # The engine splits a compound source (' + ') only on multi-model
+                # groups; on a fixed-1 group it keys the source by exact name, so a
+                # compound there is flagged and reduced to its first weapon.
+                src_parts = split_compound_source(op.get('replaces_raw', op['replaces']), weapon_idx, global_idx)
+                if len(src_parts) > 1 and single_group:
+                    flags.append(f'COMPOUND_SOURCE_ON_SINGLE_GROUP: {op.get("replaces_raw")} on {unit_name}')
+                    src_parts = src_parts[:1]
+                repl = _norm_parts(src_parts, 'count.replaces')
                 per_n = op.get('per_n_models')
                 max_pn = op.get('max_per_n', 1)
                 is_choice = 'choice' in ot
@@ -810,24 +830,15 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 # swaps are their own thing (e.g. power fist -> chainfist), so they get a
                 # source-derived heading instead of sharing 'Special Weapon'.
                 grp_label = 'Special Weapon' if ((per_n or op.get('_special_slot')) and not is_any) \
-                            else (repl.title() + ' Options')
+                            else (repl.split(' + ')[0].title() + ' Options')
                 if is_choice:
                     choices_out = []
                     for c in op['replacement_choices']:
-                        if ' + ' in c:
-                            choices_out.append(_norm_parts(c.split(' + '), 'count_choice'))
-                        else:
-                            cn, cok = normalise_weapon(c, weapon_idx, global_idx)
-                            if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (count_choice) on {unit_name}')
-                            choices_out.append(cn)
+                        choices_out.append(_norm_parts(c.split(' + '), 'count_choice'))
                     entry = {'id': new_id('cc'), 'scope': scope, 'group': grp_label,
                              'type': 'count', 'replaces': repl, 'replacement_choices': choices_out}
                 else:
-                    if is_any:
-                        rep = _norm_parts(split_compound_replacement(op.get('replacement_raw', op['replacement'])), 'count.rep')
-                    else:
-                        rep, ok2 = normalise_weapon(op['replacement'], weapon_idx, global_idx)
-                        if not ok2: flags.append(f'WEAPON_NOT_FOUND: {op["replacement"]} (count.rep) on {unit_name}')
+                    rep = _norm_parts(split_compound_replacement(op.get('replacement_raw', op['replacement'])), 'count.rep')
                     entry = {'id': new_id('cnt'), 'scope': scope, 'group': grp_label,
                              'type': 'count', 'replaces': repl, 'replacement': rep}
                 if per_n:
@@ -853,7 +864,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 for c in op['choices']:
                     cn, cok = normalise_weapon(c, weapon_idx, global_idx)
                     if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (add_choice) on {unit_name}')
-                    choices_out.append(cn)
+                    choices_out.append(base_display(cn))
                 options.append({'id': new_id('ach'), 'scope': scope, 'group': 'Wargear',
                                 'type': 'choice', 'replaces': None, 'choices': choices_out,
                                 '_note': 'add_choice: no base weapon replaced; pick one to add'})
