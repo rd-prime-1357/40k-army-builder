@@ -413,15 +413,13 @@
         "scope": "Tactical Sergeant",
         "group": "Bolt Pistol Options",
         "type": "choice",
-        "replaces": "Bolt pistol",
+        "replaces": "Bolt pistol + Boltgun",
         "choices": [
           "Twin lightning claws"
         ]
       }
     ],
-    "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: bolt pistol and boltgun on Tactical Squad"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000071": {
@@ -490,7 +488,7 @@
         "scope": "Captain",
         "group": "Bolt Pistol Options",
         "type": "choice",
-        "replaces": "Bolt pistol",
+        "replaces": "Bolt pistol + Master-crafted bolter + Close combat weapon",
         "choices": [
           "Heavy bolt pistol + Power fist",
           "Heavy bolt pistol + Master-crafted power weapon",
@@ -514,7 +512,6 @@
       }
     ],
     "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: bolt pistol, master-crafted bolter and close combat weapon on Captain",
       "WEAPON_NOT_FOUND: relic shield (choice.choices) on Captain"
     ],
     "_defaults_source": "equipped"
@@ -616,14 +613,13 @@
         "scope": "Captain with Jump Pack",
         "group": "Heavy Bolt Pistol Options",
         "type": "choice",
-        "replaces": "Heavy bolt pistol",
+        "replaces": "Heavy bolt pistol + Astartes chainsword",
         "choices": [
           "Thunder hammer"
         ]
       }
     ],
     "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: heavy bolt pistol and astartes chainsword on Captain With Jump Pack",
       "UNMATCHED: If this model is equipped with a heavy bolt pistol and an Astartes chainsword, it can be equipped with 1 relic shield. T"
     ],
     "_defaults_source": "equipped"
@@ -968,16 +964,14 @@
         "scope": "Dreadnought",
         "group": "Dreadnought Combat Weapon Options",
         "type": "choice",
-        "replaces": "Dreadnought combat weapon",
+        "replaces": "Dreadnought combat weapon + Storm bolter",
         "choices": [
           "Missile launcher + Close combat weapon",
           "Heavy flamer + Dreadnought combat weapon"
         ]
       }
     ],
-    "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: dreadnought combat weapon and storm bolter on Dreadnought"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000118": {
@@ -1346,15 +1340,13 @@
         "scope": "Brutalis Dreadnought",
         "group": "Brutalis Fists Options",
         "type": "choice",
-        "replaces": "Brutalis fists",
+        "replaces": "Brutalis fists + Brutalis bolt rifles",
         "choices": [
           "Brutalis talons"
         ]
       }
     ],
-    "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: brutalis fists and brutalis bolt rifles on Brutalis Dreadnought"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000138": {
@@ -1625,15 +1617,13 @@
         "scope": "Death Company Dreadnought",
         "group": "Blood Fists Options",
         "type": "choice",
-        "replaces": "Blood fists",
+        "replaces": "Blood fists + Blood fist bolt rifles",
         "choices": [
           "Blood talons"
         ]
       }
     ],
-    "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: blood fists and blood fist bolt rifles on Death Company Dreadnought"
-    ]
+    "_parser_flags": []
   },
   "000000168": {
     "size_brackets": [
@@ -2402,7 +2392,7 @@
         "scope": "Wolf Guard Terminator Pack Leader",
         "group": "Storm Bolter Options",
         "type": "choice",
-        "replaces": "Storm bolter",
+        "replaces": "Storm bolter + Master-crafted power weapon",
         "choices": [
           "Relic greataxe",
           "Twin lightning claws"
@@ -2410,8 +2400,7 @@
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count.rep) on Wolf Guard Terminators",
-      "COMPOUND_SOURCE_UNSUPPORTED: storm bolter and master-crafted power weapon on Wolf Guard Terminators"
+      "WEAPON_NOT_FOUND: storm shield (count.rep) on Wolf Guard Terminators"
     ],
     "_defaults_source": "equipped"
   },
@@ -2586,7 +2575,7 @@
           "Twin autocannon",
           "Twin lascannon",
           "Twin heavy bolter",
-          "Additional Helbrute Fist"
+          "Helbrute fist"
         ]
       },
       {
@@ -2612,7 +2601,6 @@
       }
     ],
     "_parser_flags": [
-      "WEAPON_NOT_FOUND: additional helbrute fist (choice.choices) on Helbrute",
       "UNMATCHED: For each Helbrute fist this model is equipped with, it can be equipped with one of the following: 1 combi-bolter* 1 heav"
     ],
     "_defaults_source": "equipped"
@@ -2641,7 +2629,7 @@
         "type": "choice",
         "replaces": null,
         "choices": [
-          "Additional Combi-Bolter",
+          "Combi-bolter",
           "Combi-weapon"
         ],
         "_note": "add_choice: no base weapon replaced; pick one to add"
@@ -2655,9 +2643,7 @@
         "max_total": 1
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: additional combi-bolter (add_choice) on Chaos Rhino"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000001048": {
@@ -3516,7 +3502,7 @@
         "scope": "Lieutenant",
         "group": "Bolt Pistol Options",
         "type": "choice",
-        "replaces": "Bolt pistol",
+        "replaces": "Bolt pistol + Master-crafted bolter + Close combat weapon",
         "choices": [
           "Neo Volkite Pistol, 1 Master-Crafted Power Weapon And 1 Storm Shield"
         ]
@@ -3544,7 +3530,6 @@
       }
     ],
     "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: bolt pistol, master-crafted bolter and close combat weapon on Lieutenant",
       "WEAPON_NOT_FOUND: neo volkite pistol, 1 master-crafted power weapon and 1 storm shield (single.choices) on Lieutenant"
     ],
     "_defaults_source": "equipped"
@@ -4824,7 +4809,7 @@
         "scope": "Ancient in Terminator Armour",
         "group": "Storm Bolter Options",
         "type": "choice",
-        "replaces": "Storm bolter",
+        "replaces": "Storm bolter + Power fist",
         "choices": [
           "Twin lightning claws",
           "Thunder hammer + Terminator Storm Shield"
@@ -4832,7 +4817,6 @@
       }
     ],
     "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: storm bolter and power fist on Ancient In Terminator Armour",
       "WEAPON_NOT_FOUND: terminator storm shield (choice.choices) on Ancient In Terminator Armour"
     ],
     "_defaults_source": "equipped"
@@ -5794,15 +5778,13 @@
         "scope": "Ancient",
         "group": "Bolt Rifle Options",
         "type": "choice",
-        "replaces": "Bolt rifle",
+        "replaces": "Bolt rifle + Close combat weapon",
         "choices": [
           "Power weapon"
         ]
       }
     ],
-    "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: bolt rifle and close combat weapon on Ancient"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000002776": {
@@ -6961,7 +6943,7 @@
         "scope": "Venerable Dreadnought",
         "group": "Assault Cannon Options",
         "type": "choice",
-        "replaces": "Assault cannon",
+        "replaces": "Assault cannon + Storm bolter + Dreadnought combat weapon",
         "choices": [
           "Fenrisian greataxe + Blizzard Shield + Storm bolter",
           "Fenrisian greataxe + Blizzard Shield + Heavy flamer"
@@ -6969,7 +6951,6 @@
       }
     ],
     "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: assault cannon, storm bolter and dreadnought combat weapon on Venerable Dreadnought",
       "WEAPON_NOT_FOUND: blizzard shield (choice.choices) on Venerable Dreadnought",
       "WEAPON_NOT_FOUND: blizzard shield (choice.choices) on Venerable Dreadnought"
     ]
@@ -7675,7 +7656,7 @@
       }
     ],
     "_parser_flags": [
-      "COMPOUND_SOURCE_UNSUPPORTED: fenrisian greataxe or great wolf claw and storm bolter on Wulfen Dreadnought",
+      "OR_SOURCE_UNSUPPORTED: fenrisian greataxe or great wolf claw and storm bolter on Wulfen Dreadnought",
       "WEAPON_NOT_FOUND: blizzard shield and 1 heavy flamer (single.choices) on Wulfen Dreadnought",
       "UNMATCHED: If this model is not equipped with a storm bolter, its heavy flamer can be replaced with 1 storm bolter."
     ]

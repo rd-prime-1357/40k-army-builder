@@ -97,7 +97,7 @@ def split_compound_source(raw, idx, global_idx=None):
     claws']. Only splits when the whole phrase is not itself a known weapon."""
     if _is_exact_weapon(raw, idx, global_idx):
         return [base_name(raw)]
-    parts = [p.strip() for p in re.split(r'\s+and\s+', raw.strip()) if p.strip()]
+    parts = [p.strip(' ,') for p in re.split(r'\s*,\s*|\s+and\s+', raw.strip()) if p.strip(' ,')]
     if len(parts) > 1:
         return [base_name(p) for p in parts]
     return [base_name(raw)]
@@ -712,6 +712,11 @@ def normalise_weapon(raw, idx, global_idx=None):
         for k, canon in (global_idx or {}).items():
             if _squash(k) == sq:
                 return canon, True
+    # B29: a quantity qualifier the datasheet uses on an add ('1 additional combi-bolter')
+    # is not part of the weapon's name — resolve the weapon and let the add stack it.
+    m = re.match(r'^(?:additional|another|second|extra)\s+(.+)$', b)
+    if m:
+        return normalise_weapon(m.group(1), idx, global_idx)
     return raw.title(), False
 
 # ── OR alternative-profile merge ────────────────────────────────────────────────
@@ -837,15 +842,22 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
             # single-model scope: ensure only fixed=1 groups are targeted
             single_group = next((g for g in model_groups if g['name'] == scope and g.get('fixed') == 1), None)
             if ot in ('choice', 'single'):
-                # The engine keys a choice's source by exact weapon name, so it cannot
-                # yet consume a compound source ('A and B can be replaced with C').
-                # Flag it and act on the first weapon only (B23b, engine turn).
-                src_parts = split_compound_source(op.get('replaces_raw', op['replaces']), weapon_idx, global_idx)
-                if len(src_parts) > 1:
-                    flags.append(f'COMPOUND_SOURCE_UNSUPPORTED: {op.get("replaces_raw", op["replaces"])} on {unit_name}')
-                repl, ok = normalise_weapon(op['replaces'], weapon_idx, global_idx)
-                if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["replaces"]} ({ot}.replaces) on {unit_name}')
-                repl = base_display(repl)
+                # B23b: a compound source ('A and B can be replaced with C') is written in
+                # full as 'A + B'. The engine consumes every weapon named (D97), on a
+                # single-model group as well as a multi-model one.
+                raw_src = op.get('replaces_raw', op['replaces'])
+                src_parts = split_compound_source(raw_src, weapon_idx, global_idx)
+                if len(src_parts) > 1 and any(re.search(r'\s+or\s+', p) for p in src_parts):
+                    # 'Fenrisian greataxe or great wolf claw and storm bolter' — the source
+                    # itself offers an alternative. Not a shape the engine keys on yet.
+                    flags.append(f'OR_SOURCE_UNSUPPORTED: {raw_src} on {unit_name}')
+                    src_parts = src_parts[:1]
+                src_out = []
+                for p in src_parts:
+                    pn, pok = normalise_weapon(p, weapon_idx, global_idx)
+                    if not pok: flags.append(f'WEAPON_NOT_FOUND: {p} ({ot}.replaces) on {unit_name}')
+                    src_out.append(base_display(pn))
+                repl = ' + '.join(src_out)
                 raw_choices = op['choices'] if ot == 'choice' else [op['replacement']]
                 choices_out = []
                 for c in raw_choices:
@@ -856,7 +868,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                         parts.append(base_display(wn))
                     choices_out.append(' + '.join(parts))
                 options.append({'id': new_id('cho' if ot == 'choice' else 'sng'), 'scope': scope,
-                                'group': repl.title() + ' Options',
+                                'group': repl.split(' + ')[0].title() + ' Options',
                                 'type': 'choice', 'replaces': repl, 'choices': choices_out})
             elif ot in ('count', 'count_choice', 'any_count', 'any_count_choice'):
                 is_any = ot.startswith('any_')
@@ -868,13 +880,9 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                         out.append(base_display(pn))
                     return ' + '.join(out)
                 # source (replaces): compound-aware for the whole count family (B23).
-                # The engine splits a compound source (' + ') only on multi-model
-                # groups; on a fixed-1 group it keys the source by exact name, so a
-                # compound there is flagged and reduced to its first weapon.
+                # Since D97 the engine consumes every weapon of a ' + ' source on a
+                # single-model group as well, so no truncation is needed here.
                 src_parts = split_compound_source(op.get('replaces_raw', op['replaces']), weapon_idx, global_idx)
-                if len(src_parts) > 1 and single_group:
-                    flags.append(f'COMPOUND_SOURCE_ON_SINGLE_GROUP: {op.get("replaces_raw")} on {unit_name}')
-                    src_parts = src_parts[:1]
                 repl = _norm_parts(src_parts, 'count.replaces')
                 per_n = op.get('per_n_models')
                 max_pn = op.get('max_per_n', 1)
