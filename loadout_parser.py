@@ -39,6 +39,21 @@ def base_name(n):
     n = re.sub(r'\s+[–-]\s+\S.*$', '', n).strip()
     return n.lower()
 
+def lookup_equipment(name, equipment_items):
+    """Resolve a wargear item against the allowlist (weapon_abilities.json), tolerating
+    a trailing qualifier the datasheet doesn't use ('Orbital Comms Array (Aura)').
+    Returns the item's display name, or None."""
+    if not equipment_items or not name:
+        return None
+    key = base_name(name)
+    if key in equipment_items:
+        return equipment_items[key]
+    for k, disp in equipment_items.items():
+        if re.sub(r'\s*\([^)]*\)\s*$', '', k).strip() == key:
+            return re.sub(r'\s*\([^)]*\)\s*$', '', disp).strip()
+    return None
+
+
 def base_display(name):
     """Option-facing display form of a matched weapon: drop a ' – <profile>' /
     ' - <profile>' suffix so a multi-profile weapon (e.g. 'Astartes grenade
@@ -897,15 +912,25 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 options.append(entry)
             elif ot == 'add_choice':
                 # "equipped with one of the following" — treated as a single-model choice
-                # (no replaces; user picks which to add)
+                # (no replaces; user picks which to add). A pick that isn't a weapon but
+                # is a known wargear item (shield dome, orbital comms array) is named in
+                # equipment_choices so the engine files it under equipment, not weapons.
                 choices_out = []
+                equip_out = []
                 for c in op['choices']:
                     cn, cok = normalise_weapon(c, weapon_idx, global_idx)
+                    item = lookup_equipment(c, equipment_items) if not cok else None
+                    if item:
+                        choices_out.append(item)
+                        equip_out.append(item)
+                        continue
                     if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (add_choice) on {unit_name}')
                     choices_out.append(base_display(cn))
-                options.append({'id': new_id('ach'), 'scope': scope, 'group': 'Wargear',
-                                'type': 'choice', 'replaces': None, 'choices': choices_out,
-                                '_note': 'add_choice: no base weapon replaced; pick one to add'})
+                entry = {'id': new_id('ach'), 'scope': scope, 'group': 'Wargear',
+                         'type': 'choice', 'replaces': None, 'choices': choices_out,
+                         '_note': 'add_choice: no base weapon replaced; pick one to add'}
+                if equip_out: entry['equipment_choices'] = equip_out
+                options.append(entry)
             elif ot == 'add':
 
                 what, ok = normalise_weapon(op['adds'], weapon_idx, global_idx)

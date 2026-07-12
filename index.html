@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.53';
+  const VERSION = '5.54';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2591,6 +2591,16 @@
   // split and each part counted.
   function loWeaponParts(name) { return String(name || '').split(' + ').map(weaponBase).filter(Boolean); }
   function loHasWeapon(name, want) { return loWeaponParts(name).includes(weaponBase(want)); }
+  // Is any weapon this option replaces actually in the group's gear? An option whose
+  // source is missing (a variant-group swap parked on the base group, or a source
+  // that's a wargear item rather than a weapon) can't consume anything, so it must
+  // not emit anything either.
+  function loSrcOnGroup(g, o) {
+    const parts = loWeaponParts(o.replaces);
+    if (!parts.length) return true;   // add-choice: nothing to replace
+    const own = new Set((g.default_weapons || []).map(weaponBase));
+    return parts.some(s => own.has(s));
+  }
   function loSelCount(opt, sel, size, groupN) {
     const v = (sel.countById || {})[opt.id];
     let raw = 0;
@@ -2694,36 +2704,69 @@
         // ("1 model's Helbrute fist can be replaced with ..."). A picked choice takes
         // the whole slot (every copy the model carries); a count takes exactly the
         // number selected, and what it leaves behind stays on the model.
-        const replaced = {}, cRepl = {}, cUsed = {};
-        for (const o of opts) if (o.type === 'choice') { const p = choiceBy[o.id]; if (p) replaced[o.replaces] = p; }
-        const chargeF = (src, repl, cnt) => {
-          if (!(cnt > 0) || !src) return;
-          (cRepl[src] = cRepl[src] || []).push({ replacement: repl, n: cnt });
-          cUsed[src] = (cUsed[src] || 0) + cnt;
-        };
-        for (const o of opts) if (o.type === 'count') {
-          if (!reqOk(o)) continue;
+        // B23b: a source may name several weapons ("its storm bolter and power fist can
+        // be replaced with twin lightning claws"). Every named weapon is consumed and
+        // the replacement is emitted once — the multi-model path below already does this.
+        // Sources and consumption are keyed by base weapon name, so a profile suffix or
+        // a case difference between the option and the group's gear can't miss.
+        // A choice with no source at all is an add-choice ("pick one to add"): the pick
+        // is gained and nothing is given up. Names listed in equipment_choices land in
+        // the equipment table rather than the weapon table.
+        const dw = g.default_weapons || [];
+        const onModel = new Set(dw.map(weaponBase));
+        const taken = {};      // base weapon -> a choice already swapped this whole slot
+        const cUsed = {};      // base weapon -> copies consumed by count options
+        const emitF = [];      // { replacement, n, equipment }
+        for (const o of opts) {
+          if (o.type !== 'choice') continue;
+          const p = choiceBy[o.id];
+          if (!p) continue;
+          const parts = loWeaponParts(o.replaces);
+          if (!parts.length) {   // add-choice: nothing replaced
+            emitF.push({ replacement: p, n: 1, equipment: (o.equipment_choices || []).includes(p) });
+            continue;
+          }
+          if (!parts.some(s => onModel.has(s))) continue;   // source isn't on this model
+          // B25: two choices naming the same weapon are alternatives for one slot. The
+          // UI merges them into one control; this is the guard for a stale saved list.
+          if (parts.some(s => taken[s])) { overAllocated = true; continue; }
+          const first = dw.find(w => weaponBase(w) === parts[0]);
+          for (const s of parts) taken[s] = o.id;
+          emitF.push({ replacement: p, n: first ? wcnt(g, first) : 1 });
+        }
+        for (const o of opts) {
+          if (o.type !== 'count' || !reqOk(o)) continue;
+          const parts = loWeaponParts(o.replaces);
+          if (!parts.length || !parts.some(s => onModel.has(s))) continue;
           const cap = Math.min(loMaxCount(o, size, n), reqCap(o)), selv = countBy[o.id];
+          const chargeF = (repl, cnt) => {
+            if (!(cnt > 0)) return;
+            for (const s of parts) cUsed[s] = (cUsed[s] || 0) + cnt;
+            emitF.push({ replacement: repl, n: cnt });
+          };
           if (o.replacement_choices) {
             const tally = (selv && typeof selv === 'object') ? selv : {};
             let used = 0;
             for (const k of Object.keys(tally)) {
               if (!o.replacement_choices.includes(k)) continue;
               const want = Math.max(0, Math.min(tally[k] | 0, cap - used));
-              if (want > 0) { chargeF(o.replaces, k, want); used += want; }
+              if (want > 0) { chargeF(k, want); used += want; }
             }
           } else {
             const want = Math.max(0, Math.min((selv | 0), cap));
-            if (want > 0) chargeF(o.replaces, o.replacement, want);
+            if (want > 0) chargeF(o.replacement, want);
           }
         }
-        for (const w of g.default_weapons) {
-          const have = wcnt(g, w), used = cUsed[w] || 0;
-          if (replaced[w]) { if (used > 0) overAllocated = true; addRepl(weapons, replaced[w], have); continue; }
+        for (const w of dw) {
+          const b = weaponBase(w), have = wcnt(g, w), used = cUsed[b] || 0;
+          if (taken[b]) { if (used > 0) overAllocated = true; continue; }
           if (used > have) overAllocated = true;
           const keep = have - Math.min(used, have);
           if (keep > 0) add(weapons, w, keep);
-          for (const e of (cRepl[w] || [])) addRepl(weapons, e.replacement, e.n);
+        }
+        for (const e of emitF) {
+          if (e.equipment) add(equipment, e.replacement, e.n);
+          else addRepl(weapons, e.replacement, e.n);
         }
         // Leader can also carry pooled/add weapons (e.g. a Sergeant grenade launcher).
         for (const o of opts) if (o.type === 'add') {
@@ -2766,6 +2809,10 @@
       };
       for (const o of countOpts) {
         if (!reqOk(o)) continue;   // gated on a missing weapon → emits nothing, charges nothing
+        // A swap whose source weapon isn't in this group's gear (a variant-group option
+        // parked on the base group, or a source that's an item rather than a weapon)
+        // would otherwise hand out the replacement for free. It grants nothing.
+        if (!loSrcOnGroup(g, o)) continue;
         const cap = Math.min(loMaxCount(o, size, n), reqCap(o)), selv = countBy[o.id];
         if (o.replacement_choices) {
           const tally = (selv && typeof selv === 'object') ? selv : {};
@@ -2804,10 +2851,20 @@
     // is a broken compound the loadout parser couldn't express (e.g. the
     // Lieutenant's "neo-volkite + power weapon + storm shield" crammed into a
     // single swap) — the bundle now owns it, so drop it entirely.
+    // A compound replacement ('Heavy flamer + Dreadnought combat weapon') is a real
+    // pick — judge it part by part, or every compound choice reads as broken and the
+    // option vanishes from the sheet.
     const brokenChoice = (o) => o.type === 'choice' && Array.isArray(o.choices) &&
-      o.choices.every(c => !validW.has(weaponBase(c)));
+      o.choices.every(c => !String(c).split(' + ').some(p => validW.has(weaponBase(p))));
+    // An option whose source weapon isn't in its scope group's gear can't do anything
+    // (the parser parked a variant-group swap on the base group, or the source is a
+    // wargear item, not a weapon). It's hidden rather than shown as a dead control.
+    const groupOf = {};
+    for (const g of def.model_groups) groupOf[g.name] = g;
+    const srcMissing = (o) => (o.type === 'choice' || o.type === 'count') && o.replaces
+      && groupOf[o.scope] && !loSrcOnGroup(groupOf[o.scope], o);
     const suppressed = (o) =>
-      brokenChoice(o) || (ownsNow && o.replaces && managed.has(weaponBase(o.replaces)));
+      brokenChoice(o) || srcMissing(o) || (ownsNow && o.replaces && managed.has(weaponBase(o.replaces)));
     for (const o of def.options)
       if (suppressed(o) && entry.wargear[o.id] != null)
         entry.wargear[o.id] = (o.type === 'choice') ? null : 0;
@@ -2821,6 +2878,42 @@
       if (o.type === 'add' && o.requires_weapon && !reqOkUI(o) && Number(entry.wargear[o.id] || 0) > 0) entry.wargear[o.id] = 0;
       if (o.type === 'count' && o.requires_weapon && !reqOkUI(o)
           && !o.replacement_choices && Number(entry.wargear[o.id] || 0) > 0) entry.wargear[o.id] = 0;
+    }
+    // B25: two choice options in one group can name the same source weapon — the
+    // Venerable Dreadnought's assault cannon becomes a helfrost cannon *or* the
+    // greataxe-and-shield pair. They are alternatives for one slot, so they render as
+    // a single radio group. Options are joined into a cluster when their source
+    // weapons overlap (a compound source can overlap two different options).
+    const choiceRoot = {}, clusterOf = {};
+    {
+      const parent = {}, owner = {};
+      const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+      for (const o of def.options) {
+        if (o.type !== 'choice' || suppressed(o)) continue;
+        const parts = loWeaponParts(o.replaces);
+        if (!parts.length) continue;          // add-choice: owns no slot, never merged
+        parent[o.id] = o.id;
+        for (const s of parts) {
+          const k = o.scope + '|' + s;
+          if (owner[k] == null) owner[k] = o.id;
+          else { const a = find(owner[k]), b = find(o.id); if (a !== b) parent[b] = a; }
+        }
+      }
+      for (const o of def.options) if (parent[o.id]) {
+        const r = find(o.id);
+        choiceRoot[o.id] = r;
+        (clusterOf[r] = clusterOf[r] || []).push(o);
+      }
+    }
+    // Heal a saved list that carries a pick on two members of one cluster: the first
+    // wins, the rest clear. Runs before the rollup so no illegal state reaches it.
+    for (const r of Object.keys(clusterOf)) {
+      if (clusterOf[r].length < 2) continue;
+      let seen = false;
+      for (const o of clusterOf[r]) {
+        if (!entry.wargear[o.id]) continue;
+        if (seen) entry.wargear[o.id] = null; else seen = true;
+      }
     }
     const roll = loRollup(def, size, loadoutSelections(entry, def));
     const grpCounts = loGroupCounts(def, size);
@@ -2855,8 +2948,21 @@
       for (const o of opts) {
         if (o.group !== lastGroup) { html += `<div class="detail-section-label${lastGroup !== null ? ' lo-group-sep' : ''}">${o.group}</div>`; lastGroup = o.group; }
         if (o.type === 'choice') {
+          const root = choiceRoot[o.id];
+          const mates = (root && clusterOf[root]) || [];
+          if (mates.length > 1) {
+            if (root !== o.id) continue;      // already drawn with its cluster
+            const ids = mates.map(m => m.id).join(',');
+            const anyCur = mates.some(m => entry.wargear[m.id]);
+            html += loChoiceRowX(entry.listId, ids, '', '', 'Keep ' + o.replaces, !anyCur);
+            for (const m of mates)
+              for (const c of m.choices)
+                html += loChoiceRowX(entry.listId, ids, m.id, c, c, entry.wargear[m.id] === c);
+            continue;
+          }
           const cur = entry.wargear[o.id] || null;
-          html += loChoiceRow(entry.listId, o.id, '', 'Keep ' + o.replaces, !cur);
+          const keepLabel = o.replaces ? 'Keep ' + o.replaces : 'None';
+          html += loChoiceRow(entry.listId, o.id, '', keepLabel, !cur);
           for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c);
         } else if (o.type === 'count' && o.replacement_choices) {
           const max = loMaxCount(o, size, grpCounts[g.name]);
@@ -2939,6 +3045,20 @@
   function editLoadoutChoice(listId, optId, value) {
     const e = armyList.find(x => x.listId === listId); if (!e) return;
     e.wargear[optId] = value || null;
+    renderAll();
+  }
+  // One radio group spanning several choice options that compete for the same weapon
+  // slot (B25): picking any row clears every option in the cluster, then sets the one
+  // that was clicked. The 'keep' row passes no option id, so it just clears.
+  function loChoiceRowX(listId, ids, optId, value, label, chosen) {
+    return `<div class="option-item radio${chosen ? ' chosen' : ''}" onclick="editLoadoutChoiceX(${listId},'${esc(ids)}','${esc(optId)}','${esc(value)}')">
+      <div class="option-item-row"><div class="option-check">${chosen ? '\u25CF' : ''}</div>
+      <div class="option-item-name">${label}</div></div></div>`;
+  }
+  function editLoadoutChoiceX(listId, ids, optId, value) {
+    const e = armyList.find(x => x.listId === listId); if (!e) return;
+    for (const id of String(ids).split(',')) if (id) e.wargear[id] = null;
+    if (optId && value) e.wargear[optId] = value;
     renderAll();
   }
   function editLoadoutCount(listId, optId, delta, max) {
