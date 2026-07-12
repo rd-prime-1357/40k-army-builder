@@ -64,7 +64,8 @@
         "adds_weapon": "Astartes grenade launcher",
         "per_n_models": 5,
         "max_per_n": 1,
-        "pool_id": "gl_pool"
+        "pool_id": "gl_pool",
+        "requires_weapon": "Bolt rifle"
       },
       {
         "id": "grenade_launcher_sgt",
@@ -192,7 +193,8 @@
         "type": "add",
         "equipment": "Icon of despair",
         "max_total": 1,
-        "blocks_swap": true
+        "blocks_swap": true,
+        "requires_weapon": "Boltgun"
       }
     ],
     "_defaults_source": "equipped"
@@ -4520,11 +4522,12 @@
       {
         "id": "add_3",
         "scope": "Death Company Marines with Bolt Rifles",
-        "group": "Astartes Grenade Launcher - Frag",
+        "group": "Astartes Grenade Launcher",
         "type": "add",
-        "adds_weapon": "Astartes grenade launcher - frag",
+        "adds_weapon": "Astartes grenade launcher",
         "per_n_models": 5,
-        "max_per_n": 1
+        "max_per_n": 1,
+        "requires_weapon": "Bolt rifle"
       },
       {
         "id": "cc_4",
