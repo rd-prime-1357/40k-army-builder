@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.54';
+  const VERSION = '5.55';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2591,6 +2591,18 @@
   // split and each part counted.
   function loWeaponParts(name) { return String(name || '').split(' + ').map(weaponBase).filter(Boolean); }
   function loHasWeapon(name, want) { return loWeaponParts(name).includes(weaponBase(want)); }
+  // B14b part 3: the equipment channel on the *replacement* side. A replacement can be
+  // part weapon, part item ("1 thunder hammer and 1 relic shield"). Names an option lists
+  // in `equipment_choices` (a whole add-choice pick, D97) or `equipment_parts` (a named
+  // part of any replacement) belong in the equipment table, not the weapon table.
+  // Both lists are read the same way, so one set answers "is this name an item here?".
+  function loEquipSet(o) {
+    const s = new Set();
+    for (const n of (o.equipment_choices || [])) s.add(weaponBase(n));
+    for (const n of (o.equipment_parts || [])) s.add(weaponBase(n));
+    return s;
+  }
+  function loIsEquipPart(o, name) { return loEquipSet(o).has(weaponBase(name)); }
   // Is any weapon this option replaces actually in the group's gear? An option whose
   // source is missing (a variant-group swap parked on the base group, or a source
   // that's a wargear item rather than a weapon) can't consume anything, so it must
@@ -2691,8 +2703,18 @@
     const reqCap   = (opt) => opt.requires_weapon ? loReqCarriers(def, size, selAll, opt) : Infinity;
     const weapons = new Map(), equipment = new Map();
     const add = (m, name, n) => { if (n > 0) m.set(name, (m.get(name) || 0) + n); };
-    // A choice replacement may be a compound ('Power fist + Sternguard bolt rifle'): add each weapon.
-    const addRepl = (m, name, n) => { if (n > 0 && name) for (const w of String(name).split(' + ')) add(m, w, n); };
+    // A replacement may be a compound ('Power fist + Sternguard bolt rifle'): add each part.
+    // Each part is routed by the owning option — a part named in the option's equipment
+    // list ('Thunder hammer + Relic shield') lands in the equipment table, the rest in
+    // weapons. An option with no equipment list behaves exactly as before.
+    const addRepl = (o, name, n) => {
+      if (!(n > 0) || !name) return;
+      const eq = o ? loEquipSet(o) : null;
+      for (const w of String(name).split(' + ')) {
+        if (eq && eq.size && eq.has(weaponBase(w))) add(equipment, w, n);
+        else add(weapons, w, n);
+      }
+    };
     const wcnt = (g, w) => (g.default_weapon_counts && g.default_weapon_counts[w]) || 1;
     let overAllocated = false;
     const poolsOut = {};
@@ -2716,14 +2738,14 @@
         const onModel = new Set(dw.map(weaponBase));
         const taken = {};      // base weapon -> a choice already swapped this whole slot
         const cUsed = {};      // base weapon -> copies consumed by count options
-        const emitF = [];      // { replacement, n, equipment }
+        const emitF = [];      // { opt, replacement, n }
         for (const o of opts) {
           if (o.type !== 'choice') continue;
           const p = choiceBy[o.id];
           if (!p) continue;
           const parts = loWeaponParts(o.replaces);
           if (!parts.length) {   // add-choice: nothing replaced
-            emitF.push({ replacement: p, n: 1, equipment: (o.equipment_choices || []).includes(p) });
+            emitF.push({ opt: o, replacement: p, n: 1 });
             continue;
           }
           if (!parts.some(s => onModel.has(s))) continue;   // source isn't on this model
@@ -2732,7 +2754,7 @@
           if (parts.some(s => taken[s])) { overAllocated = true; continue; }
           const first = dw.find(w => weaponBase(w) === parts[0]);
           for (const s of parts) taken[s] = o.id;
-          emitF.push({ replacement: p, n: first ? wcnt(g, first) : 1 });
+          emitF.push({ opt: o, replacement: p, n: first ? wcnt(g, first) : 1 });
         }
         for (const o of opts) {
           if (o.type !== 'count' || !reqOk(o)) continue;
@@ -2742,7 +2764,7 @@
           const chargeF = (repl, cnt) => {
             if (!(cnt > 0)) return;
             for (const s of parts) cUsed[s] = (cUsed[s] || 0) + cnt;
-            emitF.push({ replacement: repl, n: cnt });
+            emitF.push({ opt: o, replacement: repl, n: cnt });
           };
           if (o.replacement_choices) {
             const tally = (selv && typeof selv === 'object') ? selv : {};
@@ -2764,10 +2786,7 @@
           const keep = have - Math.min(used, have);
           if (keep > 0) add(weapons, w, keep);
         }
-        for (const e of emitF) {
-          if (e.equipment) add(equipment, e.replacement, e.n);
-          else addRepl(weapons, e.replacement, e.n);
-        }
+        for (const e of emitF) addRepl(e.opt, e.replacement, e.n);
         // Leader can also carry pooled/add weapons (e.g. a Sergeant grenade launcher).
         for (const o of opts) if (o.type === 'add') {
           let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size, n)));
@@ -2817,12 +2836,12 @@
         if (o.replacement_choices) {
           const tally = (selv && typeof selv === 'object') ? selv : {};
           let used = 0;
-          for (const k of Object.keys(tally)) { const c = Math.max(0, tally[k] | 0); if (c > 0 && o.replacement_choices.includes(k)) { emit.push({ replacement: k, n: c }); used += c; } }
+          for (const k of Object.keys(tally)) { const c = Math.max(0, tally[k] | 0); if (c > 0 && o.replacement_choices.includes(k)) { emit.push({ opt: o, replacement: k, n: c }); used += c; } }
           used = Math.min(used, cap);
           chargeSource(o.replaces, used);
         } else {
           const want = Math.max(0, Math.min((selv | 0), cap));
-          if (want > 0) { emit.push({ replacement: o.replacement, n: want }); chargeSource(o.replaces, want); }
+          if (want > 0) { emit.push({ opt: o, replacement: o.replacement, n: want }); chargeSource(o.replaces, want); }
         }
       }
       let maxSrcUsed = 0;
@@ -2832,7 +2851,7 @@
       }
       poolsOut[g.name] = { pool, used: maxSrcUsed };
       for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[w] || 0)) * wcnt(g, w));
-      for (const e of emit) addRepl(weapons, e.replacement, e.n);
+      for (const e of emit) addRepl(e.opt, e.replacement, e.n);
     }
     for (const pid in poolCap) poolsOut['pool:' + pid] = { pool: poolCap[pid], used: poolUsed[pid] || 0, leaderUsed: poolLeaderUsed[pid] || 0 };
     return { weapons, equipment, overAllocated, pools: poolsOut };
@@ -2854,8 +2873,11 @@
     // A compound replacement ('Heavy flamer + Dreadnought combat weapon') is a real
     // pick — judge it part by part, or every compound choice reads as broken and the
     // option vanishes from the sheet.
+    // A part named in the option's equipment list is a real pick even though no weapon
+    // profile exists for it (a relic shield is not a weapon), so it must not read as broken.
+    const realPart = (o, p) => validW.has(weaponBase(p)) || loIsEquipPart(o, p);
     const brokenChoice = (o) => o.type === 'choice' && Array.isArray(o.choices) &&
-      o.choices.every(c => !String(c).split(' + ').some(p => validW.has(weaponBase(p))));
+      o.choices.every(c => !String(c).split(' + ').some(p => realPart(o, p)));
     // An option whose source weapon isn't in its scope group's gear can't do anything
     // (the parser parked a variant-group swap on the base group, or the source is a
     // wargear item, not a weapon). It's hidden rather than shown as a dead control.
