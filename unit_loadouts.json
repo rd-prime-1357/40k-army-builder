@@ -497,6 +497,9 @@
           "Plasma pistol + Power fist",
           "Plasma pistol + Master-crafted power weapon",
           "Heavy bolt pistol + Master-crafted power weapon + Relic Shield"
+        ],
+        "equipment_parts": [
+          "Relic Shield"
         ]
       },
       {
@@ -511,9 +514,7 @@
         ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: relic shield (choice.choices) on Captain"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000076": {
@@ -615,7 +616,10 @@
         "type": "choice",
         "replaces": "Heavy bolt pistol + Astartes chainsword",
         "choices": [
-          "Thunder hammer"
+          "Thunder hammer + Relic Shield"
+        ],
+        "equipment_parts": [
+          "Relic Shield"
         ]
       }
     ],
@@ -921,12 +925,13 @@
         "replaces": "Storm bolter",
         "choices": [
           "Relic Shield"
+        ],
+        "equipment_parts": [
+          "Relic Shield"
         ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: relic shield (single.choices) on Chaplain In Terminator Armour"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000117": {
@@ -2375,7 +2380,10 @@
         "type": "count",
         "replaces": "Storm bolter",
         "replacement": "Storm Shield",
-        "max_total_all": true
+        "max_total_all": true,
+        "equipment_parts": [
+          "Storm Shield"
+        ]
       },
       {
         "id": "cnt_2",
@@ -2399,9 +2407,7 @@
         ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count.rep) on Wolf Guard Terminators"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000322": {
@@ -2444,7 +2450,10 @@
           "Boltgun",
           "Storm Shield"
         ],
-        "max_total_all": true
+        "max_total_all": true,
+        "equipment_parts": [
+          "Storm Shield"
+        ]
       },
       {
         "id": "cnt_2",
@@ -2457,9 +2466,7 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count_choice) on Thunderwolf Cavalry"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000323": {
@@ -3504,7 +3511,10 @@
         "type": "choice",
         "replaces": "Bolt pistol + Master-crafted bolter + Close combat weapon",
         "choices": [
-          "Neo Volkite Pistol, 1 Master-Crafted Power Weapon And 1 Storm Shield"
+          "Neo-volkite pistol + Master-crafted power weapon + Storm Shield"
+        ],
+        "equipment_parts": [
+          "Storm Shield"
         ]
       },
       {
@@ -3529,9 +3539,7 @@
         ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: neo volkite pistol, 1 master-crafted power weapon and 1 storm shield (single.choices) on Lieutenant"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000001367": {
@@ -4813,12 +4821,13 @@
         "choices": [
           "Twin lightning claws",
           "Thunder hammer + Terminator Storm Shield"
+        ],
+        "equipment_parts": [
+          "Terminator Storm Shield"
         ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: terminator storm shield (choice.choices) on Ancient In Terminator Armour"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000002682": {
@@ -4907,12 +4916,13 @@
         "type": "count",
         "replaces": "Centurion bolters",
         "replacement": "Centurion Assault Launcher",
-        "max_total_all": true
+        "max_total_all": true,
+        "equipment_parts": [
+          "Centurion Assault Launcher"
+        ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: centurion assault launcher (count.rep) on Centurion Assault Squad"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000002705": {
@@ -6212,7 +6222,10 @@
           "Power weapon + Astartes Shield"
         ],
         "per_n_models": 5,
-        "max_per_n": 2
+        "max_per_n": 2,
+        "equipment_parts": [
+          "Astartes Shield"
+        ]
       },
       {
         "id": "cnt_2",
@@ -6294,10 +6307,7 @@
         ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: astartes shield (count_choice) on Deathwatch Veterans",
-      "WEAPON_NOT_FOUND: astartes shield (count_choice) on Deathwatch Veterans"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000002786": {
@@ -6947,13 +6957,13 @@
         "choices": [
           "Fenrisian greataxe + Blizzard Shield + Storm bolter",
           "Fenrisian greataxe + Blizzard Shield + Heavy flamer"
+        ],
+        "equipment_parts": [
+          "Blizzard Shield"
         ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: blizzard shield (choice.choices) on Venerable Dreadnought",
-      "WEAPON_NOT_FOUND: blizzard shield (choice.choices) on Venerable Dreadnought"
-    ]
+    "_parser_flags": []
   },
   "000003698": {
     "size_brackets": [
@@ -7191,12 +7201,13 @@
           "Thunder hammer + Storm Shield",
           "Twin lightning claws"
         ],
-        "max_total_all": true
+        "max_total_all": true,
+        "equipment_parts": [
+          "Storm Shield"
+        ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count_choice) on Deathwatch Terminator Squad"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000003874": {
@@ -7651,13 +7662,15 @@
         "type": "choice",
         "replaces": "Fenrisian greataxe",
         "choices": [
-          "Blizzard Shield And 1 Heavy Flamer"
+          "Blizzard Shield + Heavy flamer"
+        ],
+        "equipment_parts": [
+          "Blizzard Shield"
         ]
       }
     ],
     "_parser_flags": [
       "OR_SOURCE_UNSUPPORTED: fenrisian greataxe or great wolf claw and storm bolter on Wulfen Dreadnought",
-      "WEAPON_NOT_FOUND: blizzard shield and 1 heavy flamer (single.choices) on Wulfen Dreadnought",
       "UNMATCHED: If this model is not equipped with a storm bolter, its heavy flamer can be replaced with 1 storm bolter."
     ]
   },
@@ -8031,7 +8044,10 @@
         "replaces": "Heavy thunder hammer",
         "replacement": "Power weapon + Astartes Shield",
         "per_n_models": 5,
-        "max_per_n": 1
+        "max_per_n": 1,
+        "equipment_parts": [
+          "Astartes Shield"
+        ]
       },
       {
         "id": "cnt_3",
@@ -8054,9 +8070,7 @@
         "max_per_n": 1
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: astartes shield (count.rep) on Decimus Kill Team"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004179": {

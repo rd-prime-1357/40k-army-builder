@@ -204,7 +204,10 @@ def classify_sgl_single(text, unit_name):
     model = m.group('model').strip()
     replaces = qty_name(m.group('repl'))
     replacement = qty_name(m.group('rep'))
-    return [{'_type': 'single', '_scope_hint': model, 'replaces': replaces, 'replacement': replacement}]
+    # B30: keep the raw text ('1 thunder hammer and 1 relic shield') so the emitter can
+    # split a compound replacement the same way a choice list already is.
+    return [{'_type': 'single', '_scope_hint': model, 'replaces': replaces,
+             'replacement': replacement, 'replacement_raw': m.group('rep').strip()}]
 
 def _per_n_scope(raw):
     """Normalise the model phrase of a per-N line to a scope hint. A bare
@@ -404,7 +407,7 @@ def classify_active_swap(text, unit_name):
             return None
         return [{'_type': 'choice', '_scope_hint': model, 'replaces': replaces, 'choices': choices}]
     return [{'_type': 'single', '_scope_hint': model, 'replaces': replaces,
-             'replacement': qty_name(m.group('rep'))}]
+             'replacement': qty_name(m.group('rep')), 'replacement_raw': m.group('rep').strip()}]
 
 def classify_one_model_swap(text, unit_name):
     """Indefinite single-model swaps that need a 1-model cap:
@@ -525,7 +528,8 @@ def classify_this_model_choice(text, unit_name):
     if m2:
         return [{'_type': 'single', '_scope_hint': 'single',
                  'replaces': qty_name(m2.group('repl')),
-                 'replacement': qty_name(m2.group('rep'))}]
+                 'replacement': qty_name(m2.group('rep')),
+                 'replacement_raw': m2.group('rep').strip()}]
     return None
 
 def classify_this_model_add_choice(text, unit_name):
@@ -858,25 +862,58 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     if not pok: flags.append(f'WEAPON_NOT_FOUND: {p} ({ot}.replaces) on {unit_name}')
                     src_out.append(base_display(pn))
                 repl = ' + '.join(src_out)
-                raw_choices = op['choices'] if ot == 'choice' else [op['replacement']]
+                if ot == 'choice':
+                    raw_choices = op['choices']
+                else:
+                    # B30: a single replacement can name several things ('1 thunder hammer and
+                    # 1 relic shield'). Split it on ' and ' / commas the way a choice list is,
+                    # and write it as one compound pick ('A + B'), unless the whole phrase is
+                    # itself a known weapon ('Slaughter and Carnage').
+                    rraw = op.get('replacement_raw', op['replacement'])
+                    if _is_exact_weapon(qty_name(rraw), weapon_idx, global_idx):
+                        rparts = [qty_name(rraw)]
+                    else:
+                        rparts = split_compound_replacement(rraw)
+                    raw_choices = [' + '.join(rparts)]
                 choices_out = []
+                equip_out = []
                 for c in raw_choices:
                     parts = []
                     for w in c.split(' + '):
                         wn, wok = normalise_weapon(w, weapon_idx, global_idx)
-                        if not wok: flags.append(f'WEAPON_NOT_FOUND: {w} ({ot}.choices) on {unit_name}')
+                        if not wok:
+                            # B30: a replacement part that isn't a weapon but is a known wargear
+                            # item (relic shield, blizzard shield) is named in equipment_parts so
+                            # the engine files it under equipment rather than the weapon table.
+                            item = lookup_equipment(w, equipment_items)
+                            if item:
+                                parts.append(item)
+                                if item not in equip_out: equip_out.append(item)
+                                continue
+                            flags.append(f'WEAPON_NOT_FOUND: {w} ({ot}.choices) on {unit_name}')
                         parts.append(base_display(wn))
                     choices_out.append(' + '.join(parts))
-                options.append({'id': new_id('cho' if ot == 'choice' else 'sng'), 'scope': scope,
-                                'group': repl.split(' + ')[0].title() + ' Options',
-                                'type': 'choice', 'replaces': repl, 'choices': choices_out})
+                entry = {'id': new_id('cho' if ot == 'choice' else 'sng'), 'scope': scope,
+                         'group': repl.split(' + ')[0].title() + ' Options',
+                         'type': 'choice', 'replaces': repl, 'choices': choices_out}
+                if equip_out: entry['equipment_parts'] = equip_out
+                options.append(entry)
             elif ot in ('count', 'count_choice', 'any_count', 'any_count_choice'):
                 is_any = ot.startswith('any_')
-                def _norm_parts(parts, ctx):
+                equip_out = []
+                def _norm_parts(parts, ctx, side='source'):
                     out = []
                     for p in parts:
                         pn, pok = normalise_weapon(p, weapon_idx, global_idx)
-                        if not pok: flags.append(f'WEAPON_NOT_FOUND: {p} ({ctx}) on {unit_name}')
+                        if not pok:
+                            # B30: item names on the replacement side route to equipment_parts.
+                            # The source side is a separate problem (B28) and stays flagged.
+                            item = lookup_equipment(p, equipment_items) if side == 'replacement' else None
+                            if item:
+                                out.append(item)
+                                if item not in equip_out: equip_out.append(item)
+                                continue
+                            flags.append(f'WEAPON_NOT_FOUND: {p} ({ctx}) on {unit_name}')
                         out.append(base_display(pn))
                     return ' + '.join(out)
                 # source (replaces): compound-aware for the whole count family (B23).
@@ -895,11 +932,11 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 if is_choice:
                     choices_out = []
                     for c in op['replacement_choices']:
-                        choices_out.append(_norm_parts(c.split(' + '), 'count_choice'))
+                        choices_out.append(_norm_parts(c.split(' + '), 'count_choice', 'replacement'))
                     entry = {'id': new_id('cc'), 'scope': scope, 'group': grp_label,
                              'type': 'count', 'replaces': repl, 'replacement_choices': choices_out}
                 else:
-                    rep = _norm_parts(split_compound_replacement(op.get('replacement_raw', op['replacement'])), 'count.rep')
+                    rep = _norm_parts(split_compound_replacement(op.get('replacement_raw', op['replacement'])), 'count.rep', 'replacement')
                     entry = {'id': new_id('cnt'), 'scope': scope, 'group': grp_label,
                              'type': 'count', 'replaces': repl, 'replacement': rep}
                 if per_n:
@@ -917,6 +954,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 if op.get('requires_weapon'):
                     rw, _rwok = normalise_weapon(op['requires_weapon'], weapon_idx, global_idx)
                     entry['requires_weapon'] = base_display(rw)
+                if equip_out: entry['equipment_parts'] = equip_out
                 options.append(entry)
             elif ot == 'add_choice':
                 # "equipped with one of the following" — treated as a single-model choice
