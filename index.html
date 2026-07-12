@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.52';
+  const VERSION = '5.53';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2548,7 +2548,14 @@
   let loadoutDefs = {};   // unit_id -> definition
 
   function loMaxCount(opt, size, groupN) {
-    if (opt.per_n_models) return Math.floor(size / opt.per_n_models) * (opt.max_per_n || 1);
+    // per_n_models is written against the whole unit ("1 per 5 models"), so it can
+    // exceed the models actually in the option's scope group — a 1-model Sergeant, or
+    // a 9-model body inside a 10-model unit. With no authored max_total to trust, the
+    // group's own model count is the ceiling.
+    if (opt.per_n_models) {
+      const raw = Math.floor(size / opt.per_n_models) * (opt.max_per_n || 1);
+      return (groupN != null) ? Math.min(raw, groupN) : raw;
+    }
     if (opt.max_total != null) return opt.max_total;
     if (opt.max_total_all) {
       const g = (groupN != null) ? groupN : size;   // eligible models in the scoped group
@@ -2683,12 +2690,44 @@
       const n = counts[g.name];
       const opts = byScope[g.name] || [];
       if (g.count.fixed === 1) {
-        const replaced = {};
+        // A single-model group can be the scope of a count option as well as a choice
+        // ("1 model's Helbrute fist can be replaced with ..."). A picked choice takes
+        // the whole slot (every copy the model carries); a count takes exactly the
+        // number selected, and what it leaves behind stays on the model.
+        const replaced = {}, cRepl = {}, cUsed = {};
         for (const o of opts) if (o.type === 'choice') { const p = choiceBy[o.id]; if (p) replaced[o.replaces] = p; }
-        for (const w of g.default_weapons) { if (replaced[w]) addRepl(weapons, replaced[w], wcnt(g, w)); else add(weapons, w, wcnt(g, w)); }
+        const chargeF = (src, repl, cnt) => {
+          if (!(cnt > 0) || !src) return;
+          (cRepl[src] = cRepl[src] || []).push({ replacement: repl, n: cnt });
+          cUsed[src] = (cUsed[src] || 0) + cnt;
+        };
+        for (const o of opts) if (o.type === 'count') {
+          if (!reqOk(o)) continue;
+          const cap = Math.min(loMaxCount(o, size, n), reqCap(o)), selv = countBy[o.id];
+          if (o.replacement_choices) {
+            const tally = (selv && typeof selv === 'object') ? selv : {};
+            let used = 0;
+            for (const k of Object.keys(tally)) {
+              if (!o.replacement_choices.includes(k)) continue;
+              const want = Math.max(0, Math.min(tally[k] | 0, cap - used));
+              if (want > 0) { chargeF(o.replaces, k, want); used += want; }
+            }
+          } else {
+            const want = Math.max(0, Math.min((selv | 0), cap));
+            if (want > 0) chargeF(o.replaces, o.replacement, want);
+          }
+        }
+        for (const w of g.default_weapons) {
+          const have = wcnt(g, w), used = cUsed[w] || 0;
+          if (replaced[w]) { if (used > 0) overAllocated = true; addRepl(weapons, replaced[w], have); continue; }
+          if (used > have) overAllocated = true;
+          const keep = have - Math.min(used, have);
+          if (keep > 0) add(weapons, w, keep);
+          for (const e of (cRepl[w] || [])) addRepl(weapons, e.replacement, e.n);
+        }
         // Leader can also carry pooled/add weapons (e.g. a Sergeant grenade launcher).
         for (const o of opts) if (o.type === 'add') {
-          let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
+          let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size, n)));
           want = Math.min(want, reqCap(o));
           if (o.pool_id) {
             const rem = (poolCap[o.pool_id] != null ? poolCap[o.pool_id] : Infinity) - (poolUsed[o.pool_id] || 0);
@@ -2704,7 +2743,7 @@
       const countOpts = opts.filter(o => o.type === 'count');
       let reserved = 0;
       for (const o of addOpts) {
-        let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size)));
+        let want = Math.max(0, Math.min(addBy[o.id] || 0, loMaxCount(o, size, n)));
         want = Math.min(want, reqCap(o));   // body adds were never gated before B19
         if (o.pool_id) {
           const rem = (poolCap[o.pool_id] != null ? poolCap[o.pool_id] : Infinity) - (poolUsed[o.pool_id] || 0);
