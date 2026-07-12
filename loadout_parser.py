@@ -481,24 +481,44 @@ def classify_this_model_add_choice(text, unit_name):
 
 def classify_n_model_swap(text, unit_name):
     """'1 Tactical Marine's boltgun can be replaced with one of the following: …'
-       'N <model>'s X can be replaced with …'"""
+       'N <model>'s X can be replaced with N Y'
+       'N of this model's X can be replaced with …'
+
+    N counts models IN THE UNIT, not an allowance per 5 models: a 10-model Tactical
+    Squad still gets exactly one special and one heavy weapon. The old form emitted
+    per_n_models 5 / max_per_n 1, which doubled every such slot at size 10 and (on a
+    1-model unit like the Helbrute) computed zero. Now emits a fixed cap of N via
+    max_total, keeping the 'Special Weapon' heading these slots had.
+
+    A compound source ('X and Y can be replaced with…') is deliberately left
+    UNMATCHED — the second replaced weapon would be silently dropped (B23)."""
     m = re.match(
-        r"\d+\s+(?P<model>.+?)'s? (?P<repl>.+?) can be replaced with"
-        r"(?: one of the following[:\s]+(?P<list>.+)|(?P<rep>\d+\s+\S.*?)(?:\.|$))",
+        r"(?P<n>\d+)\s+(?:of\s+)?(?P<model>.+?)'s? (?P<repl>.+?) can be replaced with"
+        r"(?: one of the following[:\s]+(?P<list>.+)|\s+(?P<rep>\d+\s+\S.*?)(?:\.|$))",
         text, re.I)
     if not m: return None
-    scope = m.group('model').strip()
-    replaces = qty_name(m.group('repl'))
+    repl_raw = m.group('repl').strip()
+    if re.search(r'\band\b', repl_raw, re.I):
+        return None
+    n = int(m.group('n'))
+    model = m.group('model').strip().lower()
+    if model in ('model', 'models'):
+        scope = 'body'
+    elif model in ('this model', 'these models'):
+        scope = 'single'
+    else:
+        scope = m.group('model').strip()
+    replaces = qty_name(repl_raw)
     if m.group('list'):
         choices = _choices_from_list(m.group('list'))
         if choices:
             return [{'_type': 'count_choice', '_scope_hint': scope,
                      'replaces': replaces, 'replacement_choices': choices,
-                     'per_n_models': 5, 'max_per_n': 1}]
+                     'max_total': n, '_special_slot': True}]
     elif m.group('rep'):
         return [{'_type': 'count', '_scope_hint': scope,
                  'replaces': replaces, 'replacement': qty_name(m.group('rep')),
-                 'per_n_models': 5, 'max_per_n': 1}]
+                 'max_total': n, '_special_slot': True}]
     return None
 
 NOTE_PAT = re.compile(
@@ -789,7 +809,8 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 # per-N replacements are the datasheet's "special weapon" slot; any-number
                 # swaps are their own thing (e.g. power fist -> chainfist), so they get a
                 # source-derived heading instead of sharing 'Special Weapon'.
-                grp_label = 'Special Weapon' if (per_n and not is_any) else (repl.title() + ' Options')
+                grp_label = 'Special Weapon' if ((per_n or op.get('_special_slot')) and not is_any) \
+                            else (repl.title() + ' Options')
                 if is_choice:
                     choices_out = []
                     for c in op['replacement_choices']:

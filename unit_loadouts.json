@@ -392,8 +392,7 @@
           "Plasma cannon – standard",
           "Plasma gun – standard"
         ],
-        "per_n_models": 5,
-        "max_per_n": 1
+        "max_total": 1
       },
       {
         "id": "cc_2",
@@ -407,8 +406,7 @@
           "Meltagun",
           "Plasma gun – standard"
         ],
-        "per_n_models": 5,
-        "max_per_n": 1
+        "max_total": 1
       },
       {
         "id": "sng_3",
@@ -2582,7 +2580,16 @@
         ]
       },
       {
-        "id": "cc_2",
+        "id": "cnt_2",
+        "scope": "Helbrute",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Helbrute fist",
+        "replacement": "Missile launcher – frag",
+        "max_total": 1
+      },
+      {
+        "id": "cc_3",
         "scope": "Helbrute",
         "group": "Special Weapon",
         "type": "count",
@@ -2591,13 +2598,11 @@
           "Helbrute hammer",
           "Power scourge"
         ],
-        "per_n_models": 5,
-        "max_per_n": 1
+        "max_total": 1
       }
     ],
     "_parser_flags": [
       "WEAPON_NOT_FOUND: additional helbrute fist (choice) on Helbrute",
-      "UNMATCHED: 1 of this model's Helbrute fists can be replaced with 1 missile launcher",
       "UNMATCHED: For each Helbrute fist this model is equipped with, it can be equipped with one of the following: 1 combi-bolter* 1 heav"
     ],
     "_defaults_source": "equipped"
@@ -4079,8 +4084,7 @@
           "Inferno pistol",
           "Plasma pistol – standard"
         ],
-        "per_n_models": 5,
-        "max_per_n": 1
+        "max_total": 1
       },
       {
         "id": "cc_2",
@@ -4093,8 +4097,7 @@
           "Power weapon",
           "Thunder hammer"
         ],
-        "per_n_models": 5,
-        "max_per_n": 1
+        "max_total": 1
       }
     ],
     "_parser_flags": [
@@ -4506,8 +4509,7 @@
           "Inferno pistol",
           "Plasma pistol – standard"
         ],
-        "per_n_models": 5,
-        "max_per_n": 1
+        "max_total": 1
       },
       {
         "id": "cnt_2",
@@ -4541,8 +4543,7 @@
           "Power weapon",
           "Thunder hammer"
         ],
-        "per_n_models": 5,
-        "max_per_n": 1
+        "max_total": 1
       }
     ],
     "_parser_flags": []
@@ -5578,8 +5579,7 @@
           "Power fist",
           "Power weapon"
         ],
-        "per_n_models": 5,
-        "max_per_n": 1
+        "max_total": 1
       },
       {
         "id": "cc_4",
@@ -8081,9 +8081,18 @@
         ]
       }
     ],
-    "options": [],
+    "options": [
+      {
+        "id": "cnt_1",
+        "scope": "Wolf Scouts",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma pistol – standard",
+        "replacement": "Plasma gun – standard",
+        "max_total": 1
+      }
+    ],
     "_parser_flags": [
-      "UNMATCHED: 1 Wolf Scout's plasma pistol can be replaced with 1 plasma gun.",
       "UNMATCHED: 1 Wolf Scout equipped with a plasma pistol can be equipped with 1 haywire mine (That model's plasma pistol cannot be rep",
       "UNMATCHED: 1 Wolf Scout's plasma pistol and combat blade can be replaced with 1 bolt pistol, 1 Thunderclap and 1 runic stave.",
       "UNMATCHED: If this unit contains 12 models, 1 Wolf Scout's plasma pistol can be replaced with 1 instigator bolt carbine."
