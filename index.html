@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.56';
+  const VERSION = '5.57';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2669,9 +2669,21 @@
     return Math.max(0, Math.min(n, Math.max(0, carriers) + gained));
   }
   // How many carriers a gated option needs: 1 by default, or one per model taking it.
+  // B32: `requires_weapon` may name more than one weapon, joined with ' + ' (D103).
+  // The bearer must hold *every* named weapon, so the carrier count is the minimum
+  // across the parts — a model that gave one of them away is no longer a carrier.
+  // A single-name gate splits to one part, so its count is unchanged by construction.
   function loReqCarriers(def, size, sel, opt) {
     if (!opt.requires_weapon) return Infinity;
-    return loCarriers(def, size, sel, opt.scope, opt.requires_weapon);
+    const parts = loWeaponParts(opt.requires_weapon);
+    if (!parts.length) return 0;
+    let min = Infinity;
+    for (const p of parts) min = Math.min(min, loCarriers(def, size, sel, opt.scope, p));
+    return min;
+  }
+  // Prose form of a gate for the disabled row: "A + B" reads as "A and B".
+  function loReqLabel(opt) {
+    return String(opt.requires_weapon || '').split(' + ').filter(Boolean).join(' and ');
   }
   function loReqOk(def, size, sel, opt) {
     if (!opt.requires_weapon) return true;
@@ -3029,7 +3041,7 @@
         } else if (o.type === 'count') {
           if (o.requires_weapon && !reqOkUI(o)) {
             html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
-              <div class="option-item-name">${o.replacement || o.group} — needs ${o.requires_weapon}</div></div></div>`;
+              <div class="option-item-name">${o.replacement || o.group} — needs ${loReqLabel(o)}</div></div></div>`;
           } else {
           const max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
           const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
@@ -3044,7 +3056,7 @@
             const disabled = !reqOkUI(o) || (poolInfo && poolInfo.pool === 0);
             const on = Number(entry.wargear[o.id] || 0) > 0;
             if (disabled) {
-              const why = !reqOkUI(o) ? ` — needs ${o.requires_weapon}` : '';
+              const why = !reqOkUI(o) ? ` — needs ${loReqLabel(o)}` : '';
               html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
                 <div class="option-item-name">${label}${why}</div></div></div>`;
             } else {
