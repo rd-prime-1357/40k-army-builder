@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.57';
+  const VERSION = '5.58';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1463,6 +1463,11 @@
       const mg       = unit.model_groups && unit.model_groups[0];
       const leaderEligible = mg && mg.leader_eligible_units  ? mg.leader_eligible_units  : [];
       const coLeaderWith   = mg && mg.co_leader_eligible_with ? mg.co_leader_eligible_with : [];
+      // B35: the roster badge is the smallest legal cost of the unit, so it carries the
+      // cost of the default loadout's priced wargear too — otherwise a Terminator Assault
+      // Squad advertises 155 and lands in the list at 180.
+      const baseMin  = sizes.length > 0 ? sizes[0].first_unit : null;
+      const gearMin  = baseMin == null ? 0 : defaultWargearCost(unit.unit_id, sizes[0].size);
       return {
         unit_id:       unit.unit_id,
         unit_name:     unit.unit_name,
@@ -1472,7 +1477,7 @@
         limit,
         leaderEligible,
         coLeaderWith,
-        minPts: sizes.length > 0 ? sizes[0].first_unit : null,
+        minPts: baseMin == null ? null : baseMin + gearMin,
       };
     });
   }
@@ -1542,7 +1547,7 @@
 
   async function init() {
     try {
-      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes, glossaryRes, loadoutsRes] = await Promise.all([
+      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes, glossaryRes, loadoutsRes, wargearPtsRes] = await Promise.all([
         fetch(`units.json?v=${VERSION}`),
         fetch(`abilities.json?v=${VERSION}`),
         fetch(`rules.json?v=${VERSION}`),
@@ -1551,6 +1556,7 @@
         fetch(`faction_taxonomy.json?v=${VERSION}`),
         fetch(`core_glossary.json?v=${VERSION}`),
         fetch(`unit_loadouts.json?v=${VERSION}`),
+        fetch(`wargear_points.json?v=${VERSION}`),
       ]);
 
       if (!unitsRes.ok) throw new Error('Failed to load unit data');
@@ -1585,6 +1591,13 @@
       if (loadoutsRes.ok) {
         const l = await loadoutsRes.json();
         for (const k of Object.keys(l)) if (k[0] !== '_') loadoutDefs[k] = l[k];
+      }
+      // B35: per-item wargear costs, keyed unit_id -> items -> lowercased item name.
+      // Keys are already lowercased by the parser; every lookup goes through
+      // weaponBase() so rollup names of any casing (and any profile suffix) match.
+      if (wargearPtsRes.ok) {
+        const wp = await wargearPtsRes.json();
+        for (const k of Object.keys(wp)) if (k[0] !== '_') wargearPoints[k] = wp[k];
       }
 
       // Index units by army name for fast resolution.
@@ -1637,15 +1650,69 @@
     return [...ordered, ...extra].map(t => ({ type: t, items: groups[t] }));
   }
 
+  // B35 / D108. A unit's size-bracket cost does NOT include its wargear: the MFM
+  // prices wargear per item TAKEN, on top of the unit's main cost, and a default-issue
+  // item is a taken item (MFM_Instructions.txt, UNITS > Wargear). So the cost of an
+  // entry hangs off what the configured unit is actually carrying — the rollup — and
+  // never off the option list. Swapping a priced item away therefore lowers the total.
+  //
+  // Both rollup maps are walked: a priced item can be a weapon (Thunder hammer) or a
+  // piece of equipment (Storm Shield, banner of Macragge). Names are matched through
+  // weaponBase(), which lowercases and drops any profile suffix, because the rollup
+  // preserves the source data's casing and our own data disagrees with itself
+  // ('storm shield' in one default_wargear, 'Storm Shield' in another equipment_parts).
+  function wargearCostForRollup(unitId, roll) {
+    const priced = wargearPoints[unitId];
+    if (!priced || !priced.items || !roll) return 0;
+    let sum = 0;
+    for (const m of [roll.weapons, roll.equipment]) {
+      if (!m) continue;
+      for (const [name, n] of m) {
+        const p = priced.items[weaponBase(name)];
+        if (p && n > 0) sum += n * (Number(p.cost) || 0);
+      }
+    }
+    return sum;
+  }
+
+  // Cost of the wargear an entry is configured with, as currently selected.
+  function wargearCostForEntry(entry, unit) {
+    if (!unit || !unit.unit_id || !wargearPoints[unit.unit_id]) return 0;
+    const def = loadoutDefs[unit.unit_id];
+    if (!def) return 0;
+    const size = loadoutSize(entry, def);
+    return wargearCostForRollup(unit.unit_id, loRollup(def, size, loadoutSelections(entry, def)));
+  }
+
+  // Cost of a unit's wargear with nothing selected — the default loadout. Used for the
+  // roster's "from" badge so it agrees with what the entry costs once added.
+  function defaultWargearCost(unitId, sizeNum) {
+    if (!unitId || !wargearPoints[unitId]) return 0;
+    const def = loadoutDefs[unitId];
+    if (!def) return 0;
+    const size = sizeNum || (def.size_brackets ? def.size_brackets[0] : 0);
+    const empty = { choiceById: {}, countById: {}, addById: {} };
+    return wargearCostForRollup(unitId, loRollup(def, size, empty));
+  }
+
   function ptsForEntry(entry) {
     const unit = allUnits.find(u => u.unit_name === entry.unit_name);
     if (!unit) return null;
     const sizeEntry = unit.sizes[entry.sizeIdx];
     if (!sizeEntry) return null;
     const priorCopies = armyList.filter(e => e.unit_name === entry.unit_name && e.listId < entry.listId).length;
-    if (priorCopies === 0) return sizeEntry.first_unit;
-    if (priorCopies === 1) return sizeEntry.second_unit;
-    return sizeEntry.third_plus;
+    let base;
+    if (priorCopies === 0)      base = sizeEntry.first_unit;
+    else if (priorCopies === 1) base = sizeEntry.second_unit;
+    else                        base = sizeEntry.third_plus;
+    if (base == null) return null;
+    return base + wargearCostForEntry(entry, unit);
+  }
+
+  // Entry cost is derived from the configuration, so it is recomputed on every render
+  // rather than only when the size changes. One place computes it: ptsForEntry.
+  function refreshPoints() {
+    for (const e of armyList) if (!e.unresolved) e.points = ptsForEntry(e);
   }
 
   function entryHasError(entry) {
@@ -1791,14 +1858,14 @@
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
     entry.wargear[stateKey] = entry.wargear[stateKey] === weaponName ? null : weaponName;
-    renderDetail();
+    renderAll();
   }
 
   function editWargearIndep(listId, stateKey) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
     entry.wargear[stateKey] = !entry.wargear[stateKey];
-    renderDetail();
+    renderAll();
   }
 
   function editWargearBundle(listId, stateKey, endpointId) {
@@ -1806,7 +1873,7 @@
     if (!entry) return;
     // Default-bearing radio: always exactly one selection, so set (not toggle).
     entry.wargear[stateKey] = endpointId;
-    renderDetail();
+    renderAll();
   }
 
   function editOtherOption(listId, optName) {
@@ -1847,6 +1914,7 @@
   // ── Render all ─────────────────────────────────────────────────────────────
 
   function renderAll() {
+    refreshPoints();
     renderBanner();
     renderRoster();
     renderList();
@@ -2546,6 +2614,7 @@
 
   // ── Structured loadout model: composition + options -> weapon counts ───────
   let loadoutDefs = {};   // unit_id -> definition
+  let wargearPoints = {}; // unit_id -> { items: { lowercased item name -> {cost, display, source} } }
 
   function loMaxCount(opt, size, groupN) {
     // per_n_models is written against the whole unit ("1 per 5 models"), so it can
