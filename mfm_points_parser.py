@@ -56,6 +56,17 @@ TIER_3 = re.compile(r"3rd", re.I)
 TIER_1ST = re.compile(r"1st unit", re.I)
 TIER_2PLUS = re.compile(r"2nd\s*\+", re.I)
 SKIP_HEADERS = re.compile(r"^(your |munitorum|points value|wargear|enhancement)", re.I)
+# B35 / D107. A unit's WARGEAR OPTIONS block prices individual items:
+#     WARGEAR OPTIONS
+#     • per Macro plasma incinerator10 pts
+# The item name and the cost are jammed together, exactly as in the size-bracket
+# lines. MFM_Instructions.txt: "these costs are per item taken, and are applied on
+# top of the unit's main points cost" -- so the cost hangs off the ITEM, and a
+# default-issue item is an item taken (Terminator Assault Squad can never ADD a
+# thunder hammer, only swap it away, so its 5 pts can only be pricing the default).
+# SKIP_HEADERS keeps "WARGEAR OPTIONS" from being read as a unit name; the block is
+# collected separately below and attached to the preceding unit.
+WARGEAR_RE = re.compile(r"^[\u2022\-\*]\s*per\s+(.+?)\s*(\d+)\s*pts\s*$", re.I)
 
 def norm(s):
     s = (s or "").upper()
@@ -103,12 +114,31 @@ def parse_mfm(path):
     collecting_support = False
 
     def new_unit(name):
-        return {"name": name, "tiers": [], "support_lines": [], "mode": "single"}
+        return {"name": name, "tiers": [], "support_lines": [], "mode": "single", "wargear": []}
+
+    collecting_wargear = False
 
     i = 0
     while i < len(lines):
         line = lines[i].strip()
         if not line:
+            i += 1
+            continue
+
+        if collecting_wargear:
+            m = WARGEAR_RE.match(line)
+            if m and cur is not None:
+                cur["wargear"].append({
+                    "item": m.group(1).strip(),
+                    "cost": int(m.group(2)),
+                    "line": i + 1,
+                })
+                i += 1
+                continue
+            collecting_wargear = False
+
+        if line.upper() == "WARGEAR OPTIONS":
+            collecting_wargear = True
             i += 1
             continue
 
@@ -199,13 +229,216 @@ def read_stats_unitnames(path):
     header = rows[0]
     return header, rows
 
+
+# ---------------------------------------------------------------------------
+# B35 -- paid wargear (D107).
+#
+# The MFM prices items, not options. The same item can be free on one unit and
+# priced on another (a Terminator Assault Squad's storm shield is free; a Wolf
+# Guard Terminator's costs 5), so the map is keyed by datasheet id, never by
+# item name alone -- the same discipline as D70 for ability text.
+#
+# The chapter MFM files repeat the shared Space Marines datasheets (Redemptor
+# Dreadnought is priced in six files). They collapse onto one datasheet id and
+# must agree; a disagreement is a flag, not a silent last-writer-wins.
+# ---------------------------------------------------------------------------
+
+def _split_parts(name):
+    """A compound loadout name ('Thunder hammer + Storm Shield') is several items."""
+    return [p.strip() for p in str(name or "").split(" + ") if p.strip()]
+
+def reachable_items(loadout):
+    """Every item name a configured unit could end up carrying, from unit_loadouts.json.
+
+    Includes swap SOURCES as well as replacements: a source item is carried until
+    it is swapped away, and Terminator Assault Squad's priced thunder hammer only
+    ever appears as a default and as a swap source.
+    Returns lowercased-name -> preferred display casing.
+    """
+    out = {}
+    def put(name):
+        for p in _split_parts(name):
+            k = p.lower()
+            if k not in out:
+                out[k] = p
+    for g in loadout.get("model_groups", []):
+        for w in g.get("default_weapons", []) or []:
+            put(w)
+        for w in g.get("default_wargear", []) or []:
+            put(w)
+    for o in loadout.get("options", []):
+        for key in ("adds_weapon", "adds_wargear", "replaces", "replacement"):
+            if o.get(key):
+                put(o[key])
+        for key in ("choices", "replacement_choices", "equipment_parts", "equipment_choices"):
+            for c in o.get(key, []) or []:
+                put(c)
+    return out
+
+# An MFM file names one faction's units. Datasheet NAMES are not unique across
+# factions -- "Defiler" is five separate datasheets (CSM 000000969, DG 000004209,
+# EC 000004208, TS 000001030, WE 000004207; Datasheets.csv). Resolving a wargear
+# cost by unit name alone would silently attach the CSM Defiler's price to the DG
+# Defiler. So the file's faction is part of the key. The Space Marine chapter files
+# (Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves) all carry
+# faction SM -- chapters are not separate faction ids in Factions.csv.
+FACTION_BY_MFM = {
+    'MFM_Space_Marines_v1_0.txt': 'SM',
+    'MFM_Black_Templars_v1_0.txt': 'SM',
+    'MFM_Blood_Angels_v1_0.txt': 'SM',
+    'MFM_Dark_Angels_v1_0.txt': 'SM',
+    'MFM_Death_Watch_v1_0.txt': 'SM',
+    'MFM_Space_Wolves_v1_0.txt': 'SM',
+    'MFM_Grey_Knights_v1_0.txt': 'GK',
+    'MFM_Chaos_Space_Marines_v1_0.txt': 'CSM',
+    'MFM_Death_Guard_v1_0.txt': 'DG',
+    'MFM_Thousand_Sons_v1_0.txt': 'TS',
+    'MFM_Emperors_Children_v1_0.txt': 'EC',
+    'MFM_World_Eaters_v1_0.txt': 'WE',
+    'MFM_Chaos_Daemons_v1_0.txt': 'CD',
+    'MFM_Drukhari_v1_0.txt': 'DRU',
+}
+
+def _datasheet_index(datasheets_csv):
+    """(faction_id, NORMED NAME) -> datasheet id, plus normed name -> set(ids)."""
+    by_fac, by_name = {}, {}
+    with open(datasheets_csv, encoding='utf-8-sig') as f:
+        head = f.readline().rstrip('\r\n').split('|')
+        ix, nx, fx = head.index('id'), head.index('name'), head.index('faction_id')
+        for line in f:
+            p = line.rstrip('\r\n').split('|')
+            if len(p) <= fx:
+                continue
+            k = norm(p[nx])
+            by_fac[(p[fx], k)] = p[ix]
+            by_name.setdefault(k, set()).add(p[ix])
+    return by_fac, by_name
+
+def build_wargear_points(mfm_paths, units_path, loadouts_path, datasheets_csv):
+    """Return (wargear_map, flags). wargear_map: datasheet_id -> {lower_item: cost}."""
+    import json
+    with open(units_path, encoding="utf-8") as f:
+        blocks = json.load(f)
+    with open(loadouts_path, encoding="utf-8") as f:
+        loadouts = json.load(f)
+    by_fac, by_name = _datasheet_index(datasheets_csv)
+
+    in_data = set()
+    for b in blocks:
+        for u in b.get("units", []):
+            in_data.add(u["unit_id"])
+
+    wargear, display, provenance = {}, {}, {}
+    flags = {"unit_not_in_scope": [], "item_unmatched": [], "cost_conflict": [],
+             "no_loadout": [], "unknown_faction_file": [], "name_ambiguous": [],
+             "no_datasheet": []}
+
+    for path in mfm_paths:
+        base = os.path.basename(path)
+        fac = FACTION_BY_MFM.get(base)
+        if fac is None:
+            flags["unknown_faction_file"].append(base)
+        units = parse_mfm(path)
+        for nkey, info in units.items():
+            for w in info.get("wargear", []):
+                src = "%s:%d" % (base, w["line"])
+                if fac is not None:
+                    ds = by_fac.get((fac, nkey))
+                else:
+                    ids = by_name.get(nkey, set())
+                    if len(ids) > 1:
+                        flags["name_ambiguous"].append((info["name"], sorted(ids), src))
+                        continue
+                    ds = next(iter(ids)) if ids else None
+                if not ds:
+                    flags["no_datasheet"].append((info["name"], fac, w["item"], src))
+                    continue
+                if ds not in in_data:
+                    flags["unit_not_in_scope"].append((info["name"], ds, w["item"], w["cost"], src))
+                    continue
+                lo = loadouts.get(ds)
+                if not lo:
+                    flags["no_loadout"].append((info["name"], ds, w["item"], src))
+                    continue
+                reach = reachable_items(lo)
+                key = w["item"].strip().lower()
+                if key not in reach:
+                    flags["item_unmatched"].append((info["name"], ds, w["item"], src,
+                                                    sorted(reach.values())))
+                    continue
+                prev = wargear.setdefault(ds, {}).get(key)
+                if prev is not None and prev != w["cost"]:
+                    flags["cost_conflict"].append((info["name"], ds, w["item"], prev,
+                                                   w["cost"], provenance[(ds, key)], src))
+                    continue
+                wargear[ds][key] = w["cost"]
+                display[(ds, key)] = reach[key]
+                provenance.setdefault((ds, key), src)
+
+    out = {}
+    for ds in sorted(wargear):
+        out[ds] = {
+            "items": {
+                k: {"cost": v,
+                    "display": display[(ds, k)],
+                    "source": provenance[(ds, k)]}
+                for k, v in sorted(wargear[ds].items())
+            }
+        }
+    return out, flags
+
+def cmd_wargear(args):
+    import json
+    paths = list(args.wargear)   # explicit order: generic faction file before its chapter files, so provenance cites the generic source
+    out, flags = build_wargear_points(paths, args.units, args.loadouts, args.datasheets)
+    doc = {
+        "_meta": {
+            "source": "MFM WARGEAR OPTIONS blocks; see MFM_Instructions.txt (UNITS > Wargear)",
+            "rule": "cost is per item TAKEN, applied on top of the unit's main points cost; "
+                    "default-issue items are taken items and are priced (D107 / B35)",
+            "key": "datasheet_id -> items -> lowercased item name -> {cost, display, source}",
+            "engine": "match rollup weapon/equipment names by weaponBase(name).toLowerCase()",
+        }
+    }
+    doc.update(out)
+    with open(args.wargear_out, "w", encoding="utf-8") as f:
+        json.dump(doc, f, indent=1, ensure_ascii=False)
+        f.write("\n")
+
+    priced = sum(len(v["items"]) for v in out.values())
+    print("wargear_points.json: %d units, %d priced items" % (len(out), priced))
+    for name, items in [("MFM FILE WITH NO FACTION MAPPING", flags["unknown_faction_file"]),
+                        ("MFM NAME AMBIGUOUS ACROSS FACTIONS", flags["name_ambiguous"]),
+                        ("NO DATASHEET FOR MFM NAME + FACTION", flags["no_datasheet"]),
+                        ("UNIT NOT IN units.json (out of v1 data scope)", flags["unit_not_in_scope"]),
+                        ("UNIT HAS NO unit_loadouts.json ENTRY", flags["no_loadout"]),
+                        ("ITEM NOT FOUND IN UNIT'S REACHABLE LOADOUT", flags["item_unmatched"]),
+                        ("COST CONFLICT ACROSS MFM FILES", flags["cost_conflict"])]:
+        print("  %s: %d" % (name, len(items)))
+        for it in items:
+            print("     ", it)
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description="MFM -> Unit_Points.csv (+ Leader Eligible Units patch)")
-    ap.add_argument("--mfm", required=True, help="MFM text file (GW points)")
+    ap.add_argument("--mfm", required=False, help="MFM text file (GW points)")
     ap.add_argument("--out-dir", default="out")
     ap.add_argument("--army", default=ARMY_DEFAULT, help="Army Name for generic units in Unit_Points")
     ap.add_argument("--stats", default=None, help="Unit_Stats.csv to (a) match names and (b) patch Leader Eligible Units")
+    ap.add_argument("--wargear", nargs="+", default=None,
+                    help="B35: MFM files to harvest WARGEAR OPTIONS costs from (wargear mode)")
+    ap.add_argument("--units", default="units.json", help="units.json (wargear mode: MFM name -> datasheet id)")
+    ap.add_argument("--loadouts", default="unit_loadouts.json", help="unit_loadouts.json (wargear mode: item name matching)")
+    ap.add_argument("--wargear-out", default="wargear_points.json", help="wargear mode output")
+    ap.add_argument("--datasheets", default="Datasheets.csv",
+                    help="wargear mode: name+faction -> datasheet id (names are NOT unique across factions)")
     args = ap.parse_args()
+
+    if args.wargear:
+        sys.exit(cmd_wargear(args))
+    if not args.mfm:
+        ap.error("--mfm is required unless --wargear is given")
     os.makedirs(args.out_dir, exist_ok=True)
 
     units = parse_mfm(args.mfm)

@@ -1,0 +1,81 @@
+{
+ "_meta": {
+  "source": "MFM WARGEAR OPTIONS blocks; see MFM_Instructions.txt (UNITS > Wargear)",
+  "rule": "cost is per item TAKEN, applied on top of the unit's main points cost; default-issue items are taken items and are priced (D107 / B35)",
+  "key": "datasheet_id -> items -> lowercased item name -> {cost, display, source}",
+  "engine": "match rollup weapon/equipment names by weaponBase(name).toLowerCase()"
+ },
+ "000000118": {
+  "items": {
+   "thunder hammer": {
+    "cost": 5,
+    "display": "Thunder hammer",
+    "source": "MFM_Space_Marines_v1_0.txt:373"
+   }
+  }
+ },
+ "000000318": {
+  "items": {
+   "storm shield": {
+    "cost": 5,
+    "display": "Storm Shield",
+    "source": "MFM_Space_Wolves_v1_0.txt:89"
+   }
+  }
+ },
+ "000000322": {
+  "items": {
+   "storm shield": {
+    "cost": 5,
+    "display": "Storm Shield",
+    "source": "MFM_Space_Wolves_v1_0.txt:54"
+   }
+  }
+ },
+ "000002717": {
+  "items": {
+   "macro plasma incinerator": {
+    "cost": 10,
+    "display": "Macro plasma incinerator",
+    "source": "MFM_Space_Marines_v1_0.txt:302"
+   }
+  }
+ },
+ "000003873": {
+  "items": {
+   "thunder hammer": {
+    "cost": 5,
+    "display": "Thunder hammer",
+    "source": "MFM_Death_Watch_v1_0.txt:9"
+   }
+  }
+ },
+ "000004185": {
+  "items": {
+   "banner of macragge": {
+    "cost": 10,
+    "display": "banner of Macragge",
+    "source": "MFM_Space_Marines_v1_0.txt:482"
+   },
+   "blades of honour": {
+    "cost": 10,
+    "display": "Blades of honour",
+    "source": "MFM_Space_Marines_v1_0.txt:483"
+   }
+  }
+ },
+ "000004209": {
+  "items": {
+   "hades lascannon": {
+    "cost": 10,
+    "display": "Hades lascannon",
+    "source": "MFM_Death_Guard_v1_0.txt:52"
+   },
+   "heavy reaper autocannon": {
+    "cost": 10,
+    "display": "Heavy reaper autocannon",
+    "source": "MFM_Death_Guard_v1_0.txt:51"
+   }
+  }
+ }
+}
