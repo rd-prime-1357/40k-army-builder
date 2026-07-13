@@ -7432,11 +7432,25 @@
         ]
       }
     ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: 1 Plaguebearer that is not equipped with a daemonic icon can be equipped with 1 instrument of Chaos.",
-      "UNMATCHED: 1 Plaguebearer that is not equipped with an instrument of Chaos can be equipped with 1 daemonic icon."
+    "options": [
+      {
+        "id": "add_1",
+        "scope": "Plaguebearers",
+        "group": "Instrument of Chaos",
+        "type": "add",
+        "equipment": "Instrument of Chaos",
+        "max_total": 1
+      },
+      {
+        "id": "add_2",
+        "scope": "Plaguebearers",
+        "group": "Daemonic Icon",
+        "type": "add",
+        "equipment": "Daemonic Icon",
+        "max_total": 1
+      }
     ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004114": {
@@ -7468,11 +7482,25 @@
         ]
       }
     ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: 1 Plague Drone that is not equipped with a daemonic icon can be equipped with 1 instrument of Chaos.",
-      "UNMATCHED: 1 Plague Drone that is not equipped with an instrument of Chaos can be equipped with 1 daemonic icon."
+    "options": [
+      {
+        "id": "add_1",
+        "scope": "Plague Drones",
+        "group": "Instrument of Chaos",
+        "type": "add",
+        "equipment": "Instrument of Chaos",
+        "max_total": 1
+      },
+      {
+        "id": "add_2",
+        "scope": "Plague Drones",
+        "group": "Daemonic Icon",
+        "type": "add",
+        "equipment": "Daemonic Icon",
+        "max_total": 1
+      }
     ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004115": {
