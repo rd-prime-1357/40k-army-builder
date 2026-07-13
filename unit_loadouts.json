@@ -621,11 +621,18 @@
         "equipment_parts": [
           "Relic Shield"
         ]
+      },
+      {
+        "id": "add_4",
+        "scope": "Captain with Jump Pack",
+        "group": "Relic Shield",
+        "type": "add",
+        "equipment": "Relic Shield",
+        "max_total": 1,
+        "requires_weapon": "Heavy bolt pistol + Astartes chainsword"
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: If this model is equipped with a heavy bolt pistol and an Astartes chainsword, it can be equipped with 1 relic shield. T"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000084": {
@@ -2388,10 +2395,10 @@
         "type": "count",
         "replaces": "Storm bolter",
         "replacement": "Storm Shield",
-        "max_total_all": true,
         "equipment_parts": [
           "Storm Shield"
-        ]
+        ],
+        "max_total_all": true
       },
       {
         "id": "cnt_2",
@@ -2458,10 +2465,10 @@
           "Boltgun",
           "Storm Shield"
         ],
-        "max_total_all": true,
         "equipment_parts": [
           "Storm Shield"
-        ]
+        ],
+        "max_total_all": true
       },
       {
         "id": "cnt_2",
@@ -4924,10 +4931,10 @@
         "type": "count",
         "replaces": "Centurion bolters",
         "replacement": "Centurion Assault Launcher",
-        "max_total_all": true,
         "equipment_parts": [
           "Centurion Assault Launcher"
-        ]
+        ],
+        "max_total_all": true
       }
     ],
     "_parser_flags": [],
@@ -6229,11 +6236,11 @@
           "Boltgun + Astartes Shield + Close combat weapon",
           "Power weapon + Astartes Shield"
         ],
-        "per_n_models": 5,
-        "max_per_n": 2,
         "equipment_parts": [
           "Astartes Shield"
-        ]
+        ],
+        "per_n_models": 5,
+        "max_per_n": 2
       },
       {
         "id": "cnt_2",
@@ -7209,10 +7216,10 @@
           "Thunder hammer + Storm Shield",
           "Twin lightning claws"
         ],
-        "max_total_all": true,
         "equipment_parts": [
           "Storm Shield"
-        ]
+        ],
+        "max_total_all": true
       }
     ],
     "_parser_flags": [],
@@ -7710,11 +7717,18 @@
         "choices": [
           "Pyre pistol"
         ]
+      },
+      {
+        "id": "add_2",
+        "scope": "Execrator",
+        "group": "Master-Crafted Power Weapon",
+        "type": "add",
+        "adds_weapon": "Master-crafted power weapon",
+        "max_total": 1,
+        "requires_weapon": "Absolvor bolt pistol"
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: If this model is equipped with an absolvor bolt pistol, it can be equipped with 1 master-crafted power weapon (this mode"
-    ]
+    "_parser_flags": []
   },
   "000004136": {
     "size_brackets": [
@@ -8053,11 +8067,11 @@
         "type": "count",
         "replaces": "Heavy thunder hammer",
         "replacement": "Power weapon + Astartes Shield",
-        "per_n_models": 5,
-        "max_per_n": 1,
         "equipment_parts": [
           "Astartes Shield"
-        ]
+        ],
+        "per_n_models": 5,
+        "max_per_n": 1
       },
       {
         "id": "cnt_3",
@@ -8174,7 +8188,16 @@
         "max_total": 1
       },
       {
-        "id": "cnt_2",
+        "id": "add_2",
+        "scope": "Wolf Scouts",
+        "group": "Haywire Mine",
+        "type": "add",
+        "equipment": "Haywire Mine",
+        "max_total": 1,
+        "requires_weapon": "Plasma pistol"
+      },
+      {
+        "id": "cnt_3",
         "scope": "Wolf Scouts",
         "group": "Special Weapon",
         "type": "count",
@@ -8184,7 +8207,6 @@
       }
     ],
     "_parser_flags": [
-      "UNMATCHED: 1 Wolf Scout equipped with a plasma pistol can be equipped with 1 haywire mine (That model's plasma pistol cannot be rep",
       "UNMATCHED: If this unit contains 12 models, 1 Wolf Scout's plasma pistol can be replaced with 1 instigator bolt carbine."
     ],
     "_defaults_source": "equipped"
