@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.55';
+  const VERSION = '5.56';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2603,14 +2603,33 @@
     return s;
   }
   function loIsEquipPart(o, name) { return loEquipSet(o).has(weaponBase(name)); }
-  // Is any weapon this option replaces actually in the group's gear? An option whose
-  // source is missing (a variant-group swap parked on the base group, or a source
-  // that's a wargear item rather than a weapon) can't consume anything, so it must
-  // not emit anything either.
+  // B28: the equipment channel on the *source* side. A model can be asked to give up a
+  // wargear item it carries as gear ("its thunder hammer and storm shield can be
+  // replaced with twin lightning claws"). The item never appears in the weapon table,
+  // so the group's `default_wargear` list is the only place it lives. Gear is one per
+  // model. These two helpers answer "what does this group carry, weapons and gear?".
+  function loGearOn(g) { return new Set((g.default_wargear || []).map(weaponBase)); }
+  function loOwnedOn(g) {
+    const s = new Set((g.default_weapons || []).map(weaponBase));
+    for (const x of loGearOn(g)) s.add(x);
+    return s;
+  }
+  // Gear names come out of the option prose in lower case ("storm shield"). The wargear
+  // allowlist holds the display form, so prefer it; outside the app (test harness) fall
+  // back to sentence case so the two channels still agree on one row per item.
+  function loGearName(n) {
+    const b = weaponBase(n);
+    if (typeof weaponAbilitiesLookup !== 'undefined')
+      for (const k in weaponAbilitiesLookup) if (weaponBase(k) === b) return k;
+    return String(n || '').replace(/^./, c => c.toUpperCase());
+  }
+  // Is anything this option replaces actually on the group's models? An option whose
+  // source is missing (a variant-group swap parked on the base group) can't consume
+  // anything, so it must not emit anything either. A gear item is a real source.
   function loSrcOnGroup(g, o) {
     const parts = loWeaponParts(o.replaces);
     if (!parts.length) return true;   // add-choice: nothing to replace
-    const own = new Set((g.default_weapons || []).map(weaponBase));
+    const own = loOwnedOn(g);
     return parts.some(s => own.has(s));
   }
   function loSelCount(opt, sel, size, groupN) {
@@ -2735,7 +2754,8 @@
         // is gained and nothing is given up. Names listed in equipment_choices land in
         // the equipment table rather than the weapon table.
         const dw = g.default_weapons || [];
-        const onModel = new Set(dw.map(weaponBase));
+        const dg = g.default_wargear || [];   // B28: gear is a source too, one per model
+        const onModel = loOwnedOn(g);
         const taken = {};      // base weapon -> a choice already swapped this whole slot
         const cUsed = {};      // base weapon -> copies consumed by count options
         const emitF = [];      // { opt, replacement, n }
@@ -2786,6 +2806,12 @@
           const keep = have - Math.min(used, have);
           if (keep > 0) add(weapons, w, keep);
         }
+        for (const it of dg) {
+          const b = weaponBase(it), used = cUsed[b] || 0;
+          if (taken[b]) { if (used > 0) overAllocated = true; continue; }
+          if (used > 1) overAllocated = true;
+          if (used < 1) add(equipment, loGearName(it), 1);
+        }
         for (const e of emitF) addRepl(e.opt, e.replacement, e.n);
         // Leader can also carry pooled/add weapons (e.g. a Sergeant grenade launcher).
         for (const o of opts) if (o.type === 'add') {
@@ -2823,8 +2849,11 @@
       // sum of all swaps. A compound source ('Power fist + Storm bolter') charges
       // each named weapon; the same weapon consumed by two options (e.g. a special
       // weapon and a separate swap that both need the power fist) sums correctly.
+      // Keyed by base name, so a case difference or a profile suffix between the option's
+      // source and the group's gear can't miss — and so a gear item ('storm shield' in
+      // default_wargear, 'Storm Shield' in the option) charges the same slot.
       const chargeSource = (replaces, cnt) => {
-        for (const src of String(replaces).split(' + ')) swappedByWeapon[src] = (swappedByWeapon[src] || 0) + cnt;
+        for (const src of loWeaponParts(replaces)) swappedByWeapon[src] = (swappedByWeapon[src] || 0) + cnt;
       };
       for (const o of countOpts) {
         if (!reqOk(o)) continue;   // gated on a missing weapon → emits nothing, charges nothing
@@ -2850,7 +2879,9 @@
         if (swappedByWeapon[k] > pool) overAllocated = true;
       }
       poolsOut[g.name] = { pool, used: maxSrcUsed };
-      for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[w] || 0)) * wcnt(g, w));
+      for (const w of g.default_weapons) add(weapons, w, Math.max(0, n - (swappedByWeapon[weaponBase(w)] || 0)) * wcnt(g, w));
+      for (const it of (g.default_wargear || []))
+        add(equipment, loGearName(it), Math.max(0, n - (swappedByWeapon[weaponBase(it)] || 0)));
       for (const e of emit) addRepl(e.opt, e.replacement, e.n);
     }
     for (const pid in poolCap) poolsOut['pool:' + pid] = { pool: poolCap[pid], used: poolUsed[pid] || 0, leaderUsed: poolLeaderUsed[pid] || 0 };
