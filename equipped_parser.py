@@ -319,6 +319,38 @@ def normalise_profiles(ld):
                     opt[f] = [_fold_compound(c) for c in opt[f]]
 
 
+def load_wargear_allowlist(path):
+    """Canonical wargear item names (weapon_abilities.json) -> normalised set."""
+    try:
+        rows = json.load(open(path))
+    except Exception:
+        return set()
+    out = set()
+    for r in rows:
+        nm = r.get('weapon_ability_name') if isinstance(r, dict) else None
+        if nm:
+            out.add(norm_name(re.sub(r'\s*\([^)]*\)\s*$', '', nm)))
+    return out
+
+
+def _names_wargear(elines, ex, ba, g_ex, g_ba, allow):
+    """True when a datasheet loadout clause names an item that is not a weapon but is
+    a known wargear item."""
+    if not allow:
+        return False
+    for ln in elines:
+        parsed = parse_equipped_line(ln)
+        if not parsed:
+            continue
+        for tok in parsed[1]:
+            core = re.sub(r'^\d+\s+', '', tok).strip()
+            if resolve(core, ex, ba, g_ex, g_ba):
+                continue
+            if norm_name(core) in allow:
+                return True
+    return False
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--composition', required=True)
@@ -327,6 +359,7 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--report', required=True)
     ap.add_argument('--no-prune', action='store_true')
+    ap.add_argument('--wargear-allowlist', default='weapon_abilities.json')
     ap.add_argument('--datasheets', default=None,
                     help='Datasheets.csv; gap-fills the loadout partition for multi-group '
                          'units the web.txt composition dump misses (web.txt takes precedence).')
@@ -340,6 +373,7 @@ def main():
     # Gap-fill from Datasheets.csv loadout prose. Only multi-group units the web.txt
     # dump didn't cover: single-group units are already correct (flat == the one group),
     # and web.txt-covered units are left untouched so nothing regresses.
+    allow = load_wargear_allowlist(args.wargear_allowlist)
     ds_filled = []
     if args.datasheets:
         ds_lines = loadout_lines_from_datasheets(args.datasheets)
@@ -351,7 +385,12 @@ def main():
                 continue
             if entry.get('_defaults_source') == 'equipped':
                 continue  # already partitioned by a web.txt pass — don't re-touch
-            if len(entry.get('model_groups', [])) < 2:
+            if len(entry.get('model_groups', [])) < 2 and not _names_wargear(
+                    elines, ex_by_id.get(uid, {}), ba_by_id.get(uid, {}), g_ex, g_ba, allow):
+                # Single-group units are already correct on the weapon side (flat == the
+                # one group). Admit one only when its loadout prose names a real wargear
+                # ITEM (allowlist) that no weapon lookup can resolve — otherwise the group
+                # would carry no gear and a gear-sourced swap could never fire (B28b).
                 continue
             owner_lines[uid] = elines
             ds_filled.append(uid)

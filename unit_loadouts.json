@@ -1021,9 +1021,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count.replaces) on Terminator Assault Squad"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000119": {
@@ -1701,11 +1699,15 @@
         "default_weapons": [
           "Lion’s Wrath",
           "The Sword of Secrets"
+        ],
+        "default_wargear": [
+          "the Lion Helm"
         ]
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000219": {
     "size_brackets": [
@@ -1759,11 +1761,15 @@
           "The Deliverer",
           "Mind Wipe",
           "Traitor’s Bane"
+        ],
+        "default_wargear": [
+          "Book of Salvation"
         ]
       }
     ],
     "options": [],
-    "_parser_flags": []
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000230": {
     "size_brackets": [
@@ -2289,6 +2295,9 @@
         },
         "default_weapons": [
           "Wulfen weapons"
+        ],
+        "default_wargear": [
+          "death totem"
         ]
       }
     ],
@@ -2303,9 +2312,8 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: death totem (count.replaces) on Wulfen"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000000314": {
     "size_brackets": [
@@ -7529,6 +7537,9 @@
         },
         "default_weapons": [
           "Master-crafted power weapon"
+        ],
+        "default_wargear": [
+          "storm shield"
         ]
       }
     ],
@@ -7556,9 +7567,8 @@
         ]
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (choice.replaces) on Wolf Guard Battle Leader"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000004131": {
     "size_brackets": [
@@ -7601,9 +7611,7 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: storm shield (count.replaces) on Wolf Guard Headtakers"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004132": {
@@ -7619,6 +7627,9 @@
         },
         "default_weapons": [
           "Thunder hammer"
+        ],
+        "default_wargear": [
+          "death totem"
         ]
       }
     ],
@@ -7633,9 +7644,8 @@
         "max_total_all": true
       }
     ],
-    "_parser_flags": [
-      "WEAPON_NOT_FOUND: death totem (count.replaces) on Wulfen with Storm Shields"
-    ]
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
   },
   "000004133": {
     "size_brackets": [
