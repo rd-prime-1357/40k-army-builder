@@ -1020,6 +1020,15 @@
     "options": [
       {
         "id": "cnt_1",
+        "scope": "Assault Terminator Sergeant",
+        "group": "Thunder Hammer Options",
+        "type": "count",
+        "replaces": "Thunder hammer + Storm Shield",
+        "replacement": "Twin lightning claws",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
         "scope": "Assault Terminators",
         "group": "Thunder Hammer Options",
         "type": "count",
@@ -1127,6 +1136,15 @@
     "options": [
       {
         "id": "cnt_1",
+        "scope": "Inceptor Sergeant",
+        "group": "Assault Bolters Options",
+        "type": "count",
+        "replaces": "Assault bolters",
+        "replacement": "Plasma exterminators",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
         "scope": "Inceptors",
         "group": "Assault Bolters Options",
         "type": "count",
@@ -1427,10 +1445,45 @@
         ]
       }
     ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: Any number of models can each have their bolt pistol replaced one of the following: 1 storm shield 1 grav-pistol 1 hand "
+    "options": [
+      {
+        "id": "cc_1",
+        "scope": "Vanguard Veteran Sergeant with Jump Pack",
+        "group": "Bolt Pistol Options",
+        "type": "count",
+        "replaces": "Bolt pistol",
+        "replacement_choices": [
+          "Storm Shield",
+          "Grav-pistol",
+          "Hand flamer",
+          "Inferno pistol",
+          "Plasma pistol"
+        ],
+        "equipment_parts": [
+          "Storm Shield"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cc_2",
+        "scope": "Vanguard Veterans with Jump Packs",
+        "group": "Bolt Pistol Options",
+        "type": "count",
+        "replaces": "Bolt pistol",
+        "replacement_choices": [
+          "Storm Shield",
+          "Grav-pistol",
+          "Hand flamer",
+          "Inferno pistol",
+          "Plasma pistol"
+        ],
+        "equipment_parts": [
+          "Storm Shield"
+        ],
+        "max_total_all": true
+      }
     ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000000151": {
@@ -2390,7 +2443,7 @@
     "options": [
       {
         "id": "cnt_1",
-        "scope": "Wolf Guard Terminators",
+        "scope": "Wolf Guard Terminator Pack Leader",
         "group": "Storm Bolter Options",
         "type": "count",
         "replaces": "Storm bolter",
@@ -2403,6 +2456,18 @@
       {
         "id": "cnt_2",
         "scope": "Wolf Guard Terminators",
+        "group": "Storm Bolter Options",
+        "type": "count",
+        "replaces": "Storm bolter",
+        "replacement": "Storm Shield",
+        "equipment_parts": [
+          "Storm Shield"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_3",
+        "scope": "Wolf Guard Terminators",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Storm bolter + Master-crafted power weapon",
@@ -2411,7 +2476,7 @@
         "max_per_n": 1
       },
       {
-        "id": "cho_3",
+        "id": "cho_4",
         "scope": "Wolf Guard Terminator Pack Leader",
         "group": "Storm Bolter Options",
         "type": "choice",
@@ -2457,6 +2522,21 @@
     "options": [
       {
         "id": "cc_1",
+        "scope": "Thunderwolf Cavalry Pack Leader",
+        "group": "Bolt Pistol Options",
+        "type": "count",
+        "replaces": "Bolt pistol",
+        "replacement_choices": [
+          "Boltgun",
+          "Storm Shield"
+        ],
+        "equipment_parts": [
+          "Storm Shield"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cc_2",
         "scope": "Thunderwolf Cavalry",
         "group": "Bolt Pistol Options",
         "type": "count",
@@ -2471,7 +2551,7 @@
         "max_total_all": true
       },
       {
-        "id": "cnt_2",
+        "id": "cnt_3",
         "scope": "Thunderwolf Cavalry",
         "group": "Special Weapon",
         "type": "count",
@@ -3079,6 +3159,18 @@
       },
       {
         "id": "cc_2",
+        "scope": "Scout Sergeant",
+        "group": "Boltgun Options",
+        "type": "count",
+        "replaces": "Boltgun",
+        "replacement_choices": [
+          "Astartes shotgun",
+          "Combat knife"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cc_3",
         "scope": "Scouts",
         "group": "Boltgun Options",
         "type": "count",
@@ -3090,7 +3182,7 @@
         "max_total_all": true
       },
       {
-        "id": "cnt_3",
+        "id": "cnt_4",
         "scope": "Scouts",
         "group": "Special Weapon",
         "type": "count",
@@ -3100,7 +3192,7 @@
         "max_per_n": 1
       },
       {
-        "id": "cc_4",
+        "id": "cc_5",
         "scope": "Scouts",
         "group": "Special Weapon",
         "type": "count",
@@ -3266,6 +3358,15 @@
       },
       {
         "id": "cnt_2",
+        "scope": "Terminator Sergeant",
+        "group": "Power Fist Options",
+        "type": "count",
+        "replaces": "Power fist",
+        "replacement": "Chainfist",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_3",
         "scope": "Terminators",
         "group": "Power Fist Options",
         "type": "count",
@@ -3274,7 +3375,7 @@
         "max_total_all": true
       },
       {
-        "id": "sng_3",
+        "id": "sng_4",
         "scope": "Terminator Sergeant",
         "group": "Power Fist Options",
         "type": "choice",
@@ -3446,6 +3547,15 @@
     "options": [
       {
         "id": "cnt_1",
+        "scope": "Devastator Centurion Sergeant",
+        "group": "Centurion Bolters Options",
+        "type": "count",
+        "replaces": "Centurion bolters",
+        "replacement": "Centurion missile launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
         "scope": "Devastator Centurions",
         "group": "Centurion Bolters Options",
         "type": "count",
@@ -3454,7 +3564,19 @@
         "max_total_all": true
       },
       {
-        "id": "cc_2",
+        "id": "cc_3",
+        "scope": "Devastator Centurion Sergeant",
+        "group": "Grav-Cannon Options",
+        "type": "count",
+        "replaces": "Grav-cannon",
+        "replacement_choices": [
+          "Twin heavy bolter",
+          "Twin lascannon"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cc_4",
         "scope": "Devastator Centurions",
         "group": "Grav-Cannon Options",
         "type": "count",
@@ -4202,6 +4324,15 @@
     "options": [
       {
         "id": "cnt_1",
+        "scope": "Aggressor Sergeant",
+        "group": "Flamestorm Gauntlets Options",
+        "type": "count",
+        "replaces": "Flamestorm gauntlets",
+        "replacement": "Auto boltstorm gauntlets + Fragstorm grenade launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
         "scope": "Aggressors",
         "group": "Flamestorm Gauntlets Options",
         "type": "count",
@@ -4478,6 +4609,15 @@
     "options": [
       {
         "id": "cnt_1",
+        "scope": "Desolation Sergeant",
+        "group": "Superfrag Rocket Launcher Options",
+        "type": "count",
+        "replaces": "Superfrag rocket launcher",
+        "replacement": "Superkrak rocket launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
         "scope": "Desolation Marines",
         "group": "Superfrag Rocket Launcher Options",
         "type": "count",
@@ -4486,7 +4626,7 @@
         "max_total_all": true
       },
       {
-        "id": "sng_2",
+        "id": "sng_3",
         "scope": "Desolation Sergeant",
         "group": "Superfrag Rocket Launcher Options",
         "type": "choice",
@@ -4917,7 +5057,7 @@
     "options": [
       {
         "id": "cnt_1",
-        "scope": "Assault Centurions",
+        "scope": "Assault Centurion Sergeant",
         "group": "Twin Flamer Options",
         "type": "count",
         "replaces": "Twin flamer",
@@ -4926,6 +5066,27 @@
       },
       {
         "id": "cnt_2",
+        "scope": "Assault Centurions",
+        "group": "Twin Flamer Options",
+        "type": "count",
+        "replaces": "Twin flamer",
+        "replacement": "Twin meltagun",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_3",
+        "scope": "Assault Centurion Sergeant",
+        "group": "Centurion Bolters Options",
+        "type": "count",
+        "replaces": "Centurion bolters",
+        "replacement": "Centurion Assault Launcher",
+        "equipment_parts": [
+          "Centurion Assault Launcher"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_4",
         "scope": "Assault Centurions",
         "group": "Centurion Bolters Options",
         "type": "count",
@@ -5301,6 +5462,15 @@
     "options": [
       {
         "id": "cnt_1",
+        "scope": "Reiver Sergeant",
+        "group": "Combat Knife Options",
+        "type": "count",
+        "replaces": "Combat knife",
+        "replacement": "Bolt carbine + Close combat weapon",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
         "scope": "Reivers",
         "group": "Combat Knife Options",
         "type": "count",
@@ -5309,7 +5479,7 @@
         "max_total_all": true
       },
       {
-        "id": "add_2",
+        "id": "add_3",
         "scope": "Reiver Sergeant",
         "group": "Combat Knife",
         "type": "add",
@@ -5318,17 +5488,8 @@
         "requires_weapon": "Bolt carbine"
       },
       {
-        "id": "add_3",
-        "scope": "Reiver Sergeant",
-        "group": "Reiver Grav-chute",
-        "type": "add",
-        "equipment": "Reiver Grav-chute",
-        "per_n_models": 1,
-        "max_per_n": 1
-      },
-      {
         "id": "add_4",
-        "scope": "Reivers",
+        "scope": "Reiver Sergeant",
         "group": "Reiver Grav-chute",
         "type": "add",
         "equipment": "Reiver Grav-chute",
@@ -5337,6 +5498,15 @@
       },
       {
         "id": "add_5",
+        "scope": "Reivers",
+        "group": "Reiver Grav-chute",
+        "type": "add",
+        "equipment": "Reiver Grav-chute",
+        "per_n_models": 1,
+        "max_per_n": 1
+      },
+      {
+        "id": "add_6",
         "scope": "Reiver Sergeant",
         "group": "Grapnel Launcher",
         "type": "add",
@@ -5345,7 +5515,7 @@
         "max_per_n": 1
       },
       {
-        "id": "add_6",
+        "id": "add_7",
         "scope": "Reivers",
         "group": "Grapnel Launcher",
         "type": "add",
@@ -5969,7 +6139,61 @@
       },
       {
         "id": "cnt_6",
+        "scope": "Kill Team Infiltrators with bolt sniper rifles",
+        "group": "Bolt Sniper Rifle Options",
+        "type": "count",
+        "replaces": "Bolt sniper rifle",
+        "replacement": "Las fusil",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_7",
+        "scope": "Kill Team Infiltrators with Deathwatch occulus bolt carbines",
+        "group": "Bolt Sniper Rifle Options",
+        "type": "count",
+        "replaces": "Bolt sniper rifle",
+        "replacement": "Las fusil",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_8",
+        "scope": "Kill Team Infiltrators with combat knives",
+        "group": "Bolt Sniper Rifle Options",
+        "type": "count",
+        "replaces": "Bolt sniper rifle",
+        "replacement": "Las fusil",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_9",
         "scope": "Kill Team Infiltrators",
+        "group": "Combat Knife Options",
+        "type": "count",
+        "replaces": "Combat knife",
+        "replacement": "Deathwatch bolt carbine + Close combat weapon",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_10",
+        "scope": "Kill Team Infiltrators with bolt sniper rifles",
+        "group": "Combat Knife Options",
+        "type": "count",
+        "replaces": "Combat knife",
+        "replacement": "Deathwatch bolt carbine + Close combat weapon",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_11",
+        "scope": "Kill Team Infiltrators with Deathwatch occulus bolt carbines",
+        "group": "Combat Knife Options",
+        "type": "count",
+        "replaces": "Combat knife",
+        "replacement": "Deathwatch bolt carbine + Close combat weapon",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_12",
+        "scope": "Kill Team Infiltrators with combat knives",
         "group": "Combat Knife Options",
         "type": "count",
         "replaces": "Combat knife",
@@ -6114,7 +6338,52 @@
       },
       {
         "id": "cnt_6",
+        "scope": "Kill Team Sergeant",
+        "group": "Superfrag Rocket Launcher Options",
+        "type": "count",
+        "replaces": "Superfrag rocket launcher",
+        "replacement": "Superkrak rocket launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_7",
         "scope": "Kill Team Intercessors",
+        "group": "Superfrag Rocket Launcher Options",
+        "type": "count",
+        "replaces": "Superfrag rocket launcher",
+        "replacement": "Superkrak rocket launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_8",
+        "scope": "Kill Team Intercessors with plasma incinerators",
+        "group": "Superfrag Rocket Launcher Options",
+        "type": "count",
+        "replaces": "Superfrag rocket launcher",
+        "replacement": "Superkrak rocket launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_9",
+        "scope": "Kill Team Intercessors with heavy bolt pistols",
+        "group": "Superfrag Rocket Launcher Options",
+        "type": "count",
+        "replaces": "Superfrag rocket launcher",
+        "replacement": "Superkrak rocket launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_10",
+        "scope": "Kill Team Intercessors with pyreblasters",
+        "group": "Superfrag Rocket Launcher Options",
+        "type": "count",
+        "replaces": "Superfrag rocket launcher",
+        "replacement": "Superkrak rocket launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_11",
+        "scope": "Kill Team Intercessors with superfrag rocket launchers",
         "group": "Superfrag Rocket Launcher Options",
         "type": "count",
         "replaces": "Superfrag rocket launcher",
@@ -6188,6 +6457,24 @@
       {
         "id": "cnt_3",
         "scope": "Kill Team Heavy Intercessors",
+        "group": "Flamestorm Gauntlets Options",
+        "type": "count",
+        "replaces": "Flamestorm gauntlets",
+        "replacement": "Auto boltstorm gauntlets + Fragstorm grenade launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_4",
+        "scope": "Kill Team Heavy Intercessors with power fists",
+        "group": "Flamestorm Gauntlets Options",
+        "type": "count",
+        "replaces": "Flamestorm gauntlets",
+        "replacement": "Auto boltstorm gauntlets + Fragstorm grenade launcher",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_5",
+        "scope": "Kill Team Heavy Intercessors with melta rifles",
         "group": "Flamestorm Gauntlets Options",
         "type": "count",
         "replaces": "Flamestorm gauntlets",
@@ -7206,6 +7493,23 @@
       },
       {
         "id": "cc_2",
+        "scope": "Deathwatch Terminator Sergeant",
+        "group": "Power Fist Options",
+        "type": "count",
+        "replaces": "Power fist + Storm bolter",
+        "replacement_choices": [
+          "Storm bolter + Power weapon",
+          "Storm bolter + Chainfist",
+          "Thunder hammer + Storm Shield",
+          "Twin lightning claws"
+        ],
+        "equipment_parts": [
+          "Storm Shield"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cc_3",
         "scope": "Deathwatch Terminators",
         "group": "Power Fist Options",
         "type": "count",
@@ -7297,7 +7601,25 @@
       },
       {
         "id": "cnt_4",
+        "scope": "Kill Team Sergeant with Jump Pack",
+        "group": "Assault Bolters Options",
+        "type": "count",
+        "replaces": "Assault bolters",
+        "replacement": "Plasma exterminators",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_5",
         "scope": "Kill Team Intercessors with Jump Packs",
+        "group": "Assault Bolters Options",
+        "type": "count",
+        "replaces": "Assault bolters",
+        "replacement": "Plasma exterminators",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_6",
+        "scope": "Kill Team Heavy Intercessors with Jump Packs",
         "group": "Assault Bolters Options",
         "type": "count",
         "replaces": "Assault bolters",
@@ -7644,6 +7966,15 @@
         "replaces": "Master-crafted power weapon + Storm Shield",
         "replacement": "Paired master-crafted power weapons",
         "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
+        "scope": "Hunting Wolves",
+        "group": "Master-Crafted Power Weapon Options",
+        "type": "count",
+        "replaces": "Master-crafted power weapon + Storm Shield",
+        "replacement": "Paired master-crafted power weapons",
+        "max_total_all": true
       }
     ],
     "_parser_flags": [],
@@ -7893,6 +8224,15 @@
       },
       {
         "id": "cnt_2",
+        "scope": "Terminator Squad Leader",
+        "group": "Power Fist Options",
+        "type": "count",
+        "replaces": "Power fist",
+        "replacement": "Chainfist",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_3",
         "scope": "Terminators",
         "group": "Power Fist Options",
         "type": "count",
@@ -7901,7 +8241,7 @@
         "max_total_all": true
       },
       {
-        "id": "sng_3",
+        "id": "sng_4",
         "scope": "Terminator Squad Leader",
         "group": "Power Fist Options",
         "type": "choice",

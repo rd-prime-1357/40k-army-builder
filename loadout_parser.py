@@ -54,6 +54,44 @@ def lookup_equipment(name, equipment_items):
     return None
 
 
+
+def resolve_part(raw, idx, global_idx=None, equipment_items=None):
+    """Resolve ONE named part of a loadout phrase. Weapon index first, equipment
+    allowlist (weapon_abilities.json) second, flag only if neither. Returns
+    (display_name, ok, is_equipment). A storm/relic/blizzard/Astartes/Terminator
+    shield, the Centurion assault launcher and the death totem are wargear, not
+    weapons: they live in the allowlist, so a weapon-only lookup emits a bogus
+    WEAPON_NOT_FOUND and drops equipment_parts (D118)."""
+    wn, ok = normalise_weapon(raw, idx, global_idx)
+    if ok:
+        return base_display(wn), True, False
+    item = lookup_equipment(raw, equipment_items)
+    if item:
+        return item, True, True
+    return raw.title(), False, False
+
+
+def _gate_parts(raw, idx, global_idx=None, equipment_items=None):
+    """Normalise the gate clause of a conditional add ('...is equipped with a heavy
+    bolt pistol and an Astartes chainsword'). Strips articles and counts, splits on
+    'and'/comma unless the whole phrase is itself a known 'and'-named weapon, resolves
+    each part and joins with ' + '. This is what produces D103/B32's compound gate."""
+    t = (raw or '').strip().rstrip('.,;')
+    t = re.sub(r'^(?:an?|the)\s+', '', t, flags=re.I)
+    if _is_exact_weapon(t, idx, global_idx):
+        parts = [t]
+    else:
+        parts = [p for p in re.split(r'\s*,\s*|\s+and\s+', t) if p.strip()]
+    out = []
+    for p in parts:
+        p = re.sub(r'^(?:an?|the)\s+', '', p.strip(), flags=re.I)
+        p = re.sub(r'^\d+\s+', '', p).strip(' .,;')
+        if not p:
+            continue
+        dn, _ok, _eq = resolve_part(p, idx, global_idx, equipment_items)
+        out.append(dn)
+    return ' + '.join(out)
+
 def base_display(name):
     """Option-facing display form of a matched weapon: drop a ' – <profile>' /
     ' - <profile>' suffix so a multi-profile weapon (e.g. 'Astartes grenade
@@ -352,7 +390,10 @@ def classify_any_number(text, unit_name):
         r"(?:Any number of|All of the|All|Up to (?P<upto>\d+))\s+"
         r"(?P<scope>.+?)"
         r"(?:\s+in this unit)?"
-        r" can (?:each )?(?:have their (?P<repl>.+?) replaced with|replace their (?P<repl2>.+?) with)\s+"
+        # B42: GW drops the 'with' on 000000147 line 1 ("...bolt pistol replaced one of the
+        # following"). Tolerate it, or the whole sentence is UNMATCHED and the storm shield
+        # never reaches the player.
+        r" can (?:each )?(?:have their (?P<repl>.+?) replaced(?: with)?|replace their (?P<repl2>.+?) with)\s+"
         r"(?:(?:one|1) of the following[:\s]+(?P<list>.+)|(?P<rep>\d+\s+\S.*?)(?:\.|$))",
         text, re.I)
     if not m:
@@ -365,18 +406,29 @@ def classify_any_number(text, unit_name):
         # tolerate a trailing 'models'/'units' after a named model, if present
         scope_hint = re.sub(r'\s+(?:models?|units?)$', '', scope_raw, flags=re.I).strip() or 'body'
     repl_raw = (m.group('repl') or m.group('repl2') or '').strip()
+    # D116/B18: a GENERIC model phrase ('Any number of models', 'All models in this unit')
+    # covers every model group, leader included; a NAMED model phrase ('Any number of
+    # Sternguard Veterans') covers that group only. The uncapped forms fan out safely —
+    # each group's cap is its own model count and there is no unit-wide cap to share.
+    # 'Up to N models' IS capped, so it is left body-scoped until the engine can pool a
+    # cap across count options (B18b).
+    generic = (scope_hint == 'body' and up_to is None)
     if m.group('list'):
         choices = _choices_from_list(m.group('list'))
         if choices:
-            return [{'_type': 'any_count_choice', '_scope_hint': scope_hint,
-                     'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
-                     'up_to': up_to, 'replacement_choices': choices}]
+            op = {'_type': 'any_count_choice', '_scope_hint': scope_hint,
+                  'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+                  'up_to': up_to, 'replacement_choices': choices}
+            if generic: op['_all_groups'] = True
+            return [op]
     elif m.group('rep'):
         rep_raw = m.group('rep').strip()
-        return [{'_type': 'any_count', '_scope_hint': scope_hint,
-                 'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
-                 'up_to': up_to,
-                 'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw}]
+        op = {'_type': 'any_count', '_scope_hint': scope_hint,
+              'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+              'up_to': up_to,
+              'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw}
+        if generic: op['_all_groups'] = True
+        return [op]
     return None
 
 def classify_active_swap(text, unit_name):
@@ -405,7 +457,8 @@ def classify_active_swap(text, unit_name):
             return None
         return [{'_type': 'choice', '_scope_hint': model, 'replaces': replaces, 'choices': choices}]
     return [{'_type': 'single', '_scope_hint': model, 'replaces': replaces,
-             'replacement': qty_name(m.group('rep'))}]
+             'replacement': qty_name(m.group('rep')),
+             'replacement_raw': m.group('rep').strip()}]
 
 def classify_one_model_swap(text, unit_name):
     """Indefinite single-model swaps that need a 1-model cap:
@@ -456,60 +509,50 @@ def classify_conditional_add(text, unit_name):
     one capped add (max_total:1) scoped to <model>, carrying requires_weapon so the
     add disappears if the gate weapon is not present. (Reiver Sergeant: keeps a
     combat knife only when it took the bolt carbine.)"""
-    if re.search(r'is not equipped with', text, re.I):
-        return None                      # a negated gate is a different shape
     m = re.match(
-        r"If (?:the |this )?(?P<model>.+?) is equipped with (?P<req>.+?),\s+"
+        r"If (?:the )?(?P<model>.+?) is equipped with (?P<req>.+?),?\s+"
         r"it can be equipped with (?P<what>\d+\s+\S.*?)(?:\s*\(|\.|$)",
         text, re.I)
     if not m:
         return None
-    model = m.group('model').strip()
-    hint = 'single' if re.fullmatch(r'model', model, re.I) else model
-    return [{'_type': 'add', '_scope_hint': hint,
+    return [{'_type': 'add', '_scope_hint': m.group('model').strip(),
              'adds': qty_name(m.group('what')),
-             'requires_weapon': m.group('req').strip(),
-             '_gate_compound': True,
+             'requires_weapon_raw': m.group('req').strip(),
              'max_total': 1}]
 
-def classify_negated_gate_add(text, unit_name):
-    """'1 <Model> that is not equipped with a <A> can be equipped with 1 <B>.'
-
-    D106: the exclusion is per MODEL, not per unit.  Because the body group always
-    holds two or more models, one model can carry A while another carries B, so the
-    two sentences never actually lock each other out at unit level.  The correct
-    emission is therefore two independent, ungated, unpooled single-model adds — no
-    exclusion pool, no requires_weapon."""
-    m = re.match(
-        r"(?P<n>\d+)\s+(?P<model>.+?)\s+that is not equipped with .+?\s+"
-        r"can be equipped with (?P<what>\d+\s+\S.*?)(?:\s*\(|\.|$)",
-        text, re.I)
-    if not m:
-        return None
-    return [{'_type': 'add', '_scope_hint': m.group('model').strip(),
-             'adds': qty_name(m.group('what')),
-             'max_total': int(m.group('n'))}]
 
 def classify_bearer_add(text, unit_name):
-    """'1 <Model> equipped with a <weapon> can be equipped with 1 <item>.'
-
-    A single-model add gated on that model still carrying <weapon> — the same gate as
-    classify_conditional_add, but written from the model's side rather than as an
-    'If …' clause.  A trailing parenthetical rules note ('That model's plasma pistol
-    cannot be replaced') is dropped."""
-    if re.search(r'is not equipped with|one of the following', text, re.I):
-        return None
+    """'1 Wolf Scout equipped with a plasma pistol can be equipped with 1 haywire mine.'
+    The model-side spelling of the conditional add: the gate names the bearer, not the
+    unit. Emits one capped add scoped to the named model group, gated on the bearer
+    still carrying the gate weapon."""
     m = re.match(
-        r"(?P<n>\d+)\s+(?P<model>(?!.*\bnot\b).+?)\s+equipped with (?P<req>.+?)\s+"
-        r"can be equipped with (?P<what>\d+\s+\S.*?)(?:\s*\(|\.|$)",
+        r"(?:1|One)\s+(?P<model>.+?)\s+equipped with an?\s+(?P<req>.+?)"
+        r"\s+can be equipped with (?P<what>\d+\s+\S.*?)(?:\s*\(|\.|$)",
         text, re.I)
     if not m:
         return None
     return [{'_type': 'add', '_scope_hint': m.group('model').strip(),
              'adds': qty_name(m.group('what')),
-             'requires_weapon': m.group('req').strip(),
-             '_gate_compound': True,
-             'max_total': int(m.group('n'))}]
+             'requires_weapon_raw': m.group('req').strip(),
+             'max_total': 1}]
+
+
+def classify_negated_gate_add(text, unit_name):
+    """'1 Plaguebearer that is not equipped with a daemonic icon can be equipped with 1
+    instrument of Chaos.' Per D106 the exclusion is per MODEL, and the body group always
+    holds two or more, so the pair of sentences can never actually block each other.
+    Emits one independent, ungated, unpooled single-model add — the negated clause is
+    discarded deliberately, not dropped by accident."""
+    m = re.match(
+        r"(?:1|One)\s+(?P<model>.+?)\s+that is not equipped with an?\s+(?P<req>.+?)"
+        r"\s+can be equipped with (?P<what>\d+\s+\S.*?)(?:\s*\(|\.|$)",
+        text, re.I)
+    if not m:
+        return None
+    return [{'_type': 'add', '_scope_hint': m.group('model').strip(),
+             'adds': qty_name(m.group('what')),
+             'max_total': 1}]
 
 def classify_all_models_add(text, unit_name):
     """'All models in this unit can each be equipped with 1 <item>.'
@@ -633,7 +676,6 @@ NOTE_PAT = re.compile(
     r'^\*|cannot be taken|only if one|only one|^note:|^designer', re.I)
 
 CLASSIFIERS = [
-    classify_negated_gate_add,
     classify_conditional_add,
     classify_all_models_add,
     classify_one_model_add,
@@ -644,6 +686,7 @@ CLASSIFIERS = [
     classify_active_swap,
     classify_one_model_swap,
     classify_conditional_add_choice,
+    classify_negated_gate_add,
     classify_bearer_add,
     classify_add,
     classify_this_model_choice,
@@ -766,43 +809,6 @@ def normalise_weapon(raw, idx, global_idx=None):
     if m:
         return normalise_weapon(m.group(1), idx, global_idx)
     return raw.title(), False
-
-def resolve_part(raw, idx, global_idx=None, equipment_items=None):
-    """Resolve ONE part of a loadout phrase to its canonical display name.
-
-    A part is a weapon OR a non-weapon wargear item (a storm shield, a death totem,
-    a Centurion assault launcher).  Weapons win: the weapon index is consulted first,
-    and only a name that is not a weapon anywhere falls through to the equipment
-    allowlist (weapon_abilities.json).  Returns (display_name, is_equipment, ok).
-    Callers flag WEAPON_NOT_FOUND only when ok is False — a resolved wargear item is
-    not a missing weapon."""
-    name, ok = normalise_weapon(raw, idx, global_idx)
-    if ok:
-        return base_display(name), False, True
-    item = lookup_equipment(raw, equipment_items)
-    if item:
-        return item, True, True
-    return name, False, False
-
-def _gate_parts(raw, idx, global_idx=None, equipment_items=None):
-    """Resolve a gate phrase ('requires_weapon') that may name more than one item.
-
-    'a heavy bolt pistol and an Astartes chainsword' -> 'Heavy bolt pistol + Astartes
-    chainsword'.  Articles and counts are stripped from each part.  A phrase that is
-    itself a known 'and'-named weapon is left whole."""
-    s = re.sub(r'\s*\([^)]*\)\s*$', '', (raw or '').strip()).strip(' .,;')
-    if _is_exact_weapon(s, idx, global_idx):
-        parts = [s]
-    else:
-        parts = [p for p in re.split(r'\s*,\s*|\s+and\s+', s) if p.strip()]
-    out = []
-    for p in parts:
-        p = re.sub(r'^(?:\d+|an?|the)\s+', '', p.strip(), flags=re.I).strip(' .,;')
-        if not p:
-            continue
-        disp, _is_eq, _ok = resolve_part(p, idx, global_idx, equipment_items)
-        out.append(disp)
-    return ' + '.join(out) if out else base_display(s)
 
 # ── OR alternative-profile merge ────────────────────────────────────────────────
 def _norm_group_key(name):
@@ -939,25 +945,26 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     src_parts = src_parts[:1]
                 src_out = []
                 for p in src_parts:
-                    pn, _peq, pok = resolve_part(p, weapon_idx, global_idx, equipment_items)
+                    pn, pok, _eq = resolve_part(p, weapon_idx, global_idx, equipment_items)
                     if not pok: flags.append(f'WEAPON_NOT_FOUND: {p} ({ot}.replaces) on {unit_name}')
                     src_out.append(pn)
                 repl = ' + '.join(src_out)
+                # A compound GAIN on a single swap ('...replaced with 1 thunder hammer and
+                # 1 relic shield') must be split, or normalise_weapon's prefix fallback
+                # swallows the phrase and emits only its first weapon (D118).
                 if ot == 'choice':
                     raw_choices = op['choices']
                 else:
-                    # a single gain can be compound ('1 thunder hammer and 1 relic shield');
-                    # split it before resolving so every part is named.
-                    raw_choices = [' + '.join(split_compound_replacement(
-                        op.get('replacement_raw', op['replacement'])))]
+                    raw_choices = [' + '.join(
+                        split_compound_replacement(op.get('replacement_raw', op['replacement'])))]
                 choices_out = []
                 equip_parts = []
                 for c in raw_choices:
                     parts = []
                     for w in c.split(' + '):
-                        wn, weq, wok = resolve_part(w, weapon_idx, global_idx, equipment_items)
+                        wn, wok, w_is_eq = resolve_part(w, weapon_idx, global_idx, equipment_items)
                         if not wok: flags.append(f'WEAPON_NOT_FOUND: {w} ({ot}.choices) on {unit_name}')
-                        if weq and wn not in equip_parts: equip_parts.append(wn)
+                        if w_is_eq and wn not in equip_parts: equip_parts.append(wn)
                         parts.append(wn)
                     choices_out.append(' + '.join(parts))
                 entry = {'id': new_id('cho' if ot == 'choice' else 'sng'), 'scope': scope,
@@ -971,9 +978,11 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 def _norm_parts(parts, ctx, collect=False):
                     out = []
                     for p in parts:
-                        pn, peq, pok = resolve_part(p, weapon_idx, global_idx, equipment_items)
+                        pn, pok, p_is_eq = resolve_part(p, weapon_idx, global_idx, equipment_items)
                         if not pok: flags.append(f'WEAPON_NOT_FOUND: {p} ({ctx}) on {unit_name}')
-                        if collect and peq and pn not in equip_parts: equip_parts.append(pn)
+                        # equipment_parts is collected from the GAINED side only: the engine
+                        # only needs to know which parts a model gains are non-weapons (D118).
+                        if collect and p_is_eq and pn not in equip_parts: equip_parts.append(pn)
                         out.append(pn)
                     return ' + '.join(out)
                 # source (replaces): compound-aware for the whole count family (B23).
@@ -1012,9 +1021,10 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     entry['max_total_all'] = True
                     if op.get('up_to') is not None:
                         entry['up_to'] = op['up_to']
-                if op.get('requires_weapon'):
+                if op.get('requires_weapon') or op.get('requires_weapon_raw'):
                     entry['requires_weapon'] = _gate_parts(
-                        op['requires_weapon'], weapon_idx, global_idx, equipment_items)
+                        op.get('requires_weapon_raw') or op['requires_weapon'],
+                        weapon_idx, global_idx, equipment_items)
                 options.append(entry)
             elif ot == 'add_choice':
                 # "equipped with one of the following" — treated as a single-model choice
@@ -1055,9 +1065,10 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     else:
                         entry['max_total'] = op.get('max_total', 1)
                     if op.get('pool_id'): entry['pool_id'] = op['pool_id']
-                    if op.get('requires_weapon'):
+                    if op.get('requires_weapon') or op.get('requires_weapon_raw'):
                         entry['requires_weapon'] = _gate_parts(
-                            op['requires_weapon'], weapon_idx, global_idx, equipment_items)
+                            op.get('requires_weapon_raw') or op['requires_weapon'],
+                            weapon_idx, global_idx, equipment_items)
                     options.append(entry)
                     continue
                 if not ok: flags.append(f'WEAPON_NOT_FOUND: {op["adds"]} (add) on {unit_name}')
@@ -1070,9 +1081,10 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                 else:
                     entry['max_total'] = op.get('max_total', 1)
                 if op.get('pool_id'): entry['pool_id'] = op['pool_id']
-                if op.get('requires_weapon'):
+                if op.get('requires_weapon') or op.get('requires_weapon_raw'):
                     entry['requires_weapon'] = _gate_parts(
-                        op['requires_weapon'], weapon_idx, global_idx, equipment_items)
+                        op.get('requires_weapon_raw') or op['requires_weapon'],
+                        weapon_idx, global_idx, equipment_items)
                 options.append(entry)
 
     def emit_count(g):
@@ -1170,11 +1182,12 @@ def main():
     all_flags = []
     parsed = 0; skipped = 0; preserved = 0
 
-    # Only datasheets that are actually in the roster (units.json) get a loadout
-    # definition. Datasheets.csv carries the whole faction; units.json carries what the
-    # app can field. Emitting the rest would put 150 dead definitions in the output.
-    roster = set(unit_weapons)
-    target_ids = [uid for uid, fid in ds_fac.items() if fid in fac_ids and uid in roster]
+    # Datasheets.csv is the FACTION; units.json is the ROSTER. Emit definitions only for
+    # datasheets the app can actually field — otherwise the parser writes 368 entries
+    # against the roster's 217 (D118).
+    roster_ids = set(unit_weapons.keys())
+    target_ids = [uid for uid, fid in ds_fac.items()
+                  if fid in fac_ids and (not roster_ids or uid in roster_ids)]
     # Global weapon index: base_name -> canonical name, across ALL units in pipeline output
     global_weapon_idx = {}
     if os.path.exists(units_json):
