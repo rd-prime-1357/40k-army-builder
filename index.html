@@ -211,6 +211,13 @@
     .unit-card.over-limit { border-color: #3a1a00; }
     .unit-card.over-limit .unit-name { color: #cc6600; }
 
+    /* B41/E3: at the datasheet limit the card is full, not illegal. The add is
+       refused, so the card reads as disabled (amber), and red is reserved for a
+       count that actually exceeds the limit (only reachable from an imported or
+       legacy list). */
+    .unit-card.at-limit { opacity: 0.5; cursor: not-allowed; }
+    .unit-card.at-limit:hover { border-color: #2a2a2a; background: #1a1a1a; }
+
     .unit-info { flex: 1; min-width: 0; }
 
     .unit-name {
@@ -250,6 +257,7 @@
       white-space: nowrap;
     }
 
+    .unit-limit-badge.at-limit   { color: #cc9900; font-weight: 600; }
     .unit-limit-badge.over-limit { color: #cc2200; font-weight: 600; }
 
     /* Info icon button */
@@ -1400,7 +1408,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.60';
+  const VERSION = '5.61';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1513,6 +1521,25 @@
     if (unitType === 'Epic Hero') return 1;
     if (unitType === 'Battleline' || unitType === 'Dedicated Transport') return 6;
     return 3;
+  }
+
+  // B41 + E3. The datasheet limit is a hard boundary, not a warning (D0: legality is the
+  // only boundary on validity, and a limit the tool merely flags is a limit it does not
+  // enforce). Three states, one source of truth, so the roster card, the add path and the
+  // detail flag can never disagree:
+  //   'ok'   — below the limit; the add is allowed.
+  //   'at'   — exactly at the limit; the add is refused, the card reads disabled.
+  //   'over' — past the limit; only reachable from an imported or pre-v5.61 saved list,
+  //            so it stays an error the player can see and fix.
+  function limitState(count, limit) {
+    if (!(limit > 0)) return 'ok';
+    if (count > limit)  return 'over';
+    if (count >= limit) return 'at';
+    return 'ok';
+  }
+
+  function canAddUnit(count, limit) {
+    return limitState(count, limit) === 'ok';
   }
 
   // State
@@ -1732,7 +1759,7 @@
     if (!unit) return false;
     const count = armyList.filter(e => e.unit_name === entry.unit_name).length;
     if (unit.needsGod && !entry.god) return true;
-    if (count > unit.limit) return true;
+    if (limitState(count, unit.limit) === 'over') return true;
     return false;
   }
 
@@ -1756,9 +1783,13 @@
         <div class="role-label">${type}</div>
         ${items.map(u => {
           const count    = armyList.filter(e => e.unit_name === u.unit_name).length;
-          const overLim  = count >= u.limit;
+          const state    = limitState(count, u.limit);
+          const atLim    = state === 'at';
+          const overLim  = state === 'over';
+          const cardCls  = overLim ? ' over-limit' : (atLim ? ' at-limit' : '');
+          const badgeCls = overLim ? ' over-limit' : (atLim ? ' at-limit' : '');
           return `
-            <div class="unit-card${overLim ? ' over-limit' : ''}"
+            <div class="unit-card${cardCls}"
                  onclick="addUnitFromRoster('${esc(u.unit_name)}')">
               <div class="unit-info">
                 <div class="unit-name">${u.unit_name}</div>
@@ -1768,7 +1799,7 @@
                         onclick="event.stopPropagation();openModalFull('${esc(u.unit_name)}')">ⓘ</button>
                 <div class="unit-right-badges">
                   <div class="unit-pts-badge">${u.minPts !== null ? u.minPts + ' pts' : '—'}</div>
-                  <div class="unit-limit-badge${overLim ? ' over-limit' : ''}">(${count}/${u.limit})</div>
+                  <div class="unit-limit-badge${badgeCls}">(${count}/${u.limit})</div>
                 </div>
               </div>
             </div>
@@ -1785,6 +1816,12 @@
     if (!unit) return;
 
     const copyCount = armyList.filter(e => e.unit_name === unitName).length;
+
+    // B41: refuse the add at the limit rather than accept it and flag it.
+    if (!canAddUnit(copyCount, unit.limit)) {
+      flashBanner(`Limit reached — ${unitName} (max ${unit.limit})`);
+      return;
+    }
 
     const sizeEntry = unit.sizes[0];
     let pts = null;
@@ -2074,7 +2111,7 @@
     const unit    = allUnits.find(u => u.unit_name === entry.unit_name);
     const raw     = rawUnits.find(u => u.unit_name === entry.unit_name);
     const count   = armyList.filter(e => e.unit_name === entry.unit_name).length;
-    const overLim = count > unit.limit;
+    const overLim = limitState(count, unit.limit) === 'over';
     const isLeader = unit.leaderEligible.length > 0;
 
     nameEl.textContent  = entry.unit_name;
