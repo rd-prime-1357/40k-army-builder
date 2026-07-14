@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.59';
+  const VERSION = '5.60';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2502,6 +2502,25 @@
   // while its non-default endpoint is chosen — that's the cross-exclusivity:
   // picking the atomic swap hides the per-slot swaps, and clearing it brings
   // them back.
+  // B36. A bundle endpoint's `removes` set and a loadout choice option's `replaces`
+  // set can describe the *same* swap — the Lieutenant's atomic
+  // "bolt pistol + master-crafted bolter + close combat weapon -> neo-volkite,
+  // master-crafted power weapon, storm shield" is written once in bundled_swaps and
+  // once in unit_loadouts.json. Rendering both showed the neo-volkite twice, and the
+  // duplicate's three-weapon `replaces` transitively glued the three single-slot swaps
+  // into one B25 radio cluster, so a legal plasma pistol + power fist build became
+  // unreachable. The bundle is the single control for a swap it already owns, so a
+  // loadout option whose replaced-weapon set exactly equals some endpoint's removes
+  // set is dropped — always, not only while the bundle is engaged.
+  function bundleDuplicateSwaps(raw) {
+    const key = (arr) => arr.map(weaponBase).sort().join('|');
+    const dup = new Set();
+    for (const b of ((raw && raw.bundled_swaps) || []))
+      for (const ep of (b.endpoints || []))
+        if ((ep.removes || []).length) dup.add(key(ep.removes));
+    return dup;
+  }
+
   function bundleSuppressesLoadout(entry, raw) {
     const bs = (raw && raw.bundled_swaps) || [];
     for (let gi = 0; gi < bs.length; gi++) {
@@ -3086,8 +3105,17 @@
     for (const g of def.model_groups) groupOf[g.name] = g;
     const srcMissing = (o) => (o.type === 'choice' || o.type === 'count') && o.replaces
       && groupOf[o.scope] && !loSrcOnGroup(groupOf[o.scope], o);
+    // B36. `replaces` may be compound ('Bolt pistol + Master-crafted bolter + Close
+    // combat weapon'). weaponBase() on the whole string never matched a managed family,
+    // so an 'owns' bundle (the Captain) failed to hide its own compound swap and drew a
+    // second, redundant pane. Judge the managed test part by part.
+    const dupSwaps = bundleDuplicateSwaps(raw);
+    const dupKey = (o) => loWeaponParts(o.replaces).sort().join('|');
+    const bundleOwned = (o) => o.replaces &&
+      (dupSwaps.has(dupKey(o)) ||
+       (ownsNow && loWeaponParts(o.replaces).some(p => managed.has(p))));
     const suppressed = (o) =>
-      brokenChoice(o) || srcMissing(o) || (ownsNow && o.replaces && managed.has(weaponBase(o.replaces)));
+      brokenChoice(o) || srcMissing(o) || bundleOwned(o);
     for (const o of def.options)
       if (suppressed(o) && entry.wargear[o.id] != null)
         entry.wargear[o.id] = (o.type === 'choice') ? null : 0;
