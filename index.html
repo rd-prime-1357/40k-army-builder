@@ -882,6 +882,11 @@
       font-size: 0.72rem;
       color: #999;
     }
+    .ability-partial {
+      font-size: 0.65rem;
+      color: #b8860b;
+      margin-top: 2px;
+    }
 
     .keyword-list {
       display: flex;
@@ -1408,7 +1413,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.63';
+  const VERSION = '5.64';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2418,7 +2423,7 @@
       for (const w of (g.default_wargear || [])) eat(w);
     }
     for (const o of (def.options || [])) {
-      eat(o.replaces); eat(o.replacement); eat(o.adds_weapon);
+      eat(o.replaces); eat(o.replacement); eat(o.adds_weapon); eat(o.equipment);
       for (const c of [].concat(o.choices || [], o.replacement_choices || [],
                                 o.equipment_choices || [], o.equipment_parts || [])) eat(c);
     }
@@ -2475,6 +2480,82 @@
     // would asterisk a Hunting Wolf for a storm shield it cannot hold).
     if (models <= 0) return { carriers: 0, models: 0, attributable: attributable };
     return { carriers: Math.min(carriers, models), models: models, attributable: attributable };
+  }
+
+  // B46: every wargear ability this unit's OWN datasheet defines — the default-issue
+  // ones units.json lists, plus the OPTION-granted ones only
+  // datasheet_wargear_abilities.json carries. units.json's wargear_ability_names is
+  // default-issue only, so reading it alone hides e.g. the Reiver's grav-chute text
+  // from every popup even though the text is in the data.
+  function allWargearAbilityNames(raw) {
+    const out = [];
+    for (const g of (raw.model_groups || []))
+      for (const n of (g.wargear_ability_names || [])) if (!out.includes(n)) out.push(n);
+    const ds = dsWargearAbilities[raw && raw.unit_id] || {};
+    for (const n of Object.keys(ds)) if (!out.includes(n)) out.push(n);
+    return out;
+  }
+
+  // Unit-wide carrier count. The popup's Wargear Abilities section is a unit-level
+  // section, not a per-statline-group one, so it counts over every loadout group.
+  // null = the item is not representable in the loadout; the caller then falls back
+  // to the other-option checkbox or to the default-issue reading.
+  function wargearCarrierStateUnit(raw, entry, name) {
+    const def = loadoutDefs[raw.unit_id];
+    if (!def || !loDefNamesItem(def, name)) return null;
+    const size = entry ? loadoutSize(entry, def)
+                       : ((def.size_brackets && def.size_brackets[0]) || 0);
+    const sel  = entry ? loadoutSelections(entry, def)
+                       : { choiceById: {}, countById: {}, addById: {} };
+    const counts = loGroupCounts(def, size);
+    let models = 0, carriers = 0;
+    for (const g of (def.model_groups || [])) {
+      models   += counts[g.name] || 0;
+      carriers += loCarriers(def, size, sel, g.name, name);
+    }
+    if (models <= 0) return { carriers: 0, models: 0 };
+    return { carriers: Math.min(carriers, models), models: models };
+  }
+
+  // B46 / D112: the statline's three-way rule, applied to the CONFIGURED popup's
+  // Wargear Abilities list.
+  //
+  //   'all'  -> plain row
+  //   'some' -> row marked with an asterisk: not every model carries the item
+  //   'none' -> nothing in this build carries it; the row is not rendered
+  //
+  // Sources in precedence order: a bundle grant; the loadout (canonical wherever the
+  // item is representable there — the Reiver grav-chute is both a loadout add and a
+  // B14 other-option, and the loadout wins); a B14 other-option checkbox; and finally
+  // default-issue gear. A unit-wide aura from one bearer ("models in the bearer's unit
+  // have…") needs one carrier, not all of them, exactly as the statline pass reads it.
+  function wargearAbilityMode(raw, entry, name) {
+    const text    = wargearAbilityDesc(raw, name) || '';
+    const uniform = /models in (?:the )?(?:bearer.?s )?unit have/i.test(text);
+    const single  = isSingleModelGroup(raw);
+    const spread  = () => (uniform || single) ? 'all' : 'some';
+
+    const gated = new Set();
+    for (const b of (raw.bundled_swaps || []))
+      for (const ep of (b.endpoints || []))
+        for (const g of (ep.grants || [])) if (g.ability_name) gated.add(g.ability_name);
+    if (gated.has(name)) {
+      return activeBundleGrants(entry, raw).some(g => g.ability_name === name)
+        ? spread() : 'none';
+    }
+
+    const st = wargearCarrierStateUnit(raw, entry, name);
+    if (st) {
+      if (st.carriers <= 0) return 'none';
+      if (uniform) return 'all';
+      return st.carriers >= st.models ? 'all' : 'some';
+    }
+
+    const oo = (raw.other_options || []).find(
+      o => o.ability_name === name || o.option_name === name);
+    if (oo) return (entry && entry.otherOptions[oo.option_name]) ? spread() : 'none';
+
+    return spread();
   }
 
   // The one place the three-way D105 rule lives. For a model group, returns the
@@ -3522,13 +3603,11 @@
       html += `</div></div>`;
     }
 
-    // Wargear Abilities — conferred by default (non-optional) gear (e.g. invuln saves)
-    const allWargearAbilities = [];
-    for (const mg of raw.model_groups) {
-      for (const name of (mg.wargear_ability_names || [])) {
-        if (!allWargearAbilities.includes(name)) allWargearAbilities.push(name);
-      }
-    }
+    // Wargear Abilities — the BROWSE popup is the datasheet, so it lists every
+    // wargear ability the unit can have: default-issue gear and option-granted gear
+    // alike (B46). Filtering to what a given build actually carries is the
+    // configured popup's job.
+    const allWargearAbilities = allWargearAbilityNames(raw);
     if (allWargearAbilities.length > 0) {
       const sid = 'full-wargear-abilities';
       html += `<div class="modal-section">
@@ -3756,35 +3835,31 @@
       html += `</div></div>`;
     }
 
-    // Wargear Abilities — the CONFIGURED popup lists only what this build actually
-    // has: always-on gear abilities, plus optional (grant-conferred) ones whose
-    // grant is currently chosen. Abilities tied to a bundle grant are "optional"
-    // and hidden unless active; the left-panel popup still shows all possibilities.
-    const optionalWA = new Set();
-    for (const b of (raw.bundled_swaps || []))
-      for (const ep of (b.endpoints || []))
-        for (const g of (ep.grants || [])) if (g.ability_name) optionalWA.add(g.ability_name);
-    const activeWA = new Set(activeBundleGrants(entry, raw).map(g => g.ability_name).filter(Boolean));
-    const cfgWargearAbilities = [];
-    for (const mg of raw.model_groups) {
-      for (const name of (mg.wargear_ability_names || [])) {
-        if (optionalWA.has(name) && !activeWA.has(name)) continue;
-        if (inertWA.has(name)) continue;   // D105: no model in this build carries it
-        if (!cfgWargearAbilities.includes(name)) cfgWargearAbilities.push(name);
-      }
+    // Wargear Abilities — the CONFIGURED popup lists what THIS build carries, from
+    // the full ability set (default-issue and option-granted alike, B46), filtered by
+    // carrier count on the same three-way rule the statline uses (D112): every model
+    // carries it -> plain row; some carry it -> asterisked row; none -> not rendered.
+    const cfgWA = [];
+    for (const name of allWargearAbilityNames(raw)) {
+      const mode = wargearAbilityMode(raw, entry, name);
+      if (mode === 'none') continue;                      // no model in this build has it
+      if (inertWA.has(name)) continue;                    // D105 statline pass agrees
+      cfgWA.push({ name: name, partial: mode === 'some' });
     }
-    if (cfgWargearAbilities.length > 0) {
+    if (cfgWA.length > 0) {
       const sid = 'cfg-wargear-abilities';
+      const heading = cfgWA.map(x => x.name + (x.partial ? '*' : '')).join(', ');
       html += `<div class="modal-section">
         <div class="modal-section-header" onclick="toggleSection('${sid}')">
-          <span class="modal-section-heading"><span>Wargear Abilities</span><span class="modal-section-names">${cfgWargearAbilities.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
+          <span class="modal-section-heading"><span>Wargear Abilities</span><span class="modal-section-names">${heading}</span></span><span class="modal-section-chevron">▶</span>
         </div>
         <div class="modal-section-content" id="${sid}">`;
-      for (const name of cfgWargearAbilities) {
-        const desc = wargearAbilityDesc(raw, name);
+      for (const wa of cfgWA) {
+        const desc = wargearAbilityDesc(raw, wa.name);
         html += `<div class="ability-row">
-          <div class="ability-name">${name}</div>
+          <div class="ability-name">${wa.name}${wa.partial ? '<sup class="stat-asterisk">*</sup>' : ''}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
+          ${wa.partial ? `<div class="ability-partial">* only some models in this unit carry this</div>` : ''}
         </div>`;
       }
       html += `</div></div>`;
