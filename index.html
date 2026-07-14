@@ -1400,7 +1400,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.58';
+  const VERSION = '5.59';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1542,12 +1542,17 @@
   let keywordsLookup        = {};  // keyword_name -> description
   let weaponAbilitiesLookup = {};  // weapon_ability_name -> description
   let coreGlossaryLookup    = {};  // core rule / weapon-ability BASE name -> description
+  // B15/D105: per-DATASHEET wargear ability text. weapon_abilities.json is keyed by
+  // NAME and is therefore flattened across datasheets — 'Storm Shield' collapses to
+  // one string while the real texts are three different things (W4 / W6 / INV4+).
+  // This table restores the datasheet key and is always tried first.
+  let dsWargearAbilities    = {};  // unit_id -> { ability_name -> description }
 
   // ── Data load ──────────────────────────────────────────────────────────────
 
   async function init() {
     try {
-      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes, glossaryRes, loadoutsRes, wargearPtsRes] = await Promise.all([
+      const [unitsRes, abilitiesRes, rulesRes, keywordsRes, weaponAbilitiesRes, taxonomyRes, glossaryRes, loadoutsRes, wargearPtsRes, dsWargearRes] = await Promise.all([
         fetch(`units.json?v=${VERSION}`),
         fetch(`abilities.json?v=${VERSION}`),
         fetch(`rules.json?v=${VERSION}`),
@@ -1557,6 +1562,7 @@
         fetch(`core_glossary.json?v=${VERSION}`),
         fetch(`unit_loadouts.json?v=${VERSION}`),
         fetch(`wargear_points.json?v=${VERSION}`),
+        fetch(`datasheet_wargear_abilities.json?v=${VERSION}`),
       ]);
 
       if (!unitsRes.ok) throw new Error('Failed to load unit data');
@@ -1598,6 +1604,12 @@
       if (wargearPtsRes.ok) {
         const wp = await wargearPtsRes.json();
         for (const k of Object.keys(wp)) if (k[0] !== '_') wargearPoints[k] = wp[k];
+      }
+      // B15/D105: per-datasheet wargear ability text. Missing file degrades to the
+      // old name-keyed glossary, i.e. today's behaviour.
+      if (dsWargearRes.ok) {
+        const dw = await dsWargearRes.json();
+        for (const k of Object.keys(dw)) if (k[0] !== '_') dsWargearAbilities[k] = dw[k];
       }
 
       // Index units by army name for fast resolution.
@@ -2318,72 +2330,145 @@
     return false;
   }
 
-  // B15: always-on conferred wargear characteristics for one model group, read
-  // from wargear_ability_names (the default, non-optional gear surface). Guards:
-  //  - skip abilities that are ALSO an optional bundle/other-option grant on this
-  //    unit — the active-grant path owns those (they aren't unconditionally on);
-  //  - "models in the unit have…" -> uniform (write the value); "the bearer has…"
-  //    on a single-model group -> the bearer is the only model (write); "the
-  //    bearer has…" on a multi-model group -> only one model gets it, so this is
-  //    NOT a whole-group value — left for the E17 asterisk (write nothing);
-  //  - only INV and FNP are written. W and SV are held: the shared glossary text
-  //    hardcodes a datasheet-specific Wounds/Save value (e.g. "Storm Shield -> a
-  //    Wounds characteristic of 4") that is wrong on other carriers (it would drop
-  //    a Wolf Guard Battle Leader from W5 to W4). Those need a per-carrier rules
-  //    call before they can be applied broadly.
-  function broadWargearStatOverrides(raw, mg) {
-    const ov = {};
-    const names = mg.wargear_ability_names || [];
-    if (!names.length) return ov;
+  // ── B15 / D105: conferred wargear characteristics ─────────────────────────
+  //
+  // Ability text is read from the unit's OWN datasheet row, never by item name
+  // (D70). `dsWargearAbilities` carries that; the flat name-keyed glossary is a
+  // fallback only, and it is provably wrong wherever a name collides (Storm
+  // Shield: W4 on Terminator Assault Squad, W6 on Wolf Guard Battle Leader,
+  // INV4+ on Lieutenant).
+  function wargearAbilityDesc(raw, name) {
+    const t = dsWargearAbilities[raw && raw.unit_id];
+    return (t && t[name]) || glossaryDesc(name);
+  }
+
+  // Does this loadout def name the item anywhere at all — as default gear, as a
+  // swap source, or as anything a swap/add can hand out? If not, the item is not
+  // representable in the rollup and carriers cannot be counted; the caller falls
+  // back to the legacy uniform/bearer heuristic rather than silently reporting
+  // "nobody has it".
+  function loDefNamesItem(def, name) {
+    const want = weaponBase(name);
+    const seen = new Set();
+    const eat = v => { for (const p of loWeaponParts(v)) seen.add(p); };
+    for (const g of (def.model_groups || [])) {
+      for (const w of (g.default_weapons || [])) eat(w);
+      for (const w of (g.default_wargear || [])) eat(w);
+    }
+    for (const o of (def.options || [])) {
+      eat(o.replaces); eat(o.replacement); eat(o.adds_weapon);
+      for (const c of [].concat(o.choices || [], o.replacement_choices || [],
+                                o.equipment_choices || [], o.equipment_parts || [])) eat(c);
+    }
+    return seen.has(want);
+  }
+
+  // units.json splits a unit into STATLINE groups; unit_loadouts.json splits it into
+  // LOADOUT groups, and the two namings do not line up in general (9 of our 16 named
+  // statline groups don't). Where every model named in a statline group resolves to a
+  // loadout group, carriers can be counted inside that group; where it can't, they
+  // can only be counted unit-wide, and a unit-wide count must never be written to one
+  // group's statline — a Hunting Wolf does not get a Wolf Guard's storm shield.
+  // Returns the loadout group names to count over, or null = "cannot attribute".
+  function statGroupScopes(raw, mg, def) {
+    const names = (def.model_groups || []).map(g => g.name);
+    if (raw.model_groups.length <= 1) return names;   // one statline = the whole unit
+    const norm = x => String(x).toLowerCase().replace(/\s*-\s*epic hero$/, '').replace(/\*+$/, '').trim();
+    const index = {};
+    for (const n of names) index[norm(n)] = n;
+    const want = String(mg.model_group || '').split(',').map(norm).filter(Boolean);
+    if (!want.length) return null;
+    const out = [];
+    for (const w of want) {
+      if (!index[w]) return null;                     // unmapped -> cannot attribute
+      if (!out.includes(index[w])) out.push(index[w]);
+    }
+    return out;
+  }
+
+  // D105: how many models in the CONFIGURED statline group carry the item, out of how
+  // many models that group has. `entry` null => the default loadout (the browse view,
+  // and what the printed datasheet shows). Returns null when the item cannot be
+  // counted, which means "use the legacy heuristic". `attributable: false` means the
+  // count is unit-wide and cannot be pinned to this statline group, so the caller must
+  // cap at an asterisk and never write a value.
+  function wargearCarrierState(raw, mg, entry, name) {
+    const def = loadoutDefs[raw.unit_id];
+    if (!def || !loDefNamesItem(def, name)) return null;
+    const size = entry ? loadoutSize(entry, def)
+                       : ((def.size_brackets && def.size_brackets[0]) || 0);
+    const sel  = entry ? loadoutSelections(entry, def)
+                       : { choiceById: {}, countById: {}, addById: {} };
+    const scopes = statGroupScopes(raw, mg, def);
+    const attributable = scopes !== null;
+    const use = scopes || (def.model_groups || []).map(g => g.name);
+    const counts = loGroupCounts(def, size);
+    let models = 0, carriers = 0;
+    for (const g of use) {
+      models   += counts[g] || 0;
+      carriers += loCarriers(def, size, sel, g, name);
+    }
+    // An optional group with no models in this build has no carriers — that is a real
+    // zero, not an unknown, so it must not fall through to the legacy heuristic (which
+    // would asterisk a Hunting Wolf for a storm shield it cannot hold).
+    if (models <= 0) return { carriers: 0, models: 0, attributable: attributable };
+    return { carriers: Math.min(carriers, models), models: models, attributable: attributable };
+  }
+
+  // The one place the three-way D105 rule lives. For a model group, returns the
+  // characteristic overrides that reach the statline, the cells that get an
+  // asterisk instead, and the ability names that confer nothing in this build.
+  //
+  //   every model carries it   -> override written (W / SV / INV / FNP, literally,
+  //                               as an absolute set: "Wounds characteristic of 6")
+  //   some but not all         -> statline untouched; asterisk to the rules text (D75)
+  //   no model carries it      -> nothing; the ability is inert in this build
+  //
+  // Dynamic on the configured loadout, not static per datasheet: the same unit
+  // moves between clean and asterisked as it is built. Guards kept from D88:
+  // abilities that are ALSO a bundle/other-option grant belong to the active-grant
+  // path; text under a conditional/summon clause is never read.
+  function conferredStats(raw, mg, entry) {
+    const ov = {}, flags = {}, inert = new Set();
+    const names = (mg && mg.wargear_ability_names) || [];
+    if (!names.length) return { ov, flags, inert };
     const gated = new Set();
     for (const b of (raw.bundled_swaps || []))
       for (const ep of (b.endpoints || []))
         for (const g of (ep.grants || [])) if (g.ability_name) gated.add(g.ability_name);
     for (const o of (raw.other_options || [])) if (o.ability_name) gated.add(o.ability_name);
+
     const single = isSingleModelGroup(raw);
     for (const n of names) {
       if (gated.has(n)) continue;
-      const text = glossaryDesc(n);
-      const uniform = /models in (?:the )?(?:bearer.?s )?unit have/i.test(text);
-      const bearer  = /the bearer has/i.test(text);
-      if (!uniform && bearer && !single) continue;   // per-model on multi-model -> E17
+      const text   = wargearAbilityDesc(raw, n);
       const parsed = unconditionalStatOverride(text);
-      if (parsed.INV != null) ov.INV = parsed.INV;
-      if (parsed.FNP != null) ov.FNP = parsed.FNP;
-    }
-    return ov;
-  }
+      const keys   = Object.keys(parsed);
+      if (!keys.length) continue;
+      // "models in the bearer's unit have…" is a unit-wide aura from one bearer
+      // (Lion Helm). It needs one carrier, not all of them.
+      const uniform = /models in (?:the )?(?:bearer.?s )?unit have/i.test(text);
+      const st = wargearCarrierState(raw, mg, entry, n);
 
-  // E17: the counterpart to broadWargearStatOverrides. A default (non-optional)
-  // wargear ability that confers a per-model INV/FNP ("the bearer has a 4+
-  // invulnerable save") on a MULTI-model group applies to one model only, so it
-  // can't be shown as a whole-group statline number — B15 deliberately writes
-  // nothing there. This flags exactly those cells so the statline can mark them
-  // with an asterisk pointing at the Wargear Abilities section. Same guards as
-  // B15: skip grant-gated abilities; only unconditional values (a conditional /
-  // once-per-battle aura yields nothing after the sentence filter, so it's never
-  // asterisked). Returns { INV: true?, FNP: true? }.
-  function bearerOnlyStatFlags(raw, mg) {
-    const flags = {};
-    const names = mg.wargear_ability_names || [];
-    if (!names.length) return flags;
-    if (isSingleModelGroup(raw)) return flags;   // bearer is the whole group -> B15 wrote it
-    const gated = new Set();
-    for (const b of (raw.bundled_swaps || []))
-      for (const ep of (b.endpoints || []))
-        for (const g of (ep.grants || [])) if (g.ability_name) gated.add(g.ability_name);
-    for (const o of (raw.other_options || [])) if (o.ability_name) gated.add(o.ability_name);
-    for (const n of names) {
-      if (gated.has(n)) continue;
-      const text = glossaryDesc(n);
-      const uniform = /models in (?:the )?(?:bearer.?s )?unit have/i.test(text);
-      const bearer  = /the bearer has/i.test(text);
-      if (uniform || !bearer) continue;   // uniform -> whole-group (B15); non-bearer -> not this case
-      const parsed = unconditionalStatOverride(text);
-      if (parsed.INV != null) flags.INV = true;
-      if (parsed.FNP != null) flags.FNP = true;
+      let mode;
+      if (st) {
+        if (st.carriers <= 0)                   mode = 'none';
+        else if (!st.attributable)              mode = 'some';   // can't pin it to this group
+        else if (uniform)                       mode = 'all';
+        else if (st.carriers >= st.models)      mode = 'all';
+        else                                    mode = 'some';
+      } else {
+        // Legacy fallback: the item isn't representable in the loadout, so assume
+        // it is default-issue (that is what wargear_ability_names means) and use
+        // the old uniform / single-model / bearer-on-multi-model heuristic.
+        mode = (uniform || single) ? 'all' : 'some';
+      }
+
+      if (mode === 'none') { inert.add(n); continue; }
+      if (mode === 'all')  { for (const k of keys) ov[k] = parsed[k]; continue; }
+      for (const k of keys) flags[k] = true;
     }
-    return flags;
+    return { ov, flags, inert };
   }
 
   // Weapon add/remove from the chosen bundle endpoints. Loadout-defined units
@@ -2713,7 +2798,9 @@
     if (!g) return 0;
     const n = loGroupCounts(def, size)[scope] || 0;
     if (n <= 0) return 0;
-    let carriers = (g.default_weapons || []).some(w => loHasWeapon(w, weapon)) ? n : 0;
+    // B28/B15: an item held as gear counts exactly like a weapon for carrier purposes.
+    const held = [].concat(g.default_weapons || [], g.default_wargear || []);
+    let carriers = held.some(w => loHasWeapon(w, weapon)) ? n : 0;
     let gained = 0;
     for (const o of def.options) {
       if (o.scope !== scope) continue;
@@ -2731,8 +2818,10 @@
           for (const k of Object.keys(tally))
             if (loHasWeapon(k, weapon)) gained += Math.max(0, tally[k] | 0);
         } else if (o.replacement && loHasWeapon(o.replacement, weapon)) gained += c;
-      } else if (o.type === 'add' && o.adds_weapon && loHasWeapon(o.adds_weapon, weapon)) {
-        gained += Math.max(0, Number((sel.addById || {})[o.id]) || 0);
+      } else if (o.type === 'add') {
+        const an = o.adds_weapon || o.equipment;
+        if (an && loHasWeapon(an, weapon))
+          gained += Math.max(0, Number((sel.addById || {})[o.id]) || 0);
       }
     }
     return Math.max(0, Math.min(n, Math.max(0, carriers) + gained));
@@ -3254,7 +3343,8 @@
         html += `<div class="stat-block">`;
       }
 
-      html += buildStatTable(mg, broadWargearStatOverrides(raw, mg), bearerOnlyStatFlags(raw, mg));
+      const cs = conferredStats(raw, mg, null);
+      html += buildStatTable(mg, cs.ov, cs.flags);
       html += `</div>`;
 
       // Weapons for this model group
@@ -3325,7 +3415,7 @@
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of allWargearAbilities) {
-        const desc = glossaryDesc(name);
+        const desc = wargearAbilityDesc(raw, name);
         html += `<div class="ability-row">
           <div class="ability-name">${name}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
@@ -3439,6 +3529,8 @@
       }
     }
 
+    // D105: names that confer nothing in this build (no model carries the item).
+    const inertWA = new Set();
     for (let i = 0; i < raw.model_groups.length; i++) {
       const mg = raw.model_groups[i];
       if (i > 0) html += '<hr class="model-group-divider">';
@@ -3452,15 +3544,17 @@
       // Stat overrides from equipped wargear/grants, all read from ability text:
       // active weapon/wargear abilities (e.g. Shining aegis -> Sv 3+) plus active
       // bundle grants (e.g. relic shield -> W, storm shield -> INV).
+      const cs = conferredStats(raw, mg, entry);
       const overrides = Object.assign(
         {},
-        broadWargearStatOverrides(raw, mg),
+        cs.ov,
         activeWeaponStatOverrides(raw, mg, activeBases, replacedBases),
         activeStatOverrides(entry, raw),
         activeOtherOptionOverrides(entry, raw)
       );
 
-      html += buildStatTable(mg, overrides, bearerOnlyStatFlags(raw, mg));
+      html += buildStatTable(mg, overrides, cs.flags);
+      cs.inert.forEach(n => inertWA.add(n));
       html += `</div>`;
 
       // Weapons for this model group — configured view (skipped for loadout units,
@@ -3553,6 +3647,7 @@
     for (const mg of raw.model_groups) {
       for (const name of (mg.wargear_ability_names || [])) {
         if (optionalWA.has(name) && !activeWA.has(name)) continue;
+        if (inertWA.has(name)) continue;   // D105: no model in this build carries it
         if (!cfgWargearAbilities.includes(name)) cfgWargearAbilities.push(name);
       }
     }
@@ -3564,7 +3659,7 @@
         </div>
         <div class="modal-section-content" id="${sid}">`;
       for (const name of cfgWargearAbilities) {
-        const desc = glossaryDesc(name);
+        const desc = wargearAbilityDesc(raw, name);
         html += `<div class="ability-row">
           <div class="ability-name">${name}</div>
           ${desc ? `<div class="ability-desc">${desc}</div>` : ''}
@@ -3630,13 +3725,19 @@
     // override value). The asterisk points at the Wargear Abilities section.
     const invStar = (!invOv && fl.INV) ? '<sup class="stat-asterisk">*</sup>' : '';
     const fnpStar = (!fnpOv && fl.FNP) ? '<sup class="stat-asterisk">*</sup>' : '';
+    // B15: W and SV take the same asterisk when some — but not all — models carry
+    // the item that would set them.
+    const wOv     = ov.W  !== undefined && ov.W  !== null;
+    const svOv    = ov.SV !== undefined && ov.SV !== null;
+    const wStar   = (!wOv  && fl.W)  ? '<sup class="stat-asterisk">*</sup>' : '';
+    const svStar  = (!svOv && fl.SV) ? '<sup class="stat-asterisk">*</sup>' : '';
     const inv = invOv ? `<span class="stat-override">${cleanPlus(ov.INV)}+</span>` : (mg.INV ? `${mg.INV}+` : '\u2014');
     const fnp = fnpOv ? `<span class="stat-override">${cleanPlus(ov.FNP)}+</span>` : (mg.FNP ? `${mg.FNP}+` : '\u2014');
     const invCond = (!invOv && mg.INV_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
     const fnpCond = (!fnpOv && mg.FNP_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.FNP_Condition})</span>` : '';
     const svDisplay = ovCell('SV', cleanPlus(mg.SV), '+');
     const wDisplay  = ovCell('W',  mg.W);
-    const legend = (invStar || fnpStar)
+    const legend = (invStar || fnpStar || wStar || svStar)
       ? `<div class="stat-asterisk-legend">* see Wargear Abilities</div>` : '';
 
     return `<table class="stat-table">
@@ -3649,10 +3750,10 @@
         <tr>
           <td>${mg.M}</td>
           <td>${mg.T}</td>
-          <td>${svDisplay}</td>
+          <td>${svDisplay}${svStar}</td>
           <td class="inv-cell">${inv}${invStar}${invCond}</td>
           <td class="fnp-cell">${fnp}${fnpStar}${fnpCond}</td>
-          <td>${wDisplay}</td>
+          <td>${wDisplay}${wStar}</td>
           <td>${cleanPlus(mg.LD)}+</td>
           <td>${mg.OC}</td>
         </tr>

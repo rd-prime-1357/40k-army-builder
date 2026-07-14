@@ -1,0 +1,127 @@
+{
+ "_source": "Datasheets_abilities.csv (type=Wargear)",
+ "000000073": {
+  "Relic Shield": "The bearer has a Wounds characteristic of 6."
+ },
+ "000000083": {
+  "Relic Shield": "The bearer has a Wounds characteristic of 6."
+ },
+ "000000115": {
+  "Relic Shield": "The bearer has a Wounds characteristic of 6."
+ },
+ "000000118": {
+  "Storm Shield": "The bearer has a Wounds characteristic of 4."
+ },
+ "000000128": {
+  "Helix Gauntlet": "Models in the bearer’s unit have the Feel No Pain 6+ ability.",
+  "Infiltrator Comms Array": "Each time you target the bearer’s unit with a Stratagem, roll one D6: on a 5+, you gain 1CP."
+ },
+ "000000147": {
+  "Storm Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000000165": {
+  "Sanguinary Banner": "Add 1 to the Objective Control characteristic of models in the bearer’s unit."
+ },
+ "000000218": {
+  "The Lion Helm": "Models in the bearer’s unit have a 4+ invulnerable save. In addition, once per battle, in any phase, the bearer can summon a Watcher in the Dark. When it does, until the end of the phase, models in the bearer’s unit have the Feel No Pain 4+ ability against mortal wounds."
+ },
+ "000000226": {
+  "Book of Salvation": "While this model is leading a unit, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit. When this model is destroyed, each friendly <span class=\"kwb\">ADEPTUS</span> <span class=\"kwb\">ASTARTES</span> unit within 6\" of this model must take a Battle-shock test."
+ },
+ "000000230": {
+  "Watcher in the Dark": "Once per battle, in any phase, just after a mortal wound is allocated to an <span class=\"kwb\">ADEPTUS</span> <span class=\"kwb\">ASTARTES</span> model in this unit, this unit can summon a Watcher in the Dark. When it does, until the end of the phase, models in this unit have the Feel No Pain 4+ ability against mortal wounds.<br><br><b>Designer’s Note:</b> <i>Place a Watcher in the Dark token next to the unit, removing it when this ability has been used.</i>"
+ },
+ "000000231": {
+  "Watcher in the Dark": "Once per battle, in any phase, just after a mortal wound is allocated to an <span class=\"kwb\">ADEPTUS</span> <span class=\"kwb\">ASTARTES</span> model in this unit, this unit can summon a Watcher in the Dark. When it does, until the end of the phase, models in this unit have the Feel No Pain 4+ ability against mortal wounds.<br><br><b>Designer’s Note:</b> <i>Place a Watcher in the Dark token next to the unit, removing it when this ability has been used.</i>"
+ },
+ "000000311": {
+  "Death Totem": "Each time the bearer makes a melee attack, re-roll a Hit roll of 1."
+ },
+ "000000318": {
+  "Storm Shield": "The bearer has a Wounds characteristic of 4."
+ },
+ "000000322": {
+  "Storm Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000000358": {
+  "Auspex Array": "Ranged weapons equipped by the bearer have the [IGNORES COVER] ability.",
+  "Infernum Halo-launcher": "The bearer has the <span class=\"kwb\">SMOKE</span> keyword."
+ },
+ "000001044": {
+  "Icon of Despair (Aura)": "While an enemy unit is within 6\" of the bearer, worsen the Leadership characteristic of models in that unit by 1."
+ },
+ "000001159": {
+  "Haywire Mine": "Once per battle, at the start of any phase, you can select one enemy unit within 3\" of the bearer and roll one D6: on a 2+, that enemy unit suffers D3 mortal wounds, or 2D3 mortal wounds instead if it is a Vehicle unit."
+ },
+ "000001346": {
+  "Storm Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000001371": {
+  "Icon of Despair (Aura)": "While an enemy unit is within 6\" of the bearer, worsen the Leadership characteristic of models in that unit by 1."
+ },
+ "000002568": {
+  "Orbital Comms Array (Aura)": "While a friendly <span class=\"kwb\">ADEPTUS</span> <span class=\"kwb\">ASTARTES</span> unit is within 6\" of the bearer, each time you target that unit with a Stratagem, roll one D6: on a 5+, you gain 1CP.",
+  "Shield Dome": "The bearer has a 5+ invulnerable save."
+ },
+ "000002677": {
+  "Terminator Storm Shield": "The bearer has a Wounds characteristic of 6."
+ },
+ "000002703": {
+  "Centurion Assault Launcher": "The bearer has the Grenades keyword."
+ },
+ "000002718": {
+  "Grapnel Launcher": "Each time the bearer’s unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance the bearer can be moved during that move.",
+  "Reiver Grav-chute": "The bearer has the Deep Strike ability."
+ },
+ "000002779": {
+  "Helix Gauntlet": "Models in the bearer’s unit have the Feel No Pain 6+ ability.",
+  "Infiltrator Comms Array": "Each time you target the bearer’s unit with a Stratagem, roll one D6: on a 5+, you gain 1CP.",
+  "Instigator Bolt Carbine": "In your Shooting phase, after the bearer’s unit has shot, the bearer’s unit can make a Normal move. If it does, until the end of the turn, the bearer’s unit is not eligible to declare a charge."
+ },
+ "000002783": {
+  "Astartes Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000002786": {
+  "Orbital Comms Array (Aura)": "While a friendly <span class=\"kwb\">ADEPTUS</span> <span class=\"kwb\">ASTARTES</span> unit is within 6\" of the bearer, each time you target that unit with a Stratagem, roll one D6: on a 5+, you gain 1CP.",
+  "Shield Dome": "The bearer has a 5+ invulnerable save."
+ },
+ "000002801": {
+  "Blizzard Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000003873": {
+  "Storm Shield": "The bearer has a Wounds characteristic of 4."
+ },
+ "000004113": {
+  "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
+  "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
+ },
+ "000004114": {
+  "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
+  "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
+ },
+ "000004130": {
+  "Storm Shield": "The bearer has a Wounds characteristic of 6."
+ },
+ "000004131": {
+  "Storm Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000004132": {
+  "Death Totem": "Each time the bearer makes a melee attack, re-roll a Hit roll of 1."
+ },
+ "000004133": {
+  "Blizzard Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000004175": {
+  "Astartes Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000004182": {
+  "Haywire Mine": "Once per battle, at the start of any phase, you can select one enemy unit within 3\" of the bearer and roll one D6: on a 2+, that enemy unit suffers D3 mortal wounds, or 2D3 mortal wounds instead if it is a <span class=\"kwb\">VEHICLE</span> unit."
+ },
+ "000004185": {
+  "Banner of Macragge": "Once per battle, at the start of the Fight phase, the bearer can use this ability. If it does, until the end of the phase, add 1 to the Strength and Attacks characteristics of melee weapons equipped by models in the bearer’s unit."
+ },
+ "000004188": {
+  "Refractor Field": "The bearer has a 5+ invulnerable save.",
+  "Storm Shield": "The bearer has a 4+ invulnerable save."
+ }
+}
