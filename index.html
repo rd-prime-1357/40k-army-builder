@@ -1408,7 +1408,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.62';
+  const VERSION = '5.63';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1864,7 +1864,7 @@
       sizeIdx:          0,
       god:              null,
       points:           pts,
-      wargear:          {},
+      wargear:          loadoutDefaultWargear(unit.unit_id),   // E14
       otherOptions:     {},
       attachedToListId: null,
     });
@@ -2797,6 +2797,38 @@
       return opt.up_to != null ? Math.min(opt.up_to, g) : g;
     }
     return 0;
+  }
+  // ── E14: free, unconditional adds default to selected ─────────────────────
+  // A pure add that grants something for free, has no gate, no shared pool and a
+  // hard cap of one is a thing no player would decline, so a new entry is seeded
+  // with it already ticked. It stays an ordinary toggle the player can clear — the
+  // model on the table may not carry the part, and a list has to be buildable to
+  // match it. A default is a convenience, never a lock.
+  //
+  // Deliberately narrow. Excluded and banked:
+  //   * priced adds — the cost is exactly the reason not to take it. wargear_points.json
+  //     is the authority; the MFM WARGEAR OPTIONS blocks price none of the adds we seed.
+  //   * per-N / pooled adds — a stepper has no unambiguous "on", and its ceiling moves
+  //     with unit size.
+  //   * gated adds (requires_weapon) — the gate can break and heal after the seed.
+  // Seeding happens once, when the unit is added from the roster. A saved list is
+  // never rewritten on load.
+  function loIsFreeDefaultAdd(unitId, o) {
+    if (!o || o.type !== 'add') return false;
+    if (o.requires_weapon || o.pool_id) return false;
+    if (o.per_n_models || o.max_total !== 1) return false;
+    const item = o.equipment || o.adds_weapon;
+    if (!item) return false;
+    const priced = wargearPoints[unitId];
+    if (priced && priced.items && priced.items[weaponBase(item)]) return false;
+    return true;
+  }
+  function loadoutDefaultWargear(unitId) {
+    const w = {};
+    const def = loadoutDefs[unitId];
+    if (!def || !Array.isArray(def.options)) return w;
+    for (const o of def.options) if (loIsFreeDefaultAdd(unitId, o)) w[o.id] = 1;
+    return w;
   }
   function loGroupCounts(def, size) {
     // First pass: resolve every group that isn't fills-to-size, tallying how many
