@@ -1408,7 +1408,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.61';
+  const VERSION = '5.62';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1467,7 +1467,6 @@
     allUnits = units.map(unit => {
       const sizes    = unit.points ? unit.points.sizes : [];
       const needsGod = GOD_UNITS.has(unit.unit_name);
-      const limit    = unit.instance_limit_override || instanceLimit(unit.unit_type);
       const mg       = unit.model_groups && unit.model_groups[0];
       const leaderEligible = mg && mg.leader_eligible_units  ? mg.leader_eligible_units  : [];
       const coLeaderWith   = mg && mg.co_leader_eligible_with ? mg.co_leader_eligible_with : [];
@@ -1482,7 +1481,10 @@
         unit_type:     unit.unit_type,
         sizes,
         needsGod,
-        limit,
+        // D115: the limit is NOT frozen here. It depends on the battle size, which the
+        // player can change at any time, and both the create and open paths set the
+        // faction before the points total. Read it through unitLimit() instead.
+        limitOverride: unit.instance_limit_override || null,
         leaderEligible,
         coLeaderWith,
         minPts: baseMin == null ? null : baseMin + gearMin,
@@ -1506,10 +1508,10 @@
   function selectArmyPoints(value) {
     POINTS_CAP = Number(value);
     if (currentListMeta) currentListMeta.points_target = POINTS_CAP;
-    renderBanner();
-    renderList();
-    renderDetail();
-    scheduleSave();
+    // D115: the unit limits move with the battle size, so the roster must redraw too —
+    // and a list that was legal at Strike Force can become over-limit at Incursion. That
+    // is a real error the player needs to see, not something to silently trim.
+    renderAll();
   }
 
   const TYPE_ORDER = [
@@ -1517,10 +1519,30 @@
     'Beast','Monster','Vehicle','Dedicated Transport','Fortification','Allied'
   ];
 
-  function instanceLimit(unitType) {
+  // D115 — the unit limit depends on the BATTLE SIZE.
+  // Army_Muster_Rules.txt 25.03 "Select Battle Size": the battle size table gives a Unit
+  // Limit of 2 at INCURSION (1000 pts) and 3 at STRIKE FORCE (2000 pts). Its footnote:
+  // "The unit limit for BATTLELINE and DEDICATED TRANSPORT units is double the relevant
+  // amount shown above, and every EPIC HERO has a unit limit of 1, regardless of the
+  // battle size."
+  //
+  // So: Incursion 2 / 4 / 1. Strike Force 3 / 6 / 1. The old flat 3 / 6 / 1 was the
+  // Strike Force row applied to both, which silently permitted an illegal Incursion list.
+  function battleSizeUnitLimit(pointsTotal) {
+    return Number(pointsTotal) <= 1000 ? 2 : 3;
+  }
+
+  function instanceLimit(unitType, pointsTotal) {
     if (unitType === 'Epic Hero') return 1;
-    if (unitType === 'Battleline' || unitType === 'Dedicated Transport') return 6;
-    return 3;
+    const base = battleSizeUnitLimit(pointsTotal);
+    if (unitType === 'Battleline' || unitType === 'Dedicated Transport') return base * 2;
+    return base;
+  }
+
+  // Single read path for a unit's current limit. Always live against POINTS_CAP, so it
+  // cannot go stale when the player changes battle size mid-list.
+  function unitLimit(u) {
+    return u.limitOverride || instanceLimit(u.unit_type, POINTS_CAP);
   }
 
   // B41 + E3. The datasheet limit is a hard boundary, not a warning (D0: legality is the
@@ -1759,7 +1781,7 @@
     if (!unit) return false;
     const count = armyList.filter(e => e.unit_name === entry.unit_name).length;
     if (unit.needsGod && !entry.god) return true;
-    if (limitState(count, unit.limit) === 'over') return true;
+    if (limitState(count, unitLimit(unit)) === 'over') return true;
     return false;
   }
 
@@ -1783,7 +1805,8 @@
         <div class="role-label">${type}</div>
         ${items.map(u => {
           const count    = armyList.filter(e => e.unit_name === u.unit_name).length;
-          const state    = limitState(count, u.limit);
+          const lim      = unitLimit(u);
+          const state    = limitState(count, lim);
           const atLim    = state === 'at';
           const overLim  = state === 'over';
           const cardCls  = overLim ? ' over-limit' : (atLim ? ' at-limit' : '');
@@ -1799,7 +1822,7 @@
                         onclick="event.stopPropagation();openModalFull('${esc(u.unit_name)}')">ⓘ</button>
                 <div class="unit-right-badges">
                   <div class="unit-pts-badge">${u.minPts !== null ? u.minPts + ' pts' : '—'}</div>
-                  <div class="unit-limit-badge${badgeCls}">(${count}/${u.limit})</div>
+                  <div class="unit-limit-badge${badgeCls}">(${count}/${lim})</div>
                 </div>
               </div>
             </div>
@@ -1818,8 +1841,9 @@
     const copyCount = armyList.filter(e => e.unit_name === unitName).length;
 
     // B41: refuse the add at the limit rather than accept it and flag it.
-    if (!canAddUnit(copyCount, unit.limit)) {
-      flashBanner(`Limit reached — ${unitName} (max ${unit.limit})`);
+    const lim = unitLimit(unit);
+    if (!canAddUnit(copyCount, lim)) {
+      flashBanner(`Limit reached — ${unitName} (max ${lim} at ${POINTS_CAP} pts)`);
       return;
     }
 
@@ -2111,17 +2135,18 @@
     const unit    = allUnits.find(u => u.unit_name === entry.unit_name);
     const raw     = rawUnits.find(u => u.unit_name === entry.unit_name);
     const count   = armyList.filter(e => e.unit_name === entry.unit_name).length;
-    const overLim = limitState(count, unit.limit) === 'over';
+    const lim     = unitLimit(unit);
+    const overLim = limitState(count, lim) === 'over';
     const isLeader = unit.leaderEligible.length > 0;
 
     nameEl.textContent  = entry.unit_name;
-    countEl.textContent = `${count} of ${unit.limit}`;
+    countEl.textContent = `${count} of ${lim}`;
     countEl.className   = 'panel-subheader-right' + (overLim ? ' over-limit' : '');
 
     let html = '';
 
     if (overLim) {
-      html += `<div class="over-limit-flag">⚠ Over limit — ${count} of ${unit.limit} allowed</div>`;
+      html += `<div class="over-limit-flag">⚠ Over limit — ${count} of ${lim} allowed</div>`;
     }
 
     if (unit.needsGod && !entry.god) {
