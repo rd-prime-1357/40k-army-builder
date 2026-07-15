@@ -294,6 +294,73 @@ def _dedupe(seq):
             seen.add(x); out.append(x)
     return out
 
+# B18c — fan a capped generic per-N weapon swap onto every model group that
+# actually carries the source weapon, sharing one unit-wide pool_id so the cap
+# is drawn across the whole unit (D116: a generic "1 model" phrase reaches every
+# carrying group, including a leader/sergeant group).
+#
+# This runs on the final --datasheets pass only, after per-group default_weapons
+# are authoritative, so "which groups carry the weapon" is answerable.
+#
+# Scope is an EXPLICIT unit allowlist, not a structural gate. S63 found the
+# structural gate ("uncontested + 2+ carriers") is unsafe: it matches 8 units,
+# and two of them (Terminators 000001183 / 000004138) carry a per-model
+# restriction — "* this model's storm bolter cannot be replaced" — that lives in
+# a datasheet footnote, not in the option structure, so a structural fan would
+# hand those sergeants an ILLEGAL swap. Until that per-model-restriction signal
+# is parsed and applied, only hand-verified units are fanned. Add a unit id here
+# only after confirming it has no such footnote and no same-slot contest.
+_FAN_UNIT_ALLOWLIST = {'000000241', '000002748'}
+
+def _wbase(name):
+    return strip_profile(name).strip().lower()
+
+def _slug(s):
+    return re.sub(r'_+', '_', re.sub(r'[^a-z0-9]+', '_', str(s).lower())).strip('_')
+
+def fan_pooled_swaps(ld):
+    for uid in _FAN_UNIT_ALLOWLIST:
+        entry = ld.get(uid)
+        if not isinstance(entry, dict):
+            continue
+        groups = entry.get('model_groups', [])
+        opts = entry.get('options', [])
+        # weapons replaced by ANY option — used to skip same-slot contests.
+        contest = {}
+        for o in opts:
+            r = o.get('replaces')
+            if r:
+                contest[_wbase(r)] = contest.get(_wbase(r), 0) + 1
+        new_opts = []
+        for o in opts:
+            new_opts.append(o)
+            if o.get('type') != 'count' or not o.get('per_n_models'):
+                continue
+            w = o.get('replaces')
+            if not w or contest.get(_wbase(w), 0) > 1:
+                continue  # contested slot — do not fan
+            carriers = [g['name'] for g in groups
+                        if any(_wbase(dw) == _wbase(w) for dw in g.get('default_weapons', []))]
+            if len(carriers) < 2:
+                continue  # single carrier already correct
+            pool = _slug(strip_profile(w))
+            o['pool_id'] = pool  # original keeps its id; gains the shared pool
+            have = {o.get('scope')}
+            existing_ids = {x.get('id') for x in opts}
+            for gname in carriers:
+                if gname in have:
+                    continue
+                cid = o['id'] + '__' + _slug(gname)
+                if cid in existing_ids:
+                    continue
+                copy = {k: v for k, v in o.items()}
+                copy['id'] = cid
+                copy['scope'] = gname
+                copy['pool_id'] = pool
+                new_opts.append(copy)
+                have.add(gname)
+        entry['options'] = new_opts
+
 def normalise_profiles(ld):
     for uid, entry in ld.items():
         if not isinstance(entry, dict):
@@ -554,6 +621,9 @@ def main():
             pruned.append(k); del ld[k]
 
     normalise_profiles(ld)
+
+    if args.datasheets:
+        fan_pooled_swaps(ld)
 
     json.dump(ld, open(args.out, 'w'), indent=2, ensure_ascii=False)
 

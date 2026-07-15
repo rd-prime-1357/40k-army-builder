@@ -3,11 +3,11 @@
   "files": {
     "index.html": "bf0addb5a0ed88015c8e12c29368d4be35e00c1e36cb1e6573c4de6ff9c85da2",
     "units.json": "1d0136c9c12c9891d708df3504b3155735290f307f420ee4118a993e9ec31787",
-    "unit_loadouts.json": "7201cae0b4e4d46bc84faa46624cc12b6d38df4ae289a818b8f08fa01a253f23",
+    "unit_loadouts.json": "48032e39770db89358abba1f29b2dfd93b490510e857e7d83726f2c41da6ff9a",
     "wargear_points.json": "7ef958cb434bb1e6459b19f5e1030039d7ad5e250b8634a3eaa8fee0028aba67",
     "datasheet_wargear_abilities.json": "6d88919f11f5386d30648dafa7f6840ec263add10ccbfa88b08c2fc1f9727d0c",
     "loadout_parser.py": "e6e289b91c4dec370e6fead82cf8ccc9d51bd6fd8dbce7befd1536f6928d1d0b",
-    "equipped_parser.py": "ac5229d5a949a0a9b787248ca140d9f6e740dd3c0df25436f16bfb56417027af",
+    "equipped_parser.py": "fab6bfe4ff2b9d57c6dd0c1974146eda25c0ef276a3e16be5cb4e9db44dd067d",
     "wahapedia_transform.py": "c2c24efa8c73f2a2495e419b81921695c4e9bd2497344d03b89db40eb1147177",
     "mfm_points_parser.py": "80e983481f2aa8fe3aaeab746e02fb96eb8e694c7e91f6c44341019ff6021ade",
     "convert_to_json.py": "c2936bc0dd73edd01ae360bbfffedd2909cf0159dcaa3a7cf554a5c7d6b12efe",

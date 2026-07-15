@@ -2071,7 +2071,19 @@
         "replaces": "Plasma talon",
         "replacement": "Astartes grenade launcher",
         "per_n_models": 3,
-        "max_per_n": 1
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
+      },
+      {
+        "id": "cnt_1__ravenwing_huntmaster",
+        "scope": "Ravenwing Huntmaster",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma talon",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
       }
     ],
     "_parser_flags": [],
@@ -5830,7 +5842,30 @@
         "replaces": "Plasma talon",
         "replacement": "Astartes grenade launcher",
         "per_n_models": 3,
-        "max_per_n": 1
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
+      },
+      {
+        "id": "cnt_1__ravenwing_champion",
+        "scope": "Ravenwing Champion",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma talon",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
+      },
+      {
+        "id": "cnt_1__ravenwing_apothecary",
+        "scope": "Ravenwing Apothecary",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma talon",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
       }
     ],
     "_parser_flags": [],
