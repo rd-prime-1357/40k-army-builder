@@ -1458,7 +1458,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.65';
+  const VERSION = '5.67';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3222,7 +3222,19 @@
           if (o.type !== 'count' || !reqOk(o)) continue;
           const parts = loWeaponParts(o.replaces);
           if (!parts.length || !parts.some(s => onModel.has(s))) continue;
-          const cap = Math.min(loMaxCount(o, size, n), reqCap(o)), selv = countBy[o.id];
+          let cap = Math.min(loMaxCount(o, size, n), reqCap(o));
+          // B18e: a fixed-1 group can carry a pooled count (a capped generic swap
+          // fanned onto a leader/sergeant). Bound its cap by the shared pool's
+          // remaining capacity and charge what it consumes — exactly as the add
+          // branch above and the multi-model count branch below already do — so
+          // co-pooled options across groups draw from one unit-wide cap on the
+          // emitted weapons and points, not just the status counter.
+          if (o.pool_id) {
+            const rem = (poolCap[o.pool_id] != null ? poolCap[o.pool_id] : Infinity) - (poolUsed[o.pool_id] || 0);
+            cap = Math.min(cap, Math.max(0, rem));
+          }
+          const selv = countBy[o.id];
+          let usedThis = 0;
           const chargeF = (repl, cnt) => {
             if (!(cnt > 0)) return;
             for (const s of parts) cUsed[s] = (cUsed[s] || 0) + cnt;
@@ -3236,10 +3248,13 @@
               const want = Math.max(0, Math.min(tally[k] | 0, cap - used));
               if (want > 0) { chargeF(k, want); used += want; }
             }
+            usedThis = used;
           } else {
             const want = Math.max(0, Math.min((selv | 0), cap));
             if (want > 0) chargeF(o.replacement, want);
+            usedThis = want;
           }
+          if (o.pool_id) poolUsed[o.pool_id] = (poolUsed[o.pool_id] || 0) + usedThis;
         }
         for (const w of dw) {
           const b = weaponBase(w), have = wcnt(g, w), used = cUsed[b] || 0;
@@ -3303,17 +3318,29 @@
         // parked on the base group, or a source that's an item rather than a weapon)
         // would otherwise hand out the replacement for free. It grants nothing.
         if (!loSrcOnGroup(g, o)) continue;
-        const cap = Math.min(loMaxCount(o, size, n), reqCap(o)), selv = countBy[o.id];
+        let cap = Math.min(loMaxCount(o, size, n), reqCap(o));
+        // B18b: a count option can carry a shared pool_id (a capped generic swap).
+        // Bound its cap by the pool's remaining capacity, mirroring the add branch,
+        // and charge what it consumes so co-pooled options lock each other out.
+        if (o.pool_id) {
+          const rem = (poolCap[o.pool_id] != null ? poolCap[o.pool_id] : Infinity) - (poolUsed[o.pool_id] || 0);
+          cap = Math.min(cap, Math.max(0, rem));
+        }
+        const selv = countBy[o.id];
+        let usedThis = 0;
         if (o.replacement_choices) {
           const tally = (selv && typeof selv === 'object') ? selv : {};
           let used = 0;
           for (const k of Object.keys(tally)) { const c = Math.max(0, tally[k] | 0); if (c > 0 && o.replacement_choices.includes(k)) { emit.push({ opt: o, replacement: k, n: c }); used += c; } }
           used = Math.min(used, cap);
           chargeSource(o.replaces, used);
+          usedThis = used;
         } else {
           const want = Math.max(0, Math.min((selv | 0), cap));
           if (want > 0) { emit.push({ opt: o, replacement: o.replacement, n: want }); chargeSource(o.replaces, want); }
+          usedThis = want;
         }
+        if (o.pool_id) poolUsed[o.pool_id] = (poolUsed[o.pool_id] || 0) + usedThis;
       }
       let maxSrcUsed = 0;
       for (const k of Object.keys(swappedByWeapon)) {
@@ -3470,12 +3497,17 @@
             }
             if (o.replaces) listNames.push(o.replaces);
           } else if (o.type === 'count' && o.replacement_choices) {
-            const mx = loMaxCount(o, size, grpCounts[g.name]); allowed += mx;
+            let mx = loMaxCount(o, size, grpCounts[g.name]);
+            const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
+            if (poolInfo) mx = Math.min(mx, Math.max(0, poolInfo.pool - poolInfo.leaderUsed));
+            allowed += mx;
             const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
             picked += Object.keys(tally).reduce((a, k) => a + (Number(tally[k]) || 0), 0);
             for (const c of o.replacement_choices) listNames.push(c);
           } else if (o.type === 'count') {
-            const mx = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
+            let mx = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
+            const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
+            if (poolInfo) mx = Math.min(mx, Math.max(0, poolInfo.pool - poolInfo.leaderUsed));
             if (Number.isFinite(mx)) { allowed += mx; picked += Math.min(Number(entry.wargear[o.id] || 0), mx); }
             if (o.replacement) listNames.push(o.replacement);
           } else if (o.type === 'add') {
@@ -3511,7 +3543,9 @@
             html += loChoiceRow(entry.listId, o.id, '', keepLabel, !cur, o.replaces ? mkDetail('eye', itemDetailHtml(raw, o.replaces)) : null);
             for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c, mkDetail('eye', itemDetailHtml(raw, c)));
           } else if (o.type === 'count' && o.replacement_choices) {
-            const max = loMaxCount(o, size, grpCounts[g.name]);
+            let max = loMaxCount(o, size, grpCounts[g.name]);
+            const poolInfoRC = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
+            if (poolInfoRC) max = Math.min(max, Math.max(0, poolInfoRC.pool - poolInfoRC.leaderUsed));
             const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
             html += `<div class="lo-substep-note">pick up to ${max}</div>`;
             for (const c of o.replacement_choices) {
@@ -3525,7 +3559,9 @@
               html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
                 <div class="option-item-name">${o.replacement || o.group} — needs ${loReqLabel(o)}</div>${d.btn}</div></div>${d.panel}`;
             } else {
-            const max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
+            let max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
+            const poolInfoC = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
+            if (poolInfoC) max = Math.min(max, Math.max(0, poolInfoC.pool - poolInfoC.leaderUsed));
             const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
             html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
                               `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, (o.replacement || o.group), `(max ${max})`, mkDetail('eye', itemDetailHtml(raw, o.replacement || o.group)));
