@@ -586,6 +586,51 @@
     }
     .option-item.radio.disabled:hover { border-color: #333; background: transparent; }
 
+    /* B47: info buttons + inline detail expanders in the Configuration Panel */
+    .info-btn {
+      margin-left: auto;
+      flex-shrink: 0;
+      background: transparent;
+      border: none;
+      color: #6a6a6a;
+      cursor: pointer;
+      padding: 0 0.15rem;
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+      font-size: 0.85rem;
+    }
+    .info-btn:hover { color: #cc9900; }
+    .info-btn svg { display: block; }
+    .lo-detail {
+      display: none;
+      margin: 0.1rem 0 0.45rem;
+      padding: 0.5rem 0.6rem;
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+    }
+    .lo-detail.open { display: block; }
+    .lo-detail .weapon-table { margin: 0.15rem 0; }
+    .lo-detail-block { margin-bottom: 0.55rem; }
+    .lo-detail-block:last-child { margin-bottom: 0; }
+    .lo-detail-name {
+      font-size: 0.72rem; font-weight: 600; color: #cbb46a; margin-bottom: 0.15rem;
+    }
+    .lo-detail-text { font-size: 0.72rem; color: #b0b0b0; line-height: 1.4; }
+    .lo-detail-text.muted { color: #666; font-style: italic; }
+    .lo-heading-row {
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .lo-heading-row > span:first-child { flex: 1; }
+    .lo-head-right { display: inline-flex; align-items: center; gap: 0.4rem; flex: 0 0 auto; }
+    .lo-count {
+      font-size: 0.62rem; color: #888; letter-spacing: 0.04em;
+      background: #202020; border: 1px solid #333; border-radius: 3px;
+      padding: 0.05rem 0.3rem;
+    }
+    .lo-heading-row .info-btn { margin-left: 0; }
+
     /* Incomplete flag in detail */
     .incomplete-flag {
       font-size: 0.72rem;
@@ -1413,7 +1458,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.64';
+  const VERSION = '5.65';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2707,17 +2752,21 @@
         seenBase.add(b);
         famOpts.push(opt);
       }
-      html += `<div class="options-block"><div class="detail-section-label">Replace ${stripProfile(opts[0].weapon_replaced)}</div>`;
+      const listNames = famOpts.map(o => o.replacement_weapon_name).concat([opts[0].weapon_replaced]);
+      const listPair  = mkDetail('list', groupDetailHtml(raw, listNames));
+      const picked    = chosen ? 1 : 0;
+      html += `<div class="options-block"><div class="detail-section-label lo-heading-row"><span>Replace ${stripProfile(opts[0].weapon_replaced)}</span><span class="lo-head-right"><span class="lo-count">${picked}/1</span>${listPair.btn}</span></div>${listPair.panel}`;
       for (const opt of famOpts) {
         const display = stripProfile(opt.replacement_weapon_name);
         const isCh    = weaponBase(chosen) === weaponBase(opt.replacement_weapon_name);
+        const d       = mkDetail('eye', itemDetailHtml(raw, opt.replacement_weapon_name));
         html += `<div class="option-item radio${isCh ? ' chosen' : ''}"
                       onclick="editWargearGroup(${entry.listId},'${esc(stateKey)}','${esc(display)}')">
           <div class="option-item-row">
             <div class="option-check">${isCh ? '●' : ''}</div>
-            <div class="option-item-name">${display}</div>
+            <div class="option-item-name">${display}</div>${d.btn}
           </div>
-        </div>`;
+        </div>${d.panel}`;
       }
       html += `</div>`;
     }
@@ -2734,13 +2783,15 @@
     for (const [replacedBase, opts] of Object.entries(indepByWeapon)) {
       const stateKey = `indep_${replacedBase}`;
       const isCh     = !!entry.wargear[stateKey];
-      html += `<div class="options-block"><div class="detail-section-label">Optional Swap</div>
+      const listPair = mkDetail('list', groupDetailHtml(raw, [opts[0].replacement_weapon_name, opts[0].weapon_replaced]));
+      const d        = mkDetail('eye', itemDetailHtml(raw, opts[0].replacement_weapon_name));
+      html += `<div class="options-block"><div class="detail-section-label lo-heading-row"><span>Optional Swap</span><span class="lo-head-right"><span class="lo-count">${isCh ? 1 : 0}/1</span>${listPair.btn}</span></div>${listPair.panel}
         <div class="option-item${isCh ? ' chosen' : ''}" onclick="editWargearIndep(${entry.listId},'${esc(stateKey)}')">
           <div class="option-item-row">
             <div class="option-check">${isCh ? '✓' : ''}</div>
-            <div class="option-item-name">${stripProfile(opts[0].weapon_replaced)} → ${stripProfile(opts[0].replacement_weapon_name)}</div>
+            <div class="option-item-name">${stripProfile(opts[0].weapon_replaced)} → ${stripProfile(opts[0].replacement_weapon_name)}</div>${d.btn}
           </div>
-        </div>
+        </div>${d.panel}
       </div>`;
     }
 
@@ -2753,19 +2804,27 @@
         const stateKey = `bundle_${gi}`;
         const chosenEp = bundleChosenEndpoint(entry, bundle, gi);
         const chosen   = chosenEp ? chosenEp.id : null;
-        html += `<div class="options-block"><div class="detail-section-label">${bundle.option_group || 'Weapons'}</div>`;
-        for (const ep of (bundle.endpoints || [])) {
+        const eps      = bundle.endpoints || [];
+        // Counter: how many non-default endpoints exist, and whether one is picked.
+        const nonDefault = eps.filter(ep => !ep.is_default).length;
+        const pickedBundle = (chosenEp && !chosenEp.is_default) ? 1 : 0;
+        const bundleListNames = [];
+        for (const ep of eps) for (const w of (ep.adds || [])) bundleListNames.push(w);
+        const listPair = mkDetail('list', groupDetailHtml(raw, bundleListNames));
+        html += `<div class="options-block"><div class="detail-section-label lo-heading-row"><span>${bundle.option_group || 'Weapons'}</span><span class="lo-head-right"><span class="lo-count">${pickedBundle}/${Math.max(1, nonDefault)}</span>${listPair.btn}</span></div>${listPair.panel}`;
+        for (const ep of eps) {
           const isCh = chosen === ep.id;
           const pts  = ep.points_cost ? ` <span style="color:#888;font-size:0.7rem;">(+${ep.points_cost})</span>` : '';
+          const d    = mkDetail('eye', endpointDetailHtml(raw, ep));
           html += `<div class="option-item radio${isCh ? ' chosen' : ''}"
                         onclick="editWargearBundle(${entry.listId},'${esc(stateKey)}','${esc(ep.id)}')">
             <div class="option-item-row">
               <div class="option-check">${isCh ? '●' : ''}</div>
-              <div class="option-item-name">${ep.label}${pts}</div>
+              <div class="option-item-name">${ep.label}${pts}</div>${d.btn}
             </div>
             ${(isCh && ep.grants && ep.grants.length) ? ep.grants.map(g =>
               `<div class="option-item-note">Grants ${g.option_name}${g.carrier_notes ? ' — ' + g.carrier_notes : ''}</div>`).join('') : ''}
-          </div>`;
+          </div>${d.panel}`;
         }
         html += `</div>`;
       });
@@ -2775,35 +2834,54 @@
   }
 
   function buildOtherOptionsHtml(entry, raw) {
-    let html = `<div class="detail-section-label" style="margin-bottom:0.45rem;">Unit Options</div><div class="options-block">`;
     // Some options are double-sourced: present both as a loadout group and as a
     // B14 other_option (e.g. Watcher in the Dark on Deathwing units). The loadout
     // group is canonical, so suppress the matching other_option here to avoid a
     // duplicate control. Match on normalized label.
     const _lo = loadoutFor(entry);
-    const _loLabels = new Set((_lo && _lo.options ? _lo.options : [])
-      .map(o => (o.label || o.group || '').trim().toLowerCase()));
-    for (const opt of (raw.other_options || [])) {
-      if (_loLabels.has((opt.option_name || '').trim().toLowerCase())) continue;
+    // A B14 other_option that is ALSO offered by the loadout is double-sourced;
+    // the loadout control is canonical, so suppress the checkbox. Match on the
+    // loadout option's label/group AND on the item names it offers inside
+    // choices / equipment_choices / equipment (B48: Corvus Blackstar's auspex
+    // array + infernum halo-launcher live in ach_4.choices, so a label-only
+    // match missed them and both a radio and a checkbox rendered). ach_4 carries
+    // a 'None' row, so suppressing the checkboxes leaves the empty state reachable.
+    const _loLabels = new Set();
+    for (const o of (_lo && _lo.options ? _lo.options : [])) {
+      const add = v => { const s = (v || '').toString().trim().toLowerCase(); if (s) _loLabels.add(s); };
+      add(o.label || o.group);
+      for (const c of (o.choices || [])) add(c);
+      for (const c of (o.equipment_choices || [])) add(c);
+      add(o.equipment);
+    }
+    const visible = (raw.other_options || []).filter(
+      opt => !_loLabels.has((opt.option_name || '').trim().toLowerCase()));
+    const picked = visible.filter(opt => !!entry.otherOptions[opt.option_name]).length;
+    // The ☰ detail for the whole group: the rules text of every option here.
+    const listPair = mkDetail('list', groupDetailHtml(raw, visible.map(o => o.ability_name || o.option_name)));
+    let html = `<div class="detail-section-label lo-heading-row" style="margin-bottom:0.45rem;"><span>Unit Options</span><span class="lo-head-right"><span class="lo-count">${picked}/${visible.length}</span>${listPair.btn}</span></div>${listPair.panel}<div class="options-block">`;
+    for (const opt of visible) {
       const isCh = !!entry.otherOptions[opt.option_name];
+      const d    = mkDetail('eye', itemDetailHtml(raw, opt.ability_name || opt.option_name));
       html += `<div class="option-item${isCh ? ' chosen' : ''}"
                     onclick="editOtherOption(${entry.listId},'${esc(opt.option_name)}')">
         <div class="option-item-row">
           <div class="option-check">${isCh ? '✓' : ''}</div>
-          <div class="option-item-name">${opt.option_name}</div>
+          <div class="option-item-name">${opt.option_name}</div>${d.btn}
         </div>
         ${opt.carrier_notes ? `<div class="option-item-note">${opt.carrier_notes}</div>` : ''}
-      </div>`;
+      </div>${d.panel}`;
     }
     // Read-only lines granted by the currently chosen bundle endpoint(s).
     for (const g of activeBundleGrants(entry, raw)) {
+      const d = mkDetail('eye', itemDetailHtml(raw, g.ability_name || g.option_name));
       html += `<div class="option-item granted">
         <div class="option-item-row">
           <div class="option-check">◆</div>
-          <div class="option-item-name">${g.option_name} <span style="color:#888;font-size:0.65rem;">(granted)</span></div>
+          <div class="option-item-name">${g.option_name} <span style="color:#888;font-size:0.65rem;">(granted)</span></div>${d.btn}
         </div>
         ${g.carrier_notes ? `<div class="option-item-note">${g.carrier_notes}</div>` : ''}
-      </div>`;
+      </div>${d.panel}`;
     }
     html += `</div>`;
     return html;
@@ -3370,67 +3448,112 @@
           html += `<div class="lo-pool${over ? ' over' : ''}">${pooledHere.group}: ${pp.used} of ${pp.pool}${over ? ' — too many for this unit' : ''}</div>`;
         }
       }
-      let lastGroup = null;
-      for (const o of opts) {
-        if (o.group !== lastGroup) { html += `<div class="detail-section-label${lastGroup !== null ? ' lo-group-sep' : ''}">${o.group}</div>`; lastGroup = o.group; }
-        if (o.type === 'choice') {
-          const root = choiceRoot[o.id];
-          const mates = (root && clusterOf[root]) || [];
-          if (mates.length > 1) {
-            if (root !== o.id) continue;      // already drawn with its cluster
-            const ids = mates.map(m => m.id).join(',');
-            const anyCur = mates.some(m => entry.wargear[m.id]);
-            html += loChoiceRowX(entry.listId, ids, '', '', 'Keep ' + o.replaces, !anyCur);
-            for (const m of mates)
-              for (const c of m.choices)
-                html += loChoiceRowX(entry.listId, ids, m.id, c, c, entry.wargear[m.id] === c);
-            continue;
-          }
-          const cur = entry.wargear[o.id] || null;
-          const keepLabel = o.replaces ? 'Keep ' + o.replaces : 'None';
-          html += loChoiceRow(entry.listId, o.id, '', keepLabel, !cur);
-          for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c);
-        } else if (o.type === 'count' && o.replacement_choices) {
-          const max = loMaxCount(o, size, grpCounts[g.name]);
-          const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
-          html += `<div class="lo-substep-note">pick up to ${max}</div>`;
-          for (const c of o.replacement_choices) {
-            const cur = Number(tally[c] || 0);
-            html += loStepper(`editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',-1,${max})`,
-                              `editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',1,${max})`, cur, c, '');
-          }
-        } else if (o.type === 'count') {
-          if (o.requires_weapon && !reqOkUI(o)) {
-            html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
-              <div class="option-item-name">${o.replacement || o.group} — needs ${loReqLabel(o)}</div></div></div>`;
-          } else {
-          const max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
-          const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
-          html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
-                            `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, (o.replacement || o.group), `(max ${max})`);
-          }
-        } else if (o.type === 'add') {
-          const max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
-          const label = o.adds_weapon || o.equipment || o.group;
-          const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
-          if (o.max_total === 1 && !o.per_n_models) {
-            const disabled = !reqOkUI(o) || (poolInfo && poolInfo.pool === 0);
-            const on = Number(entry.wargear[o.id] || 0) > 0;
-            if (disabled) {
-              const why = !reqOkUI(o) ? ` — needs ${loReqLabel(o)}` : '';
-              html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
-                <div class="option-item-name">${label}${why}</div></div></div>`;
+      // Split this scope's options into their option-groups, preserving order,
+      // so each group heading can carry a (picked/allowed) counter and a list
+      // icon that opens the detail for every item the group offers.
+      const groupOrder = [], groupMap = {};
+      for (const o of opts) { if (!groupMap[o.group]) { groupMap[o.group] = []; groupOrder.push(o.group); } groupMap[o.group].push(o); }
+      for (let gi = 0; gi < groupOrder.length; gi++) {
+        const gk = groupOrder[gi], gopts = groupMap[gk];
+        // Counter + the item list for the ☰ icon, in one pass over the group.
+        let picked = 0, allowed = 0; const listNames = []; const seenRoot = new Set();
+        for (const o of gopts) {
+          if (o.type === 'choice') {
+            const root = choiceRoot[o.id], mates = (root && clusterOf[root]) || [];
+            if (mates.length > 1) {
+              if (seenRoot.has(root)) continue; seenRoot.add(root);
+              allowed += 1; if (mates.some(m => entry.wargear[m.id])) picked += 1;
+              for (const m of mates) for (const c of m.choices) listNames.push(c);
             } else {
-              html += `<div class="option-item radio${on ? ' chosen' : ''}" onclick="editLoadoutAdd(${entry.listId},'${esc(o.id)}')">
-                  <div class="option-item-row"><div class="option-check">${on ? '\u25CF' : ''}</div>
-                  <div class="option-item-name">${label}</div></div></div>`;
+              allowed += 1; if (entry.wargear[o.id]) picked += 1;
+              for (const c of o.choices) listNames.push(c);
             }
-          } else {
-            let mx = max;
-            if (poolInfo) mx = Math.max(0, poolInfo.pool - poolInfo.leaderUsed);
-            const cur = Math.min(Number(entry.wargear[o.id] || 0), mx);
-            html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${mx})`,
-                              `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${mx})`, cur, label, `(max ${mx})`);
+            if (o.replaces) listNames.push(o.replaces);
+          } else if (o.type === 'count' && o.replacement_choices) {
+            const mx = loMaxCount(o, size, grpCounts[g.name]); allowed += mx;
+            const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
+            picked += Object.keys(tally).reduce((a, k) => a + (Number(tally[k]) || 0), 0);
+            for (const c of o.replacement_choices) listNames.push(c);
+          } else if (o.type === 'count') {
+            const mx = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
+            if (Number.isFinite(mx)) { allowed += mx; picked += Math.min(Number(entry.wargear[o.id] || 0), mx); }
+            if (o.replacement) listNames.push(o.replacement);
+          } else if (o.type === 'add') {
+            const label = o.adds_weapon || o.equipment || o.group; listNames.push(label);
+            if (o.max_total === 1 && !o.per_n_models) { allowed += 1; if (Number(entry.wargear[o.id] || 0) > 0) picked += 1; }
+            else {
+              const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
+              let mx = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
+              if (poolInfo) mx = Math.max(0, poolInfo.pool - poolInfo.leaderUsed);
+              if (Number.isFinite(mx)) { allowed += mx; picked += Math.min(Number(entry.wargear[o.id] || 0), mx); }
+            }
+          }
+        }
+        const listPair = mkDetail('list', groupDetailHtml(raw, listNames));
+        const sep = gi > 0 ? ' lo-group-sep' : '';
+        html += `<div class="detail-section-label${sep} lo-heading-row"><span>${gk}</span><span class="lo-head-right"><span class="lo-count">${picked}/${allowed}</span>${listPair.btn}</span></div>${listPair.panel}`;
+        for (const o of gopts) {
+          if (o.type === 'choice') {
+            const root = choiceRoot[o.id];
+            const mates = (root && clusterOf[root]) || [];
+            if (mates.length > 1) {
+              if (root !== o.id) continue;      // already drawn with its cluster
+              const ids = mates.map(m => m.id).join(',');
+              const anyCur = mates.some(m => entry.wargear[m.id]);
+              html += loChoiceRowX(entry.listId, ids, '', '', 'Keep ' + o.replaces, !anyCur, o.replaces ? mkDetail('eye', itemDetailHtml(raw, o.replaces)) : null);
+              for (const m of mates)
+                for (const c of m.choices)
+                  html += loChoiceRowX(entry.listId, ids, m.id, c, c, entry.wargear[m.id] === c, mkDetail('eye', itemDetailHtml(raw, c)));
+              continue;
+            }
+            const cur = entry.wargear[o.id] || null;
+            const keepLabel = o.replaces ? 'Keep ' + o.replaces : 'None';
+            html += loChoiceRow(entry.listId, o.id, '', keepLabel, !cur, o.replaces ? mkDetail('eye', itemDetailHtml(raw, o.replaces)) : null);
+            for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c, mkDetail('eye', itemDetailHtml(raw, c)));
+          } else if (o.type === 'count' && o.replacement_choices) {
+            const max = loMaxCount(o, size, grpCounts[g.name]);
+            const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
+            html += `<div class="lo-substep-note">pick up to ${max}</div>`;
+            for (const c of o.replacement_choices) {
+              const cur = Number(tally[c] || 0);
+              html += loStepper(`editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',-1,${max})`,
+                                `editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',1,${max})`, cur, c, '', mkDetail('eye', itemDetailHtml(raw, c)));
+            }
+          } else if (o.type === 'count') {
+            if (o.requires_weapon && !reqOkUI(o)) {
+              const d = mkDetail('eye', itemDetailHtml(raw, o.replacement || o.group));
+              html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
+                <div class="option-item-name">${o.replacement || o.group} — needs ${loReqLabel(o)}</div>${d.btn}</div></div>${d.panel}`;
+            } else {
+            const max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
+            const cur = Math.min(Number(entry.wargear[o.id] || 0), max);
+            html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${max})`,
+                              `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${max})`, cur, (o.replacement || o.group), `(max ${max})`, mkDetail('eye', itemDetailHtml(raw, o.replacement || o.group)));
+            }
+          } else if (o.type === 'add') {
+            const max = Math.min(loMaxCount(o, size, grpCounts[g.name]), reqCapUI(o));
+            const label = o.adds_weapon || o.equipment || o.group;
+            const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
+            if (o.max_total === 1 && !o.per_n_models) {
+              const disabled = !reqOkUI(o) || (poolInfo && poolInfo.pool === 0);
+              const on = Number(entry.wargear[o.id] || 0) > 0;
+              const d = mkDetail('eye', itemDetailHtml(raw, label));
+              if (disabled) {
+                const why = !reqOkUI(o) ? ` — needs ${loReqLabel(o)}` : '';
+                html += `<div class="option-item radio disabled"><div class="option-item-row"><div class="option-check"></div>
+                  <div class="option-item-name">${label}${why}</div>${d.btn}</div></div>${d.panel}`;
+              } else {
+                html += `<div class="option-item radio${on ? ' chosen' : ''}" onclick="editLoadoutAdd(${entry.listId},'${esc(o.id)}')">
+                    <div class="option-item-row"><div class="option-check">${on ? '\u25CF' : ''}</div>
+                    <div class="option-item-name">${label}</div>${d.btn}</div></div>${d.panel}`;
+              }
+            } else {
+              let mx = max;
+              if (poolInfo) mx = Math.max(0, poolInfo.pool - poolInfo.leaderUsed);
+              const cur = Math.min(Number(entry.wargear[o.id] || 0), mx);
+              html += loStepper(`editLoadoutCount(${entry.listId},'${esc(o.id)}',-1,${mx})`,
+                                `editLoadoutCount(${entry.listId},'${esc(o.id)}',1,${mx})`, cur, label, `(max ${mx})`, mkDetail('eye', itemDetailHtml(raw, label)));
+            }
           }
         }
       }
@@ -3439,13 +3562,14 @@
     if (!html) return '';
     return `<div class="detail-section-label" style="color:#666;margin-bottom:0.6rem;">Wargear Options</div>` + html;
   }
-  function loStepper(minusCall, plusCall, cur, label, sub) {
+  function loStepper(minusCall, plusCall, cur, label, sub, detail) {
+    const btn = detail ? detail.btn : '', panel = detail ? detail.panel : '';
     return `<div class="lo-stepper">
       <button class="lo-step-btn" onclick="${minusCall}">\u2212</button>
       <span class="lo-step-val">${cur}</span>
       <button class="lo-step-btn" onclick="${plusCall}">+</button>
-      <span class="lo-step-lbl">${label} <span class="lo-step-max">${sub}</span></span>
-    </div>`;
+      <span class="lo-step-lbl">${label} <span class="lo-step-max">${sub}</span></span>${btn}
+    </div>${panel}`;
   }
   function editLoadoutChoiceCount(listId, optId, choice, delta, groupMax) {
     const e = armyList.find(x => x.listId === listId); if (!e) return;
@@ -3463,10 +3587,11 @@
     e.wargear[optId] = Number(e.wargear[optId] || 0) > 0 ? 0 : 1;
     renderAll();
   }
-  function loChoiceRow(listId, optId, value, label, chosen) {
+  function loChoiceRow(listId, optId, value, label, chosen, detail) {
+    const btn = detail ? detail.btn : '', panel = detail ? detail.panel : '';
     return `<div class="option-item radio${chosen ? ' chosen' : ''}" onclick="editLoadoutChoice(${listId},'${esc(optId)}','${esc(value)}')">
       <div class="option-item-row"><div class="option-check">${chosen ? '\u25CF' : ''}</div>
-      <div class="option-item-name">${label}</div></div></div>`;
+      <div class="option-item-name">${label}</div>${btn}</div></div>${panel}`;
   }
   function editLoadoutChoice(listId, optId, value) {
     const e = armyList.find(x => x.listId === listId); if (!e) return;
@@ -3476,10 +3601,11 @@
   // One radio group spanning several choice options that compete for the same weapon
   // slot (B25): picking any row clears every option in the cluster, then sets the one
   // that was clicked. The 'keep' row passes no option id, so it just clears.
-  function loChoiceRowX(listId, ids, optId, value, label, chosen) {
+  function loChoiceRowX(listId, ids, optId, value, label, chosen, detail) {
+    const btn = detail ? detail.btn : '', panel = detail ? detail.panel : '';
     return `<div class="option-item radio${chosen ? ' chosen' : ''}" onclick="editLoadoutChoiceX(${listId},'${esc(ids)}','${esc(optId)}','${esc(value)}')">
       <div class="option-item-row"><div class="option-check">${chosen ? '\u25CF' : ''}</div>
-      <div class="option-item-name">${label}</div></div></div>`;
+      <div class="option-item-name">${label}</div>${btn}</div></div>${panel}`;
   }
   function editLoadoutChoiceX(listId, ids, optId, value) {
     const e = armyList.find(x => x.listId === listId); if (!e) return;
@@ -3530,6 +3656,88 @@
       html += `<tr><td class="weapon-name-cell">${w.weapon_name} <span class="lo-wcount">\u00d7${r.n}</span></td><td>${w.range}</td><td>${w.A}</td><td>${bsws}</td><td>${w.S}</td><td>${w.AP}</td><td>${w.D}</td><td class="weapon-abilities-cell">${ab}</td></tr>`;
     }
     return html + `</tbody></table></div>`;
+  }
+
+  // ── B47: inline detail expanders + info buttons ───────────────────────────
+  // A row's eye opens the detail for that one item; a heading's list icon opens
+  // the detail for every item in the group at once. Both are read-only and do
+  // NOT re-render the panel — they toggle a sibling expander via toggleDetail,
+  // so an open expander survives until the next selection change (which rebuilds
+  // the whole panel and collapses it — acceptable for v1).
+  let _detSeq = 0;
+  function toggleDetail(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('open');
+  }
+  function infoBtn(kind, id) {
+    const glyph = kind === 'list'
+      ? '\u2630'
+      : '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const title = kind === 'list' ? 'Show details for every item in this group' : 'Show details';
+    return `<button type="button" class="info-btn${kind === 'list' ? ' info-list' : ''}" title="${title}" onclick="event.stopPropagation();toggleDetail('${id}')">${glyph}</button>`;
+  }
+  // Returns { btn, panel }: place btn inside the row/heading, panel immediately
+  // after it. kind is 'eye' (single item) or 'list' (whole group).
+  function mkDetail(kind, html) {
+    const id = 'det' + (++_detSeq);
+    return { btn: infoBtn(kind, id), panel: `<div class="lo-detail" id="${id}">${html}</div>` };
+  }
+  // Every recorded profile of a weapon whose base name matches (strike/sweep etc.).
+  function weaponProfilesFor(raw, name) {
+    const b = weaponBase(name);
+    return ((raw && raw.weapons) || []).filter(w => weaponBase(w.weapon_name) === b);
+  }
+  function miniWeaponTable(profs) {
+    let h = `<table class="weapon-table detail-wtable"><thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>BS/WS</th><th>S</th><th>AP</th><th>D</th><th>Abilities</th></tr></thead><tbody>`;
+    for (const w of profs) {
+      const bsws = w.BS || w.WS || '\u2014';
+      const ab = (w.weapon_ability_names && w.weapon_ability_names.length) ? w.weapon_ability_names.join(', ') : '\u2014';
+      h += `<tr><td class="weapon-name-cell">${w.weapon_name}</td><td>${w.range}</td><td>${w.A}</td><td>${bsws}</td><td>${w.S}</td><td>${w.AP}</td><td>${w.D}</td><td class="weapon-abilities-cell">${ab}</td></tr>`;
+    }
+    return h + `</tbody></table>`;
+  }
+  // Detail for one selectable item. A label may be compound ('Heavy flamer +
+  // Dreadnought combat weapon'), so each part is resolved on its own: a weapon
+  // profile if the datasheet has one, else the item's rules text, else a note.
+  function itemDetailHtml(raw, name) {
+    let out = '';
+    for (const part of String(name || '').split(' + ')) {
+      const p = part.trim();
+      if (!p) continue;
+      const profs = weaponProfilesFor(raw, p);
+      if (profs.length) { out += miniWeaponTable(profs); continue; }
+      const desc = wargearAbilityDesc(raw, p);
+      out += `<div class="lo-detail-name">${p}</div>`;
+      out += desc ? `<div class="lo-detail-text">${desc}</div>`
+                  : `<div class="lo-detail-text muted">No weapon profile or rules text is recorded for this item on this datasheet.</div>`;
+    }
+    return out || `<div class="lo-detail-text muted">No details available.</div>`;
+  }
+  // Detail for a whole group: every distinct item stacked, deduped by base name.
+  function groupDetailHtml(raw, names) {
+    const seen = new Set();
+    let out = '';
+    for (const n of (names || [])) {
+      if (!n) continue;
+      const k = weaponBase(n);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out += `<div class="lo-detail-block">${itemDetailHtml(raw, n)}</div>`;
+    }
+    return out || `<div class="lo-detail-text muted">No details available.</div>`;
+  }
+  // Detail for a bundle endpoint: the weapons it adds, the rules text of anything
+  // it grants, and a note of what it removes.
+  function endpointDetailHtml(raw, ep) {
+    let out = '';
+    for (const w of (ep.adds || [])) out += `<div class="lo-detail-block">${itemDetailHtml(raw, w)}</div>`;
+    for (const g of (ep.grants || [])) {
+      const t = wargearAbilityDesc(raw, g.ability_name || g.option_name) || g.carrier_notes || '';
+      out += `<div class="lo-detail-name">${g.option_name}</div>`;
+      if (t) out += `<div class="lo-detail-text">${t}</div>`;
+    }
+    if (ep.removes && ep.removes.length) out += `<div class="lo-detail-text muted">Removes: ${ep.removes.join(', ')}</div>`;
+    return out || `<div class="lo-detail-text muted">Default loadout — no changes.</div>`;
   }
 
   function buildModalFull(raw) {
