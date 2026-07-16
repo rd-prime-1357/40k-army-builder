@@ -1,7 +1,7 @@
 {
   "_note": "SHA-256 of every guarded pipeline file. Regenerated at session close (python3 pipeline_manifest.py --write). manifest_check verifies it at baseline; a mismatch names the file that arrived as the wrong copy.",
   "files": {
-    "index.html": "bf0addb5a0ed88015c8e12c29368d4be35e00c1e36cb1e6573c4de6ff9c85da2",
+    "index.html": "34ba86b9f8596c0745f8ab735415a06f4eaf2113db46465e48d56464f6bb9cf9",
     "units.json": "5b35aa77825e58aa0532696811f44e8bc89fe5fd4a7b2c855f6c1f4039d38d8e",
     "unit_loadouts.json": "48032e39770db89358abba1f29b2dfd93b490510e857e7d83726f2c41da6ff9a",
     "wargear_points.json": "7ef958cb434bb1e6459b19f5e1030039d7ad5e250b8634a3eaa8fee0028aba67",

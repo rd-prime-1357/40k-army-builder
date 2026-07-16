@@ -932,6 +932,7 @@
       color: #b8860b;
       margin-top: 2px;
     }
+    .kwb { font-weight: 700; color: #cc9900; }
 
     .keyword-list {
       display: flex;
@@ -1458,7 +1459,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.67';
+  const VERSION = '5.68';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3776,6 +3777,36 @@
     return out || `<div class="lo-detail-text muted">Default loadout — no changes.</div>`;
   }
 
+  // B49: dedicated Leader section, placed first among ability sections. Reads
+  // leader_eligible_units (resolved unit names) and leader_footer (raw Wahapedia
+  // markup, injected as HTML — not escaped) off each model group that carries the
+  // Leader ability. Multi-group units (e.g. Chaplain Grimaldus) get a label per
+  // group; the common single-group case does not.
+  function leaderSectionHtml(raw, sidPrefix) {
+    const entries = [];
+    for (const mg of raw.model_groups) {
+      if (!mg.leader_ability_name) continue;
+      const elig = mg.leader_eligible_units || [];
+      if (!elig.length) continue;
+      entries.push({ group: mg.model_group, eligible: elig, footer: mg.leader_footer || '' });
+    }
+    if (!entries.length) return '';
+    const showGroupLabel = entries.length > 1;
+    let body = '';
+    for (const e of entries) {
+      const word = e.eligible.length === 1 ? 'unit' : 'units';
+      const label = showGroupLabel ? `<div class="stat-group-label">${e.group}</div>` : '';
+      body += `${label}<div class="ability-row"><div class="ability-desc">This model can be attached to the following ${word}: ${e.eligible.join(', ')}.${e.footer ? ' ' + e.footer : ''}</div></div>`;
+    }
+    const sid = sidPrefix + '-leader';
+    return `<div class="modal-section">
+      <div class="modal-section-header" onclick="toggleSection('${sid}')">
+        <span class="modal-section-heading"><span>Leader</span></span><span class="modal-section-chevron">▶</span>
+      </div>
+      <div class="modal-section-content" id="${sid}">${body}</div>
+    </div>`;
+  }
+
   function buildModalFull(raw) {
     let html = '';
 
@@ -3798,6 +3829,9 @@
       const mgWeapons = raw.weapons.filter(w => w.model_group === mg.model_group);
       html += buildWeaponSections(mgWeapons, 'full', null, raw);
     }
+
+    // Leader — B49, placed first among ability sections (not merged into Abilities)
+    html += leaderSectionHtml(raw, 'full');
 
     // Abilities — collected across all model groups (deduplicated)
     const allAbilityNames = [];
@@ -3827,7 +3861,7 @@
     const allRuleNames = [];
     for (const mg of raw.model_groups) {
       for (const name of mg.rule_names) {
-        if (!allRuleNames.includes(name)) allRuleNames.push(name);
+        if (name !== 'Leader' && !allRuleNames.includes(name)) allRuleNames.push(name);
       }
     }
     if (allRuleNames.length > 0) {
@@ -4012,6 +4046,9 @@
     const cfgLoDef = loadoutFor(entry);
     if (cfgLoDef) html += loadoutWeaponHtml(entry, cfgLoDef, raw);
 
+    // Leader — B49, placed first among ability sections (not merged into Abilities)
+    html += leaderSectionHtml(raw, 'cfg');
+
     // Abilities
     const allAbilityNames = [];
     for (const mg of raw.model_groups) {
@@ -4040,7 +4077,7 @@
     const allRuleNames = [];
     for (const mg of raw.model_groups) {
       for (const name of mg.rule_names) {
-        if (!allRuleNames.includes(name)) allRuleNames.push(name);
+        if (name !== 'Leader' && !allRuleNames.includes(name)) allRuleNames.push(name);
       }
     }
     // Roll-up: append the abilities of the unit's ACTIVE weapons (still shown
