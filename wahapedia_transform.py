@@ -515,6 +515,12 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
                     if nm not in names:
                         names.append(nm)
             leader_elig = " | ".join(sorted(names))
+        # Leader footer: the datasheet's attachment-clause prose (e.g. the
+        # Lieutenant's "even if a Captain is already attached" co-leader text).
+        # Wahapedia carries it verbatim (with its <i>/<span> markup) in the
+        # leader_footer column; kept as-is for the app to render. Only meaningful
+        # on units that actually have a Leader ability.
+        leader_footer = _WS.sub(" ", (d.get("leader_footer") or "")).strip() if leader_ability else ""
         fnp_v, fnp_c = abil["fnp"].get(ds_id, ("", ""))
         for m in (mlist or [None]):
             grp = "All" if len(mlist) <= 1 else strip_html(m.get("name", "")) if m else "All"
@@ -533,6 +539,7 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
                 leader_elig,   # Leader Eligible Units (from Datasheets_leader.csv)
                 "",   # Co-Leader Eligible With (manual / surfaced)
                 "",   # Leader Restrictions     (manual / surfaced)
+                leader_footer,   # Leader Footer (attachment-clause prose, markup kept)
                 abil_names, rule_str, kw_str,
                 faction_kw_str, model_kw_str, wargear_str,
                 ds_id,   # Datasheet ID (Wahapedia stable id; durable saved-list ref)
@@ -896,7 +903,7 @@ def main():
 
     O = lambda n: os.path.join(args.out_dir, n)
     write_csv(O("Unit_Stats.csv"),
-              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Unit Ability Names","Rule Names","Keyword Names","Faction Keyword Names","Model Keyword Names","Wargear Ability Names","Datasheet ID"],
+              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Leader Footer","Unit Ability Names","Rule Names","Keyword Names","Faction Keyword Names","Model Keyword Names","Wargear Ability Names","Datasheet ID"],
               stats_rows, trailing_blank_cols=2)
     write_csv(O("Unit_Weapons.csv"),
               ["Army Name","Unit Name","Model Group","Weapon Type","Weapon Name","Range","A","BS","WS","S","AP","D","Weapon Ability Names","Weapon Keyword Names","Is Base Equipment","Allegiance_Condition"],

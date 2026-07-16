@@ -450,6 +450,7 @@ def build_units(data):
                     "leader_eligible_units":    split_multi(row.get("Leader Eligible Units", "")),
                     "co_leader_eligible_with":  split_multi(row.get("Co-Leader Eligible With", "")),
                     "leader_restrictions":      clean(row.get("Leader Restrictions")),
+                    "leader_footer":            clean(row.get("Leader Footer")),
                     # Reference lists (names only)
                     "unit_ability_names":       split_list(row.get("Unit Ability Names", "")),
                     "rule_names":               split_list(row.get("Rule Names", "")),

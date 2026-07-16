@@ -33,6 +33,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to one of the above units even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the <span class=\"kwb\">LEADER</span> units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Surgical Precision",
               "Vivispectrum"
@@ -130,6 +131,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Assault Ramp"
             ],
@@ -323,6 +325,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Assault Ramp"
             ],
@@ -521,6 +524,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Suppression Fire"
             ],
@@ -635,6 +639,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Combat Squads"
             ],
@@ -1283,6 +1288,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Bladeguard"
             ],
@@ -1474,6 +1480,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>* This model cannot be attached to a BLADEGUARD VETERAN SQUAD unless this model is equipped with a relic shield, and cannot be attached to a HELLBLASTER SQUAD unless this model is equipped with a plasma pistol.</i>",
             "unit_ability_names": [
               "Rites of Battle",
               "Finest Hour"
@@ -1854,6 +1861,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Priority Objective Identified",
               "Evade and Survive"
@@ -1967,6 +1975,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Psychic Hood",
               "Veil of Time (Psychic)"
@@ -2149,6 +2158,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Angel’s Wrath",
               "Rites of Battle"
@@ -2393,6 +2403,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Interceptor"
             ],
@@ -2620,6 +2631,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Sentinel Protocols"
             ],
@@ -2749,6 +2761,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Drop Pod Assault",
               "Combat Disembarkation",
@@ -2814,6 +2827,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Ballistus Strike"
             ],
@@ -2961,6 +2975,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Litany of Hate",
               "Catechism of Fire"
@@ -3076,6 +3091,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Fortification",
               "Ceramite Cover",
@@ -3220,6 +3236,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Total Obliteration"
             ],
@@ -3373,6 +3390,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Litany of Hate",
               "Exhortation of Rage"
@@ -3708,6 +3726,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Hammerstrike"
             ],
@@ -3840,6 +3859,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Litany of Hate",
               "Recitation of Faith"
@@ -3950,6 +3970,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Wisdom of the Ancients (Aura)"
             ],
@@ -4228,6 +4249,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Teleport Homer",
               "Terminatus Assault"
@@ -4340,6 +4362,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Psychic Hood",
               "Shrouding (Psychic)"
@@ -4477,6 +4500,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Hailstrike"
             ],
@@ -4607,6 +4631,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Meteoric Descent"
             ],
@@ -4762,6 +4787,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Incendiary Terror"
             ],
@@ -4880,6 +4906,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Omni-scramblers"
             ],
@@ -4899,7 +4926,10 @@
               "Adeptus Astartes"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Helix Gauntlet",
+              "Infiltrator Comms Array"
+            ]
           }
         ],
         "weapons": [
@@ -5020,6 +5050,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Fire Support"
             ],
@@ -5206,6 +5237,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Rites of Battle",
               "The Imperium’s Sword"
@@ -5358,6 +5390,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Brutalis Charge"
             ],
@@ -5567,6 +5600,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Techmarine",
               "Blessing of the Omnissiah",
@@ -5698,6 +5732,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Vanguard Assault"
             ],
@@ -5944,6 +5979,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Combat Support"
             ],
@@ -6122,6 +6158,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Objective Secured",
               "Target Elimination"
@@ -6481,6 +6518,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Outrider Escort"
             ],
@@ -6636,6 +6674,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Multi-spectrum Array"
             ],
@@ -6655,7 +6694,9 @@
               "Adeptus Astartes"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Haywire Mine"
+            ]
           }
         ],
         "weapons": [
@@ -6769,6 +6810,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Guerrilla Tactics"
             ],
@@ -7068,6 +7110,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to the above unit even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the <span class=\"kwb\">LEADER</span> units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Astartes Banner",
               "Deeds of Heroism"
@@ -7172,6 +7215,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Rites of Battle",
               "Refuse to Yield"
@@ -7370,6 +7414,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Litany of Hate",
               "Spiritual Leader"
@@ -7467,6 +7512,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Unyielding in the Face of the Foe"
             ],
@@ -7617,6 +7663,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Teleport Homer",
               "Fury of the First"
@@ -7858,6 +7905,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Siege Shield"
             ],
@@ -8007,6 +8055,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Strafing Run"
             ],
@@ -8220,6 +8269,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Armoured Resilience"
             ],
@@ -8524,6 +8574,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Decimator Protocols"
             ],
@@ -8727,6 +8778,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a unit it can lead even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Tactical Precision",
               "Deadly Terror"
@@ -8846,6 +8898,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a unit it can lead even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Tactical Precision",
               "Target Priority"
@@ -9103,6 +9156,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Shock Assault"
             ],
@@ -9356,6 +9410,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Thunderstrike"
             ],
@@ -9482,6 +9537,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Rotating Death"
             ],
@@ -9650,6 +9706,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Reposition Under Covering Fire",
               "Mark the Target"
@@ -9830,6 +9887,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Ferocious Assault"
             ],
@@ -9997,6 +10055,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "For the Chapter!",
               "Designer’s Note"
@@ -10181,6 +10240,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Close-quarters Firepower"
             ],
@@ -10318,6 +10378,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Assault Ramp"
             ],
@@ -10518,6 +10579,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Signum",
               "Armorium Cherub",
@@ -10989,6 +11051,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Sternguard Focus"
             ],
@@ -11298,6 +11361,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Psychic Hood",
               "Mental Fortress (Psychic)"
@@ -11434,6 +11498,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Targeter Optics"
             ],
@@ -11626,6 +11691,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a unit it can lead even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Tactical Precision",
               "Strategic Dispersal"
@@ -11743,6 +11809,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Assault Vehicle"
             ],
@@ -12001,6 +12068,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to one of the above units even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the <span class=\"kwb\">LEADER</span> units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Astartes Banner",
               "Keep the Banner High"
@@ -12230,6 +12298,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Rites of Battle",
               "Master of Deceit"
@@ -12346,6 +12415,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Annihilator Protocols"
             ],
@@ -12508,6 +12578,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Aquilon Optics"
             ],
@@ -12705,6 +12776,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Tempormortis",
               "Silent Fury"
@@ -12804,6 +12876,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Thunderous Impact"
             ],
@@ -12838,6 +12911,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Thunderous Impact"
             ],
@@ -13031,6 +13105,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Annihilator"
             ],
@@ -13232,6 +13307,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Destructor"
             ],
@@ -13433,6 +13509,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Duty Eternal"
             ],
@@ -13693,6 +13770,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Fearsome Assault",
               "Terror Troops (Aura)"
@@ -13713,7 +13791,10 @@
               "Adeptus Astartes"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Grapnel Launcher",
+              "Reiver Grav-chute"
+            ]
           }
         ],
         "weapons": [
@@ -13863,6 +13944,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Emergency Combat Embarkation"
             ],
@@ -14062,6 +14144,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Executioner"
             ],
@@ -14326,6 +14409,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Self Repair"
             ],
@@ -14451,6 +14535,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Pinning Bombardment"
             ],
@@ -14602,6 +14687,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Astartes Banner",
               "Command Squad"
@@ -14788,6 +14874,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to one of the above units even if one CAPTAIN, CHAPTER MASTER or LIEUTENANT model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Narthecium",
               "Gene-seed Recovery"
@@ -14918,6 +15005,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "You can attach this model to one of the above units even if one CAPTAIN, CHAPTER MASTER or LIEUTENANT model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.",
             "unit_ability_names": [
               "Astartes Banner",
               "Unbreakable Duty"
@@ -15048,6 +15136,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Hammer of Wrath"
             ],
@@ -15300,6 +15389,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Tempormortis",
               "Indomitable Assault"
@@ -15410,6 +15500,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Litany of Hate",
               "Zealot’s Fervour"
@@ -15522,6 +15613,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Unorthodox Strategist (Aura)",
               "Master of the Fleet"
@@ -15640,6 +15732,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Author of the Codex",
               "Ultramarines Bodyguard",
@@ -15772,6 +15865,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Hood of Hellfire",
               "Master of Prescience (Psychic)"
@@ -15935,6 +16029,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Inspiring Leader",
               "Master Tactician"
@@ -16041,6 +16136,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to the above unit even if a Marneus Calgar unit has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Knight Champion of Macragge",
               "Honour or Death"
@@ -16178,6 +16274,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Ultramarines Honour Guard",
               "Glory of Ultramar"
@@ -16329,6 +16426,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Press the Attack",
               "Honour of Ultramar"
@@ -16458,6 +16556,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Second Company Banner",
               "Strategium Command"
@@ -16513,6 +16612,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Second Company Banner",
               "Strategium Command"
@@ -16732,6 +16832,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Rites of Tempering",
               "Iron Father",
@@ -16872,6 +16973,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Cold and Calculating",
               "Cerebrex Logic Engine"
@@ -16999,6 +17101,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Warden of the Imperium Nihilus",
               "Death Mask of Sanguinius"
@@ -17098,6 +17201,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "The Quickening (Psychic)",
               "Transfixing Gaze (Aura; Psychic)"
@@ -17252,6 +17356,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Aura of Fervour (Aura)",
               "Miraculous Saviour"
@@ -17333,6 +17438,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Redeemer of the Lost",
               "Mass of Doom"
@@ -17429,6 +17535,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to one of the above units, even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Sanguinary Priest",
               "Blood Chalice"
@@ -17521,6 +17628,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Guardian of the Lost",
               "Fury Unbound"
@@ -17619,6 +17727,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Angelic Visage",
               "Heirs of Azkaellon"
@@ -17641,7 +17750,9 @@
               "Blood Angels"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Sanguinary Banner"
+            ]
           }
         ],
         "weapons": [
@@ -17777,6 +17888,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Black Rage",
               "Driven by Fury"
@@ -17969,6 +18081,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Overcharged Engines"
             ],
@@ -18199,6 +18312,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Black Rage",
               "An Honourable Death in Combat"
@@ -18486,6 +18600,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Black Rage",
               "Visions of Heresy"
@@ -18868,6 +18983,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Black Rage",
               "Savage Fury"
@@ -19135,6 +19251,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Rites of Battle",
               "Finest Hour"
@@ -19308,6 +19425,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Forlorn Hero",
               "Black Rage",
@@ -19483,6 +19601,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Lost to Fury",
               "Black Rage",
@@ -19723,6 +19842,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Supreme Grand Master",
               "Masterful Tactician"
@@ -19828,6 +19948,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Grand Master of the Deathwing",
               "Strikes of Retribution"
@@ -19940,6 +20061,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Exemplar of Hate",
               "Feared Interrogator"
@@ -20062,6 +20184,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Psychic Hood",
               "Engulfing Fear (Psychic)"
@@ -20201,6 +20324,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Teleport Homer",
               "Deathwing"
@@ -20221,7 +20345,9 @@
               "Dark Angels"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Watcher in the Dark"
+            ]
           }
         ],
         "weapons": [
@@ -20476,6 +20602,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Teleport Homer",
               "Inner Circle"
@@ -20496,7 +20623,9 @@
               "Dark Angels"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Watcher in the Dark"
+            ]
           }
         ],
         "weapons": [
@@ -20632,6 +20761,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Icon of Old Caliban (Aura)"
             ],
@@ -20747,6 +20877,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Lightning-fast Manoeuvres"
             ],
@@ -20897,6 +21028,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Stasis Bomb"
             ],
@@ -21005,6 +21137,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Knights of Caliban"
             ],
@@ -21160,6 +21293,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Storm of Vengeance"
             ],
@@ -21316,6 +21450,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Grand Master of the Ravenwing",
               "Cut Off Their Escape"
@@ -21459,6 +21594,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Intractable Will",
               "The Spiritshield Helm"
@@ -21555,6 +21691,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Primarch of the First Legion",
               "The Emperor’s Shield",
@@ -21687,6 +21824,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Narthecium",
               "Astartes Banner",
@@ -21879,6 +22017,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Braziers of Judgement",
               "Enmity for the Unworthy"
@@ -21993,6 +22132,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "High King of Fenris",
               "Guile of the Wolf (Aura)"
@@ -22120,6 +22260,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "War Howl",
               "Battle-lust"
@@ -22218,6 +22359,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Wind Walker (Psychic)",
               "Tempest’s Wrath (Psychic)"
@@ -22353,6 +22495,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Slayer’s Oath",
               "Oathbound"
@@ -22466,6 +22609,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Legendary Tenacity",
               "Ancient Tactician"
@@ -22648,6 +22792,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Berserk Charge"
             ],
@@ -22806,6 +22951,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Cunning Hunters"
             ],
@@ -23012,6 +23158,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Iron Priest",
               "Gift of the Iron Wolf",
@@ -23120,6 +23267,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Savage Frenzy"
             ],
@@ -23223,6 +23371,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Murder-maker (Aura)",
               "Bestial Fury"
@@ -23340,6 +23489,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Anvil of Endurance",
               "Champion of the Kingsguard"
@@ -23436,6 +23586,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Rugged Resilience"
             ],
@@ -23602,6 +23753,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Thunderous Charge"
             ],
@@ -23788,6 +23940,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Predatory Instinct",
               "Hunting Hounds"
@@ -23856,6 +24009,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Fervour of the Ancients (Aura)"
             ],
@@ -24105,6 +24259,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Healing Balms",
               "Litany of Hate"
@@ -24198,6 +24353,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Tempered Ferocity",
               "Heroic Last Stand"
@@ -24399,6 +24555,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Let Loose the Wolves",
               "Headhunters",
@@ -24452,6 +24609,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Let Loose the Wolves",
               "Headhunters",
@@ -24586,6 +24744,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Hammer Blow"
             ],
@@ -24691,6 +24850,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Bestial Rage",
               "Violent Fury"
@@ -24832,6 +24992,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Deadly Stalkers",
               "Hunting Hounds"
@@ -24874,6 +25035,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Deadly Stalkers",
               "Hunting Hounds"
@@ -25145,6 +25307,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Blackstar Cluster Launcher"
             ],
@@ -25168,7 +25331,10 @@
               "Deathwatch"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Auspex Array",
+              "Infernum Halo-launcher"
+            ]
           }
         ],
         "weapons": [
@@ -25347,6 +25513,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Spectrus Doctrines"
             ],
@@ -25371,6 +25538,8 @@
             ],
             "model_keyword_names": [],
             "wargear_ability_names": [
+              "Helix Gauntlet",
+              "Infiltrator Comms Array",
               "Instigator Bolt Carbine"
             ]
           }
@@ -25621,6 +25790,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Fortis Doctrines"
             ],
@@ -26111,6 +26281,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Indomitor Doctrines"
             ],
@@ -26345,6 +26516,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Death to the Alien"
             ],
@@ -26634,6 +26806,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Strategic Knowledge",
               "Watch Master"
@@ -26729,6 +26902,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Tactical Instinct",
               "Unstoppable Champion"
@@ -26826,6 +27000,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Terminatus Assault",
               "Teleport Homer"
@@ -27117,6 +27292,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Talonstrike Doctrines"
             ],
@@ -27157,6 +27333,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Talonstrike Doctrines"
             ],
@@ -27457,6 +27634,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Death to the Alien"
             ],
@@ -27510,6 +27688,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Death to the Alien"
             ],
@@ -27968,6 +28147,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Unto the Anvil",
               "Lord of the Pyroclasts"
@@ -28076,6 +28256,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Forgefather",
               "Seeker of the Unfound"
@@ -28210,6 +28391,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Icon of Obstinacy",
               "Rampart"
@@ -28301,6 +28483,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Signum Array",
               "Siege Captain"
@@ -28408,6 +28591,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Oath of Rynn",
               "To the Last"
@@ -28520,6 +28704,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Shadowmaster",
               "Echo of the Ravenspire"
@@ -28629,6 +28814,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Master of Shadows",
               "Blackwing Mantle"
@@ -28755,6 +28941,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "For the Khan!",
               "Trophy Taker"
@@ -28861,6 +29048,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Spear of Chogoris",
               "Skilled Riders"
@@ -29001,6 +29189,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Assault Vehicle"
             ],
@@ -29271,6 +29460,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Aquilon Optics"
             ],
@@ -29473,8 +29663,8 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
-              "Ferocious Assault",
               "Priority Target Acquisition"
             ],
             "rule_names": [
@@ -29642,8 +29832,8 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
-              "Rotating Death",
               "Reaping Tally"
             ],
             "rule_names": [
@@ -29829,8 +30019,8 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
-              "Executioner",
               "Interception Strike"
             ],
             "rule_names": [
@@ -30113,8 +30303,8 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
-              "Emergency Combat Embarkation",
               "Stabilised Disembarkation"
             ],
             "rule_names": [
@@ -30341,6 +30531,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Litanies of the Devout",
               "Temple Relics"
@@ -30396,6 +30587,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Litanies of the Devout",
               "Temple Relics"
@@ -30538,6 +30730,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to one of the units on the left even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Vehement Aggression",
               "Prioritised Eradication"
@@ -30695,6 +30888,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Crusade of Wrath",
               "High Marshal"
@@ -30813,6 +31007,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Armour of Faith",
               "Sigismund’s Heir"
@@ -30933,6 +31128,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Inspirational Exemplar",
               "Pious Fervour"
@@ -31062,6 +31258,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Exploit Their Cowardice"
             ],
@@ -31296,6 +31493,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Righteous Zeal"
             ],
@@ -31333,6 +31531,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Righteous Zeal"
             ],
@@ -31583,6 +31782,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Remorseless Persecution",
               "Condemnatory Annihilation"
@@ -31725,6 +31925,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to one of the above units even if one Captain, Chapter Master, Execrator or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Vengeful Exhortation",
               "Martial Honour"
@@ -31817,8 +32018,8 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
-              "Sternguard Focus",
               "Virtuous Onslaught"
             ],
             "rule_names": [
@@ -32098,9 +32299,9 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Teleport Homer",
-              "Fury of the First",
               "Judgement of the Weak"
             ],
             "rule_names": [
@@ -32327,6 +32528,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Assault Ramp",
               "Legacy of Jerulas"
@@ -32520,6 +32722,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Greater Daemon of Khorne (Aura)",
               "Rage Embodied (Aura)",
@@ -32630,6 +32833,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Greater Daemon of Khorne (Aura)",
               "Daemon Lord of Khorne (Aura)",
@@ -32849,6 +33053,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Lord of Decapitations",
               "Skulls for Khorne"
@@ -32930,6 +33135,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Bloodmaster",
               "A Gory Path"
@@ -33007,6 +33213,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Skullmaster's Fury",
               "Devastating Charge"
@@ -33100,6 +33307,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Blood Throne"
             ],
@@ -33187,6 +33395,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Pack Leader",
               "Prey of the Blood God"
@@ -33284,6 +33493,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Bane of Cowards"
             ],
@@ -33378,6 +33588,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Brass Stampede"
             ],
@@ -33495,6 +33706,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Hunters from the Warp"
             ],
@@ -33591,6 +33803,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Skulls of the Fallen"
             ],
@@ -33697,6 +33910,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Shadow of Khorne (Aura)",
               "Cover",
@@ -33756,6 +33970,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Greater Daemon of Tzeentch (Aura)",
               "One Head Looks Forward",
@@ -33876,6 +34091,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Greater Daemon of Tzeentch (Aura)",
               "Daemon Lord of Tzeentch (Aura)",
@@ -34046,6 +34262,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Formless Horror"
             ],
@@ -34159,6 +34376,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Fateskimmer",
               "Rider of the Immaterial Winds"
@@ -34296,6 +34514,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Fluxmaster",
               "Altered Reality (Psychic)"
@@ -34411,6 +34630,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "P'tarix's Sorcerous Syphon (Aura)"
             ],
@@ -34485,6 +34705,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Changecaster",
               "Storm of Mutating Sorcery (Psychic)"
@@ -34601,6 +34822,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Blazing Warpfire (Psychic)",
               "Flames of Change (Psychic)"
@@ -34714,6 +34936,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Split"
             ],
@@ -34833,6 +35056,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Split"
             ],
@@ -34868,6 +35092,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Split"
             ],
@@ -35014,6 +35239,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Bounding Leaps"
             ],
@@ -35112,6 +35338,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Slashing Dive"
             ],
@@ -35195,6 +35422,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Eldritch Flames (Psychic)"
             ],
@@ -35324,6 +35552,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Greater Daemon of Nurgle (Aura)",
               "Virulent Blessing (Psychic)",
@@ -35443,6 +35672,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Greater Daemon of Nurgle (Aura)",
               "Daemon Lord of Nurgle (Aura)",
@@ -35642,6 +35872,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Poxbringer",
               "Feculent Despair (Aura Psychic)"
@@ -35723,6 +35954,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Keep Counting!",
               "Meet Your Quota!"
@@ -35820,6 +36052,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Blessed by the Plague God",
               "Tally of Pestilence"
@@ -35900,6 +36133,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Jolly Gutpipes",
               "Disease of Mirth (Aura)"
@@ -35979,6 +36213,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Beast Handler",
               "Seed the Garden of Nurgle"
@@ -36075,6 +36310,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Infected Outbreak"
             ],
@@ -36171,6 +36407,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Mischief Makers"
             ],
@@ -36253,6 +36490,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Grotesque Regeneration"
             ],
@@ -36335,6 +36573,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Death's Heads"
             ],
@@ -36473,6 +36712,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Shroud of Flies (Aura)",
               "Diseased Cover",
@@ -36532,6 +36772,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Greater Daemon of Slaanesh (Aura)",
               "No Prey Can Evade",
@@ -36685,6 +36926,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Greater Daemon of Slaanesh (Aura)",
               "Daemon Lord of Slaanesh (Aura)",
@@ -36911,6 +37153,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Harmonic Alignment",
               "Discordant Disruption (Aura)"
@@ -37023,6 +37266,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "The Eternal Dance"
             ],
@@ -37097,6 +37341,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Prince of Slaanesh",
               "Delightful Agonies"
@@ -37251,6 +37496,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Swallow Energy (Psychic)",
               "Horrible Fascination (Psychic)"
@@ -37348,6 +37594,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Tormentbringer (Aura)",
               "Hysterical Frenzy"
@@ -37483,6 +37730,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Tranceweaver",
               "Symphony of Pain (Psychic)"
@@ -37562,6 +37810,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Horrifying Beauty"
             ],
@@ -37659,6 +37908,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Soporific Musk"
             ],
@@ -37739,6 +37989,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Unholy Speed"
             ],
@@ -37859,6 +38110,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Cutting Down the Foe"
             ],
@@ -37994,6 +38246,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "The Dark Master (Aura)",
               "Shadow Form"
@@ -38130,6 +38383,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Scuttling Walker"
             ],
@@ -38336,6 +38590,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Daemonic Lord",
               "Prince of Darkness (Aura)",
@@ -38442,6 +38697,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Malefic Destruction",
               "Harbinger of Death"
@@ -38556,6 +38812,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Infused with the Blessings of Nurgle"
             ],
@@ -39001,6 +39258,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Diseased Malice",
               "Froth-spattered Frenzy"
@@ -39385,6 +39643,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Fire Support"
             ],
@@ -39541,6 +39800,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Lethal Ichor"
             ],
@@ -39620,6 +39880,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Assault Ramp"
             ],
@@ -39818,6 +40079,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Metalophagic Infection"
             ],
@@ -40053,6 +40315,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Death Guard Defenders",
               "Fevered Strategist",
@@ -40175,6 +40438,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "The Destroyer Hive",
               "Eater Plague (Psychic)"
@@ -40281,6 +40545,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Vector of Disease",
               "Unholy Resilience"
@@ -40386,6 +40651,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Gift of Contagion (Psychic)",
               "Pestilent Fallout (Psychic)"
@@ -40524,6 +40790,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Curse of the Walking Pox"
             ],
@@ -40610,6 +40877,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Hovering Death"
             ],
@@ -40731,6 +40999,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a <span class=\"kwb\">PLAGUE</span> <span class=\"kwb\">MARINES</span> or <span class=\"kwb\">POXWALKERS</span> unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Sickening Vitality",
               "Tocsin of Misery (Aura)"
@@ -40851,6 +41120,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a <span class=\"kwb\">PLAGUE</span> <span class=\"kwb\">MARINES</span> unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Blinding Spray",
               "Putrefying Stink"
@@ -40953,6 +41223,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a <span class=\"kwb\">PLAGUE</span> <span class=\"kwb\">MARINES</span> unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Foul Infusion",
               "Extraction of Fresh Disease"
@@ -41077,6 +41348,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a <span class=\"kwb\">PLAGUE</span> <span class=\"kwb\">MARINES</span> unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Tainted Narthecium",
               "Inflamed Infections"
@@ -41179,6 +41451,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a <span class=\"kwb\">PLAGUE</span> <span class=\"kwb\">MARINES</span> unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Malicious Calculations",
               "Sevenfold Chant"
@@ -41294,6 +41567,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Silent Bodyguard",
               "Death Approaches"
@@ -41441,6 +41715,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Blistering Fusillade"
             ],
@@ -41688,6 +41963,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Tank Hunters"
             ],
@@ -41842,6 +42118,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Spore-laced Shock Waves"
             ],
@@ -42022,6 +42299,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Lord of the Death Guard",
               "Host of Plagues"
@@ -42172,6 +42450,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Virulent Aura",
               "Blight Bombardment"
@@ -42275,6 +42554,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Hail of Corrosive Disease"
             ],
@@ -42511,6 +42791,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Putrescent Fog (Aura)",
               "Diseased Cover",
@@ -42594,6 +42875,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Horrifying Visage",
               "Enfeebling Miasma (Aura)"
@@ -42715,6 +42997,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": "<i>You can attach this model to a <span class=\"kwb\">PLAGUE</span> <span class=\"kwb\">MARINES</span> unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
             "unit_ability_names": [
               "Unclean Icon",
               "Blessed Icon of Disease"
@@ -42817,6 +43100,7 @@
             ],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Gift of Poxes",
               "Shroud of Disease"
@@ -42935,6 +43219,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Explosive Blight"
             ],
@@ -43035,6 +43320,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Virulent Blessing (Psychic)",
               "Deluge of Nurgle (Aura)"
@@ -43161,6 +43447,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Daemon Lord of Nurgle (Aura)",
               "Nurgle’s Rot (Psychic)"
@@ -43354,6 +43641,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Infected Outbreak"
             ],
@@ -43374,7 +43662,10 @@
               "Plague Legions"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Daemonic Icon",
+              "Instrument of Chaos"
+            ]
           }
         ],
         "weapons": [
@@ -43457,6 +43748,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Death’s Heads"
             ],
@@ -43477,7 +43769,10 @@
               "Plague Legions"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [
+              "Daemonic Icon",
+              "Instrument of Chaos"
+            ]
           }
         ],
         "weapons": [
@@ -43602,6 +43897,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Grotesque Regeneration"
             ],
@@ -43691,6 +43987,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Mischief Makers"
             ],
@@ -43780,6 +44077,7 @@
             "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "leader_restrictions": null,
+            "leader_footer": null,
             "unit_ability_names": [
               "Scuttling Walker",
               "Barrage of Filth"
