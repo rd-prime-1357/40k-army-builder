@@ -32757,18 +32757,7 @@
       "is_base_equipment": true
      }
     ],
-    "wargear_options": [
-     {
-      "model_group": "All",
-      "models_per_trigger": null,
-      "max_substitutions_per_trigger": null,
-      "weapon_replaced": "Lash of Khorne",
-      "replacement_weapon_name": "Bloodflail",
-      "points_cost": null,
-      "is_choice": true,
-      "option_group": "B"
-     }
-    ],
+    "wargear_options": [],
     "other_options": [],
     "bundled_swaps": [
      {

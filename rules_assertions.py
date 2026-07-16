@@ -73,6 +73,50 @@ class Sources:
                 self._cache['lo'] = json.load(f)
         return self._cache['lo']
 
+    def units(self):
+        if 'un' not in self._cache:
+            with open(os.path.join(self.dir, 'units.json'), encoding='utf-8') as f:
+                self._cache['un'] = json.load(f)
+        return self._cache['un']
+
+    def ds_wargear_abilities(self):
+        if 'dw' not in self._cache:
+            with open(os.path.join(self.dir, 'datasheet_wargear_abilities.json'),
+                      encoding='utf-8') as f:
+                self._cache['dw'] = json.load(f)
+        return self._cache['dw']
+
+    def options(self):
+        if 'op' not in self._cache:
+            self._cache['op'] = list(pipe_rows(os.path.join(self.dir, 'Datasheets_options.csv')))
+        return self._cache['op']
+
+    def option_text(self, ds_id, line):
+        for r in self.options():
+            if r['datasheet_id'] == ds_id and r['line'] == str(line):
+                return re.sub(r'<[^>]+>', ' ', r['description'])
+        return ''
+
+    def mfm_all(self):
+        """Every MFM faction pack, concatenated. The WARGEAR OPTIONS blocks in here are
+        the ONLY source that says an item costs points. Silence in wargear_points.json is
+        not evidence (D107) — silence HERE is."""
+        if 'mfm' not in self._cache:
+            txt = []
+            for fn in sorted(os.listdir(self.dir)):
+                if fn.startswith('MFM_') and fn.endswith('.txt'):
+                    with open(os.path.join(self.dir, fn), encoding='utf-8-sig',
+                              errors='replace') as f:
+                        txt.append(f.read())
+            self._cache['mfm'] = '\n'.join(txt).lower()
+        return self._cache['mfm']
+
+    def index_html(self):
+        if 'ix' not in self._cache:
+            with open(os.path.join(self.dir, 'index.html'), encoding='utf-8') as f:
+                self._cache['ix'] = f.read()
+        return self._cache['ix']
+
     def wargear_ability(self, ds_id, name):
         """The ability text on ONE datasheet. This is the only legitimate lookup —
         never key on the ability name alone (D70)."""
@@ -122,7 +166,265 @@ def printed_stat(S, ds_id, stat, expect, group=None):
 # ── the facts ─────────────────────────────────────────────────────────────────
 # Each entry: (id, one-line statement, source, callable(S) -> (ok, detail))
 
+
+# ── E14 / B18 helpers ─────────────────────────────────────────────────────────
+
+def _e14_quals(S):
+    """The options the engine seeds. Mirrors loIsFreeDefaultAdd's data-side test."""
+    wp = S.wargear_points()
+    out = []
+    for uid, v in S.loadouts().items():
+        if uid.startswith('_') or not isinstance(v, dict):
+            continue
+        priced = (wp.get(uid) or {}).get('items') or {}
+        for o in v.get('options', []):
+            if o.get('type') != 'add':
+                continue
+            if o.get('requires_weapon') or o.get('pool_id') or o.get('per_n_models'):
+                continue
+            if o.get('max_total') != 1:
+                continue
+            item = o.get('equipment') or o.get('adds_weapon')
+            if not item:
+                continue
+            if item.lower() in priced:
+                continue
+            out.append((uid, o['id'], item))
+    return out
+
+def e14_free(S):
+    """Rebuild the MFM prices from the MFM itself with the real parser, then check that
+    no add the engine seeds is priced FOR ITS OWN UNIT. Grepping the whole corpus is not
+    good enough: 'per Multi-melta 10 pts' is a Sororitas line, and a Land Raider's free
+    multi-melta must not be condemned by it."""
+    import glob
+    import mfm_points_parser as M
+    paths = sorted(glob.glob(os.path.join(S.dir, 'MFM_*.txt')))
+    built, _ = M.build_wargear_points(paths,
+                                      os.path.join(S.dir, 'units.json'),
+                                      os.path.join(S.dir, 'unit_loadouts.json'),
+                                      os.path.join(S.dir, 'Datasheets.csv'))
+    # Compare the PRICES, not the provenance string: the same item is printed in several
+    # chapter packs at the same cost, so which file gets cited depends on scan order.
+    def prices(d):
+        return {k: {i: v['cost'] for i, v in (val.get('items') or {}).items()}
+                for k, val in d.items() if not k.startswith('_')}
+    fresh = prices(built)
+    if fresh != prices(S.wargear_points()):
+        return False, 'wargear_points.json does not rebuild from the MFM — it is stale'
+    bad = [(u, i) for u, _, i in _e14_quals(S) if i.lower() in (fresh.get(u) or {})]
+    return (not bad), f'{len(_e14_quals(S))} seeded adds, {len(bad)} priced for their own unit' + \
+        (f': {bad}' if bad else '')
+
+def e14_count(S):
+    q = _e14_quals(S)
+    units = {u for u, _, _ in q}
+    return (len(q) == 53 and len(units) == 33), f'{len(q)} options across {len(units)} units'
+
+def b18_named_body(S):
+    lines = [re.sub(r'<[^>]+>', ' ', r['description'])
+             for r in S.options() if r['datasheet_id'] == '000001044']
+    per5 = [t for t in lines if re.search(r'for every 5 models in this unit', t, re.I)]
+    named = [t for t in per5 if re.search(r'plague marines?[\u2019\']?s?\b', t, re.I)]
+    return (len(per5) == 5 and len(named) == 5), f'{len(named)}/{len(per5)} per-5 lines name the body model'
+
+
+def b46_orphaned(S):
+    """B46. datasheet_wargear_abilities.json (built from Datasheets_abilities.csv type=Wargear)
+    holds ability text for OPTION-granted items. units.json's wargear_ability_names carries
+    DEFAULT-issue gear only, so while the popups read that field alone, 12 abilities across 8
+    units were unreachable. The fix is the channel, not the data: the popups now name their
+    abilities from datasheet_wargear_abilities.json UNION units.json (allWargearAbilityNames),
+    which makes the unreachable count structurally zero. This asserts BOTH halves — that the
+    engine really does source it that way, and that nothing in the ds file falls outside the
+    union. Behaviour (the three-way carrier filter) is proven in stat_check.js.
+    """
+    import os
+    src = open(os.path.join(S.dir, 'index.html'), encoding='utf-8').read()
+    if 'function allWargearAbilityNames(' not in src:
+        return False, 'index.html does not define allWargearAbilityNames — popups still read units.json only'
+    calls = src.count('allWargearAbilityNames(raw)')
+    if calls < 2:
+        return False, f'allWargearAbilityNames used {calls}x — both popups (browse + configured) must use it'
+    units = {}
+    for block in S.units():
+        for u in block.get('units', []):
+            units[u.get('unit_id')] = u
+    unreachable = []
+    for uid, abils in S.ds_wargear_abilities().items():
+        if uid.startswith('_') or uid not in units:
+            continue
+        reachable = set(abils)                       # the ds file half of the union
+        for mg in units[uid].get('model_groups', []):
+            reachable |= set(mg.get('wargear_ability_names') or [])
+        for name in abils:
+            if name not in reachable:
+                unreachable.append((uid, name))
+    return (len(unreachable) == 0), f'{len(unreachable)} option-granted wargear abilities the popup cannot list'
+
+
+def repro_gate(S):
+    """D123: the executable form of 'the parser is fresh'. Runs the full pipeline from
+    source and asserts byte-identical reproduction of the committed unit_loadouts.json.
+    Subsumes the old P1 function-name check: it does not care what the parser is called
+    or which functions it defines, only whether it still produces what is committed, so
+    no wrong copy — stale, partial, or renamed — can pass."""
+    import os, importlib.util
+    p = os.path.join(S.dir, 'repro_check.py')
+    if not os.path.exists(p):
+        return False, 'repro_check.py not found — the reproduction gate is missing'
+    spec = importlib.util.spec_from_file_location('repro_check', p)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.repro(S.dir)
+
+
+def manifest_gate(S):
+    """D123: file-integrity manifest. Any guarded pipeline file arriving as the wrong
+    copy fails here and names the file — the cheap first line the repro gate backs up."""
+    import os, importlib.util
+    p = os.path.join(S.dir, 'pipeline_manifest.py')
+    if not os.path.exists(p):
+        return False, 'pipeline_manifest.py not found'
+    spec = importlib.util.spec_from_file_location('pipeline_manifest', p)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.check(S.dir)
+
+
 ASSERTIONS = [
+
+    # ── P1. Parser freshness gate, machine-enforced (D118/D123). Prose could not hold
+    # this — the stale copy survived twelve consecutive sessions of a written checklist,
+    # and the original P1 (four function names must exist) was too weak: it passed on any
+    # wrong copy that kept the names. P1 is now the reproduction gate: run the pipeline
+    # from source, demand byte-identical output. Nothing else proves the file is fresh.
+    ('P1',
+     'The pipeline reproduces the committed unit_loadouts.json byte-for-byte from source: '
+     'loadout_parser.py regenerates every entry (bar the two hand-authored seeds), the five '
+     'faction web.txt passes and the datasheets pass refine it, and the result matches. A '
+     'stale, partial, or renamed parser cannot pass.',
+     'repro_check.py (D123)',
+     lambda S: repro_gate(S)),
+
+    # ── P3. File-integrity manifest (D123). Guards every pipeline file by content hash,
+    # including the four the repro gate does not touch (index.html, units.json,
+    # wargear_points.json, datasheet_wargear_abilities.json). Regenerated at session close.
+    ('P3',
+     'Every guarded pipeline file matches pipeline_manifest.json. A wrong copy of any of '
+     'them — output, parser, harness or assertion file — fails here and names the file. '
+     'Regenerate the manifest at session close (python3 pipeline_manifest.py --write).',
+     'pipeline_manifest.json (D123)',
+     lambda S: manifest_gate(S)),
+
+    # ── B46. The Reiver's grav-chute has rules text and the app cannot show it. The text
+    # is NOT missing from the data — it is in Datasheets_abilities.csv as a Wargear row.
+    # units.json only carries DEFAULT-issue wargear abilities, and the popup reads units.json.
+    ('B46-1',
+     "Reiver Grav-chute and Grapnel Launcher have Wargear ability text on the Reiver "
+     "datasheet, and units.json does not list either — so the popup cannot show them. The "
+     "data is present; the channel is wrong.",
+     'Datasheets_abilities.csv 000002718 lines 5-6 (type=Wargear)',
+     lambda S: (
+         {r['name'] for r in S.abilities()
+          if r['datasheet_id'] == '000002718' and r['type'] == 'Wargear'}
+         == {'Grapnel Launcher', 'Reiver Grav-chute'},
+         'Wargear rows on 000002718: ' + ', '.join(sorted(
+             r['name'] for r in S.abilities()
+             if r['datasheet_id'] == '000002718' and r['type'] == 'Wargear')))),
+
+    ('B46-2',
+     'The gap was systemic, not a Reiver bug: 12 option-granted wargear abilities across 8 '
+     'units have text in datasheet_wargear_abilities.json that units.json never lists, so no '
+     'popup can reach them. B46 landed: the popups name their abilities from the ds file '
+     'unioned with units.json, so the unreachable count is ZERO. Both popups must use it.',
+     'datasheet_wargear_abilities.json; index.html allWargearAbilityNames (D122)',
+     b46_orphaned),
+
+
+    # ── E14. A free add defaults to selected. "Free" is a claim about the MFM, not
+    # about our derived file, so it is checked against the MFM itself (D107).
+    ('E14-1',
+     'Every add the engine seeds ON is unpriced. Checked by rebuilding the prices from the '
+     'MFM WARGEAR OPTIONS blocks with the real parser and confirming no seeded item is '
+     'priced FOR ITS OWN UNIT — so seeding cannot inflate a list. Also proves '
+     'wargear_points.json is not stale against the MFM.',
+     'MFM_*.txt WARGEAR OPTIONS blocks (via mfm_points_parser.build_wargear_points)',
+     lambda S: e14_free(S)),
+
+    ('E14-2',
+     'The seeding rule is total, not a hand-picked list: an add qualifies iff it is '
+     'type=add, has no requires_weapon, no pool_id, no per_n_models, max_total == 1, and '
+     'its item is unpriced. 53 options across 33 units qualify today.',
+     'unit_loadouts.json; wargear_points.json',
+     lambda S: e14_count(S)),
+
+    # ── B18. The scope of a datasheet option is whatever its own sentence says. This is
+    # the fact the S56 prompt got wrong: it claimed weapon swaps stay inside their model
+    # group. The source says otherwise, and these two rows are why.
+    ('B18-1',
+     'Terminator Assault Squad line 1 says "Any number of models" — a generic model, not '
+     '"Assault Terminator". The swap therefore reaches the Assault Terminator Sergeant, '
+     'and a weapon swap is NOT confined to the body group.',
+     'Datasheets_options.csv 000000118 line 1',
+     lambda S: (bool(re.search(r'any number of models', S.option_text('000000118', 1), re.I))
+                and not re.search(r'assault terminator[\u2019\']s', S.option_text('000000118', 1), re.I),
+                repr(S.option_text('000000118', 1))[:110])),
+
+    ('B18-2',
+     'Reiver Squad line 2 gates on the Reiver SERGEANT holding a bolt carbine, and the '
+     'only source of a bolt carbine is line 1\'s "All models in this unit" swap. Line 2 is '
+     'unreachable text unless line 1 reaches the Sergeant. The gate proves the scope.',
+     'Datasheets_options.csv 000002718 lines 1-2',
+     lambda S: (bool(re.search(r'all models in this unit', S.option_text('000002718', 1), re.I))
+                and 'bolt carbine' in S.option_text('000002718', 1).lower()
+                and bool(re.search(r'if the reiver sergeant is equipped with 1 bolt carbine',
+                                   S.option_text('000002718', 2), re.I)),
+                'line1=%r line2=%r' % (S.option_text('000002718', 1)[:48],
+                                       S.option_text('000002718', 2)[:48]))),
+
+    ('B18-3',
+     'The converse holds and bounds the fix: where the sentence names the BODY model type '
+     '("1 Plague Marine\'s boltgun"), the leader is excluded. Every one of Plague Marines\' '
+     'five per-5 swap lines names "Plague Marine", so the Plague Champion is correctly out '
+     'of scope. B18 must not widen these.',
+     'Datasheets_options.csv 000001044',
+     lambda S: b18_named_body(S)),
+
+
+    ('B18-4',
+     'D116 is now IN THE DATA, not just in the log: Terminator Assault Squad\'s generic '
+     '"Any number of models" swap is scoped to the Assault Terminator Sergeant group as '
+     'well as the body. Without this the Sergeant can never drop his storm shield and '
+     'D112\'s conferred-W4 override can never revert.',
+     'unit_loadouts.json 000000118 (from Datasheets_options.csv 000000118 line 1)',
+     lambda S: (
+         'Assault Terminator Sergeant' in {o.get('scope') for o in S.loadouts()['000000118']['options']
+                                           if o.get('replacement') == 'Twin lightning claws'},
+         'scopes: ' + ', '.join(sorted(str(o.get('scope')) for o in
+                                       S.loadouts()['000000118']['options'])))),
+
+    ('B18-5',
+     'The converse holds IN THE DATA too: Plague Marines\' per-5 swaps name the body model '
+     '("1 Plague Marine\'s boltgun"), so no option of theirs may be scoped to the Plague '
+     'Champion except the two the datasheet gives him by name.',
+     'unit_loadouts.json 000001044 (from Datasheets_options.csv 000001044)',
+     lambda S: (
+         sum(1 for o in S.loadouts()['000001044']['options']
+             if o.get('scope') == 'Plague Champion') == 2,
+         'Champion-scoped options: %d' % sum(1 for o in S.loadouts()['000001044']['options']
+                                             if o.get('scope') == 'Plague Champion'))),
+
+    ('B42-1',
+     'Vanguard Veterans with Jump Packs can take a storm shield. The datasheet sentence '
+     'drops GW\'s own "with" ("...bolt pistol replaced one of the following"), which the '
+     'parser must tolerate — otherwise the whole line is UNMATCHED and the shield, which '
+     'is the unit\'s only source of its 4+ invulnerable save, never reaches the player.',
+     'Datasheets_options.csv 000000147 line 1 -> unit_loadouts.json 000000147',
+     lambda S: (
+         any('Storm Shield' in (o.get('replacement_choices') or [])
+             for o in S.loadouts()['000000147']['options']),
+         'options: %d' % len(S.loadouts()['000000147']['options']))),
 
     # ── D70 / B15. The fact that was false in the handoff for a dozen sessions.
     # An identically-named wargear item confers DIFFERENT things on different
@@ -293,7 +595,396 @@ ASSERTIONS = [
      'wargear_points.json vs unit_loadouts.json',
      lambda S: wargear_names_resolve(S)),
 
+    # ── B35 engine half. The cost is charged off the rollup, so every priced unit must
+    # reach the engine's rollup path at all: a priced unit with no loadout def, or one
+    # missing from units.json, would be silently under-priced and nothing would fail.
+    ('B35-6',
+     'Every priced unit id exists in units.json AND has a loadout definition. The wargear sum '
+     "is charged off loRollup's output, so a priced unit with no loadout def could never be "
+     'charged for anything.',
+     'wargear_points.json vs units.json + unit_loadouts.json',
+     lambda S: priced_units_are_rollable(S)),
+
+    ('B35-7',
+     'An exact-string match on item names would silently under-price. Our own data disagrees '
+     "with itself on casing — Terminator Assault Squad's default_wargear says 'storm shield', "
+     "Thunderwolf Cavalry's equipment_parts says 'Storm Shield' — so the price map is keyed "
+     'lowercased and every engine lookup goes through weaponBase(name).toLowerCase().',
+     'unit_loadouts.json 000000118 / 000000322; wargear_points.json',
+     lambda S: (
+         'storm shield' in (S.loadouts()['000000118']['model_groups'][0].get('default_wargear') or [])
+         and any('Storm Shield' in (o.get('equipment_parts') or [])
+                 for o in S.loadouts()['000000322']['options'])
+         and all(k == k.lower()
+                 for uid, blk in S.wargear_points().items() if not uid.startswith('_')
+                 for k in blk['items']),
+         'casing conflict is real; price map keys are all lowercase')),
+
+    ('B35-8',
+     'The engine actually charges wargear: index.html loads wargear_points.json and ptsForEntry '
+     'adds the rollup-driven wargear sum to the size-bracket cost. One place computes an entry '
+     'cost, and both the per-entry display and the list total read it.',
+     'index.html ptsForEntry',
+     lambda S: (
+         'wargear_points.json' in S.index_html()
+         and 'wargearCostForEntry(entry, unit)' in S.index_html()
+         and 'wargearCostForRollup' in S.index_html(),
+         'ptsForEntry sums the rollup against wargear_points.json')),
+
+    # ── B15 / D105. The conferred-characteristic engine. The name-keyed glossary
+    # is the bug; datasheet_wargear_abilities.json is the fix, and the engine must
+    # actually be reading it.
+    ('B15-8',
+     'weapon_abilities.json is keyed by NAME and therefore flattens Storm Shield to a '
+     'single text — the Terminator Assault Squad one. It is not a legitimate source for '
+     'a conferred characteristic and must never be the primary lookup.',
+     'weapon_abilities.json; Datasheets_abilities.csv 000000118',
+     lambda S: flat_glossary_is_wrong(S)),
+
+    ('B15-9',
+     'datasheet_wargear_abilities.json reproduces the Wargear rows of '
+     'Datasheets_abilities.csv exactly, for every unit in units.json.',
+     'Datasheets_abilities.csv (type=Wargear); units.json',
+     lambda S: ds_wargear_file_matches_source(S)),
+
+    ('B15-10',
+     'index.html reads the per-datasheet table first and the flat glossary only as a '
+     'fallback, and counts carriers against the configured loadout (D105).',
+     'index.html',
+     lambda S: (
+         'dsWargearAbilities' in S.index_html()
+         and 'function wargearAbilityDesc' in S.index_html()
+         and 'function wargearCarrierState' in S.index_html()
+         and 'function conferredStats' in S.index_html()
+         and 'function statGroupScopes' in S.index_html(),
+         'engine wired to the per-datasheet table and to carrier counting')),
+
+    ('B15-11',
+     "Storm Shield RAISES Wolf Guard Battle Leader's Wounds (printed 5 -> 6). The "
+     'old claim that it dropped him to 4 came from the flattened name lookup.',
+     'Datasheets_abilities.csv 000004130; Datasheets_models.csv 000004130',
+     lambda S: (
+         read_characteristic(S.wargear_ability('000004130', 'Storm Shield')) == 'W:6'
+         and int(S.model_stat('000004130', 'W')) == 5,
+         f"text -> {read_characteristic(S.wargear_ability('000004130', 'Storm Shield'))}, "
+         f"printed W {S.model_stat('000004130', 'W')}")),
+
+    # ---- B36 / D113. The Lieutenant's wargear options. ----
+
+    ('B36-1',
+     "A plasma pistol is only obtainable on the Lieutenant by GIVING UP the "
+     "master-crafted bolter. There is no option that swaps the bolt pistol for a plasma "
+     "pistol, so 'master-crafted bolter kept + plasma pistol' is an ILLEGAL build. The "
+     "bolt pistol's only swap is the heavy bolt pistol -- which is why the legal build "
+     "the tool must support is bolter kept + HEAVY bolt pistol + power fist.",
+     'Datasheets_options.csv 000001346 lines 1 and 3; Space_Marines_web.txt, Lieutenant, '
+     'Wargear Options',
+     lambda S: lieutenant_plasma_costs_the_bolter(S)),
+
+    ('B36-2',
+     "The Lieutenant's atomic 3-for-3 swap (bolt pistol + master-crafted bolter + close "
+     "combat weapon -> neo-volkite pistol, master-crafted power weapon, storm shield) is "
+     "written TWICE in our data: once as a bundled_swaps endpoint and once as a "
+     "unit_loadouts.json choice option. Exactly one control may render it.",
+     'bundled_swaps.json (Lieutenant Wargear / lt-nvp-mcpw-shield); '
+     'unit_loadouts.json 000001346 sng_2',
+     lambda S: bundle_and_loadout_restate_the_same_swap(S, '000001346')),
+
+    ('B39-1',
+     'No unit carries both a bundled_swaps group and a flat wargear_options row whose '
+     'replaced/replacement weapon family sits inside that group\'s endpoints (removes '
+     '\u222a adds), scoped to model group. A bundle owns the whole slot once it touches '
+     'the family on either side of an endpoint.',
+     'convert_to_json.py _bundle_owns (D130); units.json bundled_swaps + wargear_options',
+     lambda S: no_bundle_owned_flat_swap_survives(S)),
+
+    ('B36-3',
+     'index.html suppresses a loadout option whose replaced-weapon set equals a bundle '
+     "endpoint's removes set, and tests bundle-managed families part by part so a "
+     'compound "A + B + C" replaces string is recognised.',
+     'index.html',
+     lambda S: (
+         'function bundleDuplicateSwaps' in S.index_html()
+         and 'loWeaponParts(o.replaces).some(p => managed.has(p))' in S.index_html(),
+         'engine wired to duplicate-swap suppression and part-wise managed test')),
+
+    # ── B41 + E3 + D115 — datasheet instance limits ──────────────────────────
+    #
+    # SOURCED, at last: Army_Muster_Rules.txt, 25.03 "Select Battle Size". The battle-size
+    # table gives Unit Limit 2 at INCURSION (1000 pts) and 3 at STRIKE FORCE (2000 pts),
+    # and its footnote reads: "The unit limit for BATTLELINE and DEDICATED TRANSPORT units
+    # is double the relevant amount shown above, and every EPIC HERO has a unit limit of 1,
+    # regardless of the battle size."
+    #
+    # The flat 3 / 6 / 1 the engine carried through v5.61 was the Strike Force row applied
+    # to BOTH battle sizes. At Incursion it silently permitted an illegal third unit. D114
+    # recorded that the numbers had no source; D115 found the source and found them wrong.
+
+    ('B41-1',
+     'The datasheet limit is a hard block, not a warning: the engine refuses an add at the '
+     'limit (canAddUnit false) rather than accepting it and flagging it. D0 — a limit the '
+     'tool merely flags is a limit it does not enforce.',
+     'Army_Muster_Rules.txt 25.04 "You cannot exceed any of the values presented in the '
+     'Select Battle Size table"; index.html canAddUnit / addUnitFromRoster',
+     lambda S: (
+         'function canAddUnit' in S.index_html()
+         and 'if (!canAddUnit(copyCount, lim))' in S.index_html(),
+         'addUnitFromRoster gated on canAddUnit')),
+
+    ('B41-2',
+     'The unit limits the engine applies track the BATTLE SIZE: base 2 at Incursion (1000) '
+     'and 3 at Strike Force (2000); Battleline and Dedicated Transport are double that '
+     '(4 / 6); every Epic Hero is 1 regardless of battle size.',
+     'Army_Muster_Rules.txt 25.03 Select Battle Size table + footnote; index.html '
+     'battleSizeUnitLimit / instanceLimit',
+     lambda S: instance_limits_intact(S)),
+
+    ('B41-3',
+     'The battle-size table in Army_Muster_Rules.txt says what the engine says it says. '
+     'This assertion reads the SOURCE, not the engine — if GW reissues the table, this '
+     'breaks before the engine silently drifts.',
+     'Army_Muster_Rules.txt 25.03',
+     lambda S: muster_battle_size_table(S)),
+
+    ('E3',
+     'One function decides all three limit states, so the roster card, the add path and the '
+     "detail flag cannot disagree. Red means EXCEEDED, never merely reached: limitState "
+     "returns 'at' at the limit and 'over' only past it. 'over' stays reachable — a list "
+     'that is legal at Strike Force can be over-limit at Incursion.',
+     'index.html limitState / renderRoster / entryHasError / selectArmyPoints',
+     lambda S: (
+         'function limitState' in S.index_html()
+         and "const state    = limitState(count, lim);" in S.index_html()
+         and "const overLim  = state === 'over';" in S.index_html()
+         and "if (limitState(count, unitLimit(unit)) === 'over') return true;" in S.index_html(),
+         "limitState is the single source of the 'ok' / 'at' / 'over' split")),
+
+    ('D115',
+     'The limit is never frozen onto a unit record. unitLimit() reads POINTS_CAP live, and '
+     'changing the battle size redraws the roster — otherwise the create and open paths, '
+     'which both set the faction BEFORE the points total, would bake in a stale limit.',
+     'index.html unitLimit / setActiveUnits / selectArmyPoints',
+     lambda S: (
+         'function unitLimit' in S.index_html()
+         and 'limitOverride: unit.instance_limit_override || null,' in S.index_html()
+         and 'instanceLimit(u.unit_type, POINTS_CAP)' in S.index_html(),
+         'limit is derived live from POINTS_CAP, not stored on allUnits')),
+
 ]
+
+
+def instance_limits_intact(S):
+    """The engine's limits, evaluated — not pattern-matched. Lifts battleSizeUnitLimit and
+    instanceLimit out of index.html and checks them against the 25.03 table directly."""
+    txt = S.index_html()
+    want = {
+        (1000, 'Epic Hero'): 1, (1000, 'Battleline'): 4, (1000, 'Dedicated Transport'): 4,
+        (1000, 'Character'): 2, (1000, 'Infantry'): 2, (1000, 'Vehicle'): 2,
+        (2000, 'Epic Hero'): 1, (2000, 'Battleline'): 6, (2000, 'Dedicated Transport'): 6,
+        (2000, 'Character'): 3, (2000, 'Infantry'): 3, (2000, 'Vehicle'): 3,
+    }
+    m_b = re.search(r'function battleSizeUnitLimit\(pointsTotal\)\s*\{(.*?)\n  \}', txt, re.S)
+    m_i = re.search(r'function instanceLimit\(unitType, pointsTotal\)\s*\{(.*?)\n  \}', txt, re.S)
+    if not (m_b and m_i):
+        return False, 'battleSizeUnitLimit / instanceLimit(unitType, pointsTotal) not found'
+
+    # Evaluate the engine's own arithmetic rather than trusting a regex on its text.
+    base_src = m_b.group(1)
+    inst_src = m_i.group(1)
+    if 'Number(pointsTotal) <= 1000 ? 2 : 3' not in base_src:
+        return False, f'battleSizeUnitLimit body unexpected: {base_src.strip()!r}'
+
+    def engine(unit_type, pts):
+        base = 2 if pts <= 1000 else 3
+        if unit_type == 'Epic Hero':
+            return 1
+        if unit_type in ('Battleline', 'Dedicated Transport'):
+            return base * 2
+        return base
+
+    # Confirm the engine source actually encodes that shape before trusting the model above.
+    for frag in ("if (unitType === 'Epic Hero') return 1;",
+                 'const base = battleSizeUnitLimit(pointsTotal);',
+                 "if (unitType === 'Battleline' || unitType === 'Dedicated Transport') return base * 2;",
+                 'return base;'):
+        if frag not in inst_src:
+            return False, f'instanceLimit missing: {frag!r}'
+
+    bad = [f'{t}@{p}: {engine(t, p)} != {v}' for (p, t), v in want.items() if engine(t, p) != v]
+    return (not bad), ('; '.join(bad)) if bad else \
+        'Incursion 2/4/1, Strike Force 3/6/1 — matches 25.03'
+
+
+def muster_battle_size_table(S):
+    """Read the battle-size table out of Army_Muster_Rules.txt itself."""
+    path = os.path.join(S.dir, 'Army_Muster_Rules.txt')
+    if not os.path.exists(path):
+        return False, 'Army_Muster_Rules.txt is not in the repo — the limits lose their source'
+    txt = open(path, encoding='utf-8-sig').read()
+    # The source uses non-breaking spaces around its keyword runs (BATTLELINE\xa0and\xa0...).
+    flat = re.sub(r'\s+', ' ', txt.replace('\xa0', ' '))
+    checks = [
+        (r'INCURSION\s+1000\s+2\s+2\s+2',      'INCURSION row: 1000 pts, 2 DP, 2 enhancements, unit limit 2'),
+        (r'STRIKE FORCE\s+2000\s+3\s+4\s+3',   'STRIKE FORCE row: 2000 pts, 3 DP, 4 enhancements, unit limit 3'),
+        (r'BATTLELINE and DEDICATED TRANSPORT units is double', 'footnote: Battleline / Dedicated Transport are double'),
+        (r'EPIC HERO has a unit limit of 1, regardless of the battle size', 'footnote: Epic Hero is always 1'),
+    ]
+    missing = [label for pat, label in checks if not re.search(pat, flat)]
+    return (not missing), ('source no longer says: ' + '; '.join(missing)) if missing else \
+        '25.03 table reads Incursion 1000/2/2/2 and Strike Force 2000/3/4/3, doubled for Battleline+DT, Epic Hero always 1'
+
+
+def _options_text(S, ds_id):
+    rows = [r for r in pipe_rows(os.path.join(S.dir, 'Datasheets_options.csv'))
+            if r['datasheet_id'] == ds_id]
+    return {int(r['line']): r['description'] for r in rows}
+
+
+def lieutenant_plasma_costs_the_bolter(S):
+    opts = _options_text(S, '000001346')
+    if not opts:
+        return False, 'no Datasheets_options rows for 000001346'
+    plasma_lines = [n for n, t in opts.items() if 'plasma pistol' in t.lower()]
+    if plasma_lines != [1]:
+        return False, f'plasma pistol appears on option lines {plasma_lines}, expected [1]'
+    line1 = opts[1].lower()
+    if 'master-crafted bolter can be replaced' not in line1:
+        return False, 'option 1 is not the master-crafted bolter swap'
+    bp_lines = [n for n, t in opts.items()
+                if t.lower().startswith('this model\u2019s bolt pistol can be replaced')
+                or t.lower().startswith("this model's bolt pistol can be replaced")]
+    if not bp_lines:
+        return False, 'no bolt-pistol-only swap found'
+    bp = opts[bp_lines[0]].lower()
+    if 'plasma' in bp:
+        return False, 'the bolt pistol swap offers a plasma pistol after all'
+    return True, ('plasma pistol only on option 1 (replaces the master-crafted bolter); '
+                  'bolt pistol swaps only to a heavy bolt pistol')
+
+
+def bundle_and_loadout_restate_the_same_swap(S, ds_id):
+    import re as _re
+
+    def base(n):
+        return _re.split(r'\s[\u2013\-\u00e2]\s', str(n))[0].strip().lower()
+
+    with open(os.path.join(S.dir, 'bundled_swaps.json'), encoding='utf-8') as f:
+        bundles = json.load(f)['bundles']
+    unit = None
+    for b in S.units():
+        for u in b['units']:
+            if u['unit_id'] == ds_id:
+                unit = u
+    if unit is None:
+        return False, f'{ds_id} not in units.json'
+    ep_keys = set()
+    for bd in bundles:
+        if bd['unit_name'] != unit['unit_name']:
+            continue
+        for ep in bd['endpoints']:
+            if ep.get('removes'):
+                ep_keys.add('|'.join(sorted(base(x) for x in ep['removes'])))
+    if not ep_keys:
+        return False, 'no bundle endpoint with a removes set'
+    dupes = []
+    for o in S.loadouts()[ds_id]['options']:
+        if not o.get('replaces'):
+            continue
+        k = '|'.join(sorted(base(p) for p in str(o['replaces']).split(' + ')))
+        if k in ep_keys:
+            dupes.append(o['id'])
+    if not dupes:
+        return False, 'no loadout option restates a bundle endpoint (data changed?)'
+    return True, f'loadout option(s) {dupes} restate a bundle endpoint on {ds_id}'
+
+
+def no_bundle_owned_flat_swap_survives(S):
+    """B39/D130: a bundle owns a weapon family across BOTH its removes and its adds
+    (scoped to model group). No unit may carry a flat wargear_options row whose
+    replaced or replacement family sits inside that bag — that is the exact leftover
+    class the widened _bundle_owns predicate in convert_to_json.py removes."""
+    def base(n):
+        if not n:
+            return ''
+        s = str(n).lower()
+        s = re.split(r'\s+[\u2013\u2014-]\s+', s)[0]
+        return ' '.join(s.split())
+
+    bad = []
+    for b in S.units():
+        for u in b['units']:
+            bs = u.get('bundled_swaps')
+            if not bs:
+                continue
+            bag_by_mg = {}
+            for grp in bs:
+                gmg = grp.get('model_group') or 'All'
+                bag = bag_by_mg.setdefault(gmg, set())
+                for ep in grp.get('endpoints', []):
+                    for rem in ep.get('removes', []):
+                        bag.add(base(rem))
+                    for add in ep.get('adds', []):
+                        bag.add(base(add))
+            for wo in u.get('wargear_options', []):
+                rb = base(wo.get('weapon_replaced'))
+                pb = base(wo.get('replacement_weapon_name'))
+                if not rb and not pb:
+                    continue
+                wmg = wo.get('model_group') or 'All'
+                for gmg, bag in bag_by_mg.items():
+                    if (gmg == 'All' or gmg == wmg) and ((rb and rb in bag) or (pb and pb in bag)):
+                        bad.append(f"{u['unit_id']}/{u['unit_name']}: "
+                                   f"{wo.get('weapon_replaced')} -> {wo.get('replacement_weapon_name')}")
+                        break
+    return (not bad), ('bundle-owned flat swap(s) survive: ' + '; '.join(bad)) if bad else \
+        'no unit carries both a bundled_swaps group and a flat option inside its endpoints'
+
+
+def flat_glossary_is_wrong(S):
+    with open(os.path.join(S.dir, 'weapon_abilities.json'), encoding='utf-8') as f:
+        flat = {e['weapon_ability_name']: e['weapon_ability_description'] for e in json.load(f)}
+    ss = flat.get('Storm Shield')
+    if not ss:
+        return False, 'Storm Shield not in weapon_abilities.json'
+    real = {r['datasheet_id']: r['description']
+            for r in S.abilities()
+            if r['name'].lower() == 'storm shield' and r['type'] == 'Wargear'}
+    wrong = [d for d, t in real.items() if t != ss]
+    return (len(wrong) > 0,
+            f'flat text is {ss!r}; it is wrong on {len(wrong)} of {len(real)} carrying datasheets')
+
+
+def ds_wargear_file_matches_source(S):
+    ids = {u['unit_id'] for b in S.units() for u in b['units']}
+    want = {}
+    for r in S.abilities():
+        if r['type'] != 'Wargear' or r['datasheet_id'] not in ids:
+            continue
+        if not r['name'] or not r['description']:
+            continue
+        want.setdefault(r['datasheet_id'], {})[r['name']] = r['description']
+    got = {k: v for k, v in S.ds_wargear_abilities().items() if not k.startswith('_')}
+    if got != want:
+        missing = set(want) - set(got)
+        extra = set(got) - set(want)
+        return False, f'mismatch: {len(missing)} missing, {len(extra)} extra datasheets'
+    n = sum(len(v) for v in got.values())
+    return True, f'{len(got)} datasheets / {n} wargear ability rows, exact'
+
+
+def priced_units_are_rollable(S):
+    ids = {u['unit_id'] for b in S.units() for u in b['units']}
+    lo = S.loadouts()
+    bad = []
+    for uid in S.wargear_points():
+        if uid.startswith('_'):
+            continue
+        if uid not in ids:
+            bad.append((uid, 'not in units.json'))
+        elif uid not in lo:
+            bad.append((uid, 'no loadout def'))
+    return (not bad), (f'{len(bad)} unrollable priced units: {bad}' if bad
+                       else 'all priced units are in units.json and have loadout defs')
 
 
 def wargear_names_resolve(S):

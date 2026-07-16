@@ -586,22 +586,26 @@ def build_units(data):
             # wargear_option whose replaced family the bundle already removes
             # (scoped to model group), so the same swap isn't offered twice.
             if bundled_swaps:
-                removed_by_mg = {}
+                endpoint_by_mg = {}
                 for grp in bundled_swaps:
                     gmg = grp.get("model_group") or "All"
-                    bag = removed_by_mg.setdefault(gmg, set())
+                    bag = endpoint_by_mg.setdefault(gmg, set())
                     for ep in grp.get("endpoints", []):
                         for rem in ep.get("removes", []):
                             bag.add(weapon_base(rem))
+                        for add in ep.get("adds", []):
+                            bag.add(weapon_base(add))
 
                 def _bundle_owns(wo):
                     rb = weapon_base(wo.get("weapon_replaced"))
-                    if not rb:
+                    pb = weapon_base(wo.get("replacement_weapon_name"))
+                    if not rb and not pb:
                         return False
                     wmg = wo.get("model_group") or "All"
-                    for gmg, bag in removed_by_mg.items():
-                        if (gmg == "All" or gmg == wmg) and rb in bag:
-                            return True
+                    for gmg, bag in endpoint_by_mg.items():
+                        if gmg == "All" or gmg == wmg:
+                            if (rb and rb in bag) or (pb and pb in bag):
+                                return True
                     return False
 
                 kept = [wo for wo in wargear_options if not _bundle_owns(wo)]
