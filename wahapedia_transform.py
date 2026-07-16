@@ -853,8 +853,10 @@ def main():
 
     # Fix 2b: additive chapter-variant ability inheritance. A chapter variant unions
     # the generic (Adeptus Astartes) same-named datasheet's abilities (base first)
-    # with its own, deduped. Operates on the assembled Unit Ability Names column (18).
-    AB = 18
+    # with its own, deduped. Operates on the assembled Unit Ability Names column (19).
+    # (Was 18 pre-B49; the Leader Footer column insertion shifted every later column
+    # right by one and this index was never updated — see D138.)
+    AB = 19
     generic_abil_by_name = {}
     for row in stats_rows:
         if row[0] == GENERIC_ARMY_NAME:
@@ -876,7 +878,8 @@ def main():
         data, selected, army_of, weapon_names_by_ds, wargear_abils, flags)
 
     # B14: an item routed to Other Options is optional, so its ability must not
-    # sit on the always-on Wargear Ability Names surface (col 23). Remove it for
+    # sit on the always-on Wargear Ability Names surface (col 24; was 23 pre-B49,
+    # same Leader Footer shift as Fix 2b above — D138). Remove it for
     # the units that gained the option; it now confers only when selected.
     routed_by_unit = defaultdict(set)
     for army, unit, nm in routed_items:
@@ -886,9 +889,9 @@ def main():
             drop = routed_by_unit.get((row[0], row[1]))
             if not drop:
                 continue
-            kept = [a for a in row[23].split(",") if a and a not in drop]
-            if len(kept) != len([a for a in row[23].split(",") if a]):
-                row[23] = ",".join(kept)
+            kept = [a for a in row[24].split(",") if a and a not in drop]
+            if len(kept) != len([a for a in row[24].split(",") if a]):
+                row[24] = ",".join(kept)
                 flags["b14_surface_subtracted"].append(f"{row[1]} [{row[0]}]: removed {sorted(drop)} from always-on wargear abilities")
 
     # seeds from completed faction

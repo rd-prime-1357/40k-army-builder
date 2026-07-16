@@ -4926,10 +4926,7 @@
               "Adeptus Astartes"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Helix Gauntlet",
-              "Infiltrator Comms Array"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -6694,9 +6691,7 @@
               "Adeptus Astartes"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Haywire Mine"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -13798,10 +13793,7 @@
               "Adeptus Astartes"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Grapnel Launcher",
-              "Reiver Grav-chute"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -17767,9 +17759,7 @@
               "Blood Angels"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Sanguinary Banner"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20362,9 +20352,7 @@
               "Dark Angels"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Watcher in the Dark"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -20640,9 +20628,7 @@
               "Dark Angels"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Watcher in the Dark"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -25361,10 +25347,7 @@
               "Deathwatch"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Auspex Array",
-              "Infernum Halo-launcher"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -25568,8 +25551,6 @@
             ],
             "model_keyword_names": [],
             "wargear_ability_names": [
-              "Helix Gauntlet",
-              "Infiltrator Comms Array",
               "Instigator Bolt Carbine"
             ]
           }
@@ -29709,6 +29690,7 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
+              "Ferocious Assault",
               "Priority Target Acquisition"
             ],
             "rule_names": [
@@ -29878,6 +29860,7 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
+              "Rotating Death",
               "Reaping Tally"
             ],
             "rule_names": [
@@ -30065,6 +30048,7 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
+              "Executioner",
               "Interception Strike"
             ],
             "rule_names": [
@@ -30349,6 +30333,7 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
+              "Emergency Combat Embarkation",
               "Stabilised Disembarkation"
             ],
             "rule_names": [
@@ -32077,6 +32062,7 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
+              "Sternguard Focus",
               "Virtuous Onslaught"
             ],
             "rule_names": [
@@ -32359,6 +32345,7 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Teleport Homer",
+              "Fury of the First",
               "Judgement of the Weak"
             ],
             "rule_names": [
@@ -43719,10 +43706,7 @@
               "Plague Legions"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Daemonic Icon",
-              "Instrument of Chaos"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
@@ -43826,10 +43810,7 @@
               "Plague Legions"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": [
-              "Daemonic Icon",
-              "Instrument of Chaos"
-            ]
+            "wargear_ability_names": []
           }
         ],
         "weapons": [
