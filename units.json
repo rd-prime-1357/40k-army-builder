@@ -12893,7 +12893,11 @@
               "Adeptus Astartes"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [],
+            "loadout_groups": [
+              "Outrider Sergeant",
+              "Outriders"
+            ]
           },
           {
             "model_group": "INVADER ATV",
@@ -12928,7 +12932,10 @@
               "Adeptus Astartes"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [],
+            "loadout_groups": [
+              "Invader ATV"
+            ]
           }
         ],
         "weapons": [
@@ -16587,6 +16594,10 @@
             "wargear_ability_names": [
               "Refractor Field",
               "Storm Shield"
+            ],
+            "loadout_groups": [
+              "Ancient Gadriel - EPIC HERO",
+              "Veteran Sergeant Metaurus - EPIC HERO"
             ]
           },
           {
@@ -16643,6 +16654,12 @@
             "wargear_ability_names": [
               "Refractor Field",
               "Storm Shield"
+            ],
+            "loadout_groups": [
+              "Gaius Silva - EPIC HERO",
+              "Aemelia Minervas - EPIC HERO",
+              "Dainal Kornelius - EPIC HERO",
+              "Lucia Vestha - EPIC HERO"
             ]
           }
         ],
@@ -24591,6 +24608,9 @@
             ],
             "wargear_ability_names": [
               "Storm Shield"
+            ],
+            "loadout_groups": [
+              "Wolf Guard Headtakers"
             ]
           },
           {
@@ -24645,6 +24665,9 @@
             ],
             "wargear_ability_names": [
               "Storm Shield"
+            ],
+            "loadout_groups": [
+              "Hunting Wolves"
             ]
           }
         ],
@@ -25017,6 +25040,10 @@
             "model_keyword_names": [],
             "wargear_ability_names": [
               "Haywire Mine"
+            ],
+            "loadout_groups": [
+              "Wolf Scout Pack Leader",
+              "Wolf Scouts"
             ]
           },
           {
@@ -25060,6 +25087,9 @@
             "model_keyword_names": [],
             "wargear_ability_names": [
               "Haywire Mine"
+            ],
+            "loadout_groups": [
+              "Hunting Wolves"
             ]
           }
         ],
@@ -27315,7 +27345,11 @@
               "Deathwatch"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [],
+            "loadout_groups": [
+              "Kill Team Sergeant with Jump Pack",
+              "Kill Team Intercessors with Jump Packs"
+            ]
           },
           {
             "model_group": "KILL TEAM HEAVY INTERCESSORS WITH JUMP PACKS",
@@ -27356,7 +27390,10 @@
               "Deathwatch"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [],
+            "loadout_groups": [
+              "Kill Team Heavy Intercessors with Jump Packs"
+            ]
           }
         ],
         "weapons": [
@@ -27670,6 +27707,10 @@
             ],
             "wargear_ability_names": [
               "Astartes Shield"
+            ],
+            "loadout_groups": [
+              "Kill Team Sergeant",
+              "Deathwatch Veterans"
             ]
           },
           {
@@ -27724,6 +27765,9 @@
             ],
             "wargear_ability_names": [
               "Astartes Shield"
+            ],
+            "loadout_groups": [
+              "Gravis Veterans"
             ]
           }
         ],
@@ -30561,7 +30605,10 @@
                 ]
               }
             ],
-            "wargear_ability_names": []
+            "wargear_ability_names": [],
+            "loadout_groups": [
+              "Chaplain Grimaldus - EPIC HERO"
+            ]
           },
           {
             "model_group": "CENOBYTE SERVITOR",
@@ -30617,7 +30664,10 @@
                 ]
               }
             ],
-            "wargear_ability_names": []
+            "wargear_ability_names": [],
+            "loadout_groups": [
+              "Cenobyte Servitors*"
+            ]
           }
         ],
         "weapons": [
@@ -31513,7 +31563,10 @@
               "Black Templars"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [],
+            "loadout_groups": [
+              "Neophytes"
+            ]
           },
           {
             "model_group": "OTHER MODELS",
@@ -31551,7 +31604,11 @@
               "Black Templars"
             ],
             "model_keyword_names": [],
-            "wargear_ability_names": []
+            "wargear_ability_names": [],
+            "loadout_groups": [
+              "Sword Brother",
+              "Initiates"
+            ]
           }
         ],
         "weapons": [
