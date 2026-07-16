@@ -418,6 +418,10 @@ def build_units(data):
             # unit_type is the same across all model groups — take from first row
             unit_type = clean(stat_rows[0].get("Unit Type"))
 
+            # E9a: must_be_warlord (SUPREME COMMANDER) — same across all model
+            # groups, take-from-first-row precedent as unit_type above.
+            must_be_warlord = bool(clean(stat_rows[0].get("Must Be Warlord")))
+
             # Stable saved-list reference key. Prefer the Wahapedia datasheet id
             # (carried through transform); fall back to a deterministic local slug
             # for Gen-1 sources that have none. Consistent across a unit's stat rows.
@@ -623,6 +627,7 @@ def build_units(data):
                 "unit_id":        unit_id,
                 "unit_name":      unit_name,
                 "unit_type":      unit_type,
+                "must_be_warlord": must_be_warlord,
                 "unit_ability_details": ability_details_by_ds.get(unit_id, {}),
                 "model_groups":   model_groups,
                 "weapons":        weapons,

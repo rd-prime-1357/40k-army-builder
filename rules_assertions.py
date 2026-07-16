@@ -770,6 +770,16 @@ ASSERTIONS = [
          and 'instanceLimit(u.unit_type, POINTS_CAP)' in S.index_html(),
          'limit is derived live from POINTS_CAP, not stored on allUnits')),
 
+    # ── E9a. must_be_warlord is true iff the unit carries SUPREME COMMANDER in
+    # source (any built faction, any ability `type`), or is Be'Lakor (hand-added
+    # per D132 — Gen-1 CD data never routes through wahapedia_transform.py, so its
+    # own datasheet_id never appears as a match key in Datasheets_abilities.csv).
+    ('E9a-1',
+     "must_be_warlord is true on exactly the units whose datasheet carries a "
+     "SUPREME COMMANDER ability in source, plus Be'Lakor by name.",
+     'Datasheets_abilities.csv (SUPREME COMMANDER rows) + units.json must_be_warlord',
+     lambda S: e9a_warlord(S)),
+
 ]
 
 
@@ -1016,6 +1026,22 @@ def wargear_names_resolve(S):
     return (not bad), ('unresolved priced items: ' + '; '.join(bad)) if bad else \
         'all priced items reachable in their own unit'
 
+
+def e9a_warlord(S):
+    sc_ids = set()
+    for r in S.abilities():
+        if (r.get('name') or '').strip().lower() == 'supreme commander':
+            sc_ids.add(r['datasheet_id'])
+    built_ids, warlord_units = set(), set()
+    for blk in S.units():
+        for u in blk['units']:
+            built_ids.add(u['unit_id'])
+            if u.get('must_be_warlord'):
+                warlord_units.add(u['unit_id'])
+    expected = (sc_ids & built_ids) | {"local:chaos-daemons:be-lakor"}
+    if warlord_units != expected:
+        return False, f'expected {sorted(expected)}, got {sorted(warlord_units)}'
+    return True, f'must_be_warlord true on exactly {sorted(warlord_units)}'
 
 def d95(S):
     bad = []
