@@ -1459,7 +1459,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.68';
+  const VERSION = '5.69';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2486,6 +2486,19 @@
   function statGroupScopes(raw, mg, def) {
     const names = (def.model_groups || []).map(g => g.name);
     if (raw.model_groups.length <= 1) return names;   // one statline = the whole unit
+    // D135/B44: units.json can carry an authoritative loadout_groups mapping on the
+    // statline group itself, built by hand against the datasheet composition tables.
+    // When present, trust it outright and skip the name-heuristic below — the
+    // heuristic is exactly what misses Wolf Scouts' Pack Leader and can't attribute
+    // Outrider Squad at all.
+    if (Array.isArray(mg.loadout_groups) && mg.loadout_groups.length) {
+      const out = [];
+      for (const g of mg.loadout_groups) {
+        if (!names.includes(g)) return null;           // mapping stale vs def -> cannot attribute
+        if (!out.includes(g)) out.push(g);
+      }
+      return out;
+    }
     const norm = x => String(x).toLowerCase().replace(/\s*-\s*epic hero$/, '').replace(/\*+$/, '').trim();
     const index = {};
     for (const n of names) index[norm(n)] = n;
