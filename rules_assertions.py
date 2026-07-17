@@ -229,6 +229,57 @@ def b18_named_body(S):
     return (len(per5) == 5 and len(named) == 5), f'{len(named)}/{len(per5)} per-5 lines name the body model'
 
 
+def _fan_scope_qualifies(desc):
+    """True for a per-N-models or any-number-of-models swap line (the pattern
+    B18c/B18d/B18f fan onto multiple carrying groups) — excludes single-model
+    named-leader lines (e.g. 'The Watch Sergeant's ... can be replaced ...')
+    which are a different option entirely and never fanned."""
+    d = re.sub(r'<[^>]+>', ' ', desc).strip()
+    return bool(re.match(r'^(for every \d+ models? in (this|the) unit|any number of models?)\b', d, re.I))
+
+def _fan_scope_is_generic(desc):
+    """D116: the swap's scope subject — the noun phrase right before 'can' —
+    is the generic word 'model'/'models' (bare or possessive), reaching every
+    carrying group including a leader/sergeant group. A named body type
+    ('1 Eradicator's melta rifle', '1 Deathwing Terminator') is body-only and
+    must NOT be fanned onto the leader/sergeant group. Returns None if the
+    sentence shape isn't recognised (caller should treat that as a failure,
+    not a pass)."""
+    d = re.sub(r'<[^>]+>', ' ', desc)
+    m = re.search(r'unit,\s*(.+?)\s+can\b', d, re.I) or re.search(r'^(any number of.+?)\s+can\b', d, re.I)
+    if not m:
+        return None
+    subj = re.sub(r'^(up to \d+|any number of|\d+|one)\s+', '', m.group(1).strip(), flags=re.I)
+    return bool(re.match(r"^models?(['\u2019]s)?\b", subj, re.I))
+
+def b18h_fan_allowlist_generic(S):
+    """D116/B18h. Every unit in equipped_parser.py's _FAN_UNIT_ALLOWLIST must rest on a
+    Datasheets_options.csv line whose scope subject is the generic word 'model' — never a
+    named body type. Closes the S83 near-miss where a hand-patched fan onto a named-body-type
+    unit (000000103/000001177) passed repro_check.py and every other assertion because nothing
+    covered it. A negative control (000000103, a known named-body unit NOT in the allowlist)
+    must classify False, or the classifier itself is vacuous."""
+    import equipped_parser as EP
+    bad = []
+    for uid in sorted(EP._FAN_UNIT_ALLOWLIST):
+        quals = [r['description'] for r in S.options()
+                 if r['datasheet_id'] == uid and r['button'] == '\u2022'
+                 and _fan_scope_qualifies(r['description'])]
+        if not quals:
+            bad.append(f'{uid}: no qualifying per-N/any-number scope line found')
+            continue
+        for desc in quals:
+            if _fan_scope_is_generic(desc) is not True:
+                bad.append(f'{uid}: named-body (non-generic) scope line — {desc[:70]!r}')
+    control = [r['description'] for r in S.options()
+               if r['datasheet_id'] == '000000103' and r['button'] == '\u2022'
+               and _fan_scope_qualifies(r['description'])]
+    if not control or _fan_scope_is_generic(control[0]) is not False:
+        bad.append('negative control 000000103 did not classify as named-body — classifier is vacuous')
+    return (not bad), (f'{len(EP._FAN_UNIT_ALLOWLIST)} allowlist units checked, '
+                        f'{len(bad)} problem(s)' + (f': {bad}' if bad else ''))
+
+
 def b46_orphaned(S):
     """B46. datasheet_wargear_abilities.json (built from Datasheets_abilities.csv type=Wargear)
     holds ability text for OPTION-granted items. units.json's wargear_ability_names carries
@@ -414,6 +465,13 @@ ASSERTIONS = [
              if o.get('scope') == 'Plague Champion') == 2,
          'Champion-scoped options: %d' % sum(1 for o in S.loadouts()['000001044']['options']
                                              if o.get('scope') == 'Plague Champion'))),
+
+    ('B18h-1',
+     'D116, made executable: every unit in equipped_parser.py\'s _FAN_UNIT_ALLOWLIST rests on '
+     'a Datasheets_options.csv scope line whose subject is the generic word "model," never a '
+     'named body type. A negative control proves the classifier actually discriminates.',
+     'Datasheets_options.csv (per-N/any-number scope lines) + equipped_parser._FAN_UNIT_ALLOWLIST (D116/D150)',
+     lambda S: b18h_fan_allowlist_generic(S)),
 
     ('B42-1',
      'Vanguard Veterans with Jump Packs can take a storm shield. The datasheet sentence '

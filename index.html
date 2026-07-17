@@ -1518,7 +1518,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.73';
+  const VERSION = '5.74';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3777,14 +3777,14 @@
               if (root !== o.id) continue;      // already drawn with its cluster
               const ids = mates.map(m => m.id).join(',');
               const anyCur = mates.some(m => entry.wargear[m.id]);
-              html += loChoiceRowX(entry.listId, ids, '', '', 'Keep ' + o.replaces, !anyCur, o.replaces ? mkDetail('eye', itemDetailHtml(raw, o.replaces)) : null);
+              html += loChoiceRowX(entry.listId, ids, '', '', o.replaces, !anyCur, o.replaces ? mkDetail('eye', itemDetailHtml(raw, o.replaces)) : null);
               for (const m of mates)
                 for (const c of m.choices)
                   html += loChoiceRowX(entry.listId, ids, m.id, c, c, entry.wargear[m.id] === c, mkDetail('eye', itemDetailHtml(raw, c)));
               continue;
             }
             const cur = entry.wargear[o.id] || null;
-            const keepLabel = o.replaces ? 'Keep ' + o.replaces : 'None';
+            const keepLabel = o.replaces ? o.replaces : 'None';
             html += loChoiceRow(entry.listId, o.id, '', keepLabel, !cur, o.replaces ? mkDetail('eye', itemDetailHtml(raw, o.replaces)) : null);
             for (const c of o.choices) html += loChoiceRow(entry.listId, o.id, c, c, cur === c, mkDetail('eye', itemDetailHtml(raw, c)));
           } else if (o.type === 'count' && o.replacement_choices) {
