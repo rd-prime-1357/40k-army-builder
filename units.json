@@ -33112,7 +33112,11 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Greater Daemon of Khorne (Aura)": "While a friendly Khorne Legiones Daemonica unit is within 6\", that unit is within your Shadow of Chaos.",
+          "Rage Embodied (Aura)": "While a friendly Khorne Legiones Daemonica unit is within 6\", add 1 to Attacks of melee weapons in that unit.",
+          "Murderlust": "Eligible to declare a charge in a turn it Advanced."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -33225,7 +33229,11 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Greater Daemon of Khorne (Aura)": "While a friendly Khorne Legiones Daemonica unit is within 6\", that unit is within your Shadow of Chaos.",
+          "Daemon Lord of Khorne (Aura)": "While a friendly Khorne Legiones Daemonica unit is within 6\", add 1 to Hit rolls for melee attacks made by models in that unit.",
+          "Relentless Carnage": "At end of Fight phase, select one enemy unit within Engagement Range and roll 8D6: for each 4+, that enemy unit suffers 1 mortal wound."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -33445,7 +33453,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Lord of Decapitations": "While leading a unit, melee weapons in that unit have DEVASTATING WOUNDS.",
+          "Skulls for Khorne": "Each time this model makes an attack targeting a Character unit, re-roll Hit roll and Wound roll. Each time this model destroys an enemy Character unit, gain 1CP."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -33529,7 +33540,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Bloodmaster": "While leading a unit, add 1 to Wound rolls for attacks made by models in that unit.",
+          "A Gory Path": "Each time this model's unit Consolidates, it can move up to 6\" instead of 3\"."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -33609,7 +33623,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Skullmaster's Fury": "While leading a unit, each time that unit ends a Charge move, until end of turn, Juggernaut's bladed horns in that unit have DEVASTATING WOUNDS.",
+          "Devastating Charge": "Each time this model's unit ends a Charge move, each enemy unit within Engagement Range must take a Battle-shock test."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -33707,7 +33724,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Blood Throne": "At start of Fight phase, select one enemy unit within 18\" and visible. Until end of phase, friendly Khorne Legiones Daemonica attacks targeting that unit improve S, AP, and D by 1.",
+          "Champion Slayer": "Each time this model makes a melee attack targeting a Character or Monster, re-roll Wound roll. Each time this model destroys an enemy Character or Monster, regain up to D6 lost wounds."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -33795,7 +33815,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Pack Leader": "While leading a unit, re-roll Advance and Charge rolls for that unit.",
+          "Prey of the Blood God": "At start of first battle round, select one enemy unit as prey. Re-roll Wound rolls targeting that prey. When prey is destroyed, select a new prey."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -33897,7 +33920,9 @@
         "unit_type": "Battleline",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Bane of Cowards": "Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more units with this ability Falls Back, models in that enemy unit must take Desperate Escape tests. If also Battle-shocked, subtract 1 from those tests."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -33994,7 +34019,9 @@
         "unit_type": "Mounted",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Brass Stampede": "Each time this unit ends a Charge move, select one enemy unit within Engagement Range and roll 1D6 for each model in this unit: for each 4+, that enemy unit suffers D3 mortal wounds."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -34114,7 +34141,9 @@
         "unit_type": "Beast",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Hunters from the Warp": "At end of opponent's turn, if not within Engagement Range of enemy units, can remove from battlefield and place into Strategic Reserves."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -34213,7 +34242,9 @@
         "unit_type": "Mounted",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Skulls of the Fallen": "After shooting, select one enemy unit hit. That unit must take a Battle-shock test."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -34322,7 +34353,11 @@
         "unit_type": "Fortification",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Shadow of Khorne (Aura)": "Area within 6\" of this Fortification is within your Shadow of Chaos. While a friendly Khorne Legiones Daemonica unit is within 6\", re-roll Battle-shock tests for that unit.",
+          "Cover": "standard Benefit of Cover rule for models not fully visible due to this Fortification.",
+          "Fortification": "standard fortification rules (enemy units only within Engagement Range: ranged attacks still allowed but -1 Hit roll unless Pistol; no Desperate Escape tests for Fall Back while Battle-shocked except for those moving over enemy models)."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -34384,7 +34419,11 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Greater Daemon of Tzeentch (Aura)": "While a friendly Tzeentch Legiones Daemonica unit is within 6\", that unit is within your Shadow of Chaos.",
+          "One Head Looks Forward": "At end of your Command phase, if on battlefield, take LD test; if passed, gain 1CP.",
+          "One Head Looks Back": "Once per turn, when opponent targets a unit within 12\" of this model with a stratagem, you can increase the CP cost of that stratagem by 1CP."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -34507,7 +34546,11 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Greater Daemon of Tzeentch (Aura)": "While a friendly Tzeentch Legiones Daemonica unit is within 6\", that unit is within your Shadow of Chaos.",
+          "Daemon Lord of Tzeentch (Aura)": "While a friendly Tzeentch Legiones Daemonica unit is within 6\", add 1 to S for ranged attacks made by models in that unit.",
+          "Master of Magicks (Psychic)": "In Shooting phase, select one of: IGNORES COVER, LETHAL HITS, or SUSTAINED HITS D3. Until end of phase, Bolt of Change has that ability."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -34680,7 +34723,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Formless Horror": "Each time an enemy unit wishes to target this model, that unit must first take a Battle-shock test. If failed, in addition to being Battle-shocked, that enemy unit cannot target this model this phase.",
+          "Mischief and Confusion": "At start of opponent's Shooting phase, select one enemy unit within 12\" and visible; roll 1D6: on 2-5, subtract 1 from Hit rolls for models in that unit until end of phase; on 6, that enemy unit is not eligible to shoot this phase."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -34794,7 +34840,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Fateskimmer": "While leading a unit, melee weapons in that unit have LETHAL HITS.",
+          "Rider of the Immaterial Winds": "Once per battle, at end of opponent's turn, if not within Engagement Range of enemy units, can remove this model's unit from battlefield and place into Strategic Reserves."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -34933,7 +34982,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Fluxmaster": "While leading a unit, subtract 1 from Hit rolls for attacks targeting that unit.",
+          "Altered Reality (Psychic)": "Once per battle round, after a Hit roll, Wound roll, or saving throw is made for this model, can change the result to an unmodified 6."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -35054,7 +35106,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "P'tarix's Sorcerous Syphon (Aura)": "While an enemy unit is within 12\", subtract 1 from Wound rolls for Psychic Attacks made by models in that unit.",
+          "Xirat'p's Sorcerous Barrages (Psychic)": "At end of your Movement phase, roll 1D6 for each enemy unit within 6\": on 2-3, 1 mortal wound; on 4-5, D3 mortal wounds; on 6, D6 mortal wounds."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -35128,7 +35183,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Changecaster": "While leading a unit, ranged weapons in that unit have SUSTAINED HITS 1.",
+          "Storm of Mutating Sorcery (Psychic)": "After shooting, select one enemy Infantry unit hit by one or more attacks; that unit must take a Battle-shock test."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -35248,7 +35306,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": true,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Blazing Warpfire (Psychic)": "While leading a unit, ranged weapons in that unit have ASSAULT.",
+          "Flames of Change (Psychic)": "After shooting, select one enemy unit (excluding Monsters and Vehicles) hit by one or more attacks; roll 1D6. On 4+, until end of opponent's next turn, that enemy unit is aflame: subtract 2\" from Move characteristic and subtract 2 from Advance and Charge rolls."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -35366,7 +35427,11 @@
         "unit_type": "Battleline",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Split": "Each time a Blue Horror model is destroyed, after the attacking unit finishes making attacks, if this unit is not destroyed, roll 1D6 for that model. On 4+, add one Brimstone Horror model to this unit.",
+          "Sullen Malevolence (Aura)": "While an enemy unit is within 6\" of this unit and this unit contains one or more Blue Horror models, worsen LD of models in that enemy unit by 1.",
+          "Exploding Horrors": "Each time this unit is selected to fight, can select one enemy unit within Engagement Range, then select one or more Brimstone Horror models; for each, roll 1D6: on 4+, that model is destroyed and that enemy unit suffers 1 mortal wound."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -35496,7 +35561,9 @@
         "unit_type": "Battleline",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Split": "Each time a Pink Horror or Blue Horror model is destroyed, after attacking unit finishes, roll 1D6 for that model. On 4+: if Pink Horror, add two Blue Horror models; if Blue Horror, add one Brimstone Horror model. HORRORS ARE PINK. HORRORS ARE BLUE. WHERE ONCE THERE WAS ONE, NOW THERE ARE TWO — If at any point this unit contains no Pink Horror models, use the Blue Horrors datasheet for this unit. While the unit contains one or more Pink Horror models, the Sullen Malevolence and Exploding Horrors abilities from the Blue Horrors datasheet do not apply to this unit."
+        },
         "model_groups": [
           {
             "model_group": "Pink Horror",
@@ -35681,7 +35748,9 @@
         "unit_type": "Infantry",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Bounding Leaps": "Eligible to shoot in a turn in which it Fell Back."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -35782,7 +35851,9 @@
         "unit_type": "Beast",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Slashing Dive": "In your Movement phase, after this unit ends a Normal move, select one enemy unit it moved over and roll 1D6 for each model in this unit: for each 4+, that enemy unit suffers 1 mortal wound."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -35868,7 +35939,9 @@
         "unit_type": "Mounted",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Eldritch Flames (Psychic)": "After shooting, select one enemy unit hit by one or more attacks. Until end of phase, that unit cannot have the Benefit of Cover."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36000,7 +36073,11 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Greater Daemon of Nurgle (Aura)": "While a friendly Nurgle Legiones Daemonica unit is within 6\", that unit is within your Shadow of Chaos.",
+          "Virulent Blessing (Psychic)": "At start of Fight phase, select one enemy unit within 24\" and visible. Until end of phase, Nurgle Legiones Daemonica model attacks allocated to that unit add 1 to D characteristic.",
+          "Deluge of Nurgle (Aura)": "While an enemy unit is within 6\", subtract 2 from Move and subtract 1 from OC of models in that unit."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36122,7 +36199,11 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Greater Daemon of Nurgle (Aura)": "While a friendly Nurgle Legiones Daemonica unit is within 6\", that unit is within your Shadow of Chaos.",
+          "Daemon Lord of Nurgle (Aura)": "While a friendly Nurgle Legiones Daemonica unit is within 6\", add 1 to Toughness of models in that unit.",
+          "Nurgle's Rot (Psychic)": "At end of your Movement phase, select one enemy unit within 12\". Until start of your next Movement phase, subtract 1 from Toughness of models in that unit."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36322,7 +36403,9 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Poxbringer": "While leading a unit, a successful unmodified Hit roll of 5+ scores a Critical Hit for melee attacks in that unit. Feculent Despair (Aura, Psychic) — While an enemy unit is within 6\", subtract 1 from its Battle-shock tests."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36406,7 +36489,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Keep Counting!": "While leading a unit, melee weapons in that unit have SUSTAINED HITS 1.",
+          "Meet Your Quota!": "While leading a unit, add 1 to OC of models in that unit."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36506,7 +36592,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Blessed by the Plague God": "While leading a unit, models in that unit have a 4+ invulnerable save.",
+          "Tally of Pestilence": "Keep a tally of enemy models destroyed by Nurgle Legiones Daemonica models from your army. At start of your Command phase, if tally is 7 or more, gain 1CP and reset tally to 0."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36589,7 +36678,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Jolly Gutpipes": "While leading a unit, add 1 to Move of models in that unit and re-roll Advance rolls for that unit.",
+          "Disease of Mirth (Aura)": "At start of Fight phase, every enemy unit (excluding Monsters and Vehicles) within 6\" must take a Battle-shock test."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36671,7 +36763,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Beast Handler": "While leading a unit, re-roll charge rolls for that unit. Once per battle, can target this unit with Heroic Intervention stratagem regardless of other uses this phase (-1CP, does not prevent other uses).",
+          "Seed the Garden of Nurgle": "At end of your Movement phase, if this model is within one Area Terrain feature, until end of battle, that Area Terrain feature is within your Shadow of Chaos."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36772,7 +36867,9 @@
         "unit_type": "Battleline",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Infected Outbreak": "If you control an objective marker at end of your Command phase and this unit is within range, that objective marker remains under your control even if you have no models within range, until opponent controls it at start or end of any turn."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36871,7 +36968,9 @@
         "unit_type": "Battleline",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Mischief Makers": "Each time an enemy unit (excluding Titanic units) within Engagement Range of one or more units with this ability is selected to fight, subtract 1 from Hit rolls for melee attacks in that enemy unit until end of phase."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -36956,7 +37055,9 @@
         "unit_type": "Beast",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Grotesque Regeneration": "At end of each phase, if a Beasts of Nurgle model in this unit has lost wounds but is not destroyed, that model regains all lost wounds."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -37041,7 +37142,9 @@
         "unit_type": "Mounted",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Death's Heads": "After shooting, select one enemy unit hit. Until end of turn, friendly Nurgle Legiones Daemonica models can re-roll Wound rolls for attacks targeting that unit."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -37182,7 +37285,11 @@
         "unit_type": "Fortification",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Shroud of Flies (Aura)": "While a friendly Nurgle Legiones Daemonica unit is within 6\", models in that unit have the Stealth ability.",
+          "Diseased Cover": "standard Benefit of Cover rule.",
+          "Fortification": "standard fortification rules (enemy units only within Engagement Range: ranged attacks still allowed but -1 Hit roll unless Pistol; no Desperate Escape tests for Fall Back while Battle-shocked except for those moving over enemy models)."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -37244,7 +37351,11 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Greater Daemon of Slaanesh (Aura)": "While a friendly Slaanesh Legiones Daemonica unit is within 6\", that unit is within your Shadow of Chaos.",
+          "No Prey Can Evade": "Re-roll Advance and Charge rolls for this model.",
+          "Monarch of the Hunt": "At start of first battle round, select one enemy unit as quarry. Re-roll Hit and Wound rolls for attacks targeting quarry. When quarry is destroyed, select new quarry."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -37400,7 +37511,11 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Greater Daemon of Slaanesh (Aura)": "While a friendly Slaanesh Legiones Daemonica unit is within 6\", that unit is within your Shadow of Chaos.",
+          "Daemon Lord of Slaanesh (Aura)": "While a friendly Slaanesh Legiones Daemonica unit is within 6\", improve AP of melee weapons in that unit by 1.",
+          "Mesmerising Form": "Each time an attack targets this model, subtract 1 from Hit roll."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -37627,7 +37742,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Harmonic Alignment": "While leading a unit, in your Command phase, return D3 destroyed Bodyguard models to that unit.",
+          "Discordant Disruption (Aura)": "While an enemy Psyker unit is within 12\", Psychic weapons in that unit have HAZARDOUS."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -37744,7 +37862,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "The Eternal Dance": "At start of Fight phase, select one enemy unit within 6\". Until end of phase: friendly Slaanesh Legiones Daemonica models add 1 to Wound rolls targeting that unit; models in that enemy unit subtract 1 from Wound rolls for melee attacks.",
+          "Dazzling Acrobatics": "Eligible to declare a charge in a turn in which it Advanced or Fell Back."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -37819,7 +37940,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Prince of Slaanesh": "While leading a unit, a successful unmodified Wound roll of 5+ scores a Critical Wound for melee attacks in that unit.",
+          "Delightful Agonies": "First time this model is destroyed, roll 1D6 at end of phase. On 2+, set this model back up with full wounds, not within Engagement Range of enemy units."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -37976,7 +38100,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Swallow Energy (Psychic)": "While leading a unit, models in that unit have Feel No Pain 4+ against mortal wounds and Psychic Attacks.",
+          "Horrible Fascination (Psychic)": "At start of opponent's Shooting phase, one Psyker model from your army with this ability can use it. Select one enemy unit within 12\" and visible; roll 1D6: on 1, that Psyker suffers D3 mortal wounds; on 2-5, subtract 1 from Hit rolls for models in that enemy unit until end of phase; on 6, that enemy unit is not eligible to shoot this phase."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -38076,7 +38203,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Tormentbringer (Aura)": "While a friendly Slaanesh Legiones Daemonica unit is within 6\", melee weapons in that unit have SUSTAINED HITS 1.",
+          "Hysterical Frenzy": "Each time a model in this model's unit is destroyed, if that model has not fought this phase, do not remove it. The destroyed model can fight after attacking unit finishes, then is removed."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -38214,7 +38344,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Tranceweaver": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If target is within range of an objective marker, re-roll the Hit roll instead.",
+          "Symphony of Pain (Psychic)": "At end of your Movement phase, select one enemy unit that is Battle-shocked and within 12\". Until end of turn, Slaanesh Legiones Daemonica models making attacks targeting that unit can re-roll Hit and Wound rolls."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -38298,7 +38431,9 @@
         "unit_type": "Battleline",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Horrifying Beauty": "At start of Fight phase, each enemy unit within Engagement Range of one or more units with this ability must take a Battle-shock test, subtracting 1 from result if Below Half-strength."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -38398,7 +38533,9 @@
         "unit_type": "Beast",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Soporific Musk": "Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more units with this ability Falls Back, models in that enemy unit must take Desperate Escape tests. If also Battle-shocked, subtract 1 from each test."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -38481,7 +38618,9 @@
         "unit_type": "Mounted",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Unholy Speed": "Re-roll Advance and Charge rolls for this unit."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -38604,7 +38743,9 @@
         "unit_type": "Mounted",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Cutting Down the Foe": "Each time a model in this unit makes a melee attack, if this unit made a Charge move this turn, improve S and D of that attack by 1."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -38742,7 +38883,10 @@
         "unit_type": "Epic Hero",
         "must_be_warlord": true,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "The Dark Master (Aura)": "The area within 6\" of this model is within your Shadow of Chaos.",
+          "Shadow Form": "At start of battle round, select one Shadow Form ability. Until end of battle round, this model has that ability."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -38881,7 +39025,9 @@
         "unit_type": "Vehicle",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Scuttling Walker": "Each time this model makes a Normal or Advance move, it can move over friendly Monster and Vehicle models and terrain features 4\" or less in height as if they were not there."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -39090,7 +39236,11 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Daemonic Lord": "While within 3\" of one or more friendly Legiones Daemonica Infantry units, this model has the Lone Operative ability.",
+          "Prince of Darkness (Aura)": "While a friendly Legiones Daemonica unit is within 6\", models in that unit have the Stealth ability.",
+          "Unholy Vigour": "Once per battle, at start of any phase, this model can use this ability. Until end of phase, this model has a 3+ invulnerable save."
+        },
         "model_groups": [
           {
             "model_group": "All",
@@ -39199,7 +39349,10 @@
         "unit_type": "Character",
         "must_be_warlord": false,
         "cannot_be_warlord": false,
-        "unit_ability_details": {},
+        "unit_ability_details": {
+          "Malefic Destruction": "Once per battle, at start of Fight phase, add 3 to A of hellforged weapons until end of phase.",
+          "Harbinger of Death": "Each time this model is selected to fight, select one of: LETHAL HITS, PRECISION, or SUSTAINED HITS 1. Until end of phase, hellforged weapons have that ability."
+        },
         "model_groups": [
           {
             "model_group": "All",
