@@ -314,6 +314,24 @@
     }
     .info-btn:hover { color: #999; }
 
+    /* Duplicate icon button (E10) */
+    .duplicate-btn {
+      background: none;
+      border: none;
+      color: #444;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+      padding: 0.15rem 0.2rem;
+      border-radius: 2px;
+      transition: color 0.15s;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .duplicate-btn:hover { color: #999; }
+
     /* ── Army list (middle panel) ── */
     .empty-state {
       text-align: center;
@@ -1500,7 +1518,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.72';
+  const VERSION = '5.73';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1989,6 +2007,68 @@
     renderAll();
   }
 
+  // E10: duplicate a unit. Copies the entry's full configuration (size, wargear,
+  // other options) at a new listId, so copy-tier pricing (ptsForEntry) picks it up
+  // automatically as the next copy in listId order — no separate pricing logic needed.
+  // Attached leaders are duplicated and re-attached to the copy, EXCEPT Epic Heroes,
+  // which are never duplicated (Ryan's spec, S52): the copy simply has no leader in
+  // that slot, which is not an error. The unit-limit hard boundary (B41/D0) applies to
+  // the duplicate exactly as it does to a fresh add — refused at the limit, not flagged.
+  function duplicateUnit(listId) {
+    const entry = armyList.find(e => e.listId === listId);
+    if (!entry || entry.unresolved) return;
+    const unit = allUnits.find(u => u.unit_name === entry.unit_name);
+    if (!unit) return;
+
+    const copyCount = armyList.filter(e => e.unit_name === entry.unit_name).length;
+    const lim = unitLimit(unit);
+    if (!canAddUnit(copyCount, lim)) {
+      flashBanner(`Limit reached — ${entry.unit_name} (max ${lim} at ${POINTS_CAP} pts)`);
+      return;
+    }
+
+    const newListId = nextId++;
+    const newEntry = {
+      listId:           newListId,
+      unit_name:        entry.unit_name,
+      unit_type:        entry.unit_type,
+      sizeIdx:          entry.sizeIdx,
+      god:              entry.god,
+      points:           null,
+      wargear:          { ...entry.wargear },
+      otherOptions:     { ...entry.otherOptions },
+      attachedToListId: null,
+    };
+    armyList.push(newEntry);
+    newEntry.points = ptsForEntry(newEntry);
+
+    for (const leader of getAttachedLeaders(listId)) {
+      if (leader.unit_type === 'Epic Hero') continue;   // never duplicated — copy has no leader in this slot
+      const leaderUnit = allUnits.find(u => u.unit_name === leader.unit_name);
+      if (!leaderUnit) continue;
+      const leaderCopyCount = armyList.filter(e => e.unit_name === leader.unit_name).length;
+      if (!canAddUnit(leaderCopyCount, unitLimit(leaderUnit))) continue;   // same hard limit, silently skipped
+
+      const newLeaderId = nextId++;
+      const newLeader = {
+        listId:           newLeaderId,
+        unit_name:        leader.unit_name,
+        unit_type:        leader.unit_type,
+        sizeIdx:          leader.sizeIdx,
+        god:              leader.god,
+        points:           null,
+        wargear:          { ...leader.wargear },
+        otherOptions:     { ...leader.otherOptions },
+        attachedToListId: newListId,
+      };
+      armyList.push(newLeader);
+      newLeader.points = ptsForEntry(newLeader);
+    }
+
+    selectedListId = newListId;
+    renderAll();
+  }
+
   function clearList() {
     if (armyList.length && !confirm('Remove all units from this list?')) return;
     armyList = [];
@@ -2301,6 +2381,8 @@
             <span class="list-item-pts">${entry.points !== null ? entry.points + ' pts' : '—'}</span>
             <button class="info-btn" title="View configured datasheet"
                     onclick="event.stopPropagation();openModalConfigured(${entry.listId})">ⓘ</button>
+            <button class="duplicate-btn" title="Duplicate"
+                    onclick="event.stopPropagation();duplicateUnit(${entry.listId})">⧉</button>
             <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${entry.listId})" title="Remove">&times;</button>
           </div>
         `;
