@@ -1500,7 +1500,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.71';
+  const VERSION = '5.72';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1562,6 +1562,9 @@
       const mg       = unit.model_groups && unit.model_groups[0];
       const leaderEligible = mg && mg.leader_eligible_units  ? mg.leader_eligible_units  : [];
       const coLeaderWith   = mg && mg.co_leader_eligible_with ? mg.co_leader_eligible_with : [];
+      // D144: generic "any other Leader, not a duplicate" flag. Absent on every unit
+      // until B38b ships DG data — defaults false, same as coLeaderWith defaults to [].
+      const coLeaderAny    = !!(mg && mg.co_leader_any);
       // B35: the roster badge is the smallest legal cost of the unit, so it carries the
       // cost of the default loadout's priced wargear too — otherwise a Terminator Assault
       // Squad advertises 155 and lands in the list at 180.
@@ -1583,6 +1586,7 @@
         limitOverride: unit.instance_limit_override || null,
         leaderEligible,
         coLeaderWith,
+        coLeaderAny,
         minPts: baseMin == null ? null : baseMin + gearMin,
         isCharacter,
         mustBeWarlord:    !!unit.must_be_warlord,
@@ -2072,17 +2076,31 @@
     renderDetail();
   }
 
+  // D144: symmetric-pairwise permits(A, B) — never two of the same datasheet, and
+  // either side's named list or generic "any" flag covers the other.
+  function permitsCoLeader(unitA, unitB) {
+    if (unitA.unit_name === unitB.unit_name) return false;
+    return unitA.coLeaderWith.includes(unitB.unit_name) ||
+           unitB.coLeaderWith.includes(unitA.unit_name) ||
+           unitA.coLeaderAny || unitB.coLeaderAny;
+  }
+
+  // D144: full-set validation, order-independent. An incoming leader may attach to
+  // a bodyguard iff it's leader-eligible for that bodyguard AND permits() holds
+  // against every leader already attached there (not just the first-found one).
   function canAttachLeader(leaderUnitName, bodyguardEntry) {
     const leaderUnit = allUnits.find(u => u.unit_name === leaderUnitName);
     if (!leaderUnit) return false;
     if (!leaderUnit.leaderEligible.includes(bodyguardEntry.unit_name)) return false;
-    const existing = armyList.find(e =>
+    const existingLeaders = armyList.filter(e =>
       e.attachedToListId === bodyguardEntry.listId && e.listId !== bodyguardEntry.listId
     );
-    if (!existing) return true;
-    const existingUnit = allUnits.find(u => u.unit_name === existing.unit_name);
-    if (!existingUnit) return false;
-    return existingUnit.coLeaderWith.includes(leaderUnitName) || leaderUnit.coLeaderWith.includes(existing.unit_name);
+    for (const existing of existingLeaders) {
+      const existingUnit = allUnits.find(u => u.unit_name === existing.unit_name);
+      if (!existingUnit) return false;
+      if (!permitsCoLeader(leaderUnit, existingUnit)) return false;
+    }
+    return true;
   }
 
   // ── Render all ─────────────────────────────────────────────────────────────
