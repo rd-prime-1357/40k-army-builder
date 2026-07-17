@@ -8565,7 +8565,7 @@
     "options": [
       {
         "id": "cc_1",
-        "scope": "Deathwatch Veterans",
+        "scope": "Gravis Veterans",
         "group": "Special Weapon",
         "type": "count",
         "replaces": "Infernus heavy bolter",

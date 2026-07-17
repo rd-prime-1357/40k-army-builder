@@ -651,6 +651,25 @@ def main():
     if args.datasheets:
         fan_pooled_swaps(ld)
 
+    # ── Targeted scope corrections (B18g / D152) ──────────────────────────────
+    # The scope resolver maps a 'body' hint to the last model group (DW Veterans
+    # for 000004175), but only Gravis Veterans actually carry the infernus heavy
+    # bolter.  DW Veterans' default_weapons list is a normalisation artifact (union
+    # of all sub-type weapons) and cannot be trusted for carrier checks on this
+    # unit.  Do NOT use _group_carries() here — it returns a false positive on DW
+    # Veterans for the same reason.  The fan mechanism also gives wrong results
+    # (D152).  Targeted post-processing override is the safe fix.
+    _SCOPE_OVERRIDES = {
+        '000004175': {'cc_1': 'Gravis Veterans'},
+    }
+    for uid, patches in _SCOPE_OVERRIDES.items():
+        entry = ld.get(uid)
+        if not isinstance(entry, dict):
+            continue
+        for opt in entry.get('options', []):
+            if opt.get('id') in patches:
+                opt['scope'] = patches[opt['id']]
+
     json.dump(ld, open(args.out, 'w'), indent=2, ensure_ascii=False)
 
     with open(args.report, 'w') as f:
