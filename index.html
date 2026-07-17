@@ -104,8 +104,14 @@
       margin-left: auto;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.6rem;
       white-space: nowrap;
+    }
+
+    .banner-pts-group {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.35rem;
     }
 
     .banner-pts-value {
@@ -432,6 +438,60 @@
     }
 
     .remove-btn:hover { color: #cc2200; }
+
+    /* E7: more room between points/info/duplicate and the delete control in the
+       center panel list, so a mis-tap doesn't land on the "x". Scoped under
+       .list-item so it wins over the shared .info-btn rule used elsewhere
+       (B47 Configuration Panel) without touching that rule. */
+    .list-item .list-item-pts { margin-right: 0.5rem; }
+    .list-item .info-btn      { margin-right: 0.4rem; }
+    .list-item .duplicate-btn { margin-right: 0.55rem; }
+    .list-item .remove-btn    { margin-left: 0.1rem; }
+
+    /* E8: undo-delete toast */
+    .undo-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.4rem;
+      transform: translateX(-50%) translateY(0);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: #1a1a1a;
+      border: 1px solid #3a3a3a;
+      border-radius: 6px;
+      padding: 0.55rem 0.7rem 0.55rem 0.9rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      z-index: 500;
+      font-size: 0.8rem;
+      color: #ccc;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .undo-toast.hidden { display: none; }
+    .undo-toast-msg { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
+    .undo-toast-btn {
+      background: none;
+      border: none;
+      color: #cc9900;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      padding: 0.1rem 0.3rem;
+      flex-shrink: 0;
+    }
+    .undo-toast-btn:hover { text-decoration: underline; }
+    .undo-toast-dismiss {
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 0.9rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.1rem 0.15rem;
+      flex-shrink: 0;
+    }
+    .undo-toast-dismiss:hover { color: #999; }
 
     .list-footer {
       flex-shrink: 0;
@@ -1111,8 +1171,15 @@
 
   <!-- List points — far right -->
   <div class="banner-points hidden" id="banner-points">
-    <span class="banner-label">List Points</span>
-    <span class="banner-pts-value" id="banner-pts-value">0</span>
+    <span class="banner-pts-group">
+      <span class="banner-label">Configured</span>
+      <span class="banner-pts-value" id="banner-pts-value">0</span>
+    </span>
+    <span class="banner-sep">|</span>
+    <span class="banner-pts-group">
+      <span class="banner-label">Remaining</span>
+      <span class="banner-pts-value" id="banner-pts-remaining">0</span>
+    </span>
   </div>
 </div>
 
@@ -1133,6 +1200,13 @@
     </div>
   </div>
   <div id="mylists-container"></div>
+
+  <!-- E8: undo-delete toast -->
+  <div class="undo-toast hidden" id="undo-toast">
+    <span class="undo-toast-msg" id="undo-toast-msg"></span>
+    <button class="undo-toast-btn" onclick="undoDelete()">Undo</button>
+    <button class="undo-toast-dismiss" title="Dismiss" onclick="dismissUndoToast()">&times;</button>
+  </div>
 </div>
 
 <!-- Three-column layout (builder screen) -->
@@ -1518,7 +1592,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.74';
+  const VERSION = '5.76';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1700,6 +1774,15 @@
   let currentListMeta = null;   // { name, points_target, primary_faction, created }
   let saveTimer       = null;
   let hasGhosts       = false;  // any unresolved (ghost) entries in the open list
+
+  // E8: undo-delete toast state. While a delete is pending undo, the change is
+  // held in memory only — scheduleSave() is suppressed so the removal is never
+  // persisted until the toast expires or is dismissed. This guarantees Undo
+  // always restores the pre-delete state even if an autosave landed moments
+  // before the delete.
+  const UNDO_TOAST_MS = 5000;
+  let pendingDelete    = null;  // { entry, index, attachedListIds, timeoutId } | null
+  let suppressAutoSave = false;
 
   // Army-data + taxonomy (populated in init)
   let armyData        = null;   // full units.json: array of { army, units }
@@ -1998,13 +2081,86 @@
   // ── Remove unit ────────────────────────────────────────────────────────────
 
   function removeUnit(listId) {
-    armyList.forEach(e => { if (e.attachedToListId === listId) e.attachedToListId = null; });
-    armyList = armyList.filter(e => e.listId !== listId);
+    const idx = armyList.findIndex(e => e.listId === listId);
+    if (idx === -1) return;
+    const entry = armyList[idx];
+
+    // Remember which entries were attached to this one (e.g. a leader attached
+    // to a bodyguard) so Undo can restore the attachment, not just the entry.
+    const attachedListIds = [];
+    armyList.forEach(e => {
+      if (e.attachedToListId === listId) {
+        attachedListIds.push(e.listId);
+        e.attachedToListId = null;
+      }
+    });
+
+    armyList.splice(idx, 1);
 
     if (selectedListId === listId) {
       selectedListId = armyList.length > 0 ? armyList[armyList.length - 1].listId : null;
     }
+
+    // E8: only one undo pending at a time — a second delete while one is open
+    // lets the first expire (commit) rather than chaining undos (Ryan's call).
+    if (pendingDelete) commitPendingDelete();
+
+    pendingDelete = {
+      entry: entry,
+      index: idx,
+      attachedListIds: attachedListIds,
+      timeoutId: setTimeout(commitPendingDelete, UNDO_TOAST_MS),
+    };
+    suppressAutoSave = true;
     renderAll();
+    showUndoToast(entry.unit_name);
+  }
+
+  // Finalizes a pending delete: persists the removal. Called when the toast
+  // expires, is dismissed, or a navigation/new-delete forces it to resolve.
+  function commitPendingDelete() {
+    if (!pendingDelete) return;
+    if (pendingDelete.timeoutId) clearTimeout(pendingDelete.timeoutId);
+    pendingDelete = null;
+    suppressAutoSave = false;
+    hideUndoToast();
+    scheduleSave();
+  }
+
+  function dismissUndoToast() {
+    commitPendingDelete();
+  }
+
+  function undoDelete() {
+    if (!pendingDelete) return;
+    clearTimeout(pendingDelete.timeoutId);
+    const { entry, index, attachedListIds } = pendingDelete;
+    pendingDelete = null;
+    suppressAutoSave = false;
+
+    const insertAt = Math.min(index, armyList.length);
+    armyList.splice(insertAt, 0, entry);
+    attachedListIds.forEach(id => {
+      const e = armyList.find(x => x.listId === id);
+      if (e) e.attachedToListId = entry.listId;
+    });
+    selectedListId = entry.listId;
+
+    hideUndoToast();
+    renderAll();
+  }
+
+  function showUndoToast(unitName) {
+    const el  = document.getElementById('undo-toast');
+    const msg = document.getElementById('undo-toast-msg');
+    if (!el || !msg) return;
+    msg.textContent = unitName + ' removed';
+    el.classList.remove('hidden');
+  }
+
+  function hideUndoToast() {
+    const el = document.getElementById('undo-toast');
+    if (el) el.classList.add('hidden');
   }
 
   // E10: duplicate a unit. Copies the entry's full configuration (size, wargear,
@@ -2071,6 +2227,7 @@
 
   function clearList() {
     if (armyList.length && !confirm('Remove all units from this list?')) return;
+    commitPendingDelete(); // E8: don't lose an in-flight delete on bulk clear
     armyList = [];
     selectedListId = null;
     hasGhosts = false;
@@ -2276,12 +2433,15 @@
   }
 
   function renderBanner() {
-    const total    = totalPoints();
-    const overCap  = total > POINTS_CAP;
-    const bannerEl = document.getElementById('banner-points');
-    const ptsEl    = document.getElementById('banner-pts-value');
+    const total     = totalPoints();
+    const remaining = POINTS_CAP - total;
+    const overCap   = total > POINTS_CAP;
+    const bannerEl  = document.getElementById('banner-points');
+    const ptsEl     = document.getElementById('banner-pts-value');
+    const remEl     = document.getElementById('banner-pts-remaining');
     bannerEl.className = 'banner-points' + (overCap ? ' over-cap' : '') + (currentScreen === 'home' ? ' hidden' : '');
     ptsEl.textContent  = total;
+    if (remEl) remEl.textContent = remaining;
     const nameEl = document.getElementById('banner-listname');
     if (nameEl) nameEl.textContent = currentListMeta ? currentListMeta.name : '';
     const chg = document.getElementById('banner-changed');
@@ -4614,6 +4774,7 @@
   }
 
   function showHome() {
+    commitPendingDelete(); // E8: don't lose an in-flight delete on navigation
     currentScreen = 'home';
     currentListId = null;
     currentListMeta = null;
@@ -4709,6 +4870,7 @@
     if (!fac || !fac.built) { err.textContent = 'Pick a playable faction.'; return; }
     const target = Number(document.getElementById('create-points').value);
 
+    commitPendingDelete(); // E8: don't lose an in-flight delete on navigation
     setFaction(fac);
     armyList = []; selectedListId = null; nextId = 1; hasGhosts = false;
     warlordEntryId = null;
@@ -4726,6 +4888,7 @@
   // ── Open / load (id-first resolve, ghost rows for misses) ─────────────────
   function openList(id) {
     if (!store) return;
+    commitPendingDelete(); // E8: don't lose an in-flight delete on navigation
     store.get(id).then(rec => {
       if (!rec) { alert('List not found.'); renderMyLists(); return; }
       const found = findFactionByName(rec.primary_faction);
@@ -4962,6 +5125,7 @@
   }
   function scheduleSave() {
     if (currentScreen !== 'builder' || !currentListId) return;
+    if (suppressAutoSave) return; // E8: hold the save until the undo toast resolves
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveNow, 400);
   }

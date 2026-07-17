@@ -266,6 +266,22 @@ def build_army_names(selected, kw_rows, flags):
 # Abilities indexing  (route by type)
 # ----------------------------------------------------------------------------
 
+# B4: ability `type` field values that print in the source datasheet's ability
+# block but aren't tagged "Datasheet". Layout buckets, not semantic classes —
+# they route the same as Datasheet. Primarch collects Guilliman's "Primarch of
+# the XIII (Aura)", "Master of Battle", "Supreme Strategist" (plus Lion, Grimaldus,
+# Mortarion). Special / Special (правая колонка) / Fortification (левая колонка)
+# collect SUPREME COMMANDER description text, INSPIRING COMMANDER, LAST SURVIVOR,
+# ATTACHED UNIT scoping text, and other datasheet-block rules. Wargear profile
+# stays out (weapon-ability text; different pipeline). Без заголовка stays out
+# (Drop Pod Designer's Note — informational, not an ability).
+_DATASHEET_LIKE_TYPES = frozenset({
+    "Primarch",
+    "Special",
+    "Special (правая колонка)",
+    "Fortification (левая колонка)",
+})
+
 def index_abilities(data, selected, flags):
     glossary = {a["id"]: a for a in data["abil_glossary"]}
     # per-datasheet routed abilities
@@ -328,7 +344,13 @@ def index_abilities(data, selected, flags):
                 flags["fnp_from_ability"].append(f"{selected[ds]['name']}: FNP {param} (placed in Rule Names)")
             rule_names[ds].append(inst)
             rule_defs.setdefault(generic_of(inst), desc)
-        elif atype == "Datasheet":
+        elif atype == "Datasheet" or atype in _DATASHEET_LIKE_TYPES:
+            # B4: Primarch, Special, "Special (правая колонка)", and
+            # "Fortification (левая колонка)" all print in the datasheet's
+            # ability block in the source rulebook. The type field is a layout
+            # bucket, not a semantic class (already noted for SUPREME COMMANDER
+            # at line 307). Route them the same as Datasheet so their names +
+            # descriptions surface in the tool.
             if name:
                 unit_abil[ds].append(name)
                 unit_abil_defs.setdefault(name, desc)

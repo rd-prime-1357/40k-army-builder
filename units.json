@@ -1898,7 +1898,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Priority Objective Identified": "At the start of the first battle round, if your army includes one or more models with this ability, you can select one objective marker on the battlefield. Until the end of the battle, while one or more models with this ability are on the battlefield, each time a friendly ADEPTUS ASTARTES model makes an attack that targets an enemy unit that is within range of that objective marker, re-roll a Wound roll of 1.",
-          "Evade and Survive": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, if this unit is not within Engagement Range of one or more enemy units, it can make a Normal move."
+          "Evade and Survive": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, if this unit is not within Engagement Range of one or more enemy units, it can make a Normal move.",
+          "LAST SURVIVOR": "This model cannot be selected as your Warlord."
         },
         "model_groups": [
           {
@@ -1921,7 +1922,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Priority Objective Identified",
-              "Evade and Survive"
+              "Evade and Survive",
+              "LAST SURVIVOR"
             ],
             "rule_names": [
               "Feel No Pain 5+",
@@ -15106,7 +15108,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Astartes Banner": "While this unit contains an Ancient, add 1 to the Objective Control characteristic of models in this unit.",
-          "Command Squad": "While a CHARACTER model is leading this unit, each time an attack targets this unit, subtract 1 from the Wound roll."
+          "Command Squad": "While a CHARACTER model is leading this unit, each time an attack targets this unit, subtract 1 from the Wound roll.",
+          "COMPANY HEROES": "You must attach one CAPTAIN or CHAPTER MASTER model to this unit. If this is not possible, this unit does not take part in the battle and counts as having been destroyed."
         },
         "model_groups": [
           {
@@ -15129,7 +15132,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Astartes Banner",
-              "Command Squad"
+              "Command Squad",
+              "COMPANY HEROES"
             ],
             "rule_names": [
               "Oath of Moment"
@@ -16248,7 +16252,11 @@
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Author of the Codex": "At the Start of your Command phase, select two Author of the Codex abilities (see left). Until the start of your next Command phase, this model has those abilities.",
           "Ultramarines Bodyguard": "While this model is within 3\" of one or more friendly Adeptus Astartes Infantry units, this model has the Lone Operative ability.",
-          "Armour of Fate": "The first time this model is destroyed, roll one D6 at the end of the phase: on a 3+, set this model back up on the battlefield as close as possible to where it was destroyed and not within Engagement Range of any enemy models, with 6 wounds remaining."
+          "Armour of Fate": "The first time this model is destroyed, roll one D6 at the end of the phase: on a 3+, set this model back up on the battlefield as close as possible to where it was destroyed and not within Engagement Range of any enemy models, with 6 wounds remaining.",
+          "SUPREME COMMANDER": "If this model is in your army, it must be your Warlord.",
+          "Primarch of the XIII (Aura)": "While a friendly ADEPTUS ASTARTES unit is within 6\" of this model, add 1 to the Objective Control characteristic of models in that unit and you can re-roll Battle-shock and Leadership tests taken for that unit.",
+          "Master of Battle": "At the start of your Command phase, after you have selected your Oath of Moment target, select a second enemy unit. Until the start of your next Command phase, if your Oath of Moment target is destroyed, that second enemy unit becomes your Oath of Moment target until you select a new one.",
+          "Supreme Strategist": "Once per battle round, one unit from your army with this ability can use it when a friendly ADEPTUS ASTARTES unit within 12\" of that model is targeted with a Stratagem. If it does, reduce the CP cost of that usage of that Stratagem by 1CP."
         },
         "model_groups": [
           {
@@ -16272,7 +16280,11 @@
             "unit_ability_names": [
               "Author of the Codex",
               "Ultramarines Bodyguard",
-              "Armour of Fate"
+              "Armour of Fate",
+              "SUPREME COMMANDER",
+              "Primarch of the XIII (Aura)",
+              "Master of Battle",
+              "Supreme Strategist"
             ],
             "rule_names": [
               "Oath of Moment"
@@ -16804,7 +16816,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Ultramarines Honour Guard": "While a Captain or Chapter Master model is leading this unit, each time an attack targets this unit, subtract 1 from the Wound roll.",
-          "Glory of Ultramar": "In your opponent’s Shooting phase, each time an enemy unit has shot, if any models from this unit were destroyed as a result of those attacks, this unit can make a Surge move. To do so, roll one D6: models in this unit move a number of inches up to the result, but this unit must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT ). When doing so, those models can be moved within Engagement Range of that enemy unit. This unit cannot make a Surge move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Surge move per phase."
+          "Glory of Ultramar": "In your opponent’s Shooting phase, each time an enemy unit has shot, if any models from this unit were destroyed as a result of those attacks, this unit can make a Surge move. To do so, roll one D6: models in this unit move a number of inches up to the result, but this unit must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT ). When doing so, those models can be moved within Engagement Range of that enemy unit. This unit cannot make a Surge move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Surge move per phase.",
+          "ATTACHED UNIT": "If a Captain or Chapter Master unit from your army can be attached to a Company Heroes unit, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -16827,7 +16840,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Ultramarines Honour Guard",
-              "Glory of Ultramar"
+              "Glory of Ultramar",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Oath of Moment"
@@ -16943,7 +16957,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Press the Attack": "Weapons equipped by models in this model’s unit have the [SUSTAINED HITS 1] ability.",
-          "Honour of Ultramar": "If this model is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 2+, do not remove it from play. This model can fight after the attacking unit has finished making its attacks. If one or more enemy models are destroyed as a result of those attacks, this model regains D3 lost wounds and is not destroyed; otherwise, it is removed from play."
+          "Honour of Ultramar": "If this model is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 2+, do not remove it from play. This model can fight after the attacking unit has finished making its attacks. If one or more enemy models are destroyed as a result of those attacks, this model regains D3 lost wounds and is not destroyed; otherwise, it is removed from play.",
+          "DEMETRIAN TITUS": "Your army cannot include more than one Titus unit."
         },
         "model_groups": [
           {
@@ -16982,7 +16997,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Press the Attack",
-              "Honour of Ultramar"
+              "Honour of Ultramar",
+              "DEMETRIAN TITUS"
             ],
             "rule_names": [
               "Feel No Pain 5+",
@@ -17085,7 +17101,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Second Company Banner": "While this unit contains Ancient Gadriel, add 1 to the Objective Control characteristic of models in this unit. While this unit contains Ancient Gadriel and Captain Titus, improve the Leadership characteristic of models in this unit by 1 as well.",
-          "Strategium Command": "After both players have deployed their armies, if this unit is on the battlefield (or any Transport it is embarked within is on the battlefield), select up to three ADEPTUS ASTARTES units from your army and redeploy them. When doing so, you can set those units up in Strategic Reserves, regardless of how many units are already in Strategic Reserves."
+          "Strategium Command": "After both players have deployed their armies, if this unit is on the battlefield (or any Transport it is embarked within is on the battlefield), select up to three ADEPTUS ASTARTES units from your army and redeploy them. When doing so, you can set those units up in Strategic Reserves, regardless of how many units are already in Strategic Reserves.",
+          "HEROES OF ULTRAMAR": "At the start of the Declare Battle Formations step, this unit can join one of the following units. This unit then counts as part of that unit for the rest of the battle, and that unit’s Starting Strength is increased accordingly. Assault intercessor Squad, Bladeguard Veteran Squad, Intercessor Squad, Sternguard Veteran Squad; This unit cannot join an Attached unit, and only Captain Titus can join a unit this unit has joined."
         },
         "model_groups": [
           {
@@ -17115,7 +17132,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Second Company Banner",
-              "Strategium Command"
+              "Strategium Command",
+              "HEROES OF ULTRAMAR"
             ],
             "rule_names": [
               "Oath of Moment"
@@ -17176,7 +17194,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Second Company Banner",
-              "Strategium Command"
+              "Strategium Command",
+              "HEROES OF ULTRAMAR"
             ],
             "rule_names": [
               "Oath of Moment"
@@ -17377,7 +17396,8 @@
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Rites of Tempering": "While this model is leading a unit, models in that unit have the Feel No Pain 5+ ability.",
           "Iron Father": "While this model is within 3\" of one or more friendly Adeptus Astartes Vehicle units, it has the Lone Operative ability.",
-          "Master of the Forge": "In your Command phase, select one friendly ADEPTUS ASTARTES VEHICLE model within 3\" of this model. That model regains up to 3 lost wounds and, until the start of your next Command phase, each time that VEHICLE model makes an attack, add 1 to the Hit roll. You cannot select a unit for this ability that has already been selected for the Blessing of the Omnissiah ability this phase, and vice versa."
+          "Master of the Forge": "In your Command phase, select one friendly ADEPTUS ASTARTES VEHICLE model within 3\" of this model. That model regains up to 3 lost wounds and, until the start of your next Command phase, each time that VEHICLE model makes an attack, add 1 to the Hit roll. You cannot select a unit for this ability that has already been selected for the Blessing of the Omnissiah ability this phase, and vice versa.",
+          "INSPIRING COMMANDER": "If you include this model in your army, until the end of the battle, non- CHARACTER models in Heavy Intercessor Squad units from your army have an Objective Control characteristic of 3 while they are not Battle-shocked."
         },
         "model_groups": [
           {
@@ -17406,7 +17426,8 @@
             "unit_ability_names": [
               "Rites of Tempering",
               "Iron Father",
-              "Master of the Forge"
+              "Master of the Forge",
+              "INSPIRING COMMANDER"
             ],
             "rule_names": [
               "Leader",
@@ -18339,7 +18360,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Angelic Visage": "Each time a melee attack targets this unit, subtract 1 from the Hit roll.",
-          "Heirs of Azkaellon": "While a Character model is leading this unit, each time a melee attack targets this unit, subtract 1 from the Wound roll."
+          "Heirs of Azkaellon": "While a Character model is leading this unit, each time a melee attack targets this unit, subtract 1 from the Wound roll.",
+          "ATTACHED UNIT": "If a Captain model from your army with the Leader ability can be attached to an Assault Intercessors with Jump Packs unit, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -18362,7 +18384,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Angelic Visage",
-              "Heirs of Azkaellon"
+              "Heirs of Azkaellon",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Deep Strike",
@@ -18931,7 +18954,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Black Rage": "Each time this model makes a melee attack, you can re-roll the Hit roll. While this model’s unit is not within 6\" of one or more friendly Blood Angels Character models, or 12\" of one or more friendly Chaplain models, it cannot be selected to Fall Back and its Objective Control characteristic is 0.",
-          "An Honourable Death in Combat": "Each time a model in this unit makes an attack, that attack has the [SUSTAINED HITS 1] ability if this unit is below its Starting Strength, or the [SUSTAINED HITS 2] ability if this unit is Below Half-strength."
+          "An Honourable Death in Combat": "Each time a model in this unit makes an attack, that attack has the [SUSTAINED HITS 1] ability if this unit is below its Starting Strength, or the [SUSTAINED HITS 2] ability if this unit is Below Half-strength.",
+          "ATTACHED UNIT": "If a Chaplain model from your army with the Leader ability can be attached to an Assault Intercessor Squad unit, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -18954,7 +18978,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Black Rage",
-              "An Honourable Death in Combat"
+              "An Honourable Death in Combat",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Feel No Pain 6+",
@@ -19222,7 +19247,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Black Rage": "Each time this model makes a melee attack, you can re-roll the Hit roll. While this model’s unit is not within 6\" of one or more friendly Blood Angels Character models, or 12\" of one or more friendly Chaplain models, it cannot be selected to Fall Back and its Objective Control characteristic is 0.",
-          "Visions of Heresy": "Once per turn, you can target this unit with the Fire Overwatch or the Heroic Intervention Stratagem for 0CP. While resolving that Stratagem, each time a model in this unit makes a ranged attack you can re-roll the Hit roll, or you can re-roll the Charge roll made for this unit (whichever applies)."
+          "Visions of Heresy": "Once per turn, you can target this unit with the Fire Overwatch or the Heroic Intervention Stratagem for 0CP. While resolving that Stratagem, each time a model in this unit makes a ranged attack you can re-roll the Hit roll, or you can re-roll the Charge roll made for this unit (whichever applies).",
+          "ATTACHED UNIT": "If a Chaplain model from your army with the Leader ability can be attached to an Intercessor Squad unit, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -19245,7 +19271,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Black Rage",
-              "Visions of Heresy"
+              "Visions of Heresy",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Feel No Pain 6+",
@@ -19608,7 +19635,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Black Rage": "Each time this model makes a melee attack, you can re-roll the Hit roll. While this model’s unit is not within 6\" of one or more friendly Blood Angels Character models, or 12\" of one or more friendly Chaplain models, it cannot be selected to Fall Back and its Objective Control characteristic is 0.",
-          "Savage Fury": "You can re-roll Charge rolls made for this unit."
+          "Savage Fury": "You can re-roll Charge rolls made for this unit.",
+          "ATTACHED UNIT": "If a Chaplain model from your army with the Leader ability can be attached to Assault Intercessors with Jump Packs, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -19631,7 +19659,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Black Rage",
-              "Savage Fury"
+              "Savage Fury",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Deep Strike",
@@ -20973,7 +21002,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Teleport Homer": "At the start of the battle, you can set up one Teleport Homer token for this unit anywhere on the battlefield that is not in your opponent’s deployment zone. If you do, once per battle, you can target this unit with the Rapid Ingress Stratagem for 0CP, but when resolving that Stratagem, you must set this unit up within 3\" horizontally of that token and not within 9\" horizontally of any enemy models. That token is then removed.",
-          "Deathwing": "Each time a model in this unit makes an attack, you can ignore any or all modifiers to that attack’s Ballistic Skill or Weapon Skill characteristics and/or to the Hit roll. In addition, each time a model in this unit makes an attack that targets the enemy unit you selected at the start of your Command phase for the Oath of Moment ability, add 1 to the Hit roll."
+          "Deathwing": "Each time a model in this unit makes an attack, you can ignore any or all modifiers to that attack’s Ballistic Skill or Weapon Skill characteristics and/or to the Hit roll. In addition, each time a model in this unit makes an attack that targets the enemy unit you selected at the start of your Command phase for the Oath of Moment ability, add 1 to the Hit roll.",
+          "ATTACHED UNIT": "If a Character unit from your army with the Leader ability can be attached to a Terminator Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -20996,7 +21026,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Teleport Homer",
-              "Deathwing"
+              "Deathwing",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Deep Strike",
@@ -21252,7 +21283,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Teleport Homer": "At the start of the battle, you can set up one Teleport Homer token for this unit anywhere on the battlefield that is not in your opponent’s deployment zone. If you do, once per battle, you can target this unit with the Rapid Ingress Stratagem for 0CP, but when resolving that Stratagem, you must set this unit up within 3\" horizontally of that token and not within 9\" horizontally of any enemy models. That token is then removed.",
-          "Inner Circle": "Each time an attack is allocated to a model in this unit, subtract 1 from the Damage characteristic of that attack."
+          "Inner Circle": "Each time an attack is allocated to a model in this unit, subtract 1 from the Damage characteristic of that attack.",
+          "ATTACHED UNIT": "If a Character unit from your army with the Leader ability can be attached to a Terminator Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -21275,7 +21307,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Teleport Homer",
-              "Inner Circle"
+              "Inner Circle",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Deep Strike",
@@ -21797,7 +21830,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Knights of Caliban": "Each time this unit is selected to fight, if it made a Charge move this turn, until the end of the phase, melee weapons equipped by models in this unit have the [ANTI-MONSTER 4+] and [ANTI-VEHICLE 4+] abilities."
+          "Knights of Caliban": "Each time this unit is selected to fight, if it made a Charge move this turn, until the end of the phase, melee weapons equipped by models in this unit have the [ANTI-MONSTER 4+] and [ANTI-VEHICLE 4+] abilities.",
+          "ATTACHED UNIT": "If a Character unit from your army with the Leader ability can be attached to an Outrider Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -21819,7 +21853,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Knights of Caliban"
+              "Knights of Caliban",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Oath of Moment"
@@ -22363,7 +22398,11 @@
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Primarch of the First Legion": "At the start of your Command phase, select two Primarch of the First Legion abilities. Until the start of your next Command phase, this model has those abilities.",
           "The Emperor’s Shield": "Each time an attack is allocated to this model, if the Strength characteristic of that attack is greater than the Toughness characteristic of this model, subtract 1 from the Wound roll.",
-          "Dark Angels Bodyguard": "While this model is within 3\" of one or more friendly Adeptus Astartes Infantry units, this model has the Lone Operative ability."
+          "Dark Angels Bodyguard": "While this model is within 3\" of one or more friendly Adeptus Astartes Infantry units, this model has the Lone Operative ability.",
+          "SUPREME COMMANDER": "If this model is in your army, it must be your Warlord.",
+          "Mist-wreathed Shadow Realms": "In your Command phase, if this unit is not within Engagement Range of one or more enemy units, you can remove it from the battlefield and place it into Strategic Reserves.",
+          "Martial Exemplar (Aura)": "While a friendly ADEPTUS ASTARTES unit is within 6\" of this model, each time a model in that unit makes a melee attack, re-roll a Hit roll of 1 and re-roll a Wound roll of 1.",
+          "No Hiding From the Watchers (Aura)": "While a friendly ADEPTUS ASTARTES unit is within 6\" of this model, models in that unit have the Feel No Pain 4+ ability against mortal wounds."
         },
         "model_groups": [
           {
@@ -22387,7 +22426,11 @@
             "unit_ability_names": [
               "Primarch of the First Legion",
               "The Emperor’s Shield",
-              "Dark Angels Bodyguard"
+              "Dark Angels Bodyguard",
+              "SUPREME COMMANDER",
+              "Mist-wreathed Shadow Realms",
+              "Martial Exemplar (Aura)",
+              "No Hiding From the Watchers (Aura)"
             ],
             "rule_names": [
               "Deep Strike",
@@ -22695,7 +22738,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Braziers of Judgement": "While a Character model is leading this unit, each time an attack targets this unit, subtract 1 from the Hit roll.",
-          "Enmity for the Unworthy": "Each time a model in this unit makes an attack that targets a CHARACTER unit, add 1 to the Hit roll."
+          "Enmity for the Unworthy": "Each time a model in this unit makes an attack that targets a CHARACTER unit, add 1 to the Hit roll.",
+          "Attached Unit": "If a Character unit from your army with the Leader ability can be attached to a Sternguard Veteran Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -22718,7 +22762,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Braziers of Judgement",
-              "Enmity for the Unworthy"
+              "Enmity for the Unworthy",
+              "Attached Unit"
             ],
             "rule_names": [
               "Oath of Moment"
@@ -22811,7 +22856,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "High King of Fenris": "Once per battle round, in your Movement phase, you can select one friendly Space Wolves unit that is in Reserves. If you do, until the end of the phase, for the purpose of setting up that unit on the battlefield, treat the current battle round number as being one higher than it actually is.",
-          "Guile of the Wolf (Aura)": "Each time your opponent targets a unit from their army with a Stratagem, if that unit is within 12\" of this model, increase the cost of that usage of that Stratagem by 1CP (this is not cumulative with any other rules that increase the CP cost of that Stratagem)."
+          "Guile of the Wolf (Aura)": "Each time your opponent targets a unit from their army with a Stratagem, if that unit is within 12\" of this model, increase the cost of that usage of that Stratagem by 1CP (this is not cumulative with any other rules that increase the CP cost of that Stratagem).",
+          "EMBARKING WITHIN TRANSPORTS": "This model can embark within friendly Adeptus Astartes Transport models that can transport Terminator models. When doing so, it takes up the space of 4 Infantry models."
         },
         "model_groups": [
           {
@@ -22836,7 +22882,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "High King of Fenris",
-              "Guile of the Wolf (Aura)"
+              "Guile of the Wolf (Aura)",
+              "EMBARKING WITHIN TRANSPORTS"
             ],
             "rule_names": [
               "Deep Strike",
@@ -24079,7 +24126,8 @@
           "Curse of the Wulfen": "While this unit is within 6\" of one or more friendly Space Wolves Character models (excluding Wulfen models) or within 12\" of one or more friendly Wolf Priest models, if it is not Battle-shocked, add 1 to the Objective Control characteristic of Infantry models in it and add 3 to the Objective Control characteristic of Vehicle models in it.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Murder-maker (Aura)": "In the Fight phase, each time an attack targets a friendly Wulfen unit within 6\" of this model, if a model in that unit is destroyed as a result of that attack, if that model has not fought this phase, roll one D6: on a 4+, do not remove the destroyed model from play; it can fight after the attacking unit has finished making its attacks, and is then removed from play.",
-          "Bestial Fury": "You can re-roll Advance and Charge rolls made for this model."
+          "Bestial Fury": "You can re-roll Advance and Charge rolls made for this model.",
+          "FORCE OF UNTAMED DESTRUCTION": "This model cannot be your WARLORD ."
         },
         "model_groups": [
           {
@@ -24102,7 +24150,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Murder-maker (Aura)",
-              "Bestial Fury"
+              "Bestial Fury",
+              "FORCE OF UNTAMED DESTRUCTION"
             ],
             "rule_names": [
               "Deadly Demise 1",
@@ -26272,7 +26321,8 @@
         "unit_ability_details": {
           "Mission Tactics": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Spectrus Doctrines": "At the end of your opponent’s turn, if this unit is more than 6\" away from all enemy units, you can remove this unit from the battlefield and place it into Strategic Reserves."
+          "Spectrus Doctrines": "At the end of your opponent’s turn, if this unit is more than 6\" away from all enemy units, you can remove this unit from the battlefield and place it into Strategic Reserves.",
+          "ATTACHED UNIT": "If a Character from your army with the Leader ability can be attached to an Infiltrator Squad, it can be attached to this unit instead. If this unit has a Leader unit attached to it during the Declare Battle Formations step, that Leader unit gains the Infiltrators and Scouts 6\" abilities."
         },
         "model_groups": [
           {
@@ -26294,7 +26344,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Spectrus Doctrines"
+              "Spectrus Doctrines",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Infiltrators",
@@ -26550,7 +26601,8 @@
         "unit_ability_details": {
           "Mission Tactics": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Fortis Doctrines": "Each time a model in this unit makes an attack that targets a unit that is below its Starting Strength, add 1 to the Hit roll. If that attack targets a unit that is Below Half-strength, add 1 to the Hit roll and add 1 to the Wound roll instead."
+          "Fortis Doctrines": "Each time a model in this unit makes an attack that targets a unit that is below its Starting Strength, add 1 to the Hit roll. If that attack targets a unit that is Below Half-strength, add 1 to the Hit roll and add 1 to the Wound roll instead.",
+          "ATTACHED UNIT": "If a Character from your army with the Leader ability can be attached to an Intercessor Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -26572,7 +26624,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Fortis Doctrines"
+              "Fortis Doctrines",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Mission Tactics",
@@ -27044,7 +27097,8 @@
         "unit_ability_details": {
           "Mission Tactics": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Indomitor Doctrines": "Each time a model in this unit makes a ranged attack that targets the closest eligible target, or makes a melee attack in a turn in which it made a Charge move, improve the Strength characteristic of that attack by 2."
+          "Indomitor Doctrines": "Each time a model in this unit makes a ranged attack that targets the closest eligible target, or makes a melee attack in a turn in which it made a Charge move, improve the Strength characteristic of that attack by 2.",
+          "ATTACHED UNIT": "If a Character unit from your army can be attached to a Heavy Intercessor Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -27066,7 +27120,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Indomitor Doctrines"
+              "Indomitor Doctrines",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Mission Tactics",
@@ -27282,7 +27337,8 @@
         "unit_ability_details": {
           "Mission Tactics": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Death to the Alien": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If the target of that attack does not have the IMPERIUM or CHAOS keywords, you can re-roll the Hit roll instead."
+          "Death to the Alien": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If the target of that attack does not have the IMPERIUM or CHAOS keywords, you can re-roll the Hit roll instead.",
+          "ATTACHED UNIT": "If a Character from your army with the Leader ability can be attached to a Sternguard Veteran Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -27304,7 +27360,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Death to the Alien"
+              "Death to the Alien",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Mission Tactics",
@@ -27775,7 +27832,8 @@
           "Mission Tactics": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Terminatus Assault": "You can re-roll Charge rolls made for this unit. Each time this unit ends a Charge move, each enemy unit within Engagement Range of this unit must take a Battle-shock test. If that enemy unit does not have the IMPERIUM or CHAOS keywords, subtract 1 from that test.",
-          "Teleport Homer": "At the start of the battle, you can set up one Teleport Homer token for this unit anywhere on the battlefield that is not within your opponent’s deployment zone. If you do, once per battle, you can target this unit with the Rapid Ingress Stratagem for 0CP, but when resolving that Stratagem, you must set this unit up within 3\" of that token and not within 9\" horizontally of one or more enemy units. That token is then removed."
+          "Teleport Homer": "At the start of the battle, you can set up one Teleport Homer token for this unit anywhere on the battlefield that is not within your opponent’s deployment zone. If you do, once per battle, you can target this unit with the Rapid Ingress Stratagem for 0CP, but when resolving that Stratagem, you must set this unit up within 3\" of that token and not within 9\" horizontally of one or more enemy units. That token is then removed.",
+          "ATTACHED UNIT": "If a Character from your army with the Leader ability can be attached to a Terminator Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -27798,7 +27856,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Terminatus Assault",
-              "Teleport Homer"
+              "Teleport Homer",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Deep Strike",
@@ -28070,7 +28129,8 @@
         "unit_ability_details": {
           "Mission Tactics": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Talonstrike Doctrines": "Each time this unit is set up on the battlefield, until the end of the turn: Improve the Armour Penetration characteristic of weapons equipped by models in this unit by 1.; Melee weapons equipped by models in this unit have the [LANCE] ability."
+          "Talonstrike Doctrines": "Each time this unit is set up on the battlefield, until the end of the turn: Improve the Armour Penetration characteristic of weapons equipped by models in this unit by 1.; Melee weapons equipped by models in this unit have the [LANCE] ability.",
+          "ATTACHED UNIT": "If a Character unit from your army with the Leader ability can be attached to an Assault Intercessors with Jump Packs unit, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -28092,7 +28152,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Talonstrike Doctrines"
+              "Talonstrike Doctrines",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Deep Strike",
@@ -28138,7 +28199,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Talonstrike Doctrines"
+              "Talonstrike Doctrines",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Deep Strike",
@@ -28423,7 +28485,8 @@
         "unit_ability_details": {
           "Mission Tactics": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Death to the Alien": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If the target of that attack does not have the IMPERIUM or CHAOS keywords, you can re-roll the Hit roll instead."
+          "Death to the Alien": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If the target of that attack does not have the IMPERIUM or CHAOS keywords, you can re-roll the Hit roll instead.",
+          "ATTACHED UNIT": "If a Character from your army with the Leader ability can be attached to an Intercessor Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -28445,7 +28508,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Death to the Alien"
+              "Death to the Alien",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Mission Tactics",
@@ -28504,7 +28568,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Death to the Alien"
+              "Death to the Alien",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Mission Tactics",
@@ -29053,7 +29118,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Forgefather": "In your Shooting phase, select one enemy unit within 24\" of and visible to this model. Until the end of the phase, each time a friendly ADEPTUS ASTARTES model makes a ranged attack with a Torrent or Melta weapon that targets that enemy unit, you can re-roll the Wound roll.",
-          "Seeker of the Unfound": "The first time this model is set up on the battlefield, select one objective marker on the battlefield. While this model is within range of that objective marker, this model has an Objective Control characteristic of 10, a Leadership characteristic of 5+ and the Feel No Pain 4+ ability."
+          "Seeker of the Unfound": "The first time this model is set up on the battlefield, select one objective marker on the battlefield. While this model is within range of that objective marker, this model has an Objective Control characteristic of 10, a Leadership characteristic of 5+ and the Feel No Pain 4+ ability.",
+          "INSPIRING COMMANDER": "If you include this model in your army, until the end of the battle, non- CHARACTER models in Infernus Squad units from your army have an Objective Control characteristic of 2 while they are not Battle-shocked."
         },
         "model_groups": [
           {
@@ -29082,7 +29148,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Forgefather",
-              "Seeker of the Unfound"
+              "Seeker of the Unfound",
+              "INSPIRING COMMANDER"
             ],
             "rule_names": [
               "Feel No Pain 6+",
@@ -29191,7 +29258,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Icon of Obstinacy": "Each time an attack targets this model’s unit, if the Strength characteristic of that attack is greater than or equal to the Toughness characteristic of that unit, subtract 1 from the Wound roll.",
-          "Rampart": "Once per battle, at the start of any phase, this model can use this ability. If it does, until the end of the phase, this model has a 2+ invulnerable save."
+          "Rampart": "Once per battle, at the start of any phase, this model can use this ability. If it does, until the end of the phase, this model has a 2+ invulnerable save.",
+          "INSPIRING COMMANDER": "If you include this model in your army, until the end of the battle, non- CHARACTER models in Terminator Assault Squad and Terminator Squad units from your army have an Objective Control characteristic of 2 while they are not Battle-shocked."
         },
         "model_groups": [
           {
@@ -29220,7 +29288,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Icon of Obstinacy",
-              "Rampart"
+              "Rampart",
+              "INSPIRING COMMANDER"
             ],
             "rule_names": [
               "Deep Strike",
@@ -29396,7 +29465,9 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Oath of Rynn": "Once per battle, at the start of either player’s Command phase, this model can use this ability. When it does, until the end of the turn, add 1 to the Attacks characteristic of weapons equipped by models in this model’s unit.",
-          "To the Last": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Hit roll if that unit is below its Starting Strength, and add 1 to the Wound roll as well if that unit is Below Half-strength."
+          "To the Last": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Hit roll if that unit is below its Starting Strength, and add 1 to the Wound roll as well if that unit is Below Half-strength.",
+          "CRIMSON FISTS": "This model is from the Crimson Fists Chapter, a successor of the Imperial Fists. For all rules purposes, it is treated as an Imperial Fists model, but it cannot be included in an army that includes any other Imperial Fists Epic Hero models.",
+          "INSPIRING COMMANDER": "If you include this model in your army, until the end of the battle, non- CHARACTER models in Sternguard Veteran Squad units from your army have an Objective Control characteristic of 2 while they are not Battle-shocked."
         },
         "model_groups": [
           {
@@ -29426,7 +29497,9 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Oath of Rynn",
-              "To the Last"
+              "To the Last",
+              "CRIMSON FISTS",
+              "INSPIRING COMMANDER"
             ],
             "rule_names": [
               "Feel No Pain 6+",
@@ -29515,7 +29588,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Shadowmaster": "While this model is leading a unit, models in this unit cannot be targeted by ranged attacks unless the attacking model is within 12\".",
-          "Echo of the Ravenspire": "At the end of your opponent’s turn, if this model’s unit is not within Engagement Range of any enemy models, you can remove it from the battlefield and place it into Strategic Reserves."
+          "Echo of the Ravenspire": "At the end of your opponent’s turn, if this model’s unit is not within Engagement Range of any enemy models, you can remove it from the battlefield and place it into Strategic Reserves.",
+          "INSPIRING COMMANDER": "If you include this model in your army, until the end of the battle, non- CHARACTER models in Assault Intercessors with Jump Packs units from your army have an Objective Control characteristic of 2 while they are not Battle-shocked."
         },
         "model_groups": [
           {
@@ -29542,7 +29616,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Shadowmaster",
-              "Echo of the Ravenspire"
+              "Echo of the Ravenspire",
+              "INSPIRING COMMANDER"
             ],
             "rule_names": [
               "Deep Strike",
@@ -29632,7 +29707,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Master of Shadows": "In your Command phase, you can select one unit from your opponent’s army. Until the start of your next Command phase, each time an ADEPTUS ASTARTES unit from your army declares a charge while it is within 12\" of that enemy unit, you can re-roll the Charge roll, but it must declare that enemy unit as a target of that charge (if possible).",
-          "Blackwing Mantle": "You can target this model’s unit with the Rapid Ingress and Heroic Intervention Stratagems for 0CP, even if you have already used that Stratagem on a different unit this phase."
+          "Blackwing Mantle": "You can target this model’s unit with the Rapid Ingress and Heroic Intervention Stratagems for 0CP, even if you have already used that Stratagem on a different unit this phase.",
+          "CHAPTER MASTER OF THE RAVEN GUARD": "At the start of the Declare Battle Formations step, if your army includes AETHON SHAAN and Kayvaan Shrike, until the end of the battle, your KAYVAAN SHRIKE unit loses its Lone Operative ability and it replaces its CHAPTER MASTER keyword with CAPTAIN ."
         },
         "model_groups": [
           {
@@ -29655,7 +29731,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Master of Shadows",
-              "Blackwing Mantle"
+              "Blackwing Mantle",
+              "CHAPTER MASTER OF THE RAVEN GUARD"
             ],
             "rule_names": [
               "Deep Strike",
@@ -29748,7 +29825,8 @@
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "For the Khan!": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [ASSAULT] ability and melee weapons equipped by models in that unit have the [LANCE] ability.",
-          "Trophy Taker": "Each time this model destroys an enemy CHARACTER model, you gain 1CP."
+          "Trophy Taker": "Each time this model destroys an enemy CHARACTER model, you gain 1CP.",
+          "INSPIRING COMMANDER": "If you include this model in your army, until the end of the battle, non- CHARACTER models in Outrider Squad units from your army have an Objective Control characteristic of 3 while they are not Battle-shocked."
         },
         "model_groups": [
           {
@@ -29785,7 +29863,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "For the Khan!",
-              "Trophy Taker"
+              "Trophy Taker",
+              "INSPIRING COMMANDER"
             ],
             "rule_names": [
               "Leader",
@@ -31372,7 +31451,10 @@
         "unit_ability_details": {
           "Templar Vows": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced .",
           "Litanies of the Devout": "While this unit is leading a unit and contains a Chaplain Grimaldus model, each time a model in that unit makes a melee attack, you can re-roll the Hit roll.",
-          "Temple Relics": "In your Command phase, if this unit contains one or more Cenobyte Servitor models, select one Temple Relics ability (see left). Until the start of your next Command phase, this unit’s Chaplain Grimaldus model has that ability."
+          "Temple Relics": "In your Command phase, if this unit contains one or more Cenobyte Servitor models, select one Temple Relics ability (see left). Until the start of your next Command phase, this unit’s Chaplain Grimaldus model has that ability.",
+          "Banner of the Emperor Victorious": "Add 1 to Advance and Charge rolls made for this unit.",
+          "Column from the Major Altar": "Add 1 to the Toughness characteristic of models in this unit.",
+          "Water from the Stoup of Elucidation": "Improve the Armour Penetration characteristic of melee weapons equipped by models in this unit by 1."
         },
         "model_groups": [
           {
@@ -31403,7 +31485,10 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Litanies of the Devout",
-              "Temple Relics"
+              "Temple Relics",
+              "Banner of the Emperor Victorious",
+              "Column from the Major Altar",
+              "Water from the Stoup of Elucidation"
             ],
             "rule_names": [
               "Feel No Pain 5+",
@@ -31463,7 +31548,10 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Litanies of the Devout",
-              "Temple Relics"
+              "Temple Relics",
+              "Banner of the Emperor Victorious",
+              "Column from the Major Altar",
+              "Water from the Stoup of Elucidation"
             ],
             "rule_names": [
               "Feel No Pain 5+",
@@ -31895,7 +31983,8 @@
         "unit_ability_details": {
           "Templar Vows": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced .",
           "Armour of Faith": "Once per phase, when an attack is allocated to this model and the saving throw is failed, you can change the Damage characteristic of that attack to 0.",
-          "Sigismund’s Heir": "Each time this model’s unit declares a charge, if one or more targets of that charge have the CHARACTER keyword, add 2 to the Charge roll. Once per battle, when this model’s unit is selected to fight, if that unit is within Engagement Range of one or more enemy CHARACTER units, this model can use this ability. If it does, until the end of the phase, melee weapons equipped by this model have the [DEVASTATING WOUNDS] ability."
+          "Sigismund’s Heir": "Each time this model’s unit declares a charge, if one or more targets of that charge have the CHARACTER keyword, add 2 to the Charge roll. Once per battle, when this model’s unit is selected to fight, if that unit is within Engagement Range of one or more enemy CHARACTER units, this model can use this ability. If it does, until the end of the phase, melee weapons equipped by this model have the [DEVASTATING WOUNDS] ability.",
+          "CHOSEN OF THE EMPEROR": "You cannot include more than one EMPEROR’S CHAMPION model in your army."
         },
         "model_groups": [
           {
@@ -31928,7 +32017,8 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Armour of Faith",
-              "Sigismund’s Heir"
+              "Sigismund’s Heir",
+              "CHOSEN OF THE EMPEROR"
             ],
             "rule_names": [
               "Leader",
@@ -32162,7 +32252,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Templar Vows": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced .",
-          "Exploit Their Cowardice": "Each time an enemy unit within Engagement Range of this unit is selected to Fall Back, after it ends that Fall Back move, if this unit is not within Engagement Range of one or more enemy units, this unit can make a Normal move."
+          "Exploit Their Cowardice": "Each time an enemy unit within Engagement Range of this unit is selected to Fall Back, after it ends that Fall Back move, if this unit is not within Engagement Range of one or more enemy units, this unit can make a Normal move.",
+          "ATTACHED UNIT": "If a Character from your army with the Leader ability can be attached to an Intercessor Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -32184,7 +32275,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Exploit Their Cowardice"
+              "Exploit Their Cowardice",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Templar Vows"
@@ -32400,7 +32492,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Templar Vows": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced .",
-          "Righteous Zeal": "In your opponent’s Shooting phase, each time an enemy unit has shot, if any models in this unit were destroyed as a result of those attacks, this unit can make a Righteous Zeal move. To do so, roll one D6 and add 2 to the result: models in this unit move a number of inches up to this result, but this unit must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT ). When doing so, those models can be moved within Engagement Range of that enemy unit. This unit cannot make a Righteous Zeal move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Righteous Zeal move per phase."
+          "Righteous Zeal": "In your opponent’s Shooting phase, each time an enemy unit has shot, if any models in this unit were destroyed as a result of those attacks, this unit can make a Righteous Zeal move. To do so, roll one D6 and add 2 to the result: models in this unit move a number of inches up to this result, but this unit must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT ). When doing so, those models can be moved within Engagement Range of that enemy unit. This unit cannot make a Righteous Zeal move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Righteous Zeal move per phase.",
+          "ATTACHED UNIT": "If a Character from your army with the Leader ability can be attached to an Intercessor Squad, it can be attached to this unit instead."
         },
         "model_groups": [
           {
@@ -32422,7 +32515,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Righteous Zeal"
+              "Righteous Zeal",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Templar Vows"
@@ -32464,7 +32558,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Righteous Zeal"
+              "Righteous Zeal",
+              "ATTACHED UNIT"
             ],
             "rule_names": [
               "Templar Vows"
@@ -43657,7 +43752,11 @@
         "unit_ability_details": {
           "Nurgle’s Gift (Aura)": "If your Army Faction is DEATH GUARD , while an enemy unit is within Contagion Range of one or more Death Guard models from your army, it is Afflicted (see below). CONTAGION RANGE Contagion Range changes over the course of the battle: AFFLICTED During the Declare Battle Formations step, select one of the Plagues below. Until the end of the battle, while an enemy unit is Afflicted, subtract 1 from the Toughness characteristic of models in that unit, and that unit has the effect of your chosen Plague. Skullsquirm Blight This horrifying affliction sees the minds and senses of the victim gnawed gradually away from within. Each time a model in this unit makes an attack, subtract 1 from the Hit roll . Rattlejoint Ague Limbs shuddering with fever palsy, bones turned brittle as glass, these warriors can barely act to defend themselves. Worsen the Save characteristic of models in this unit by 1. Scabrous Soulrot Victims of this insidious ailment become glassy eyed and morose as their very animus and essence decay. Worsen the Move, Leadership, and Objective Control characteristics of models in this unit by 1 (this rule can only worsen a model’s Objective Control characteristic to a minimum of 1).",
           "Lord of the Death Guard": "Once per turn, this model can use one of the Lord of the Death Guard abilities (see left).",
-          "Host of Plagues": "At the end of your Movement phase, roll one D6 for each enemy unit within 6\" of this model, adding 1 to the result if that enemy unit is Afflicted: on a 3+, that enemy unit suffers D3 mortal wounds."
+          "Host of Plagues": "At the end of your Movement phase, roll one D6 for each enemy unit within 6\" of this model, adding 1 to the result if that enemy unit is Afflicted: on a 3+, that enemy unit suffers D3 mortal wounds.",
+          "Diseased Influence": "Just after an enemy unit ends a Normal, Advance or Fall Back move within 9\" of a friendly Death Guard unit that is within 6\" of this model, if that DEATH GUARD unit is not within Engagement Range of one or more enemy units, it can make a Normal move of up to 5\".",
+          "Boon of Death": "In the Fight phase, when a friendly DEATH GUARD unit within 6\" of this model is selected as the target of an attack, this model can use this ability. If it does, until the end of the phase, each time a model in that DEATH GUARD unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6. On a 2+, do not remove it from play; that destroyed model can fight after the attacking unit has finished making its attacks, and it is then removed from play.",
+          "Inflamed Reprisal": "In your opponent’s Shooting phase, when a friendly DEATH GUARD unit within 6\" of this model is selected as the target of an attack, this model can use this ability. If it does, after the attacking unit has finished making its attacks, that Death Guard unit can shoot as if it were your Shooting phase, but when resolving those attacks it can only target that enemy unit (and only if it is an eligible target).",
+          "SUPREME COMMANDER": "If this model is in your army, it must be your WARLORD ."
         },
         "model_groups": [
           {
@@ -43680,7 +43779,11 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Lord of the Death Guard",
-              "Host of Plagues"
+              "Host of Plagues",
+              "Diseased Influence",
+              "Boon of Death",
+              "Inflamed Reprisal",
+              "SUPREME COMMANDER"
             ],
             "rule_names": [
               "Deadly Demise D6",
@@ -44158,7 +44261,8 @@
           "Nurgle’s Gift (Aura)": "If your Army Faction is DEATH GUARD , while an enemy unit is within Contagion Range of one or more Death Guard models from your army, it is Afflicted (see below). CONTAGION RANGE Contagion Range changes over the course of the battle: AFFLICTED During the Declare Battle Formations step, select one of the Plagues below. Until the end of the battle, while an enemy unit is Afflicted, subtract 1 from the Toughness characteristic of models in that unit, and that unit has the effect of your chosen Plague. Skullsquirm Blight This horrifying affliction sees the minds and senses of the victim gnawed gradually away from within. Each time a model in this unit makes an attack, subtract 1 from the Hit roll . Rattlejoint Ague Limbs shuddering with fever palsy, bones turned brittle as glass, these warriors can barely act to defend themselves. Worsen the Save characteristic of models in this unit by 1. Scabrous Soulrot Victims of this insidious ailment become glassy eyed and morose as their very animus and essence decay. Worsen the Move, Leadership, and Objective Control characteristics of models in this unit by 1 (this rule can only worsen a model’s Objective Control characteristic to a minimum of 1).",
           "Putrescent Fog (Aura)": "Enemy units that are set up on the battlefield as Reinforcements cannot be set up within 12\" of this model.",
           "Diseased Cover": "Each time a ranged attack is allocated to a model, if that model is not fully visible to the attacking unit because of this Fortification, that model has the Benefit of Cover against that attack.",
-          "Fortification": "While an enemy unit is only within Engagement Range of one or more FORTIFICATIONS from your army: That unit can still be selected as the target of ranged attacks, but each time such an attack is made, unless it is made with a Pistol, subtract 1 from the Hit roll.; Models in that unit do not need to take Desperate Escape tests due to Falling Back while Battle-shocked, except for those that will move over enemy models when doing so."
+          "Fortification": "While an enemy unit is only within Engagement Range of one or more FORTIFICATIONS from your army: That unit can still be selected as the target of ranged attacks, but each time such an attack is made, unless it is made with a Pistol, subtract 1 from the Hit roll.; Models in that unit do not need to take Desperate Escape tests due to Falling Back while Battle-shocked, except for those that will move over enemy models when doing so.",
+          "DEPLOYMENT": "Both parts of this FORTIFICATION must be set up within 1\" of each other. Both parts are then treated as a single model for all rules purposes."
         },
         "model_groups": [
           {
@@ -44182,7 +44286,8 @@
             "unit_ability_names": [
               "Putrescent Fog (Aura)",
               "Diseased Cover",
-              "Fortification"
+              "Fortification",
+              "DEPLOYMENT"
             ],
             "rule_names": [
               "Deadly Demise D3",
