@@ -422,6 +422,9 @@ def build_units(data):
             # groups, take-from-first-row precedent as unit_type above.
             must_be_warlord = bool(clean(stat_rows[0].get("Must Be Warlord")))
 
+            # E9b: cannot_be_warlord — same take-from-first-row precedent.
+            cannot_be_warlord = bool(clean(stat_rows[0].get("Cannot Be Warlord")))
+
             # Stable saved-list reference key. Prefer the Wahapedia datasheet id
             # (carried through transform); fall back to a deterministic local slug
             # for Gen-1 sources that have none. Consistent across a unit's stat rows.
@@ -628,6 +631,7 @@ def build_units(data):
                 "unit_name":      unit_name,
                 "unit_type":      unit_type,
                 "must_be_warlord": must_be_warlord,
+                "cannot_be_warlord": cannot_be_warlord,
                 "unit_ability_details": ability_details_by_ds.get(unit_id, {}),
                 "model_groups":   model_groups,
                 "weapons":        weapons,

@@ -170,6 +170,42 @@
 
     .panel-subheader-right.over-limit { color: #cc2200; }
 
+    /* E9b: Warlord pick list — centered in the Army List subheader bar */
+    .warlord-picker {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      color: #999;
+      min-width: 0;
+    }
+    .warlord-label {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: #777;
+      white-space: nowrap;
+    }
+    .warlord-select {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      color: #ddd;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.35rem;
+      border-radius: 3px;
+      max-width: 220px;
+    }
+    .warlord-select:disabled { color: #999; opacity: 0.85; }
+    .warlord-illegal {
+      color: #cc2200;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .panel-body {
       flex: 1;
       overflow-y: auto;
@@ -1097,6 +1133,7 @@
     <div class="panel-subheader">
       <div class="panel-subheader-title">Army List</div>
       <div class="panel-subheader-detail" id="list-unit-count"></div>
+      <div class="warlord-picker" id="warlord-picker"></div>
     </div>
     <div class="panel-body" id="list-items" style="padding-bottom:0;">
       <div class="empty-state">No units added yet.<br>Click any unit in the roster to add it.</div>
@@ -1203,6 +1240,7 @@
       primary_faction: meta.primary_faction || null,
       created:         meta.created || now,
       modified:        now,
+      warlord_entry_id: meta.warlord_entry_id != null ? meta.warlord_entry_id : null,
       entries:         serializeEntries(armyList, meta.primary_faction, lookups)
     };
   }
@@ -1247,7 +1285,10 @@
         unresolved:       unresolved          // drives the ghost-row flag
       };
     });
-    return { armyList: armyList, warnings: warnings, maxEntryId: maxEntryId };
+    return {
+      armyList: armyList, warnings: warnings, maxEntryId: maxEntryId,
+      warlordEntryId: record.warlord_entry_id != null ? record.warlord_entry_id : null
+    };
   }
 
   // ── migration hook ───────────────────────────────────────────────────────
@@ -1459,7 +1500,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.69';
+  const VERSION = '5.70';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1526,6 +1567,10 @@
       // Squad advertises 155 and lands in the list at 180.
       const baseMin  = sizes.length > 0 ? sizes[0].first_unit : null;
       const gearMin  = baseMin == null ? 0 : defaultWargearCost(unit.unit_id, sizes[0].size);
+      // E9b: Warlord eligibility. CHARACTER is the core-rules eligibility test;
+      // must/cannot_be_warlord come straight off the unit record (E9a/E9b data).
+      const isCharacter = (unit.model_groups || []).some(g =>
+        (g.keyword_names || []).some(k => (k || '').toLowerCase() === 'character'));
       return {
         unit_id:       unit.unit_id,
         unit_name:     unit.unit_name,
@@ -1539,6 +1584,9 @@
         leaderEligible,
         coLeaderWith,
         minPts: baseMin == null ? null : baseMin + gearMin,
+        isCharacter,
+        mustBeWarlord:    !!unit.must_be_warlord,
+        cannotBeWarlord:  !!unit.cannot_be_warlord,
       };
     });
   }
@@ -1621,6 +1669,7 @@
   let rawUnits        = [];
   let selectedListId  = null;
   let nextId          = 1;
+  let warlordEntryId  = null;   // E9b: listId of the chosen Warlord, or null
 
   // List-management state (step 3)
   let store           = null;   // ListStorage.ListStore instance
@@ -1941,6 +1990,7 @@
     armyList = [];
     selectedListId = null;
     hasGhosts = false;
+    warlordEntryId = null;
     renderAll();
   }
 
@@ -2039,11 +2089,92 @@
 
   function renderAll() {
     refreshPoints();
+    recomputeWarlord();
     renderBanner();
     renderRoster();
     renderList();
+    renderWarlordPicker();
     renderDetail();
     scheduleSave();
+  }
+
+  // ── E9b: Warlord pick list ──────────────────────────────────────────────────
+  // Eligible: resolved (non-ghost) entries whose unit carries CHARACTER and does
+  // NOT carry cannot_be_warlord. "cannot" always wins over "must" per Ryan's S52
+  // spec, even though no built unit today carries both.
+  function eligibleWarlordEntries() {
+    return armyList.filter(e => !e.unresolved).map(e => {
+      const unit = allUnits.find(u => u.unit_name === e.unit_name);
+      return { entry: e, unit };
+    }).filter(x => x.unit && x.unit.isCharacter && !x.unit.cannotBeWarlord);
+  }
+
+  function recomputeWarlord() {
+    const eligible = eligibleWarlordEntries();
+    const mustBe    = eligible.filter(x => x.unit.mustBeWarlord);
+
+    if (mustBe.length === 1) {
+      // Forced pick — the must-be unit is in the list and unambiguous.
+      warlordEntryId = mustBe[0].entry.listId;
+    } else if (mustBe.length >= 2) {
+      // E9b: two must-be units is an illegal army (Ryan's spec). Don't force a
+      // pick between them — the illegal-army flag is what surfaces this, not a
+      // guess at which one "wins".
+    } else if (warlordEntryId != null && !eligible.some(x => x.entry.listId === warlordEntryId)) {
+      // Previously-selected entry left the list, or is no longer eligible.
+      warlordEntryId = null;
+    }
+  }
+
+  function warlordIllegal() {
+    return eligibleWarlordEntries().filter(x => x.unit.mustBeWarlord).length >= 2;
+  }
+
+  function renderWarlordPicker() {
+    const el = document.getElementById('warlord-picker');
+    if (!el) return;
+    if (armyList.length === 0) { el.innerHTML = ''; return; }
+
+    const eligible = eligibleWarlordEntries();
+    if (eligible.length === 0) { el.innerHTML = ''; return; }
+
+    if (warlordIllegal()) {
+      const names = eligible.filter(x => x.unit.mustBeWarlord)
+        .map(x => escHtml(x.entry.unit_name)).join(' and ');
+      el.innerHTML = `<span class="warlord-illegal">⚠ ${names} must both be Warlord — illegal army</span>`;
+      return;
+    }
+
+    // Disambiguate duplicate unit names in the dropdown (e.g. two Captains).
+    const forcedPick = eligible.some(x => x.unit.mustBeWarlord);
+    const optList = forcedPick ? eligible.filter(x => x.unit.mustBeWarlord) : eligible;
+    const nameCounts = {};
+    optList.forEach(x => { nameCounts[x.entry.unit_name] = (nameCounts[x.entry.unit_name] || 0) + 1; });
+    const seen = {};
+    const options = optList.map(x => {
+      let label = x.entry.unit_name;
+      if (nameCounts[label] > 1) {
+        seen[label] = (seen[label] || 0) + 1;
+        label = `${label} (${seen[label]})`;
+      }
+      const sel = x.entry.listId === warlordEntryId ? ' selected' : '';
+      return `<option value="${x.entry.listId}"${sel}>${escHtml(label)}</option>`;
+    }).join('');
+
+    el.innerHTML = `
+      <span class="warlord-label">Warlord</span>
+      <select class="warlord-select" onchange="setWarlord(this.value)"${forcedPick ? ' disabled title="Forced by a must-be-Warlord rule"' : ''}>
+        ${forcedPick ? '' : `<option value=""${warlordEntryId == null ? ' selected' : ''}>— none selected —</option>`}
+        ${options}
+      </select>`;
+  }
+
+  function setWarlord(listIdStr) {
+    const listId = listIdStr === '' ? null : Number(listIdStr);
+    // A must-be entry can't be overridden by picking something else while it's
+    // still in the list — recomputeWarlord() re-forces it right after anyway.
+    warlordEntryId = listId;
+    renderAll();
   }
 
   function renderBanner() {
@@ -4480,6 +4611,7 @@
 
     setFaction(fac);
     armyList = []; selectedListId = null; nextId = 1; hasGhosts = false;
+    warlordEntryId = null;
     currentListId   = ListStorage.newListId();
     currentListMeta = { name: name, points_target: target, primary_faction: fac.name, created: Date.now() };
     POINTS_CAP = target;
@@ -4511,6 +4643,7 @@
       const out = ListStorage.deserialize(rec, resolvers);
       armyList  = out.armyList;
       nextId    = (out.maxEntryId || 0) + 1;
+      warlordEntryId = out.warlordEntryId;
 
       // Recompute points for resolved entries (reference model — never frozen);
       // ghosts keep their saved cached points for display only.
@@ -4712,7 +4845,8 @@
       name:            currentListMeta ? currentListMeta.name : 'Untitled',
       points_target:   POINTS_CAP,
       primary_faction: currentListMeta ? currentListMeta.primary_faction : (currentFaction ? currentFaction.name : null),
-      created:         currentListMeta ? currentListMeta.created : Date.now()
+      created:         currentListMeta ? currentListMeta.created : Date.now(),
+      warlord_entry_id: warlordEntryId
     };
   }
   var saveLookups = {

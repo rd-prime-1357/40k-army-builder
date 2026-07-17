@@ -780,6 +780,19 @@ ASSERTIONS = [
      'Datasheets_abilities.csv (SUPREME COMMANDER rows) + units.json must_be_warlord',
      lambda S: e9a_warlord(S)),
 
+    # ── E9b. cannot_be_warlord is true iff the unit's datasheet carries a
+    # description containing both "cannot" and "warlord" in source (any built
+    # faction, any ability name/type — the restriction isn't a single named
+    # ability, unlike SUPREME COMMANDER), or is Exalted Flamer by name
+    # (hand-added per D132 — Gen-1 CD data never routes through
+    # wahapedia_transform.py, so its datasheet_id never appears as a match key
+    # in Datasheets_abilities.csv).
+    ('E9b-1',
+     'cannot_be_warlord is true on exactly the units whose datasheet carries a '
+     '"cannot...Warlord" ability description in source, plus Exalted Flamer by name.',
+     'Datasheets_abilities.csv (cannot+Warlord rows) + units.json cannot_be_warlord',
+     lambda S: e9b_cannot_warlord(S)),
+
 ]
 
 
@@ -1042,6 +1055,23 @@ def e9a_warlord(S):
     if warlord_units != expected:
         return False, f'expected {sorted(expected)}, got {sorted(warlord_units)}'
     return True, f'must_be_warlord true on exactly {sorted(warlord_units)}'
+
+def e9b_cannot_warlord(S):
+    cannot_ids = set()
+    for r in S.abilities():
+        desc = (r.get('description') or '').lower()
+        if 'cannot' in desc and 'warlord' in desc:
+            cannot_ids.add(r['datasheet_id'])
+    built_ids, cannot_units = set(), set()
+    for blk in S.units():
+        for u in blk['units']:
+            built_ids.add(u['unit_id'])
+            if u.get('cannot_be_warlord'):
+                cannot_units.add(u['unit_id'])
+    expected = (cannot_ids & built_ids) | {"local:chaos-daemons:exalted-flamer"}
+    if cannot_units != expected:
+        return False, f'expected {sorted(expected)}, got {sorted(cannot_units)}'
+    return True, f'cannot_be_warlord true on exactly {sorted(cannot_units)}'
 
 def d95(S):
     bad = []

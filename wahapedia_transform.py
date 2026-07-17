@@ -277,6 +277,7 @@ def index_abilities(data, selected, flags):
     fnp = {}                          # ds_id -> (value, condition)
     leader_flag = set()               # ds_id has Leader
     warlord_flag = set()              # ds_id carries SUPREME COMMANDER (E9a)
+    cannot_warlord_flag = set()       # ds_id carries a "cannot be Warlord" restriction (E9b)
     # lookups
     unit_abil_defs = OrderedDict()    # name -> desc  (Datasheet + Faction)
     weapon_abil_defs = OrderedDict()  # name -> desc  (Wargear)
@@ -305,6 +306,18 @@ def index_abilities(data, selected, flags):
         # rather than Special; type is a layout bucket, not a semantic class.
         if name.strip().lower() == "supreme commander":
             warlord_flag.add(ds)
+
+        # E9b: "cannot be Warlord" restrictions carry many different ability
+        # names (LOYAL PROTECTOR, LONER, SHADOW ASSIGNMENT, Pack Leader, etc.),
+        # so name-matching (as above) doesn't work. Matched instead on the
+        # description text itself: every "must be Warlord" row contains "must"
+        # (never "cannot"), and every other Warlord mention that isn't a
+        # restriction (conditional bonuses like Master Tactician, Death Vision
+        # of Sanguinius) doesn't contain "cannot" either — so "cannot"+"warlord"
+        # together in one description reliably isolates just this class.
+        dlow = desc.lower()
+        if "cannot" in dlow and "warlord" in dlow:
+            cannot_warlord_flag.add(ds)
 
         if atype == "Core":
             inst = name if not param else f"{name} {param}".strip()
@@ -338,7 +351,8 @@ def index_abilities(data, selected, flags):
     return {
         "unit_abil": unit_abil, "unit_faction": unit_faction,
         "rule_names": rule_names, "fnp": fnp,
-        "leader_flag": leader_flag, "warlord_flag": warlord_flag, "unit_abil_defs": unit_abil_defs,
+        "leader_flag": leader_flag, "warlord_flag": warlord_flag,
+        "cannot_warlord_flag": cannot_warlord_flag, "unit_abil_defs": unit_abil_defs,
         "weapon_abil_defs": weapon_abil_defs, "rule_defs": rule_defs,
         "faction_abilities": faction_abilities,
         "wargear_abil": wargear_abil,
@@ -529,6 +543,7 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
         # on units that actually have a Leader ability.
         leader_footer = _WS.sub(" ", (d.get("leader_footer") or "")).strip() if leader_ability else ""
         must_be_warlord = "Yes" if ds_id in abil["warlord_flag"] else ""
+        cannot_be_warlord = "Yes" if ds_id in abil["cannot_warlord_flag"] else ""
         fnp_v, fnp_c = abil["fnp"].get(ds_id, ("", ""))
         for m in (mlist or [None]):
             grp = "All" if len(mlist) <= 1 else strip_html(m.get("name", "")) if m else "All"
@@ -552,6 +567,7 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
                 faction_kw_str, model_kw_str, wargear_str,
                 ds_id,   # Datasheet ID (Wahapedia stable id; durable saved-list ref)
                 must_be_warlord,   # Must Be Warlord (E9a: SUPREME COMMANDER name-match)
+                cannot_be_warlord,   # Cannot Be Warlord (E9b: description text-match)
             ])
     return rows
 
@@ -915,7 +931,7 @@ def main():
 
     O = lambda n: os.path.join(args.out_dir, n)
     write_csv(O("Unit_Stats.csv"),
-              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Leader Footer","Unit Ability Names","Rule Names","Keyword Names","Faction Keyword Names","Model Keyword Names","Wargear Ability Names","Datasheet ID","Must Be Warlord"],
+              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Leader Footer","Unit Ability Names","Rule Names","Keyword Names","Faction Keyword Names","Model Keyword Names","Wargear Ability Names","Datasheet ID","Must Be Warlord","Cannot Be Warlord"],
               stats_rows, trailing_blank_cols=2)
     write_csv(O("Unit_Weapons.csv"),
               ["Army Name","Unit Name","Model Group","Weapon Type","Weapon Name","Range","A","BS","WS","S","AP","D","Weapon Ability Names","Weapon Keyword Names","Is Base Equipment","Allegiance_Condition"],

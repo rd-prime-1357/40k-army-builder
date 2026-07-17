@@ -1,4 +1,4 @@
-Army Name,Unit Name,Model Group,Unit Type,M,T,SV,INV,INV_Condition,FNP,FNP_Condition,W,LD,OC,Leader Ability Name,Leader Eligible Units,Co-Leader Eligible With,Leader Restrictions,Unit Ability Names,Rule Names,Keyword Names,Must Be Warlord,
+Army Name,Unit Name,Model Group,Unit Type,M,T,SV,INV,INV_Condition,FNP,FNP_Condition,W,LD,OC,Leader Ability Name,Leader Eligible Units,Co-Leader Eligible With,Leader Restrictions,Unit Ability Names,Rule Names,Keyword Names,Must Be Warlord,Cannot Be Warlord
 Chaos Daemons,Skarbrand,All,Epic Hero,"10""",11,3,4,,,,20,6,5,,,,,"Greater Daemon of Khorne (Aura),Rage Embodied (Aura),Murderlust","Deadly Demise D6,Deep Strike","Monster,Character,Epic Hero,Chaos,Daemon,Khorne,Skarbrand",,
 Chaos Daemons,Bloodthirster,All,Character,"12""",11,3,4,,,,18,6,5,,,,,"Greater Daemon of Khorne (Aura),Daemon Lord of Khorne (Aura),Relentless Carnage","Deadly Demise D6,Deep Strike","Monster,Character,Fly,Chaos,Daemon,Khorne,Bloodthirster",,
 Chaos Daemons,Skulltaker,All,Epic Hero,"8""",4,4,4,,,,5,7,1,Leader,Bloodletters,,,"Lord of Decapitations,Skulls for Khorne","Deep Strike,Leader","Infantry,Character,Epic Hero,Chaos,Daemon,Khorne,Skulltaker",,
@@ -18,7 +18,7 @@ Chaos Daemons,Fateskimmer,All,Character,"12""",7,6,4,,,,9,7,3,Leader,Screamers,,
 Chaos Daemons,Fluxmaster,All,Character,"12""",4,6,4,,,,4,7,1,Leader,"Pink Horrors,Blue Horrors",,,"Fluxmaster,Altered Reality (Psychic)","Deep Strike,Leader","Mounted,Character,Fly,Psyker,Chaos,Daemon,Tzeentch,Fluxmaster",,
 Chaos Daemons,The Blue Scribes,All,Epic Hero,"12""",4,6,4,,,,6,8,2,,,,,P'tarix's Sorcerous Syphon (Aura),Xirat'p's Sorcerous Barrages (Psychic),"Deep Strike,Lone Operative",,
 Chaos Daemons,Changecaster,All,Character,"6""",3,6,4,,,,3,7,1,Leader,"Blue Horrors,Pink Horrors",,,"Changecaster,Storm of Mutating Sorcery (Psychic)","Deep Strike,Leader","Infantry,Character,Psyker,Chaos,Daemon,Tzeentch,Changecaster",,
-Chaos Daemons,Exalted Flamer,All,Character,"9""",4,7,4,,,,6,7,1,Leader,Flamers,,,"Blazing Warpfire (Psychic),Flames of Change (Psychic)","Deep Strike,Leader","Infantry,Character,Fly,Chaos,Daemon,Tzeentch,Exalted Flamer",,
+Chaos Daemons,Exalted Flamer,All,Character,"9""",4,7,4,,,,6,7,1,Leader,Flamers,,,"Blazing Warpfire (Psychic),Flames of Change (Psychic)","Deep Strike,Leader","Infantry,Character,Fly,Chaos,Daemon,Tzeentch,Exalted Flamer",,Yes
 Chaos Daemons,Blue Horrors,All,Battleline,"6""",3,7,4,,,,1,8,1,,,,,"Split,Sullen Malevolence (Aura),Exploding Horrors","Deep Strike,Infiltrators","Infantry,Battleline,Chaos,Daemon,Tzeentch,Horrors",,
 Chaos Daemons,Pink Horrors,Pink Horror,Battleline,"6""",3,7,4,,,,1,7,2,,,,,Split,Deep Strike,"Infantry,Battleline,Chaos,Daemon,Tzeentch,Horrors,Pink",,
 Chaos Daemons,Pink Horrors,Blue Horror,Battleline,"6""",3,7,4,,,,1,8,1,,,,,Split,Deep Strike,"Infantry,Battleline,Chaos,Daemon,Tzeentch,Horrors,Blue",,
