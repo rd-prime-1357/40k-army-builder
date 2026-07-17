@@ -1,0 +1,417 @@
+{
+  "000000322": {
+    "size_brackets": [
+      3,
+      6
+    ],
+    "model_groups": [
+      {
+        "name": "Thunderwolf Cavalry Pack Leader",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Teeth and claws",
+          "Wolf Guard weapon"
+        ]
+      },
+      {
+        "name": "Thunderwolf Cavalry",
+        "count": {
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Teeth and claws",
+          "Wolf Guard weapon"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "cc_1",
+        "scope": "Thunderwolf Cavalry Pack Leader",
+        "group": "Bolt Pistol Options",
+        "type": "count",
+        "replaces": "Bolt pistol",
+        "replacement_choices": [
+          "Boltgun",
+          "Storm Shield"
+        ],
+        "equipment_parts": [
+          "Storm Shield"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cc_2",
+        "scope": "Thunderwolf Cavalry",
+        "group": "Bolt Pistol Options",
+        "type": "count",
+        "replaces": "Bolt pistol",
+        "replacement_choices": [
+          "Boltgun",
+          "Storm Shield"
+        ],
+        "equipment_parts": [
+          "Storm Shield"
+        ],
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_3",
+        "scope": "Thunderwolf Cavalry",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Bolt pistol",
+        "replacement": "Plasma pistol",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "cnt_3"
+      },
+      {
+        "id": "cnt_3__thunderwolf_cavalry_pack_leader",
+        "scope": "Thunderwolf Cavalry Pack Leader",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Bolt pistol",
+        "replacement": "Plasma pistol",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "cnt_3"
+      }
+    ],
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
+  },
+  "000002783": {
+    "size_brackets": [
+      5,
+      10
+    ],
+    "model_groups": [
+      {
+        "name": "Watch Sergeant",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Boltgun",
+          "Power weapon"
+        ]
+      },
+      {
+        "name": "Deathwatch Veterans",
+        "count": {
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Boltgun",
+          "Power weapon"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "cc_1",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement_choices": [
+          "Boltgun + Astartes Shield + Close combat weapon",
+          "Power weapon + Astartes Shield"
+        ],
+        "equipment_parts": [
+          "Astartes Shield"
+        ],
+        "per_n_models": 5,
+        "max_per_n": 2,
+        "pool_id": "cc_1"
+      },
+      {
+        "id": "cc_1__watch_sergeant",
+        "scope": "Watch Sergeant",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement_choices": [
+          "Boltgun + Astartes Shield + Close combat weapon",
+          "Power weapon + Astartes Shield"
+        ],
+        "equipment_parts": [
+          "Astartes Shield"
+        ],
+        "per_n_models": 5,
+        "max_per_n": 2,
+        "pool_id": "cc_1"
+      },
+      {
+        "id": "cnt_2",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Deathwatch thunder hammer",
+        "per_n_models": 5,
+        "max_per_n": 2,
+        "pool_id": "cnt_2"
+      },
+      {
+        "id": "cnt_2__watch_sergeant",
+        "scope": "Watch Sergeant",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Deathwatch thunder hammer",
+        "per_n_models": 5,
+        "max_per_n": 2,
+        "pool_id": "cnt_2"
+      },
+      {
+        "id": "cnt_3",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Stalker-pattern boltgun + Close combat weapon",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "pool_id": "cnt_3"
+      },
+      {
+        "id": "cnt_3__watch_sergeant",
+        "scope": "Watch Sergeant",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Stalker-pattern boltgun + Close combat weapon",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "pool_id": "cnt_3"
+      },
+      {
+        "id": "cnt_4",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Deathwatch shotgun + Close combat weapon",
+        "per_n_models": 5,
+        "max_per_n": 2,
+        "pool_id": "cnt_4"
+      },
+      {
+        "id": "cnt_4__watch_sergeant",
+        "scope": "Watch Sergeant",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Deathwatch shotgun + Close combat weapon",
+        "per_n_models": 5,
+        "max_per_n": 2,
+        "pool_id": "cnt_4"
+      },
+      {
+        "id": "cnt_5",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Frag cannon + Close combat weapon",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "pool_id": "cnt_5"
+      },
+      {
+        "id": "cnt_5__watch_sergeant",
+        "scope": "Watch Sergeant",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Frag cannon + Close combat weapon",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "pool_id": "cnt_5"
+      },
+      {
+        "id": "cnt_6",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Infernus heavy bolter + Close combat weapon",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "pool_id": "cnt_6"
+      },
+      {
+        "id": "cnt_6__watch_sergeant",
+        "scope": "Watch Sergeant",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Infernus heavy bolter + Close combat weapon",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "pool_id": "cnt_6"
+      },
+      {
+        "id": "cnt_7",
+        "scope": "Deathwatch Veterans",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Black Shield blades",
+        "max_total": 1,
+        "pool_id": "cnt_7"
+      },
+      {
+        "id": "cnt_7__watch_sergeant",
+        "scope": "Watch Sergeant",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Boltgun + Power weapon",
+        "replacement": "Black Shield blades",
+        "max_total": 1,
+        "pool_id": "cnt_7"
+      },
+      {
+        "id": "sng_8",
+        "scope": "Watch Sergeant",
+        "group": "Power Weapon Options",
+        "type": "choice",
+        "replaces": "Power weapon",
+        "choices": [
+          "Xenophase blade"
+        ]
+      },
+      {
+        "id": "sng_9",
+        "scope": "Watch Sergeant",
+        "group": "Boltgun Options",
+        "type": "choice",
+        "replaces": "Boltgun",
+        "choices": [
+          "Combi-weapon"
+        ]
+      }
+    ],
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
+  },
+  "000003874": {
+    "size_brackets": [
+      10
+    ],
+    "model_groups": [
+      {
+        "name": "Kill Team Sergeant with Jump Pack",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Heavy bolt pistol",
+          "Astartes chainsword"
+        ]
+      },
+      {
+        "name": "Kill Team Intercessors with Jump Packs",
+        "count": {
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Heavy bolt pistol",
+          "Astartes chainsword"
+        ]
+      },
+      {
+        "name": "Kill Team Heavy Intercessors with Jump Packs",
+        "count": {
+          "optional": true,
+          "max": 5
+        },
+        "default_weapons": [
+          "Assault bolters",
+          "Close combat weapon"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "cho_1",
+        "scope": "Kill Team Sergeant with Jump Pack",
+        "group": "Heavy Bolt Pistol Options",
+        "type": "choice",
+        "replaces": "Heavy bolt pistol",
+        "choices": [
+          "Hand flamer",
+          "Plasma pistol"
+        ]
+      },
+      {
+        "id": "cho_2",
+        "scope": "Kill Team Sergeant with Jump Pack",
+        "group": "Astartes Chainsword Options",
+        "type": "choice",
+        "replaces": "Astartes chainsword",
+        "choices": [
+          "Power fist",
+          "Power weapon"
+        ]
+      },
+      {
+        "id": "cnt_3",
+        "scope": "Kill Team Intercessors with Jump Packs",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Heavy bolt pistol",
+        "replacement": "Plasma pistol",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "pool_id": "cnt_3"
+      },
+      {
+        "id": "cnt_3__kill_team_sergeant_with_jump_pack",
+        "scope": "Kill Team Sergeant with Jump Pack",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Heavy bolt pistol",
+        "replacement": "Plasma pistol",
+        "per_n_models": 5,
+        "max_per_n": 1,
+        "pool_id": "cnt_3"
+      },
+      {
+        "id": "cnt_4",
+        "scope": "Kill Team Sergeant with Jump Pack",
+        "group": "Assault Bolters Options",
+        "type": "count",
+        "replaces": "Assault bolters",
+        "replacement": "Plasma exterminators",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_5",
+        "scope": "Kill Team Intercessors with Jump Packs",
+        "group": "Assault Bolters Options",
+        "type": "count",
+        "replaces": "Assault bolters",
+        "replacement": "Plasma exterminators",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_6",
+        "scope": "Kill Team Heavy Intercessors with Jump Packs",
+        "group": "Assault Bolters Options",
+        "type": "count",
+        "replaces": "Assault bolters",
+        "replacement": "Plasma exterminators",
+        "max_total_all": true
+      }
+    ],
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
+  }
+}
