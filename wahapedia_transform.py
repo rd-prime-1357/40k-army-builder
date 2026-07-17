@@ -568,6 +568,7 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
                 ds_id,   # Datasheet ID (Wahapedia stable id; durable saved-list ref)
                 must_be_warlord,   # Must Be Warlord (E9a: SUPREME COMMANDER name-match)
                 cannot_be_warlord,   # Cannot Be Warlord (E9b: description text-match)
+                "",   # Co-Leader Any (B38b: manual / surfaced, DG generic co-leader shape)
             ])
     return rows
 
@@ -931,7 +932,7 @@ def main():
 
     O = lambda n: os.path.join(args.out_dir, n)
     write_csv(O("Unit_Stats.csv"),
-              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Leader Footer","Unit Ability Names","Rule Names","Keyword Names","Faction Keyword Names","Model Keyword Names","Wargear Ability Names","Datasheet ID","Must Be Warlord","Cannot Be Warlord"],
+              ["Army Name","Unit Name","Model Group","Unit Type","M","T","SV","INV","INV_Condition","FNP","FNP_Condition","W","LD","OC","Leader Ability Name","Leader Eligible Units","Co-Leader Eligible With","Leader Restrictions","Leader Footer","Unit Ability Names","Rule Names","Keyword Names","Faction Keyword Names","Model Keyword Names","Wargear Ability Names","Datasheet ID","Must Be Warlord","Cannot Be Warlord","Co-Leader Any"],
               stats_rows, trailing_blank_cols=2)
     write_csv(O("Unit_Weapons.csv"),
               ["Army Name","Unit Name","Model Group","Weapon Type","Weapon Name","Range","A","BS","WS","S","AP","D","Weapon Ability Names","Weapon Keyword Names","Is Base Equipment","Allegiance_Condition"],

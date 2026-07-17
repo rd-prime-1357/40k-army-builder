@@ -26,6 +26,14 @@ family, so gets a single-name list.
 This script is idempotent and part of the canonical units.json rebuild chain
 (run after add_loadout_groups.py, before the file is committed).
 units_repro_check.py invokes it as the final step.
+
+B38b (D147) — same script, second job: set `co_leader_any = True` on the 6 built
+DG units whose leader_footer carries the generic "even if one other Leader unit
+has already been attached to it" clause (not a named role-word family like B38a,
+so no MAPPING list of names is needed -- just a flag). Wording re-verified against
+committed units.json at S81 build time on all 6 targets, byte-for-byte match with
+the S80 handoff quote. Every other unit's `co_leader_any` defaults to False via
+the new Unit_Stats.csv column (blank cell -> False in convert_to_json.py).
 """
 import argparse
 import json
@@ -74,6 +82,16 @@ MAPPING = {
     "000004136": _GROUP_D,  # Crusade Ancient                -- "...Execrator or Lieutenant"
 }
 
+# B38b: unit_ids getting co_leader_any = True (generic DG co-leader shape, no named list).
+CO_LEADER_ANY_IDS = [
+    "000001058",  # Noxious Blightbringer
+    "000001367",  # Foul Blightspawn
+    "000001368",  # Biologus Putrifier
+    "000001369",  # Plague Surgeon
+    "000001370",  # Tallyman
+    "000002750",  # Icon Bearer
+]
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -118,10 +136,30 @@ def main():
         print(f"ERROR expected 12 model-groups tagged (one per unit), tagged {len(touched)}", file=sys.stderr)
         sys.exit(1)
 
+    # B38b guard: every id must exist and must be a single-model_group Character
+    # (same shape assumption as B38a); catches drift if the roster changes.
+    missing_any = [uid for uid in CO_LEADER_ANY_IDS if uid not in by_id]
+    if missing_any:
+        print(f"ERROR co_leader_any target unit_id(s) not found in units.json: {missing_any}", file=sys.stderr)
+        sys.exit(1)
+
+    touched_any = []
+    for uid in CO_LEADER_ANY_IDS:
+        unit = by_id[uid]
+        for mg in unit.get("model_groups", []):
+            mg["co_leader_any"] = True
+            touched_any.append((uid, unit.get("unit_name"), mg.get("model_group")))
+
+    if len(touched_any) != len(CO_LEADER_ANY_IDS):
+        print(f"ERROR expected {len(CO_LEADER_ANY_IDS)} model-groups tagged for co_leader_any, "
+              f"tagged {len(touched_any)}", file=sys.stderr)
+        sys.exit(1)
+
     with open(args.units, "w", encoding="utf-8") as f:
         json.dump(units, f, indent=2, ensure_ascii=False)
 
-    print(f"OK   set co_leader_eligible_with on {len(touched)} units ({len(MAPPING)} target unit_ids)")
+    print(f"OK   set co_leader_eligible_with on {len(touched)} units ({len(MAPPING)} target unit_ids); "
+          f"set co_leader_any on {len(touched_any)} units ({len(CO_LEADER_ANY_IDS)} target unit_ids)")
 
 
 if __name__ == "__main__":
