@@ -38,7 +38,8 @@ CD_ROOT_CSVS = [
 
 REQUIRED = [
     'wahapedia_transform.py', 'mfm_points_parser.py', 'convert_to_json.py',
-    'merge_factions.py', 'add_loadout_groups.py', 'add_co_leader.py', 'units.json', 'unit_loadouts.json',
+    'merge_factions.py', 'add_loadout_groups.py', 'add_co_leader.py',
+    'add_bodyguard_stat_flags.py', 'units.json', 'unit_loadouts.json',
     'bundled_swaps.json', 'faction_taxonomy.json',
     'MFM_Space_Marines_v1_0.txt', 'MFM_Death_Guard_v1_0.txt',
 ] + CD_ROOT_CSVS
@@ -134,6 +135,12 @@ def repro(dir_):
                         '--units', os.path.join(deploy, 'units.json')], cwd=dir_)
         if rc != 0:
             return False, 'add_co_leader.py failed:\n' + out[-600:]
+
+        # --- B7b (D157/D159): populate bodyguard_stat_flags for leader-aura markers ---
+        rc, out = _run([sys.executable, 'add_bodyguard_stat_flags.py',
+                        '--units', os.path.join(deploy, 'units.json')], cwd=dir_)
+        if rc != 0:
+            return False, 'add_bodyguard_stat_flags.py failed:\n' + out[-600:]
 
         rebuilt_path = os.path.join(deploy, 'units.json')
         a = open(rebuilt_path, 'rb').read()

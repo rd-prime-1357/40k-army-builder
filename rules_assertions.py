@@ -862,6 +862,22 @@ ASSERTIONS = [
      'index.html canAttachLeader; core rules 19.01; D157',
      lambda S: b7a_stack_cap(S)),
 
+    # ── B7b. Combined attached-unit popup with per-stat aura markers (D157/D159).
+    # Two independent checks: (1) the exact set of leaders carrying non-empty
+    # bodyguard_stat_flags matches the S91 hand-audit; (2) the render layer wires
+    # a combined-modal path off the bodyguard's ⓘ, calls buildModalConfigured per
+    # attached member, and unions each leader's bodyguard_stat_flags into an
+    # asterisk-marker set applied to the bodyguard's stat block.
+    ('B7b-1',
+     'The 16 SM+DG leaders identified in the S91 audit carry exactly the '
+     'expected bodyguard_stat_flags; every other unit\'s flag list is empty. '
+     'index.html defines openModalCombined and buildModalCombined, unions '
+     'leader flags across attached members, and buildStatTable accepts the '
+     'auraFlags parameter. renderList routes the bodyguard ⓘ to openModalCombined '
+     'when attached leaders exist.',
+     'S91 hand-audit of SM+DG leader unit abilities; D157/D159; index.html render layer',
+     lambda S: b7b_combined_popup(S)),
+
 ]
 
 
@@ -941,6 +957,101 @@ def b7a_stack_cap(S):
     return (not bad), ('cap holds: 0/1 existing -> allowed, 2+ existing -> refused, '
                         'independent of pairwise permits') if not bad else \
         f'cap model disagrees with expected shape at counts {bad}'
+
+
+def b7b_combined_popup(S):
+    """Two-part check for the B7b combined attached-unit popup:
+
+    Part A -- data. Every unit's model_groups carry a bodyguard_stat_flags list
+    (never missing). The exact set of unit_ids with non-empty flags matches the
+    S91 hand-audit (16 leaders); flag contents are the union of aura effects
+    each leader confers on an attached bodyguard's markable stats. Any drift
+    means the audit or the data has moved.
+
+    Part B -- render. index.html defines openModalCombined and
+    buildModalCombined; buildModalCombined calls buildModalConfigured per
+    member and computes an aura-flag union across attached leaders'
+    bodyguard_stat_flags; buildStatTable's signature accepts an auraFlags
+    parameter; renderList routes the bodyguard's info button to
+    openModalCombined when getAttachedLeaders returns non-empty."""
+    # Part A: data.
+    expected = {
+        '000000079': ['FNP'],
+        '000000115': ['FNP'],
+        '000000119': ['FNP'],
+        '000000127': ['FNP'],
+        '000000158': ['FNP'],
+        '000000226': ['FNP'],
+        '000000292': ['M'],
+        '000001058': ['M'],
+        '000001165': ['OC'],
+        '000001611': ['FNP'],
+        '000002266': ['INV', 'FNP'],
+        '000002677': ['OC'],
+        '000002748': ['OC'],
+        '000002750': ['OC'],
+        '000002775': ['OC'],
+        '000002792': ['T'],
+    }
+    got = {}
+    missing_field = []
+    for blk in S.units():
+        for u in blk['units']:
+            uid = u.get('unit_id')
+            for mg in u.get('model_groups', []):
+                if 'bodyguard_stat_flags' not in mg:
+                    missing_field.append(uid)
+                    continue
+                v = mg.get('bodyguard_stat_flags') or []
+                if v:
+                    got[uid] = list(v)
+                    break  # only first mg carries the flags in the audit shape
+    if missing_field:
+        return False, f'bodyguard_stat_flags missing on {len(missing_field)} model_groups (first: {missing_field[:3]})'
+    if set(got) != set(expected):
+        extra = sorted(set(got) - set(expected))
+        miss  = sorted(set(expected) - set(got))
+        return False, f'flag set drift: extra={extra[:5]}, missing={miss[:5]}'
+    mismatch = [uid for uid in expected if sorted(got[uid]) != sorted(expected[uid])]
+    if mismatch:
+        return False, f'flag contents drift for unit_ids {mismatch[:5]}'
+
+    # Part B: render.
+    txt = S.index_html()
+    if 'function openModalCombined(bodyguardListId)' not in txt:
+        return False, 'openModalCombined not defined in index.html'
+    if 'function buildModalCombined(' not in txt:
+        return False, 'buildModalCombined not defined in index.html'
+    if 'function buildStatTable(mg, overrides, flags, auraFlags)' not in txt:
+        return False, 'buildStatTable signature does not include auraFlags parameter'
+    if 'function buildModalConfigured(raw, entry, auraFlags)' not in txt:
+        return False, 'buildModalConfigured signature does not include auraFlags parameter'
+
+    m = re.search(r'function buildModalCombined\(([^)]*)\)\s*\{(.*?)\n  \}', txt, re.S)
+    if not m:
+        return False, 'buildModalCombined body not extractable'
+    body = m.group(2)
+    if 'buildModalConfigured' not in body:
+        return False, 'buildModalCombined does not call buildModalConfigured'
+    if 'combined-member-divider' not in body:
+        return False, 'buildModalCombined does not insert combined-member-divider between panels'
+
+    m2 = re.search(r'function openModalCombined\([^)]*\)\s*\{(.*?)\n  \}', txt, re.S)
+    if not m2:
+        return False, 'openModalCombined body not extractable'
+    ombody = m2.group(1)
+    if 'bodyguard_stat_flags' not in ombody:
+        return False, 'openModalCombined does not read bodyguard_stat_flags for the aura union'
+    if 'getAttachedLeaders(bodyguardListId)' not in ombody:
+        return False, 'openModalCombined does not pull attached leaders'
+
+    # renderList: bodyguard info button branches on hasLeaders to route to combined.
+    if "onclick=\"event.stopPropagation();${hasLeaders ? 'openModalCombined' : 'openModalConfigured'}(${entry.listId})\"" not in txt:
+        return False, 'bodyguard info button not routed to openModalCombined when leaders attached'
+
+    return True, ('data: 16/16 leaders carry expected flags; '
+                  'render: openModalCombined/buildModalCombined wired, aura union pulls from '
+                  'bodyguard_stat_flags, bodyguard ⓘ routes conditionally')
 
 
 def muster_battle_size_table(S):

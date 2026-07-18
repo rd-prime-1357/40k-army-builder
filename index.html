@@ -1080,6 +1080,23 @@
       margin: 0.9rem 0;
     }
 
+    /* B7b: divider between attached-unit member panels in the combined popup —
+       stronger than model-group-divider so the reader can tell where one
+       member's datasheet ends and the next begins. */
+    .combined-member-divider {
+      border: none;
+      border-top: 2px solid #4a4a4a;
+      margin: 1.4rem 0 1rem;
+    }
+    .combined-member-header {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: #cc9900;
+      margin-bottom: 0.6rem;
+    }
+
     /* ── List management: home page, create modal, ghost rows ── */
     .screen-home { flex:1; overflow-y:auto; padding:2rem 2.5rem; }
     .home-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; max-width:900px; }
@@ -1592,7 +1609,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.77';
+  const VERSION = '5.78';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2542,8 +2559,8 @@
               <div class="list-item-sub">${sub}</div>
             </div>
             <span class="list-item-pts">${entry.points !== null ? entry.points + ' pts' : '—'}</span>
-            <button class="info-btn" title="View configured datasheet"
-                    onclick="event.stopPropagation();openModalConfigured(${entry.listId})">ⓘ</button>
+            <button class="info-btn" title="${hasLeaders ? 'View attached unit' : 'View configured datasheet'}"
+                    onclick="event.stopPropagation();${hasLeaders ? 'openModalCombined' : 'openModalConfigured'}(${entry.listId})">ⓘ</button>
             <button class="duplicate-btn" title="Duplicate"
                     onclick="event.stopPropagation();duplicateUnit(${entry.listId})">⧉</button>
             <button class="remove-btn" onclick="event.stopPropagation();removeUnit(${entry.listId})" title="Remove">&times;</button>
@@ -3315,6 +3332,57 @@
     document.getElementById('modal-mode-badge').textContent = 'Configured';
     document.getElementById('modal-body').innerHTML = buildModalConfigured(raw, entry);
     document.getElementById('stat-modal').classList.remove('hidden');
+  }
+
+  // B7b: combined attached-unit popup. Fires from the bodyguard's ⓘ when one or
+  // more leaders are attached. Renders the bodyguard first, then each leader in
+  // attach order, using the existing buildModalConfigured for each member.
+  // The bodyguard's stat table receives the union of every attached leader's
+  // `bodyguard_stat_flags` as aura markers (asterisks on affected stats).
+  function openModalCombined(bodyguardListId) {
+    const bodyguard = armyList.find(e => e.listId === bodyguardListId);
+    if (!bodyguard) return;
+    const leaders = getAttachedLeaders(bodyguardListId);
+    if (leaders.length === 0) {
+      openModalConfigured(bodyguardListId);
+      return;
+    }
+    const bgRaw = rawUnits.find(u => u.unit_name === bodyguard.unit_name);
+    if (!bgRaw) return;
+
+    // Compute the aura-flag union across every attached leader's first mg.
+    const auraSet = new Set();
+    for (const leader of leaders) {
+      const lraw = rawUnits.find(u => u.unit_name === leader.unit_name);
+      if (!lraw || !lraw.model_groups || !lraw.model_groups[0]) continue;
+      const flags = lraw.model_groups[0].bodyguard_stat_flags || [];
+      for (const f of flags) auraSet.add(f);
+    }
+    const auraFlags = Array.from(auraSet);
+
+    // Composite title: bodyguard + leader1 + leader2 (attach order).
+    const memberNames = [bodyguard.unit_name].concat(leaders.map(l => l.unit_name));
+    document.getElementById('modal-title').textContent = memberNames.join(' + ');
+    document.getElementById('modal-mode-badge').textContent = 'Attached Unit';
+    document.getElementById('modal-body').innerHTML = buildModalCombined(bodyguard, bgRaw, leaders, auraFlags);
+    document.getElementById('stat-modal').classList.remove('hidden');
+  }
+
+  function buildModalCombined(bodyguard, bgRaw, leaders, auraFlags) {
+    // Bodyguard panel first, with aura flags applied.
+    let html = '';
+    html += `<div class="combined-member-header">${bodyguard.unit_name}</div>`;
+    html += buildModalConfigured(bgRaw, bodyguard, auraFlags);
+    // Then each leader in attach order, plain panels (no aura pass — leader ⓘ
+    // reciprocals not populated this pass per D157/D159).
+    for (const leader of leaders) {
+      const lraw = rawUnits.find(u => u.unit_name === leader.unit_name);
+      if (!lraw) continue;
+      html += '<hr class="combined-member-divider">';
+      html += `<div class="combined-member-header">${leader.unit_name}</div>`;
+      html += buildModalConfigured(lraw, leader);
+    }
+    return html;
   }
 
   function closeModal() {
@@ -4351,7 +4419,7 @@
 
   // ── Modal: Configured view ─────────────────────────────────────────────────
 
-  function buildModalConfigured(raw, entry) {
+  function buildModalConfigured(raw, entry, auraFlags) {
     let html = '';
 
     // Determine which weapons are "active" based on wargear state
@@ -4439,7 +4507,9 @@
         activeOtherOptionOverrides(entry, raw)
       );
 
-      html += buildStatTable(mg, overrides, cs.flags);
+      // B7b: aura flags apply only to the first model group (Character panel).
+      const auraForThisMg = (i === 0 && auraFlags && auraFlags.length) ? auraFlags : null;
+      html += buildStatTable(mg, overrides, cs.flags, auraForThisMg);
       cs.inert.forEach(n => inertWA.add(n));
       html += `</div>`;
 
@@ -4590,9 +4660,15 @@
 
   // ── Shared modal helpers ───────────────────────────────────────────────────
 
-  function buildStatTable(mg, overrides, flags) {
+  function buildStatTable(mg, overrides, flags, auraFlags) {
     const ov  = overrides || {};
     const fl  = flags || {};
+    // B7b: aura flags come from attached-leader `bodyguard_stat_flags` unioned
+    // at combined-popup time. The set may include INV, FNP, LD, T, M, OC (D157
+    // markable-stat list) and rarely W or SV. Aura stars use the same * symbol
+    // as wargear stars; the legend text below distinguishes the source.
+    const aura = {};
+    for (const k of (auraFlags || [])) aura[k] = true;
     // SV and LD carry a trailing '+' in the data while INV/FNP are bare numbers;
     // strip any existing '+' so we don't render a doubled '++'.
     const cleanPlus = v => String(v == null ? '' : v).replace(/\+\s*$/, '');
@@ -4608,22 +4684,44 @@
     // E17: a per-model bearer value that can't be shown as a whole-group number is
     // marked with an asterisk (only when the cell isn't already carrying a real
     // override value). The asterisk points at the Wargear Abilities section.
-    const invStar = (!invOv && fl.INV) ? '<sup class="stat-asterisk">*</sup>' : '';
-    const fnpStar = (!fnpOv && fl.FNP) ? '<sup class="stat-asterisk">*</sup>' : '';
+    // B7b: an aura on the same cell fires the same asterisk (source disambiguated
+    // in the legend text).
+    const invStar = (!invOv && (fl.INV || aura.INV)) ? '<sup class="stat-asterisk">*</sup>' : '';
+    const fnpStar = (!fnpOv && (fl.FNP || aura.FNP)) ? '<sup class="stat-asterisk">*</sup>' : '';
     // B15: W and SV take the same asterisk when some — but not all — models carry
     // the item that would set them.
     const wOv     = ov.W  !== undefined && ov.W  !== null;
     const svOv    = ov.SV !== undefined && ov.SV !== null;
-    const wStar   = (!wOv  && fl.W)  ? '<sup class="stat-asterisk">*</sup>' : '';
-    const svStar  = (!svOv && fl.SV) ? '<sup class="stat-asterisk">*</sup>' : '';
+    const wStar   = (!wOv  && (fl.W  || aura.W))  ? '<sup class="stat-asterisk">*</sup>' : '';
+    const svStar  = (!svOv && (fl.SV || aura.SV)) ? '<sup class="stat-asterisk">*</sup>' : '';
+    // B7b: LD, T, M, OC gain aura-only asterisk support (no wargear-flag or
+    // override machinery today; conferralStats has never targeted these cells).
+    const ldStar  = aura.LD ? '<sup class="stat-asterisk">*</sup>' : '';
+    const tStar   = aura.T  ? '<sup class="stat-asterisk">*</sup>' : '';
+    const mStar   = aura.M  ? '<sup class="stat-asterisk">*</sup>' : '';
+    const ocStar  = aura.OC ? '<sup class="stat-asterisk">*</sup>' : '';
     const inv = invOv ? `<span class="stat-override">${cleanPlus(ov.INV)}+</span>` : (mg.INV ? `${mg.INV}+` : '\u2014');
     const fnp = fnpOv ? `<span class="stat-override">${cleanPlus(ov.FNP)}+</span>` : (mg.FNP ? `${mg.FNP}+` : '\u2014');
     const invCond = (!invOv && mg.INV_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
     const fnpCond = (!fnpOv && mg.FNP_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.FNP_Condition})</span>` : '';
     const svDisplay = ovCell('SV', cleanPlus(mg.SV), '+');
     const wDisplay  = ovCell('W',  mg.W);
-    const legend = (invStar || fnpStar || wStar || svStar)
-      ? `<div class="stat-asterisk-legend">* see Wargear Abilities</div>` : '';
+    // Legend adapts to the source: an aura anywhere means the reader needs the
+    // Abilities section (a broader label that covers both wargear-abilities and
+    // unit-abilities sources); pure-wargear stars keep the old label.
+    const hasWargearStar = invStar || fnpStar || wStar || svStar
+                           ? ((!aura.INV && fl.INV) || (!aura.FNP && fl.FNP)
+                              || (!aura.W && fl.W) || (!aura.SV && fl.SV))
+                           : false;
+    const hasAuraStar    = invStar || fnpStar || wStar || svStar || ldStar || tStar || mStar || ocStar
+                           ? (aura.INV || aura.FNP || aura.LD || aura.T || aura.M || aura.OC
+                              || aura.W || aura.SV)
+                           : false;
+    let legendText = '';
+    if (hasAuraStar) legendText = '* see Abilities';
+    else if (hasWargearStar) legendText = '* see Wargear Abilities';
+    const legend = legendText
+      ? `<div class="stat-asterisk-legend">${legendText}</div>` : '';
 
     return `<table class="stat-table">
       <thead>
@@ -4633,14 +4731,14 @@
       </thead>
       <tbody>
         <tr>
-          <td>${mg.M}</td>
-          <td>${mg.T}</td>
+          <td>${mg.M}${mStar}</td>
+          <td>${mg.T}${tStar}</td>
           <td>${svDisplay}${svStar}</td>
           <td class="inv-cell">${inv}${invStar}${invCond}</td>
           <td class="fnp-cell">${fnp}${fnpStar}${fnpCond}</td>
           <td>${wDisplay}${wStar}</td>
-          <td>${cleanPlus(mg.LD)}+</td>
-          <td>${mg.OC}</td>
+          <td>${cleanPlus(mg.LD)}+${ldStar}</td>
+          <td>${mg.OC}${ocStar}</td>
         </tr>
       </tbody>
     </table>${legend}`;
