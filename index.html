@@ -1592,7 +1592,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.76';
+  const VERSION = '5.77';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2332,6 +2332,9 @@
     const existingLeaders = armyList.filter(e =>
       e.attachedToListId === bodyguardEntry.listId && e.listId !== bodyguardEntry.listId
     );
+    // B7a (D157): stack-size cap of 2. permitsCoLeader is pairwise-only and stays
+    // correct for the pair; a 3rd attach must refuse regardless of pairwise permits.
+    if (existingLeaders.length >= 2) return false;
     for (const existing of existingLeaders) {
       const existingUnit = allUnits.find(u => u.unit_name === existing.unit_name);
       if (!existingUnit) return false;

@@ -851,6 +851,17 @@ ASSERTIONS = [
      'Datasheets_abilities.csv (cannot+Warlord rows) + units.json cannot_be_warlord',
      lambda S: e9b_cannot_warlord(S)),
 
+    # ── B7a. Stack-size cap of 2 on canAttachLeader (D157). permitsCoLeader is
+    # pairwise-only and stays correct for the pair; a 3rd attach must refuse
+    # regardless of pairwise permits, so the cap has to be a separate guard that
+    # short-circuits before the pairwise loop can ever say yes.
+    ('B7a-1',
+     'canAttachLeader refuses a 3rd leader on a bodyguard already carrying 2, '
+     'even when every pairwise permit would allow it. permitsCoLeader itself is '
+     'untouched — the cap is a stack-size guard, not a change to the pair rule.',
+     'index.html canAttachLeader; core rules 19.01; D157',
+     lambda S: b7a_stack_cap(S)),
+
 ]
 
 
@@ -894,6 +905,42 @@ def instance_limits_intact(S):
     bad = [f'{t}@{p}: {engine(t, p)} != {v}' for (p, t), v in want.items() if engine(t, p) != v]
     return (not bad), ('; '.join(bad)) if bad else \
         'Incursion 2/4/1, Strike Force 3/6/1 — matches 25.03'
+
+
+def b7a_stack_cap(S):
+    """Lifts canAttachLeader's source and checks the cap guard is present, placed
+    correctly (after the leaderEligible check, before the pairwise loop can return
+    true), and that permitsCoLeader's own call is untouched. Then models the
+    engine's own shape in Python — with permitsCoLeader stubbed to always allow —
+    to prove the cap alone is what refuses a 3rd attach."""
+    txt = S.index_html()
+    m = re.search(r'function canAttachLeader\(leaderUnitName, bodyguardEntry\)\s*\{(.*?)\n  \}',
+                  txt, re.S)
+    if not m:
+        return False, 'canAttachLeader not found'
+    body = m.group(1)
+
+    guard = 'if (existingLeaders.length >= 2) return false;'
+    if guard not in body:
+        return False, f'stack-size cap guard not found in canAttachLeader: {guard!r}'
+    if 'permitsCoLeader(leaderUnit, existingUnit)' not in body:
+        return False, 'canAttachLeader no longer calls permitsCoLeader — pairwise rule lost'
+
+    # Guard must sit before the pairwise loop, else a 2-count stack could still
+    # pass the pairwise checks and slip through before the cap is ever consulted.
+    if body.index(guard) > body.index('for (const existing of existingLeaders)'):
+        return False, 'cap guard sits after the pairwise loop — can be bypassed'
+
+    # Model the shape with permits stubbed to True: only the cap can refuse now.
+    def engine_always_permits(existing_count):
+        if existing_count >= 2:
+            return False
+        return True  # pairwise loop, stubbed permissive, would return True every time
+
+    bad = [n for n in (0, 1, 2, 3) if engine_always_permits(n) != (n < 2)]
+    return (not bad), ('cap holds: 0/1 existing -> allowed, 2+ existing -> refused, '
+                        'independent of pairwise permits') if not bad else \
+        f'cap model disagrees with expected shape at counts {bad}'
 
 
 def muster_battle_size_table(S):

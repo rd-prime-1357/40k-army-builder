@@ -22,6 +22,7 @@ function loadEngine(path) {
     slice(lines, 'function ptsForEntry', 'function refreshPoints'),
     slice(lines, 'function getAttachedLeaders', 'function addUnitFromRoster'),
     slice(lines, 'function duplicateUnit', '// ── Edit operations'),
+    slice(lines, 'function permitsCoLeader', 'function renderAll'),
   ].join('\n');
 
   const prelude = `
@@ -42,6 +43,7 @@ function loadEngine(path) {
       setAllUnits: (u) => { allUnits = u; },
       setNextId: (n) => { nextId = n; },
       duplicateUnit,
+      canAttachLeader,
       getFlashed: () => flashed,
     };
   `)();
@@ -142,6 +144,48 @@ function unit(name, type) { return { unit_name: name, unit_type: type, sizes: [{
   check('scenario 5: body still copies despite leader being at its own limit', !!bodyCopy);
   check('scenario 5: leader copy silently skipped (still only 3 Foul Blightspawn)', list.filter(e => e.unit_name === 'Foul Blightspawn').length === 3);
   check('scenario 5: body copy left with no leader attached', !list.some(e => e.attachedToListId === bodyCopy.listId));
+}
+
+// ── Scenario 6: 2-leader stack duplicate (B7a) — both leaders copy if under
+// their own limits, and the duplicated body refuses a 3rd leader (D157 cap),
+// independent of pairwise permits which would otherwise allow it.
+{
+  function leaderUnit(name, coLeaderWith) {
+    return {
+      unit_name: name, unit_type: 'Character', sizes: [{ size: 1, first_unit: 60, second_unit: 60, third_plus: 60 }],
+      leaderEligible: ['Plague Marines'], coLeaderWith, coLeaderAny: false,
+    };
+  }
+  E.setAllUnits([
+    unit('Plague Marines', 'Infantry'),
+    leaderUnit('Tallyman', ['Foul Blightspawn', 'Biologus Putrifier']),
+    leaderUnit('Foul Blightspawn', ['Tallyman']),
+    leaderUnit('Biologus Putrifier', ['Tallyman']),
+  ]);
+  E.setNextId(60);
+  E.setArmyList([
+    { listId: 1, unit_name: 'Plague Marines', unit_type: 'Infantry', sizeIdx: 0, god: null, points: 100, wargear: {}, otherOptions: {}, attachedToListId: null },
+    { listId: 2, unit_name: 'Tallyman', unit_type: 'Character', sizeIdx: 0, god: null, points: 60, wargear: {}, otherOptions: {}, attachedToListId: 1 },
+    { listId: 3, unit_name: 'Foul Blightspawn', unit_type: 'Character', sizeIdx: 0, god: null, points: 60, wargear: {}, otherOptions: {}, attachedToListId: 1 },
+  ]);
+  E.duplicateUnit(1);
+  const list = E.getArmyList();
+  check('scenario 6: six entries after duplicate (body+2 leaders x2)', list.length === 6);
+  const bodyCopy = list.find(e => e.unit_name === 'Plague Marines' && e.listId !== 1);
+  const attachedToCopy = list.filter(e => e.attachedToListId === bodyCopy.listId);
+  check('scenario 6: both leaders duplicated onto the body copy', attachedToCopy.length === 2);
+  check('scenario 6: leader copies are Tallyman + Foul Blightspawn',
+    attachedToCopy.map(e => e.unit_name).sort().join(',') === 'Foul Blightspawn,Tallyman');
+
+  // B7a: the duplicated body already carries 2 leaders — a 3rd must refuse even
+  // though Biologus Putrifier's pairwise permits (coLeaderWith Tallyman) would allow it.
+  const refused = E.canAttachLeader('Biologus Putrifier', bodyCopy);
+  check('scenario 6: 3rd leader refused on the 2-leader-stacked body copy (B7a cap)', refused === false);
+
+  // Sanity: a fresh, unattached body (only 0 existing leaders) still accepts a leader.
+  const fresh = { listId: 999, unit_name: 'Plague Marines' };
+  const allowed = E.canAttachLeader('Tallyman', fresh);
+  check('scenario 6: leader still attaches to an unstacked body (cap did not overreach)', allowed === true);
 }
 
 console.log(failures === 0 ? '\nall E10 checks pass' : `\n${failures} E10 check(s) FAILED`);
