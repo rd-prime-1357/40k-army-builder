@@ -3896,11 +3896,19 @@
         "replacement": "Plague spewer",
         "per_n_models": 5,
         "max_per_n": 1
+      },
+      {
+        "id": "cnt_6",
+        "scope": "Blightlord Terminators",
+        "group": "Combi-Bolter Options",
+        "type": "count",
+        "replaces": "Combi-bolter + Bubotic blade",
+        "replacement": "Plague spewer + Close combat weapon",
+        "max_total": 1,
+        "required_size": 3
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: If this unit contains only 3 models, 1 Blightlord Terminator's combi-bolter and bubotic blade can be replaced with 1 pla"
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000001374": {
@@ -8720,11 +8728,19 @@
         "replaces": "Plasma pistol + Combat blade",
         "replacement": "Bolt pistol + Thunderclap + Runic stave",
         "max_total": 1
+      },
+      {
+        "id": "cnt_4",
+        "scope": "Wolf Scouts",
+        "group": "Plasma Pistol Options",
+        "type": "count",
+        "replaces": "Plasma pistol",
+        "replacement": "Instigator bolt carbine",
+        "max_total": 1,
+        "required_size": 12
       }
     ],
-    "_parser_flags": [
-      "UNMATCHED: If this unit contains 12 models, 1 Wolf Scout's plasma pistol can be replaced with 1 instigator bolt carbine."
-    ],
+    "_parser_flags": [],
     "_defaults_source": "equipped"
   },
   "000004183": {

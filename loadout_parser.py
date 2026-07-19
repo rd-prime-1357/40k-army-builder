@@ -460,6 +460,32 @@ def classify_active_swap(text, unit_name):
              'replacement': qty_name(m.group('rep')),
              'replacement_raw': m.group('rep').strip()}]
 
+def classify_size_gated_swap(text, unit_name):
+    """Size-exact single-model swaps:
+       'If this unit contains N models, 1 <bearer>'s X can be replaced with 1 Y.'
+       'If this unit contains only N models, 1 <bearer>'s X can be replaced with 1 Y.'
+    The swap is legal only when the unit is fielded at exactly N models. Emits a
+    normal count op with max_total:1, tagged required_size:N — a dormant gate
+    until the engine honours it (banked engine turn). Handles compound replaces
+    ('X and Y' → 'A and B') and compound replacements the same way qty_name does
+    elsewhere. Two units carry this pattern: Wolf Scouts (gated at 12 models)
+    and Blightlord Terminators (gated at only 3 models)."""
+    m = re.match(
+        r"If this unit contains\s+(?:only\s+)?(?P<n>\d+)\s+models?,\s+"
+        r"1\s+(?P<bearer>.+?)'s\s+(?P<repl>.+?)\s+can be replaced with\s+"
+        r"(?P<rep>\d+\s+\S.*?)(?:\.|$)",
+        text, re.I)
+    if not m:
+        return None
+    repl_raw = m.group('repl').strip()
+    rep_raw = m.group('rep').strip()
+    op = {'_type': 'count', '_scope_hint': m.group('bearer').strip(),
+          'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+          'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw,
+          'max_total': 1,
+          'required_size': int(m.group('n'))}
+    return [op]
+
 def classify_one_model_swap(text, unit_name):
     """Indefinite single-model swaps that need a 1-model cap:
        'One model can replace its X with 1 Y'   /   '1 model can replace its X with 1 Y'
@@ -684,6 +710,7 @@ CLASSIFIERS = [
     classify_per_n,
     classify_any_number,
     classify_active_swap,
+    classify_size_gated_swap,
     classify_one_model_swap,
     classify_conditional_add_choice,
     classify_negated_gate_add,
@@ -1025,6 +1052,8 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                     entry['requires_weapon'] = _gate_parts(
                         op.get('requires_weapon_raw') or op['requires_weapon'],
                         weapon_idx, global_idx, equipment_items)
+                if op.get('required_size') is not None:
+                    entry['required_size'] = op['required_size']
                 options.append(entry)
             elif ot == 'add_choice':
                 # "equipped with one of the following" — treated as a single-model choice

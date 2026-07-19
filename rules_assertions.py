@@ -473,6 +473,24 @@ ASSERTIONS = [
      'Datasheets_options.csv (per-N/any-number scope lines) + equipped_parser._FAN_UNIT_ALLOWLIST (D116/D150)',
      lambda S: b18h_fan_allowlist_generic(S)),
 
+    ('B34-1',
+     'The size-exact swap on Wolf Scouts (unlocks only at 12 models) and on Blightlord '
+     'Terminators (unlocks only at 3 models) is present in unit_loadouts.json as a count '
+     'option carrying required_size:N. Absent the classifier, both lines are UNMATCHED '
+     'and the swap is silently dropped — the player cannot take a legal weapon. The '
+     'assertion checks presence of the option with the correct required_size on both '
+     'units; engine enforcement (suppressing the option at other sizes) is a downstream '
+     'concern and covered by the engine turn.',
+     'Datasheets_options.csv 000004182 line 4 + 000001372 line 6 -> unit_loadouts.json',
+     lambda S: (
+         any(o.get('required_size') == 12 for o in S.loadouts()['000004182']['options']) and
+         any(o.get('required_size') == 3  for o in S.loadouts()['000001372']['options']),
+         'WS gate: %s; BLT gate: %s' % (
+             next((o.get('required_size') for o in S.loadouts()['000004182']['options']
+                   if o.get('required_size') is not None), None),
+             next((o.get('required_size') for o in S.loadouts()['000001372']['options']
+                   if o.get('required_size') is not None), None)))),
+
     ('B42-1',
      'Vanguard Veterans with Jump Packs can take a storm shield. The datasheet sentence '
      'drops GW\'s own "with" ("...bolt pistol replaced one of the following"), which the '
