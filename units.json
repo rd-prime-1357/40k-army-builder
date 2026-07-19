@@ -151,7 +151,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn.",
+          "Transport": "This model has a transport capacity of 12 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -173,7 +174,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Assault Ramp"
+              "Assault Ramp",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D6",
@@ -349,7 +351,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn.",
+          "Transport": "This model has a transport capacity of 16 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -371,7 +374,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Assault Ramp"
+              "Assault Ramp",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D6",
@@ -2829,7 +2833,8 @@
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
           "Drop Pod Assault": "This model must start the battle in Reserves and can be set up in the Reinforcements step of your first, second or third Movement phase, regardless of any mission rules. Any units embarked within this model must immediately disembark after it has been set up on the battlefield, and they must be set up more than 9\" away from all enemy models.",
           "Combat Disembarkation": "Each time a unit disembarks from this model after it has been set up on the battlefield, that unit is still eligible to declare a charge this turn.",
-          "Deployment Complete": "Once this unit is set up on the battlefield and all units within it have disembarked, until the end of the battle, units cannot embark within this TRANSPORT ."
+          "Deployment Complete": "Once this unit is set up on the battlefield and all units within it have disembarked, until the end of the battle, units cannot embark within this TRANSPORT .",
+          "Transport": "This model has a transport capacity of 12 Adeptus Astartes Infantry models. It cannot transport Centurion, Gravis, Jump Pack, Wulfen or Terminator models."
         },
         "model_groups": [
           {
@@ -2853,7 +2858,8 @@
             "unit_ability_names": [
               "Drop Pod Assault",
               "Combat Disembarkation",
-              "Deployment Complete"
+              "Deployment Complete",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise 1",
@@ -5179,7 +5185,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Fire Support": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks, Until the end of the phase, each time a friendly model that disembarked from this Transport this turn makes an attack that targets that enemy unit, you can re-roll the Wound roll."
+          "Fire Support": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks, Until the end of the phase, each time a friendly model that disembarked from this Transport this turn makes an attack that targets that enemy unit, you can re-roll the Wound roll.",
+          "Transport": "This model has a transport capacity of 6 ADEPTUS ASTARTES INFANTRY models. It cannot transport JUMP PACK, WULFEN, PHOBOS, GRAVIS, CENTURION, TERMINATOR or TACTicus models (excluding TACTICUS CHARACTER models that began the battle attached to a non- TACTICUS unit)."
         },
         "model_groups": [
           {
@@ -5201,7 +5208,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Fire Support"
+              "Fire Support",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D3",
@@ -8504,7 +8512,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Armoured Resilience": "Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack."
+          "Armoured Resilience": "Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack.",
+          "Transport": "This model has a transport capacity of 12 Adeptus Astartes Infantry models and 1 Dreadnought model. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -8526,7 +8535,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Armoured Resilience"
+              "Armoured Resilience",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D6",
@@ -10723,7 +10733,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn.",
+          "Transport": "This model has a transport capacity of 14 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -10745,7 +10756,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Assault Ramp"
+              "Assault Ramp",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D6",
@@ -12214,7 +12226,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Assault Vehicle": "Units can disembark from this TRANSPORT after it has Advanced. Units that do so count as having made a Normal move, and cannot declare a charge that turn."
+          "Assault Vehicle": "Units can disembark from this TRANSPORT after it has Advanced. Units that do so count as having made a Normal move, and cannot declare a charge that turn.",
+          "Transport": "This model has a transport capacity of 7 Tacticus or Phobos Infantry models. It cannot transport Jump Pack models."
         },
         "model_groups": [
           {
@@ -12236,7 +12249,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Assault Vehicle"
+              "Assault Vehicle",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D3",
@@ -14439,7 +14453,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Emergency Combat Embarkation": "Once per turn, in your opponent’s Charge phase, after an enemy unit has selected targets for its charge but before it makes a Charge move, you can select one ADEPTUS ASTARTES unit from your army that was selected as a target of that charge. Provided that unit is not within Engagement Range of one or more enemy units and every model in that unit is within 3\" of this TRANSPORT , it can embark within this TRANSPORT . The charging unit can then select new targets for its charge."
+          "Emergency Combat Embarkation": "Once per turn, in your opponent’s Charge phase, after an enemy unit has selected targets for its charge but before it makes a Charge move, you can select one ADEPTUS ASTARTES unit from your army that was selected as a target of that charge. Provided that unit is not within Engagement Range of one or more enemy units and every model in that unit is within 3\" of this TRANSPORT , it can embark within this TRANSPORT . The charging unit can then select new targets for its charge.",
+          "Transport": "This model has a transport capacity of 14 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -14461,7 +14476,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Emergency Combat Embarkation"
+              "Emergency Combat Embarkation",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D6",
@@ -14643,7 +14659,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Executioner": "Each time this model makes an attack that targets a unit that is Below Half-strength, add 1 to the Hit roll."
+          "Executioner": "Each time this model makes an attack that targets a unit that is Below Half-strength, add 1 to the Hit roll.",
+          "Transport": "This model has a transport capacity of 7 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -14665,7 +14682,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Executioner"
+              "Executioner",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D6",
@@ -14912,7 +14930,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Self Repair": "At the end of your Command phase, this model regains 1 lost wound."
+          "Self Repair": "At the end of your Command phase, this model regains 1 lost wound.",
+          "Transport": "This model has a transport capacity of 12 ADEPTUS ASTARTES INFANTRY models. It cannot transport JUMP PACK, WULFEN, PHOBOS, GRAVIS, CENTURION, TERMINATOR or TACTICUS models (excluding TACTICUS CHARACTER models that began the battle attached to a non- TACTICUS unit)."
         },
         "model_groups": [
           {
@@ -14934,7 +14953,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Self Repair"
+              "Self Repair",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D3",
@@ -26290,7 +26310,8 @@
         "unit_ability_details": {
           "Mission Tactics": "At the start of your Command phase, you can select one of the Mission Tactics listed below. Until the start of your next Command phase, that Mission Tactic is active and its effects apply to all units from your army with this ability. Each Mission Tactic can only be selected once per battle. FUROR TACTICS When the enemy horde grows close, the Deathwatch will be tasked with the decimation of their core. Aiming not for clinical kills but for maximum destruction over a wide area, they tear the heart from the enemy army. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [SUSTAINED HITS 1] ability. MALLEUS TACTICS When the giants of war lumber forth, the Deathwatch will adopt Malleus tactics. Even the largest behemoth has a weak point, and the archives of the Deathwatch number them all. While this Mission Tactic is active, weapons equipped by ADEPTUS ASTARTES units from your army have the [LETHAL HITS] ability. PURGATUS TACTICS By adopting Purgatus tactics, the Deathwatch focus their deadly ire upon the commanders of the enemy host, assassinating them one after another with pitiless head shots and killing thrusts of the blade. While this Mission Tactic is active, each time an ADEPTUS ASTARTES unit from your army makes an attack, if a Critical Hit is scored, that attack has the [PRECISION] ability.",
           "Oath of Moment": "If your Army Faction is ADEPTUS ASTARTES , at the start of your Command phase, select one unit from your opponent’s army. Until the start of your next Command phase, that enemy unit is your Oath of Moment target. Each time a model with this ability makes an attack that targets your Oath of Moment target: You can re-roll the Hit roll.; If you are using a Codex: Space Marines Detachment and your army does not include one or more units with the Black Templars, Blood Angels, Dark Angels, Deathwatch or Space Wolves keywords, add 1 to the Wound roll as well.",
-          "Blackstar Cluster Launcher": "Each time this model ends a Normal move, you can select one enemy unit it moved over during that move and roll six D6: for each 5+, that unit suffers 1 mortal wound."
+          "Blackstar Cluster Launcher": "Each time this model ends a Normal move, you can select one enemy unit it moved over during that move and roll six D6: for each 5+, that unit suffers 1 mortal wound.",
+          "Transport": "This model has a transport capacity of 12 Adeptus Astartes Infantry or Kill Team models. Each Jump Pack, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -26312,7 +26333,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Blackstar Cluster Launcher"
+              "Blackstar Cluster Launcher",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D6",
@@ -30291,7 +30313,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Templar Vows": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced .",
-          "Assault Vehicle": "Units can disembark from this TRANSPORT after it has Advanced. Units that do so count as having made a Normal move, and cannot declare a charge that turn."
+          "Assault Vehicle": "Units can disembark from this TRANSPORT after it has Advanced. Units that do so count as having made a Normal move, and cannot declare a charge that turn.",
+          "Transport": "This model has a transport capacity of 7 Tacticus or Phobos Infantry models. It cannot transport Jump Pack models."
         },
         "model_groups": [
           {
@@ -30313,7 +30336,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Assault Vehicle"
+              "Assault Vehicle",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D3",
@@ -31139,7 +31163,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Templar Vows": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced .",
-          "Interception Strike": "Each time this model makes a ranged attack that targets an enemy unit within 12\" of one or more ADEPTUS ASTARTES units from your army, you can re-roll the Hit roll."
+          "Interception Strike": "Each time this model makes a ranged attack that targets an enemy unit within 12\" of one or more ADEPTUS ASTARTES units from your army, you can re-roll the Hit roll.",
+          "Transport": "This model has a transport capacity of 7 Adeptus Astartes Infantry models. Each Jump Pack, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -31162,6 +31187,7 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Executioner",
+              "Transport",
               "Interception Strike"
             ],
             "rule_names": [
@@ -31428,7 +31454,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Templar Vows": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced .",
-          "Stabilised Disembarkation": "In your opponent’s Shooting phase, each time an enemy unit is selected to shoot, after that unit has shot, if any of those attacks targeted this TRANSPORT , it can use this ability. If it does, any units embarked within it can disembark. When doing so, models in those units can be set up anywhere on the battlefield wholly within 6\" of this TRANSPORT and not within Engagement Range of one or more enemy units."
+          "Stabilised Disembarkation": "In your opponent’s Shooting phase, each time an enemy unit is selected to shoot, after that unit has shot, if any of those attacks targeted this TRANSPORT , it can use this ability. If it does, any units embarked within it can disembark. When doing so, models in those units can be set up anywhere on the battlefield wholly within 6\" of this TRANSPORT and not within Engagement Range of one or more enemy units.",
+          "Transport": "This model has a transport capacity of 14 Adeptus Astartes Infantry models. Each Jump Pack, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -31451,6 +31478,7 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Emergency Combat Embarkation",
+              "Transport",
               "Stabilised Disembarkation"
             ],
             "rule_names": [
@@ -33811,7 +33839,8 @@
         "unit_ability_details": {
           "Templar Vows": "If your Army Faction is ADEPTUS ASTARTES , at the start of the first battle round, select one of the following Vows to be active for ADEPTUS ASTARTES units from your army. While a Vow is active for a unit from your army, that unit has the associated ability shown below. Abhor the Witch, Destroy the Witch Each time this unit declares a charge , if one or more targets of that charge have the PSYKER keyword, you can re-roll the Charge roll . Melee weapons equipped by models in this unit have the [PRECISION] ability while targeting PSYKER units. Accept Any Challenge, No Matter the Odds Each time a model in this unit makes a melee attack, if the Strength characteristic of that attack is less than or equal to the Toughness characteristic of the target, add 1 to the Wound roll . Suffer Not the Unclean to Live This unit is eligible to declare a charge in a turn in which it Fell Back , and each time a model in this unit makes a Pile-in or Consolidation move , it does not need to end that move closer to the closest enemy model, provided it ends that move as close as possible to the closest enemy unit. Uphold the Honour of the Emperor If this unit has the INFANTRY keyword: At the end of your Command phase , if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.; If the mission you are playing features Actions , this unit is eligible to start to perform an Action in a turn in which it Advanced .",
           "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn.",
-          "Legacy of Jerulas": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly model that disembarked from this TRANSPORT this turn makes an attack that targets that enemy unit, re-roll a Hit roll of 1 and re-roll a Wound roll of 1."
+          "Legacy of Jerulas": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly model that disembarked from this TRANSPORT this turn makes an attack that targets that enemy unit, re-roll a Hit roll of 1 and re-roll a Wound roll of 1.",
+          "Transport": "This model has a transport capacity of 16 Adeptus Astartes Infantry models. Each Jump Pack, Gravis or TERMiNATOR model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
         },
         "model_groups": [
           {
@@ -33834,6 +33863,7 @@
             "leader_footer": null,
             "unit_ability_names": [
               "Assault Ramp",
+              "Transport",
               "Legacy of Jerulas"
             ],
             "rule_names": [
@@ -41313,7 +41343,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Nurgle’s Gift (Aura)": "If your Army Faction is DEATH GUARD , while an enemy unit is within Contagion Range of one or more Death Guard models from your army, it is Afflicted (see below). CONTAGION RANGE Contagion Range changes over the course of the battle: AFFLICTED During the Declare Battle Formations step, select one of the Plagues below. Until the end of the battle, while an enemy unit is Afflicted, subtract 1 from the Toughness characteristic of models in that unit, and that unit has the effect of your chosen Plague. Skullsquirm Blight This horrifying affliction sees the minds and senses of the victim gnawed gradually away from within. Each time a model in this unit makes an attack, subtract 1 from the Hit roll . Rattlejoint Ague Limbs shuddering with fever palsy, bones turned brittle as glass, these warriors can barely act to defend themselves. Worsen the Save characteristic of models in this unit by 1. Scabrous Soulrot Victims of this insidious ailment become glassy eyed and morose as their very animus and essence decay. Worsen the Move, Leadership, and Objective Control characteristics of models in this unit by 1 (this rule can only worsen a model’s Objective Control characteristic to a minimum of 1).",
-          "Fire Support": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, each time a friendly model that disembarked from this TRANSPORT this turn makes an attack that targets that enemy unit, you can re-roll the Wound roll."
+          "Fire Support": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, each time a friendly model that disembarked from this TRANSPORT this turn makes an attack that targets that enemy unit, you can re-roll the Wound roll.",
+          "Transport": "This model has a transport capacity of 12 Death Guard Infantry models. It cannot transport Terminator models."
         },
         "model_groups": [
           {
@@ -41335,7 +41366,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Fire Support"
+              "Fire Support",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D3",
@@ -41558,7 +41590,8 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "Nurgle’s Gift (Aura)": "If your Army Faction is DEATH GUARD , while an enemy unit is within Contagion Range of one or more Death Guard models from your army, it is Afflicted (see below). CONTAGION RANGE Contagion Range changes over the course of the battle: AFFLICTED During the Declare Battle Formations step, select one of the Plagues below. Until the end of the battle, while an enemy unit is Afflicted, subtract 1 from the Toughness characteristic of models in that unit, and that unit has the effect of your chosen Plague. Skullsquirm Blight This horrifying affliction sees the minds and senses of the victim gnawed gradually away from within. Each time a model in this unit makes an attack, subtract 1 from the Hit roll . Rattlejoint Ague Limbs shuddering with fever palsy, bones turned brittle as glass, these warriors can barely act to defend themselves. Worsen the Save characteristic of models in this unit by 1. Scabrous Soulrot Victims of this insidious ailment become glassy eyed and morose as their very animus and essence decay. Worsen the Move, Leadership, and Objective Control characteristics of models in this unit by 1 (this rule can only worsen a model’s Objective Control characteristic to a minimum of 1).",
-          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn.",
+          "Transport": "This model has a transport capacity of 14 Death Guard Infantry models. Each Terminator model takes up the space of 2 models."
         },
         "model_groups": [
           {
@@ -41580,7 +41613,8 @@
             "leader_restrictions": null,
             "leader_footer": null,
             "unit_ability_names": [
-              "Assault Ramp"
+              "Assault Ramp",
+              "Transport"
             ],
             "rule_names": [
               "Deadly Demise D6",

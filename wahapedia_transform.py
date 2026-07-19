@@ -370,6 +370,24 @@ def index_abilities(data, selected, flags):
             # Special / Fortification / Primarch / Wargear profile / Без заголовка
             flags["unclassified_abilities"].append(
                 f"{selected[ds]['name']} | type='{atype}' | name='{name or '(none)'}'")
+
+    # E15: "Transport" as an ability, not just a keyword. Datasheets.csv carries a
+    # dedicated `transport` column (capacity + exclusion text) that this pipeline
+    # never routed anywhere — the TRANSPORT keyword showed with no explanatory
+    # text. Routed the same way every other Datasheet-type ability is: per-datasheet
+    # text in unit_abil_desc (what actually renders, per the B1 fix) plus a global
+    # fallback entry. Text differs per unit (capacity, excluded model types), so this
+    # is exactly the shared-name-with-different-text shape B1 already solved for.
+    for ds_id, ds_row in selected.items():
+        transport_text = strip_html((ds_row.get("transport") or "").strip(), list_sep="; ")
+        if not transport_text:
+            continue
+        name = "Transport"
+        if name not in unit_abil[ds_id]:
+            unit_abil[ds_id].append(name)
+        unit_abil_defs.setdefault(name, transport_text)
+        unit_abil_desc[ds_id][name] = transport_text
+
     return {
         "unit_abil": unit_abil, "unit_faction": unit_faction,
         "rule_names": rule_names, "fnp": fnp,
