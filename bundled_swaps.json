@@ -254,6 +254,113 @@
           ]
         }
       ]
+    },
+    {
+      "army_name": "Space Wolves",
+      "unit_name": "Wulfen Dreadnought",
+      "model_group": "All",
+      "option_group": "Wulfen Dreadnought Arms",
+      "endpoints": [
+        {
+          "id": "wulfen-base",
+          "label": "Default loadout",
+          "is_default": true,
+          "points_cost": 0,
+          "adds": [],
+          "removes": [],
+          "grants": []
+        },
+        {
+          "id": "wulfen-shield-flamer-keep-claw",
+          "label": "Blizzard shield & heavy flamer (keep great wolf claw)",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": [
+            "Heavy flamer"
+          ],
+          "removes": [
+            "Fenrisian greataxe",
+            "Storm bolter"
+          ],
+          "grants": [
+            {
+              "model_group": "All",
+              "option_name": "Blizzard shield",
+              "ability_name": "Blizzard Shield",
+              "carrier_notes": "The bearer has a 4+ invulnerable save.",
+              "stat_override": {
+                "INV": "4"
+              }
+            }
+          ]
+        },
+        {
+          "id": "wulfen-shield-flamer-keep-axe",
+          "label": "Blizzard shield & heavy flamer (keep Fenrisian greataxe)",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": [
+            "Heavy flamer"
+          ],
+          "removes": [
+            "Great wolf claw",
+            "Storm bolter"
+          ],
+          "grants": [
+            {
+              "model_group": "All",
+              "option_name": "Blizzard shield",
+              "ability_name": "Blizzard Shield",
+              "carrier_notes": "The bearer has a 4+ invulnerable save.",
+              "stat_override": {
+                "INV": "4"
+              }
+            }
+          ]
+        },
+        {
+          "id": "wulfen-shield-bolter-keep-claw",
+          "label": "Blizzard shield & storm bolter (keep great wolf claw)",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": [],
+          "removes": [
+            "Fenrisian greataxe"
+          ],
+          "grants": [
+            {
+              "model_group": "All",
+              "option_name": "Blizzard shield",
+              "ability_name": "Blizzard Shield",
+              "carrier_notes": "The bearer has a 4+ invulnerable save.",
+              "stat_override": {
+                "INV": "4"
+              }
+            }
+          ]
+        },
+        {
+          "id": "wulfen-shield-bolter-keep-axe",
+          "label": "Blizzard shield & storm bolter (keep Fenrisian greataxe)",
+          "is_default": false,
+          "points_cost": 0,
+          "adds": [],
+          "removes": [
+            "Great wolf claw"
+          ],
+          "grants": [
+            {
+              "model_group": "All",
+              "option_name": "Blizzard shield",
+              "ability_name": "Blizzard Shield",
+              "carrier_notes": "The bearer has a 4+ invulnerable save.",
+              "stat_override": {
+                "INV": "4"
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }
