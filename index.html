@@ -1619,7 +1619,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.80';
+  const VERSION = '5.82';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3345,8 +3345,9 @@
   }
 
   // B7b: combined attached-unit popup. Fires from the bodyguard's ⓘ when one or
-  // more leaders are attached. Renders the bodyguard first, then each leader in
-  // attach order, using the existing buildModalConfigured for each member.
+  // more leaders are attached. Renders each leader first (attach order), then the
+  // bodyguard last, using the existing buildModalConfigured for each member —
+  // this matches the center Army List panel's stacking order (B53, S96).
   // The bodyguard's stat table receives the union of every attached leader's
   // `bodyguard_stat_flags` as aura markers (asterisks on affected stats).
   function openModalCombined(bodyguardListId) {
@@ -3379,19 +3380,19 @@
   }
 
   function buildModalCombined(bodyguard, bgRaw, leaders, auraFlags) {
-    // Bodyguard panel first, with aura flags applied.
+    // Each leader first, in attach order, plain panels (no aura pass — leader ⓘ
+    // reciprocals not populated this pass per D157/D159). Bodyguard panel last,
+    // with aura flags applied — matches the center panel's stacking (B53, S96).
     let html = '';
-    html += `<div class="combined-member-header">${bodyguard.unit_name}</div>`;
-    html += buildModalConfigured(bgRaw, bodyguard, auraFlags);
-    // Then each leader in attach order, plain panels (no aura pass — leader ⓘ
-    // reciprocals not populated this pass per D157/D159).
     for (const leader of leaders) {
       const lraw = rawUnits.find(u => u.unit_name === leader.unit_name);
       if (!lraw) continue;
-      html += '<hr class="combined-member-divider">';
       html += `<div class="combined-member-header">${leader.unit_name}</div>`;
       html += buildModalConfigured(lraw, leader);
+      html += '<hr class="combined-member-divider">';
     }
+    html += `<div class="combined-member-header">${bodyguard.unit_name}</div>`;
+    html += buildModalConfigured(bgRaw, bodyguard, auraFlags);
     return html;
   }
 
@@ -3642,18 +3643,23 @@
   function loRollup(def, size, sel, optCounts) {
     const choiceBy = sel.choiceById || {}, countBy = sel.countById || {}, addBy = sel.addById || {};
     const counts = loGroupCounts(def, size, optCounts || {});
+    // B34 Piece 2: strip options gated to a different size bracket. Every option
+    // loop below (byScope split + pool-cap init) reads this filtered list, so a
+    // size-gated option contributes nothing at brackets that don't match its
+    // required_size. Exact match, never a floor/ceiling.
+    const sizeActiveOptions = def.options.filter(o => o.required_size == null || o.required_size === size);
     const byScope = {};
-    for (const o of def.options) (byScope[o.scope] = byScope[o.scope] || []).push(o);
+    for (const o of sizeActiveOptions) (byScope[o.scope] = byScope[o.scope] || []).push(o);
     // Unit-wide shared pools: options carrying the same pool_id draw from one cap.
     // The option with per_n_models defines the cap; others (e.g. a leader toggle)
     // just consume from it. leaderUsed tracks how much the fixed-1 leader took, so
     // body controls can shrink their ceiling accordingly.
     const poolCap = {}, poolUsed = {}, poolLeaderUsed = {}, poolFromPerN = {};
-    for (const o of def.options) if (o.pool_id && o.per_n_models) { poolCap[o.pool_id] = loMaxCount(o, size); poolFromPerN[o.pool_id] = true; }
+    for (const o of sizeActiveOptions) if (o.pool_id && o.per_n_models) { poolCap[o.pool_id] = loMaxCount(o, size); poolFromPerN[o.pool_id] = true; }
     // A pool whose members all use max_total (no per_n_models defining member) still
     // needs a cap; otherwise two pooled adds sharing a pool_id can't lock each other
     // out. Bound it by the largest member max_total (per_n members take precedence).
-    for (const o of def.options) if (o.pool_id && !o.per_n_models && o.max_total != null && !poolFromPerN[o.pool_id])
+    for (const o of sizeActiveOptions) if (o.pool_id && !o.per_n_models && o.max_total != null && !poolFromPerN[o.pool_id])
       poolCap[o.pool_id] = Math.max(poolCap[o.pool_id] || 0, o.max_total);
     // requires_weapon: a gated option is legal only while enough models in its scope
     // group still carry the named weapon — counting choice AND count swaps, in both
@@ -3893,8 +3899,12 @@
     const bundleOwned = (o) => o.replaces &&
       (dupSwaps.has(dupKey(o)) ||
        (ownsNow && loWeaponParts(o.replaces).some(p => managed.has(p))));
+    // B34 Piece 2: an option carrying required_size:N is legal only at that exact
+    // bracket. At every other bracket it is suppressed here (hidden + stale pick
+    // cleared) and skipped in loRollup below. Exact match, never a floor/ceiling.
+    const sizeGated = (o) => o.required_size != null && o.required_size !== size;
     const suppressed = (o) =>
-      brokenChoice(o) || srcMissing(o) || bundleOwned(o);
+      brokenChoice(o) || srcMissing(o) || bundleOwned(o) || sizeGated(o);
     for (const o of def.options)
       if (suppressed(o) && entry.wargear[o.id] != null)
         entry.wargear[o.id] = (o.type === 'choice') ? null : 0;
