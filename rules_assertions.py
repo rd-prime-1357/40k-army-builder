@@ -878,6 +878,21 @@ ASSERTIONS = [
      'S91 hand-audit of SM+DG leader unit abilities; D157/D159; index.html render layer',
      lambda S: b7b_combined_popup(S)),
 
+    # ── B13-1. Optional Epic Hero model groups in Victrix Honour Guard (D158/B13).
+    # The engine detects embedded optional Epic Hero models by name-matching ('EPIC HERO'
+    # substring on an optional group), with no separate field needed. Guards: Victrix
+    # has exactly the two expected groups, no other unit has such groups, and
+    # editLoadoutOptional's cap check is present and correctly placed.
+    ('B13-1',
+     'Victrix Honour Guard (000004185) has exactly two optional model groups with '
+     '"EPIC HERO" in the name (Chapter Ancient, Chapter Champion); no other unit in '
+     'unit_loadouts.json has optional groups with "EPIC HERO" in the name; '
+     'isOptEpicHeroBlocked is defined in index.html and editLoadoutOptional guards '
+     'toggle-on with it (turning off is always allowed).',
+     'unit_loadouts.json model_groups; Datasheets_keywords.csv (Epic Hero model-scoped); '
+     'index.html isOptEpicHeroBlocked / editLoadoutOptional; B13 Piece 2',
+     lambda S: b13_optional_epic_hero(S)),
+
 ]
 
 
@@ -1052,6 +1067,64 @@ def b7b_combined_popup(S):
     return True, ('data: 16/16 leaders carry expected flags; '
                   'render: openModalCombined/buildModalCombined wired, aura union pulls from '
                   'bodyguard_stat_flags, bodyguard ⓘ routes conditionally')
+
+
+def b13_optional_epic_hero(S):
+    """B13 Piece 2: optional model groups whose name contains 'EPIC HERO' in
+    unit_loadouts.json are detected by the engine via name-matching, not a
+    separate field. Checks:
+
+    1. Victrix Honour Guard (000004185) has exactly two optional model groups,
+       both with 'EPIC HERO' in the name: 'Chapter Ancient - EPIC HERO' and
+       'Chapter Champion - EPIC HERO'.
+    2. No other unit in unit_loadouts.json has an optional group with 'EPIC HERO'
+       in its name (today Victrix is unique; this assertion fails if a new unit
+       gets such a group without being audited).
+    3. index.html defines isOptEpicHeroBlocked and editLoadoutOptional guards
+       the toggle-on path with that function.
+    4. editLoadoutOptional refuses to set the key when blocked (currentlyOn
+       check precedes the cap guard so turning off is always allowed)."""
+    import json as _json, os as _os
+
+    lo_path = _os.path.join(S.dir, 'unit_loadouts.json')
+    if not _os.path.exists(lo_path):
+        return False, 'unit_loadouts.json not found'
+    lo = _json.load(open(lo_path, encoding='utf-8'))
+
+    # Check 1: Victrix optional Epic Hero groups
+    v = lo.get('000004185')
+    if not v:
+        return False, 'Victrix Honour Guard (000004185) missing from unit_loadouts.json'
+    opt_eh_groups = [
+        mg['name'] for mg in v.get('model_groups', [])
+        if (mg.get('count') or {}).get('optional') and 'EPIC HERO' in mg['name'].upper()
+    ]
+    expected_groups = {'Chapter Ancient - EPIC HERO', 'Chapter Champion - EPIC HERO'}
+    if set(opt_eh_groups) != expected_groups:
+        return False, f'Victrix optional EPIC HERO groups: got {opt_eh_groups}, want {sorted(expected_groups)}'
+
+    # Check 2: no other unit has optional groups with EPIC HERO in name
+    others = []
+    for uid, u in lo.items():
+        if uid.startswith('_') or uid == '000004185': continue
+        for mg in u.get('model_groups', []):
+            ct = mg.get('count') or {}
+            if ct.get('optional') and 'EPIC HERO' in mg.get('name', '').upper():
+                others.append(f'{uid}/{mg["name"]}')
+    if others:
+        return False, f'Unexpected optional EPIC HERO groups in other units: {others}'
+
+    # Check 3 & 4: engine defines and wires the cap guard
+    txt = S.index_html()
+    if 'function isOptEpicHeroBlocked(thisListId, groupName)' not in txt:
+        return False, 'isOptEpicHeroBlocked not defined in index.html'
+    if 'groupName.toUpperCase().includes(\'EPIC HERO\')' not in txt:
+        return False, 'isOptEpicHeroBlocked does not use EPIC HERO name-check'
+    if 'if (!currentlyOn && isOptEpicHeroBlocked(listId, groupName)) return;' not in txt:
+        return False, 'editLoadoutOptional does not guard toggle-on with isOptEpicHeroBlocked'
+
+    return True, ('Victrix: 2 optional EPIC HERO groups confirmed; no other units carry such '
+                  'groups; isOptEpicHeroBlocked defined and wired in editLoadoutOptional')
 
 
 def muster_battle_size_table(S):
