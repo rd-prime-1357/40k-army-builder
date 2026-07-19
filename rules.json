@@ -53,19 +53,19 @@
   },
   {
     "rule_name": "Deadly Demise D6",
-    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers D6 mortal wounds.\""
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\" of this model suffers D6 mortal wounds.\""
   },
   {
     "rule_name": "Deadly Demise D3",
-    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers D3 mortal wounds.\""
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\" of this model suffers D3 mortal wounds.\""
   },
   {
     "rule_name": "Deadly Demise 1",
-    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\\ of this model suffers 1 mortal wound.\""
+    "rule_description": "When this model is destroyed, roll one D6. On a 6, each unit within 6\" of this model suffers 1 mortal wound.\""
   },
   {
     "rule_name": "Scouts 9\"",
-    "rule_description": "After both sides have deployed, this unit can make a Normal move of up to 9\\. It cannot end this move within 9\" of any enemy models.\""
+    "rule_description": "After both sides have deployed, this unit can make a Normal move of up to 9\". It cannot end this move within 9\" of any enemy models.\""
   },
   {
     "rule_name": "Feel No Pain 5+",
@@ -74,5 +74,25 @@
   {
     "rule_name": "Feel No Pain 6+",
     "rule_description": "Each time a wound is allocated to a model in this unit, roll one D6. On a 6, that wound is ignored."
+  },
+  {
+    "rule_name": "Sullen Malevolence (Aura)",
+    "rule_description": "While an enemy unit is within 6\" of this unit and this unit contains one or more Blue Horror models, worsen the Leadership characteristic of models in that enemy unit by 1."
+  },
+  {
+    "rule_name": "Champion Slayer",
+    "rule_description": "Each time this model makes a melee attack that targets a Character unit, re-roll a Hit roll of 1. Each time this model destroys an enemy Character model, gain 1CP."
+  },
+  {
+    "rule_name": "Mischief and Confusion",
+    "rule_description": "At the start of the Shooting phase, select one enemy unit within 12\" of this model. Until the end of the phase, each time a model in that unit makes a ranged attack, subtract 1 from the Hit roll."
+  },
+  {
+    "rule_name": "Xirat'p's Sorcerous Barrages (Psychic)",
+    "rule_description": "At the end of your Movement phase, roll 1D6 for each enemy unit within 6\" of this model: on a 2-3, that unit suffers 1 mortal wound; on a 4-5, that unit suffers D3 mortal wounds; on a 6, that unit suffers D6 mortal wounds."
+  },
+  {
+    "rule_name": "Dazzling Acrobatics",
+    "rule_description": "This model is eligible to declare a charge in a turn in which it Fell Back."
   }
 ]

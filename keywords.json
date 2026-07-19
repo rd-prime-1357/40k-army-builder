@@ -134,5 +134,9 @@
   {
     "keyword_name": "Sustained Hits D3",
     "keyword_description": "A Critical Hit scored with this weapon scores D3 additional hits."
+  },
+  {
+    "keyword_name": "Reverberating Summons",
+    "keyword_description": null
   }
 ]

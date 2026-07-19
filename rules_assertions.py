@@ -330,6 +330,21 @@ def repro_gate(S):
     return mod.repro(S.dir)
 
 
+def units_repro_gate(S):
+    """D164 (B55): the executable form of 'units.json and its glossary lookups are fresh'.
+    Runs the real per-faction pipeline from source and demands byte-identical reproduction
+    of the committed units.json AND the four merged lookups. Without this, the lookups were
+    the one deployed output nothing checked, and they drifted silently for several sessions."""
+    import os, importlib.util
+    p = os.path.join(S.dir, 'units_repro_check.py')
+    if not os.path.exists(p):
+        return False, 'units_repro_check.py not found — the units reproduction gate is missing'
+    spec = importlib.util.spec_from_file_location('units_repro_check', p)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.repro(S.dir)
+
+
 def manifest_gate(S):
     """D123: file-integrity manifest. Any guarded pipeline file arriving as the wrong
     copy fails here and names the file — the cheap first line the repro gate backs up."""
@@ -357,6 +372,18 @@ ASSERTIONS = [
      'stale, partial, or renamed parser cannot pass.',
      'repro_check.py (D123)',
      lambda S: repro_gate(S)),
+
+    # ── P4. The same gate for the other half of the deployed data (D164/B55). P1 covers
+    # unit_loadouts.json only; units.json and the four glossary lookups the app loads
+    # (abilities, rules, keywords, weapon_abilities) had no reproduction check at all.
+    # abilities.json had drifted 76 entries and 33 mangled inch marks before anyone looked.
+    ('P4',
+     'The pipeline reproduces the committed units.json byte-for-byte from source '
+     '(SM and DG through wahapedia_transform, CD direct off the root CSVs, merged, then the '
+     'three post-merge passes), and every one of the four merged glossary lookups matches too. '
+     'A stale committed lookup cannot pass.',
+     'units_repro_check.py (D164)',
+     lambda S: units_repro_gate(S)),
 
     # ── P3. File-integrity manifest (D123). Guards every pipeline file by content hash,
     # including the four the repro gate does not touch (index.html, units.json,
@@ -490,6 +517,20 @@ ASSERTIONS = [
                    if o.get('required_size') is not None), None),
              next((o.get('required_size') for o in S.loadouts()['000001372']['options']
                    if o.get('required_size') is not None), None)))),
+
+    ('B34-2',
+     'Every required_size value in unit_loadouts.json is a member of that unit\'s '
+     'declared size_brackets. A stale gate — brackets changed but required_size did not — '
+     'would render the option unreachable at every bracket; this assertion catches that '
+     'divergence before the engine sees it.',
+     'unit_loadouts.json size_brackets vs option.required_size',
+     lambda S: (
+         all(o.get('required_size') in d.get('size_brackets', [])
+             for d in S.loadouts().values() if isinstance(d, dict)
+             for o in d.get('options', []) if o.get('required_size') is not None),
+         'options carrying required_size: %d' % sum(
+             1 for d in S.loadouts().values() if isinstance(d, dict)
+             for o in d.get('options', []) if o.get('required_size') is not None))),
 
     ('B42-1',
      'Vanguard Veterans with Jump Packs can take a storm shield. The datasheet sentence '

@@ -36,6 +36,16 @@ CD_ROOT_CSVS = [
     'Keywords.csv', 'Rules.csv', 'Weapon_Abilities.csv',
 ]
 
+# The four glossary lookups merge_factions.py unions alongside units.json, plus the
+# taxonomy pass-through. Same run, same fixed point (B55 / D164).
+LOOKUPS = [
+    ('abilities.json', 'ability_name'),
+    ('rules.json', 'rule_name'),
+    ('keywords.json', 'keyword_name'),
+    ('weapon_abilities.json', 'weapon_ability_name'),
+    ('faction_taxonomy.json', None),
+]
+
 REQUIRED = [
     'wahapedia_transform.py', 'mfm_points_parser.py', 'convert_to_json.py',
     'merge_factions.py', 'add_loadout_groups.py', 'add_co_leader.py',
@@ -146,7 +156,35 @@ def repro(dir_):
         a = open(rebuilt_path, 'rb').read()
         b = open(committed, 'rb').read()
         if a == b:
-            return True, 'pipeline reproduces committed units.json byte-for-byte'
+            # units.json is fresh; the merged lookups ship from the same run, so they are
+            # part of the same fixed point (B55 / D164). Any of them drifting is the same
+            # class of failure and is reported here rather than left to prose.
+            bad = []
+            for fname, key in LOOKUPS:
+                rp = os.path.join(deploy, fname)
+                cp = os.path.join(dir_, fname)
+                if not os.path.exists(cp):
+                    bad.append(f'{fname}: missing from project dir')
+                    continue
+                ra_ = open(rp, 'rb').read()
+                rb_ = open(cp, 'rb').read()
+                if ra_ == rb_:
+                    continue
+                if key is None:
+                    bad.append(f'{fname}: differs ({len(ra_)} vs {len(rb_)} bytes)')
+                    continue
+                na = {r[key]: r for r in json.loads(ra_.decode('utf-8'))}
+                nb = {r[key]: r for r in json.loads(rb_.decode('utf-8'))}
+                add = sorted(set(na) - set(nb))
+                lost = sorted(set(nb) - set(na))
+                chg = sorted(k for k in set(na) & set(nb) if na[k] != nb[k])
+                bad.append(f'{fname}: +{len(add)} rebuild-only, -{len(lost)} committed-only, '
+                           f'{len(chg)} text changes (e.g. {(add + lost + chg)[:3]})')
+            if bad:
+                return False, 'units.json is fresh but merged lookups have drifted:\n  ' + \
+                              '\n  '.join(bad)
+            return True, ('pipeline reproduces committed units.json and all four merged '
+                          'lookups byte-for-byte')
 
         ra = json.loads(a.decode('utf-8')); rb = json.loads(b.decode('utf-8'))
         def flat(d):
