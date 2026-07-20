@@ -56,6 +56,21 @@ COMPOSITION_RE = re.compile(
     r"^[•\-\*]\s*(\d+\s+[^,\d]+(?:,\s*\d+\s+[^,\d]+)*)(\d+)\s*pts\s*$", re.I
 )
 COMPOSITION_COUNT_RE = re.compile(r"(\d+)\s+[^,\d]+")
+# B56g. Split a composition string into its individual (count, label) groups so the
+# resolver can tell a genuine escort line ("3 Wolf Guard Headtakers, 3 Hunting Wolves")
+# from an ordinary multi-role composition where every printed line has several groups
+# and none stands alone (Crusader Squad's "1 Sword Brother, 4 Neophytes, 5 Initiates").
+GROUP_SPLIT_RE = re.compile(r"(\d+)\s+([^,\d]+)")
+
+def _parse_groups(text):
+    groups = []
+    for cnt, label in GROUP_SPLIT_RE.findall(text):
+        lbl = label.strip().rstrip(",").strip()
+        groups.append((int(cnt), lbl))
+    return groups
+
+def _norm_label(s):
+    return re.sub(r"\s+", " ", (s or "").strip()).lower()
 TIER_SINGLE = re.compile(r"your unit costs", re.I)
 TIER_12 = re.compile(r"1st to 2nd", re.I)
 TIER_3 = re.compile(r"3rd", re.I)
@@ -192,7 +207,8 @@ def parse_mfm(path):
 
         m = COMPOSITION_RE.match(line)
         if m and cur and cur["tiers"]:
-            size = sum(int(c) for c in COMPOSITION_COUNT_RE.findall(m.group(1)))
+            groups = _parse_groups(m.group(1))
+            size = sum(c for c, _ in groups)
             cost = int(m.group(2))
             # Composition lines are staged, not written straight into the tier dict.
             # Two different compositions can sum to the same bracket size (e.g. a
@@ -203,7 +219,7 @@ def parse_mfm(path):
             # read, so a same-size collision voids that tier instead of guessing. D106.
             cur.setdefault("composition_pending", []).append(
                 {"tier_idx": len(cur["tiers"]) - 1, "size": size, "cost": cost,
-                 "line": i + 1, "text": line}
+                 "line": i + 1, "text": line, "groups": groups}
             )
             i += 1; continue
 
@@ -223,8 +239,42 @@ def parse_mfm(path):
         pending = info.pop("composition_pending", None)
         if not pending:
             continue
-        by_tier = {}
+
+        # B56g. A single-group line ("6 Wolf Guard Headtakers") stands alone. A
+        # multi-group line is an escort candidate only if its FIRST group exactly
+        # matches (count and label) a single-group line in the same tier — that is
+        # the signature of "primary count, optionally with an add-on group", as
+        # opposed to Crusader Squad where every line has several groups and none
+        # ever appears alone. Only matched escort lines are pulled out of the normal
+        # size/collision resolution; everything else is untouched.
+        singles_by_tier = {}
         for e in pending:
+            if len(e["groups"]) == 1:
+                singles_by_tier.setdefault(e["tier_idx"], []).append(e)
+
+        escort_entries, normal_entries = [], []
+        for e in pending:
+            match = None
+            if len(e["groups"]) > 1:
+                first_count, first_label = e["groups"][0]
+                for s in singles_by_tier.get(e["tier_idx"], []):
+                    if s["groups"][0][0] == first_count and _norm_label(s["groups"][0][1]) == _norm_label(first_label):
+                        match = s
+                        break
+            if match:
+                escort_count = sum(c for c, _ in e["groups"][1:])
+                escort_label = ", ".join(l for _, l in e["groups"][1:])
+                escort_entries.append({
+                    "tier_idx": e["tier_idx"], "primary_count": first_count,
+                    "escort_count": escort_count, "escort_label": escort_label,
+                    "escort_cost": e["cost"] - match["cost"],
+                    "line": e["line"], "text": e["text"],
+                })
+            else:
+                normal_entries.append(e)
+
+        by_tier = {}
+        for e in normal_entries:
             by_tier.setdefault(e["tier_idx"], {}).setdefault(e["size"], []).append(e)
         conflicted = False
         for tier_idx, by_size in by_tier.items():
@@ -240,6 +290,27 @@ def parse_mfm(path):
         for tier_idx, by_size in by_tier.items():
             for size, entries in by_size.items():
                 info["tiers"][tier_idx][size] = entries[0]["cost"]
+
+        # Derive the escort's per-model rate from the printed difference. Every
+        # escort line for this unit must agree on the rate (evenly divisible, same
+        # value across brackets and tiers) or it is flagged rather than guessed —
+        # no invented price, matching D106.
+        if escort_entries:
+            rates = set()
+            for ee in escort_entries:
+                if ee["escort_count"] > 0 and ee["escort_cost"] % ee["escort_count"] == 0:
+                    rates.add(ee["escort_cost"] // ee["escort_count"])
+                else:
+                    rates.add(None)
+            if len(rates) == 1 and None not in rates:
+                info["escort_group"] = {
+                    "label": escort_entries[0]["escort_label"],
+                    "rate_per_model": next(iter(rates)),
+                    "brackets": sorted({(ee["primary_count"], ee["escort_count"]) for ee in escort_entries}),
+                    "source_lines": [ee["line"] for ee in escort_entries],
+                }
+            else:
+                info["escort_conflicts"] = escort_entries
 
     return units
 
@@ -509,11 +580,17 @@ def main():
         sys.exit("No units parsed from MFM file.")
 
     flags = {"no_costs": [], "mfm_no_datasheet": [], "datasheet_no_mfm": [], "support_filled": [],
-              "out_of_scope_dropped": [], "composition_conflicts": []}
+              "out_of_scope_dropped": [], "composition_conflicts": [], "escort_groups": [],
+              "escort_conflicts": []}
     for info in units.values():
         for c in info.get("composition_conflicts", []):
             flags["composition_conflicts"].append(
                 (info["name"], c["line"], c["text"], c["size"], c["cost"]))
+        eg = info.get("escort_group")
+        if eg:
+            flags["escort_groups"].append((info["name"], eg))
+        for ec in info.get("escort_conflicts", []):
+            flags["escort_conflicts"].append((info["name"], ec["line"], ec["text"]))
 
     # name set from datasheets (if provided) for matching + army-name lookup
     ds_army_by_norm = {}
@@ -667,6 +744,22 @@ def main():
         f.write(f"## Chapter overrides applied (append mode, base row replaced) — {len(collisions)}\n")
         for army, unit, base_pts1, chap_pts1 in sorted(collisions):
             f.write(f"- {army} / {unit}: base row {base_pts1} at 1-2 replaced by chapter {chap_pts1} (D42, D169)\n")
+        f.write("\n")
+        escorts = flags.get("escort_groups", [])
+        f.write(f"## Escort model groups derived (B56g phase 1) — {len(escorts)}\n")
+        f.write("Primary bracket is keyed on the primary group's count only; the escort group's "
+                "per-model rate is re-derived from the printed price difference, never hand-entered. "
+                "Not yet wired into unit_loadouts.json or units.json as a purchasable group — that is "
+                "phase 2/3, per D173.\n\n")
+        for name, eg in sorted(escorts):
+            brackets = ", ".join(f"{p}+{e}" for p, e in eg["brackets"])
+            f.write(f"- {name}: {eg['label']} at {eg['rate_per_model']} pts/model "
+                    f"(brackets primary+escort: {brackets})\n")
+        f.write("\n")
+        econf = flags.get("escort_conflicts", [])
+        f.write(f"## Escort rate conflicts (voided, not derived) — {len(econf)}\n")
+        for name, line, text in sorted(econf):
+            f.write(f"- {name} (line {line}): `{text}`\n")
         f.write("\n")
 
     print(f"Done. {len(point_rows)} unit point rows -> {out_points}")

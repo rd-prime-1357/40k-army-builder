@@ -962,17 +962,32 @@ ASSERTIONS = [
     # Headtakers looked like the same shape but is not: its bracket lines include an
     # optional Hunting Wolves escort, and two different compositions ("6 Headtakers" vs
     # "3 Headtakers + 3 Hunting Wolves") both sum to a 6-model bracket at two different
-    # prices. The parser detects that collision and voids the unit's whole composition
-    # table rather than guess a winner (D106) — it stays null pending a real mechanism
-    # for pricing the escort separately. Residual: Wolf Guard Headtakers (mechanism
-    # needed), Judiciar Xacharus and Chaplain Kastiel (no points source anywhere, B56e).
+    # prices. The parser used to detect that collision and void the unit's whole
+    # composition table (D106). B56g phase 1 (S106) closed it: the resolver now keys the
+    # primary bracket on the Headtaker count alone and pulls escort lines out before the
+    # collision check runs, so the collision never occurs. Residual: Judiciar Xacharus and
+    # Chaplain Kastiel (no points source anywhere, B56e).
     ('B56b-1',
-     'Exactly 3 units in units.json carry points: null, and they are exactly Wolf Guard '
-     'Headtakers (000004131 — composition/escort collision, needs a pricing mechanism), '
-     'Judiciar Xacharus (000004179, B56e) and Chaplain Kastiel (000004180, B56e). No other '
-     'unit is uncosted.',
+     'Exactly 2 units in units.json carry points: null, and they are exactly Judiciar '
+     'Xacharus (000004179, B56e) and Chaplain Kastiel (000004180, B56e). No other unit is '
+     'uncosted, including Wolf Guard Headtakers (000004131, closed by B56g phase 1).',
      'units.json (D167/D168); MFM_Space_Wolves_v1_0.txt, MFM_Black_Templars_v1_0.txt',
      lambda S: b56a_residual_nulls(S)),
+
+    # B56g phase 1 (S106, D174). The escort's per-model rate is re-derived from the
+    # printed difference, never hand-entered: 115-85=30 over 3 wolves and 230-170=60 over
+    # 6, both 10 pts/wolf, identical at the 3rd+ tier (125-95=30, 240-180=60). This check
+    # is the executable form of "all four printed totals reproduce" from the ticket, plus
+    # a check that the escort itself is NOT yet wired into units.json as a purchasable
+    # group (that is phase 2/3, per D173) — a passing engine offer here would mean the
+    # scope crept past the parser turn.
+    ('B56g-1',
+     'Wolf Guard Headtakers (000004131) prices at 85/170 (1st-2nd) and 95/180 (3rd+) for '
+     'the printed Headtaker-only brackets (3 and 6 models). The Hunting Wolves escort '
+     'derives at exactly 10 pts/model from the printed totals at both copy-tiers, and is '
+     'not yet present as a model group or optional count in unit_loadouts.json.',
+     'MFM_Space_Wolves_v1_0.txt (lines 72-80); mfm_points_parser.py escort resolver',
+     lambda S: b56g_headtaker_escort(S)),
 
     # Black Templars is the negative control from D167: unscoped, 9 of its 18 datasheets
     # share a name with an Adeptus Astartes datasheet and the parser's old preference wrote
@@ -1167,13 +1182,61 @@ def b7b_combined_popup(S):
 
 
 def b56a_residual_nulls(S):
-    want = {'000004131', '000004179', '000004180'}
+    want = {'000004179', '000004180'}
     got = set()
     for blk in S.units():
         for u in blk['units']:
             if u.get('points') is None:
                 got.add(u['unit_id'])
     return (got == want), f'{len(got)} null unit_id(s): {sorted(got)}'
+
+
+def b56g_headtaker_escort(S):
+    import mfm_points_parser as mfmp
+    units_by_id = {}
+    for blk in S.units():
+        for u in blk['units']:
+            units_by_id[u['unit_id']] = u
+    ht = units_by_id.get('000004131')
+    if not ht or ht.get('points') is None:
+        return False, 'Wolf Guard Headtakers missing or still null in units.json'
+    sizes = {s['size']: s for s in ht['points'].get('sizes', [])}
+    want_prices = {3: (85, 85, 95), 6: (170, 170, 180)}
+    for size, (fu, su, tp) in want_prices.items():
+        row = sizes.get(size)
+        if not row:
+            return False, f'bracket size {size} missing from Wolf Guard Headtakers points'
+        got = (row.get('first_unit'), row.get('second_unit'), row.get('third_plus'))
+        if got != (fu, su, tp):
+            return False, f'bracket {size}: expected {(fu, su, tp)}, got {got}'
+
+    # Escort rate re-derived directly from the source text, not hand-entered here.
+    src_units = mfmp.parse_mfm(os.path.join(S.dir, 'MFM_Space_Wolves_v1_0.txt'))
+    info = src_units.get(mfmp.norm('WOLF GUARD HEADTAKERS'))
+    if not info or not info.get('escort_group'):
+        return False, 'parser no longer derives an escort_group for Wolf Guard Headtakers'
+    eg = info['escort_group']
+    if eg['rate_per_model'] != 10:
+        return False, f'derived escort rate {eg["rate_per_model"]}, expected 10'
+    if eg['brackets'] != [(3, 3), (6, 6)]:
+        return False, f'unexpected escort brackets {eg["brackets"]}'
+
+    # The Hunting Wolves model group already exists in unit_loadouts.json (it comes
+    # from the datasheet itself, via equipped_parser -- not something this ticket
+    # adds) but must not yet carry a price, and the escort must not be reachable
+    # through wargear_points.json either (direction (b), rejected by D173). Pricing
+    # the group and fixing its 0-or-1 count is phase 2/3, not this parser turn.
+    loadout = S.loadouts().get('000004131', {})
+    group = next((g for g in loadout.get('model_groups', [])
+                  if g.get('name', '').lower() == 'hunting wolves'), None)
+    if group and any(k in group for k in ('points', 'cost', 'price')):
+        return False, 'Hunting Wolves model group now carries a price — phase 1 scope exceeded'
+    wp = S.wargear_points()
+    if any('wolf' in k.lower() for k in wp.get('000004131', {}).get('items', {})):
+        return False, 'escort priced via wargear_points.json — direction (b), rejected by D173'
+
+    return True, (f'brackets 85/170 (1-2), 95/180 (3+); escort {eg["rate_per_model"]} '
+                  f'pts/model at brackets {eg["brackets"]}; not yet wired into loadouts')
 
 
 def b56a_bt_negative_control(S):
