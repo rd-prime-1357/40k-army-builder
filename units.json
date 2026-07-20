@@ -1497,7 +1497,25 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Blood Angels": {
+            "sizes": [
+              {
+                "size": 3,
+                "first_unit": 85,
+                "second_unit": 85,
+                "third_plus": 95
+              },
+              {
+                "size": 6,
+                "first_unit": 170,
+                "second_unit": 170,
+                "third_plus": 180
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000000073",
@@ -2457,7 +2475,19 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Blood Angels": {
+            "sizes": [
+              {
+                "size": 1,
+                "first_unit": 80,
+                "second_unit": 80,
+                "third_plus": 80
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000000084",
@@ -3814,7 +3844,19 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Blood Angels": {
+            "sizes": [
+              {
+                "size": 1,
+                "first_unit": 80,
+                "second_unit": 80,
+                "third_plus": 80
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000000114",
@@ -6126,7 +6168,25 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Blood Angels": {
+            "sizes": [
+              {
+                "size": 5,
+                "first_unit": 105,
+                "second_unit": 105,
+                "third_plus": 115
+              },
+              {
+                "size": 10,
+                "first_unit": 210,
+                "second_unit": 210,
+                "third_plus": 220
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000001156",
@@ -9731,7 +9791,25 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Blood Angels": {
+            "sizes": [
+              {
+                "size": 5,
+                "first_unit": 80,
+                "second_unit": 80,
+                "third_plus": 80
+              },
+              {
+                "size": 10,
+                "first_unit": 150,
+                "second_unit": 150,
+                "third_plus": 150
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000001610",
@@ -13591,7 +13669,25 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Blood Angels": {
+            "sizes": [
+              {
+                "size": 3,
+                "first_unit": 75,
+                "second_unit": 75,
+                "third_plus": 75
+              },
+              {
+                "size": 6,
+                "first_unit": 140,
+                "second_unit": 140,
+                "third_plus": 140
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000002714",
@@ -14920,7 +15016,49 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Space Wolves": {
+            "sizes": [
+              {
+                "size": 1,
+                "first_unit": 230,
+                "second_unit": 230,
+                "third_plus": 250
+              }
+            ]
+          },
+          "Blood Angels": {
+            "sizes": [
+              {
+                "size": 1,
+                "first_unit": 230,
+                "second_unit": 230,
+                "third_plus": 250
+              }
+            ]
+          },
+          "Dark Angels": {
+            "sizes": [
+              {
+                "size": 1,
+                "first_unit": 230,
+                "second_unit": 230,
+                "third_plus": 250
+              }
+            ]
+          },
+          "Deathwatch": {
+            "sizes": [
+              {
+                "size": 1,
+                "first_unit": 230,
+                "second_unit": 230,
+                "third_plus": 250
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000002723",
@@ -15992,7 +16130,25 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Blood Angels": {
+            "sizes": [
+              {
+                "size": 5,
+                "first_unit": 95,
+                "second_unit": 95,
+                "third_plus": 105
+              },
+              {
+                "size": 10,
+                "first_unit": 180,
+                "second_unit": 180,
+                "third_plus": 190
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000004179",
