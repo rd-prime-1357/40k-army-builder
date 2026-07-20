@@ -1619,7 +1619,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.82';
+  const VERSION = '5.83';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1659,6 +1659,21 @@
     return group ? group.factions.find(f => f.name === factionName) : null;
   }
 
+  // B56d: chapter-scoped point overrides (D171). A unioned Adeptus Astartes
+  // unit that carries chapter_point_overrides[armyName] gets that price
+  // substituted here, before anything downstream (cost calc, list render,
+  // saved-list re-hydration) ever reads unit.points. Never mutate the shared
+  // generic unit object — it's the same object reference across every
+  // faction's resolved set, so an in-place edit would leak the override into
+  // every other chapter's view. Returns a fresh object only where an
+  // override actually applies.
+  function applyChapterPointOverrides(units, armyName) {
+    return units.map(u => {
+      const override = u.chapter_point_overrides && u.chapter_point_overrides[armyName];
+      return override ? Object.assign({}, u, { points: override }) : u;
+    });
+  }
+
   // Resolve the unit set for a faction record.
   // Generic Space Marines → the Adeptus Astartes block, no chapter filter.
   // A chapter (is_subfaction) → union(generic codex, chapter units); the
@@ -1669,7 +1684,7 @@
     const chapter = unitsByArmy[faction.data_army] || [];
     const chapterNames = new Set(chapter.map(u => u.unit_name));
     const merged = generic.filter(u => !chapterNames.has(u.unit_name)).concat(chapter);
-    return merged;
+    return applyChapterPointOverrides(merged, faction.data_army);
   }
 
   // Build the lightweight allUnits view + rawUnits from a resolved unit set.
