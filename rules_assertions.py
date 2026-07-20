@@ -1018,7 +1018,83 @@ ASSERTIONS = [
      'Datasheets_unit_composition.csv vs unit_loadouts.json (D179)',
      lambda S: b58_min_matches_composition(S)),
 
+    ('B58-2',
+     'The engine reads the band max and the base-group min (D181/B58 phase 2). index.html '
+     'defines loOptHeadroom and loOptMax; loOptCounts clamps a stored value to the band max '
+     'instead of returning 0/1; loGroupCounts clamps each optional group by both its band '
+     'and the remaining headroom. Data side: for every unit carrying a banded optional '
+     'group, the smallest size bracket leaves room for at least one model of some band — '
+     'a unit where every band is unreachable at every bracket is a data defect, not a '
+     'legal composition.',
+     'index.html loOptCounts / loOptHeadroom / loOptMax / loGroupCounts; unit_loadouts.json '
+     'model_groups (D181)',
+     lambda S: b58_engine_honours_bands(S)),
+
 ]
+
+
+def b58_engine_honours_bands(S):
+    """B58 phase 2: the min/max fields phase 1 wrote must actually bound the engine.
+
+    1. index.html defines loOptHeadroom and loOptMax.
+    2. loOptCounts clamps to the band max (it no longer returns a 0/1 flag).
+    3. loGroupCounts's optional branch clamps by both the band and the headroom.
+    4. Data sanity: every unit with a banded optional group (max > 1) has at least one
+       bracket where headroom > 0, i.e. the bands are reachable at all.
+    """
+    import json as _json, os as _os
+
+    txt = S.index_html()
+    for needle, why in [
+        ('function loOptHeadroom(def, size)', 'loOptHeadroom not defined in index.html'),
+        ('function loOptMax(def, size, optCounts, groupName)', 'loOptMax not defined in index.html'),
+        ('const cap = ct.per_bracket ? 1 : (ct.max != null ? ct.max : 1);',
+         'loOptCounts does not clamp a stored value to the band max'),
+        ('const v = Math.max(0, Math.min(Number(oc[g.name]) || 0, band, headroom));',
+         'loGroupCounts does not clamp an optional group by both band and headroom'),
+    ]:
+        if needle not in txt:
+            return False, why
+
+    lo_path = _os.path.join(S.dir, 'unit_loadouts.json')
+    if not _os.path.exists(lo_path):
+        return False, 'unit_loadouts.json not found'
+    lo = _json.load(open(lo_path, encoding='utf-8'))
+
+    banded, unreachable = [], []
+    for uid, u in lo.items():
+        if uid.startswith('_') or not isinstance(u, dict):
+            continue
+        groups = u.get('model_groups') or []
+        bands = [g for g in groups
+                 if (g.get('count') or {}).get('optional')
+                 and not (g.get('count') or {}).get('per_bracket')
+                 and ((g.get('count') or {}).get('max') or 1) > 1]
+        if not bands:
+            continue
+        banded.append(uid)
+        reachable = False
+        for size in (u.get('size_brackets') or []):
+            reserved = 0
+            for g in groups:
+                ct = g.get('count') or {}
+                if ct.get('optional'):
+                    continue
+                if ct.get('fixed') is not None:
+                    reserved += ct['fixed']
+                elif ct.get('per_bracket'):
+                    reserved += ct['per_bracket'].get(str(size), 0)
+                elif ct.get('fills_to_size'):
+                    reserved += ct.get('min') or 0
+            if size - reserved > 0:
+                reachable = True
+        if not reachable:
+            unreachable.append(uid)
+
+    if unreachable:
+        return False, f'banded optional groups unreachable at every bracket: {sorted(unreachable)}'
+    return True, (f'engine wiring present (loOptHeadroom / loOptMax / band+headroom clamp); '
+                  f'{len(banded)} units carry banded optional groups, all reachable')
 
 
 def b58_min_matches_composition(S):
@@ -1375,8 +1451,17 @@ def b13_optional_epic_hero(S):
         return False, 'isOptEpicHeroBlocked not defined in index.html'
     if 'groupName.toUpperCase().includes(\'EPIC HERO\')' not in txt:
         return False, 'isOptEpicHeroBlocked does not use EPIC HERO name-check'
-    if 'if (!currentlyOn && isOptEpicHeroBlocked(listId, groupName)) return;' not in txt:
+    # B58 phase 2 reshaped editLoadoutOptional into a stepper: the turn-off path returns
+    # early (so turning off is always allowed), and the cap guard sits on the turn-on path
+    # after it. Both lines must be present, and the turn-off return must come first.
+    off_line = "if (cur > 0) { e.wargear[key] = 0; renderAll(); return; }"
+    cap_line = "if (isOptEpicHeroBlocked(listId, groupName)) return;"
+    if off_line not in txt:
+        return False, 'editLoadoutOptional has no unconditional turn-off path'
+    if cap_line not in txt:
         return False, 'editLoadoutOptional does not guard toggle-on with isOptEpicHeroBlocked'
+    if txt.index(off_line) > txt.index(cap_line):
+        return False, 'editLoadoutOptional cap guard precedes the turn-off path'
 
     return True, ('Victrix: 2 optional EPIC HERO groups confirmed; no other units carry such '
                   'groups; isOptEpicHeroBlocked defined and wired in editLoadoutOptional')

@@ -1619,7 +1619,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.84';
+  const VERSION = '5.85';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3510,26 +3510,75 @@
     for (const o of def.options) if (loIsFreeDefaultAdd(unitId, o)) w[o.id] = 1;
     return w;
   }
-  // B13: derive the included/excluded state for every optional model group from
-  // entry.wargear. Storage key is 'opt_' + group name; value 1 = included, absent/0 = excluded.
-  // Returns a plain object {groupName: 0|1} for every optional group in the def.
+  // B13 / B58: derive the chosen model count for every optional model group from
+  // entry.wargear. Storage key is 'opt_' + group name.
+  // B58: a banded optional group ("0-4 Kill Team Intercessors with pyreblasters") stores
+  // how many models were taken, clamped here to its own band `max`. The B13 0/1 toggle is
+  // the degenerate one-band case (max 1), so both shapes run through one path.
+  // The B56g escort shape (optional + per_bracket) stays a 0/1 flag — loGroupCounts turns
+  // the flag into the bracket count — so it is clamped to 1 regardless of any max.
+  // NOTE: this clamp is per-group only. The unit-wide cap (models left after the base
+  // group's minimum is reserved) is size-dependent and is applied in loGroupCounts.
   function loOptCounts(def, entry) {
     const out = {};
     for (const g of (def.model_groups || [])) {
-      if (g.count && g.count.optional) {
-        out[g.name] = (entry && Number(entry.wargear['opt_' + g.name]) > 0) ? 1 : 0;
-      }
+      const ct = g.count || {};
+      if (!ct.optional) continue;
+      const raw = entry ? Number(entry.wargear['opt_' + g.name]) || 0 : 0;
+      const cap = ct.per_bracket ? 1 : (ct.max != null ? ct.max : 1);
+      out[g.name] = Math.max(0, Math.min(raw, cap));
     }
     return out;
+  }
+
+  // B58: how many models are available to consuming optional groups at this size.
+  // Everything non-optional reserves first (fixed counts, per_bracket counts), and the
+  // fills_to_size body group reserves its composition minimum ("2-9 Kill Team
+  // Intercessors" reserves 2) before any variant band may draw. The escort shape
+  // (optional + per_bracket, D174) rides alongside the bracket and is not counted here.
+  // Groups with no `min` recorded contribute 0, which is the pre-B58 behaviour.
+  function loOptHeadroom(def, size) {
+    let reserved = 0;
+    for (const g of (def.model_groups || [])) {
+      const ct = g.count || {};
+      if (ct.optional) continue;
+      if (ct.fixed != null) reserved += ct.fixed;
+      else if (ct.per_bracket) reserved += (ct.per_bracket[String(size)] || 0);
+      else if (ct.fills_to_size) reserved += (ct.min != null ? ct.min : 0);
+    }
+    return Math.max(0, (Number(size) || 0) - reserved);
+  }
+
+  // B58: the highest legal value one optional group may hold, given what the other
+  // optional groups already hold. Band max first, then whatever headroom is left once
+  // the sibling bands have taken their share. Used by the stepper so an illegal mix is
+  // simply unreachable (D0) rather than reachable-and-flagged.
+  function loOptMax(def, size, optCounts, groupName) {
+    const g = (def.model_groups || []).find(x => x.name === groupName);
+    if (!g) return 0;
+    const ct = g.count || {};
+    if (!ct.optional) return 0;
+    const band = ct.per_bracket ? 1 : (ct.max != null ? ct.max : 1);
+    if (ct.per_bracket) return band;          // escort: does not consume the bracket
+    const oc = optCounts || {};
+    let used = 0;
+    for (const o of def.model_groups) {
+      const c = o.count || {};
+      if (!c.optional || c.per_bracket || o.name === groupName) continue;
+      used += Math.max(0, Number(oc[o.name]) || 0);
+    }
+    return Math.max(0, Math.min(band, loOptHeadroom(def, size) - used));
   }
 
   function loGroupCounts(def, size, optCounts) {
     // First pass: resolve every group that isn't fills-to-size, tallying how many
     // models they reserve. fixed = its count; per_bracket = the count for the
-    // chosen size; optional = player-toggled 0 or 1 (B13 — defaults to 0 when no
-    // optCounts supplied). Second pass: fills groups take the remainder.
+    // chosen size; optional = the player-chosen band count (B13/B58 — 0 when no
+    // optCounts supplied). Second pass: fills groups take the remainder, which the
+    // band clamp guarantees is never below the group's composition minimum.
     const oc = optCounts || {};
     let reserved = 0;
+    let headroom = loOptHeadroom(def, size);   // B58 — models the variant bands may draw from
     const c = {};
     for (const g of def.model_groups) {
       const ct = g.count || {};
@@ -3542,7 +3591,18 @@
       // fills_to_size group's remainder.
       else if (ct.optional && ct.per_bracket) { c[g.name] = (oc[g.name] || 0) > 0 ? (ct.per_bracket[String(size)] || 0) : 0; }
       else if (ct.per_bracket) { const v = ct.per_bracket[String(size)] || 0; c[g.name] = v; reserved += v; }
-      else if (ct.optional) { const v = oc[g.name] || 0; c[g.name] = v; reserved += v; }
+      // B58: a banded optional group draws N models from the unit's total, capped by its
+      // own band max and by the models left after the fills_to_size group's composition
+      // minimum is set aside. Bands are served in model_groups order; a later band is
+      // trimmed rather than a shared cap being flagged (D0 — the illegal mix is simply
+      // unreachable). The UI clamps on the way up, so the trim here is a backstop for a
+      // saved list re-opened at a smaller size.
+      else if (ct.optional) {
+        const band = ct.max != null ? ct.max : 1;
+        const v = Math.max(0, Math.min(Number(oc[g.name]) || 0, band, headroom));
+        headroom -= v;
+        c[g.name] = v; reserved += v;
+      }
       else c[g.name] = null;   // fills_to_size — resolved below
     }
     for (const g of def.model_groups) if (c[g.name] === null) c[g.name] = Math.max(0, size - reserved);
@@ -4008,7 +4068,8 @@
     // B13 Piece 2: groups named with EPIC HERO are 1-per-army — disabled when already used elsewhere.
     for (const g of def.model_groups) {
       if (!(g.count && g.count.optional)) continue;
-      const included = optCounts[g.name] === 1;
+      const cur = grpCounts[g.name] || 0;
+      const included = cur > 0;
       const blocked = !included && isOptEpicHeroBlocked(entry.listId, g.name);
       // Strip the EPIC HERO suffix from the display name for readability.
       const displayName = g.name.replace(/\s*[-–]\s*EPIC HERO$/i, '');
@@ -4018,12 +4079,34 @@
       const perBracketN = g.count.per_bracket ? (g.count.per_bracket[String(size)] || 0) : null;
       const priceNote = g.price_per_model ? ` (+${(perBracketN || 0) * g.price_per_model} pts)` : '';
       const btnLabel = included ? 'Included' : (perBracketN ? `Add ${perBracketN}` : 'Add');
-      const clickAttr = blocked ? '' : ` onclick="editLoadoutOptional(${entry.listId},'${esc(g.name)}')"`;
+      // B58: a banded optional group ("0-4 with pyreblasters") is a stepper, not a
+      // toggle. The ceiling shown is the live one — the band max, narrowed by the models
+      // still free once the body group's minimum and the sibling bands are accounted for
+      // — so an illegal mix can never be reached (D0). max 1 stays the B13 toggle, which
+      // is the same control with a one-wide band.
+      const bandMax = (!g.count.per_bracket && g.count.max != null) ? g.count.max : 1;
+      if (bandMax > 1) {
+        const live = loOptMax(def, size, optCounts, g.name);
+        html += `<div class="opt-group-block"><div class="opt-group-label">Optional Models</div>
+          ${loStepper(`editLoadoutOptional(${entry.listId},'${esc(g.name)}',-1)`,
+                      `editLoadoutOptional(${entry.listId},'${esc(g.name)}',1)`,
+                      cur, displayName + (g.price_per_model ? ` (+${cur * g.price_per_model} pts)` : ''),
+                      `(max ${live})`)}</div>`;
+        continue;
+      }
+      // B58: a one-band optional group can also be out of room — the body group's
+      // minimum plus the fixed models can leave nothing for it at the smaller bracket.
+      // Show that as a disabled control with a reason rather than a button that does
+      // nothing when clicked.
+      const noRoom = !included && !blocked && loOptMax(def, size, optCounts, g.name) < 1;
+      const cls = btnClass || (noRoom ? ' blocked' : '');
+      const clickAttr = (blocked || noRoom) ? '' : ` onclick="editLoadoutOptional(${entry.listId},'${esc(g.name)}')"`;
       html += `<div class="opt-group-block"><div class="opt-group-label">Optional Model</div>
         <div class="opt-group-toggle">
-          <button class="opt-toggle-btn${btnClass}"${clickAttr}>${btnLabel}</button>
+          <button class="opt-toggle-btn${cls}"${clickAttr}>${btnLabel}</button>
           <span class="opt-group-name">${displayName}${priceNote}</span>
-        </div>${blocked ? `<div class="opt-group-note">Already included in another Victrix unit</div>` : ''}</div>`;
+        </div>${blocked ? `<div class="opt-group-note">Already included in another Victrix unit</div>`
+                        : noRoom ? `<div class="opt-group-note">No models left at this unit size</div>` : ''}</div>`;
     }
     // Leader/champion block = first model group with a fixed count of 1 (Sergeant, Champion, etc.).
     let leaderName = null;
@@ -4210,13 +4293,26 @@
   // Storage key is 'opt_' + groupName; value 1 = included, absent/0 = excluded.
   // loGroupCounts reads this so fills_to_size deducts included optionals from the body count.
   // B13 Piece 2: blocked if the same group is already included in another entry (Epic Hero cap).
-  function editLoadoutOptional(listId, groupName) {
+  // B58: called with no delta it is the original toggle; called with +1/-1 it is the
+  // stepper for a banded group. Both clamp to loOptMax, so the base group's minimum and
+  // the sibling bands hard-cap what can be taken rather than flagging an overrun.
+  function editLoadoutOptional(listId, groupName, delta) {
     const e = armyList.find(x => x.listId === listId); if (!e) return;
     const key = 'opt_' + groupName;
-    const currentlyOn = Number(e.wargear[key] || 0) > 0;
-    // Only enforce the cap when trying to turn ON; turning off is always allowed.
-    if (!currentlyOn && isOptEpicHeroBlocked(listId, groupName)) return;
-    e.wargear[key] = currentlyOn ? 0 : 1;
+    const cur = Number(e.wargear[key] || 0);
+    if (delta == null) {
+      // Only enforce the cap when trying to turn ON; turning off is always allowed.
+      if (cur > 0) { e.wargear[key] = 0; renderAll(); return; }
+      if (isOptEpicHeroBlocked(listId, groupName)) return;
+      const d = loadoutFor(e);
+      if (d && loOptMax(d, loadoutSize(e, d), loOptCounts(d, e), groupName) < 1) return;
+      e.wargear[key] = 1;
+      renderAll();
+      return;
+    }
+    const def = loadoutFor(e); if (!def) return;
+    const ceiling = loOptMax(def, loadoutSize(e, def), loOptCounts(def, e), groupName);
+    e.wargear[key] = Math.max(0, Math.min(cur + Number(delta), ceiling));
     renderAll();
   }
   function loChoiceRow(listId, optId, value, label, chosen, detail) {
