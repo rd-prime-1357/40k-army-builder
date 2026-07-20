@@ -199,6 +199,63 @@
     ],
     "_defaults_source": "equipped"
   },
+  "000004131": {
+    "size_brackets": [
+      3,
+      6
+    ],
+    "model_groups": [
+      {
+        "name": "Wolf Guard Headtakers",
+        "count": {
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Heavy bolt pistol",
+          "Master-crafted power weapon"
+        ],
+        "default_wargear": [
+          "storm shield"
+        ]
+      },
+      {
+        "name": "Hunting Wolves",
+        "count": {
+          "optional": true,
+          "per_bracket": {
+            "3": 3,
+            "6": 6
+          }
+        },
+        "price_per_model": 10,
+        "default_weapons": [
+          "Teeth and claws"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "cnt_1",
+        "scope": "Wolf Guard Headtakers",
+        "group": "Master-Crafted Power Weapon Options",
+        "type": "count",
+        "replaces": "Master-crafted power weapon + Storm Shield",
+        "replacement": "Paired master-crafted power weapons",
+        "max_total_all": true
+      },
+      {
+        "id": "cnt_2",
+        "scope": "Hunting Wolves",
+        "group": "Master-Crafted Power Weapon Options",
+        "type": "count",
+        "replaces": "Master-crafted power weapon + Storm Shield",
+        "replacement": "Paired master-crafted power weapons",
+        "max_total_all": true
+      }
+    ],
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
+  },
   "000000060": {
     "size_brackets": [
       1
@@ -8078,59 +8135,6 @@
           "Master-crafted heavy bolt pistol",
           "Plasma pistol"
         ]
-      }
-    ],
-    "_parser_flags": [],
-    "_defaults_source": "equipped"
-  },
-  "000004131": {
-    "size_brackets": [
-      3,
-      6
-    ],
-    "model_groups": [
-      {
-        "name": "Wolf Guard Headtakers",
-        "count": {
-          "fills_to_size": true
-        },
-        "default_weapons": [
-          "Heavy bolt pistol",
-          "Master-crafted power weapon"
-        ],
-        "default_wargear": [
-          "storm shield"
-        ]
-      },
-      {
-        "name": "Hunting Wolves",
-        "count": {
-          "optional": true,
-          "max": 6
-        },
-        "default_weapons": [
-          "Teeth and claws"
-        ]
-      }
-    ],
-    "options": [
-      {
-        "id": "cnt_1",
-        "scope": "Wolf Guard Headtakers",
-        "group": "Master-Crafted Power Weapon Options",
-        "type": "count",
-        "replaces": "Master-crafted power weapon + Storm Shield",
-        "replacement": "Paired master-crafted power weapons",
-        "max_total_all": true
-      },
-      {
-        "id": "cnt_2",
-        "scope": "Hunting Wolves",
-        "group": "Master-Crafted Power Weapon Options",
-        "type": "count",
-        "replaces": "Master-crafted power weapon + Storm Shield",
-        "replacement": "Paired master-crafted power weapons",
-        "max_total_all": true
       }
     ],
     "_parser_flags": [],
