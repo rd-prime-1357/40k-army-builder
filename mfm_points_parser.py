@@ -46,6 +46,16 @@ POINT_NAME_OVERRIDES = {
 ARMY_DEFAULT = "Adeptus Astartes"
 
 COST_RE = re.compile(r"^[•\-\*]\s*(\d+)\s*models?\s*(\d+)\s*pts", re.I)
+# B56b. A composition-shaped bracket line names roles instead of a bare model count:
+#     • 1 Sword Brother, 4 Neophytes, 5 Initiates150 pts
+# One or more "<count> <label>" groups, comma-separated, with the cost jammed onto the
+# end of the last label exactly as in COST_RE. Label chars exclude digits so the count/
+# cost boundary is unambiguous even with no separating space. Bracket size = sum of the
+# counts (matches how Size_1..3 are read elsewhere). Tried only after COST_RE misses.
+COMPOSITION_RE = re.compile(
+    r"^[•\-\*]\s*(\d+\s+[^,\d]+(?:,\s*\d+\s+[^,\d]+)*)(\d+)\s*pts\s*$", re.I
+)
+COMPOSITION_COUNT_RE = re.compile(r"(\d+)\s+[^,\d]+")
 TIER_SINGLE = re.compile(r"your unit costs", re.I)
 TIER_12 = re.compile(r"1st to 2nd", re.I)
 TIER_3 = re.compile(r"3rd", re.I)
@@ -180,6 +190,23 @@ def parse_mfm(path):
             cur["tiers"][-1][int(m.group(1))] = int(m.group(2))
             i += 1; continue
 
+        m = COMPOSITION_RE.match(line)
+        if m and cur and cur["tiers"]:
+            size = sum(int(c) for c in COMPOSITION_COUNT_RE.findall(m.group(1)))
+            cost = int(m.group(2))
+            # Composition lines are staged, not written straight into the tier dict.
+            # Two different compositions can sum to the same bracket size (e.g. a
+            # base count vs. base+optional-escort count both totalling 6 models) —
+            # picking whichever line came first would silently ship whichever cost
+            # happened to be first in the file, which is not "the" price for that
+            # bracket. Stage everything and resolve per-tier after the unit is fully
+            # read, so a same-size collision voids that tier instead of guessing. D106.
+            cur.setdefault("composition_pending", []).append(
+                {"tier_idx": len(cur["tiers"]) - 1, "size": size, "cost": cost,
+                 "line": i + 1, "text": line}
+            )
+            i += 1; continue
+
         if is_real_unit_header(i):
             cur = new_unit(line)
             units[norm(line)] = cur
@@ -187,6 +214,32 @@ def parse_mfm(path):
             i += 1; continue
 
         i += 1
+
+    # Resolve staged composition lines per unit, per tier: if every entry for a
+    # given size agrees, write it; if a size has two different costs within the
+    # same tier, void that whole unit's composition contribution rather than
+    # guess a winner or ship a partial bracket table.
+    for info in units.values():
+        pending = info.pop("composition_pending", None)
+        if not pending:
+            continue
+        by_tier = {}
+        for e in pending:
+            by_tier.setdefault(e["tier_idx"], {}).setdefault(e["size"], []).append(e)
+        conflicted = False
+        for tier_idx, by_size in by_tier.items():
+            for size, entries in by_size.items():
+                costs = {e["cost"] for e in entries}
+                if len(costs) > 1:
+                    conflicted = True
+                    info.setdefault("composition_conflicts", []).extend(entries)
+        if conflicted:
+            # Void every staged composition value for this unit — do not mix
+            # resolved and unresolved brackets in one price table.
+            continue
+        for tier_idx, by_size in by_tier.items():
+            for size, entries in by_size.items():
+                info["tiers"][tier_idx][size] = entries[0]["cost"]
 
     return units
 
@@ -456,7 +509,11 @@ def main():
         sys.exit("No units parsed from MFM file.")
 
     flags = {"no_costs": [], "mfm_no_datasheet": [], "datasheet_no_mfm": [], "support_filled": [],
-              "out_of_scope_dropped": []}
+              "out_of_scope_dropped": [], "composition_conflicts": []}
+    for info in units.values():
+        for c in info.get("composition_conflicts", []):
+            flags["composition_conflicts"].append(
+                (info["name"], c["line"], c["text"], c["size"], c["cost"]))
 
     # name set from datasheets (if provided) for matching + army-name lookup
     ds_army_by_norm = {}
@@ -599,6 +656,13 @@ def main():
             for it in sorted(items):
                 f.write(f"- {it}\n")
             f.write("\n")
+        comp = flags.get("composition_conflicts", [])
+        f.write(f"## Composition-bracket collisions — {len(comp)} (B56b, held for a follow-up ticket)\n")
+        f.write("Unit's entire composition-based price table is voided when any bracket size "
+                "has more than one candidate cost within the same copy-tier.\n\n")
+        for name, line, text, size, cost in sorted(comp):
+            f.write(f"- {name} (line {line}): `{text}` sums to bracket size {size}, cost {cost} pts\n")
+        f.write("\n")
         collisions = flags.get("chapter_override_applied", [])
         f.write(f"## Chapter overrides applied (append mode, base row replaced) — {len(collisions)}\n")
         for army, unit, base_pts1, chap_pts1 in sorted(collisions):

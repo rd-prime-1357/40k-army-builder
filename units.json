@@ -33890,7 +33890,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 150
+            },
+            {
+              "size": 20,
+              "first_unit": 290,
+              "second_unit": 290,
+              "third_plus": 290
+            }
+          ]
+        },
         "abilities": []
       },
       {

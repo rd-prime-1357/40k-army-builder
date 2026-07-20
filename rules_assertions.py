@@ -955,28 +955,38 @@ ASSERTIONS = [
     # ── B56a. Replaces the prose closure figures in MFM_Chapter_Pass.md (D107 again —
     # that document drifted in both directions inside one release before this landed).
     # The five chapter MFM files, run scoped through mfm_points_parser.py --scope-to-army,
-    # close 77 of the 81 units.json entries that carried points: null. Four residuals
-    # remain: two are a parser gap (composition-shaped bracket line, B56b), two have no
-    # points source anywhere in the 30 MFM files held (B56e, blocked).
-    ('B56a-1',
-     'Exactly 4 units in units.json carry points: null, and they are exactly Wolf Guard '
-     'Headtakers (000004131, B56b), Crusader Squad (000002799, B56b), Judiciar Xacharus '
-     '(000004179, B56e) and Chaplain Kastiel (000004180, B56e). No other unit is uncosted.',
+    # close 77 of the 81 units.json entries that carried points: null.
+    #
+    # B56b (renumbered from B56a-1) taught the parser a composition-shaped bracket line
+    # (role names instead of a bare model count) and closed Crusader Squad. Wolf Guard
+    # Headtakers looked like the same shape but is not: its bracket lines include an
+    # optional Hunting Wolves escort, and two different compositions ("6 Headtakers" vs
+    # "3 Headtakers + 3 Hunting Wolves") both sum to a 6-model bracket at two different
+    # prices. The parser detects that collision and voids the unit's whole composition
+    # table rather than guess a winner (D106) — it stays null pending a real mechanism
+    # for pricing the escort separately. Residual: Wolf Guard Headtakers (mechanism
+    # needed), Judiciar Xacharus and Chaplain Kastiel (no points source anywhere, B56e).
+    ('B56b-1',
+     'Exactly 3 units in units.json carry points: null, and they are exactly Wolf Guard '
+     'Headtakers (000004131 — composition/escort collision, needs a pricing mechanism), '
+     'Judiciar Xacharus (000004179, B56e) and Chaplain Kastiel (000004180, B56e). No other '
+     'unit is uncosted.',
      'units.json (D167/D168); MFM_Space_Wolves_v1_0.txt, MFM_Black_Templars_v1_0.txt',
      lambda S: b56a_residual_nulls(S)),
 
     # Black Templars is the negative control from D167: unscoped, 9 of its 18 datasheets
     # share a name with an Adeptus Astartes datasheet and the parser's old preference wrote
     # all nine under Adeptus Astartes, corrupting the generic roster while BT stayed
-    # uncosted. This checks both halves at once — BT closes to 17/18, and the three
-    # datasheets BT prices differently from the shared Adeptus Astartes name (Impulsor,
-    # Repulsor Executioner, Sternguard Veteran Squad) still disagree, proving they are two
-    # separate rows rather than one overwritten by the other.
+    # uncosted. This checks both halves at once — BT closes to 18/18 (B56b priced Crusader
+    # Squad, the last BT residual), and the three datasheets BT prices differently from the
+    # shared Adeptus Astartes name (Impulsor, Repulsor Executioner, Sternguard Veteran
+    # Squad) still disagree, proving they are two separate rows rather than one overwritten
+    # by the other.
     ('B56a-2',
-     'Black Templars has 18 units.json entries; 17 have non-null points (only Crusader '
-     'Squad, 000002799, is null). The Adeptus Astartes and Black Templars Impulsor '
-     'datasheets (000002568 / 000002786) keep distinct first-unit costs, 80 and 85 — proof '
-     'the scoped chapter run did not overwrite the generic row.',
+     'Black Templars has 18 units.json entries, all with non-null points. The Adeptus '
+     'Astartes and Black Templars Impulsor datasheets (000002568 / 000002786) keep distinct '
+     'first-unit costs, 80 and 85 — proof the scoped chapter run did not overwrite the '
+     'generic row.',
      'units.json (D167/D168, negative control)',
      lambda S: b56a_bt_negative_control(S)),
 
@@ -1157,7 +1167,7 @@ def b7b_combined_popup(S):
 
 
 def b56a_residual_nulls(S):
-    want = {'000004131', '000002799', '000004179', '000004180'}
+    want = {'000004131', '000004179', '000004180'}
     got = set()
     for blk in S.units():
         for u in blk['units']:
@@ -1180,8 +1190,7 @@ def b56a_bt_negative_control(S):
     if not bt_units:
         return False, 'no Black Templars army block found'
     non_null = [u for u in bt_units if u.get('points') is not None]
-    ok_count = len(bt_units) == 18 and len(non_null) == 17 and \
-        {u['unit_id'] for u in bt_units if u.get('points') is None} == {'000002799'}
+    ok_count = len(bt_units) == 18 and len(non_null) == 18
     aa_cost = (aa_impulsor or {}).get('sizes', [{}])[0].get('first_unit')
     bt_cost = (bt_impulsor or {}).get('sizes', [{}])[0].get('first_unit')
     ok_distinct = aa_cost == 80 and bt_cost == 85
