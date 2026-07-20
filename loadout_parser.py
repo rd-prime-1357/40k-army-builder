@@ -501,12 +501,21 @@ def classify_one_model_swap(text, unit_name):
         text, re.I)
     if not m:
         return None
-    op = {'_type': 'count', '_scope_hint': 'body',
+    req = m.group('req').strip() if m.group('req') else None
+    # D179/B21: 'body' is only correct when the swap's own weapon is carried by
+    # every group. Score the scope hint against the gating weapon (requires_weapon,
+    # if named) or else the weapon actually being replaced — a variant model group
+    # whose name embeds that weapon ('... with plasma incinerators') will out-score
+    # the plain body group on word overlap. Units with no such variant group fall
+    # through resolve_scope's existing 'no match' fallback to the body group
+    # unchanged, so this is additive, not a behavior change, for every other case.
+    scope_hint = req if req else m.group('repl').strip()
+    op = {'_type': 'count', '_scope_hint': scope_hint,
           'replaces': qty_name(m.group('repl')),
           'replacement': qty_name(m.group('rep')),
           'max_total': 1}
-    if m.group('req'):
-        op['requires_weapon'] = m.group('req').strip()
+    if req:
+        op['requires_weapon'] = req
     return [op]
 
 def classify_conditional_add_choice(text, unit_name):

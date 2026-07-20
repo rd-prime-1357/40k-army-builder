@@ -1030,6 +1030,17 @@ ASSERTIONS = [
      'model_groups (D181)',
      lambda S: b58_engine_honours_bands(S)),
 
+    ('B59-1',
+     'Unit-instance limits are counted per-armyList-entry, keyed by unit_name, never by '
+     'scanning a unit\'s model_groups. This is what makes it safe for one datasheet to '
+     'embed another datasheet\'s model as an optional model group (Invader ATV inside '
+     'Outrider Squad, D182) without inflating the embedded model\'s standalone datasheet '
+     'limit. The fact must be executable, not commentary — E10 duplication or any future '
+     '"render the ATV as its own line" would break it silently otherwise.',
+     'index.html unitLimit / limitState / armyList.filter call sites (D182 category '
+     'distinction: selection-scoped caps do not follow the model)',
+     lambda S: b59_limits_are_entry_scoped(S)),
+
 ]
 
 
@@ -1095,6 +1106,81 @@ def b58_engine_honours_bands(S):
         return False, f'banded optional groups unreachable at every bracket: {sorted(unreachable)}'
     return True, (f'engine wiring present (loOptHeadroom / loOptMax / band+headroom clamp); '
                   f'{len(banded)} units carry banded optional groups, all reachable')
+
+
+def b59_limits_are_entry_scoped(S):
+    """B59/D182: unit-instance limits must count armyList entries, not model groups.
+
+    Today the fact holds by structure — every count-against-limit call filters armyList
+    on entry-level fields (unit_name, unit_id, listId, attachedToListId) — but nothing
+    pins that in place. E10 duplication or a future "render the ATV as its own line"
+    could break it silently. The tightest structural check: no higher-order call over
+    armyList in index.html may dereference .model_groups. If someone adds a code path
+    that walks embedded model groups to compute a count, this fires and forces review.
+
+    Also confirms the two concrete datasheets D182 turns on are still there: standalone
+    Invader ATV (000001158) exists as its own unit, and Outrider Squad (000002712)
+    carries "Invader ATV" as an embedded model group name (which, per this assertion,
+    cannot inflate 000001158's count).
+    """
+    import re as _re, json as _json, os as _os
+
+    txt = S.index_html()
+
+    # 1. No armyList higher-order call (.filter / .map / .some / .every / .find /
+    #    .reduce / .forEach / .findIndex) may reach into .model_groups on its
+    #    entry — the entry does not carry model_groups anyway, but the assertion
+    #    guards against a future change that copies the loadout def into the entry
+    #    and then counts from it.
+    hof_re = _re.compile(
+        r"armyList\.(?:filter|map|some|every|find|findIndex|reduce|forEach|flatMap)\("
+        r"[^;{}]*?\.model_groups",
+        _re.DOTALL,
+    )
+    m = hof_re.search(txt)
+    if m:
+        return False, (f'armyList higher-order call dereferences .model_groups at '
+                       f'offset {m.start()} — a limit count that walks model_groups '
+                       f'would inflate embedded-model datasheets like Invader ATV')
+
+    # 2. The unit-limit engine surface is intact: unitLimit / limitState / canAddUnit
+    #    exist as functions and armyList.filter on unit_name is the counting shape.
+    for needle, why in [
+        ('function unitLimit(', 'unitLimit function missing from index.html'),
+        ('function limitState(', 'limitState function missing from index.html'),
+        ('function canAddUnit(', 'canAddUnit function missing from index.html'),
+    ]:
+        if needle not in txt:
+            return False, why
+    if 'armyList.filter(e => e.unit_name ===' not in txt:
+        return False, ('armyList.filter(e => e.unit_name === ...) count shape not found '
+                       '— limit counting may have moved off the entry-scoped path')
+
+    # 3. The two concrete datasheets D182 pivots on must still exist as expected.
+    lo = S.loadouts()
+    if '000002712' not in lo:
+        return False, 'Outrider Squad 000002712 missing from unit_loadouts.json'
+    outrider_group_names = {g.get('name') for g in lo['000002712'].get('model_groups', [])}
+    if 'Invader ATV' not in outrider_group_names:
+        return False, ('Outrider Squad 000002712 no longer carries an "Invader ATV" '
+                       'model group — the D182 embedding this assertion protects is gone')
+
+    units_path = _os.path.join(S.dir, 'units.json')
+    with open(units_path, encoding='utf-8') as f:
+        units = _json.load(f)
+    standalone_atv_present = False
+    for block in units:
+        for u in block.get('units', []):
+            if u.get('unit_id') == '000001158':
+                standalone_atv_present = True
+                break
+    if not standalone_atv_present:
+        return False, 'standalone Invader ATV datasheet 000001158 missing from units.json'
+
+    return True, ('no armyList higher-order call walks .model_groups; unit-limit '
+                  'engine surface intact; Outrider Squad carries embedded Invader ATV '
+                  'and standalone 000001158 exists')
+
 
 
 def b58_min_matches_composition(S):

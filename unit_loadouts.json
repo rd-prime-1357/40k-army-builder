@@ -6271,7 +6271,7 @@
       },
       {
         "id": "cnt_4",
-        "scope": "Kill Team Infiltrators",
+        "scope": "Kill Team Infiltrators with bolt sniper rifles",
         "group": "Bolt Sniper Rifle Options",
         "type": "count",
         "replaces": "Bolt sniper rifle",
@@ -6470,7 +6470,7 @@
       },
       {
         "id": "cnt_4",
-        "scope": "Kill Team Intercessors",
+        "scope": "Kill Team Intercessors with plasma incinerators",
         "group": "Bolt Pistol Options",
         "type": "count",
         "replaces": "Bolt pistol",
@@ -6480,7 +6480,7 @@
       },
       {
         "id": "cnt_5",
-        "scope": "Kill Team Intercessors",
+        "scope": "Kill Team Intercessors with superfrag rocket launchers",
         "group": "Superfrag Rocket Launcher Options",
         "type": "count",
         "replaces": "Superfrag rocket launcher",
@@ -6599,7 +6599,7 @@
       },
       {
         "id": "cnt_2",
-        "scope": "Kill Team Heavy Intercessors",
+        "scope": "Kill Team Heavy Intercessors with melta rifles",
         "group": "Melta Rifle Options",
         "type": "count",
         "replaces": "Melta rifle",
