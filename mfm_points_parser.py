@@ -426,6 +426,16 @@ def main():
     ap.add_argument("--out-dir", default="out")
     ap.add_argument("--army", default=ARMY_DEFAULT, help="Army Name for generic units in Unit_Points")
     ap.add_argument("--stats", default=None, help="Unit_Stats.csv to (a) match names and (b) patch Leader Eligible Units")
+    ap.add_argument("--append", action="store_true",
+                    help="B56a: append rows to an existing Unit_Points.csv in --out-dir (chapter run) "
+                         "instead of overwriting it. Written with no header and no BOM, since the base "
+                         "file (from the un-scoped run) already carries both. If the file does not yet "
+                         "exist, falls back to a fresh write with header, exactly as without this flag.")
+    ap.add_argument("--scope-to-army", action="store_true",
+                    help="B56a: restrict the name->army map to --army's own Unit_Stats.csv rows only "
+                         "(chapter runs). An MFM entry with no datasheet in that block is DROPPED, not "
+                         "written under --army as a fallback. Without this flag, a name ambiguous across "
+                         "armies prefers Adeptus Astartes (base-run behavior, unchanged).")
     ap.add_argument("--wargear", nargs="+", default=None,
                     help="B35: MFM files to harvest WARGEAR OPTIONS costs from (wargear mode)")
     ap.add_argument("--units", default="units.json", help="units.json (wargear mode: MFM name -> datasheet id)")
@@ -445,7 +455,8 @@ def main():
     if not units:
         sys.exit("No units parsed from MFM file.")
 
-    flags = {"no_costs": [], "mfm_no_datasheet": [], "datasheet_no_mfm": [], "support_filled": []}
+    flags = {"no_costs": [], "mfm_no_datasheet": [], "datasheet_no_mfm": [], "support_filled": [],
+              "out_of_scope_dropped": []}
 
     # name set from datasheets (if provided) for matching + army-name lookup
     ds_army_by_norm = {}
@@ -461,6 +472,14 @@ def main():
             for r in stats_rows[1:]:
                 if len(r) > ui:
                     k = norm(r[ui]); a = r[ai]
+                    if args.scope_to_army:
+                        # B56a: chapter run. Only this army's own rows are eligible for
+                        # the name->army map; a name shared with another army (e.g. Black
+                        # Templars' Gladiator Lancer vs. the Adeptus Astartes datasheet of
+                        # the same name) must not resolve outside this block.
+                        if a == args.army:
+                            ds_army_by_norm[k] = a
+                        continue
                     # Fix 1: prefer the generic (Adeptus Astartes) army when a unit
                     # name appears under multiple armies. First-seen otherwise wins,
                     # but a generic row always takes precedence over a chapter row.
@@ -483,9 +502,17 @@ def main():
         if override:
             display_name = override
             nkey = norm(display_name)
-        army = ds_army_by_norm.get(nkey, args.army)
-        if ds_army_by_norm and nkey not in ds_army_by_norm:
-            flags["mfm_no_datasheet"].append(display_name)
+        army = ds_army_by_norm.get(nkey)
+        if army is None:
+            if args.scope_to_army:
+                # B56a: no datasheet in this chapter's own block. Drop rather than
+                # write under --army — a fallback here is exactly the bug that let
+                # Black Templars rows overwrite generic Adeptus Astartes prices.
+                flags.setdefault("out_of_scope_dropped", []).append(display_name)
+                continue
+            army = args.army
+            if ds_army_by_norm:
+                flags["mfm_no_datasheet"].append(display_name)
         point_rows.append(to_points_row(army, display_name, info))
         seen.add(nkey)
 
@@ -500,10 +527,41 @@ def main():
               "Points_1-2","Points_2-2","Points_3-2",
               "Points_1-3","Points_2-3","Points_3-3"]
     out_points = os.path.join(args.out_dir, "Unit_Points.csv")
-    with open(out_points, "w", encoding="utf-8-sig", newline="") as f:
-        w = csv.writer(f, lineterminator="\r\n")
-        w.writerow(header)
-        w.writerows(point_rows)
+    append_mode = args.append and os.path.exists(out_points)
+    if append_mode:
+        # B56a: a chapter row whose (Army, Unit) key already exists in the target file
+        # is a genuine override, not a duplicate. Per D42 as written (confirmed S101
+        # after B56f: "faction points always override generic"), the chapter row wins.
+        # Remove the base row, append the chapter row, and log the override so it's
+        # visible in the validation report rather than silent.
+        with open(out_points, encoding="utf-8-sig", newline="") as rf:
+            existing = list(csv.reader(rf))
+        existing_keys = {(r[0], r[1]) for r in existing[1:] if len(r) >= 2}
+        overrides = {(row[0], row[1]): row for row in point_rows
+                     if (row[0], row[1]) in existing_keys}
+        if overrides:
+            # Rewrite the file with the base row(s) for each colliding key stripped.
+            kept = [existing[0]]  # header (with BOM)
+            for r in existing[1:]:
+                if len(r) >= 2 and (r[0], r[1]) in overrides:
+                    flags.setdefault("chapter_override_applied", []).append(
+                        (r[0], r[1], r[5] if len(r) > 5 else "",
+                         overrides[(r[0], r[1])][5]))
+                    continue
+                kept.append(r)
+            with open(out_points, "w", encoding="utf-8-sig", newline="") as f:
+                w = csv.writer(f, lineterminator="\r\n")
+                w.writerows(kept)
+        # Append every chapter row: new keys are additive, overriding keys are now the
+        # sole row for that key after the strip.
+        with open(out_points, "a", encoding="utf-8", newline="") as f:
+            w = csv.writer(f, lineterminator="\r\n")
+            w.writerows(point_rows)
+    else:
+        with open(out_points, "w", encoding="utf-8-sig", newline="") as f:
+            w = csv.writer(f, lineterminator="\r\n")
+            w.writerow(header)
+            w.writerows(point_rows)
 
     # patch Leader Eligible Units into Unit_Stats (verbatim SUPPORT list)
     if stats_rows is not None and lei is not None:
@@ -534,12 +592,18 @@ def main():
             ("no_costs", "MFM entries with no parsable cost"),
             ("mfm_no_datasheet", "MFM units with NO matching datasheet (check name/scope)"),
             ("datasheet_no_mfm", "Datasheets with NO MFM points (missing or name mismatch)"),
+            ("out_of_scope_dropped", "MFM entries dropped: no datasheet in this --scope-to-army block"),
         ]:
             items = flags[key]
             f.write(f"## {title} — {len(items)}\n")
             for it in sorted(items):
                 f.write(f"- {it}\n")
             f.write("\n")
+        collisions = flags.get("chapter_override_applied", [])
+        f.write(f"## Chapter overrides applied (append mode, base row replaced) — {len(collisions)}\n")
+        for army, unit, base_pts1, chap_pts1 in sorted(collisions):
+            f.write(f"- {army} / {unit}: base row {base_pts1} at 1-2 replaced by chapter {chap_pts1} (D42, D169)\n")
+        f.write("\n")
 
     print(f"Done. {len(point_rows)} unit point rows -> {out_points}")
     print(f"  leader lists patched: {len(flags['support_filled'])} | see points_validation_report.md")

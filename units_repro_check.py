@@ -52,7 +52,23 @@ REQUIRED = [
     'add_bodyguard_stat_flags.py', 'units.json', 'unit_loadouts.json',
     'bundled_swaps.json', 'faction_taxonomy.json',
     'MFM_Space_Marines_v1_0.txt', 'MFM_Death_Guard_v1_0.txt',
+    # B56a: the five Space Marines chapter point files. Correctly-scoped, they are
+    # purely additive on top of the base SM run (D167/D168) and sit inside the fixed
+    # point from here on — this is exactly the kind of input that goes stale silently
+    # if it is outside the gate (D107).
+    'MFM_Space_Wolves_v1_0.txt', 'MFM_Blood_Angels_v1_0.txt',
+    'MFM_Black_Templars_v1_0.txt', 'MFM_Dark_Angels_v1_0.txt',
+    'MFM_Death_Watch_v1_0.txt',
 ] + CD_ROOT_CSVS
+
+# B56a: chapter file -> the Army Name its own Unit_Stats.csv rows carry.
+CHAPTER_POINTS = [
+    ('MFM_Space_Wolves_v1_0.txt', 'Space Wolves'),
+    ('MFM_Blood_Angels_v1_0.txt', 'Blood Angels'),
+    ('MFM_Black_Templars_v1_0.txt', 'Black Templars'),
+    ('MFM_Dark_Angels_v1_0.txt', 'Dark Angels'),
+    ('MFM_Death_Watch_v1_0.txt', 'Deathwatch'),
+]
 
 
 def _run(cmd, cwd):
@@ -84,6 +100,16 @@ def repro(dir_):
                         cwd=dir_)
         if rc != 0:
             return False, 'mfm_points_parser.py (SM) failed:\n' + out[-600:]
+
+        # --- B56a: chapter points, scoped and additive, before convert_to_json.py ---
+        for mfm_file, army in CHAPTER_POINTS:
+            rc, out = _run([sys.executable, 'mfm_points_parser.py',
+                            '--mfm', mfm_file, '--army', army, '--scope-to-army', '--append',
+                            '--out-dir', sm_dir, '--stats', os.path.join(sm_dir, 'Unit_Stats.csv')],
+                            cwd=dir_)
+            if rc != 0:
+                return False, f'mfm_points_parser.py ({army}) failed:\n' + out[-600:]
+
         rc, out = _run([sys.executable, 'convert_to_json.py',
                         '--input-dir', sm_dir, '--output-dir', sm_dir,
                         '--bundles', os.path.join(dir_, 'bundled_swaps.json')], cwd=dir_)

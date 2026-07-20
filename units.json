@@ -17903,7 +17903,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 125
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -18062,7 +18071,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -18146,7 +18164,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 130,
+              "second_unit": 130,
+              "third_plus": 130
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -18233,7 +18260,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -18384,7 +18420,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 85
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -18489,7 +18534,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -18654,7 +18708,22 @@
           }
         ],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 145
+            },
+            {
+              "size": 6,
+              "first_unit": 260,
+              "second_unit": 260,
+              "third_plus": 280
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -18852,7 +18921,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 160
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -19086,7 +19164,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 135
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -19380,7 +19467,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 95
+            },
+            {
+              "size": 10,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 170
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -19769,7 +19871,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 90
+            },
+            {
+              "size": 10,
+              "first_unit": 155,
+              "second_unit": 155,
+              "third_plus": 165
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -20029,7 +20146,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 135
+            },
+            {
+              "size": 10,
+              "first_unit": 230,
+              "second_unit": 230,
+              "third_plus": 245
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -20217,7 +20349,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -20398,7 +20539,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -20627,7 +20777,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
+            }
+          ]
+        },
         "abilities": []
       }
     ]
@@ -20750,7 +20909,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 140,
+              "second_unit": 140,
+              "third_plus": 140
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -20857,7 +21025,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -20986,7 +21163,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -21146,7 +21332,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -21428,7 +21623,22 @@
           }
         ],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 165,
+              "second_unit": 165,
+              "third_plus": 165
+            },
+            {
+              "size": 10,
+              "first_unit": 330,
+              "second_unit": 330,
+              "third_plus": 330
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -21592,7 +21802,16 @@
           }
         ],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 240,
+              "second_unit": 260,
+              "third_plus": 260
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -21712,7 +21931,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -21867,7 +22095,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 195,
+              "second_unit": 195,
+              "third_plus": 195
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -21980,7 +22217,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 200,
+              "second_unit": 200,
+              "third_plus": 200
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -22142,7 +22388,22 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 85
+            },
+            {
+              "size": 6,
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 160
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -22299,7 +22560,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 130
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -22437,7 +22707,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 105
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -22550,7 +22829,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -22692,7 +22980,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 285,
+              "second_unit": 285,
+              "third_plus": 285
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -22895,7 +23192,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 115,
+              "second_unit": 115,
+              "third_plus": 125
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -23009,7 +23315,22 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 90
+            },
+            {
+              "size": 6,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 180
+            }
+          ]
+        },
         "abilities": []
       }
     ]
@@ -23147,7 +23468,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -23249,7 +23579,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -23391,7 +23730,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -23513,7 +23861,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -23701,7 +24058,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 160
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -23864,7 +24230,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 135,
+              "second_unit": 135,
+              "third_plus": 135
+            },
+            {
+              "size": 20,
+              "first_unit": 270,
+              "second_unit": 270,
+              "third_plus": 270
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -24069,7 +24450,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 165,
+              "second_unit": 165,
+              "third_plus": 165
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -24187,7 +24577,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 55,
+              "second_unit": 55,
+              "third_plus": 55
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -24294,7 +24693,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 95
+            },
+            {
+              "size": 10,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 180
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -24417,7 +24831,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 150
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -24521,7 +24944,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 105
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -24692,7 +25124,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 150,
+              "second_unit": 160,
+              "third_plus": 160
+            },
+            {
+              "size": 10,
+              "first_unit": 300,
+              "second_unit": 310,
+              "third_plus": 310
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -24882,7 +25329,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 110
+            },
+            {
+              "size": 6,
+              "first_unit": 200,
+              "second_unit": 200,
+              "third_plus": 210
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -24956,7 +25418,22 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 45,
+              "second_unit": 45,
+              "third_plus": 50
+            },
+            {
+              "size": 10,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 80
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -25200,9 +25677,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 165,
-              "second_unit": 165,
-              "third_plus": 165
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 135
             }
           ]
         },
@@ -25303,7 +25780,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -25512,7 +25998,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -25823,7 +26318,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 110
+            },
+            {
+              "size": 10,
+              "first_unit": 200,
+              "second_unit": 200,
+              "third_plus": 210
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -26077,7 +26587,16 @@
             ]
           }
         ],
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 135,
+              "second_unit": 135,
+              "third_plus": 145
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -26400,7 +26919,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 6,
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 105
+            },
+            {
+              "size": 12,
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 200
+            }
+          ]
+        },
         "abilities": []
       }
     ]
@@ -26614,7 +27148,16 @@
           }
         ],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 180
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -26895,7 +27438,16 @@
           }
         ],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 180
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -27392,7 +27944,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 195,
+              "second_unit": 195,
+              "third_plus": 210
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -27633,7 +28194,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 275,
+              "second_unit": 275,
+              "third_plus": 290
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -27925,7 +28495,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            },
+            {
+              "size": 10,
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -28025,7 +28610,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 95
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -28130,7 +28724,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -28429,7 +29032,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 180
+            },
+            {
+              "size": 10,
+              "first_unit": 330,
+              "second_unit": 330,
+              "third_plus": 330
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -28787,7 +29405,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 265,
+              "second_unit": 265,
+              "third_plus": 280
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -29296,7 +29923,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            },
+            {
+              "size": 10,
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
+            }
+          ]
+        },
         "abilities": []
       }
     ]
@@ -30686,7 +31328,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -30893,7 +31544,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 170
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -31067,7 +31727,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 160
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -31259,7 +31928,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 170
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -31550,7 +32228,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 245,
+              "second_unit": 245,
+              "third_plus": 265
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -31776,7 +32463,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 190
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -31995,7 +32691,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 4,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -32194,7 +32899,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -32314,7 +33028,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 120
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -32440,7 +33163,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -32586,7 +33318,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 80,
+              "second_unit": 90,
+              "third_plus": 90
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -32827,7 +33568,28 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 4,
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 120
+            },
+            {
+              "size": 5,
+              "first_unit": 130,
+              "second_unit": 130,
+              "third_plus": 145
+            },
+            {
+              "size": 9,
+              "first_unit": 235,
+              "second_unit": 235,
+              "third_plus": 250
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -33275,7 +34037,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -33415,7 +34186,16 @@
         "wargear_options": [],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 45,
+              "second_unit": 45,
+              "third_plus": 45
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -33700,7 +34480,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            },
+            {
+              "size": 10,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 160
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -33934,7 +34729,22 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 160
+            },
+            {
+              "size": 10,
+              "first_unit": 320,
+              "second_unit": 320,
+              "third_plus": 320
+            }
+          ]
+        },
         "abilities": []
       },
       {
@@ -34133,7 +34943,16 @@
         ],
         "other_options": [],
         "bundled_swaps": null,
-        "points": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 220,
+              "second_unit": 220,
+              "third_plus": 240
+            }
+          ]
+        },
         "abilities": []
       }
     ]

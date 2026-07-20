@@ -952,6 +952,34 @@ ASSERTIONS = [
      'index.html isOptEpicHeroBlocked / editLoadoutOptional; B13 Piece 2',
      lambda S: b13_optional_epic_hero(S)),
 
+    # ── B56a. Replaces the prose closure figures in MFM_Chapter_Pass.md (D107 again —
+    # that document drifted in both directions inside one release before this landed).
+    # The five chapter MFM files, run scoped through mfm_points_parser.py --scope-to-army,
+    # close 77 of the 81 units.json entries that carried points: null. Four residuals
+    # remain: two are a parser gap (composition-shaped bracket line, B56b), two have no
+    # points source anywhere in the 30 MFM files held (B56e, blocked).
+    ('B56a-1',
+     'Exactly 4 units in units.json carry points: null, and they are exactly Wolf Guard '
+     'Headtakers (000004131, B56b), Crusader Squad (000002799, B56b), Judiciar Xacharus '
+     '(000004179, B56e) and Chaplain Kastiel (000004180, B56e). No other unit is uncosted.',
+     'units.json (D167/D168); MFM_Space_Wolves_v1_0.txt, MFM_Black_Templars_v1_0.txt',
+     lambda S: b56a_residual_nulls(S)),
+
+    # Black Templars is the negative control from D167: unscoped, 9 of its 18 datasheets
+    # share a name with an Adeptus Astartes datasheet and the parser's old preference wrote
+    # all nine under Adeptus Astartes, corrupting the generic roster while BT stayed
+    # uncosted. This checks both halves at once — BT closes to 17/18, and the three
+    # datasheets BT prices differently from the shared Adeptus Astartes name (Impulsor,
+    # Repulsor Executioner, Sternguard Veteran Squad) still disagree, proving they are two
+    # separate rows rather than one overwritten by the other.
+    ('B56a-2',
+     'Black Templars has 18 units.json entries; 17 have non-null points (only Crusader '
+     'Squad, 000002799, is null). The Adeptus Astartes and Black Templars Impulsor '
+     'datasheets (000002568 / 000002786) keep distinct first-unit costs, 80 and 85 — proof '
+     'the scoped chapter run did not overwrite the generic row.',
+     'units.json (D167/D168, negative control)',
+     lambda S: b56a_bt_negative_control(S)),
+
 ]
 
 
@@ -1126,6 +1154,40 @@ def b7b_combined_popup(S):
     return True, ('data: 16/16 leaders carry expected flags; '
                   'render: openModalCombined/buildModalCombined wired, aura union pulls from '
                   'bodyguard_stat_flags, bodyguard ⓘ routes conditionally')
+
+
+def b56a_residual_nulls(S):
+    want = {'000004131', '000002799', '000004179', '000004180'}
+    got = set()
+    for blk in S.units():
+        for u in blk['units']:
+            if u.get('points') is None:
+                got.add(u['unit_id'])
+    return (got == want), f'{len(got)} null unit_id(s): {sorted(got)}'
+
+
+def b56a_bt_negative_control(S):
+    bt_units = []
+    aa_impulsor = bt_impulsor = None
+    for blk in S.units():
+        if blk.get('army') == 'Black Templars':
+            bt_units = blk['units']
+        for u in blk['units']:
+            if u['unit_id'] == '000002568':
+                aa_impulsor = u.get('points')
+            if u['unit_id'] == '000002786':
+                bt_impulsor = u.get('points')
+    if not bt_units:
+        return False, 'no Black Templars army block found'
+    non_null = [u for u in bt_units if u.get('points') is not None]
+    ok_count = len(bt_units) == 18 and len(non_null) == 17 and \
+        {u['unit_id'] for u in bt_units if u.get('points') is None} == {'000002799'}
+    aa_cost = (aa_impulsor or {}).get('sizes', [{}])[0].get('first_unit')
+    bt_cost = (bt_impulsor or {}).get('sizes', [{}])[0].get('first_unit')
+    ok_distinct = aa_cost == 80 and bt_cost == 85
+    ok = ok_count and ok_distinct
+    return ok, (f'BT {len(bt_units)} units, {len(non_null)} priced; '
+                f'Impulsor AA={aa_cost} BT={bt_cost}')
 
 
 def b13_optional_epic_hero(S):
