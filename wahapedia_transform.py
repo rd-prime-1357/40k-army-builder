@@ -589,12 +589,17 @@ def build_stats(data, selected, army_of, abil, kw_rows, weapon_names_by_ds, lead
             grp = "All" if len(mlist) <= 1 else strip_html(m.get("name", "")) if m else "All"
             mv = (m.get("M") if m else "") or ""
             t = (m.get("T") if m else "") or ""
+            # B11: strip the trailing '+' at the source so SV matches INV/FNP
+            # (bare numbers). The render guard in index.html (cleanPlus) already
+            # tolerates either form, so this is a data-shape fix, not a display fix.
             sv = (m.get("Sv") if m else "") or ""
+            sv = sv[:-1] if sv.endswith("+") else sv
             inv = (m.get("inv_sv") if m else "") or ""
             inv = "" if inv in ("-", None) else inv
             invc = strip_html(m.get("inv_sv_descr", "")) if m else ""
             wv = (m.get("W") if m else "") or ""
             ld = (m.get("Ld") if m else "") or ""
+            ld = ld[:-1] if ld.endswith("+") else ld
             oc = (m.get("OC") if m else "") or ""
             rows.append([
                 army_of[ds_id], d["name"], grp, ut, mv, t, sv, inv, invc,
