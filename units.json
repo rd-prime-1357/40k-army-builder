@@ -41025,7 +41025,10 @@
         "cannot_be_warlord": false,
         "unit_ability_details": {
           "The Dark Master (Aura)": "The area within 6\" of this model is within your Shadow of Chaos.",
-          "Shadow Form": "At start of battle round, select one Shadow Form ability. Until end of battle round, this model has that ability."
+          "Shadow Form": "At start of battle round, select one Shadow Form ability. Until end of battle round, this model has that ability.",
+          "Wreathed in Shadows (Aura Psychic)": "While a friendly Legiones Daemonica or Shadow Legion unit is within 6\" of this model, that unit can only be targeted by a ranged attack if the attacking model is within 18\".",
+          "Pall of Despair (Aura Psychic)": "In Battle-shock step of opponent's Command phase, if an enemy unit below Starting Strength is within 9\", that unit must take a Battle-shock test. For Starting Strength 1 units, considered below while it has lost one or more wounds. For each enemy unit that fails within 9\", this model regains up to D3 lost wounds.",
+          "Shadow Lord (Aura Psychic)": "While a friendly Legiones Daemonica or Shadow Legion unit is within 6\" of this model, re-roll a Hit roll of 1 for each attack made by models in that unit."
         },
         "model_groups": [
           {
@@ -41048,7 +41051,10 @@
             "leader_footer": null,
             "unit_ability_names": [
               "The Dark Master (Aura)",
-              "Shadow Form"
+              "Shadow Form",
+              "Wreathed in Shadows (Aura Psychic)",
+              "Pall of Despair (Aura Psychic)",
+              "Shadow Lord (Aura Psychic)"
             ],
             "rule_names": [
               "Deadly Demise D6",
