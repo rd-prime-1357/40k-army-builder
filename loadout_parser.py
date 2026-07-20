@@ -172,13 +172,13 @@ def parse_comp_row(text):
     lo = int(m.group(1))
     hi = int(m.group(2)) if m.group(2) is not None else None
     name = m.group(3).strip()
-    g = {'name': name, 'fixed': None, 'fills': False, 'optional': False, 'max': None}
+    g = {'name': name, 'fixed': None, 'fills': False, 'optional': False, 'max': None, 'min': None}
     if hi is None:
         g['fixed'] = lo                    # single integer -> fixed count
     elif lo == 0:
         g['optional'] = True; g['max'] = hi  # '0-N' -> optional group (toggle / capped)
     else:
-        g['fills'] = True                  # 'A-B', A>=1 -> body, fills to size
+        g['fills'] = True; g['min'] = lo   # 'A-B', A>=1 -> body, fills to size, min A
     return g
 
 # ── sentence classifiers ──────────────────────────────────────────────────────
@@ -1123,7 +1123,10 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
             return {'optional': True, 'max': g.get('max')}
         if g.get('fixed') is not None:
             return {'fixed': g['fixed']}
-        return {'fills_to_size': True}
+        c = {'fills_to_size': True}
+        if g.get('min') is not None:
+            c['min'] = g['min']
+        return c
 
     defn = {
         'size_brackets': size_brackets,

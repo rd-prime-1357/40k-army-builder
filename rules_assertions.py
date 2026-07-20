@@ -91,6 +91,11 @@ class Sources:
             self._cache['op'] = list(pipe_rows(os.path.join(self.dir, 'Datasheets_options.csv')))
         return self._cache['op']
 
+    def composition(self):
+        if 'cp' not in self._cache:
+            self._cache['cp'] = list(pipe_rows(os.path.join(self.dir, 'Datasheets_unit_composition.csv')))
+        return self._cache['cp']
+
     def option_text(self, ds_id, line):
         for r in self.options():
             if r['datasheet_id'] == ds_id and r['line'] == str(line):
@@ -1005,7 +1010,51 @@ ASSERTIONS = [
      'units.json (D167/D168, negative control)',
      lambda S: b56a_bt_negative_control(S)),
 
+    ('B58-1',
+     'Every fills_to_size model group in unit_loadouts.json carries a min field equal to '
+     'the low end of its "A-B" composition line (D179/B58 phase 1). The base group minimum '
+     'is real rules data the engine will need to bound banded optional-group steppers; it '
+     'cannot be inferred from fills_to_size alone.',
+     'Datasheets_unit_composition.csv vs unit_loadouts.json (D179)',
+     lambda S: b58_min_matches_composition(S)),
+
 ]
+
+
+def b58_min_matches_composition(S):
+    # Hand-authored entries (repro_check.py HAND_AUTHORED) bypass the parser entirely and
+    # predate this field; they are frozen, not stale, and are excluded here for that reason.
+    hand_authored = {'000001157', '000001044', '000004131'}
+    hyphen_re = re.compile(r'^(\d+)[-\u2010\u2011\u2012\u2013\u2014\u2015](\d+)\s+')
+    comp_lo = {}  # (datasheet_id, group_name) -> lo
+    for r in S.composition():
+        m = hyphen_re.match(r['description'].strip())
+        if not m:
+            continue
+        lo, hi = int(m.group(1)), int(m.group(2))
+        if lo == 0:
+            continue  # '0-N' is an optional group, not a fills body
+        name = hyphen_re.sub('', r['description'].strip())
+        comp_lo[(r['datasheet_id'], name)] = lo
+    bad = []
+    checked = 0
+    for uid, defn in S.loadouts().items():
+        if uid.startswith('_') or uid in hand_authored:
+            continue
+        for g in defn.get('model_groups', []):
+            c = g.get('count', {})
+            if not c.get('fills_to_size'):
+                continue
+            checked += 1
+            want = comp_lo.get((uid, g['name']))
+            got = c.get('min')
+            if want is None:
+                bad.append(f'{uid}/{g["name"]}: no matching composition line found')
+            elif got != want:
+                bad.append(f'{uid}/{g["name"]}: min={got}, composition says {want}')
+    ok = (not bad) and checked > 0
+    detail = f'{checked} fills_to_size groups checked' if ok else '; '.join(bad[:8])
+    return ok, detail
 
 
 def instance_limits_intact(S):

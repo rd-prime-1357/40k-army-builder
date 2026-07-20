@@ -498,7 +498,8 @@
       {
         "name": "Bladeguard Veterans",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -745,7 +746,8 @@
       {
         "name": "Firestrike Servo-turrets",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 1
         },
         "default_weapons": [
           "Twin Firestrike las-talon",
@@ -877,7 +879,8 @@
       {
         "name": "Eradicators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Bolt pistol",
@@ -1064,7 +1067,8 @@
       {
         "name": "Assault Terminators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Thunder hammer"
@@ -1182,7 +1186,8 @@
       {
         "name": "Inceptors",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Assault bolters",
@@ -1233,7 +1238,8 @@
       {
         "name": "Infernus Marines",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -1287,7 +1293,8 @@
       {
         "name": "Infiltrators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -1494,7 +1501,8 @@
       {
         "name": "Vanguard Veterans with Jump Packs",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -1664,7 +1672,8 @@
       {
         "name": "Sanguinary Guard",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 3
         },
         "default_weapons": [
           "Angelus boltgun",
@@ -1907,7 +1916,8 @@
       {
         "name": "Deathwing Terminators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Storm bolter",
@@ -2110,7 +2120,8 @@
       {
         "name": "Ravenwing Black Knights",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Bolt pistol",
@@ -2305,7 +2316,8 @@
       {
         "name": "Blood Claws",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 9
         },
         "default_weapons": [
           "Bolt pistol",
@@ -2420,7 +2432,8 @@
       {
         "name": "Wulfen",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 5
         },
         "default_weapons": [
           "Wulfen weapons"
@@ -2501,7 +2514,8 @@
       {
         "name": "Wolf Guard Terminators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Storm bolter",
@@ -2579,7 +2593,8 @@
       {
         "name": "Thunderwolf Cavalry",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Bolt pistol",
@@ -2654,7 +2669,8 @@
       {
         "name": "Fenrisian Wolves",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 5
         },
         "default_weapons": [
           "Teeth and claws"
@@ -3034,7 +3050,8 @@
       {
         "name": "Poxwalkers",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 10
         },
         "default_weapons": [
           "Improvised weapon"
@@ -3183,7 +3200,8 @@
       {
         "name": "Incursors",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -3218,7 +3236,8 @@
       {
         "name": "Scouts",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -3371,7 +3390,8 @@
       {
         "name": "Heavy Intercessors",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -3414,7 +3434,8 @@
       {
         "name": "Terminators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Storm bolter",
@@ -3616,7 +3637,8 @@
       {
         "name": "Devastator Centurions",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Grav-cannon",
@@ -3860,7 +3882,8 @@
       {
         "name": "Deathshroud Terminators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Plaguespurt gauntlet",
@@ -3895,7 +3918,8 @@
       {
         "name": "Blightlord Terminators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Combi-bolter",
@@ -3977,7 +4001,8 @@
       {
         "name": "Myphitic Blight-hulers",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 1
         },
         "default_weapons": [
           "Bile spurt",
@@ -4077,7 +4102,8 @@
       {
         "name": "Assault Intercessors",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -4291,7 +4317,8 @@
       {
         "name": "Death Company Marines",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 5
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -4359,7 +4386,8 @@
       {
         "name": "Hellblasters",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -4402,7 +4430,8 @@
       {
         "name": "Aggressors",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Flamestorm gauntlets",
@@ -4539,7 +4568,8 @@
       {
         "name": "Devastator Marines",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -4592,7 +4622,8 @@
       {
         "name": "Sternguard Veterans",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Sternguard bolt pistol",
@@ -4737,7 +4768,8 @@
       {
         "name": "Death Company Marines with Bolt Rifles",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 5
         },
         "default_weapons": [
           "Bolt pistol",
@@ -5134,7 +5166,8 @@
       {
         "name": "Assault Centurions",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Twin flamer",
@@ -5315,7 +5348,8 @@
       {
         "name": "Outriders",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -5540,7 +5574,8 @@
       {
         "name": "Reivers",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Special issue bolt pistol",
@@ -5805,7 +5840,8 @@
       {
         "name": "Death Company Marines with Jump Packs",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 5
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -6113,7 +6149,8 @@
       {
         "name": "Assault Intercessors with Jump Packs",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -6166,7 +6203,8 @@
       {
         "name": "Kill Team Infiltrators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 3
         },
         "default_weapons": [
           "Bolt pistol",
@@ -6335,7 +6373,8 @@
       {
         "name": "Kill Team Intercessors",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Bolt pistol",
@@ -6514,7 +6553,8 @@
       {
         "name": "Kill Team Heavy Intercessors",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 3
         },
         "default_weapons": [
           "Bolt pistol",
@@ -6616,7 +6656,8 @@
       {
         "name": "Deathwatch Veterans",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Boltgun",
@@ -7268,7 +7309,8 @@
       {
         "name": "Sword Brothers",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -7347,7 +7389,8 @@
       {
         "name": "Initiates",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 5
         },
         "default_weapons": [
           "Bolt pistol",
@@ -7358,7 +7401,8 @@
       {
         "name": "Neophytes",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Bolt pistol",
@@ -7477,7 +7521,8 @@
       {
         "name": "Inner Circle Companions",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 3
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -7668,7 +7713,8 @@
       {
         "name": "Deathwatch Terminators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Power fist",
@@ -7748,7 +7794,8 @@
       {
         "name": "Kill Team Intercessors with Jump Packs",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Heavy bolt pistol",
@@ -8008,7 +8055,8 @@
       {
         "name": "Plague Drones",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 2
         },
         "default_weapons": [
           "Death’s heads",
@@ -8047,7 +8095,8 @@
       {
         "name": "Beasts of Nurgle",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 1
         },
         "default_weapons": [
           "Putrid appendages"
@@ -8066,7 +8115,8 @@
       {
         "name": "Nurgling Swarms",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 3
         },
         "default_weapons": [
           "Diseased claws and teeth"
@@ -8149,7 +8199,8 @@
       {
         "name": "Wulfen",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 5
         },
         "default_weapons": [
           "Thunder hammer"
@@ -8288,7 +8339,8 @@
       {
         "name": "Sternguard Veterans",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Sternguard bolt pistol",
@@ -8359,7 +8411,8 @@
       {
         "name": "Terminators",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 4
         },
         "default_weapons": [
           "Storm bolter",
@@ -8816,7 +8869,8 @@
       {
         "name": "Victrix Honour Guard",
         "count": {
-          "fills_to_size": true
+          "fills_to_size": true,
+          "min": 1
         },
         "default_weapons": [
           "Master-crafted bolt carbine",
