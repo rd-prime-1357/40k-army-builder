@@ -1619,7 +1619,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.83';
+  const VERSION = '5.84';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1983,24 +1983,43 @@
     return sum;
   }
 
+  // B56g phase 3: cost of priced optional model groups (e.g. Hunting Wolves) at the
+  // current toggle state — count.optional groups carrying a price_per_model field.
+  // Independent of wargearPoints, so it applies even for units with no other priced
+  // wargear (defaultWargearCost's early-return guard doesn't gate this).
+  function modelGroupCost(def, size, optCounts) {
+    if (!def || !Array.isArray(def.model_groups)) return 0;
+    const counts = loGroupCounts(def, size, optCounts || {});
+    let sum = 0;
+    for (const g of def.model_groups) {
+      if (g.price_per_model) sum += (counts[g.name] || 0) * g.price_per_model;
+    }
+    return sum;
+  }
+
   // Cost of the wargear an entry is configured with, as currently selected.
   function wargearCostForEntry(entry, unit) {
-    if (!unit || !unit.unit_id || !wargearPoints[unit.unit_id]) return 0;
+    if (!unit || !unit.unit_id) return 0;
     const def = loadoutDefs[unit.unit_id];
     if (!def) return 0;
     const size = loadoutSize(entry, def);
-    return wargearCostForRollup(unit.unit_id, loRollup(def, size, loadoutSelections(entry, def), loOptCounts(def, entry)));
+    const optCounts = loOptCounts(def, entry);
+    const grp = modelGroupCost(def, size, optCounts);
+    if (!wargearPoints[unit.unit_id]) return grp;
+    return grp + wargearCostForRollup(unit.unit_id, loRollup(def, size, loadoutSelections(entry, def), optCounts));
   }
 
   // Cost of a unit's wargear with nothing selected — the default loadout. Used for the
   // roster's "from" badge so it agrees with what the entry costs once added.
   function defaultWargearCost(unitId, sizeNum) {
-    if (!unitId || !wargearPoints[unitId]) return 0;
+    if (!unitId) return 0;
     const def = loadoutDefs[unitId];
     if (!def) return 0;
     const size = sizeNum || (def.size_brackets ? def.size_brackets[0] : 0);
+    const grp = modelGroupCost(def, size, {});
+    if (!wargearPoints[unitId]) return grp;
     const empty = { choiceById: {}, countById: {}, addById: {} };
-    return wargearCostForRollup(unitId, loRollup(def, size, empty));
+    return grp + wargearCostForRollup(unitId, loRollup(def, size, empty));
   }
 
   function ptsForEntry(entry) {
@@ -3515,6 +3534,13 @@
     for (const g of def.model_groups) {
       const ct = g.count || {};
       if (ct.fixed != null) { c[g.name] = ct.fixed; reserved += ct.fixed; }
+      // B56g phase 3: optional + per_bracket is a 0-or-N escort toggle (e.g. Hunting
+      // Wolves) — off gives 0, on gives the full bracket count. It does NOT add to
+      // `reserved`: the escort rides alongside the size bracket, it isn't part of it
+      // (D174 — all four printed configs keep the Headtaker count at exactly the
+      // bracket size whether or not the escort is taken), so it must not shrink a
+      // fills_to_size group's remainder.
+      else if (ct.optional && ct.per_bracket) { c[g.name] = (oc[g.name] || 0) > 0 ? (ct.per_bracket[String(size)] || 0) : 0; }
       else if (ct.per_bracket) { const v = ct.per_bracket[String(size)] || 0; c[g.name] = v; reserved += v; }
       else if (ct.optional) { const v = oc[g.name] || 0; c[g.name] = v; reserved += v; }
       else c[g.name] = null;   // fills_to_size — resolved below
@@ -3987,12 +4013,16 @@
       // Strip the EPIC HERO suffix from the display name for readability.
       const displayName = g.name.replace(/\s*[-–]\s*EPIC HERO$/i, '');
       const btnClass = included ? ' included' : blocked ? ' blocked' : '';
-      const btnLabel = included ? 'Included' : 'Add';
+      // B56g phase 3: a per_bracket optional group (e.g. Hunting Wolves) adds N models
+      // at once, not one — show the count and, if priced, the points on the toggle.
+      const perBracketN = g.count.per_bracket ? (g.count.per_bracket[String(size)] || 0) : null;
+      const priceNote = g.price_per_model ? ` (+${(perBracketN || 0) * g.price_per_model} pts)` : '';
+      const btnLabel = included ? 'Included' : (perBracketN ? `Add ${perBracketN}` : 'Add');
       const clickAttr = blocked ? '' : ` onclick="editLoadoutOptional(${entry.listId},'${esc(g.name)}')"`;
       html += `<div class="opt-group-block"><div class="opt-group-label">Optional Model</div>
         <div class="opt-group-toggle">
           <button class="opt-toggle-btn${btnClass}"${clickAttr}>${btnLabel}</button>
-          <span class="opt-group-name">${displayName}</span>
+          <span class="opt-group-name">${displayName}${priceNote}</span>
         </div>${blocked ? `<div class="opt-group-note">Already included in another Victrix unit</div>` : ''}</div>`;
     }
     // Leader/champion block = first model group with a fixed count of 1 (Sergeant, Champion, etc.).

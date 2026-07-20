@@ -1221,22 +1221,35 @@ def b56g_headtaker_escort(S):
     if eg['brackets'] != [(3, 3), (6, 6)]:
         return False, f'unexpected escort brackets {eg["brackets"]}'
 
-    # The Hunting Wolves model group already exists in unit_loadouts.json (it comes
-    # from the datasheet itself, via equipped_parser -- not something this ticket
-    # adds) but must not yet carry a price, and the escort must not be reachable
-    # through wargear_points.json either (direction (b), rejected by D173). Pricing
-    # the group and fixing its 0-or-1 count is phase 2/3, not this parser turn.
+    # Phase 3 (S108, closes B56g): the escort is now reachable in the app. Direction
+    # (b) — pricing through wargear_points.json — stays rejected per D173; the check
+    # below confirms the group carries the price on itself (price_per_model, sibling
+    # of a 0-or-N per_bracket count) and that the engine actually reads that field.
     loadout = S.loadouts().get('000004131', {})
     group = next((g for g in loadout.get('model_groups', [])
                   if g.get('name', '').lower() == 'hunting wolves'), None)
-    if group and any(k in group for k in ('points', 'cost', 'price')):
-        return False, 'Hunting Wolves model group now carries a price — phase 1 scope exceeded'
+    if not group:
+        return False, 'Hunting Wolves model group missing from unit_loadouts.json'
+    if group.get('price_per_model') != 10:
+        return False, f'expected price_per_model 10, got {group.get("price_per_model")!r}'
+    ct = group.get('count', {})
+    if not (ct.get('optional') and ct.get('per_bracket') == {'3': 3, '6': 6}):
+        return False, f'expected optional 0-or-N per_bracket {{"3": 3, "6": 6}}, got {ct!r}'
     wp = S.wargear_points()
     if any('wolf' in k.lower() for k in wp.get('000004131', {}).get('items', {})):
         return False, 'escort priced via wargear_points.json — direction (b), rejected by D173'
 
+    # The engine turn (B56g phase 3): loGroupCounts must treat optional+per_bracket as
+    # a 0-or-N toggle (not the old hard-coded 0-or-1), and a cost function must read
+    # price_per_model into points math. Checked as source patterns, not by executing JS.
+    html = S.index_html()
+    if 'ct.optional && ct.per_bracket' not in html:
+        return False, 'loGroupCounts has no optional+per_bracket branch — escort still stuck at 0-or-1'
+    if 'price_per_model' not in html or 'modelGroupCost' not in html:
+        return False, 'no engine function reads price_per_model into points math'
+
     return True, (f'brackets 85/170 (1-2), 95/180 (3+); escort {eg["rate_per_model"]} '
-                  f'pts/model at brackets {eg["brackets"]}; not yet wired into loadouts')
+                  f'pts/model at brackets {eg["brackets"]}; now reachable as a 0-or-N toggle')
 
 
 def b56a_bt_negative_control(S):
