@@ -1047,6 +1047,7 @@
     .modal-box {
       background: var(--c-1a1a1a);
       border: 1px solid var(--c-3a3a3a);
+      border-top: 3px solid var(--c-8b0000);
       border-radius: 6px;
       width: 100%;
       max-width: 760px;
@@ -1054,6 +1055,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
     }
 
     .modal-header {
@@ -1297,9 +1299,9 @@
 
     .keyword-pill {
       font-size: 0.65rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 3px;
-      border: 1px solid var(--c-3a3a3a);
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--c-9a7a4a);
       color: var(--c-888888);
       background: var(--c-111111);
       text-transform: uppercase;
@@ -1919,7 +1921,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.0';
+  const VERSION = '6.1';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
