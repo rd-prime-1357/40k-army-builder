@@ -136,10 +136,10 @@
       --c-44aaff: #0062b4;
       --c-4a4a4a: #b5b5b5;
       --c-4a8a4a: #417941;
-      --c-555555: #aaaaaa;
+      --c-555555: #6b6b6b;
       --c-5a3a3a: #4a3030;
       --c-5a5a5a: #a5a5a5;
-      --c-666666: #7a7a7a;
+      --c-666666: #595959;
       --c-6a6a6a: #757575;
       --c-6ab06a: #315d31;
       --c-6e6e6e: #707070;
@@ -1431,6 +1431,11 @@
       transition: border-color 0.15s;
     }
     .banner-theme-toggle:hover { border-color: var(--c-cc9900); }
+    html.theme-light .banner-theme-toggle {
+      background: #3a3a3a;
+      border-color: #2a2a2a;
+    }
+    html.theme-light .banner-theme-toggle:hover { border-color: var(--c-cc9900); }
     .banner-theme-toggle::before {
       content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='%23cc9900' d='M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z'/%3E%3C/svg%3E");
       display: block;
@@ -1910,7 +1915,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.93';
+  const VERSION = '5.94';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
