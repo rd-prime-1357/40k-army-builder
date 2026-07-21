@@ -1041,6 +1041,18 @@ ASSERTIONS = [
      'distinction: selection-scoped caps do not follow the model)',
      lambda S: b59_limits_are_entry_scoped(S)),
 
+    ('B59a-1',
+     'A model group carrying non_consuming: true rides alongside the size bracket '
+     'instead of drawing from it (D182 mechanism, B59a engine turn). index.html\'s '
+     'loOptHeadroom excludes such a group from the reservation subtracted from size; '
+     'loGroupCounts clamps such a group to its band only, taking nothing from the '
+     'shared headroom or the reserved total that other groups compete over. Data side '
+     'is passive today — no unit_loadouts.json group carries the flag yet (that is '
+     'B59b) — but if one appears here first, it must be on an optional group, the '
+     'only shape the mechanism is defined for.',
+     'index.html loOptHeadroom / loGroupCounts (D182); unit_loadouts.json model_groups',
+     lambda S: b59a_non_consuming_engine(S)),
+
 ]
 
 
@@ -1181,6 +1193,51 @@ def b59_limits_are_entry_scoped(S):
                   'engine surface intact; Outrider Squad carries embedded Invader ATV '
                   'and standalone 000001158 exists')
 
+
+def b59a_non_consuming_engine(S):
+    """B59a/D182: non_consuming rides alongside the bracket, not part of it.
+
+    1. loOptHeadroom excludes a non_consuming group from the reservation subtracted
+       from size (it does not shrink headroom the way a fixed/per_bracket/fills_to_size
+       group does).
+    2. loGroupCounts' optional branch clamps a non_consuming group to its band only —
+       no headroom deduction, no addition to the reserved total other groups compete
+       over (the fills_to_size group must not be shorted by it).
+    3. Data side, passive until B59b: if any model group in unit_loadouts.json already
+       carries non_consuming: true, it must be on an optional group — the only shape
+       the mechanism is defined for. Zero such groups today passes vacuously.
+    """
+    txt = S.index_html()
+    for needle, why in [
+        ('if (ct.non_consuming) continue;',
+         'loOptHeadroom does not skip the reservation for a non_consuming group'),
+        ('const v = Math.max(0, Math.min(Number(oc[g.name]) || 0, band));',
+         'loGroupCounts does not clamp a non_consuming group to band only, independent '
+         'of headroom'),
+    ]:
+        if needle not in txt:
+            return False, why
+
+    lo = S.loadouts()
+    bad = []
+    for uid, u in lo.items():
+        if uid.startswith('_') or not isinstance(u, dict):
+            continue
+        for g in (u.get('model_groups') or []):
+            ct = g.get('count') or {}
+            if ct.get('non_consuming') and not ct.get('optional'):
+                bad.append((uid, g.get('name')))
+    if bad:
+        return False, f'non_consuming set on a non-optional group: {bad[:3]}'
+
+    flagged = sum(
+        1 for u in lo.values() if isinstance(u, dict)
+        for g in (u.get('model_groups') or [])
+        if (g.get('count') or {}).get('non_consuming')
+    )
+    return True, (f'engine wiring present (loOptHeadroom / loGroupCounts honour '
+                  f'non_consuming); {flagged} unit_loadouts.json group(s) carry the '
+                  f'flag today (0 expected until B59b)')
 
 
 def b58_min_matches_composition(S):

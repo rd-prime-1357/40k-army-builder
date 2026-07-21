@@ -1619,7 +1619,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.85';
+  const VERSION = '5.86';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3541,6 +3541,7 @@
     let reserved = 0;
     for (const g of (def.model_groups || [])) {
       const ct = g.count || {};
+      if (ct.non_consuming) continue;  // B59a: rides alongside the bracket, reserves nothing
       if (ct.optional) continue;
       if (ct.fixed != null) reserved += ct.fixed;
       else if (ct.per_bracket) reserved += (ct.per_bracket[String(size)] || 0);
@@ -3599,9 +3600,18 @@
       // saved list re-opened at a smaller size.
       else if (ct.optional) {
         const band = ct.max != null ? ct.max : 1;
-        const v = Math.max(0, Math.min(Number(oc[g.name]) || 0, band, headroom));
-        headroom -= v;
-        c[g.name] = v; reserved += v;
+        if (ct.non_consuming) {
+          // B59a: rides alongside the bracket rather than drawing from it — clamp to
+          // the band only. It neither takes headroom from sibling bands nor reserves
+          // from size (same "alongside, not part of it" rule as the per_bracket
+          // escort above, generalised to a plain optional group — D182).
+          const v = Math.max(0, Math.min(Number(oc[g.name]) || 0, band));
+          c[g.name] = v;
+        } else {
+          const v = Math.max(0, Math.min(Number(oc[g.name]) || 0, band, headroom));
+          headroom -= v;
+          c[g.name] = v; reserved += v;
+        }
       }
       else c[g.name] = null;   // fills_to_size — resolved below
     }
