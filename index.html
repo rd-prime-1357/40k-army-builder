@@ -162,11 +162,11 @@
       --c-cc6600: #b35900;
       --c-cc77ff: #9100e7;
       --c-cc9900: #b38600;
-      --c-cccccc: #262626;
-      --c-dddddd: #1f1f1f;
-      --c-e0e0e0: #1f1f1f;
+      --c-cccccc: #1c1c1c;
+      --c-dddddd: #171717;
+      --c-e0e0e0: #171717;
       --c-e8d890: #c1a528;
-      --c-e8e8e8: #1f1f1f;
+      --c-e8e8e8: #171717;
       --c-ff6644: #b42100;
       --c-ffffff: #1a1a1a;
 
@@ -183,16 +183,21 @@
        CSS variables actually used by banner styles are re-pinned inside this
        scope, so every child element under .top-banner in light mode resolves
        to the same colors it does in dark mode. */
-    html.theme-light .top-banner {
-      --c-1a0000: #1a0000;
+    html.theme-light .top-banner {      --c-1a0000: #2e2e2e;
       --c-8b0000: #8b0000;
       --c-cc2200: #cc2200;
       --c-cc9900: #cc9900;
-      --c-3a0000: #3a0000;
+      --c-3a0000: #4a4a4a;
       --c-3a3a3a: #3a3a3a;
       --c-555555: #555555;
       --c-666666: #666666;
       --c-e8e8e8: #e8e8e8;
+    }
+
+    /* Section headers stand out more against the lighter panel backgrounds. */
+    html.theme-light .role-label,
+    html.theme-light .list-type-label {
+      font-weight: 700;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -607,7 +612,7 @@
     }
 
     .list-item:hover { background: var(--bg-card-hover); }
-    .list-item.active { background: var(--c-1e1200); border-color: var(--c-cc9900); }
+    .list-item.active { background: var(--c-1e1200); border: 2px solid var(--c-cc9900); padding: calc(0.4rem - 1px) calc(0.45rem - 1px); }
     .list-item.has-error { border-left: 2px solid var(--c-cc2200); }
 
     .list-item.attached-leader {
@@ -1334,6 +1339,7 @@
     .home-flash { color:var(--c-cc9900); font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-right:0.2rem; }
     .home-btn { background:var(--c-8b0000); border:none; color:var(--c-ffffff); font-family:inherit; font-size:0.85rem; font-weight:700; letter-spacing:0.04em; padding:0.55rem 1.1rem; border-radius:4px; cursor:pointer; text-transform:uppercase; }
     .home-btn:hover { background:var(--c-a80000); }
+    html.theme-light .home-btn { color: #ffffff; }
     .home-btn.secondary { background:var(--c-242424); color:var(--c-cc9900); border:1px solid var(--c-3a3a3a); }
     .home-btn.secondary:hover { border-color:var(--c-cc9900); }
     .home-sort { background:var(--c-242424); color:var(--c-cc9900); border:1px solid var(--c-3a3a3a); font-family:inherit; font-size:0.8rem; font-weight:700; letter-spacing:0.03em; padding:0.5rem 0.6rem; border-radius:4px; cursor:pointer; text-transform:uppercase; }
@@ -1886,7 +1892,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.91';
+  const VERSION = '5.92';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
