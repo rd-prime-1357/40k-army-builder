@@ -165,7 +165,7 @@
       --c-cccccc: #1c1c1c;
       --c-dddddd: #171717;
       --c-e0e0e0: #171717;
-      --c-e8d890: #c1a528;
+      --c-e8d890: #6a5b16;
       --c-e8e8e8: #171717;
       --c-ff6644: #b42100;
       --c-ffffff: #1a1a1a;
@@ -183,14 +183,15 @@
        CSS variables actually used by banner styles are re-pinned inside this
        scope, so every child element under .top-banner in light mode resolves
        to the same colors it does in dark mode. */
-    html.theme-light .top-banner {      --c-1a0000: #2e2e2e;
+    html.theme-light .top-banner {
+      --c-1a0000: #707070;
       --c-8b0000: #8b0000;
       --c-cc2200: #cc2200;
       --c-cc9900: #cc9900;
       --c-3a0000: #4a4a4a;
       --c-3a3a3a: #3a3a3a;
       --c-555555: #555555;
-      --c-666666: #666666;
+      --c-666666: #232323;
       --c-e8e8e8: #e8e8e8;
     }
 
@@ -218,6 +219,8 @@
 
     /* Generic visibility toggle — screens, banner chrome, modals. */
     .hidden { display: none !important; }
+
+    html { font-size: 17px; }
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
@@ -1344,6 +1347,16 @@
     .home-btn.secondary:hover { border-color:var(--c-cc9900); }
     .home-sort { background:var(--c-242424); color:var(--c-cc9900); border:1px solid var(--c-3a3a3a); font-family:inherit; font-size:0.8rem; font-weight:700; letter-spacing:0.03em; padding:0.5rem 0.6rem; border-radius:4px; cursor:pointer; text-transform:uppercase; }
     .home-sort:hover { border-color:var(--c-cc9900); }
+    html.theme-light .home-btn.secondary,
+    html.theme-light .home-sort {
+      background: #e6e6e4;
+      color: #6b5000;
+      border-color: #b8b8b6;
+    }
+    html.theme-light .home-btn.secondary:hover,
+    html.theme-light .home-sort:hover {
+      border-color: #8a6100;
+    }
     .mylists { max-width:900px; display:flex; flex-direction:column; gap:0.5rem; }
     .mylist-row { display:flex; align-items:center; gap:1rem; background:var(--c-161616); border:1px solid var(--c-2a2a2a); border-radius:5px; padding:0.85rem 1.1rem; cursor:pointer; transition:border-color 0.12s, background 0.12s; }
     .mylist-row:hover { border-color:var(--c-8b0000); background:var(--c-1c1414); }
@@ -1418,8 +1431,13 @@
       transition: border-color 0.15s;
     }
     .banner-theme-toggle:hover { border-color: var(--c-cc9900); }
-    .banner-theme-toggle::before { content: "🌙"; }
-    html.theme-light .banner-theme-toggle::before { content: "☀️"; }
+    .banner-theme-toggle::before {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='%23cc9900' d='M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z'/%3E%3C/svg%3E");
+      display: block;
+    }
+    html.theme-light .banner-theme-toggle::before {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Ccircle cx='12' cy='12' r='4.5' fill='%23cc9900'/%3E%3Cg stroke='%23cc9900' stroke-width='1.6' stroke-linecap='round'%3E%3Cline x1='12' y1='1.5' x2='12' y2='4'/%3E%3Cline x1='12' y1='20' x2='12' y2='22.5'/%3E%3Cline x1='1.5' y1='12' x2='4' y2='12'/%3E%3Cline x1='20' y1='12' x2='22.5' y2='12'/%3E%3Cline x1='4.2' y1='4.2' x2='6' y2='6'/%3E%3Cline x1='18' y1='18' x2='19.8' y2='19.8'/%3E%3Cline x1='4.2' y1='19.8' x2='6' y2='18'/%3E%3Cline x1='18' y1='6' x2='19.8' y2='4.2'/%3E%3C/g%3E%3C/svg%3E");
+    }
 
   </style>
 
@@ -1892,7 +1910,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.92';
+  const VERSION = '5.93';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
