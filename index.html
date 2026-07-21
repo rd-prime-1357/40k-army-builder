@@ -81,6 +81,19 @@
       --c-e8e8e8: #e8e8e8;
       --c-ff6644: #ff6644;
       --c-ffffff: #ffffff;
+
+      /* E11 follow-up: depth tokens (page < panel < card) and scrollbar colors.
+         Separate from the --c-hex palette above on purpose — those vars are
+         reused across many unrelated components, so depth gets its own tokens
+         to avoid rippling into inputs, modals, and dropdowns that share a hex
+         value with the old panel backgrounds. */
+      --bg-page: #101010;
+      --bg-panel: #171717;
+      --bg-card: #1f1f1f;
+      --bg-card-hover: #262626;
+      --scrollbar-track: #181818;
+      --scrollbar-thumb: #555555;
+      --scrollbar-thumb-hover: #6e6e6e;
     }
 
     html.theme-light {
@@ -156,6 +169,14 @@
       --c-e8e8e8: #1f1f1f;
       --c-ff6644: #b42100;
       --c-ffffff: #1a1a1a;
+
+      --bg-page: #f2f2f0;
+      --bg-panel: #f8f8f6;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f0f0ee;
+      --scrollbar-track: #f1f1f1;
+      --scrollbar-thumb: #c6c6c6;
+      --scrollbar-thumb-hover: #adadad;
     }
 
     /* Light-theme override: the top banner keeps its dark-theme look. Only the
@@ -176,12 +197,26 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* E11 follow-up: custom scrollbars — thin, rounded, muted, themed per mode. */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 5px;
+      border: 2px solid var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
     /* Generic visibility toggle — screens, banner chrome, modals. */
     .hidden { display: none !important; }
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--c-0f0f0f);
+      background: var(--bg-page);
       color: var(--c-e0e0e0);
       height: 100vh;
       display: flex;
@@ -383,13 +418,15 @@
       padding: 0.75rem;
     }
 
-    /* Border separators */
+    /* Border separators — all three panels share one depth level (bg-panel);
+       only the vertical rules distinguish them, matching the page/panel/card
+       depth system below. */
+    .panel { background: var(--bg-panel); }
     .panel:nth-child(1) { border-right: 1px solid var(--c-2a2a2a); }
-    .panel:nth-child(2) { border-right: 1px solid var(--c-2a2a2a); background: var(--c-111111); }
-    .panel:nth-child(3) { background: var(--c-0d0d0d); }
+    .panel:nth-child(2) { border-right: 1px solid var(--c-2a2a2a); }
 
     /* ── Roster (left panel) ── */
-    .role-group { margin-bottom: 1.1rem; }
+    .role-group { margin-bottom: 1.35rem; }
 
     .role-label {
       display: flex;
@@ -398,7 +435,7 @@
       font-size: 0.62rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: var(--c-666666);
+      color: var(--c-888888);
       border-bottom: 1px solid var(--c-2a2a2a);
       padding-bottom: 0.25rem;
       margin-bottom: 0.4rem;
@@ -426,7 +463,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--c-1a1a1a);
+      background: var(--bg-card);
       border: 1px solid var(--c-2a2a2a);
       border-radius: 3px;
       padding: 0.4rem 0.55rem;
@@ -444,7 +481,7 @@
        count that actually exceeds the limit (only reachable from an imported or
        legacy list). */
     .unit-card.at-limit { opacity: 0.5; cursor: not-allowed; }
-    .unit-card.at-limit:hover { border-color: var(--c-2a2a2a); background: var(--c-1a1a1a); }
+    .unit-card.at-limit:hover { border-color: var(--c-2a2a2a); background: var(--bg-card); }
 
     /* E6: affordability cue. Dim only — the unit is still fully legible and
        selectable (the points cap is informational, not a hard block), so this
@@ -538,13 +575,13 @@
       line-height: 1.7;
     }
 
-    .list-type-group { margin-bottom: 1.1rem; }
+    .list-type-group { margin-bottom: 1.35rem; }
 
     .list-type-label {
       font-size: 0.62rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: var(--c-666666);
+      color: var(--c-888888);
       border-bottom: 1px solid var(--c-2a2a2a);
       padding-bottom: 0.25rem;
       margin-bottom: 0.35rem;
@@ -566,9 +603,10 @@
       cursor: pointer;
       transition: background 0.12s;
       border: 1px solid transparent;
+      background: var(--bg-card);
     }
 
-    .list-item:hover { background: var(--c-1a1a1a); }
+    .list-item:hover { background: var(--bg-card-hover); }
     .list-item.active { background: var(--c-1e1200); border-color: var(--c-cc9900); }
     .list-item.has-error { border-left: 2px solid var(--c-cc2200); }
 
@@ -1848,7 +1886,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.90';
+  const VERSION = '5.91';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
