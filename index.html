@@ -227,6 +227,9 @@
     .role-group { margin-bottom: 1.1rem; }
 
     .role-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       font-size: 0.62rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
@@ -234,7 +237,25 @@
       border-bottom: 1px solid #2a2a2a;
       padding-bottom: 0.25rem;
       margin-bottom: 0.4rem;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s;
     }
+
+    .role-label:hover { color: #999; }
+
+    .role-label-chevron {
+      font-size: 0.55rem;
+      transition: transform 0.2s;
+      color: #444;
+      flex-shrink: 0;
+      margin-left: 0.5rem;
+    }
+
+    .role-label.open .role-label-chevron { transform: rotate(90deg); }
+
+    .role-group-items { display: none; }
+    .role-group-items.open { display: block; }
 
     .unit-card {
       display: flex;
@@ -1619,7 +1640,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.86';
+  const VERSION = '5.87';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -1808,6 +1829,10 @@
   let selectedListId  = null;
   let nextId          = 1;
   let warlordEntryId  = null;   // E9b: listId of the chosen Warlord, or null
+
+  // E2: left-panel role-group sections start expanded; collapsing is a
+  // session-only UI preference, not saved with the list.
+  let collapsedRoleGroups = new Set();
 
   // List-management state (step 3)
   let store           = null;   // ListStorage.ListStore instance
@@ -2066,9 +2091,16 @@
     const roster = document.getElementById('roster');
     const groups = groupByType(allUnits, 'unit_name');
 
-    roster.innerHTML = groups.map(({ type, items }) => `
+    roster.innerHTML = groups.map(({ type, items }) => {
+      const open = !collapsedRoleGroups.has(type);
+      const sid  = 'role-items-' + type.replace(/[^a-zA-Z0-9]+/g, '-');
+      return `
       <div class="role-group">
-        <div class="role-label">${type}</div>
+        <div class="role-label${open ? ' open' : ''}" onclick="toggleRoleGroup('${escAttr(type)}')">
+          <span>${type}</span>
+          <span class="role-label-chevron">▶</span>
+        </div>
+        <div class="role-group-items${open ? ' open' : ''}" id="${sid}">
         ${items.map(u => {
           const count    = armyList.filter(e => e.unit_name === u.unit_name).length;
           const lim      = unitLimit(u);
@@ -2094,8 +2126,16 @@
             </div>
           `;
         }).join('')}
+        </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
+  }
+
+  function toggleRoleGroup(type) {
+    if (collapsedRoleGroups.has(type)) collapsedRoleGroups.delete(type);
+    else collapsedRoleGroups.add(type);
+    renderRoster();
   }
 
   // ── Add unit ───────────────────────────────────────────────────────────────
