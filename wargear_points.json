@@ -5,6 +5,21 @@
   "key": "datasheet_id -> items -> lowercased item name -> {cost, display, source}",
   "engine": "match rollup weapon/equipment names by weaponBase(name).toLowerCase()"
  },
+ "_addons": {
+  "source": "MFM additive add-on lines ('• + 1 <name><cost> pts'); see B59b, D182, D184",
+  "rule": "cross-chapter-validated audit trail only -- the engine reads a literal price_per_model on the unit_loadouts.json model group, not this file, for this shape (D173's rejection of the reachable-item lookup for model-group pricing still stands)",
+  "key": "datasheet_id -> lowercased add-on name -> {cost, count, display, source}",
+  "data": {
+   "000002712": {
+    "invader atv": {
+     "cost": 60,
+     "count": 1,
+     "display": "Invader ATV",
+     "source": "MFM_Space_Marines_v1_0.txt:282"
+    }
+   }
+  }
+ },
  "000000118": {
   "items": {
    "thunder hammer": {

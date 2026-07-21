@@ -124,15 +124,21 @@ check('talonstrike headroom @10',E.loOptHeadroom(L['000003874'], 10), 7);
   check('hunting wolves off @3', off['Hunting Wolves'], 0);
 }
 
-// ── 9. Invader ATV — consuming optional against a body minimum (B59) ──
+// ── 9. Invader ATV — non_consuming, rides alongside the bracket, never
+// competes for headroom (B59b/D182). Reachable at EVERY bracket, not gated to
+// the top bracket the way a per_bracket escort would be — the withdrawn
+// per_bracket shape this section previously pinned would have kept the ATV
+// wrongly unreachable at size 3 (headroom there is 0, fully claimed by the
+// Outriders fills_to_size minimum); non_consuming is exactly what fixes that.
 {
   const def = L['000002712'];
   check('ATV headroom @3', E.loOptHeadroom(def, 3), 0);
   check('ATV headroom @6', E.loOptHeadroom(def, 6), 3);
   const oc = E.loOptCounts(def, entry({ 'opt_Invader ATV': 1 }));
-  check('ATV unreachable @3', E.loGroupCounts(def, 3, oc)['Invader ATV'], 0);
+  check('ATV reachable @3', E.loGroupCounts(def, 3, oc)['Invader ATV'], 1);
   check('ATV reachable @6', E.loGroupCounts(def, 6, oc)['Invader ATV'], 1);
   check('outriders @3 respect min', E.loGroupCounts(def, 3, oc)['Outriders'], 2);
+  check('outriders @6 unaffected by ATV', E.loGroupCounts(def, 6, oc)['Outriders'], 5);
 }
 
 // ── 10. global: no unit, at any bracket, with every band maxed, produces a body
@@ -149,7 +155,7 @@ for (const uid of Object.keys(L)) {
     let total = 0;
     for (const g of def.model_groups) {
       const ct = g.count || {};
-      total += (ct.optional && ct.per_bracket) ? 0 : c[g.name];
+      total += (ct.optional && (ct.per_bracket || ct.non_consuming)) ? 0 : c[g.name];
       if (ct.fills_to_size && ct.min != null)
         check(`${uid}@${size} ${g.name} >= min`, c[g.name] >= ct.min, true);
     }

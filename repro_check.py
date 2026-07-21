@@ -5,9 +5,9 @@ repro_check.py — the executable form of "the parser is fresh."
 Runs the real pipeline from source and asserts the result is byte-identical to the
 committed unit_loadouts.json:
 
-  1. Seed a working copy of unit_loadouts.json with ONLY the three hand-authored
-     entries (000001157, 000001044, 000004131) — the ones loadout_parser.py cannot
-     regenerate.
+  1. Seed a working copy of unit_loadouts.json with ONLY the four hand-authored
+     entries (000001157, 000001044, 000004131, 000002712) — the ones loadout_parser.py
+     cannot regenerate.
   2. Run loadout_parser.py against source (Datasheets_options.csv + the roster
      units.json), which regenerates every other entry and preserves the two seeds.
   3. Run equipped_parser.py across the five faction web.txt passes in order
@@ -27,7 +27,11 @@ Importable: repro(dir_) -> (ok, message).
 import argparse, json, os, shutil, subprocess, sys, tempfile
 from collections import OrderedDict
 
-HAND_AUTHORED = ['000001157', '000001044', '000004131']
+HAND_AUTHORED = ['000001157', '000001044', '000004131', '000002712']
+# 000002712 (Outrider Squad) added B59b/D184: its "Invader ATV" model group carries
+# non_consuming + a literal MFM price_per_model, neither derivable from Wahapedia
+# source (Datasheets_options.csv doesn't know MFM pricing or "does not consume the
+# bracket") — same class of problem as 000004131 (D175).
 WEB_PASSES = ['Space_Marines', 'Death_Guard', 'Black_Templars', 'Dark_Angels', 'Space_Wolves']
 FACTIONS = ['SM', 'DG']
 

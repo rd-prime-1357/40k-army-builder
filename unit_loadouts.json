@@ -256,6 +256,57 @@
     "_parser_flags": [],
     "_defaults_source": "equipped"
   },
+  "000002712": {
+    "size_brackets": [
+      3,
+      6
+    ],
+    "model_groups": [
+      {
+        "name": "Outrider Sergeant",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Heavy bolt pistol",
+          "Twin bolt rifle",
+          "Astartes chainsword"
+        ]
+      },
+      {
+        "name": "Outriders",
+        "count": {
+          "fills_to_size": true,
+          "min": 2
+        },
+        "default_weapons": [
+          "Heavy bolt pistol",
+          "Twin bolt rifle",
+          "Astartes chainsword"
+        ]
+      },
+      {
+        "name": "Invader ATV",
+        "count": {
+          "optional": true,
+          "max": 1,
+          "non_consuming": true
+        },
+        "price_per_model": 60,
+        "default_weapons": [
+          "Bolt pistol",
+          "Twin bolt rifle",
+          "Onslaught gatling cannon",
+          "Close combat weapon"
+        ]
+      }
+    ],
+    "options": [],
+    "_parser_flags": [
+      "UNMATCHED: An Invader ATV's onslaught gatling cannon can be replaced with 1 multi-melta."
+    ],
+    "_defaults_source": "equipped"
+  },
   "000000060": {
     "size_brackets": [
       1
@@ -5327,55 +5378,6 @@
     ],
     "options": [],
     "_parser_flags": []
-  },
-  "000002712": {
-    "size_brackets": [
-      3,
-      6
-    ],
-    "model_groups": [
-      {
-        "name": "Outrider Sergeant",
-        "count": {
-          "fixed": 1
-        },
-        "default_weapons": [
-          "Heavy bolt pistol",
-          "Twin bolt rifle",
-          "Astartes chainsword"
-        ]
-      },
-      {
-        "name": "Outriders",
-        "count": {
-          "fills_to_size": true,
-          "min": 2
-        },
-        "default_weapons": [
-          "Heavy bolt pistol",
-          "Twin bolt rifle",
-          "Astartes chainsword"
-        ]
-      },
-      {
-        "name": "Invader ATV",
-        "count": {
-          "optional": true,
-          "max": 1
-        },
-        "default_weapons": [
-          "Bolt pistol",
-          "Twin bolt rifle",
-          "Onslaught gatling cannon",
-          "Close combat weapon"
-        ]
-      }
-    ],
-    "options": [],
-    "_parser_flags": [
-      "UNMATCHED: An Invader ATV's onslaught gatling cannon can be replaced with 1 multi-melta."
-    ],
-    "_defaults_source": "equipped"
   },
   "000002713": {
     "size_brackets": [

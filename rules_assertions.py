@@ -205,10 +205,10 @@ def e14_free(S):
     import glob
     import mfm_points_parser as M
     paths = sorted(glob.glob(os.path.join(S.dir, 'MFM_*.txt')))
-    built, _ = M.build_wargear_points(paths,
-                                      os.path.join(S.dir, 'units.json'),
-                                      os.path.join(S.dir, 'unit_loadouts.json'),
-                                      os.path.join(S.dir, 'Datasheets.csv'))
+    built, _, _ = M.build_wargear_points(paths,
+                                         os.path.join(S.dir, 'units.json'),
+                                         os.path.join(S.dir, 'unit_loadouts.json'),
+                                         os.path.join(S.dir, 'Datasheets.csv'))
     # Compare the PRICES, not the provenance string: the same item is printed in several
     # chapter packs at the same cost, so which file gets cited depends on scan order.
     def prices(d):
@@ -372,7 +372,7 @@ ASSERTIONS = [
     # from source, demand byte-identical output. Nothing else proves the file is fresh.
     ('P1',
      'The pipeline reproduces the committed unit_loadouts.json byte-for-byte from source: '
-     'loadout_parser.py regenerates every entry (bar the two hand-authored seeds), the five '
+     'loadout_parser.py regenerates every entry (bar the four hand-authored seeds), the five '
      'faction web.txt passes and the datasheets pass refine it, and the result matches. A '
      'stale, partial, or renamed parser cannot pass.',
      'repro_check.py (D123)',
@@ -1203,9 +1203,9 @@ def b59a_non_consuming_engine(S):
     2. loGroupCounts' optional branch clamps a non_consuming group to its band only —
        no headroom deduction, no addition to the reserved total other groups compete
        over (the fills_to_size group must not be shorted by it).
-    3. Data side, passive until B59b: if any model group in unit_loadouts.json already
-       carries non_consuming: true, it must be on an optional group — the only shape
-       the mechanism is defined for. Zero such groups today passes vacuously.
+    3. Data side, active as of B59b: every model group in unit_loadouts.json carrying
+       non_consuming: true must be on an optional group — the only shape the mechanism
+       is defined for. Any count is tolerated; this does not hardcode an expected total.
     """
     txt = S.index_html()
     for needle, why in [
@@ -1237,13 +1237,13 @@ def b59a_non_consuming_engine(S):
     )
     return True, (f'engine wiring present (loOptHeadroom / loGroupCounts honour '
                   f'non_consuming); {flagged} unit_loadouts.json group(s) carry the '
-                  f'flag today (0 expected until B59b)')
+                  f'flag today')
 
 
 def b58_min_matches_composition(S):
     # Hand-authored entries (repro_check.py HAND_AUTHORED) bypass the parser entirely and
     # predate this field; they are frozen, not stale, and are excluded here for that reason.
-    hand_authored = {'000001157', '000001044', '000004131'}
+    hand_authored = {'000001157', '000001044', '000004131', '000002712'}
     hyphen_re = re.compile(r'^(\d+)[-\u2010\u2011\u2012\u2013\u2014\u2015](\d+)\s+')
     comp_lo = {}  # (datasheet_id, group_name) -> lo
     for r in S.composition():

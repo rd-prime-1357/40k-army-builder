@@ -61,6 +61,15 @@ COMPOSITION_COUNT_RE = re.compile(r"(\d+)\s+[^,\d]+")
 # from an ordinary multi-role composition where every printed line has several groups
 # and none stands alone (Crusader Squad's "1 Sword Brother, 4 Neophytes, 5 Initiates").
 GROUP_SPLIT_RE = re.compile(r"(\d+)\s+([^,\d]+)")
+# B59b. An additive add-on line prices a standalone extra model on top of the unit's
+# printed size brackets, rather than naming a bracket of its own:
+#     • + 1 Invader ATV60 pts
+# Distinguished from COST_RE/COMPOSITION_RE by the leading "+" before the count. The
+# name and cost are jammed together exactly as elsewhere; the printed count (typically
+# 1) is not the unit's size -- it counts copies of the add-on itself. Previously
+# unmatched by any line-shape and silently dropped (a defect predating and separate
+# from B58). Tried only after COST_RE and COMPOSITION_RE both miss.
+ADDON_RE = re.compile(r"^[•\-\*]\s*\+\s*(\d+)\s+([^\d]+?)(\d+)\s*pts\s*$", re.I)
 
 def _parse_groups(text):
     groups = []
@@ -221,6 +230,17 @@ def parse_mfm(path):
                 {"tier_idx": len(cur["tiers"]) - 1, "size": size, "cost": cost,
                  "line": i + 1, "text": line, "groups": groups}
             )
+            i += 1; continue
+
+        m = ADDON_RE.match(line)
+        if m and cur and cur["tiers"]:
+            cur.setdefault("addons", []).append({
+                "count": int(m.group(1)),
+                "item": m.group(2).strip(),
+                "cost": int(m.group(3)),
+                "line": i + 1,
+                "text": line,
+            })
             i += 1; continue
 
         if is_real_unit_header(i):
@@ -453,9 +473,17 @@ def build_wargear_points(mfm_paths, units_path, loadouts_path, datasheets_csv):
             in_data.add(u["unit_id"])
 
     wargear, display, provenance = {}, {}, {}
+    # B59b. Additive add-on lines (e.g. Invader ATV) are collected in parallel to
+    # WARGEAR OPTIONS items, but kept in their own map: the add-on's name is a model
+    # group's own label, not a reachable swap/wargear item name in unit_loadouts.json
+    # (D173's rejection of that shape stands), so it is never gated on reachable_items.
+    # This map exists to give the parsed, cross-chapter-validated fact an executable
+    # home (D107) -- the engine-facing price still ships as a literal price_per_model
+    # on the model group, per D182.
+    addons, addon_display, addon_provenance = {}, {}, {}
     flags = {"unit_not_in_scope": [], "item_unmatched": [], "cost_conflict": [],
              "no_loadout": [], "unknown_faction_file": [], "name_ambiguous": [],
-             "no_datasheet": []}
+             "no_datasheet": [], "addon_cost_conflict": [], "addon_no_datasheet": []}
 
     for path in mfm_paths:
         base = os.path.basename(path)
@@ -499,6 +527,29 @@ def build_wargear_points(mfm_paths, units_path, loadouts_path, datasheets_csv):
                 display[(ds, key)] = reach[key]
                 provenance.setdefault((ds, key), src)
 
+            for a in info.get("addons", []):
+                src = "%s:%d" % (base, a["line"])
+                if fac is not None:
+                    ds = by_fac.get((fac, nkey))
+                else:
+                    ids = by_name.get(nkey, set())
+                    ds = next(iter(ids)) if len(ids) == 1 else None
+                if not ds:
+                    flags["addon_no_datasheet"].append((info["name"], fac, a["item"], src))
+                    continue
+                if ds not in in_data:
+                    continue
+                key = a["item"].strip().lower()
+                prev = addons.setdefault(ds, {}).get(key)
+                if prev is not None and (prev["cost"] != a["cost"] or prev["count"] != a["count"]):
+                    flags["addon_cost_conflict"].append(
+                        (info["name"], ds, a["item"], prev["cost"], a["cost"],
+                         addon_provenance[(ds, key)], src))
+                    continue
+                addons[ds][key] = {"cost": a["cost"], "count": a["count"]}
+                addon_display[(ds, key)] = a["item"]
+                addon_provenance.setdefault((ds, key), src)
+
     out = {}
     for ds in sorted(wargear):
         out[ds] = {
@@ -509,12 +560,22 @@ def build_wargear_points(mfm_paths, units_path, loadouts_path, datasheets_csv):
                 for k, v in sorted(wargear[ds].items())
             }
         }
-    return out, flags
+
+    addons_out = {}
+    for ds in sorted(addons):
+        addons_out[ds] = {
+            k: {"cost": v["cost"],
+                "count": v["count"],
+                "display": addon_display[(ds, k)],
+                "source": addon_provenance[(ds, k)]}
+            for k, v in sorted(addons[ds].items())
+        }
+    return out, addons_out, flags
 
 def cmd_wargear(args):
     import json
     paths = list(args.wargear)   # explicit order: generic faction file before its chapter files, so provenance cites the generic source
-    out, flags = build_wargear_points(paths, args.units, args.loadouts, args.datasheets)
+    out, addons_out, flags = build_wargear_points(paths, args.units, args.loadouts, args.datasheets)
     doc = {
         "_meta": {
             "source": "MFM WARGEAR OPTIONS blocks; see MFM_Instructions.txt (UNITS > Wargear)",
@@ -522,7 +583,16 @@ def cmd_wargear(args):
                     "default-issue items are taken items and are priced (D107 / B35)",
             "key": "datasheet_id -> items -> lowercased item name -> {cost, display, source}",
             "engine": "match rollup weapon/equipment names by weaponBase(name).toLowerCase()",
-        }
+        },
+        "_addons": {
+            "source": "MFM additive add-on lines ('• + 1 <name><cost> pts'); see B59b, D182, D184",
+            "rule": "cross-chapter-validated audit trail only -- the engine reads a literal "
+                    "price_per_model on the unit_loadouts.json model group, not this file, "
+                    "for this shape (D173's rejection of the reachable-item lookup for "
+                    "model-group pricing still stands)",
+            "key": "datasheet_id -> lowercased add-on name -> {cost, count, display, source}",
+            "data": addons_out,
+        },
     }
     doc.update(out)
     with open(args.wargear_out, "w", encoding="utf-8") as f:
@@ -530,14 +600,18 @@ def cmd_wargear(args):
         f.write("\n")
 
     priced = sum(len(v["items"]) for v in out.values())
-    print("wargear_points.json: %d units, %d priced items" % (len(out), priced))
+    addon_count = sum(len(v) for v in addons_out.values())
+    print("wargear_points.json: %d units, %d priced items, %d validated add-ons" %
+          (len(out), priced, addon_count))
     for name, items in [("MFM FILE WITH NO FACTION MAPPING", flags["unknown_faction_file"]),
                         ("MFM NAME AMBIGUOUS ACROSS FACTIONS", flags["name_ambiguous"]),
                         ("NO DATASHEET FOR MFM NAME + FACTION", flags["no_datasheet"]),
                         ("UNIT NOT IN units.json (out of v1 data scope)", flags["unit_not_in_scope"]),
                         ("UNIT HAS NO unit_loadouts.json ENTRY", flags["no_loadout"]),
                         ("ITEM NOT FOUND IN UNIT'S REACHABLE LOADOUT", flags["item_unmatched"]),
-                        ("COST CONFLICT ACROSS MFM FILES", flags["cost_conflict"])]:
+                        ("COST CONFLICT ACROSS MFM FILES", flags["cost_conflict"]),
+                        ("ADD-ON: NO DATASHEET FOR MFM NAME + FACTION", flags["addon_no_datasheet"]),
+                        ("ADD-ON: COST CONFLICT ACROSS MFM FILES", flags["addon_cost_conflict"])]:
         print("  %s: %d" % (name, len(items)))
         for it in items:
             print("     ", it)
