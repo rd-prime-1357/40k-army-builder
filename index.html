@@ -281,6 +281,11 @@
     .unit-card.at-limit { opacity: 0.5; cursor: not-allowed; }
     .unit-card.at-limit:hover { border-color: #2a2a2a; background: #1a1a1a; }
 
+    /* E6: affordability cue. Dim only — the unit is still fully legible and
+       selectable (the points cap is informational, not a hard block), so this
+       must stay lighter than the at-limit disabled look above. */
+    .unit-card.unaffordable { opacity: 0.7; }
+
     .unit-info { flex: 1; min-width: 0; }
 
     .unit-name {
@@ -1640,7 +1645,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '5.87';
+  const VERSION = '5.88';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2090,6 +2095,10 @@
   function renderRoster() {
     const roster = document.getElementById('roster');
     const groups = groupByType(allUnits, 'unit_name');
+    // E6: a unit is "unaffordable" when even its cheapest legal build (minPts)
+    // would not fit in what's left of the points cap. Recomputed on every render
+    // since it depends on the current list total, not just the unit itself.
+    const remaining = POINTS_CAP - totalPoints();
 
     roster.innerHTML = groups.map(({ type, items }) => {
       const open = !collapsedRoleGroups.has(type);
@@ -2107,7 +2116,8 @@
           const state    = limitState(count, lim);
           const atLim    = state === 'at';
           const overLim  = state === 'over';
-          const cardCls  = overLim ? ' over-limit' : (atLim ? ' at-limit' : '');
+          const unaffordable = u.minPts !== null && u.minPts > remaining;
+          const cardCls  = (overLim ? ' over-limit' : (atLim ? ' at-limit' : '')) + (unaffordable ? ' unaffordable' : '');
           const badgeCls = overLim ? ' over-limit' : (atLim ? ' at-limit' : '');
           return `
             <div class="unit-card${cardCls}"
