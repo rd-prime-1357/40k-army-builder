@@ -66,8 +66,13 @@ for (const m of moved) console.log('  ', m.join(' | '));
 ck('TAS default 5', 155 + gear('000000118', 5, {}), 180);
 ck('TAS 10 = 360', 310 + gear('000000118', 10, {}), 360);
 // swap two models to twin lightning claws -> two hammers leave the rollup -> -10.
-ck('TAS 5, 2 claws', 155 + gear('000000118', 5, { cnt_1: 2 }), 170);
-ck('TAS 5, 4 claws', 155 + gear('000000118', 5, { cnt_1: 4 }), 160);
+// B18/D116: the generic 'Any number of models' sentence fans out — cnt_1 is the SERGEANT
+// group (1 model), cnt_2 is the body. Ids shifted with the fan-out.
+ck('TAS 5, 2 claws', 155 + gear('000000118', 5, { cnt_2: 2 }), 170);
+ck('TAS 5, 4 claws', 155 + gear('000000118', 5, { cnt_2: 4 }), 160);
+// B18 negative case: the sergeant can now drop his hammer + storm shield too.
+ck('TAS 5, sgt claws', 155 + gear('000000118', 5, { cnt_1: 1 }), 175);
+ck('TAS 5, all 5 claws', 155 + gear('000000118', 5, { cnt_1: 1, cnt_2: 4 }), 155);
 
 // (c) Redemptor 000002717: macro plasma incinerator +10, otherwise +0.
 ck('Redemptor default', gear('000002717', 1, {}), 0);
@@ -75,7 +80,7 @@ ck('Redemptor macro plasma', gear('000002717', 1, { sng_3: 'Macro plasma inciner
 
 // (d) Thunderwolf Cavalry 000000322 storm shield is an add-on part (+5 per model taking it).
 ck('TWC default', gear('000000322', 3, {}), 0);
-ck('TWC 2 shields', gear('000000322', 3, { cc_1: { 'Storm Shield': 2 } }), 10);
+ck('TWC 2 shields', gear('000000322', 3, { cc_2: { 'Storm Shield': 2 } }), 10);
 
 // (e) Victrix Honour Guard 000004185: banner (10) rides the optional Chapter Ancient
 // group, blades of honour (10) the optional Chapter Champion group.
