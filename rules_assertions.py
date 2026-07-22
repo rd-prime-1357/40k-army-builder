@@ -1148,6 +1148,52 @@ ASSERTIONS = [
      'detachments.json detachments / armies (D193, S123 dedup)',
      lambda S: e1a_keys_resolve(S)),
 
+    # ── E1b. Detachment selection state and the schema v1 -> v2 migration.
+    ('E1b-1',
+     'The DP budget the engine applies is the DP column of the 25.03 battle-size table, read '
+     'from Army_Muster_Rules.txt: 2 at Incursion and 3 at Strike Force, with the 3,000-point '
+     'size the app offers but 25.03 does not define treated as Strike Force (D192 item 2). The '
+     'threshold in index.html is checked against the source table, not against a remembered '
+     'number, so a change to either side that breaks the pair fails here.',
+     'Army_Muster_Rules.txt 25.03; index.html detachmentPointBudget (D192)',
+     lambda S: e1b_budget_matches_muster(S)),
+
+    ('E1b-2',
+     'list_store.js and the copy of the same module inlined into index.html are byte-identical, '
+     'and both declare SCHEMA_VERSION 2. Two files holding one module is a drift risk that '
+     'nothing else checks: the standalone copy silently lost E9b\'s warlord field and no gate '
+     'noticed, because no gate compared them.',
+     'index.html inlined block vs list_store.js (E1b, S124)',
+     lambda S: e1b_module_copies_agree(S)),
+
+    ('E1b-3',
+     'e1b_check.js passes in full: the three constraints on a legal detachment set (combined DP '
+     'within the battle-size budget, no detachment twice per 25.04, no two selections sharing a '
+     'Unique tag per D193) behave as stated against the real catalogue, and a v1 saved record '
+     'migrates to v2 with an empty detachment set and every other field untouched. The migration '
+     'is a claim about behaviour, so it is executed rather than described (D107).',
+     'e1b_check.js (E1b, S124)',
+     lambda S: e1b_harness_gate(S)),
+
+    # ── E1c. Detachment picker UI over the E1b read path.
+    ('E1c-1',
+     'The E1b engine functions that answer legality — dpUsed, duplicateDetachments, '
+     'uniqueTagConflicts, detachmentPointBudget, dpState — are DEFINED inside the E1b block and '
+     'nowhere else in index.html. The picker calls them; it does not re-derive them. A second '
+     'implementation growing quietly in the picker is exactly what "single read path" is meant '
+     'to prevent, and would be invisible unless something looked for it.',
+     'index.html E1b vs E1c blocks (E1c, S125)',
+     lambda S: e1c_engine_functions_defined_once(S)),
+
+    ('E1c-2',
+     'e1c_check.js passes in full: for every catalogue key across every scenario, the picker\'s '
+     'disabled flag is exactly what canAddDetachment says (a selected row is toggle-off-able, a '
+     'non-selected row is disabled iff canAddDetachment is not OK), the row\'s ghost flag is '
+     '"not in the catalogue" and nothing else, and every refusal has prose. This is the guard '
+     'against the picker growing a second implementation of the three legality rules.',
+     'e1c_check.js (E1c, S125)',
+     lambda S: e1c_harness_gate(S)),
+
 ]
 
 
@@ -2180,6 +2226,177 @@ def e1a_text_source_and_gap_manifest(S):
         bad.append(('gap manifest', sorted(manifest ^ none_set)[:3]))
     return (not bad), (f'text_source counts {counts}, {len(none_set)} in the gap manifest'
                        + ('' if not bad else f'; {len(bad)} problems e.g. {bad[:2]}'))
+
+
+def e1b_budget_matches_muster(S):
+    """D192 item 2. Read the DP column out of the 25.03 table, then read the threshold the
+    engine actually applies out of index.html, and demand they agree. Neither number is
+    written down here — both are re-derived, so this cannot pass on a stale memory."""
+    mp = os.path.join(S.dir, 'Army_Muster_Rules.txt')
+    ip = os.path.join(S.dir, 'index.html')
+    for p in (mp, ip):
+        if not os.path.exists(p):
+            return False, f'{os.path.basename(p)} is not in the repo'
+    flat = re.sub(r'\s+', ' ', open(mp, encoding='utf-8-sig').read().replace('\xa0', ' '))
+    inc = re.search(r'INCURSION\s+(\d+)\s+(\d+)\s+\d+\s+\d+', flat)
+    sf  = re.search(r'STRIKE FORCE\s+(\d+)\s+(\d+)\s+\d+\s+\d+', flat)
+    if not inc or not sf:
+        return False, '25.03 battle-size table no longer parses out of Army_Muster_Rules.txt'
+    inc_pts, inc_dp = int(inc.group(1)), int(inc.group(2))
+    sf_pts,  sf_dp  = int(sf.group(1)),  int(sf.group(2))
+
+    html = open(ip, encoding='utf-8').read()
+    m = re.search(r'function detachmentPointBudget\(pointsTotal\)\s*\{\s*'
+                  r'return Number\(pointsTotal\) <= (\d+) \? (\d+) : (\d+);', html)
+    if not m:
+        return False, 'detachmentPointBudget is not in index.html in the expected shape'
+    cut, low, high = int(m.group(1)), int(m.group(2)), int(m.group(3))
+
+    # The same read for the unit limit, so the two battle-size rules are pinned together.
+    u = re.search(r'function battleSizeUnitLimit\(pointsTotal\)\s*\{\s*'
+                  r'return Number\(pointsTotal\) <= (\d+) \? (\d+) : (\d+);', html)
+    if not u:
+        return False, 'battleSizeUnitLimit is not in index.html in the expected shape'
+
+    bad = []
+    if cut != inc_pts:  bad.append(f'budget splits at {cut}, 25.03 puts Incursion at {inc_pts}')
+    if low != inc_dp:   bad.append(f'Incursion budget is {low}, 25.03 says {inc_dp} DP')
+    if high != sf_dp:   bad.append(f'Strike Force budget is {high}, 25.03 says {sf_dp} DP')
+    if (cut, low, high) != (int(u.group(1)), int(u.group(2)), int(u.group(3))):
+        bad.append('the DP budget and battleSizeUnitLimit no longer split the battle sizes the same way')
+    return (not bad), ('; '.join(bad) if bad else
+                       f'engine budget {low} DP at <= {cut} pts, {high} DP above — matches 25.03 '
+                       f'(Incursion {inc_pts}/{inc_dp}, Strike Force {sf_pts}/{sf_dp}); '
+                       f'3000 pts falls in the Strike Force branch')
+
+
+def e1b_module_copies_agree(S):
+    """The inlined list-storage block in index.html must be the same bytes as list_store.js.
+    Located by the module's own delimiters rather than by line number, so an edit above or
+    below it cannot make this pass or fail for the wrong reason."""
+    ip = os.path.join(S.dir, 'index.html')
+    sp = os.path.join(S.dir, 'list_store.js')
+    for p in (ip, sp):
+        if not os.path.exists(p):
+            return False, f'{os.path.basename(p)} is not in the repo'
+    lines = open(ip, encoding='utf-8').read().split('\n')
+    starts = [i for i, l in enumerate(lines) if l.startswith('/* =====')]
+    ends   = [i for i, l in enumerate(lines) if l.startswith("})(typeof self !== 'undefined'")]
+    if not starts or not ends:
+        return False, 'the inlined list-storage block is not locatable in index.html'
+    inlined = '\n'.join(lines[starts[0]:ends[0] + 1]).strip()
+    standalone = open(sp, encoding='utf-8').read().strip()
+    if inlined != standalone:
+        il, sl = inlined.split('\n'), standalone.split('\n')
+        first = next((n for n in range(min(len(il), len(sl))) if il[n] != sl[n]), min(len(il), len(sl)))
+        return False, (f'the two copies differ ({len(il)} vs {len(sl)} lines, first difference at '
+                       f'line {first + 1} of the block)')
+    ver = re.search(r'var SCHEMA_VERSION = (\d+);', standalone)
+    if not ver or ver.group(1) != '2':
+        return False, f'SCHEMA_VERSION is {ver.group(1) if ver else "unreadable"}, expected 2'
+    return True, f'both copies identical ({len(standalone.splitlines())} lines), SCHEMA_VERSION 2'
+
+
+def e1b_harness_gate(S):
+    """D107 applied to engine behaviour: the migration and the three selection constraints are
+    claims about what the code does, so they are executed. Runs the real harness against the
+    real catalogue rather than restating its conclusions here."""
+    import subprocess
+    p = os.path.join(S.dir, 'e1b_check.js')
+    if not os.path.exists(p):
+        return False, 'e1b_check.js not found — the E1b behaviour gate is missing'
+    try:
+        r = subprocess.run(['node', p, os.path.join(S.dir, 'index.html'),
+                            os.path.join(S.dir, 'detachments.json'),
+                            os.path.join(S.dir, 'list_store.js')],
+                           capture_output=True, text=True, timeout=120, cwd=S.dir)
+    except FileNotFoundError:
+        return False, 'node is not available, so the E1b behaviour gate cannot run'
+    except subprocess.TimeoutExpired:
+        return False, 'e1b_check.js did not finish within 120s'
+    out = (r.stdout or '') + (r.stderr or '')
+    passed = len([l for l in out.split('\n') if l.strip().startswith('ok ')])
+    failed = [l.strip() for l in out.split('\n') if l.strip().startswith('FAIL ')]
+    if r.returncode != 0 or failed:
+        return False, (f'{len(failed)} E1b check(s) failed, e.g. {failed[:2]}' if failed
+                       else f'e1b_check.js exited {r.returncode}')
+    return True, f'e1b_check.js: {passed} checks pass'
+
+
+def e1c_engine_functions_defined_once(S):
+    """The five legality helpers are declared inside the E1b block and NOWHERE else in the file.
+    The E1c block is allowed to CALL them but never to redefine them; a second `function dpUsed`
+    (or the other four) would be exactly the "picker growing its own rules" failure mode.
+
+    Method: extract the E1b block by its own delimiters, and search the rest of the file for
+    another `function NAME(` declaration of the same five names. If one exists, name it."""
+    ip = os.path.join(S.dir, 'index.html')
+    if not os.path.exists(ip):
+        return False, 'index.html not found'
+    html = open(ip, encoding='utf-8').read()
+    lines = html.split('\n')
+
+    def find_block(start_needle, end_needle):
+        s = next((i for i, l in enumerate(lines) if start_needle in l), -1)
+        e = next((i for i, l in enumerate(lines) if end_needle   in l), -1)
+        if s < 0 or e < 0 or e <= s:
+            return None, None
+        return s, e
+
+    e1b_s, e1b_e = find_block('// ── E1b: detachment selection rules', '// ── E1b block end')
+    if e1b_s is None:
+        return False, 'the E1b block delimiters are no longer locatable in index.html'
+    e1c_s, e1c_e = find_block('// ── E1c: detachment picker', '// ── E1c block end')
+    if e1c_s is None:
+        return False, 'the E1c block delimiters are no longer locatable in index.html'
+
+    names = ['dpUsed', 'duplicateDetachments', 'uniqueTagConflicts',
+             'detachmentPointBudget', 'dpState']
+
+    # Locate each name's DEFINITION line by number, then confirm every one lies inside the E1b
+    # block. A definition outside E1b is exactly the failure mode to catch.
+    bad = []
+    for name in names:
+        pat = re.compile(r'^\s*function\s+' + re.escape(name) + r'\s*\(', re.MULTILINE)
+        matches = [i for i, l in enumerate(lines) if pat.match(l)]
+        if not matches:
+            bad.append(f'{name}: no definition found at all')
+            continue
+        if len(matches) > 1:
+            bad.append(f'{name}: defined {len(matches)} times (lines {[m+1 for m in matches]})')
+            continue
+        line_no = matches[0]
+        if not (e1b_s < line_no < e1b_e):
+            bad.append(f'{name}: defined at line {line_no+1}, outside the E1b block '
+                       f'(lines {e1b_s+1}..{e1b_e+1})')
+    if bad:
+        return False, '; '.join(bad)
+    return True, (f'all five legality helpers are defined exactly once, inside the E1b block '
+                  f'(lines {e1b_s+1}..{e1b_e+1}); the E1c block ({e1c_s+1}..{e1c_e+1}) calls them')
+
+
+def e1c_harness_gate(S):
+    """D107 applied to the picker: the disable classification is a claim about behaviour, so it
+    is executed against the real catalogue rather than described here."""
+    import subprocess
+    p = os.path.join(S.dir, 'e1c_check.js')
+    if not os.path.exists(p):
+        return False, 'e1c_check.js not found — the E1c behaviour gate is missing'
+    try:
+        r = subprocess.run(['node', p, os.path.join(S.dir, 'index.html'),
+                            os.path.join(S.dir, 'detachments.json')],
+                           capture_output=True, text=True, timeout=120, cwd=S.dir)
+    except FileNotFoundError:
+        return False, 'node is not available, so the E1c behaviour gate cannot run'
+    except subprocess.TimeoutExpired:
+        return False, 'e1c_check.js did not finish within 120s'
+    out = (r.stdout or '') + (r.stderr or '')
+    passed = len([l for l in out.split('\n') if l.strip().startswith('ok ')])
+    failed = [l.strip() for l in out.split('\n') if l.strip().startswith('FAIL ')]
+    if r.returncode != 0 or failed:
+        return False, (f'{len(failed)} E1c check(s) failed, e.g. {failed[:2]}' if failed
+                       else f'e1c_check.js exited {r.returncode}')
+    return True, f'e1c_check.js: {passed} checks pass'
 
 
 # ── runner ────────────────────────────────────────────────────────────────────
