@@ -79,6 +79,32 @@ class Sources:
                 self._cache['un'] = json.load(f)
         return self._cache['un']
 
+    def detachments(self):
+        if 'dt' not in self._cache:
+            with open(os.path.join(self.dir, 'detachments.json'), encoding='utf-8') as f:
+                self._cache['dt'] = json.load(f)
+        return self._cache['dt']
+
+    def mfm_detachment_rows(self):
+        """Re-derive the detachment catalogue straight from the MFM faction files.
+
+        MFM is the source of record for which detachments exist and for every number
+        attached to them. Comparing detachments.json against a fresh read of the MFM
+        text is what makes the catalogue a checked fact rather than a claim about a
+        file nobody re-opens.
+        """
+        if 'mfmdt' not in self._cache:
+            import importlib.util
+            p = os.path.join(self.dir, 'detachment_parser.py')
+            spec = importlib.util.spec_from_file_location('detachment_parser', p)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            rows = {}
+            for fn in sorted(set(mod.ARMY_TO_MFM.values())):
+                rows[fn] = mod.parse_mfm_detachments(os.path.join(self.dir, fn))
+            self._cache['mfmdt'] = (mod, rows)
+        return self._cache['mfmdt']
+
     def ds_wargear_abilities(self):
         if 'dw' not in self._cache:
             with open(os.path.join(self.dir, 'datasheet_wargear_abilities.json'),
@@ -1053,6 +1079,75 @@ ASSERTIONS = [
      'index.html loOptHeadroom / loGroupCounts (D182); unit_loadouts.json model_groups',
      lambda S: b59a_non_consuming_engine(S)),
 
+    # ── P5. The third byte-identical gate (D193, E1a). detachments.json is brand new,
+    # so its fixed point is established at first generation; from here on a stale or
+    # hand-edited copy fails this and nothing else would catch it.
+    ('P5',
+     'The pipeline reproduces the committed detachments.json byte-for-byte from source: '
+     'detachment_parser.py reads the eight MFM faction files for structure and numbers, '
+     'joins tier-1 faction-pack prose and tier-2 Wahapedia prose on normalised names, and '
+     'the result matches. A stale, partial or hand-edited copy cannot pass.',
+     'detachments_repro_check.py (D193)',
+     lambda S: detachments_repro_gate(S)),
+
+    ('E1a-1',
+     'Every detachment costs 1, 2 or 3 Detachment Points and grants exactly one of the five '
+     'force dispositions (Priority Assets, Take and Hold, Purge the Foe, Disruption, '
+     'Reconnaissance). Both are what the DP budget and the mission rules key off, so neither '
+     'may be absent or out of range.',
+     'Army_Muster_Rules.txt 25.03/25.04; MFM_Instructions.txt DETACHMENTS legend (D193)',
+     lambda S: e1a_dp_and_disposition(S)),
+
+    ('E1a-2',
+     'No detachment name repeats inside one army, and every MFM Unique tag survives into '
+     'detachments.json unchanged with none invented. 25.04 forbids taking the same detachment '
+     'twice; MFM_Instructions.txt adds that no two selected detachments may share a Unique '
+     'tag. The second constraint was missed entirely by the S122 scope pass and exists in '
+     'the data for Blood Angels and Death Guard today.',
+     'MFM_Instructions.txt DETACHMENTS legend, Unique Tag bullet (D193)',
+     lambda S: e1a_no_duplicate_names_and_unique_tags(S)),
+
+    ('E1a-3',
+     'The whole catalogue re-derives from the MFM faction files: same detachments per army, '
+     'same DP, same force disposition, and the same enhancement names, point costs and print '
+     'order inside each. MFM is the source of record for structure and numbers; the counts '
+     'are reported here rather than asserted, because they move on every input change.',
+     'MFM_<faction>_v1_0.txt DETACHMENTS blocks (D192/D193)',
+     lambda S: e1a_catalogue_matches_mfm(S)),
+
+    ('E1a-4',
+     'No enhancement present only in the 10th-Edition Wahapedia dump survives the join. Text '
+     'sources contribute descriptions, never membership or price — a stale enhancement shown '
+     'at a stale cost is a phantom option in front of the player.',
+     'Enhancements.csv vs MFM enhancement lists (D192/D193)',
+     lambda S: e1a_no_wahapedia_only_enhancements(S)),
+
+    ('E1a-5',
+     'The (Upgrade) tag survives the parse as a boolean, set on exactly the enhancements MFM '
+     'prints it against. It is rules-significant under 25.04, and it is carried in the '
+     'enhancement name string in the source, so it is exactly the kind of thing a name-cleaning '
+     'pass silently eats.',
+     'MFM enhancement lines carrying "(Upgrade)"; Army_Muster_Rules.txt 25.04 (D193)',
+     lambda S: e1a_upgrade_flags_preserved(S)),
+
+    ('E1a-6',
+     'Every detachment carries a text_source of faction_pack, wahapedia_10e or none; a record '
+     'with rule text is never marked none and a record marked none never carries rule text; '
+     'and the set of none records is exactly the named gap manifest in _meta. The per-tier '
+     'totals are recorded, not asserted — they move every time a faction pack arrives.',
+     'detachments.json _meta.text_sources / _meta.text_gap_manifest (D192 three-tier ladder)',
+     lambda S: e1a_text_source_and_gap_manifest(S)),
+
+    ('E1a-7',
+     'The deduplicated store resolves: every key an army names exists in the catalogue, every '
+     'catalogue record is reached by at least one army, and each record\'s own key field matches '
+     'the key it is filed under. detachments.json holds one record per distinct detachment with '
+     'each army indexing it by key, because seven armies otherwise carried a byte-identical copy '
+     'of the same Space Marines list — half the file. The saving is only safe if the indirection '
+     'is airtight; a dangling key would silently remove a detachment from an army.',
+     'detachments.json detachments / armies (D193, S123 dedup)',
+     lambda S: e1a_keys_resolve(S)),
+
 ]
 
 
@@ -1874,6 +1969,218 @@ def compound_gate(S):
                 'heavy bolt pistol', 'astartes chainsword'}
             return ok, f'gate = {gate!r} ({len(parts)} part(s))'
     return False, 'add_4 not found on 000000083'
+
+# ── E1a. Detachment catalogue (detachments.json) ──────────────────────────────
+
+FORCE_DISPOSITIONS = (
+    'PRIORITY ASSETS', 'TAKE AND HOLD', 'PURGE THE FOE', 'DISRUPTION', 'RECONNAISSANCE',
+)
+
+
+def _army_records(S, army):
+    """detachments.json stores one record per distinct detachment and lets each army
+    index it by key, because seven armies shared a byte-identical Space Marines list.
+    Resolve the indirection so the assertions still read per-army."""
+    d = S.detachments()
+    return [d['detachments'][k] for k in d['armies'][army]]
+
+
+def _all_army_records(S):
+    d = S.detachments()
+    for army in d['armies']:
+        yield army, _army_records(S, army)
+
+
+def _all_detachments(S):
+    for army, recs in _all_army_records(S):
+        for r in recs:
+            yield army, r
+
+
+def detachments_repro_gate(S):
+    """D193: the executable form of 'detachments.json is fresh'. detachments.json is a
+    first-generation file with no earlier committed version to rebuild against, so the
+    fixed point is set at first generation and held here from then on."""
+    import os, importlib.util
+    p = os.path.join(S.dir, 'detachments_repro_check.py')
+    if not os.path.exists(p):
+        return False, 'detachments_repro_check.py not found — the detachment reproduction gate is missing'
+    spec = importlib.util.spec_from_file_location('detachments_repro_check', p)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.repro(S.dir)
+
+
+def e1a_keys_resolve(S):
+    """detachments.json is stored deduplicated: one record per distinct detachment, each
+    army holding a list of keys into it. Every key an army names must resolve, every
+    record must be reachable from at least one army, and each record's own `key` field
+    must agree with the key it is filed under. If any of the three slips, an army
+    silently loses or gains detachments and nothing else would notice."""
+    d = S.detachments()
+    missing = [k for keys in d['armies'].values() for k in keys if k not in d['detachments']]
+    orphan = [k for k in d['detachments'] if not any(k in v for v in d['armies'].values())]
+    bad_self = [k for k, r in d['detachments'].items() if r.get('key') != k]
+    return (not missing and not orphan and not bad_self), (
+        f'{len(d["detachments"])} records, {sum(len(v) for v in d["armies"].values())} army slots; '
+        f'{len(missing)} unresolved, {len(orphan)} orphaned, {len(bad_self)} key mismatches')
+
+
+def e1a_dp_and_disposition(S):
+    """25.03/25.04: a detachment costs 1-3 DP and grants exactly one force disposition."""
+    bad_dp, bad_disp = [], []
+    n = 0
+    for army, r in _all_detachments(S):
+        n += 1
+        dp = r.get('dp')
+        if not isinstance(dp, int) or isinstance(dp, bool) or not (1 <= dp <= 3):
+            bad_dp.append((army, r.get('name'), dp))
+        if r.get('force_disposition') not in FORCE_DISPOSITIONS:
+            bad_disp.append((army, r.get('name'), r.get('force_disposition')))
+    ok = not bad_dp and not bad_disp
+    return ok, (f'{n} records; {len(bad_dp)} bad DP, {len(bad_disp)} bad disposition'
+                + (f' e.g. {(bad_dp + bad_disp)[:3]}' if not ok else ''))
+
+
+def e1a_no_duplicate_names_and_unique_tags(S):
+    """25.04 forbids selecting the same detachment twice, and MFM_Instructions.txt adds a
+    second exclusion: 'Some detachments are tagged with a Unique word or phrase. You cannot
+    select more than one detachment that has the same one of these tags.' A duplicate name
+    inside one army would make the first rule unenforceable by identity; a dropped or
+    invented Unique tag would make the second unenforceable at all."""
+    mod, rows = S.mfm_detachment_rows()
+    dupes = []
+    tag_mismatch = []
+    tagged = 0
+    for army, recs in _all_army_records(S):
+        seen = set()
+        for r in recs:
+            k = mod.norm_key(r.get('name_raw') or r.get('name'))
+            if k in seen:
+                dupes.append((army, r.get('name')))
+            seen.add(k)
+        src = {mod.norm_key(d['name_raw']): d['unique_tag']
+               for d in rows[mod.ARMY_TO_MFM[army]]}
+        for r in recs:
+            k = mod.norm_key(r.get('name_raw'))
+            want = src.get(k)
+            if r.get('unique_tag') != want:
+                tag_mismatch.append((army, r.get('name'), r.get('unique_tag'), want))
+            if want:
+                tagged += 1
+    ok = not dupes and not tag_mismatch
+    return ok, (f'{len(dupes)} duplicate names, {len(tag_mismatch)} Unique-tag mismatches, '
+                f'{tagged} tagged records'
+                + (f' e.g. {(dupes + tag_mismatch)[:3]}' if not ok else ''))
+
+
+def e1a_catalogue_matches_mfm(S):
+    """MFM wins on structure and numbers. Every detachment in the file, and every
+    enhancement name, point cost and print order inside it, must re-derive from the MFM
+    text. Counts are reported, not asserted — they move whenever a faction pack or MFM
+    revision lands, and an assertion that has to be hand-edited on every input change is
+    an assertion that will eventually be hand-edited wrongly."""
+    mod, rows = S.mfm_detachment_rows()
+    bad = []
+    n_det = n_enh = 0
+    distinct = set()
+    for army, recs in _all_army_records(S):
+        fn = mod.ARMY_TO_MFM[army]
+        src = {mod.norm_key(d['name_raw']): d for d in rows[fn]}
+        if len(recs) != len(rows[fn]):
+            bad.append((army, f'{len(recs)} records vs {len(rows[fn])} MFM rows'))
+            continue
+        for r in recs:
+            n_det += 1
+            distinct.add(r.get('key'))
+            d = src.get(mod.norm_key(r.get('name_raw')))
+            if d is None:
+                bad.append((army, r.get('name'), 'not in MFM'))
+                continue
+            if r.get('dp') != d['dp'] or r.get('force_disposition') != d['force_disposition']:
+                bad.append((army, r.get('name'), 'DP/disposition drift'))
+            got = [(e.get('name'), e.get('points')) for e in r.get('enhancements') or []]
+            want = [(e['name'], e['points']) for e in d['enhancements']]
+            n_enh += len(got)
+            if got != want:
+                bad.append((army, r.get('name'), 'enhancement list drift'))
+    ok = not bad
+    return ok, (f'{n_det} records over {len(distinct)} distinct MFM rows, {n_enh} enhancements'
+                + ('' if ok else f'; {len(bad)} mismatches e.g. {bad[:3]}'))
+
+
+def e1a_no_wahapedia_only_enhancements(S):
+    """The Wahapedia dump is a previous edition. An enhancement it lists that MFM does not
+    is a stale leftover; carrying it would put a phantom option at a wrong price in front of
+    the player. Text sources contribute descriptions only, never membership."""
+    mod, rows = S.mfm_detachment_rows()
+    strays = []
+    for army, recs in _all_army_records(S):
+        src = {mod.norm_key(d['name_raw']): {mod.norm_key(e['name']) for e in d['enhancements']}
+               for d in rows[mod.ARMY_TO_MFM[army]]}
+        for r in recs:
+            allowed = src.get(mod.norm_key(r.get('name_raw')), set())
+            for e in r.get('enhancements') or []:
+                if mod.norm_key(e.get('name')) not in allowed:
+                    strays.append((army, r.get('name'), e.get('name')))
+    dropped = S.detachments()['_meta'].get('wahapedia_only_enhancements_dropped')
+    return (not strays), (f'{len(strays)} non-MFM enhancements survived the join; '
+                          f'{dropped} Wahapedia-only enhancements dropped')
+
+
+def e1a_upgrade_flags_preserved(S):
+    """The (Upgrade) tag is rules-significant under 25.04 and must survive the parse as a
+    boolean, set on exactly the enhancements MFM prints it against — no more, no fewer."""
+    mod, rows = S.mfm_detachment_rows()
+    bad = []
+    flagged = 0
+    for army, recs in _all_army_records(S):
+        src = {}
+        for d in rows[mod.ARMY_TO_MFM[army]]:
+            src[mod.norm_key(d['name_raw'])] = {mod.norm_key(e['name']): e['is_upgrade']
+                                                for e in d['enhancements']}
+        for r in recs:
+            want = src.get(mod.norm_key(r.get('name_raw')), {})
+            for e in r.get('enhancements') or []:
+                got = e.get('is_upgrade')
+                exp = want.get(mod.norm_key(e.get('name')))
+                if got is not True and got is not False:
+                    bad.append((army, e.get('name'), 'not boolean'))
+                elif got != exp:
+                    bad.append((army, r.get('name'), e.get('name'), got, exp))
+                if got:
+                    flagged += 1
+    return (not bad), (f'{flagged} Upgrade-flagged enhancements'
+                       + ('' if not bad else f'; {len(bad)} wrong e.g. {bad[:3]}'))
+
+
+def e1a_text_source_and_gap_manifest(S):
+    """text_source is one of three permitted values, and the set of detachments carrying
+    'none' is exactly the named gap manifest. The per-tier totals are recorded rather than
+    asserted: they move every time a faction pack arrives."""
+    allowed = set(S.detachments()['_meta']['text_sources'])
+    if allowed != {'faction_pack', 'wahapedia_10e', 'none'}:
+        return False, f'permitted text_source set is {sorted(allowed)}'
+    bad = []
+    none_set = set()
+    counts = {}
+    for army, r in _all_detachments(S):
+        ts = r.get('text_source')
+        counts[ts] = counts.get(ts, 0) + 1
+        if ts not in allowed:
+            bad.append((army, r.get('name'), ts))
+        if ts == 'none':
+            none_set.add(r.get('key'))
+            if r.get('rule_text') is not None:
+                bad.append((army, r.get('name'), 'text_source none but rule_text present'))
+        elif r.get('rule_text') is None:
+            bad.append((army, r.get('name'), f'text_source {ts} but no rule_text'))
+    manifest = {g['key'] for g in S.detachments()['_meta']['text_gap_manifest']}
+    if manifest != none_set:
+        bad.append(('gap manifest', sorted(manifest ^ none_set)[:3]))
+    return (not bad), (f'text_source counts {counts}, {len(none_set)} in the gap manifest'
+                       + ('' if not bad else f'; {len(bad)} problems e.g. {bad[:2]}'))
+
 
 # ── runner ────────────────────────────────────────────────────────────────────
 
