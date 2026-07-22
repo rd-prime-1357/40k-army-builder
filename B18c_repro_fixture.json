@@ -1,0 +1,135 @@
+{
+  "000000241": {
+    "size_brackets": [
+      3,
+      6
+    ],
+    "model_groups": [
+      {
+        "name": "Ravenwing Huntmaster",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Plasma talon",
+          "Black Knight combat weapon"
+        ]
+      },
+      {
+        "name": "Ravenwing Black Knights",
+        "count": {
+          "fills_to_size": true
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Plasma talon",
+          "Black Knight combat weapon"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "cnt_1",
+        "scope": "Ravenwing Black Knights",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma talon",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
+      },
+      {
+        "id": "cnt_1__ravenwing_huntmaster",
+        "scope": "Ravenwing Huntmaster",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma talon",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
+      }
+    ],
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
+  },
+  "000002748": {
+    "size_brackets": [
+      3
+    ],
+    "model_groups": [
+      {
+        "name": "Ravenwing Champion",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Plasma talon",
+          "Master-crafted power weapon"
+        ]
+      },
+      {
+        "name": "Ravenwing Apothecary",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Plasma talon",
+          "Black Knight combat weapon"
+        ]
+      },
+      {
+        "name": "Ravenwing Ancient",
+        "count": {
+          "fixed": 1
+        },
+        "default_weapons": [
+          "Bolt pistol",
+          "Plasma talon",
+          "Black Knight combat weapon"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "cnt_1",
+        "scope": "Ravenwing Ancient",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma talon",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
+      },
+      {
+        "id": "cnt_1__ravenwing_champion",
+        "scope": "Ravenwing Champion",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma talon",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
+      },
+      {
+        "id": "cnt_1__ravenwing_apothecary",
+        "scope": "Ravenwing Apothecary",
+        "group": "Special Weapon",
+        "type": "count",
+        "replaces": "Plasma talon",
+        "replacement": "Astartes grenade launcher",
+        "per_n_models": 3,
+        "max_per_n": 1,
+        "pool_id": "plasma_talon"
+      }
+    ],
+    "_parser_flags": [],
+    "_defaults_source": "equipped"
+  }
+}
