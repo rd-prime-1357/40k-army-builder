@@ -1005,6 +1005,166 @@
       margin-bottom: 0.75rem;
     }
 
+    /* ── E1c: detachment picker (left panel above role groups) ─────────────── */
+    .det-counter {
+      font-size: 0.62rem;
+      color: var(--c-888888);
+      letter-spacing: 0.08em;
+      margin-left: 0.5rem;
+      white-space: nowrap;
+    }
+    .det-counter.at   { color: var(--c-cc9900); font-weight: 700; }
+    .det-counter.over { color: var(--c-cc2200); font-weight: 700; }
+
+    .det-warning {
+      font-size: 0.7rem;
+      color: var(--c-cc2200);
+      background: var(--c-141414);
+      border: 1px solid var(--c-cc2200);
+      border-radius: 3px;
+      padding: 0.3rem 0.45rem;
+      margin: 0 0 0.4rem;
+      line-height: 1.35;
+    }
+
+    .det-item {
+      background: var(--bg-card);
+      border: 1px solid var(--c-2a2a2a);
+      border-radius: 3px;
+      padding: 0.4rem 0.5rem;
+      margin-bottom: 0.3rem;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, opacity 0.12s;
+    }
+    .det-item:hover { background: var(--bg-card-hover); }
+    .det-item.selected {
+      background: var(--c-1e1200);
+      border-color: var(--c-cc9900);
+    }
+    .det-item.disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .det-item.disabled:hover { background: var(--bg-card); }
+    .det-item.ghost {
+      border-color: var(--c-cc2200);
+      opacity: 0.9;
+    }
+
+    .det-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .det-check {
+      flex-shrink: 0;
+      margin: 0;
+      accent-color: var(--c-cc9900);
+      cursor: inherit;
+    }
+    .det-body { flex: 1; min-width: 0; }
+    .det-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--c-e0e0e0);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .det-item.ghost .det-name { color: var(--c-cc2200); text-decoration: line-through; }
+    .det-sub {
+      font-size: 0.66rem;
+      color: var(--c-888888);
+      margin-top: 0.1rem;
+    }
+    .det-dp-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--c-cc9900);
+      background: var(--c-141414);
+      border: 1px solid var(--c-333333);
+      border-radius: 3px;
+      padding: 0.05rem 0.3rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .det-refusal {
+      font-size: 0.66rem;
+      color: var(--c-cc2200);
+      margin-top: 0.2rem;
+      font-style: italic;
+    }
+
+    /* Info panel reuses lo-detail dropdown styling */
+    .det-detail {
+      display: none;
+      margin: 0.3rem 0 0.4rem;
+      padding: 0.5rem 0.6rem;
+      background: var(--c-141414);
+      border: 1px solid var(--c-2a2a2a);
+      border-radius: 4px;
+    }
+    .det-detail.open { display: block; }
+    .det-detail-section { margin-bottom: 0.6rem; }
+    .det-detail-section:last-child { margin-bottom: 0; }
+    .det-detail-heading {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--c-888888);
+      margin-bottom: 0.25rem;
+    }
+    .det-detail-name {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--c-cbb46a);
+      margin-bottom: 0.1rem;
+    }
+    .det-detail-text {
+      font-size: 0.7rem;
+      color: var(--c-b0b0b0);
+      line-height: 1.4;
+      white-space: pre-wrap;
+      margin-bottom: 0.4rem;
+    }
+    .det-detail-text.muted { color: var(--c-666666); font-style: italic; }
+    .det-tier2-badge {
+      display: inline-block;
+      font-size: 0.58rem;
+      font-weight: 700;
+      color: var(--c-888888);
+      background: var(--c-202020);
+      border: 1px solid var(--c-333333);
+      border-radius: 2px;
+      padding: 0.02rem 0.28rem;
+      margin-left: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      vertical-align: middle;
+    }
+
+    /* Selected detachments in the centre army list */
+    .list-item.det-line { cursor: default; }
+    .list-item.det-line:hover { background: var(--bg-card); }
+    .list-item.det-line.ghost .list-item-name { color: var(--c-cc2200); text-decoration: line-through; }
+    .list-item-dp {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--c-cc9900);
+      white-space: nowrap;
+      margin-right: 0.4rem;
+    }
+    .det-list-warning {
+      font-size: 0.7rem;
+      color: var(--c-cc2200);
+      background: var(--c-141414);
+      border: 1px solid var(--c-cc2200);
+      border-radius: 3px;
+      padding: 0.3rem 0.45rem;
+      margin: 0.2rem 0 0.5rem;
+      line-height: 1.35;
+    }
+
     .detail-pts-row {
       display: flex;
       align-items: baseline;
@@ -1975,7 +2135,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.2';
+  const VERSION = '6.3';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2176,6 +2336,13 @@
   // session-only UI preference, not saved with the list.
   let collapsedRoleGroups = new Set();
 
+  // E1c: the detachment picker section starts expanded. Collapse state and any
+  // open info panel are session-only UI, not persisted. openDetachmentDetail
+  // holds at most one key at a time — a second click just moves the panel, so
+  // the section does not grow arbitrarily tall while browsing.
+  let collapsedDetachmentSection = false;
+  let openDetachmentDetail       = null;
+
   // List-management state (step 3)
   let store           = null;   // ListStorage.ListStore instance
   let currentScreen   = 'home'; // 'home' | 'builder'
@@ -2346,7 +2513,94 @@
   }
   // ── E1b block end ──────────────────────────────────────────────────────────
 
-  // ── Data load ──────────────────────────────────────────────────────────────
+  // ── E1c: detachment picker (UI over the E1b read path) ────────────────────
+  // Every legality question in this block is answered by canAddDetachment or
+  // detachmentSelectionState. Nothing here re-derives DP totals, tag clashes
+  // or duplicates. E1c-1 asserts that these three functions are only called
+  // by the E1b block and its consumers, so a future edit that quietly grows a
+  // second implementation here would fail structural review.
+
+  // One classifier for one row. Returns the shape the renderer needs and the
+  // shape the harness checks, so the picker cannot disagree with itself.
+  //   selected  — is this key already in `keys`
+  //   isGhost   — key survives in `keys` but is not in the current catalogue
+  //   canAdd    — canAddDetachment's answer for adding this key to `keys`
+  //   disabled  — the picker's classification for how the row renders: a
+  //               selected row is always toggle-off-able; a non-selected row is
+  //               disabled iff canAdd.ok is false. Nothing else can flip this.
+  function detachmentPickerRowState(key, keys, pointsTotal) {
+    const selected = (keys || []).indexOf(key) >= 0;
+    const isGhost  = !detachmentDefs[key];
+    // canAddDetachment expects the "keys without this one" set when checking a
+    // fresh add. For a selected row, we still compute canAdd against the OTHER
+    // selections, so the harness can see what would happen if this row were
+    // toggled off then on again. It does not affect the disabled flag.
+    const others = (keys || []).filter(k => k !== key);
+    const canAdd = canAddDetachment(key, others, pointsTotal);
+    const disabled = selected ? false : !canAdd.ok;
+    return { selected, isGhost, canAdd, disabled };
+  }
+
+  // Toggle a detachment on or off. A selected key is always removable — the
+  // whole point of flag-don't-drop is that an over-constrained state stays
+  // fixable. A non-selected key adds only when canAddDetachment permits.
+  function toggleDetachment(key) {
+    const idx = selectedDetachments.indexOf(key);
+    if (idx >= 0) {
+      selectedDetachments = selectedDetachments.slice(0, idx).concat(selectedDetachments.slice(idx + 1));
+      if (openDetachmentDetail === key) openDetachmentDetail = null;
+    } else {
+      const st = canAddDetachment(key, selectedDetachments, POINTS_CAP);
+      if (!st.ok) return;   // disabled row — click is a no-op
+      selectedDetachments = selectedDetachments.concat([key]);
+    }
+    hasGhosts = armyList.some(e => e.unresolved) ||
+                selectedDetachments.some(k => !detachmentDefs[k]);
+    renderAll();
+  }
+
+  function toggleDetachmentSection() {
+    collapsedDetachmentSection = !collapsedDetachmentSection;
+    renderRoster();
+  }
+
+  function toggleDetachmentDetail(key) {
+    openDetachmentDetail = (openDetachmentDetail === key) ? null : key;
+    renderRoster();
+  }
+
+  // A prose refusal reason. canAddDetachment already carries the machine-
+  // readable code and (for tag clash) the tag and the other keys. The picker
+  // spells that out so a disabled row is never mute — that muteness is the
+  // exact failure B47 exists to fix.
+  function detachmentRefusalText(canAdd) {
+    if (!canAdd || canAdd.ok) return '';
+    if (canAdd.reason === 'budget')     return 'Over the DP budget for this battle size.';
+    if (canAdd.reason === 'duplicate')  return 'Already selected.';
+    if (canAdd.reason === 'unknown')    return 'Not in the current catalogue.';
+    if (canAdd.reason === 'unique_tag') {
+      const other = (canAdd.conflictsWith || []).map(k => {
+        const d = detachmentDefs[k];
+        return d ? d.name : k;
+      }).join(', ');
+      return 'Clashes with ' + (canAdd.tag || 'Unique') + ' tag: ' + (other || 'another selection') + '.';
+    }
+    return 'Not currently addable.';
+  }
+
+  // "Previous edition" tier-2 marker per D192, applied per item so the tier of
+  // the rule text is not confused with the tier of an enhancement description
+  // or a stratagem — the parser recorded them separately for exactly this.
+  // Any value other than the string 'faction_pack' is treated as non-current,
+  // so a missing or null source flags rather than silently reads as current.
+  function detTier2Badge(source) {
+    if (source !== 'faction_pack') {
+      return '<span class="det-tier2-badge" title="Text carried forward from the previous edition — will be replaced when the current-edition text is loaded.">prev. ed.</span>';
+    }
+    return '';
+  }
+  // ── E1c block end ─────────────────────────────────────────────────────────
+
 
   async function init() {
     try {
@@ -2582,7 +2836,7 @@
     // since it depends on the current list total, not just the unit itself.
     const remaining = POINTS_CAP - totalPoints();
 
-    roster.innerHTML = groups.map(({ type, items }) => {
+    const rolesHtml = groups.map(({ type, items }) => {
       const open = !collapsedRoleGroups.has(type);
       const sid  = 'role-items-' + type.replace(/[^a-zA-Z0-9]+/g, '-');
       return `
@@ -2622,6 +2876,175 @@
       </div>
     `;
     }).join('');
+
+    roster.innerHTML = renderDetachmentPickerHtml() + rolesHtml;
+  }
+
+  // E1c. The picker's HTML. All legality questions go through the E1b read
+  // path — dpState, detachmentSelectionState, canAddDetachment via
+  // detachmentPickerRowState. No numbers or tag comparisons are recomputed
+  // here; this function is presentation only.
+  function renderDetachmentPickerHtml() {
+    const keys = selectedDetachments.slice();
+    const state = detachmentSelectionState(keys, POINTS_CAP);
+    const budget = state.budget;
+    const used   = state.used;
+    const open   = !collapsedDetachmentSection;
+
+    // Header counter mirrors limitState's colouring: red only when exceeded,
+    // gold when exactly at, muted otherwise. E3's rule: never merely reached.
+    let counterCls = 'det-counter';
+    if (state.state === 'over')      counterCls += ' over';
+    else if (state.state === 'at')   counterCls += ' at';
+    const counter = `<span class="${counterCls}">${used} of ${budget} DP</span>`;
+
+    // Warning banners for the over-constrained states. They belong at the top
+    // of the picker because they describe the whole set, not any one row.
+    let warnHtml = '';
+    if (state.state === 'over') {
+      warnHtml += `<div class="det-warning">Selection is over budget — ${used} of ${budget} DP.</div>`;
+    }
+    if (state.tagConflicts && state.tagConflicts.length) {
+      for (const c of state.tagConflicts) {
+        const names = c.keys.map(k => (detachmentDefs[k] ? detachmentDefs[k].name : k)).join(', ');
+        warnHtml += `<div class="det-warning">Unique-tag clash on ${escHtml(c.tag)}: ${escHtml(names)}.</div>`;
+      }
+    }
+
+    // The rows offered by the current faction, then any ghost rows for keys
+    // saved to the list but no longer in the catalogue. Flag-don't-drop: an
+    // unresolved key stays visible so it can be removed rather than being
+    // silently dropped on load.
+    const offered = detachmentKeysForFaction(currentFaction || {});
+    let rowsHtml = '';
+    for (const key of offered) {
+      rowsHtml += renderDetachmentRowHtml(key, keys, POINTS_CAP);
+    }
+    for (const key of state.unresolved) {
+      rowsHtml += renderDetachmentGhostRowHtml(key);
+    }
+
+    const body = warnHtml + (rowsHtml || '<div class="det-refusal" style="padding:0.4rem 0.1rem;">No detachments available for this faction yet.</div>');
+
+    return `
+      <div class="role-group">
+        <div class="role-label${open ? ' open' : ''}" onclick="toggleDetachmentSection()">
+          <span>Detachments ${counter}</span>
+          <span class="role-label-chevron">▶</span>
+        </div>
+        <div class="role-group-items${open ? ' open' : ''}">
+          ${body}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderDetachmentRowHtml(key, keys, pointsTotal) {
+    const d  = detachmentDefs[key];
+    if (!d) return '';
+    const st = detachmentPickerRowState(key, keys, pointsTotal);
+    const cls = 'det-item' + (st.selected ? ' selected' : '') + (st.disabled ? ' disabled' : '');
+    const fd  = d.force_disposition ? String(d.force_disposition).toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : '';
+    const uniq = d.unique_tag ? ` · Unique: ${escHtml(d.unique_tag)}` : '';
+    const refusal = st.disabled ? `<div class="det-refusal">${escHtml(detachmentRefusalText(st.canAdd))}</div>` : '';
+    const isOpen  = openDetachmentDetail === key;
+    // Whole row is the click target; the checkbox reflects state but is not
+    // itself the affordance — a click anywhere on the row toggles, matching
+    // how the roster card treats a unit tile.
+    return `
+      <div class="${cls}" onclick="toggleDetachment('${escAttr(key)}')">
+        <div class="det-row">
+          <input type="checkbox" class="det-check" ${st.selected ? 'checked' : ''} ${st.disabled ? 'disabled' : ''}
+                 onclick="event.stopPropagation();toggleDetachment('${escAttr(key)}')">
+          <div class="det-body">
+            <div class="det-name">${escHtml(d.name)}</div>
+            <div class="det-sub">${escHtml(fd)}${uniq}</div>
+          </div>
+          <span class="det-dp-badge">${Number(d.dp) || 0} DP</span>
+          <button type="button" class="info-btn" title="Show rule, enhancements, stratagems"
+                  onclick="event.stopPropagation();toggleDetachmentDetail('${escAttr(key)}')">ⓘ</button>
+        </div>
+        ${refusal}
+        <div class="det-detail${isOpen ? ' open' : ''}">${isOpen ? renderDetachmentDetailHtml(key) : ''}</div>
+      </div>
+    `;
+  }
+
+  function renderDetachmentGhostRowHtml(key) {
+    // A ghost row has no record — the whole point is the record is gone. It
+    // shows the key so the player can identify what to remove, and is always
+    // "selected" (the key is in the list) and always removable by click.
+    const label = key.split('|').slice(-1)[0] || key;
+    return `
+      <div class="det-item ghost selected" onclick="toggleDetachment('${escAttr(key)}')">
+        <div class="det-row">
+          <input type="checkbox" class="det-check" checked
+                 onclick="event.stopPropagation();toggleDetachment('${escAttr(key)}')">
+          <div class="det-body">
+            <div class="det-name">${escHtml(label)}</div>
+            <div class="det-sub">Not in current data — click to remove</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderDetachmentDetailHtml(key) {
+    const d = detachmentDefs[key];
+    if (!d) return '<div class="det-detail-text muted">No details available for this detachment.</div>';
+    let html = '';
+
+    // The detachment's own rule. text_source drives the tier-2 badge, per D192.
+    if (d.rule_name || d.rule_text) {
+      html += '<div class="det-detail-section">';
+      html += `<div class="det-detail-heading">Detachment Rule${detTier2Badge(d.text_source)}</div>`;
+      if (d.rule_name) html += `<div class="det-detail-name">${escHtml(d.rule_name)}</div>`;
+      html += d.rule_text
+        ? `<div class="det-detail-text">${escHtml(d.rule_text)}</div>`
+        : `<div class="det-detail-text muted">No rule text recorded for this detachment.</div>`;
+      html += '</div>';
+    }
+    if (d.restrictions) {
+      html += '<div class="det-detail-section">';
+      html += `<div class="det-detail-heading">Restrictions</div>`;
+      html += `<div class="det-detail-text">${escHtml(d.restrictions)}</div>`;
+      html += '</div>';
+    }
+
+    // Enhancements. Each carries its own description_source — a pack may list
+    // the enhancement but supply no updated text, so the enhancement badge is
+    // per item, not inherited from the detachment's rule tier.
+    if (Array.isArray(d.enhancements) && d.enhancements.length) {
+      html += '<div class="det-detail-section">';
+      html += `<div class="det-detail-heading">Enhancements</div>`;
+      for (const e of d.enhancements) {
+        const badge = detTier2Badge(e.description_source);
+        const pts   = (e.points != null) ? ` — ${e.points} pts` : '';
+        html += `<div class="det-detail-name">${escHtml(e.name || '')}${escHtml(pts)}${badge}</div>`;
+        html += e.description
+          ? `<div class="det-detail-text">${escHtml(e.description)}</div>`
+          : `<div class="det-detail-text muted">No text recorded.</div>`;
+      }
+      html += '</div>';
+    }
+
+    // Stratagems. stratagem_source is a single flag on the block per parser
+    // design — one badge on the heading is the right shape.
+    if (Array.isArray(d.stratagems) && d.stratagems.length) {
+      html += '<div class="det-detail-section">';
+      html += `<div class="det-detail-heading">Stratagems${detTier2Badge(d.stratagem_source)}</div>`;
+      for (const s of d.stratagems) {
+        const cp   = (s.cp != null) ? ` — ${s.cp} CP` : '';
+        const typ  = s.type ? ` · ${s.type}` : '';
+        html += `<div class="det-detail-name">${escHtml(s.name || '')}${escHtml(cp)}${escHtml(typ)}</div>`;
+        html += s.description
+          ? `<div class="det-detail-text">${escHtml(s.description)}</div>`
+          : `<div class="det-detail-text muted">No text recorded.</div>`;
+      }
+      html += '</div>';
+    }
+
+    return html || '<div class="det-detail-text muted">No rule, enhancement or stratagem text recorded.</div>';
   }
 
   function toggleRoleGroup(type) {
@@ -3053,8 +3476,14 @@
     document.getElementById('list-unit-count').textContent =
       total > 0 ? `${total} unit${total === 1 ? '' : 's'}` : '';
 
+    // E1c: the detachments group renders whether or not units are added, so an
+    // empty list still shows what the player picked (and what a saved list
+    // brought back with it). The centre-panel empty-state text only applies to
+    // the unit list itself, not to the whole panel body.
+    const detHtml = renderSelectedDetachmentsHtml();
+
     if (armyList.length === 0) {
-      container.innerHTML = '<div class="empty-state">No units added yet.<br>Click any unit in the roster to add it.</div>';
+      container.innerHTML = detHtml + '<div class="empty-state">No units added yet.<br>Click any unit in the roster to add it.</div>';
       return;
     }
 
@@ -3149,7 +3578,56 @@
       html += `</div>`;
     }
 
-    container.innerHTML = html;
+    container.innerHTML = detHtml + html;
+  }
+
+  // E1c. Selected detachments as a centre-panel section. Every state comes
+  // from detachmentSelectionState — no numbers or clash detection here.
+  function renderSelectedDetachmentsHtml() {
+    if (!selectedDetachments.length) return '';
+    const state = detachmentSelectionState(selectedDetachments, POINTS_CAP);
+
+    let warn = '';
+    if (state.state === 'over') {
+      warn += `<div class="det-list-warning">Detachment selection is over budget — ${state.used} of ${state.budget} DP.</div>`;
+    }
+    if (state.tagConflicts && state.tagConflicts.length) {
+      for (const c of state.tagConflicts) {
+        const names = c.keys.map(k => (detachmentDefs[k] ? detachmentDefs[k].name : k)).join(', ');
+        warn += `<div class="det-list-warning">Unique-tag clash on ${escHtml(c.tag)}: ${escHtml(names)}.</div>`;
+      }
+    }
+
+    let rows = '';
+    for (const key of selectedDetachments) {
+      const d = detachmentDefs[key];
+      if (!d) {
+        const label = key.split('|').slice(-1)[0] || key;
+        rows += `
+          <div class="list-item det-line ghost">
+            <div class="list-item-info">
+              <div class="list-item-name">${escHtml(label)}<span class="ghost-tag">removed</span></div>
+              <div class="list-item-sub">not in current data — no longer counted</div>
+            </div>
+            <span class="list-item-dp ghost-pts">—</span>
+            <button class="remove-btn" onclick="event.stopPropagation();toggleDetachment('${escAttr(key)}')" title="Remove">&times;</button>
+          </div>`;
+        continue;
+      }
+      const sub = [d.force_disposition ? String(d.force_disposition).toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : '',
+                   d.unique_tag ? `Unique: ${escHtml(d.unique_tag)}` : ''].filter(Boolean).join(' · ');
+      rows += `
+        <div class="list-item det-line">
+          <div class="list-item-info">
+            <div class="list-item-name">${escHtml(d.name)}</div>
+            <div class="list-item-sub">${sub}</div>
+          </div>
+          <span class="list-item-dp">${Number(d.dp) || 0} DP</span>
+          <button class="remove-btn" onclick="event.stopPropagation();toggleDetachment('${escAttr(key)}')" title="Remove">&times;</button>
+        </div>`;
+    }
+
+    return `<div class="list-type-group"><div class="list-type-label">Detachments</div>${warn}${rows}</div>`;
   }
 
   // ── Detail panel ───────────────────────────────────────────────────────────
@@ -5781,7 +6259,8 @@
         if (e.unresolved) e.points = (cacheById[e.listId] != null ? cacheById[e.listId] : null);
         else              e.points = ptsForEntry(e);
       });
-      hasGhosts = armyList.some(e => e.unresolved);
+      hasGhosts = armyList.some(e => e.unresolved) ||
+                  selectedDetachments.some(k => !detachmentDefs[k]);
 
       currentListId   = rec.id;
       currentListMeta = { name: rec.name, points_target: rec.points_target, primary_faction: rec.primary_faction, created: rec.created };

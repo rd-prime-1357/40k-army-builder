@@ -1175,6 +1175,25 @@ ASSERTIONS = [
      'e1b_check.js (E1b, S124)',
      lambda S: e1b_harness_gate(S)),
 
+    # ── E1c. Detachment picker UI over the E1b read path.
+    ('E1c-1',
+     'The E1b engine functions that answer legality — dpUsed, duplicateDetachments, '
+     'uniqueTagConflicts, detachmentPointBudget, dpState — are DEFINED inside the E1b block and '
+     'nowhere else in index.html. The picker calls them; it does not re-derive them. A second '
+     'implementation growing quietly in the picker is exactly what "single read path" is meant '
+     'to prevent, and would be invisible unless something looked for it.',
+     'index.html E1b vs E1c blocks (E1c, S125)',
+     lambda S: e1c_engine_functions_defined_once(S)),
+
+    ('E1c-2',
+     'e1c_check.js passes in full: for every catalogue key across every scenario, the picker\'s '
+     'disabled flag is exactly what canAddDetachment says (a selected row is toggle-off-able, a '
+     'non-selected row is disabled iff canAddDetachment is not OK), the row\'s ghost flag is '
+     '"not in the catalogue" and nothing else, and every refusal has prose. This is the guard '
+     'against the picker growing a second implementation of the three legality rules.',
+     'e1c_check.js (E1c, S125)',
+     lambda S: e1c_harness_gate(S)),
+
 ]
 
 
@@ -2302,6 +2321,82 @@ def e1b_harness_gate(S):
         return False, (f'{len(failed)} E1b check(s) failed, e.g. {failed[:2]}' if failed
                        else f'e1b_check.js exited {r.returncode}')
     return True, f'e1b_check.js: {passed} checks pass'
+
+
+def e1c_engine_functions_defined_once(S):
+    """The five legality helpers are declared inside the E1b block and NOWHERE else in the file.
+    The E1c block is allowed to CALL them but never to redefine them; a second `function dpUsed`
+    (or the other four) would be exactly the "picker growing its own rules" failure mode.
+
+    Method: extract the E1b block by its own delimiters, and search the rest of the file for
+    another `function NAME(` declaration of the same five names. If one exists, name it."""
+    ip = os.path.join(S.dir, 'index.html')
+    if not os.path.exists(ip):
+        return False, 'index.html not found'
+    html = open(ip, encoding='utf-8').read()
+    lines = html.split('\n')
+
+    def find_block(start_needle, end_needle):
+        s = next((i for i, l in enumerate(lines) if start_needle in l), -1)
+        e = next((i for i, l in enumerate(lines) if end_needle   in l), -1)
+        if s < 0 or e < 0 or e <= s:
+            return None, None
+        return s, e
+
+    e1b_s, e1b_e = find_block('// ── E1b: detachment selection rules', '// ── E1b block end')
+    if e1b_s is None:
+        return False, 'the E1b block delimiters are no longer locatable in index.html'
+    e1c_s, e1c_e = find_block('// ── E1c: detachment picker', '// ── E1c block end')
+    if e1c_s is None:
+        return False, 'the E1c block delimiters are no longer locatable in index.html'
+
+    names = ['dpUsed', 'duplicateDetachments', 'uniqueTagConflicts',
+             'detachmentPointBudget', 'dpState']
+
+    # Locate each name's DEFINITION line by number, then confirm every one lies inside the E1b
+    # block. A definition outside E1b is exactly the failure mode to catch.
+    bad = []
+    for name in names:
+        pat = re.compile(r'^\s*function\s+' + re.escape(name) + r'\s*\(', re.MULTILINE)
+        matches = [i for i, l in enumerate(lines) if pat.match(l)]
+        if not matches:
+            bad.append(f'{name}: no definition found at all')
+            continue
+        if len(matches) > 1:
+            bad.append(f'{name}: defined {len(matches)} times (lines {[m+1 for m in matches]})')
+            continue
+        line_no = matches[0]
+        if not (e1b_s < line_no < e1b_e):
+            bad.append(f'{name}: defined at line {line_no+1}, outside the E1b block '
+                       f'(lines {e1b_s+1}..{e1b_e+1})')
+    if bad:
+        return False, '; '.join(bad)
+    return True, (f'all five legality helpers are defined exactly once, inside the E1b block '
+                  f'(lines {e1b_s+1}..{e1b_e+1}); the E1c block ({e1c_s+1}..{e1c_e+1}) calls them')
+
+
+def e1c_harness_gate(S):
+    """D107 applied to the picker: the disable classification is a claim about behaviour, so it
+    is executed against the real catalogue rather than described here."""
+    import subprocess
+    p = os.path.join(S.dir, 'e1c_check.js')
+    if not os.path.exists(p):
+        return False, 'e1c_check.js not found — the E1c behaviour gate is missing'
+    try:
+        r = subprocess.run(['node', p, os.path.join(S.dir, 'index.html'),
+                            os.path.join(S.dir, 'detachments.json')],
+                           capture_output=True, text=True, timeout=120, cwd=S.dir)
+    except FileNotFoundError:
+        return False, 'node is not available, so the E1c behaviour gate cannot run'
+    except subprocess.TimeoutExpired:
+        return False, 'e1c_check.js did not finish within 120s'
+    out = (r.stdout or '') + (r.stderr or '')
+    passed = len([l for l in out.split('\n') if l.strip().startswith('ok ')])
+    failed = [l.strip() for l in out.split('\n') if l.strip().startswith('FAIL ')]
+    if r.returncode != 0 or failed:
+        return False, (f'{len(failed)} E1c check(s) failed, e.g. {failed[:2]}' if failed
+                       else f'e1c_check.js exited {r.returncode}')
+    return True, f'e1c_check.js: {passed} checks pass'
 
 
 # ── runner ────────────────────────────────────────────────────────────────────
