@@ -1,0 +1,31 @@
+# 40k-army-builder — repository is PUBLIC (GitHub Pages free tier).
+# Everything below is GW / Wahapedia / third-party source material and must not be published.
+# Our own code, docs and the derived JSON the app serves are committed normally.
+ 
+# ── Wahapedia CSV exports ───────────────────────────────────────────────
+*.csv
+ 
+# ── Source text: MFM points files, faction web composition files, rules text ──
+*.txt
+ 
+# ── GW faction packs and core rules (verbatim published text) ───────────
+Space_Marines_Faction_Pack_v1_0.md
+Dark_Angels_Faction_Pack_June_2026.md
+chaos_daemons_reference.md
+wh40k_core_rules.md
+*_Faction_Pack*.md
+ 
+# ── Third-party product references (New Recruit screenshots etc.) ───────
+*.pdf
+ 
+# ── Local scratch ───────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+/tmp/
+*.bak
+*.orig
+ 
+# ── Explicit re-includes: our own docs that would otherwise be caught ───
+# (none currently — all our docs are .md and none match the patterns above)
