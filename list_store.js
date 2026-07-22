@@ -9,18 +9,47 @@
  *   1. SavedList schema + (de)serialize  — pure, dependency-injected
  *   2. ListStore                          — async CRUD over a backend
  *   3. createLocalStorageBackend          — the v1 backend
+ *
+ * SCHEMA HISTORY
+ *   v1 — entries + meta. warlord_entry_id was added inside v1 as a purely
+ *        additive field: a record without it reads as "no Warlord chosen",
+ *        which is the same thing an older record meant, so it needed no bump.
+ *   v2 — E1b. `detachments`: an array of detachment KEYS from detachments.json
+ *        ("<source faction>|<MFM printed name>"). The key is the stable
+ *        identity across a regeneration; array position is not. A v1 record
+ *        upgrades to v2 with an empty detachment set — the only reading that
+ *        is certainly right, since v1 had no way to express a selection.
  * ======================================================================== */
 
 (function (root) {
   'use strict';
 
-  var SCHEMA_VERSION = 1;
+  var SCHEMA_VERSION = 2;
   var NS = '40kab:list:';   // one key per list: 40kab:list:<id>
 
   // ── ids ──────────────────────────────────────────────────────────────────
   function newListId() {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
     return 'l-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+
+  // ── detachment keys ──────────────────────────────────────────────────────
+  // E1b. Persisted as a list of keys, de-duplicated and order-preserving. 25.04
+  // forbids selecting the same detachment twice, so a duplicate in the stored
+  // array is meaningless rather than merely redundant — collapse it at the
+  // boundary instead of letting it reach the engine and be counted twice
+  // against the DP budget.
+  function normaliseDetachmentKeys(list) {
+    if (!Array.isArray(list)) return [];
+    var seen = {}, out = [];
+    for (var i = 0; i < list.length; i++) {
+      var k = list[i];
+      if (typeof k !== 'string' || !k) continue;
+      if (Object.prototype.hasOwnProperty.call(seen, k)) continue;
+      seen[k] = true;
+      out.push(k);
+    }
+    return out;
   }
 
   // ── schema: in-memory armyList <-> persisted record ──────────────────────
@@ -55,7 +84,7 @@
   }
 
   // buildRecord(meta, armyList, lookups) -> full SavedList record
-  //   meta: { id?, name, points_target, primary_faction, created? }
+  //   meta: { id?, name, points_target, primary_faction, created?, warlord_entry_id?, detachments? }
   function buildRecord(meta, armyList, lookups) {
     var now = Date.now();
     return {
@@ -64,16 +93,24 @@
       name:            meta.name || 'Untitled',
       points_target:   meta.points_target != null ? meta.points_target : null,
       primary_faction: meta.primary_faction || null,
+      warlord_entry_id: meta.warlord_entry_id != null ? meta.warlord_entry_id : null,
+      detachments:     normaliseDetachmentKeys(meta.detachments),
       created:         meta.created || now,
       modified:        now,
       entries:         serializeEntries(armyList, meta.primary_faction, lookups)
     };
   }
 
-  // deserialize(record, resolvers) -> { armyList, warnings, maxEntryId }
+  // deserialize(record, resolvers) -> { armyList, warnings, maxEntryId, warlordEntryId, detachments }
   //   resolvers.resolveUnit(faction_ref, unit_id, unit_name) -> unit | null
+  //   resolvers.detachmentExists(key) -> bool   (optional; drives a warning only)
   // Resolution order is id-first (survives renames), then cached name. A miss
   // produces a flagged ghost entry — never dropped (flag-don't-drop).
+  //
+  // Detachment keys come back as stored, NOT filtered against the current
+  // catalogue. Same reason units are ghosted rather than dropped: a key that no
+  // longer resolves is information the player needs, and silently deleting it
+  // would hide a data regression behind a list that merely looks smaller.
   function deserialize(record, resolvers) {
     var warnings = [];
     var maxEntryId = 0;
@@ -110,12 +147,24 @@
         unresolved:       unresolved          // drives the ghost-row flag
       };
     });
-    return { armyList: armyList, warnings: warnings, maxEntryId: maxEntryId };
+    var detachments = normaliseDetachmentKeys(record.detachments);
+    if (resolvers && resolvers.detachmentExists) {
+      detachments.forEach(function (k) {
+        if (!resolvers.detachmentExists(k)) {
+          warnings.push({ type: 'unresolved_detachment', key: k });
+        }
+      });
+    }
+    return {
+      armyList: armyList, warnings: warnings, maxEntryId: maxEntryId,
+      warlordEntryId: record.warlord_entry_id != null ? record.warlord_entry_id : null,
+      detachments: detachments
+    };
   }
 
   // ── migration hook ───────────────────────────────────────────────────────
-  // v1 is the only shape today; the hook exists so the first schema change has
-  // a home and old blobs upgrade on load instead of crashing or misreading.
+  // Old blobs upgrade on load instead of crashing or being misread. Each step
+  // is its own `if`, so a very old record walks every step in order.
   function migrate(record) {
     if (!record || typeof record !== 'object') return null;
     var v = record.schema_version || 0;
@@ -124,8 +173,13 @@
       // Saved by a newer app build than this one. Surface, don't guess.
       return { __incompatible: true, found_version: v, expected_version: SCHEMA_VERSION, raw: record };
     }
-    // v < current: future per-step upgrades go here, e.g.
-    //   if (v < 2) { ...; record.schema_version = 2; }
+    // v1 -> v2 (E1b). A v1 record had no way to express a detachment choice, so
+    // the empty set is the only reading that cannot be wrong. Nothing else on
+    // the record is touched: the migration adds a field, it does not rewrite one.
+    if (v < 2) {
+      record.detachments = [];
+      record.schema_version = 2;
+    }
     return record;
   }
 
@@ -161,7 +215,7 @@
     return Promise.resolve(this.backend.removeItem(this._key(id))).then(function () { return true; });
   };
 
-  // list() -> [{id,name,primary_faction,points_target,modified,created,entry_count}]
+  // list() -> [{id,name,primary_faction,points_target,modified,created,entry_count,detachment_count}]
   // Lightweight summaries for the browse surface. Scans namespaced keys; lists
   // are few and small so a scan beats maintaining a separate index that can
   // desync. Corrupt/incompatible records are skipped with a warning, not fatal.
@@ -181,7 +235,8 @@
               points_target: r.points_target,
               modified: r.modified,
               created: r.created,
-              entry_count: (r.entries || []).length
+              entry_count: (r.entries || []).length,
+              detachment_count: normaliseDetachmentKeys(r.detachments).length
             };
           } catch (err) {
             if (typeof console !== 'undefined') console.warn('[ListStore] skipping corrupt record at', k);
@@ -220,6 +275,8 @@
   // ── export / import (JSON file portability) ──────────────────────────────
   // Single list or an array. exportRecords always emits an array for a stable
   // file shape; importRecords accepts either and re-ids to avoid clobbering.
+  // Import runs migrate, so a v1 file written by an older build lands as v2
+  // with an empty detachment set rather than being rejected as incompatible.
   function exportRecords(records) {
     return JSON.stringify({ format: '40kab-lists', schema_version: SCHEMA_VERSION, lists: records }, null, 2);
   }
@@ -236,6 +293,7 @@
     SCHEMA_VERSION: SCHEMA_VERSION,
     NS: NS,
     newListId: newListId,
+    normaliseDetachmentKeys: normaliseDetachmentKeys,
     serializeEntries: serializeEntries,
     buildRecord: buildRecord,
     deserialize: deserialize,
