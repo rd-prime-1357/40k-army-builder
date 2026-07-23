@@ -1,68 +1,78 @@
-# Next-session prompt — Session 129
+# Next-session prompt — Session 130
 
-Session 128 shipped **E4b** (engine + persistence) as **D200**. `index.html` is **6.4**,
-`list_store.js` schema **3**, assertions **80/80**, baseline **20/20**. Read
-`SESSION_HANDOFF_128.md`, then **D200** — it records a correction to D199 that matters if you
-touch eligibility.
+Session 129 shipped **E4c** (UI: config-panel picker, roster chip) as **D201** — E4 is now fully
+shipped end to end. Session 129 also closed **B56** as **D202**, verified stale — the header had said
+"78/81 closed" since S104 but the real count against `units.json` is 270 total units, exactly 2
+null-points (both retired by Ryan already). `index.html` is **6.5**, assertions **80/80**, baseline
+**21/21**. Read `SESSION_HANDOFF_129.md`, then **D201** and **D202**.
 
 ## Turn type
 
-**UI.** E4c: the enhancement picker, the roster chip, and error rendering. No engine legality, no
-data file changes, no parser changes. Every verdict E4c renders comes from `enhancementRowState`
-and `enhancementRefusalText`; **assertion E4b-4 fails if E4c re-derives any of it.**
+**Analysis/scoping.** No engine, data, or UI change this session — this is E4's pattern repeating:
+E4 got a scoping session (S127, D199) before any build. E21 needs the same treatment before a line
+of parser or engine code gets written against it.
 
 ## Baseline at open
 
-Run `./baseline.sh` (`--no-repo` if offline). **Run `repo_check.py` explicitly** — it was missing
-from the project area in S128 and the custody check has not run since S127. Verify the twelve S128
-hashes in `SESSION_HANDOFF_128.md`'s Files section before trusting the sync.
+Run `./baseline.sh` (`--no-repo` if offline). Verify the nine S129 hashes in
+`SESSION_HANDOFF_129.md`'s Files section before trusting the sync. Two files — `repo_check.py` and
+`BACKLOG_ARCHIVE.md` — were missing from the project area at S129's open and had to be recovered from
+GitHub; check whether they've been re-uploaded directly, and if not, pull them the same way S129 did
+(`raw.githubusercontent.com/rd-prime-1357/40k-army-builder/main/<file>`) rather than losing time
+rediscovering the gap.
 
-## The task: E4c — enhancement UI (per D199 call 4, as built by D200)
+## The task: scope E21 — detachment-driven army-construction effects
 
-1. **Inline single-select row** in the unit's existing config panel in `renderDetail`, rendered
-   only where `enhancementRowState(...).offered` gives rows the entry could hold. Name + points +
-   detachment; illegal rows disabled and carrying `enhancementRefusalText`'s prose (a mute
-   disabled row is the failure B47 exists to fix). A selected row is always clearable.
-2. **Roster-level "Enhancements n/limit" chip** beside the DP display, off `enhancementArmyState`,
-   mirroring how `renderSelectedDetachmentsHtml` renders the DP state.
-3. **Error rendering** for the states only an import or a battle-size/detachment change can reach:
-   `notOffered`, `wrongType`, `sharedUnits`, and `state === 'over'`. Visible, never trimmed.
-   `entryHasError` already flags the carrying entry; the roster warning block is what's missing.
-4. **An `e4c_check.js` harness** in the `e1c_check.js` mould — the picker's disabled flag is
-   `canAssignEnhancement`'s answer for every offered row across scenarios, and nothing else.
+Detachment rules that require or forbid units, unlock units from other factions, or elevate units to
+Battleline (moving the count cap — Functional Spec §5). This is real and biting on day one for a
+built faction: Chaos Daemons' *Shadow Legion* forbids Daemon Prince and Epic Hero units while
+unlocking a list of HERETIC ASTARTES units. **34 detachment abilities across the full dump carry
+require/forbid language, in free prose with no common shape** — this is a parsing-and-modelling
+problem in its own right, deliberately kept out of E1c. Until it ships, the app knows about
+detachments without enforcing their construction restrictions (recorded in D192, consistent with
+D0's undetermined-legality default of leaning permissive — but every session it stays unshipped is
+another session that gap sits open on a built faction).
 
-**Version-bump `index.html`** and state the version when publishing.
+Re-derive from source before designing anything — don't trust the "34" figure forward without
+checking it, the same way D202 didn't trust "78/81" forward. Grep the actual detachment ability text
+in `Detachment_abilities.csv` / the faction pack markdown for require/forbid language and classify
+what shapes actually recur (unit-name lists, keyword-based forbids, faction-unlock text, Battleline
+elevation) before proposing a data model. Produce a D-numbered scope entry in the mould of D199:
+what the state shape looks like, what's data vs. parser vs. engine, and a session split (E21a/b/c or
+similar) the way E4 got E4a (cancelled)/E4b/E4c.
 
-## What is already done, so don't rebuild it
+## Why this over the other three open items
 
-`offeredEnhancements()`, `enhancementRowState()`, `enhancementRefusalText()`,
-`enhancementArmyState()`, `assignEnhancement()` and `clearEnhancement()` all exist, are exercised
-by `e4b_check.js`, and currently have **no UI caller**. E4c is their consumer.
-
-## Ryan's batched calls — check before building
-
-D199's four calls are **still unreviewed** and E4b is built on all four. Calls 1 and 2 (name-keyed
-duplicates, Epic-Hero-ban-on-Upgrades) are now load-bearing in shipped engine code and assertions.
-Call 4 (inline config-panel picker vs. a modal) is the one E4c would act on and is still free — if
-Ryan has said nothing, proceed on the inline recommendation.
+**P2** is process-only, softened since D123 — no urgency. **E12** (user accounts) is explicitly
+deferred by Ryan until near the end of the roadmap. **B17** (Deathwatch loadout-completeness
+remainder) is real but smaller and self-contained — a fine pickup for a later session, not blocking
+anything. E21 is the largest standing legality gap on a faction already built, is fully unblocked
+(E1c shipped S125), and — like E4 — is going to need its own scoping pass regardless of when it's
+tackled, so there's no cost to doing that pass now rather than later. My call; flag it if you'd
+rather sequence B17 or P2 first.
 
 ## Backlog
 
-**6 open:** P2, E21, E4c (this session), E12, B56, B17.
+**4 open:** P2, E21 (this session), E12, B17.
 
 ## Ground rules
 
-* UI-only — engine legality, data files and parsers untouched.
+* Analysis/scoping only — no `index.html`, data file, or parser touched this session.
 * Do not rename anything — project name still unsettled.
-* T2 hashes in this session's handoff Files section for S130 to verify.
-* Manifest: regenerate `pipeline_manifest.json` (`--write`) at close after all gates pass, and add
-  `e4c_check.js` to `pipeline_manifest.py` and `baseline.sh` when it exists.
+* T2 hashes in this session's handoff Files section for S131 to verify.
+* If E21's scope turns out to need a data or parser turn to even assess cleanly (e.g. confirming
+  the require/forbid text shapes against the raw CSV), that's still scoping — reading and
+  classifying source data is not the same as writing a parser change.
 
-## Standing inputs, neither blocking, worth more now
+## Standing inputs, neither blocking, worth more now than before
 
-* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — still zeroes the
-  nine-detachment no-text gap, and enhancement descriptions are about to become visible in the UI,
-  which makes the 30 `none`-source and 265 `wahapedia_10e`-source descriptions more prominent than
-  they have been.
+* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — enhancement
+  descriptions are now genuinely visible in the UI (E4c's detail expander, S129), which makes the
+  30 `none`-source and 265 `wahapedia_10e`-source descriptions more prominent than they were when
+  this note was first written.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
+* The project's file storage is reportedly near capacity. S129 found duplicate-version CSVs
+  (differing row counts under the same filename) likely sitting in the underlying project knowledge
+  store, invisible to the flat file listing — worth Ryan clearing directly from the project's file
+  manager before anything else gets pruned.

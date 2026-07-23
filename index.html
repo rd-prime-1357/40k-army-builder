@@ -2172,7 +2172,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.4';
+  const VERSION = '6.5';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3000,6 +3000,104 @@
     renderAll();
   }
   // ── E4b block end ──────────────────────────────────────────────────────────
+
+  // ── E4c: enhancement picker (UI over the E4b read path) ────────────────────
+  // D199 call 4: an inline single-select row in the unit's own config panel,
+  // plus a roster-level count chip. Every verdict rendered here comes from
+  // enhancementRowState / enhancementArmyState; nothing here re-derives a
+  // legality question (E4c-1 in e4c_check.js enforces this).
+
+  // Which rows this ENTRY could hold, by type — offeredEnhancements() filtered
+  // to enhancementTypeEligible for this unit_type, so an Epic Hero with no
+  // Upgrade on the table gets no section at all rather than a wall of disabled
+  // rows it can never take.
+  //
+  // Flag-don't-drop exception: whatever this entry currently holds is always
+  // included even if it is no longer type-eligible or no longer offered — the
+  // row must stay visible and clearable (clearEnhancement has no legality
+  // check), or a stale assignment from an import/detachment change would have
+  // no way back out of the unit's own panel. The roster warning block is
+  // where that staleness gets EXPLAINED; this list is what stays PICKABLE.
+  function enhancementOfferedRowsForEntry(entry, pointsTotal) {
+    const offered  = offeredEnhancements();
+    const eligible = offered.filter(r => enhancementTypeEligible(entry.unit_type, r.is_upgrade));
+    const held = (entry.enhancement && entry.enhancement.name) ? (() => {
+      const rec = enhancementRecord(entry.enhancement.name, entry.enhancement.detachment_key);
+      return {
+        name:            entry.enhancement.name,
+        detachment_key:  entry.enhancement.detachment_key,
+        detachment_name: (detachmentDefs[entry.enhancement.detachment_key] || {}).name
+                          || entry.enhancement.detachment_key || 'Unknown detachment',
+        points:          enhancementPoints(entry.enhancement.name, entry.enhancement.detachment_key),
+        is_upgrade:      enhancementIsUpgrade(entry.enhancement.name, entry.enhancement.detachment_key),
+        description:     (rec && rec.description) || '',
+        description_source: (rec && rec.description_source) || null
+      };
+    })() : null;
+    const rows = eligible.slice();
+    if (held && !rows.some(r => r.name === held.name && r.detachment_key === held.detachment_key)) {
+      rows.push(held);
+    }
+    return rows.map(r => Object.assign({}, r,
+      { state: enhancementRowState(entry, r.name, r.detachment_key, pointsTotal) }));
+  }
+
+  function renderEnhancementSectionHtml(entry, pointsTotal) {
+    const rows = enhancementOfferedRowsForEntry(entry, pointsTotal);
+    if (!rows.length) return '';
+    const picked = rows.some(r => r.state.selected) ? 1 : 0;
+    let html = `<div class="detail-section-label lo-heading-row"><span>Enhancement</span>`
+             + `<span class="lo-head-right"><span class="lo-count">${picked}/1</span></span></div>`
+             + `<div class="options-block">`;
+    for (const r of rows) {
+      const st  = r.state;
+      const cls = 'option-item radio' + (st.selected ? ' chosen' : '') + (st.disabled ? ' disabled' : '');
+      const upg = r.is_upgrade ? ' · Upgrade' : '';
+      const descBody = r.description
+        ? `<div class="lo-detail-text">${r.description}</div>`
+        : `<div class="lo-detail-text muted">No rules text recorded for this enhancement.</div>`;
+      const d = mkDetail('eye', descBody);
+      html += `<div class="${cls}" onclick="assignEnhancement(${entry.listId},'${esc(r.name)}','${esc(r.detachment_key || '')}')">
+        <div class="option-item-row">
+          <div class="option-check">${st.selected ? '\u25CF' : ''}</div>
+          <div class="option-item-name">${r.name}${detTier2Badge(r.description_source)}<span style="color:#888;font-size:0.7rem;"> — ${r.points} pts · ${r.detachment_name}${upg}</span></div>${d.btn}
+        </div>
+        ${st.disabled ? `<div class="option-item-note">${enhancementRefusalText(st.canAssign)}</div>` : ''}
+      </div>${d.panel}`;
+    }
+    html += `</div>`;
+    return html;
+  }
+
+  // Roster-level count + the states that only an import or a battle-size /
+  // detachment change can reach (D199/D200's over, notOffered, wrongType,
+  // sharedUnits). Visible whenever there is anything to say — an army with no
+  // detachments selected and no assignment carried over has nothing to show.
+  function renderEnhancementChipHtml() {
+    const st = enhancementArmyState(POINTS_CAP);
+    if (!selectedDetachments.length && !st.assigned.length) return '';
+    let cls = 'det-counter';
+    if (st.state === 'over')      cls += ' over';
+    else if (st.state === 'at')   cls += ' at';
+    let html = `<div class="list-type-group"><div class="list-type-label">Enhancements `
+             + `<span class="${cls}">${st.used} of ${st.limit}</span></div>`;
+    if (st.state === 'over') {
+      html += `<div class="det-list-warning">Enhancement selection is over the limit — ${st.used} of ${st.limit}.</div>`;
+    }
+    for (const a of st.wrongType) {
+      html += `<div class="det-list-warning">${escHtml(a.unit_name)}'s ${escHtml(a.name)} is no longer a legal type for that unit.</div>`;
+    }
+    for (const a of st.notOffered) {
+      html += `<div class="det-list-warning">${escHtml(a.unit_name)}'s ${escHtml(a.name)} is not offered by any detachment you have selected.</div>`;
+    }
+    for (const root of st.sharedUnits) {
+      const e = (armyList || []).find(x => x.listId === root);
+      html += `<div class="det-list-warning">${escHtml(e ? e.unit_name : 'A unit')} has more than one enhancement carrier attached.</div>`;
+    }
+    html += `</div>`;
+    return html;
+  }
+  // ── E4c block end ──────────────────────────────────────────────────────────
 
 
   async function init() {
@@ -3912,10 +4010,11 @@
     // empty list still shows what the player picked (and what a saved list
     // brought back with it). The centre-panel empty-state text only applies to
     // the unit list itself, not to the whole panel body.
-    const detHtml = renderSelectedDetachmentsHtml();
+    const detHtml  = renderSelectedDetachmentsHtml();
+    const enhHtml  = renderEnhancementChipHtml();
 
     if (armyList.length === 0) {
-      container.innerHTML = detHtml + '<div class="empty-state">No units added yet.<br>Click any unit in the roster to add it.</div>';
+      container.innerHTML = detHtml + enhHtml + '<div class="empty-state">No units added yet.<br>Click any unit in the roster to add it.</div>';
       return;
     }
 
@@ -4010,7 +4109,7 @@
       html += `</div>`;
     }
 
-    container.innerHTML = detHtml + html;
+    container.innerHTML = detHtml + enhHtml + html;
   }
 
   // E1c. Selected detachments as a centre-panel section. Every state comes
@@ -4186,6 +4285,11 @@
         html += buildOtherOptionsHtml(entry, raw);
       }
     }
+
+    // Enhancement — E4c. Offered rows come from the currently selected
+    // detachments; the section itself is absent for a unit no row on the
+    // table is eligible for (an Epic Hero with no Upgrade offered, etc.).
+    html += renderEnhancementSectionHtml(entry, POINTS_CAP);
 
     // Points display
     html += `<div class="detail-pts-row">

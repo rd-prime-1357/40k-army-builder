@@ -6918,3 +6918,128 @@ No picker, no chip, no error rendering — that is E4c. `entryHasError` gained a
 because it is a legality-derived boolean rather than rendering and an existing indicator would
 otherwise be wrong. `offeredEnhancements()` and `enhancementRefusalText()` exist and are exercised
 by the harness but have no caller in the UI yet; E4c is their consumer.
+
+---
+
+## D201 — E4c built: enhancement picker UI, roster chip; E4 fully shipped (S129)
+
+**UI-only session.** `index.html` 6.4 → **6.5**. No engine, data, or parser file touched. Baseline
+opened 20/20, closed **21/21** (new `e4c_check.js` gate). Assertions unchanged at 80/80 — E4c adds
+no legality rule of its own; every verdict it renders is `enhancementRowState` / `canAssignEnhancement`
+/ `enhancementArmyState`'s answer, read and displayed.
+
+### What was built, per D199 call 4 as built by D200
+
+**Config-panel row.** `enhancementOfferedRowsForEntry(entry, pointsTotal)` — the one new decision
+function E4c introduces — filters `offeredEnhancements()` to `enhancementTypeEligible(entry.unit_type,
+is_upgrade)`, so a unit sees only rows it could conceivably hold: an Epic Hero with no Upgrade
+offered gets no section at all, rather than a wall of rows disabled on `unit_type`.
+`renderEnhancementSectionHtml` renders each surviving row as a single-select item — name, points,
+detachment name — via the existing `option-item radio` idiom already used for wargear/other-options
+picks in this same panel; a disabled row carries `enhancementRefusalText`'s prose verbatim. A
+selected row is never disabled (the engine's own guarantee), so it stays clickable to clear.
+
+**A gap caught against the S129 prompt's literal task list, not spelled out but real:** the prompt's
+task 1 asked for "name + points + detachment" only. Every other pickable row in this exact panel —
+wargear swaps, bundle endpoints, other-options — carries an expandable "eye" detail button
+(`mkDetail`/`itemDetailHtml`) showing its rules text; shipping the enhancement row without one would
+be the only pick in the panel a player cannot read before taking. The S129 prompt's own standing-
+input note anticipates this directly — it flags the 30 `none`-source and 265 `wahapedia_10e`-source
+enhancement descriptions as "about to become more prominent... which the UI is about to make visible"
+once E4c ships, which only makes sense if a description surface exists. Added: each row gets an
+`mkDetail('eye', ...)` expander over the enhancement's own `description`, with `detTier2Badge` on the
+name for anything short of `faction_pack`-sourced text — the same tier badge `renderDetachmentDetailHtml`
+already uses for detachment rule text, applied here for the same reason.
+
+**One call beyond D199, not spelled out in the S129 prompt but a direct consequence of flag-don't-
+drop already built into E4b:** whatever an entry currently holds stays in its row list even when it
+is no longer type-eligible or no longer offered by a selected detachment. Without this, a unit
+holding a stale assignment (from an import, or after a detachment/battle-size change) would have no
+row to click to clear it from its own panel — `clearEnhancement` would exist with no path to it for
+exactly the states it exists to handle. The roster warning block (below) is where the staleness gets
+*explained*; this is what keeps it *clearable*.
+
+**Roster chip.** `renderEnhancementChipHtml()`, off `enhancementArmyState(POINTS_CAP)`, in the same
+`list-type-group` idiom `renderSelectedDetachmentsHtml` uses for the DP display. Shows `used of limit`
+with the same over/at/muted colouring `det-counter` already uses for DP. Warning lines for exactly
+the four states an import or a battle-size/detachment change can reach — `over`, `notOffered`,
+`wrongType`, `sharedUnits` — each naming the carrying unit, never trimmed. `duplicate` is
+deliberately not surfaced here: no state in the current data can produce a same-army-name collision
+that both (a) survives to the roster (assignment-time and attach-time gates both block it going
+forward) and (b) isn't already caught as `notOffered` or `wrongType`. If a future data or engine
+change opens a path to a bare `duplicate` with neither of those also true, this gap should be
+revisited — noted here rather than built against a state nothing today can reach.
+
+**Assertions.** No new `rules_assertions.py` entries — E4c has no legality of its own to assert.
+`e4c_check.js` (net new, 75 checks, mould of `e1c_check.js`): row filtering matches
+`enhancementTypeEligible` and nothing else; the flag-don't-drop held-row case, including the
+edge case of an Epic Hero holding a stale regular pick; `disabled` equals `selected ? false :
+!canAssignEnhancement(...).ok` across three scenarios including an attached-cluster carrier; the
+section renders empty for a unit with zero eligible rows; every disabled row's refusal text is
+`enhancementRefusalText`'s output verbatim; the chip's numbers match `enhancementArmyState` and its
+warning lines name the correct carrier for `notOffered`, `wrongType`, and `sharedUnits`.
+
+### E4 is now fully shipped
+
+D199's session split (E4b engine S128, E4c UI S129) is complete. D199's four batched calls remain
+formally unreviewed by Ryan; calls 1 and 2 (name-keyed duplicates, Epic-Hero-ban-on-Upgrades) are
+load-bearing in shipped engine code, and call 4 (inline picker over a modal) is now built as this
+session's UI shape. Overruling any of the three would be a rework, not a toggle.
+
+### Two housekeeping items surfaced this session, neither blocking
+
+**`repo_check.py` was absent from the project area for a second consecutive session** (also flagged
+at S128 close). It was never lost from the record — pulled back byte-identical from the GitHub repo,
+which confirms the repo itself is intact — but the project working area should carry its own copy
+per T1's original intent. Ryan re-upload, not an engine fix.
+
+**Duplicate-version CSVs appear to be sitting in project knowledge storage,** surfaced when several
+`Unit_*.csv` / `Rules.csv` files attached to this session's opening message carried two different row
+counts under the same filename (Unit_Wargear_Options.csv 16 vs 13 rows; Unit_Weapons.csv 140 vs 142;
+Rules.csv 13 vs 18) — the flat project-area file listing shows only one copy of each, so the
+duplication is in the underlying knowledge store, invisible to `repo_check.py` and to the file
+listing alike. Likely contributor to the project's reported 97%-full state. Not a repo custody
+issue — these files are correctly never committed — but worth Ryan clearing the stale copy of each
+from the project's file manager directly, which this session cannot do from here.
+
+### Files
+
+**Changed:** `index.html` (v6.5), `baseline.sh` (`e4c_check` gate added), `pipeline_manifest.py`
+(`e4c_check.js` guarded), `pipeline_manifest.json` (regenerated, 38 files), `40K_Decision_Log_v3_0.md`
+(this entry), `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`.
+
+**Net new:** `e4c_check.js`.
+
+**Repo custody:** all eight changed/new files are project-generated with no GW text — all
+repo-eligible. Not yet pushed this session (repo uploads are batched); `repo_check.py` at close shows
+these five files (`index.html`, `baseline.sh`, `pipeline_manifest.py`, `pipeline_manifest.json`,
+`e4c_check.js`) differing from or missing off the last repo push, as expected pre-push.
+
+---
+
+## D202 — B56 closed: verified against `units.json` directly, header had been stale (S129)
+
+While assigning S130's next work, I checked B56's "78/81 closed" claim against the current data
+before trusting it forward into a new session — the project's own principle: absence of a fresh
+re-derivation is not evidence a stale claim still holds. A first pass at the check used the wrong
+field (`sizes[].first_unit` etc., which does not exist on a unit record) and produced nonsense —
+82 apparent nulls for Adeptus Astartes alone, including units as basic as Intercessor Squad. Caught
+before it went anywhere: that number is wildly inconsistent with 129 sessions of a working,
+extensively-asserted points pipeline, and the discrepancy was resolved by finding the real schema
+(`unit.points`, a flat field) rather than by adjusting the check to fit an assumption.
+
+**Correct count: 270 total units, exactly 2 carry `points: null`** — Judiciar Xacharus and Chaplain
+Kastiel, both retired from consideration by Ryan's S121 call (B56e — unsourceable in any MFM file in
+the project). Every other unit across all six SM-family armies prices cleanly. B56's header had said
+"78/81 closed" since S104 and was never updated after Wolf Guard Headtakers (B56g) and Crusader
+Squad (B56b) shipped their remaining fixes — it had been sitting open, past its actual completion,
+for several sessions.
+
+**Closed.** Full history consolidated and moved to `BACKLOG_ARCHIVE.md`; one-line pointer left in
+`OPEN_ITEMS_BACKLOG.md` beside its already-closed sub-items. Open count: 5 → 4 (P2, E21, E12, B17).
+
+No code or data touched — this is a documentation correction, not a fix. Worth a small
+`rules_assertions.py` check pinning "the null-points set is exactly {Judiciar Xacharus, Chaplain
+Kastiel}" so this can never again silently drift stale in either direction; not built this session
+to avoid adding an engine-adjacent change to what was scoped as a UI-only turn. Candidate for
+whichever session next touches `rules_assertions.py`.

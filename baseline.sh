@@ -60,6 +60,7 @@ gate b58_check            node b58_check.js index.html unit_loadouts.json
 gate e1b_check            node e1b_check.js index.html detachments.json list_store.js
 gate e1c_check            node e1c_check.js index.html detachments.json
 gate e4b_check            node e4b_check.js index.html detachments.json
+gate e4c_check            node e4c_check.js index.html detachments.json
 gate bundle_check         node bundle_check.js index.html unit_loadouts.json units.json
 gate pipeline_manifest    python3 pipeline_manifest.py
 if [ "$SKIP_REPO" -eq 0 ]; then

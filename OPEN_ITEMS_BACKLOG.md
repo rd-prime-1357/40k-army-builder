@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **6 open** as of S128 close: P2, E21, E4c, B56, E12, B17.
+not here, it isn't open. **4 open** as of S129 close: P2, E21, E12, B17.
 
 ## Open Items
 
@@ -26,59 +26,6 @@ detachments without enforcing their construction restrictions — recorded openl
 left as a silent gap, and consistent with D0's undetermined-legality default of leaning permissive.
 
 
-### E4 — Detachment enhancement assignment — **SCOPED S127 (D199); E4b SHIPPED S128 (D200); E4c OPEN**
-Design is D199, as corrected by D200. The planned E4a data turn was cancelled — the 515 enhancement
-records verified clean in S127. Eligibility keys off `unit_type`. Two data facts shaped the design:
-29 same-army cross-detachment name collisions make the duplicate rule name-keyed army-wide, and
-Deathwing Assault at 30/15 pts in two Dark Angels detachments means a stored assignment must carry
-its detachment key, not just the name. Four batched calls for Ryan ride in D199 (duplicate identity,
-Epic-Hero-ban-on-Upgrades, free-text restrictions displayed-not-enforced, inline config-panel picker
-UI) — **still awaiting Ryan's review; E4b is built on all four.**
-
-**E4b — engine + persistence — SHIPPED S128 (D200).** Per-entry `enhancement: {name,
-detachment_key}`; `list_store.js` schema v2→v3 with `normaliseEnhancement()` at the boundary;
-`canAssignEnhancement` as the single read path over the five 25.04 rules (hard block, D114/D115
-line); the Upgrade carve-out (three copies, all priced, only the first counted); the one-per-unit
-rule enforced over the *attached* unit; attach-action gate as the second enforcement point; points
-folded into `ptsForEntry`; flag-don't-drop on stale imports. Two calls beyond D199: a duplicated
-unit does not inherit its enhancement, and ghost entries' enhancements do not count. Five
-assertions added (E4b-1..5) plus `e4b_check.js`; E1b-2 repinned to schema 3. **D200 corrects
-D199's eligibility claim** — the keyword derivation only agrees once written as CHARACTER *and not*
-EPIC HERO.
-
-**E4c — assignment UI — OPEN, assigned S129 (UI).** Inline single-select row in the unit's config
-panel for eligible units only, listing name + points from selected detachments, illegal rows
-disabled with reasons via `enhancementRefusalText`; roster-level "Enhancements n/limit" chip beside
-the DP display; visible error rendering for imported/stale/over-limit states. The engine is
-complete and harnessed — `offeredEnhancements()`, `enhancementRowState()` and
-`enhancementRefusalText()` exist with no UI caller yet and are E4c's consumers. E4c must not
-re-derive any legality; E4b-4 fails if it does.
-
-
-### B56 — 81 built units carry no points — **OPEN (cluster header); NEW S99 (D166); DIAGNOSED S100 (D167); B56a SHIPPED S101 (D168), B56b SHIPPED S102 (D170), B56c SHIPPED S103 (D171), B56d SHIPPED S104 (D172), 78/81 closed; L**
-Note: B56c/B56d do not themselves close any of the 81 null-points units — B56c/B56d is a separate
-override mechanism for units that already carry a generic price. See B56c and B56d below.
-**81 of 270 units have `points: null`** — Space Wolves 20, Black Templars 18, Dark Angels 16,
-Blood Angels 15, Deathwatch 10, Adeptus Astartes 2. All SM-family chapter units.
-
-**Why it matters:** a null-points unit renders "—" and contributes 0 to the army total, so it is
-addable and configurable. A 2,000-point list can be built 81 units deep at zero cost — a real
-legality hole against D0. Not an error state today, just silently free.
-
-**Diagnosed S100 (D167).** Not one ticket. Split into B56a–B56e below; this header closes when they
-all ship. Corrections to the S99 framing, all re-derived from current data:
-- The five chapter files close **77**, not 78. `MFM_Chapter_Pass.md` had drifted in both directions —
-  SW's Venerable Dreadnought has since been costed from base, and all four vanilla-chapter
-  stragglers it listed are now closed.
-- Wolf Guard Headtakers and Crusader Squad are a **parser gap, not a name mismatch**. Both names
-  match exactly; their MFM size-bracket lines name a composition rather than "N models", which
-  `COST_RE` cannot read.
-- Judiciar Xacharus and Chaplain Kastiel appear in **no MFM file in the project**. Unsourceable.
-- **Black Templars is the whole scoping risk**: 9 of its 18 datasheets share a name with an Adeptus
-  Astartes datasheet, and an unscoped chapter run writes those rows under `Adeptus Astartes`,
-  overwriting generic base prices while leaving BT uncosted. The other four chapters misfile zero.
-- D42 holds. The real override population is **11 rows across 4 chapters**, not the larger set
-  implied by raw diffs — BT's three apparent overrides are its own natively-priced datasheets.
 
 
 ### E12 — User accounts (login/passwords) — **OPEN; DEFERRED S121 (Ryan: hold until near the end); L; architectural**
@@ -221,6 +168,7 @@ Full history for every one of these lives in `BACKLOG_ARCHIVE.md`, in the same o
 - **E7** — More spacing between points / info / x in the center panel — SHIPPED S87 (D154)
 - **E8** — Delete safety — SHIPPED S87 (D154)
 - **E9** — Warlord selection — DONE (Sessions 75–76, D139, D140)
+- **E4** — Detachment enhancement assignment — CLOSED S129 (D199 scope, D200 engine, D201 UI); full body in `BACKLOG_ARCHIVE.md`
 - **B50** — off-by-one column index in `wahapedia_transform.py` post-processing — DONE (Session 74, D138)
 - **B51** — Blue Horrors' abilities/rules/keywords were miscolumned in the CD source — DONE (Session 75, D139)
 - **B52** — `Sullen Malevolence (Aura)`'s ability description is truncated in the CD source — SHIPPED S77
@@ -228,6 +176,7 @@ Full history for every one of these lives in `BACKLOG_ARCHIVE.md`, in the same o
 - **B56a** — chapter Unit_Points rows (scoped) — SHIPPED S101 (D168)
 - **B56b** — parser: composition-shaped size-bracket lines — SHIPPED S102 (D170) — Crusader Squad only
 - **B56g** — Wolf Guard Headtakers: Hunting Wolves escort is an optional priced model group — CLOSED S108 (D174, D175, D176)
+- **B56** — 81 built units carry no points (cluster header) — CLOSED S129 (D202); verified against `units.json` directly — 270 units total, exactly 2 null-points (Judiciar Xacharus, Chaplain Kastiel, both retired by Ryan's S121 call, B56e) — header was stale, all sub-items had already shipped; full body in `BACKLOG_ARCHIVE.md`
 - **B57** — in-between unit sizes are not offered anywhere — CLOSED S118 (D186); no build needed
 - **B56c** — derive the per-chapter points override map — SHIPPED S103 (D171)
 - **B56d** — engine: apply the chapter override at selection — SHIPPED S104 (D172)

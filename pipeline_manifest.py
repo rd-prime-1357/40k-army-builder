@@ -90,6 +90,7 @@ GUARDED = [
     'e1b_check.js',
     'e1c_check.js',
     'e4b_check.js',
+    'e4c_check.js',
 ]
 
 

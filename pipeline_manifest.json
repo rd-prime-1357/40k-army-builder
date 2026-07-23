@@ -1,7 +1,7 @@
 {
  "_note": "SHA-256 of every guarded pipeline file. Regenerated at session close (python3 pipeline_manifest.py --write). manifest_check verifies it at baseline; a mismatch names the file that arrived as the wrong copy.",
  "files": {
-  "index.html": "e1f1923a5ba81429c25b1d49d7e4f0beafc91592d4422d646ae9dd71e48cd308",
+  "index.html": "5a6019d5876a7c8c19b251d9cfbac9912dd64ea1b74bf3ae955da5c89e838f0e",
   "list_store.js": "2bc2c445e2052f65287be0f60686d4bc26e675357d3ba599754243ce55874451",
   "units.json": "307616b86b2ac34060e0b45faac13478d664ebd815c0822ca241b13a399779f4",
   "unit_loadouts.json": "2de9497122841e1a4a563a959716eda98010727ac87e2414fee83b2a543e85ab",
@@ -37,6 +37,7 @@
   "required_size_check.js": "cab302123983b22478d0c01b5117a5de3ba984cef7f6b78654e01216908d8a15",
   "e1b_check.js": "7dc666f9bbecd3fba77c1c490fec3c40484b2e6f3e53ec05f7ec6e033db4dc84",
   "e1c_check.js": "856e69c474a00ea4d7f65c1e762b6c44846d0d4e844f29a4bee7492d16074a92",
-  "e4b_check.js": "7ca74addb5a0dc60d8ea134229ed68b1d6fdefcd8e582e86d91ac2500735c8ba"
+  "e4b_check.js": "7ca74addb5a0dc60d8ea134229ed68b1d6fdefcd8e582e86d91ac2500735c8ba",
+  "e4c_check.js": "ace756aa91247a591bd1bc4e443f365f841a5a46dd4cbcd0b5e1c89ec6b0bb65"
  }
 }
