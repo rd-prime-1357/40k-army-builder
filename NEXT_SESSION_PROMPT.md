@@ -1,71 +1,68 @@
-# Next-session prompt — Session 128
+# Next-session prompt — Session 129
 
-Session 127 was an **analysis/scoping session**: E4 designed end-to-end as **D199**, the planned
-E4a data turn cancelled (data verified clean), E4 split into E4b (this session) and E4c (S129).
-Read `SESSION_HANDOFF_127.md`, then **D199** in full — it is the build spec. `index.html` did not
-change — still 6.3.
+Session 128 shipped **E4b** (engine + persistence) as **D200**. `index.html` is **6.4**,
+`list_store.js` schema **3**, assertions **80/80**, baseline **20/20**. Read
+`SESSION_HANDOFF_128.md`, then **D200** — it records a correction to D199 that matters if you
+touch eligibility.
 
 ## Turn type
 
-**Engine-only.** E4b: enhancement state, persistence, validation and points math. No data file
-changes, no parser changes. The UI (E4c) is S129 — this session may add the minimal render hooks
-the assertions need, but the picker/chip/error rendering is out of scope; stop cleanly at the
-engine seam.
+**UI.** E4c: the enhancement picker, the roster chip, and error rendering. No engine legality, no
+data file changes, no parser changes. Every verdict E4c renders comes from `enhancementRowState`
+and `enhancementRefusalText`; **assertion E4b-4 fails if E4c re-derives any of it.**
 
 ## Baseline at open
 
-Run `./baseline.sh` (use `--no-repo` if offline). **Known S127 finding:** if this sandbox loads
-from the Claude Project store, `repro_check.py` and `pipeline_manifest.py` may be missing and
-`pipeline_manifest.json` stale — pull the three from the GitHub repo if Ryan has not re-uploaded
-them yet. The repo versions are correct; S127 verified them against the S126 hashes.
+Run `./baseline.sh` (`--no-repo` if offline). **Run `repo_check.py` explicitly** — it was missing
+from the project area in S128 and the custody check has not run since S127. Verify the twelve S128
+hashes in `SESSION_HANDOFF_128.md`'s Files section before trusting the sync.
 
-**Verify the S127 hashes** in `SESSION_HANDOFF_127.md`'s Files section before trusting the sync.
+## The task: E4c — enhancement UI (per D199 call 4, as built by D200)
 
-## The task: E4b — enhancement engine + persistence (per D199)
-
-Build exactly what D199 specifies:
-
-1. **Per-entry field** `enhancement: { name, detachment_key }` beside `god`/`wargear`/`otherOptions`.
-2. **`list_store.js` schema v2 → v3.** v2 records load with `enhancement: null` on every entry.
-   Flag-don't-drop on load: unresolvable detachment key or name is kept, flagged, priced from the
-   catalogue when resolvable and 0 when not (the `detachmentDp()` pattern).
-3. **One read-path function** answering every legality question with ok/blocked-with-reason:
-   wrong unit type (regular → Character only; Upgrade → any type except Epic Hero), duplicate
-   (name-keyed army-wide; Upgrades block at the third copy), unit/attached-group already has one,
-   army limit reached (2 at ≤1000 pts else 4; first Upgrade copy counts, second/third do not),
-   not-offered (stale/import only). Hard block per D114/D115; over states from import or
-   battle-size/detachment change stay visible errors.
-4. **Attach-action gate**: refuse merging two enhancement carriers into one attached group.
-5. **Points math** through the existing recompute — entry points, army total, cap, `points_cache`.
-6. **Assertions** (rules_assertions.py or a new e4b harness — your call, note it in the handoff):
-   eligibility-set match (unit_type-derived vs keyword-derived wherever keywords are populated);
-   single-call-site guard on the read-path function (E1c-1 pattern); count arithmetic including
-   the Upgrade carve-out; name-collision census pinned at **29** so a data regeneration that moves
-   it resurfaces the duplicate-identity question.
+1. **Inline single-select row** in the unit's existing config panel in `renderDetail`, rendered
+   only where `enhancementRowState(...).offered` gives rows the entry could hold. Name + points +
+   detachment; illegal rows disabled and carrying `enhancementRefusalText`'s prose (a mute
+   disabled row is the failure B47 exists to fix). A selected row is always clearable.
+2. **Roster-level "Enhancements n/limit" chip** beside the DP display, off `enhancementArmyState`,
+   mirroring how `renderSelectedDetachmentsHtml` renders the DP state.
+3. **Error rendering** for the states only an import or a battle-size/detachment change can reach:
+   `notOffered`, `wrongType`, `sharedUnits`, and `state === 'over'`. Visible, never trimmed.
+   `entryHasError` already flags the carrying entry; the roster warning block is what's missing.
+4. **An `e4c_check.js` harness** in the `e1c_check.js` mould — the picker's disabled flag is
+   `canAssignEnhancement`'s answer for every offered row across scenarios, and nothing else.
 
 **Version-bump `index.html`** and state the version when publishing.
 
-## Ryan's batched calls (D199) — check before building on them
+## What is already done, so don't rebuild it
 
-Four recommendations are pending Ryan's review: name-keyed duplicates, Epic-Hero-ban-on-Upgrades,
-free-text restrictions displayed-not-enforced, inline config-panel UI. If he has overruled any,
-the design adjusts before E4b builds; if silent, proceed on the recommendations as recorded.
+`offeredEnhancements()`, `enhancementRowState()`, `enhancementRefusalText()`,
+`enhancementArmyState()`, `assignEnhancement()` and `clearEnhancement()` all exist, are exercised
+by `e4b_check.js`, and currently have **no UI caller**. E4c is their consumer.
+
+## Ryan's batched calls — check before building
+
+D199's four calls are **still unreviewed** and E4b is built on all four. Calls 1 and 2 (name-keyed
+duplicates, Epic-Hero-ban-on-Upgrades) are now load-bearing in shipped engine code and assertions.
+Call 4 (inline config-panel picker vs. a modal) is the one E4c would act on and is still free — if
+Ryan has said nothing, proceed on the inline recommendation.
 
 ## Backlog
 
-**7 open:** P2, E21, E4b (this session), E4c, E12, B56, B17.
+**6 open:** P2, E21, E4c (this session), E12, B56, B17.
 
 ## Ground rules
 
-* Engine-only — data files and parsers untouched.
+* UI-only — engine legality, data files and parsers untouched.
 * Do not rename anything — project name still unsettled.
-* T2 hashes in this session's handoff Files section for S129 to verify.
-* Manifest: `index.html` and `list_store.js` are guarded — regenerate `pipeline_manifest.json`
-  (`--write`) at close after all gates pass.
+* T2 hashes in this session's handoff Files section for S130 to verify.
+* Manifest: regenerate `pipeline_manifest.json` (`--write`) at close after all gates pass, and add
+  `e4c_check.js` to `pipeline_manifest.py` and `baseline.sh` when it exists.
 
 ## Standing inputs, neither blocking, worth more now
 
-* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — unchanged from
-  the S127 prompt; still zeroes the nine-detachment no-text gap.
+* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — still zeroes the
+  nine-detachment no-text gap, and enhancement descriptions are about to become visible in the UI,
+  which makes the 30 `none`-source and 265 `wahapedia_10e`-source descriptions more prominent than
+  they have been.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.

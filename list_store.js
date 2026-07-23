@@ -19,12 +19,18 @@
  *        identity across a regeneration; array position is not. A v1 record
  *        upgrades to v2 with an empty detachment set — the only reading that
  *        is certainly right, since v1 had no way to express a selection.
+ *   v3 — E4b. Per-entry `enhancement`: {name, detachment_key} or null. The
+ *        detachment key rides along because the name alone does not determine
+ *        the price — the same enhancement name exists at two different costs
+ *        in two Dark Angels detachments (D199). A v2 record upgrades to v3
+ *        with `enhancement: null` on every entry, which is the only reading
+ *        that adds no information, since v2 had no way to express one.
  * ======================================================================== */
 
 (function (root) {
   'use strict';
 
-  var SCHEMA_VERSION = 2;
+  var SCHEMA_VERSION = 3;
   var NS = '40kab:list:';   // one key per list: 40kab:list:<id>
 
   // ── ids ──────────────────────────────────────────────────────────────────
@@ -52,6 +58,24 @@
     return out;
   }
 
+  // ── enhancement assignment ───────────────────────────────────────────────
+  // E4b. A stored assignment is {name, detachment_key} or null. Normalised at
+  // the persistence boundary for normaliseDetachmentKeys' reason: a half-record
+  // that reached the engine would have to be re-checked on every single read.
+  //
+  // A name with no usable detachment key is KEPT, with the key as null. That
+  // is flag-don't-drop: the pair will not resolve against the catalogue and the
+  // engine reports it as not-offered, which is information the player needs.
+  // Dropping it would silently delete a paid-for choice. A record with no name
+  // at all carries no information and normalises to null.
+  function normaliseEnhancement(v) {
+    if (!v || typeof v !== 'object') return null;
+    var name = typeof v.name === 'string' ? v.name : '';
+    var key  = typeof v.detachment_key === 'string' && v.detachment_key ? v.detachment_key : null;
+    if (!name) return null;
+    return { name: name, detachment_key: key };
+  }
+
   // ── schema: in-memory armyList <-> persisted record ──────────────────────
   //
   // The persisted entry uses snake_case names that are deliberately decoupled
@@ -77,6 +101,7 @@
         god:           e.god != null ? e.god : null,
         wargear:       e.wargear || {},
         other_options: e.otherOptions || {},
+        enhancement:   normaliseEnhancement(e.enhancement),
         attached_to:   e.attachedToListId != null ? e.attachedToListId : null,
         points_cache:  e.points != null ? e.points : null  // display-only; recomputed on load
       };
@@ -141,6 +166,7 @@
         points:           null,               // recomputed by the app on render
         wargear:          s.wargear || {},
         otherOptions:     s.other_options || {},
+        enhancement:      normaliseEnhancement(s.enhancement),
         attachedToListId: s.attached_to != null ? s.attached_to : null,
         faction_ref:      s.faction_ref || null,
         unit_id:          s.unit_id || null,
@@ -179,6 +205,16 @@
     if (v < 2) {
       record.detachments = [];
       record.schema_version = 2;
+    }
+    // v2 -> v3 (E4b). A v2 record had no way to express an enhancement, so null
+    // on every entry is the only reading that adds no information. As with the
+    // step above, this ADDS a field and rewrites none: every other value on the
+    // record and on each entry is left exactly as it was found.
+    if (v < 3) {
+      (record.entries || []).forEach(function (e) {
+        if (e && typeof e === 'object') e.enhancement = null;
+      });
+      record.schema_version = 3;
     }
     return record;
   }
@@ -275,8 +311,8 @@
   // ── export / import (JSON file portability) ──────────────────────────────
   // Single list or an array. exportRecords always emits an array for a stable
   // file shape; importRecords accepts either and re-ids to avoid clobbering.
-  // Import runs migrate, so a v1 file written by an older build lands as v2
-  // with an empty detachment set rather than being rejected as incompatible.
+  // Import runs migrate, so an older file lands at the current schema version
+  // rather than being rejected as incompatible.
   function exportRecords(records) {
     return JSON.stringify({ format: '40kab-lists', schema_version: SCHEMA_VERSION, lists: records }, null, 2);
   }
@@ -294,6 +330,7 @@
     NS: NS,
     newListId: newListId,
     normaliseDetachmentKeys: normaliseDetachmentKeys,
+    normaliseEnhancement: normaliseEnhancement,
     serializeEntries: serializeEntries,
     buildRecord: buildRecord,
     deserialize: deserialize,

@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **6 open** as of S126 close: P2, E21, E4, B56, E12, B17.
+not here, it isn't open. **6 open** as of S128 close: P2, E21, E4c, B56, E12, B17.
 
 ## Open Items
 
@@ -26,31 +26,33 @@ detachments without enforcing their construction restrictions — recorded openl
 left as a silent gap, and consistent with D0's undetermined-legality default of leaning permissive.
 
 
-### E4 — Detachment enhancement assignment — **OPEN; SCOPED S127 (D199); splits E4b/E4c**
-Design is D199. The planned E4a data turn is cancelled — the 515 enhancement records verified clean
-in S127 (integer points, boolean `is_upgrade`, 35 Upgrades); E4a survives only as assertions landing
-with E4b. Eligibility keys off `unit_type` (keywords are unevenly populated — Chaos Daemons carry
-ability-style keywords only). Two data facts that shaped the design: 29 same-army cross-detachment
-name collisions make the duplicate rule name-keyed army-wide, and Deathwing Assault at 30/15 pts in
-two Dark Angels detachments means a stored assignment must carry its detachment key, not just the
-name. Four batched calls for Ryan ride in D199 (duplicate identity, Epic-Hero-ban-on-Upgrades,
-free-text restrictions displayed-not-enforced, inline config-panel picker UI) — work proceeds on the
-recommendations.
+### E4 — Detachment enhancement assignment — **SCOPED S127 (D199); E4b SHIPPED S128 (D200); E4c OPEN**
+Design is D199, as corrected by D200. The planned E4a data turn was cancelled — the 515 enhancement
+records verified clean in S127. Eligibility keys off `unit_type`. Two data facts shaped the design:
+29 same-army cross-detachment name collisions make the duplicate rule name-keyed army-wide, and
+Deathwing Assault at 30/15 pts in two Dark Angels detachments means a stored assignment must carry
+its detachment key, not just the name. Four batched calls for Ryan ride in D199 (duplicate identity,
+Epic-Hero-ban-on-Upgrades, free-text restrictions displayed-not-enforced, inline config-panel picker
+UI) — **still awaiting Ryan's review; E4b is built on all four.**
 
-**E4b — engine + persistence — OPEN, assigned S128 (engine-only).** Per-entry
-`enhancement: {name, detachment_key}` field; `list_store.js` schema v2→v3 (v2 loads with
-`enhancement: null`); one read-path function returning ok/blocked-with-reason for the five 25.04
-rules (hard block, D114/D115 line); the Upgrade carve-out's separate counter (first copy counts
-toward the 2/4 battle-size limit, second and third do not but still cost points, max three);
-attach-action gate refusing to merge two carriers into one attached group; points math through the
-existing recompute; flag-don't-drop on stale imports. Assertions: eligibility-set match wherever
-keywords are populated, single-call-site guard (E1c-1 pattern), count arithmetic, name-collision
-census pinned at 29.
+**E4b — engine + persistence — SHIPPED S128 (D200).** Per-entry `enhancement: {name,
+detachment_key}`; `list_store.js` schema v2→v3 with `normaliseEnhancement()` at the boundary;
+`canAssignEnhancement` as the single read path over the five 25.04 rules (hard block, D114/D115
+line); the Upgrade carve-out (three copies, all priced, only the first counted); the one-per-unit
+rule enforced over the *attached* unit; attach-action gate as the second enforcement point; points
+folded into `ptsForEntry`; flag-don't-drop on stale imports. Two calls beyond D199: a duplicated
+unit does not inherit its enhancement, and ghost entries' enhancements do not count. Five
+assertions added (E4b-1..5) plus `e4b_check.js`; E1b-2 repinned to schema 3. **D200 corrects
+D199's eligibility claim** — the keyword derivation only agrees once written as CHARACTER *and not*
+EPIC HERO.
 
 **E4c — assignment UI — OPEN, assigned S129 (UI).** Inline single-select row in the unit's config
 panel for eligible units only, listing name + points from selected detachments, illegal rows
-disabled with reasons; roster-level "Enhancements n/limit" chip beside the DP display; visible error
-rendering for imported/stale/over-limit states.
+disabled with reasons via `enhancementRefusalText`; roster-level "Enhancements n/limit" chip beside
+the DP display; visible error rendering for imported/stale/over-limit states. The engine is
+complete and harnessed — `offeredEnhancements()`, `enhancementRowState()` and
+`enhancementRefusalText()` exist with no UI caller yet and are E4c's consumers. E4c must not
+re-derive any legality; E4b-4 fails if it does.
 
 
 ### B56 — 81 built units carry no points — **OPEN (cluster header); NEW S99 (D166); DIAGNOSED S100 (D167); B56a SHIPPED S101 (D168), B56b SHIPPED S102 (D170), B56c SHIPPED S103 (D171), B56d SHIPPED S104 (D172), 78/81 closed; L**

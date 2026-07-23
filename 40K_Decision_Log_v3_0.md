@@ -6822,3 +6822,99 @@ record; totals, the points cap and `points_cache` all flow through the existing 
   Upgrade carve-out; name-collision census pinned at 29 so a data change resurfaces the question).
 - **E4c (S129, UI):** config-panel row, count chip, disabled-reason rendering, error states for
   imported/stale assignments.
+
+---
+
+## D200 — E4b built: enhancement engine, schema v3, and a correction to D199's eligibility claim (S128)
+
+**Engine-only session.** `index.html` 6.3 → **6.4**, `list_store.js` schema 2 → **3**. No data file,
+no parser, no CSV touched. Baseline opened 19/19 and closed **20/20** (the new `e4b_check.js` gate).
+Assertions 75 → **80**.
+
+### A correction to D199 that had to be made before anything could be built
+
+D199 states that a full scan "found no unit whose CHARACTER keyword would qualify it while its
+`unit_type` disqualifies it". **As written that is false.** Fifty-three Epic Heroes carry the
+CHARACTER keyword while `unit_type` is `Epic Hero` — which is not a data fault but the rules being
+the rules: in 40K an Epic Hero *is* a Character, and 25.04 bans them by a separate bullet rather
+than by not being Characters.
+
+The claim holds only once the keyword derivation is written as **has CHARACTER and NOT EPIC HERO**.
+With that carve-out the two derivations agree exactly, with the two exceptions D199 already names
+(Ravenwing Command Squad, Rendmaster on Blood Throne), both in the safe direction: `unit_type`
+offers the pick and the keyword list is merely incomplete.
+
+Nothing D199 specified about behaviour changes. What changes is the assertion: written to D199's
+prose, E4b-2 would have failed on its first run against fifty-three units, and the obvious repair
+under time pressure — dropping the EPIC HERO half — would have produced a gate that passed while
+asserting the opposite of the rule. Recorded because "the assertion was written from the handoff's
+prose rather than from the source" is the exact failure mode the source-first rule exists to stop.
+
+### What was built
+
+**State.** A per-entry `enhancement: {name, detachment_key}` field, null by default, beside `god`,
+`wargear` and `otherOptions`. The key rides along because the name alone does not price the pick.
+
+**Persistence.** `list_store.js` at schema v3, with `normaliseEnhancement()` at the boundary. A v2
+record migrates by gaining `enhancement: null` on every entry and nothing else. A name with no
+usable detachment key is **kept** with a null key — it will not resolve, and the engine reports it
+as not-offered, which is information the player needs; dropping it would silently delete a
+paid-for choice. A record with no name at all carries nothing and normalises to null.
+
+**The read path.** `canAssignEnhancement(entry, name, key, pointsTotal)` answers every legality
+question and returns ok or blocked-with-reason. Reason order mirrors `canAddDetachment` — what no
+rearrangement can fix comes first, so the player is never sent to free a slot for a pick that could
+never have been legal: `not_offered`, `unit_type`, `unit_has_one`, `duplicate`, `army_limit`. The
+army is always evaluated with the asking entry's own assignment set aside, so re-picking a held row
+is never self-blocking. `enhancementRowState` classifies a picker row over it and re-derives
+nothing; a selected row is never disabled, so an over-constrained imported list stays exitable.
+
+**Two enforcement points, per D199.** Assignment refuses (a no-op, D0 — not accepted-then-flagged),
+and `editLeaderTarget` consults `enhancementAttachBlock` so two legal carriers cannot be attached
+into one unit. 25.04's per-unit bullet reads "no unit (**including attached units**)", so the scope
+of that rule is the whole attached cluster — bodyguard, leader and co-leader share one slot.
+
+**The count carve-out.** Each regular assignment counts one; each *distinct* Upgrade name counts one
+however many copies exist. Regulars are counted per assignment rather than per distinct name so an
+imported list carrying an illegal second copy reads as two against the limit rather than one.
+
+**Battle-size limit.** `enhancementLimit` is 2 at ≤1000 and 4 above — the **Enhancement Limit
+column** of the 25.03 table, which is *not* the DP column beside it (2/3). The two sit adjacent in
+the same row; E4b-1 fails if the engine has taken the wrong one.
+
+### Two calls made this session that D199 does not cover
+
+1. **A duplicated unit does not inherit its original's enhancement**, and neither does a duplicated
+   leader. Carrying it over would create a duplicate at the instant of the copy — an illegal state
+   arriving by an action the player took, which is exactly what B41/D0 refuse rather than flag. The
+   copy starts clean. Executed as E10 scenario 7.
+2. **Ghost (unresolved) entries' enhancements do not count** toward the army limit, following
+   `totalPoints()`: an entry whose unit no longer resolves is shown but not counted, and its
+   enhancement follows its unit. The assignment stays visible.
+
+### Assertions added (75 → 80)
+
+**E4b-1** limit read from the 25.03 Enhancement column, with an explicit trap for it having been
+taken from the DP column, and all three battle-size rules pinned to the same split point.
+**E4b-2** the two eligibility derivations agree, with the EPIC HERO carve-out and a two-entry
+allowlist that fails if a gap closes and goes stale.
+**E4b-3** the census pinned three ways — 29 (army, name) pairs, 5 distinct names, 1 priced
+differently. Only 5 names collide but they repeat across 7 chapter armies, so pinning "5" would
+have looked equally plausible and been wrong; all three numbers are pinned so the next reader
+cannot mistake which one carries the argument.
+**E4b-4** the sixteen legality functions are defined once, inside the E4b block, and both
+enforcement points are *wired* — a declared-but-uncalled attach gate is worse than none, because it
+reads as covered.
+**E4b-5** `e4b_check.js`, 60 executed checks.
+
+**E1b-2** now pins SCHEMA_VERSION 3. `e1b_check.js` was rewritten to read the version from the
+module rather than pinning a literal, so future field additions do not require touching nine
+assertions — but it still asserts that a v1 record walks *both* migration steps and that the v2→v3
+step adds exactly `enhancement` and alters no other entry field.
+
+### What E4b deliberately did not do
+
+No picker, no chip, no error rendering — that is E4c. `entryHasError` gained an enhancement term,
+because it is a legality-derived boolean rather than rendering and an existing indicator would
+otherwise be wrong. `offeredEnhancements()` and `enhancementRefusalText()` exist and are exercised
+by the harness but have no caller in the UI yet; E4c is their consumer.

@@ -1774,12 +1774,18 @@
  *        identity across a regeneration; array position is not. A v1 record
  *        upgrades to v2 with an empty detachment set — the only reading that
  *        is certainly right, since v1 had no way to express a selection.
+ *   v3 — E4b. Per-entry `enhancement`: {name, detachment_key} or null. The
+ *        detachment key rides along because the name alone does not determine
+ *        the price — the same enhancement name exists at two different costs
+ *        in two Dark Angels detachments (D199). A v2 record upgrades to v3
+ *        with `enhancement: null` on every entry, which is the only reading
+ *        that adds no information, since v2 had no way to express one.
  * ======================================================================== */
 
 (function (root) {
   'use strict';
 
-  var SCHEMA_VERSION = 2;
+  var SCHEMA_VERSION = 3;
   var NS = '40kab:list:';   // one key per list: 40kab:list:<id>
 
   // ── ids ──────────────────────────────────────────────────────────────────
@@ -1807,6 +1813,24 @@
     return out;
   }
 
+  // ── enhancement assignment ───────────────────────────────────────────────
+  // E4b. A stored assignment is {name, detachment_key} or null. Normalised at
+  // the persistence boundary for normaliseDetachmentKeys' reason: a half-record
+  // that reached the engine would have to be re-checked on every single read.
+  //
+  // A name with no usable detachment key is KEPT, with the key as null. That
+  // is flag-don't-drop: the pair will not resolve against the catalogue and the
+  // engine reports it as not-offered, which is information the player needs.
+  // Dropping it would silently delete a paid-for choice. A record with no name
+  // at all carries no information and normalises to null.
+  function normaliseEnhancement(v) {
+    if (!v || typeof v !== 'object') return null;
+    var name = typeof v.name === 'string' ? v.name : '';
+    var key  = typeof v.detachment_key === 'string' && v.detachment_key ? v.detachment_key : null;
+    if (!name) return null;
+    return { name: name, detachment_key: key };
+  }
+
   // ── schema: in-memory armyList <-> persisted record ──────────────────────
   //
   // The persisted entry uses snake_case names that are deliberately decoupled
@@ -1832,6 +1856,7 @@
         god:           e.god != null ? e.god : null,
         wargear:       e.wargear || {},
         other_options: e.otherOptions || {},
+        enhancement:   normaliseEnhancement(e.enhancement),
         attached_to:   e.attachedToListId != null ? e.attachedToListId : null,
         points_cache:  e.points != null ? e.points : null  // display-only; recomputed on load
       };
@@ -1896,6 +1921,7 @@
         points:           null,               // recomputed by the app on render
         wargear:          s.wargear || {},
         otherOptions:     s.other_options || {},
+        enhancement:      normaliseEnhancement(s.enhancement),
         attachedToListId: s.attached_to != null ? s.attached_to : null,
         faction_ref:      s.faction_ref || null,
         unit_id:          s.unit_id || null,
@@ -1934,6 +1960,16 @@
     if (v < 2) {
       record.detachments = [];
       record.schema_version = 2;
+    }
+    // v2 -> v3 (E4b). A v2 record had no way to express an enhancement, so null
+    // on every entry is the only reading that adds no information. As with the
+    // step above, this ADDS a field and rewrites none: every other value on the
+    // record and on each entry is left exactly as it was found.
+    if (v < 3) {
+      (record.entries || []).forEach(function (e) {
+        if (e && typeof e === 'object') e.enhancement = null;
+      });
+      record.schema_version = 3;
     }
     return record;
   }
@@ -2030,8 +2066,8 @@
   // ── export / import (JSON file portability) ──────────────────────────────
   // Single list or an array. exportRecords always emits an array for a stable
   // file shape; importRecords accepts either and re-ids to avoid clobbering.
-  // Import runs migrate, so a v1 file written by an older build lands as v2
-  // with an empty detachment set rather than being rejected as incompatible.
+  // Import runs migrate, so an older file lands at the current schema version
+  // rather than being rejected as incompatible.
   function exportRecords(records) {
     return JSON.stringify({ format: '40kab-lists', schema_version: SCHEMA_VERSION, lists: records }, null, 2);
   }
@@ -2049,6 +2085,7 @@
     NS: NS,
     newListId: newListId,
     normaliseDetachmentKeys: normaliseDetachmentKeys,
+    normaliseEnhancement: normaliseEnhancement,
     serializeEntries: serializeEntries,
     buildRecord: buildRecord,
     deserialize: deserialize,
@@ -2135,7 +2172,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.3';
+  const VERSION = '6.4';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2601,6 +2638,369 @@
   }
   // ── E1c block end ─────────────────────────────────────────────────────────
 
+  // ── E4b: enhancement assignment rules ──────────────────────────────────────
+  // Pure functions over (entry, enhancement name, detachment key, battle size).
+  // No DOM, no rendering — E4c wires them to controls. Everything reads
+  // detachmentDefs, selectedDetachments and armyList LIVE, the way the E1b
+  // block does, so a change of battle size or detachment set can never leave a
+  // stale verdict behind.
+  //
+  // Army_Muster_Rules.txt 25.04 (SELECT ENHANCEMENTS, plus the per-unit bullet
+  // in Fill Your Army Roster) places FIVE separate rules on an assignment:
+  //   1. Only CHARACTER units may be given one, and EPIC HEROES never may.
+  //      The Upgrade bullets lift the CHARACTER half and say nothing about
+  //      EPIC HEROES, so that ban stands for Upgrades too (D199 call 2).
+  //   2. "No unit (including attached units) can have more than one
+  //      enhancement" — an attached unit is ONE unit, so a leader, any
+  //      co-leader and their bodyguard share a single slot between them.
+  //   3. "Your army cannot include more than one of the same enhancement",
+  //      keyed by NAME across the whole army (D199 call 1) — up to three of
+  //      the same Upgrade.
+  //   4. The army's enhancement count cannot exceed the battle-size limit. The
+  //      2nd and 3rd copy of an Upgrade are priced but do not count.
+  //   5. It must be offered by a currently selected detachment.
+  // Each is reported separately so the UI can say WHICH rule a pick breaks.
+
+  // 25.03 battle-size table, Enhancement Limit column: Incursion 2, Strike
+  // Force 4. The 3,000-point size the app offers but 25.03 does not define is
+  // treated as Strike Force, for exactly the reason detachmentPointBudget and
+  // battleSizeUnitLimit treat it that way — the three battle-size-derived
+  // rules must not be able to disagree about which size 3,000 points is.
+  function enhancementLimit(pointsTotal) {
+    return Number(pointsTotal) <= 1000 ? 2 : 4;
+  }
+
+  // A stored assignment is {name, detachment_key}. The key is carried because
+  // the name alone does not determine the price: Deathwing Assault is 30 pts in
+  // INNER CIRCLE TASK FORCE and 15 pts in WRATH OF THE ROCK (D199).
+  function enhancementRecord(name, detachmentKey) {
+    const d = detachmentDefs[detachmentKey];
+    if (!d || !Array.isArray(d.enhancements)) return null;
+    return d.enhancements.find(e => e.name === name) || null;
+  }
+
+  // An unresolved assignment contributes 0 points, for detachmentDp's reason:
+  // the cost is a property of a record we no longer hold, and inventing one
+  // would make the army total wrong in a way the player can neither see nor
+  // fix. The assignment stays on the entry and is surfaced as 'not_offered'.
+  function enhancementPoints(name, detachmentKey) {
+    const r = enhancementRecord(name, detachmentKey);
+    return r && Number(r.points) > 0 ? Number(r.points) : 0;
+  }
+
+  // An unresolved assignment reads as NOT an Upgrade. That is the conservative
+  // reading: it counts against the army limit and blocks at one copy rather
+  // than three, so a stale record can never quietly buy extra headroom.
+  function enhancementIsUpgrade(name, detachmentKey) {
+    const r = enhancementRecord(name, detachmentKey);
+    return !!(r && r.is_upgrade);
+  }
+
+  // Offered = carried by a detachment that is selected RIGHT NOW. The picker
+  // lists exactly these, so 'not_offered' is reachable only from an import or
+  // from deselecting a detachment after assigning out of it.
+  function enhancementIsOffered(name, detachmentKey) {
+    return (selectedDetachments || []).indexOf(detachmentKey) >= 0 &&
+           !!enhancementRecord(name, detachmentKey);
+  }
+
+  // Every enhancement the current detachment selection puts on the table, as
+  // flat rows. Two detachments may offer the same name at different prices, so
+  // rows are keyed by the (name, detachment key) pair and never collapsed.
+  function offeredEnhancements() {
+    const out = [];
+    for (const key of (selectedDetachments || [])) {
+      const d = detachmentDefs[key];
+      if (!d || !Array.isArray(d.enhancements)) continue;
+      for (const e of d.enhancements) {
+        out.push({
+          name:            e.name,
+          detachment_key:  key,
+          detachment_name: d.name,
+          points:          Number(e.points) || 0,
+          is_upgrade:      !!e.is_upgrade,
+          description:     e.description || '',
+          description_source: e.description_source || null
+        });
+      }
+    }
+    return out;
+  }
+
+  // Every assignment currently in the army. Ghost (unresolved) entries are
+  // skipped for totalPoints()'s reason: an entry whose unit no longer resolves
+  // is shown but not counted, and its enhancement follows its unit.
+  function assignedEnhancements(excludeListId) {
+    const out = [];
+    for (const e of (armyList || [])) {
+      if (e.unresolved) continue;
+      if (!e.enhancement || !e.enhancement.name) continue;
+      if (excludeListId != null && e.listId === excludeListId) continue;
+      out.push({
+        listId:         e.listId,
+        unit_name:      e.unit_name,
+        name:           e.enhancement.name,
+        detachment_key: e.enhancement.detachment_key || null
+      });
+    }
+    return out;
+  }
+
+  // 25.04: "the second and third instances of the same Upgrade do not count
+  // towards the total number of enhancements in your army, but you must still
+  // spend the stated points cost each time". So each regular assignment counts
+  // one, and each DISTINCT Upgrade name counts one however many copies of it
+  // are in the army.
+  //
+  // Regulars are counted per assignment rather than per distinct name on
+  // purpose: an imported list carrying an illegal second copy of a regular
+  // then reads as two against the limit, not one. Collapsing them would hide
+  // half of an illegal state behind the duplicate error.
+  function enhancementCount(assigned) {
+    let n = 0;
+    const upgradeNames = [];
+    for (const a of (assigned || [])) {
+      if (enhancementIsUpgrade(a.name, a.detachment_key)) {
+        if (upgradeNames.indexOf(a.name) < 0) upgradeNames.push(a.name);
+      } else n++;
+    }
+    return n + upgradeNames.length;
+  }
+
+  // Copies of one enhancement NAME in the army. Name-keyed and detachment-blind
+  // (D199 call 1): two selected detachments both offering Adamantine Mantle
+  // still allow only one in the army, and 29 such cross-detachment collisions
+  // are reachable inside a single army as the data stands.
+  function enhancementCopies(assigned, name) {
+    return (assigned || []).filter(a => a.name === name).length;
+  }
+
+  // The maximum copies of one name 25.04 allows: three for an Upgrade, one for
+  // everything else.
+  function enhancementMaxCopies(isUpgrade) {
+    return isUpgrade ? 3 : 1;
+  }
+
+  // The attached-unit cluster an entry belongs to: the bodyguard's listId plus
+  // every entry attached to that bodyguard. 25.04's per-unit bullet counts an
+  // attached unit as one unit, so this is the scope the one-per-unit rule
+  // applies over — not the single entry.
+  function attachedGroupListIds(listId) {
+    const entry = (armyList || []).find(e => e.listId === listId);
+    if (!entry) return [listId];
+    const root = entry.attachedToListId != null ? entry.attachedToListId : listId;
+    const ids = [root];
+    for (const e of (armyList || [])) {
+      if (e.attachedToListId === root && ids.indexOf(e.listId) < 0) ids.push(e.listId);
+    }
+    return ids;
+  }
+
+  // Entries in one attached-unit cluster that carry an enhancement, optionally
+  // ignoring one entry (the one being asked about).
+  function groupEnhancementCarriers(listId, excludeListId) {
+    const ids = attachedGroupListIds(listId);
+    return (armyList || []).filter(e =>
+      ids.indexOf(e.listId) >= 0 &&
+      e.listId !== excludeListId &&
+      !e.unresolved &&
+      e.enhancement && e.enhancement.name);
+  }
+
+  // D199: eligibility keys off unit_type, NOT keywords. The keyword lists are
+  // not uniformly populated — Rendmaster on Blood Throne carries only "Deep
+  // Strike", and Ravenwing Command Squad's CHARACTER sits on one model group —
+  // so a keyword test would refuse two legal picks outright. Assertion E4b-2
+  // holds the two derivations to agreement everywhere keywords ARE populated,
+  // so a data regeneration cannot shift eligibility without failing a gate.
+  function enhancementTypeEligible(unitType, isUpgrade) {
+    if (unitType === 'Epic Hero') return false;
+    return isUpgrade ? true : unitType === 'Character';
+  }
+
+  // THE read path. One function answers every legality question about one
+  // assignment; the UI renders its verdict and never recomputes it. Hard block
+  // on the D114/D115 line — a refusal is a refusal, not a warning attached to
+  // an accepted pick.
+  //
+  // The army is evaluated with THIS entry's current assignment set aside, so
+  // re-picking the row a unit already holds can never be self-blocking, and a
+  // caller can ask what would happen if the row were cleared and re-picked.
+  //
+  // Reason order mirrors canAddDetachment: what no rearrangement can fix comes
+  // first, so the player is never sent off to free up a slot for a pick that
+  // could never have been legal in the first place.
+  //   reason: null | 'not_offered' | 'unit_type' | 'unit_has_one'
+  //         | 'duplicate' | 'army_limit'
+  function canAssignEnhancement(entry, name, detachmentKey, pointsTotal) {
+    if (!entry) return { ok: false, reason: 'not_offered' };
+    const rec = enhancementRecord(name, detachmentKey);
+    if (!rec || !enhancementIsOffered(name, detachmentKey))
+      return { ok: false, reason: 'not_offered' };
+
+    const isUpgrade = !!rec.is_upgrade;
+    if (!enhancementTypeEligible(entry.unit_type, isUpgrade))
+      return { ok: false, reason: 'unit_type', unit_type: entry.unit_type || null, is_upgrade: isUpgrade };
+
+    const carriers = groupEnhancementCarriers(entry.listId, entry.listId);
+    if (carriers.length)
+      return { ok: false, reason: 'unit_has_one',
+               carrier: carriers[0].unit_name,
+               carrierListId: carriers[0].listId,
+               attached: carriers[0].listId !== entry.listId };
+
+    const others = assignedEnhancements(entry.listId);
+    const copies = enhancementCopies(others, name);
+    const max    = enhancementMaxCopies(isUpgrade);
+    if (copies >= max)
+      return { ok: false, reason: 'duplicate', copies: copies, max: max, is_upgrade: isUpgrade };
+
+    // The first copy of an Upgrade counts against the limit and the 2nd and 3rd
+    // do not, so this is asked as "what would the count BE" rather than
+    // "used + 1" — the two differ exactly on the Upgrade carve-out.
+    const limit = enhancementLimit(pointsTotal);
+    const used  = enhancementCount(others);
+    const next  = enhancementCount(others.concat([{ name: name, detachment_key: detachmentKey }]));
+    if (next > limit)
+      return { ok: false, reason: 'army_limit', used: used, limit: limit };
+
+    return { ok: true, reason: null };
+  }
+
+  // Army-level roll-up: the counter E4c renders, and the validity report an
+  // imported list is judged by. Over-limit, duplicate, wrong-type and stale
+  // states are reachable only through an import or through a battle-size or
+  // detachment change after assignment — they stay visible errors and are
+  // never silently trimmed (the dpState 'over' pattern).
+  function enhancementArmyState(pointsTotal) {
+    const assigned = assignedEnhancements();
+    const limit    = enhancementLimit(pointsTotal);
+    const used     = enhancementCount(assigned);
+    const state    = !(limit > 0) ? 'ok' : (used > limit ? 'over' : (used >= limit ? 'at' : 'ok'));
+
+    const duplicates = [];
+    const notOffered = [];
+    const wrongType  = [];
+    const sharedUnits = [];
+    const seenRoot = {};
+
+    for (const a of assigned) {
+      const isUpgrade = enhancementIsUpgrade(a.name, a.detachment_key);
+      if (enhancementCopies(assigned, a.name) > enhancementMaxCopies(isUpgrade) &&
+          duplicates.indexOf(a.name) < 0) duplicates.push(a.name);
+      if (!enhancementIsOffered(a.name, a.detachment_key)) notOffered.push(a);
+      const e = (armyList || []).find(x => x.listId === a.listId);
+      if (e && !enhancementTypeEligible(e.unit_type, isUpgrade)) wrongType.push(a);
+      const root = attachedGroupListIds(a.listId)[0];
+      if (seenRoot[root] != null) {
+        if (sharedUnits.indexOf(root) < 0) sharedUnits.push(root);
+      } else seenRoot[root] = a.listId;
+    }
+
+    return {
+      limit: limit, used: used, state: state, remaining: limit - used,
+      assigned: assigned,
+      duplicates: duplicates, notOffered: notOffered,
+      wrongType: wrongType, sharedUnits: sharedUnits,
+      legal: state !== 'over' && duplicates.length === 0 && notOffered.length === 0 &&
+             wrongType.length === 0 && sharedUnits.length === 0
+    };
+  }
+
+  // One classifier for one picker row — the shape E4c renders and the shape the
+  // harness checks, so the picker cannot disagree with itself. Mirrors
+  // detachmentPickerRowState exactly, including the rule that a SELECTED row is
+  // never disabled: flag-don't-drop means an over-constrained imported list
+  // must always be exitable.
+  function enhancementRowState(entry, name, detachmentKey, pointsTotal) {
+    const selected = !!(entry && entry.enhancement &&
+                        entry.enhancement.name === name &&
+                        entry.enhancement.detachment_key === detachmentKey);
+    const rec       = enhancementRecord(name, detachmentKey);
+    const canAssign = canAssignEnhancement(entry, name, detachmentKey, pointsTotal);
+    return {
+      selected:  selected,
+      offered:   enhancementIsOffered(name, detachmentKey),
+      isUpgrade: !!(rec && rec.is_upgrade),
+      points:    enhancementPoints(name, detachmentKey),
+      canAssign: canAssign,
+      disabled:  selected ? false : !canAssign.ok
+    };
+  }
+
+  // Prose for a refusal. canAssignEnhancement carries the machine-readable code
+  // and its operands; this spells them out so a disabled row is never mute —
+  // that muteness is the exact failure B47 exists to fix.
+  function enhancementRefusalText(canAssign) {
+    if (!canAssign || canAssign.ok) return '';
+    if (canAssign.reason === 'not_offered')
+      return 'Not offered by any detachment you have selected.';
+    if (canAssign.reason === 'unit_type') {
+      if (canAssign.unit_type === 'Epic Hero') return 'Epic Heroes cannot be given enhancements.';
+      return canAssign.is_upgrade ? 'This unit cannot take this Upgrade.'
+                                  : 'Only Characters can be given this enhancement.';
+    }
+    if (canAssign.reason === 'unit_has_one')
+      return canAssign.attached
+        ? 'The attached unit already has one — ' + (canAssign.carrier || 'another model') + ' carries it.'
+        : 'This unit already has an enhancement.';
+    if (canAssign.reason === 'duplicate')
+      return canAssign.max > 1
+        ? 'Already in your army ' + canAssign.max + ' times — that is the limit for an Upgrade.'
+        : 'Already in your army — you cannot include the same enhancement twice.';
+    if (canAssign.reason === 'army_limit')
+      return 'Enhancement limit reached for this battle size (' + canAssign.limit + ').';
+    return 'Not currently available.';
+  }
+
+  // Second enforcement point (D199). Assignment-time checking alone leaves a
+  // gap: two units may each legally carry an enhancement and then be attached
+  // to one another, which 25.04's "no unit (including attached units)" bullet
+  // forbids. Returns a refusal object or null.
+  function enhancementAttachBlock(listId, targetListId) {
+    if (targetListId == null || targetListId === '') return null;   // detaching is always allowed
+    const tid   = Number(targetListId);
+    const entry = (armyList || []).find(e => e.listId === listId);
+    if (!entry || entry.unresolved) return null;
+    if (!entry.enhancement || !entry.enhancement.name) return null;
+    const carriers = groupEnhancementCarriers(tid, listId);
+    if (!carriers.length) return null;
+    return { reason: 'unit_has_one', carrier: carriers[0].unit_name, carrierListId: carriers[0].listId };
+  }
+
+  // Points contribution of one entry's assignment, folded into ptsForEntry.
+  function enhancementPointsForEntry(entry) {
+    if (!entry || !entry.enhancement || !entry.enhancement.name) return 0;
+    return enhancementPoints(entry.enhancement.name, entry.enhancement.detachment_key);
+  }
+
+  // ── E4b actions ────────────────────────────────────────────────────────────
+  // The D0 gate. A refused assignment is a no-op, exactly as toggleDetachment
+  // treats a click on a disabled row: illegal states are unreachable, not
+  // flagged after the fact.
+
+  function assignEnhancement(listId, name, detachmentKey) {
+    const entry = (armyList || []).find(e => e.listId === listId);
+    if (!entry) return;
+    if (entry.enhancement && entry.enhancement.name === name &&
+        entry.enhancement.detachment_key === detachmentKey) {
+      entry.enhancement = null;                  // toggle off — always allowed
+    } else {
+      const st = canAssignEnhancement(entry, name, detachmentKey, POINTS_CAP);
+      if (!st.ok) return;                        // disabled row — click is a no-op
+      entry.enhancement = { name: name, detachment_key: detachmentKey };
+    }
+    renderAll();
+  }
+
+  function clearEnhancement(listId) {
+    const entry = (armyList || []).find(e => e.listId === listId);
+    if (!entry) return;
+    entry.enhancement = null;
+    renderAll();
+  }
+  // ── E4b block end ──────────────────────────────────────────────────────────
+
 
   async function init() {
     try {
@@ -2799,7 +3199,10 @@
     else if (priorCopies === 1) base = sizeEntry.second_unit;
     else                        base = sizeEntry.third_plus;
     if (base == null) return null;
-    return base + wargearCostForEntry(entry, unit);
+    // E4b: 25.04 "increase those units' points values accordingly" — the
+    // enhancement is priced onto the carrying entry, so it flows through the
+    // army total, the points cap and points_cache with no separate path.
+    return base + wargearCostForEntry(entry, unit) + enhancementPointsForEntry(entry);
   }
 
   // Entry cost is derived from the configuration, so it is recomputed on every render
@@ -2814,6 +3217,17 @@
     const count = armyList.filter(e => e.unit_name === entry.unit_name).length;
     if (unit.needsGod && !entry.god) return true;
     if (limitState(count, unitLimit(unit)) === 'over') return true;
+    // E4b: an assignment can become illegal without the player touching the
+    // entry — deselecting its detachment, changing battle size, or importing an
+    // over-limit list. Those states stay visible rather than being trimmed, so
+    // the entry has to read as an error while they last.
+    if (entry.enhancement && entry.enhancement.name) {
+      const enh = entry.enhancement;
+      const isUpgrade = enhancementIsUpgrade(enh.name, enh.detachment_key);
+      if (!enhancementIsOffered(enh.name, enh.detachment_key)) return true;
+      if (!enhancementTypeEligible(entry.unit_type, isUpgrade)) return true;
+      if (groupEnhancementCarriers(entry.listId, entry.listId).length) return true;
+    }
     return false;
   }
 
@@ -3087,6 +3501,7 @@
       points:           pts,
       wargear:          loadoutDefaultWargear(unit.unit_id),   // E14
       otherOptions:     {},
+      enhancement:      null,                                  // E4b
       attachedToListId: null,
     });
 
@@ -3182,6 +3597,10 @@
   // E10: duplicate a unit. Copies the entry's full configuration (size, wargear,
   // other options) at a new listId, so copy-tier pricing (ptsForEntry) picks it up
   // automatically as the next copy in listId order — no separate pricing logic needed.
+  // E4b: the enhancement is NOT copied. 25.04 allows one of each enhancement in the
+  // army, so carrying it onto the duplicate would land the copy in an illegal state
+  // the moment it appears — the same reason B41 refuses the add at the unit limit
+  // rather than accepting it and flagging it. The copy starts with no enhancement.
   // Attached leaders are duplicated and re-attached to the copy, EXCEPT Epic Heroes,
   // which are never duplicated (Ryan's spec, S52): the copy simply has no leader in
   // that slot, which is not an error. The unit-limit hard boundary (B41/D0) applies to
@@ -3209,6 +3628,7 @@
       points:           null,
       wargear:          { ...entry.wargear },
       otherOptions:     { ...entry.otherOptions },
+      enhancement:      null,                        // E4b — never inherited
       attachedToListId: null,
     };
     armyList.push(newEntry);
@@ -3231,6 +3651,7 @@
         points:           null,
         wargear:          { ...leader.wargear },
         otherOptions:     { ...leader.otherOptions },
+        enhancement:      null,                      // E4b — never inherited
         attachedToListId: newListId,
       };
       armyList.push(newLeader);
@@ -3281,7 +3702,18 @@
   function editLeaderTarget(listId, targetListId) {
     const entry = armyList.find(e => e.listId === listId);
     if (!entry) return;
-    entry.attachedToListId = targetListId ? Number(targetListId) : null;
+    const target = targetListId ? Number(targetListId) : null;
+    // E4b second enforcement point (D199). 25.04 allows one enhancement per
+    // unit and an attached unit is one unit, so two carriers cannot be merged
+    // into one. Checking only at assignment time leaves exactly this gap: both
+    // sides were legal apart, and the attach is what makes them illegal.
+    const block = enhancementAttachBlock(listId, target);
+    if (block) {
+      flashBanner(`Cannot attach — ${entry.unit_name} and ${block.carrier} both carry an enhancement (one per unit).`);
+      renderAll();   // snap the select back to what it was
+      return;
+    }
+    entry.attachedToListId = target;
     renderAll();
   }
 

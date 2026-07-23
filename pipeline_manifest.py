@@ -89,6 +89,7 @@ GUARDED = [
     'required_size_check.js',
     'e1b_check.js',
     'e1c_check.js',
+    'e4b_check.js',
 ]
 
 

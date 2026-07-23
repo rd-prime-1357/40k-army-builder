@@ -4,6 +4,12 @@
 // leader attached, a unit with an Epic Hero leader attached, and a unit already at its
 // instance limit. wargearCostForEntry is stubbed to 0 (points-tier math is not what
 // this checks — structural duplication + Epic Hero exclusion + limit enforcement are).
+//
+// E4b: the real enhancement block is loaded too, not stubbed, so the claim that a
+// duplicate does NOT inherit its original's enhancement is executed against the real
+// code. Carrying it over would put the copy in an illegal state the instant it
+// appeared (25.04 allows one of each enhancement in an army), which is the failure
+// mode B41 exists to prevent for unit counts.
 const fs = require('fs');
 
 function slice(lines, startNeedle, endNeedle) {
@@ -23,6 +29,7 @@ function loadEngine(path) {
     slice(lines, 'function getAttachedLeaders', 'function addUnitFromRoster'),
     slice(lines, 'function duplicateUnit', '// ── Edit operations'),
     slice(lines, 'function permitsCoLeader', 'function renderAll'),
+    slice(lines, '// ── E4b: enhancement assignment rules', '// ── E4b block end'),
   ].join('\n');
 
   const prelude = `
@@ -31,6 +38,8 @@ function loadEngine(path) {
     let nextId = 1;
     let selectedListId = null;
     let POINTS_CAP = 2000;
+    let detachmentDefs = {};
+    let selectedDetachments = [];
     function wargearCostForEntry() { return 0; }
     function flashBanner(msg) { flashed.push(msg); }
     let flashed = [];
@@ -45,6 +54,8 @@ function loadEngine(path) {
       duplicateUnit,
       canAttachLeader,
       getFlashed: () => flashed,
+      setDetachmentDefs: (d) => { detachmentDefs = d; },
+      setSelectedDetachments: (k) => { selectedDetachments = k; },
     };
   `)();
 }
@@ -186,6 +197,39 @@ function unit(name, type) { return { unit_name: name, unit_type: type, sizes: [{
   const fresh = { listId: 999, unit_name: 'Plague Marines' };
   const allowed = E.canAttachLeader('Tallyman', fresh);
   check('scenario 6: leader still attaches to an unstacked body (cap did not overreach)', allowed === true);
+}
+
+
+// ── Scenario 7 (E4b): the enhancement is not inherited by a duplicate ────────
+// Both the copied unit and any copied leader start clean. 25.04 allows one of each
+// enhancement in an army, so inheriting would create an illegal state at the moment
+// of the copy — refused up front, in the B41/D0 spirit, rather than flagged after.
+{
+  const DETS = { 'X|D1': { name: 'D1', enhancements: [
+    { name: 'Test Relic', points: 20, is_upgrade: false },
+    { name: 'Test Upgrade', points: 15, is_upgrade: true } ] } };
+  E.setDetachmentDefs(DETS);
+  E.setSelectedDetachments(['X|D1']);
+  E.setAllUnits([unit('Plague Marines', 'Infantry'), unit('Tallyman', 'Character')]);
+  E.setNextId(40);
+  E.setArmyList([
+    { listId: 1, unit_name: 'Plague Marines', unit_type: 'Infantry', sizeIdx: 0, god: null, points: 100,
+      wargear: {}, otherOptions: {}, enhancement: { name: 'Test Upgrade', detachment_key: 'X|D1' }, attachedToListId: null },
+    { listId: 2, unit_name: 'Tallyman', unit_type: 'Character', sizeIdx: 0, god: null, points: 60,
+      wargear: {}, otherOptions: {}, enhancement: { name: 'Test Relic', detachment_key: 'X|D1' }, attachedToListId: 1 },
+  ]);
+  E.duplicateUnit(1);
+  const list = E.getArmyList();
+  const bodyCopy   = list.find(e => e.listId === 40);
+  const leaderCopy = list.find(e => e.listId === 41);
+  check('scenario 7: body copy carries no enhancement', bodyCopy && bodyCopy.enhancement === null);
+  check('scenario 7: leader copy carries no enhancement', leaderCopy && leaderCopy.enhancement === null);
+  check('scenario 7: the originals keep theirs',
+        list.find(e => e.listId === 1).enhancement.name === 'Test Upgrade' &&
+        list.find(e => e.listId === 2).enhancement.name === 'Test Relic');
+  // Second copy of the datasheet, so second_unit pricing (90) with no enhancement
+  // added on top — 110 would mean the Upgrade had been inherited and priced.
+  check('scenario 7: the copy is priced without an enhancement', bodyCopy.points === 90);
 }
 
 console.log(failures === 0 ? '\nall E10 checks pass' : `\n${failures} E10 check(s) FAILED`);

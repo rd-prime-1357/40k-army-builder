@@ -1160,7 +1160,7 @@ ASSERTIONS = [
 
     ('E1b-2',
      'list_store.js and the copy of the same module inlined into index.html are byte-identical, '
-     'and both declare SCHEMA_VERSION 2. Two files holding one module is a drift risk that '
+     'and both declare SCHEMA_VERSION 3 (E4b\'s per-entry enhancement field). Two files holding one module is a drift risk that '
      'nothing else checks: the standalone copy silently lost E9b\'s warlord field and no gate '
      'noticed, because no gate compared them.',
      'index.html inlined block vs list_store.js (E1b, S124)',
@@ -1193,6 +1193,59 @@ ASSERTIONS = [
      'against the picker growing a second implementation of the three legality rules.',
      'e1c_check.js (E1c, S125)',
      lambda S: e1c_harness_gate(S)),
+
+    # ── E4b. Enhancement assignment engine and persistence.
+    ('E4b-1',
+     'The enhancement limit the engine applies is the Enhancement Limit COLUMN of the 25.03 '
+     'battle-size table, read from Army_Muster_Rules.txt: 2 at Incursion and 4 at Strike Force. '
+     'That column is not the DP column beside it (2 and 3), and the two sit adjacent in the same '
+     'row — precisely the pair that gets copied across by mistake. The 3,000-point size 25.03 '
+     'does not define must fall in the Strike Force branch here, for DP and for the unit limit, '
+     'so the three battle-size-derived rules cannot disagree.',
+     'Army_Muster_Rules.txt 25.03; index.html enhancementLimit (E4b, D199)',
+     lambda S: e4b_limit_matches_muster(S)),
+
+    ('E4b-2',
+     'Enhancement eligibility is derived from unit_type, and that is only safe while it agrees '
+     'with the keyword-derived answer. unit_type == Character must select the same set as (has '
+     'CHARACTER keyword AND NOT EPIC HERO keyword) on every unit whose keywords are populated, '
+     'bar two documented data gaps that are both in the safe direction. The EPIC HERO half is '
+     'not optional: fifty-odd Epic Heroes carry the CHARACTER keyword, because in the rules an '
+     'Epic Hero IS a Character, so a bare CHARACTER test would call every one of them eligible '
+     'and contradict 25.04. A data regeneration that shifts eligibility fails here.',
+     'units.json unit_type vs model_groups keyword_names (E4b, D199)',
+     lambda S: e4b_eligibility_derivations_agree(S)),
+
+    ('E4b-3',
+     'The name-collision census is pinned: 29 reachable same-army cross-detachment collisions '
+     'across 5 distinct names, exactly one of them priced differently in its two detachments. '
+     'These are the two findings that forced the design — a non-zero count forces the duplicate '
+     'rule to be keyed by name army-wide rather than by (detachment, name), and the differing '
+     'price forces a stored assignment to carry a detachment key rather than a bare name. If a '
+     'regeneration moves either number, both choices need revisiting rather than inheriting.',
+     'detachments.json enhancements per army (E4b, D199)',
+     lambda S: e4b_name_collision_census(S)),
+
+    ('E4b-4',
+     'The sixteen functions that answer enhancement legality are DEFINED inside the E4b block '
+     'and nowhere else in index.html, and both enforcement points are wired: editLeaderTarget '
+     'consults enhancementAttachBlock, and ptsForEntry folds in enhancementPointsForEntry. This '
+     'is E1c-1 applied ahead of the UI: E4c builds a picker over these functions, and a second '
+     'implementation growing quietly inside it would be invisible unless something looked. A '
+     'declared-but-unwired attach gate would be worse than none, since it would read as covered.',
+     'index.html E4b block vs the rest of the file (E4b, S128)',
+     lambda S: e4b_engine_functions_defined_once(S)),
+
+    ('E4b-5',
+     'e4b_check.js passes in full: the Upgrade count carve-out behaves as 25.04 states (three '
+     'copies of one Upgrade allowed, all three priced, only the first counted against the army '
+     'limit, the fourth refused), the one-per-unit rule is enforced over the ATTACHED unit and '
+     'not the single entry, an Epic Hero is refused an Upgrade as well as a regular, a refused '
+     'assignment leaves no trace on the entry, the attach action refuses to merge two carriers, '
+     'and every selected row stays clearable however over-constrained the army is. Three '
+     'different thresholds live in one 25.04 sentence, so these are executed, not described.',
+     'e4b_check.js (E4b, S128)',
+     lambda S: e4b_harness_gate(S)),
 
 ]
 
@@ -2272,6 +2325,8 @@ def e1b_budget_matches_muster(S):
 
 def e1b_module_copies_agree(S):
     """The inlined list-storage block in index.html must be the same bytes as list_store.js.
+    The declared SCHEMA_VERSION moves as tickets add persisted fields (E4b took it to 3);
+    the number is pinned here so a bump on one side without the other cannot pass.
     Located by the module's own delimiters rather than by line number, so an edit above or
     below it cannot make this pass or fail for the wrong reason."""
     ip = os.path.join(S.dir, 'index.html')
@@ -2292,9 +2347,9 @@ def e1b_module_copies_agree(S):
         return False, (f'the two copies differ ({len(il)} vs {len(sl)} lines, first difference at '
                        f'line {first + 1} of the block)')
     ver = re.search(r'var SCHEMA_VERSION = (\d+);', standalone)
-    if not ver or ver.group(1) != '2':
-        return False, f'SCHEMA_VERSION is {ver.group(1) if ver else "unreadable"}, expected 2'
-    return True, f'both copies identical ({len(standalone.splitlines())} lines), SCHEMA_VERSION 2'
+    if not ver or ver.group(1) != '3':
+        return False, f'SCHEMA_VERSION is {ver.group(1) if ver else "unreadable"}, expected 3'
+    return True, f'both copies identical ({len(standalone.splitlines())} lines), SCHEMA_VERSION 3'
 
 
 def e1b_harness_gate(S):
@@ -2397,6 +2452,247 @@ def e1c_harness_gate(S):
         return False, (f'{len(failed)} E1c check(s) failed, e.g. {failed[:2]}' if failed
                        else f'e1c_check.js exited {r.returncode}')
     return True, f'e1c_check.js: {passed} checks pass'
+
+
+def e4b_limit_matches_muster(S):
+    """The Enhancement Limit the engine applies is the Enhancement Limit COLUMN of the 25.03
+    battle-size table, not the DP column beside it. The two differ (2/3 for DP, 2/4 for
+    enhancements) and sit adjacent in the same row, which is exactly the kind of pair that gets
+    copied across by mistake. Neither number is written down here: both are re-derived, the
+    table from Army_Muster_Rules.txt and the threshold from index.html."""
+    mp = os.path.join(S.dir, 'Army_Muster_Rules.txt')
+    ip = os.path.join(S.dir, 'index.html')
+    for p in (mp, ip):
+        if not os.path.exists(p):
+            return False, f'{os.path.basename(p)} is not in the repo'
+    flat = re.sub(r'\s+', ' ', open(mp, encoding='utf-8-sig').read().replace('\xa0', ' '))
+    inc = re.search(r'INCURSION\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)', flat)
+    sf  = re.search(r'STRIKE FORCE\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)', flat)
+    if not inc or not sf:
+        return False, '25.03 battle-size table no longer parses out of Army_Muster_Rules.txt'
+    inc_pts, inc_dp, inc_enh = int(inc.group(1)), int(inc.group(2)), int(inc.group(3))
+    sf_pts,  sf_dp,  sf_enh  = int(sf.group(1)),  int(sf.group(2)),  int(sf.group(3))
+
+    html = open(ip, encoding='utf-8').read()
+    m = re.search(r'function enhancementLimit\(pointsTotal\)\s*\{\s*'
+                  r'return Number\(pointsTotal\) <= (\d+) \? (\d+) : (\d+);', html)
+    if not m:
+        return False, 'enhancementLimit is not in index.html in the expected shape'
+    cut, low, high = int(m.group(1)), int(m.group(2)), int(m.group(3))
+
+    bad = []
+    if cut != inc_pts:
+        bad.append(f'the engine splits at {cut} pts, 25.03 puts Incursion at {inc_pts}')
+    if low != inc_enh:
+        bad.append(f'engine allows {low} at Incursion, 25.03 says {inc_enh}')
+    if high != sf_enh:
+        bad.append(f'engine allows {high} at Strike Force, 25.03 says {sf_enh}')
+    if (low, high) == (inc_dp, sf_dp) and (inc_dp, sf_dp) != (inc_enh, sf_enh):
+        bad.append('the enhancement limit has been taken from the DP column, not the '
+                   'Enhancement Limit column')
+    # The 3,000-point size 25.03 does not define must land in the same branch here as it does
+    # for DP and for the unit limit, so the three battle-size rules cannot disagree.
+    d = re.search(r'function detachmentPointBudget\(pointsTotal\)\s*\{\s*'
+                  r'return Number\(pointsTotal\) <= (\d+) \?', html)
+    u = re.search(r'function battleSizeUnitLimit\(pointsTotal\)\s*\{\s*'
+                  r'return Number\(pointsTotal\) <= (\d+) \?', html)
+    if not d or not u:
+        return False, 'detachmentPointBudget or battleSizeUnitLimit is no longer in the expected shape'
+    if not (int(d.group(1)) == int(u.group(1)) == cut):
+        bad.append('the three battle-size-derived rules no longer split the sizes at the same '
+                   'points total')
+    return (not bad), ('; '.join(bad) if bad else
+                       f'engine allows {low} enhancements at <= {cut} pts and {high} above — '
+                       f'matches the 25.03 Enhancement Limit column (Incursion {inc_pts}/{inc_enh}, '
+                       f'Strike Force {sf_pts}/{sf_enh}), distinct from the DP column '
+                       f'({inc_dp}/{sf_dp}); 3,000 pts falls in the Strike Force branch for all three')
+
+
+# Two units are typed Character while their keyword lists do not say CHARACTER. Both are data
+# gaps, not eligibility facts, and both are in the SAFE direction — unit_type offers the pick,
+# the keyword list is merely incomplete. They are named here so the assertion stays sharp: any
+# THIRD such unit, or any unit in the opposite direction, fails the gate.
+E4B_KEYWORD_GAPS = {
+    ('Dark Angels', 'Ravenwing Command Squad'),      # CHARACTER sits on the Champion model group
+    ('Chaos Daemons', 'Rendmaster on Blood Throne'), # Chaos Daemons carry ability-style keywords only
+}
+
+
+def e4b_eligibility_derivations_agree(S):
+    """D199: enhancement eligibility keys off unit_type, because the keyword lists are not
+    uniformly populated. That is only safe while the two derivations agree, so this holds them
+    to it: unit_type == 'Character' must select the same set as (has CHARACTER keyword AND NOT
+    EPIC HERO keyword), everywhere keywords are populated, bar the two documented gaps.
+
+    The EPIC HERO half of the keyword test is not optional. Fifty-odd Epic Heroes carry the
+    CHARACTER keyword — in the rules an Epic Hero IS a Character — so a bare CHARACTER test
+    would call them all eligible and contradict 25.04's own bullet."""
+    units = S.units()
+    kw_only, ut_only, gaps_seen, unpopulated = [], [], set(), 0
+    for block in units:
+        army = block.get('army')
+        for u in block.get('units', []):
+            kws, populated = set(), False
+            for g in (u.get('model_groups') or []):
+                names = g.get('keyword_names') or []
+                if names:
+                    populated = True
+                for k in names:
+                    kws.add(str(k).lower())
+            if not populated:
+                unpopulated += 1
+                continue
+            kw_elig = ('character' in kws) and ('epic hero' not in kws)
+            ut_elig = (u.get('unit_type') == 'Character')
+            if kw_elig and not ut_elig:
+                kw_only.append(f"{army}/{u.get('unit_name')} (type {u.get('unit_type')})")
+            elif ut_elig and not kw_elig:
+                if (army, u.get('unit_name')) in E4B_KEYWORD_GAPS:
+                    gaps_seen.add((army, u.get('unit_name')))
+                else:
+                    ut_only.append(f"{army}/{u.get('unit_name')}")
+
+    bad = []
+    if kw_only:
+        bad.append('the keyword lists make these eligible while unit_type does not, so the '
+                   'engine is refusing legal picks: ' + ', '.join(kw_only[:5]))
+    if ut_only:
+        bad.append('these are typed Character with no CHARACTER keyword and are not documented '
+                   'gaps, so the engine may be offering illegal picks: ' + ', '.join(ut_only[:5]))
+    missing = E4B_KEYWORD_GAPS - gaps_seen
+    if missing:
+        bad.append('a documented keyword gap has closed and the allowlist is now stale — remove '
+                   'it from E4B_KEYWORD_GAPS: ' + ', '.join(f'{a}/{n}' for a, n in sorted(missing)))
+
+    total = sum(len(b.get('units', [])) for b in units)
+    chars = sum(1 for b in units for u in b.get('units', []) if u.get('unit_type') == 'Character')
+    heroes = sum(1 for b in units for u in b.get('units', []) if u.get('unit_type') == 'Epic Hero')
+    return (not bad), ('; '.join(bad) if bad else
+                       f'{chars} Character and {heroes} Epic Hero across {total} units; the '
+                       f'unit_type-derived and keyword-derived eligible sets agree on every unit '
+                       f'with keywords populated ({unpopulated} without), bar the '
+                       f'{len(E4B_KEYWORD_GAPS)} documented gaps')
+
+
+def e4b_name_collision_census(S):
+    """D199's forcing finding, pinned. The duplicate rule is keyed by NAME army-wide rather than
+    by (detachment, name) because the same enhancement name is reachable through two different
+    detachments inside one army. If a data regeneration moves this number, the choice of key has
+    to be revisited, so the census is pinned rather than merely described.
+
+    Counted as distinct (army, name) pairs. Only five distinct NAMES collide; they repeat across
+    seven chapter armies, so the name count and the pair count are very different numbers and
+    pinning the wrong one would look equally plausible."""
+    dj = S.detachments()
+    dets, armies = dj.get('detachments', {}), dj.get('armies', {})
+    if not dets or not armies:
+        return False, 'detachments.json no longer carries both a detachments map and an armies index'
+    pairs, names, differing = set(), set(), []
+    for army, keys in armies.items():
+        by_name = {}
+        for k in keys:
+            d = dets.get(k)
+            if not d:
+                continue
+            for e in (d.get('enhancements') or []):
+                by_name.setdefault(e['name'], []).append((k, e.get('points')))
+        for n, rows in by_name.items():
+            if len(rows) > 1:
+                pairs.add((army, n))
+                names.add(n)
+                if len({r[1] for r in rows}) > 1:
+                    differing.append(f'{army}/{n}')
+
+    EXPECTED_PAIRS, EXPECTED_NAMES, EXPECTED_DIFFERING = 29, 5, 1
+    bad = []
+    if len(pairs) != EXPECTED_PAIRS:
+        bad.append(f'{len(pairs)} reachable same-army cross-detachment collisions, expected '
+                   f'{EXPECTED_PAIRS} — the name-keyed duplicate rule (D199 call 1) rests on '
+                   f'this being non-zero and was scoped against this figure')
+    if len(names) != EXPECTED_NAMES:
+        bad.append(f'{len(names)} distinct colliding names, expected {EXPECTED_NAMES}')
+    if len(differing) != EXPECTED_DIFFERING:
+        bad.append(f'{len(differing)} collisions where the two copies are priced differently, '
+                   f'expected {EXPECTED_DIFFERING} — this is what forces the stored assignment '
+                   f'to carry a detachment key rather than a bare name (got {differing[:4]})')
+    return (not bad), ('; '.join(bad) if bad else
+                       f'{len(pairs)} reachable same-army collisions across {len(names)} distinct '
+                       f'names, {len(differing)} of them priced differently ({differing[0]}) — '
+                       f'name-keyed duplicates and the stored detachment key are both still forced')
+
+
+def e4b_engine_functions_defined_once(S):
+    """E1c-1's guard, applied to E4b. The functions that answer enhancement legality are declared
+    inside the E4b block and NOWHERE else in index.html. Consumers call them; nothing redefines
+    them. A second implementation growing quietly in the picker E4c is about to build is exactly
+    the failure this is here to catch, and it would be invisible otherwise."""
+    ip = os.path.join(S.dir, 'index.html')
+    if not os.path.exists(ip):
+        return False, 'index.html not found'
+    lines = open(ip, encoding='utf-8').read().split('\n')
+
+    s_i = next((i for i, l in enumerate(lines) if '// ── E4b: enhancement assignment rules' in l), -1)
+    e_i = next((i for i, l in enumerate(lines) if '// ── E4b block end' in l), -1)
+    if s_i < 0 or e_i <= s_i:
+        return False, 'the E4b block delimiters are no longer locatable in index.html'
+
+    names = ['enhancementLimit', 'enhancementRecord', 'enhancementPoints', 'enhancementIsUpgrade',
+             'enhancementIsOffered', 'assignedEnhancements', 'enhancementCount',
+             'enhancementCopies', 'enhancementMaxCopies', 'attachedGroupListIds',
+             'groupEnhancementCarriers', 'enhancementTypeEligible', 'canAssignEnhancement',
+             'enhancementArmyState', 'enhancementRowState', 'enhancementAttachBlock']
+    bad = []
+    for name in names:
+        pat = re.compile(r'^\s*function\s+' + re.escape(name) + r'\s*\(')
+        hits = [i for i, l in enumerate(lines) if pat.match(l)]
+        if not hits:
+            bad.append(f'{name} is not defined at all')
+        elif len(hits) > 1:
+            bad.append(f'{name} is defined {len(hits)} times (lines '
+                       + ', '.join(str(h + 1) for h in hits) + ')')
+        elif not (s_i < hits[0] < e_i):
+            bad.append(f'{name} is defined at line {hits[0] + 1}, outside the E4b block')
+
+    # The attach gate is the second enforcement point (D199). It is only an enforcement point if
+    # the action actually consults it, so that call is checked rather than assumed.
+    body = '\n'.join(lines)
+    m = re.search(r'function editLeaderTarget\(listId, targetListId\)\s*\{(.*?)\n  \}', body, re.S)
+    if not m:
+        return False, 'editLeaderTarget is no longer in index.html in the expected shape'
+    if 'enhancementAttachBlock' not in m.group(1):
+        bad.append('editLeaderTarget does not call enhancementAttachBlock — the attach gate is '
+                   'declared but not wired, so two carriers can still be merged into one unit')
+    if 'enhancementPointsForEntry' not in body:
+        bad.append('ptsForEntry no longer folds in enhancementPointsForEntry')
+
+    return (not bad), ('; '.join(bad) if bad else
+                       f'all {len(names)} enhancement legality functions are defined exactly once, '
+                       f'inside the E4b block, and both enforcement points are wired')
+
+
+def e4b_harness_gate(S):
+    """D107 applied to the enhancement engine: the Upgrade count carve-out, the attached-unit
+    scope of the one-per-unit rule and the hard block are claims about behaviour, so they are
+    executed against the real catalogue rather than described here."""
+    import subprocess
+    p = os.path.join(S.dir, 'e4b_check.js')
+    if not os.path.exists(p):
+        return False, 'e4b_check.js not found — the E4b behaviour gate is missing'
+    try:
+        r = subprocess.run(['node', p, os.path.join(S.dir, 'index.html'),
+                            os.path.join(S.dir, 'detachments.json')],
+                           capture_output=True, text=True, timeout=120, cwd=S.dir)
+    except FileNotFoundError:
+        return False, 'node is not available, so the E4b behaviour gate cannot run'
+    except subprocess.TimeoutExpired:
+        return False, 'e4b_check.js did not finish within 120s'
+    out = (r.stdout or '') + (r.stderr or '')
+    passed = len([l for l in out.split('\n') if l.strip().startswith('ok ')])
+    failed = [l.strip() for l in out.split('\n') if l.strip().startswith('FAIL ')]
+    if r.returncode != 0 or failed:
+        return False, (f'{len(failed)} E4b check(s) failed, e.g. {failed[:2]}' if failed
+                       else f'e4b_check.js exited {r.returncode}')
+    return True, f'e4b_check.js: {passed} checks pass'
 
 
 # ── runner ────────────────────────────────────────────────────────────────────

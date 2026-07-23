@@ -1,6 +1,6 @@
 // e1b_check.js — E1b. Loads the real detachment-selection block out of index.html
 // and the real list-storage module out of list_store.js, and asserts the three
-// constraints that govern a legal detachment set plus the schema v1 -> v2 migration.
+// constraints that govern a legal detachment set plus the schema migration chain.
 //
 // Three constraints, not one (D192 item 3, 25.04, D193):
 //   1. combined DP within the battle-size budget
@@ -192,14 +192,19 @@ eq(E.detachmentKeysForFaction(null), [], 'no faction yields no options rather th
 eq(E.detachmentKeysForFaction({ data_army: 'Nonexistent' }), [],
    'an unknown army yields no options rather than throwing');
 
-// ── 9. schema v2: persistence carries the selection ──────────────────────────
-console.log('E1b — SavedList schema v2');
-ok(S.SCHEMA_VERSION === 2, 'SCHEMA_VERSION is 2');
+// ── 9. the current schema: persistence carries the selection ─────────────────
+// The version number moves as later tickets add fields (v3 = E4b enhancements),
+// so this section reads it from the module rather than pinning a literal. What
+// it asserts is that a NEW record is written at whatever the module declares —
+// the failure worth catching is buildRecord stamping a stale number.
+console.log('E1b — SavedList schema, current version');
+const V = S.SCHEMA_VERSION;
+ok(V >= 2, 'SCHEMA_VERSION is at least 2 (E1b added the detachment field)');
 const meta = { id: 'l-test', name: 'T', points_target: 2000, primary_faction: 'Blood Angels',
                created: 1, warlord_entry_id: null, detachments: [BA_GRACE_A, BA_DOOM_A] };
 const rec = S.buildRecord(meta, [], {});
 eq(rec.detachments, [BA_GRACE_A, BA_DOOM_A], 'buildRecord carries the keys in selection order');
-ok(rec.schema_version === 2, 'a new record is written at v2');
+ok(rec.schema_version === V, 'a new record is written at the module version');
 const dupeRec = S.buildRecord(Object.assign({}, meta, { detachments: [K_SM1, K_SM1, K_SM1b] }), [], {});
 eq(dupeRec.detachments, [K_SM1, K_SM1b], 'duplicates are collapsed at the persistence boundary');
 const junkRec = S.buildRecord(Object.assign({}, meta, { detachments: [null, '', 3, K_SM1] }), [], {});
@@ -218,11 +223,12 @@ eq(ghostBack.detachments, ['Blood Angels|GONE'],
 ok(ghostBack.warnings.filter(w => w.type === 'unresolved_detachment').length === 1,
    'and it raises exactly one warning');
 
-// ── 10. the v1 -> v2 migration ───────────────────────────────────────────────
-// The claim E1b makes about behaviour: a v1 record loads as v2 with an empty
-// detachment set and NOTHING ELSE ALTERED. The second half is the part that
-// would be easy to break and hard to notice.
-console.log('E1b — v1 records upgrade to v2 with an empty detachment set');
+// ── 10. the v1 -> current migration ──────────────────────────────────────────
+// The claim E1b makes about behaviour: a v1 record loads at the current version
+// with an empty detachment set and NOTHING ELSE ALTERED. The second half is the
+// part that would be easy to break and hard to notice. E4b added a second step
+// (v2 -> v3, enhancement: null per entry), so a v1 record now walks both.
+console.log('E1b — v1 records upgrade to the current version with an empty detachment set');
 const v1 = {
   schema_version: 1, id: 'old', name: 'Old List', points_target: 1000,
   primary_faction: 'Space Marines', warlord_entry_id: 7, created: 111, modified: 222,
@@ -231,33 +237,43 @@ const v1 = {
 };
 const before = JSON.parse(JSON.stringify(v1));
 const up = S.migrate(v1);
-ok(up.schema_version === 2, 'schema_version becomes 2');
+ok(up.schema_version === V, 'schema_version becomes the module version');
 eq(up.detachments, [], 'the detachment set is empty');
 for (const f of ['id', 'name', 'points_target', 'primary_faction', 'warlord_entry_id', 'created', 'modified']) {
   ok(JSON.stringify(up[f]) === JSON.stringify(before[f]), `${f} is untouched by the migration`);
 }
-eq(up.entries, before.entries, 'entries are untouched by the migration');
+// E4b: the v2 -> v3 step ADDS `enhancement: null` to each entry and rewrites
+// nothing. Compare with that field stripped, then assert it was added and is
+// null — so a migration that touched any other entry field still fails here.
+const stripped = JSON.parse(JSON.stringify(up.entries)).map(e => { delete e.enhancement; return e; });
+eq(stripped, before.entries, 'no existing entry field is altered by the migration');
+ok(up.entries.every(e => 'enhancement' in e && e.enhancement === null),
+   'every entry gains exactly one field, enhancement, set to null');
 ok(Object.keys(up).length === Object.keys(before).length + 1,
    'the migration adds exactly one field and removes none');
 
 const v0 = S.migrate({ id: 'x', entries: [] });   // no schema_version at all
-ok(v0.schema_version === 2 && v0.detachments.length === 0,
+ok(v0.schema_version === V && v0.detachments.length === 0,
    'a record with no schema_version at all is treated as pre-v2 and upgraded');
-const v2 = S.migrate({ schema_version: 2, id: 'y', entries: [], detachments: [K_SM1] });
-eq(v2.detachments, [K_SM1], 'a v2 record passes through untouched');
+const v2 = S.migrate({ schema_version: 2, id: 'y', entries: [{ entry_id: 1 }], detachments: [K_SM1] });
+eq(v2.detachments, [K_SM1], 'a v2 record keeps its detachment set through the v3 step');
+ok(v2.schema_version === 3 && v2.entries[0].enhancement === null,
+   'a v2 record gains enhancement: null and becomes v3');
+const v3 = S.migrate({ schema_version: 3, id: 'y3', entries: [], detachments: [K_SM1] });
+eq(v3.detachments, [K_SM1], 'a current-version record passes through untouched');
 const future = S.migrate({ schema_version: 99, id: 'z' });
 ok(future.__incompatible === true, 'a newer-schema record is still surfaced, not guessed at');
 
 // ── 11. export / import carry the field ──────────────────────────────────────
 console.log('E1b — export and import carry the detachment set');
 const env = JSON.parse(S.exportRecords([rec]));
-ok(env.schema_version === 2, 'the export envelope stamps v2');
+ok(env.schema_version === V, 'the export envelope stamps the module version');
 eq(env.lists[0].detachments, [BA_GRACE_A, BA_DOOM_A], 'the exported record carries the keys');
 const round = S.importRecords(JSON.stringify(env));
-eq(round[0].detachments, [BA_GRACE_A, BA_DOOM_A], 'a v2 file round-trips its keys');
+eq(round[0].detachments, [BA_GRACE_A, BA_DOOM_A], 'a current-version file round-trips its keys');
 const oldFile = S.importRecords(JSON.stringify({ format: '40kab-lists', schema_version: 1, lists: [before] }));
-ok(oldFile.length === 1 && oldFile[0].schema_version === 2 && oldFile[0].detachments.length === 0,
-   'a v1 export file imports as v2 with an empty set rather than being rejected');
+ok(oldFile.length === 1 && oldFile[0].schema_version === V && oldFile[0].detachments.length === 0,
+   'a v1 export file imports at the current version with an empty set rather than being rejected');
 
 // ── 12. the drift guard ──────────────────────────────────────────────────────
 // list_store.js and the copy inlined in index.html are the same module in two

@@ -196,3 +196,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D197** — Policy: no further extraction of code out of `index.html` without a positive reason (S126)
 - **D198** — S126 tooling session: repo custody check, gate consolidation, known-failure allowlist, backlog/decision-log split
 - **D199** — E4 scoped: enhancement assignment design, the name-collision finding, and eligibility by unit_type (S127)
+- **D200** — E4b built: enhancement engine, schema v3, and a correction to D199's eligibility claim (S128)
