@@ -26,16 +26,31 @@ detachments without enforcing their construction restrictions — recorded openl
 left as a silent gap, and consistent with D0's undetermined-legality default of leaning permissive.
 
 
-### E4 — Detachment enhancement options in the config panel — **OPEN; unblocks when E1c lands**
-Show the selected detachment's enhancement options in the right config panel with points that add
-to the army total. **Thinner than it looked, after S122's scope pass.** Enhancements arrive inside
-the E1a detachment record already carrying name, points and the `(Upgrade)` flag, so E4 is an
-assignment UI plus a per-unit enhancement field plus the 25.04 limit rules — *not* a second data
-build. The 25.04 rules it must enforce: 2 enhancements at Incursion / 4 at Strike Force; CHARACTER
-units only; no EPIC HEROES; no duplicate enhancement in an army; no unit (including attached units)
-with more than one. `Upgrade`-tagged enhancements are the exception — allowed on non-Characters, up
-to three of the same, and the 2nd/3rd do not count against the limit though they still cost points.
-Still surfaces one real product question once unblocked: the enhancement-assignment UI itself.
+### E4 — Detachment enhancement assignment — **OPEN; SCOPED S127 (D199); splits E4b/E4c**
+Design is D199. The planned E4a data turn is cancelled — the 515 enhancement records verified clean
+in S127 (integer points, boolean `is_upgrade`, 35 Upgrades); E4a survives only as assertions landing
+with E4b. Eligibility keys off `unit_type` (keywords are unevenly populated — Chaos Daemons carry
+ability-style keywords only). Two data facts that shaped the design: 29 same-army cross-detachment
+name collisions make the duplicate rule name-keyed army-wide, and Deathwing Assault at 30/15 pts in
+two Dark Angels detachments means a stored assignment must carry its detachment key, not just the
+name. Four batched calls for Ryan ride in D199 (duplicate identity, Epic-Hero-ban-on-Upgrades,
+free-text restrictions displayed-not-enforced, inline config-panel picker UI) — work proceeds on the
+recommendations.
+
+**E4b — engine + persistence — OPEN, assigned S128 (engine-only).** Per-entry
+`enhancement: {name, detachment_key}` field; `list_store.js` schema v2→v3 (v2 loads with
+`enhancement: null`); one read-path function returning ok/blocked-with-reason for the five 25.04
+rules (hard block, D114/D115 line); the Upgrade carve-out's separate counter (first copy counts
+toward the 2/4 battle-size limit, second and third do not but still cost points, max three);
+attach-action gate refusing to merge two carriers into one attached group; points math through the
+existing recompute; flag-don't-drop on stale imports. Assertions: eligibility-set match wherever
+keywords are populated, single-call-site guard (E1c-1 pattern), count arithmetic, name-collision
+census pinned at 29.
+
+**E4c — assignment UI — OPEN, assigned S129 (UI).** Inline single-select row in the unit's config
+panel for eligible units only, listing name + points from selected detachments, illegal rows
+disabled with reasons; roster-level "Enhancements n/limit" chip beside the DP display; visible error
+rendering for imported/stale/over-limit states.
 
 
 ### B56 — 81 built units carry no points — **OPEN (cluster header); NEW S99 (D166); DIAGNOSED S100 (D167); B56a SHIPPED S101 (D168), B56b SHIPPED S102 (D170), B56c SHIPPED S103 (D171), B56d SHIPPED S104 (D172), 78/81 closed; L**

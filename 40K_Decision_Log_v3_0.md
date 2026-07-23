@@ -6710,3 +6710,115 @@ closed here as each shipped. H4 (Ryan's per-session repo refresh becoming routin
 strength of the repo-check evidence above — the refresh has visibly been happening.
 `PROCESS_IMPROVEMENT_PLAN.md` is superseded by these six tickets and is not maintained further.
 
+
+---
+
+## D199 — E4 scoped: enhancement assignment design, the name-collision finding, and eligibility by unit_type (S127)
+
+**Analysis/scoping session — no engine, data or UI change.** This entry is E4's design. S128 builds
+the engine and persistence (E4b), S129 the UI (E4c). The planned E4a data turn is cancelled: the
+data was verified clean this session (below), so E4a survives only as assertions landing with E4b.
+
+### Data findings (verified against detachments.json and units.json this session)
+
+**The enhancement records are build-ready as they stand.** 515 enhancement records across 143
+detachments; every `points` value parses as an integer, every `is_upgrade` is a real boolean (35
+flagged true), every record carries name, description and a text-source tier. No data turn needed.
+
+**Eligibility keys off `unit_type`, not keywords.** The keyword lists are not uniformly populated:
+Chaos Daemons units carry ability-style keywords only (Rendmaster on Blood Throne's list is just
+"Deep Strike", no Character keyword, no faction keywords), and several Epic Heroes carry an "Epic
+Hero" keyword without "Character". A full scan across all 14 armies found no unit whose CHARACTER
+keyword would qualify it while its `unit_type` disqualifies it — the one model-scoped Character
+keyword (Ravenwing Command Squad's Champion) sits on a unit already typed Character. So:
+`unit_type === 'Character'` (70 units) is eligible for regular enhancements; `'Epic Hero'` (58) is
+blocked; everything else is blocked except for Upgrades. This becomes an assertion in E4b: the
+unit_type-derived eligible set must continue to match the keyword-derived set wherever keywords are
+populated, so a future data regeneration cannot silently shift eligibility.
+
+**Same-named enhancements in different detachments are reachable in one army — 29 cases.** E.g.
+Adamantine Mantle appears in both FIRESTORM ASSAULT FORCE and FORGEFATHER'S SEEKERS, and any Codex-
+chapter army can select both detachments at Strike Force. The 25.04 duplicate rule ("your army
+cannot include more than one of the same enhancement") must therefore be **name-keyed army-wide**,
+not (detachment, name)-keyed — otherwise the same enhancement could be taken twice through two
+detachments.
+
+**Same name does not imply same points.** Deathwing Assault costs 30 pts in INNER CIRCLE TASK FORCE
+and 15 pts in WRATH OF THE ROCK — both confirmed directly against `MFM_Dark_Angels_v1_0.txt`, which
+is the points authority (D192). Consequence: a stored assignment must record **which detachment's
+copy** was taken, because the name alone does not determine the price.
+
+### State shape (E4b)
+
+A new per-entry field: `enhancement: { name, detachment_key }`, sitting beside `god`, `wargear` and
+`otherOptions` on the roster entry — the carrying entry is the unit that holds it (a leader entry or
+a standalone unit), never the bodyguard it is attached to unless the bodyguard itself carries it.
+Rejected alternatives: a meta-level pointer (the warlord pattern is one-per-army; enhancements are
+per-unit and plural) and reuse of `other_options` (its limits are per-unit; enhancement limits are
+army-wide and detachment-scoped, and forcing them through that mechanism would smear army state
+across entries).
+
+`list_store.js` schema bumps v2 → v3. The upgrade path from v2 sets `enhancement: null` on every
+entry — the only reading that adds no information. Load follows flag-don't-drop: an assignment whose
+detachment key no longer resolves, or whose name no longer exists in that detachment's current
+record, stays on the entry as a flagged error; points contribute from the catalogue when the record
+still resolves and 0 when it does not, mirroring `detachmentDp()`'s unresolved handling.
+
+### Validation (E4b) — hard block, D114/D115 line
+
+One read-path function in the E1b/E1c style (`enhancementRowState(entry, name, detachment_key, ...)`
+or similar), the only place the legality questions are answered; UI renders its verdicts and never
+recomputes them (the D196 second-implementation guard applies — an assertion should enforce
+single-call-site the way E1c-1 does for the detachment picker). Verdicts and reasons:
+
+1. **Wrong unit type** — regular enhancement on a non-Character; Upgrade on an Epic Hero.
+2. **Duplicate** — name already assigned elsewhere in the army (name-keyed; for Upgrades, only
+   blocks at the third existing copy).
+3. **Unit already has one** — the entry, or any entry in its attached group (same
+   `attachedToListId` cluster including the bodyguard), already carries an enhancement. One per
+   unit is absolute; Upgrade does not lift it.
+4. **Army limit reached** — assigned count ≥ limit, where the count includes every regular
+   enhancement and the **first** copy of each distinct Upgrade name; second and third copies of an
+   Upgrade are excluded from the count but still priced. Limit: 2 at ≤1000 pts, 4 otherwise —
+   3,000 pts is treated as Strike Force, the same call D192 made for DP and D115 for unit limits,
+   so the three battle-size-derived rules cannot disagree.
+5. **Not offered** — the name/detachment pair is not in the currently selected detachments. The
+   picker never lists these at all; this state exists only for imported/stale assignments.
+
+Over-limit and stale states are reachable only through import or a battle-size/detachment change —
+they stay visible errors, never silently trimmed (the `dpState` 'over' pattern).
+
+**Second enforcement point:** the leader-attach action must refuse to merge two enhancement
+carriers into one attached group. Assignment-time checking alone leaves a gap where two legal
+carriers attach afterwards.
+
+Points math: the entry's computed points add the enhancement's cost from the specific detachment
+record; totals, the points cap and `points_cache` all flow through the existing recompute.
+
+### Rules calls made this session (batched for Ryan, all reversible, proceeding on them)
+
+1. **Duplicate identity is by name, army-wide, across detachments.** Two detachments both offering
+   Adamantine Mantle still allow only one in the army. RAW reads this way and any other key would
+   let the collision cases above double up.
+2. **The Epic Hero ban extends to Upgrades.** The Upgrade bullets lift exactly two rules —
+   Character-only and the duplicate/count rules — and say nothing about EPIC HEROES, so the ban
+   stands.
+3. **Per-enhancement free-text restrictions are displayed, not enforced.** Descriptions carry
+   things like "ADEPTUS ASTARTES model only" or "TERMINATOR model only" as prose. E4 enforces the
+   five structural 25.04 rules; description-level eligibility is shown to the player in the picker
+   and left to them, as the app already does for ability text generally. Machine-parsing free text
+   would guess, and a wrong guess hard-blocks a legal pick — worse than not enforcing.
+4. **UI shape (the flagged product question): an inline single-select row in the unit's existing
+   config panel**, rendered only for eligible units, listing name + points from the currently
+   selected detachments, illegal rows disabled with their reason — plus a roster-level
+   "Enhancements n/limit" chip beside the DP display. One line why: it reuses the config-panel
+   idiom the player already knows and adds no new surface; a modal would be a second interaction
+   pattern for a decision no more complex than a wargear swap.
+
+### Session split
+
+- **E4b (S128, engine-only):** entry field, schema v3, read-path function, attach-gate, points
+  math, assertions (eligibility-set match; single-call-site guard; count arithmetic including the
+  Upgrade carve-out; name-collision census pinned at 29 so a data change resurfaces the question).
+- **E4c (S129, UI):** config-panel row, count chip, disabled-reason rendering, error states for
+  imported/stale assignments.

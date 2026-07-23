@@ -1,92 +1,71 @@
-# Next-session prompt — Session 127
+# Next-session prompt — Session 128
 
-Session 126 was a **tooling session**: repo custody check, gate consolidation, known-failure
-allowlist, and a backlog/decision-log split. Read `SESSION_HANDOFF_126.md`, then **D197** and
-**D198** in the decision log. `index.html` did **not** version-bump — still 6.3.
+Session 127 was an **analysis/scoping session**: E4 designed end-to-end as **D199**, the planned
+E4a data turn cancelled (data verified clean), E4 split into E4b (this session) and E4c (S129).
+Read `SESSION_HANDOFF_127.md`, then **D199** in full — it is the build spec. `index.html` did not
+change — still 6.3.
 
 ## Turn type
 
-**Analysis / scoping.** No engine change, no data change expected — this session decides E4's shape;
-the split from here is likely engine + persistence (S128) → picker/config UI (S129), with a data
-turn only if a source flag turns out to be missing. If the scoping pass finds E4 is thinner than
-that, ship what's ready and say so rather than forcing the three-way split.
+**Engine-only.** E4b: enhancement state, persistence, validation and points math. No data file
+changes, no parser changes. The UI (E4c) is S129 — this session may add the minimal render hooks
+the assertions need, but the picker/chip/error rendering is out of scope; stop cleanly at the
+engine seam.
 
 ## Baseline at open
 
-Run `./baseline.sh`. It covers every gate in one command now (T3, S126) — both repro checks, the
-detachments repro check, `rules_assertions.py`, all thirteen harnesses with their arguments baked
-in, `bundle_check.js`, `pipeline_manifest.py`, and `repo_check.py`. Use `--no-repo` if the network is
-unavailable in this sandbox.
+Run `./baseline.sh` (use `--no-repo` if offline). **Known S127 finding:** if this sandbox loads
+from the Claude Project store, `repro_check.py` and `pipeline_manifest.py` may be missing and
+`pipeline_manifest.json` stale — pull the three from the GitHub repo if Ryan has not re-uploaded
+them yet. The repo versions are correct; S127 verified them against the S126 hashes.
 
-**Verify the S126 hashes** (T2 convention, first use this session) before trusting the sync: compare
-the SHA-256 (first 12 chars) of each changed/net-new file in `SESSION_HANDOFF_126.md`'s Files section
-against what's actually in the project area. A mismatch means a bad sync — stop and reconcile rather
-than build on top of it.
+**Verify the S127 hashes** in `SESSION_HANDOFF_127.md`'s Files section before trusting the sync.
 
-If `repo_check.py` finds drift (this session's tooling changes haven't been pushed to the repo yet as
-of S126 close), that is expected — not a reason to stop, just note it.
+## The task: E4b — enhancement engine + persistence (per D199)
 
-## The task: E4 — detachment enhancement options in the config panel
+Build exactly what D199 specifies:
 
-**Why this is next.** Enhancements already arrive inside the E1a detachment record with name, points
-and the `Upgrade` flag — see `E1_DETACHMENT_SCOPE.md` §4. E4 is an assignment UI plus a per-unit
-enhancement field plus the 25.04 limit rules, not a second data build. It's the natural next visible
-feature riding on E1c, and it's bounded enough to scope and design in one session.
+1. **Per-entry field** `enhancement: { name, detachment_key }` beside `god`/`wargear`/`otherOptions`.
+2. **`list_store.js` schema v2 → v3.** v2 records load with `enhancement: null` on every entry.
+   Flag-don't-drop on load: unresolvable detachment key or name is kept, flagged, priced from the
+   catalogue when resolvable and 0 when not (the `detachmentDp()` pattern).
+3. **One read-path function** answering every legality question with ok/blocked-with-reason:
+   wrong unit type (regular → Character only; Upgrade → any type except Epic Hero), duplicate
+   (name-keyed army-wide; Upgrades block at the third copy), unit/attached-group already has one,
+   army limit reached (2 at ≤1000 pts else 4; first Upgrade copy counts, second/third do not),
+   not-offered (stale/import only). Hard block per D114/D115; over states from import or
+   battle-size/detachment change stay visible errors.
+4. **Attach-action gate**: refuse merging two enhancement carriers into one attached group.
+5. **Points math** through the existing recompute — entry points, army total, cap, `points_cache`.
+6. **Assertions** (rules_assertions.py or a new e4b harness — your call, note it in the handoff):
+   eligibility-set match (unit_type-derived vs keyword-derived wherever keywords are populated);
+   single-call-site guard on the read-path function (E1c-1 pattern); count arithmetic including
+   the Upgrade carve-out; name-collision census pinned at **29** so a data regeneration that moves
+   it resurfaces the duplicate-identity question.
 
-**The 25.04 rules to enforce:**
-- 2 enhancements at Incursion battle size / 4 at Strike Force (mirrors the DP-budget battle-size
-  split E1b already established).
-- CHARACTER units only.
-- No EPIC HEROES.
-- No duplicate enhancement anywhere in the army.
-- No unit (including a unit an attached leader is part of) carrying more than one enhancement.
-- `Upgrade`-tagged enhancements are the exception: allowed on non-Characters, up to three of the
-  same, and the 2nd/3rd copies don't count against the per-battle-size limit though they still cost
-  points.
+**Version-bump `index.html`** and state the version when publishing.
 
-**What this session should produce:** a design write-up (decision-log entry) covering—
-- Where the enhancement picker lives in the config panel, and how it's scoped to only the
-  enhancements from the army's currently-selected detachment(s).
-- The per-unit field shape: does an enhancement attach to the unit entry directly, or to the leader
-  sub-record the way `co_leader` fields do? `Datasheets_leader.csv` / the existing leader-attachment
-  fields are the reference point.
-- How the five hard-block rules above map onto existing validation patterns — D114/D115's
-  hard-block precedent for datasheet limits is the closest analog, not the older flag-and-warn line.
-- The `Upgrade` exception's bookkeeping: it needs its own counter separate from the main limit, since
-  it explicitly falls outside it.
+## Ryan's batched calls (D199) — check before building on them
 
-**One real product question surfaces here and needs Ryan:** the enhancement-assignment UI itself —
-where in the flow a player picks an enhancement for a unit (a control on the unit card vs. a modal vs.
-something else). Bring a recommendation with a one-line why per the standing process; don't block the
-session on it if a reasonable default lets scoping continue.
-
-## New assertions
-
-Per D107, whatever this session concludes about the 25.04 enforcement shape should land as an
-executable check once E4 actually builds (S128), not just as prose here.
+Four recommendations are pending Ryan's review: name-keyed duplicates, Epic-Hero-ban-on-Upgrades,
+free-text restrictions displayed-not-enforced, inline config-panel UI. If he has overruled any,
+the design adjusts before E4b builds; if silent, proceed on the recommendations as recorded.
 
 ## Backlog
 
-Open **E4**'s scoping as explicit sub-steps if the design pass reveals natural seams (e.g., an E4a
-data-shape check, an E4b engine turn, an E4c UI turn) — same pattern E1 used. **6 open tickets**
-carry forward unchanged: P2, E21, E12, B56, B17, plus E4 itself (now in active scoping).
+**7 open:** P2, E21, E4b (this session), E4c, E12, B56, B17.
 
 ## Ground rules
 
-* Analysis/scoping turn — if the session's findings clearly call for touching `index.html` or a data
-  file, that's fine (S128/S129 will do the actual build), but don't half-build this session; a clean
-  design write-up beats a partial engine change.
-* Deliver findings as prose/decision-log entry; batch anything needing Ryan with a recommendation.
+* Engine-only — data files and parsers untouched.
 * Do not rename anything — project name still unsettled.
-* Hashes convention (T2) continues: this session's own handoff gets SHA-256s in its Files section
-  for S128 to verify.
+* T2 hashes in this session's handoff Files section for S129 to verify.
+* Manifest: `index.html` and `list_store.js` are guarded — regenerate `pipeline_manifest.json`
+  (`--write`) at close after all gates pass.
 
 ## Standing inputs, neither blocking, worth more now
 
-* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — takes the
-  nine-detachment no-text gap to zero and upgrades 41 more from previous-edition to current text.
-  E1c already renders that text with a per-item tier badge, so upgrading these directly reduces
-  visible `prev. ed.` marks.
-* A **single-column re-extraction of the Space Marines pack** in the Dark Angels pack's form — flips
-  15 detachments' stratagems from previous-edition fallback to current text and retires the
-  column-splitter.
+* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — unchanged from
+  the S127 prompt; still zeroes the nine-detachment no-text gap.
+* A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
+  stratagems to current text.

@@ -195,3 +195,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D196** — E1c shipped: detachment picker over the E1b read path, and the second-implementation guard (S125)
 - **D197** — Policy: no further extraction of code out of `index.html` without a positive reason (S126)
 - **D198** — S126 tooling session: repo custody check, gate consolidation, known-failure allowlist, backlog/decision-log split
+- **D199** — E4 scoped: enhancement assignment design, the name-collision finding, and eligibility by unit_type (S127)
