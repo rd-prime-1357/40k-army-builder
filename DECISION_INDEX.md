@@ -1,0 +1,197 @@
+# Decision Index
+
+One line per entry in `40K_Decision_Log_v3_0.md` (number, title) — net new at **S126 (T5)**,
+so a session can find the two or three entries it needs without loading a 537 KB file. The
+decision log itself is authoritative and is not modified by this index; if the two ever
+disagree, the decision log wins.
+
+Two numbers (D158, D159) legitimately appear twice in the source log itself — both
+occurrences are listed below in document order, exactly as the source has them. A handful of
+entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the heading line itself in the source; their one-liner below is pulled from the entry's opening sentence instead.
+
+- **D0** — Foundational Rule: Legality Is the Only Boundary
+- **D1** — Tool Purpose
+- **D2** — Game Format
+- **D3** — Points Limit
+- **D4** — Technology Stack
+- **D5** — Data Maintenance Approach
+- **D6** — JSON File Structure
+- **D7** — Excel as Data Maintenance Tool
+- **D8** — Weapon Options Enforced
+- **D9** — Release Philosophy
+- **D10** — Browser Caching
+- **D15** — Abilities Embedded Per Unit
+- **D22** — INV and FNP Storage
+- **D23** — Two-Level Parameterized Ability Naming
+- **D25** — Daemonic Allegiance Units: Single Datasheets, God Selection at List-Build Time
+- **D26** — units.json Nested Structure
+- **D27** — Unit Size: Ordered Slots with Trailing Blanks
+- **D28** — Points Pricing: Fully-Populated 3×3 Lookup Matrix
+- **D29** — Army-Level Unit Instance Limit: Derived from Type with Override
+- **D31** — Immediate-Add Interaction Model
+- **D32** — No Hard Enforcement of Instance Limits
+- **D33** — Leader Display in Army List
+- **D34** — Error Flag System
+- **D35** — Banner Layout and Color System
+- **D36** — Bundled / Compound Weapon Swaps
+- **D37** — Stable Unit Reference: Wahapedia datasheet_id carried through pipeline
+- **D38** — List Management: Storage Mechanism
+- **D39** — Saved-List Data Model: Reference, Versioned, Flag-Don't-Drop
+- **D40** — List Construction Model: Model 2 (faction-on-list, autosave, home page)
+- **D41** — MFM Update Strategy: Full Re-Pull of Changed Armies, No Patcher
+- **D42** — SM-Family Chapter Points Sourcing: Base + Build-Time-Derived Override
+- **D43** — Cross-Faction / Allied Points Sourcing (Pattern Catalog)
+- **D44** — Structured Loadout Definition Schema (unit_loadouts.json)
+- **D45** — Weapon Count Rollup: Exact, Not Heuristic
+- **D46** — Add vs. Swap Distinction (Critical for Correct Counts)
+- **D47** — Parser + Override Layer Pattern for Loadouts
+- **D48** — army-name Flag Required for Non-SM Factions
+- **D49** — Equipped-With Composition Parser (New Source + Parser Layer)
+- **D50** — default_wargear Schema Field
+- **D51** — default_weapon_counts Schema Field
+- **D52** — Curated-Roster Scoping + Orphan Pruning
+- **D53** — Legends: Keep in Source, Defer Processing
+- **D54** — Wargear-Option Controls: Two-Control Model
+- **D55** — Leader/Champion Block Visually Separated (Configure Pane)
+- **D56** — Two Option Surfaces: Unconfigured Popup vs Configure Pane
+- **D57** — Heterogeneous Named-Model Units Require Composition Prose
+- **D58** — "Every Other Model" Resolves to the Complement of Named Groups
+- **D59** — Tolerant Group-Name Matching (Footnotes, Irregular Plurals, "model" Suffix)
+- **D60** — Victrix Honour Guard Count Model + Army-Wide Character Cap
+- **D61** — Un-onboarded Units: Points-Driven "Unverified" Badge, Not Hide (resolves old Item 8)
+- **D62** — "OR" Alternative-Profile Units → Size Brackets + Per-Bracket Counts
+- **D63** — Compound "A and B" Replacement Choices Are One Pick (D0 held)
+- **D64** — Coupled-Control Hard Interlock (Local Exception to D0 Flag-and-Warn)
+- **D65** — Leader Inclusion in a Per-N Carrier Pool Follows the Datasheet Wording
+- **D66** — Any-number-family parser: named-model scope + compound weapons
+- **D67** — Any-number swap caps + per-source-weapon pool
+- **D68** — Any-number swaps get their own heading; live-test gaps banked
+- **D69** — Points join normalized; units.json reproduction chain established
+- **D70** — Per-model keyword split, wargear abilities, per-datasheet ability text
+- **D71** — Unit classification from shared + namesake keywords; Leader/Character promotion (B8)
+- **D72** — Heterogeneous fixed-group split (B9)
+- **D73** — Bundle / loadout integration and the compound-swap control model (B5, B6)
+- **D74** — Stat-line INV/FNP overrides; configured popup made selection-aware
+- **D75** — Captain relic-shield W correction; general characteristic-from-text reader; Shining Aegis de-hardcoded (B12 remainder)
+- **D76** — B14: optional per-model wargear items routed to Other Options
+- **D77** — B14 render wiring corrected; other-option / loadout de-dup; weapon-count root cause found
+- **D78** — B16 shipped: per-model-group default weapons (weapon-count fix)
+- **D79** — B17 (part 1): loadout option-parser gaps closed for the Deathwatch/Deathwing partials
+- **D80** — B17 (part 2): the banked single-model / conditional-swap shapes
+- **D81** — B17 (engine turn): count `requires_weapon` gate + `max_total` pool cap; Spectrus helix/comms
+- **D82** — JSON export / import wired into the UI (data-loss recovery)
+- **D83** — B17 (true-1b): variant sub-group default weapons (Deathwatch Kill Teams)
+- **D84** — Reiver Squad parser gap: conditional add + unit-wide per-model item adds (S29)
+- **D85** — Sanguinary Guard banner: one-model item add (S30)
+- **D86** — "Back up all lists" multi-list export (S31)
+- **D87** — E16: sort control on "My Army Lists" home page
+- **D88** — B15 (safe subset): broad conferred always-on wargear characteristics → statline
+- **D89** — E17: asterisk on statline cells with a per-model (bearer-only) INV/FNP
+- **D90** — B14b/B14c investigation: rescope, and the `requires_weapon` gate is dormant (S35)
+- **D91** — B19: the `requires_weapon` gate becomes a carrier count (S36, v5.52)
+- **D92** — B14c(b): the three bearer-gated adds go live (S37, data-only)
+- **D93** — B20 — engine half: single-model groups now honour `count` options, and every per-N cap is bounded by its own model group (v5.53,…
+- **D94** — "N model's X can be replaced with…" is N models in the unit, not N per 5 models (parser + data)
+- **D95** — Weapon names in `unit_loadouts.json` are family names, and a swap source can be compound (parser + data)
+- **D96** — Session 41: the per-N passive-possessive shape (B26), the Whirlwind bleed (B27), and a 23-unit staleness fold
+- **D97** — Compound swap sources, mutually exclusive choices, and dead swap controls (Session 42, index.html v5.54)
+- **D98** — The parser writes compound swap sources in full (B23b data half) and stops inventing "additional" weapons (B29). Session 43, data-only
+- **D99** — The equipment channel on the replacement side; B14b part 2 closes as already satisfied (S44, engine only, v5.55)
+- **D100** — B30: compound single replacements, and the wargear allowlist on the whole replacement side (S45, data turn)
+- **D101** — a wargear item can be the *source* of a swap, and base gear is now rolled up (S46, engine)
+- **D102** — B28b: a wargear item is a first-class swap source, and gear-only groups now carry their gear (S47)
+- **D103** — B14c(c) — bearer-gated adds. A gate may name more than one weapon; it is written the way every other multi-weapon field is written
+- **D104** — A negated gate is a mutual exclusion, not a requirement. The parser must not read it as one
+- **D105** — E17: when a conferred characteristic reaches the statline; B15 closed as never-real
+- **D106** — a negated gate is a PER-MODEL exclusion, not a unit-level one. D104's remedy was wrong.
+- **D107** — wargear is NOT free. And the false claim came from our own data, one turn after D106.
+- **D108** — the base cost does NOT include default wargear. Settled from source, not from New Recruit.
+- **D109** — D107's "138 priced entries" is wrong. The real numbers.
+- **D110** — a wargear price is keyed by DATASHEET ID, never by unit name and never by item name.
+- **D111** — an entry's cost is derived from its rollup, not from its option list, and it is recomputed on every render.
+- **D112** — B15 shipped. The name-keyed glossary was the bug; carrier counting is the rule.
+- **D113** — A bundle owns the swap it describes; the loadout def never restates it. (B36 — Lieutenant / Captain wargear.)
+- **D114** — B41 + E3 — the datasheet limit becomes a hard block, and red comes to mean "exceeded"
+- **D115** — The limits depend on the battle size. `Army_Muster_Rules.txt` arrived, and D114's numbers were wrong
+- **D116** — B18's rule was backwards, and the source says so. A swap is NOT confined to its model group.
+- **D117** — E14: a free, ungated, unpooled, one-off add defaults to selected. Narrow on purpose.
+- **D118** — `loadout_parser.py` rebuilt to the committed file, and the freshness gate is now machine-enforced
+- **D119** — the S57 parser did not survive into S58, and the rebuild is now reproducible from the log
+- **D120** — B18 is two items, not one: `pool_id` is honoured only on `type: 'add'`
+- **D121** — B43 is not a data gap; it is B44
+- **D122** — B46: the popup's wargear-ability list is sourced from the datasheet, not from units.json
+- **D123** — the parser-freshness guard is now executable and covers the whole pipeline
+- **D124** — B47 — information buttons in the Configuration Panel. Engine only; `unit_loadouts.json` and `units.json` byte-identical
+- **D125** — B48 — Corvus Blackstar `000000358` no longer renders two controls for the same wargear
+- **D126** — B18b — `count` options now draw from the shared pool cap (`pool_id`)
+- **D127** — B18c — capped generic swap fan-out: the ticket's uniform premise was wrong; re-scoped to two units, three deferred to new B18d, two are…
+- **D128** — B18c stopped and banked at build time: S62's "provably exactly two units" premise was false, and seeding a cross-group pooled count exposes…
+- **D129** — B18e shipped: the shared `pool_id` cap is now enforced on the weapon/points rollup for `count` options on fixed-1 groups, not just on the…
+- **D130** — B39 diagnosis: Bloodthirster's doubled great-axe option is a stale duplicate flat swap, not a source-supported mutual-exclusion (fix is a pipeline dedup widen)
+- **D131** — B39 fix shipped; B39b audit folded in clean; a units.json full-pipeline non-reproducibility finding banked as new custody item
+- **D132** — P4 resolved: D131's diagnosis was wrong about the mechanism (not the symptom). Chaos Daemons IS reproducible — from the project root, never through wahapedia_transform.py. units.json re-established as a fixed point for all 14 blocks.
+- **D133** — B40 closed as not-a-bug; Leader-section rework opened (B49); leader_footer added to the pipeline as the data half
+- **D134** — B49 engine half shipped: dedicated Leader section rendered, generic Rules line dropped
+- **D135** — B44 data half shipped: `loadout_groups` shared key added to statline model groups
+- **D136** — B44 engine half shipped: `statGroupScopes()` now trusts `loadout_groups` when present, closing B44 and the Wolf Scouts undercount
+- **D137** — B45 retired as a standalone ticket and re-homed into its real owners; SUPREME COMMANDER (must-be-Warlord) found silently dropped by the transform
+- **D138** — off-by-one column-index bug in `wahapedia_transform.py` post-processing (found while scoping E9a, fixed same session)
+- **D139** — E9a shipped: `must_be_warlord` surfaced for the 4 SUPREME COMMANDER units; a second, unrelated
+- **D140** — E9b shipped: Warlord pick list wired into the Army List banner, plus a data addition E9b needed —
+- **D141** — B1 audited before being scheduled: the reported symptom no longer reproduces; the real residual
+- **D142** — B1b shipped: Chaos Daemons gets its own per-unit ability-text coverage; B52 and 3 truncated
+- **D143** — B2 audited and closed (no reproduction); B38 re-scoped after inspecting the co-leader data on real data
+- **D144** — B38 decision resolved (Ryan): support true multi-leader with full-set validation; model the generic shape with an explicit flag
+- **D145** — B38-engine shipped: full-set symmetric-pairwise leader validation, zero behaviour change confirmed
+- **D146** — B38a shipped: co_leader_eligible_with populated on the 12 built SM named-shape units
+- **D147** — B38b shipped: co_leader_any populated on the 6 built DG generic-shape units
+- **D148** — E10 shipped: duplicate unit in center panel
+- **D149** — B18d shipped: capped generic swaps fanned to leader-conflict units (Thunderwolf Cavalry, Deathwatch Veterans, Talonstrike Kill Team)
+- **D150** — B18f investigated and closed with no data change: five of six candidates are named-body-type (D116-correct, no under-grant); only Decimus Kill Team is a genuine generic under-grant, re-scoped to B18g
+- **D151** — E13 shipped (label polish) and B18h shipped (D116 made executable as an assertion on the fan allowlist)
+- **D152** — B18g investigated and banked: cc_1 is scoped to the wrong group; fan mechanism cannot fix it
+- **D153** — B18g shipped: cc_1 scope corrected to Gravis Veterans via targeted post-processing override
+- **D154** — E7/E8 shipped, then E5 shipped in a follow-on engine turn
+- **D155** — B4 shipped: Primarch / Special / Fortification ability types routed alongside Datasheet
+- **D156** — B37 closed on reconfirm: Captain wargear panes are already correctly fixed, no build needed
+- **D157** — B7 reshaped: multi-leader mechanic already shipped in B38 cluster; residual work split into B7a (stack cap) and B7b (combined popup with aura markers)
+- **D158** — B7a shipped: stack-size cap of 2 added to canAttachLeader
+- **D159** — B7b shipped: combined attached-unit popup with per-stat aura markers
+- **D158** — B13 Piece 1: Optional model toggle for Victrix Honour Guard (S92)
+- **D159** — B13 Piece 2: Embedded Epic Hero cap for optional model groups (S93)
+- **D160** — B34 Piece 1: Size-gated wargear swaps as `required_size` (data + parser) (S94)
+- **D161** — B34 Piece 2: Size-gated wargear swaps enforced in engine (S95)
+- **D162** — B53: combined attached-unit popup panel order flipped to leader-first (S96)
+- **D163** — E15: Transport ability text added alongside the Transport keyword (S97)
+- **D164** — B55: the four merged glossary lookups were stale; reproduction gate extended to cover them (S98)
+- **D165** — B31: the Wulfen Dreadnought's "A or B and C" source, resolved as a bundle rather than a schema extension (S99)
+- **D166** — the 81 unpriced units are a tracked gap, not an undiscovered one (S99)
+- **D167** — B56 diagnosis: the chapter-points gap is four separate problems, not one (S100)
+- **D171** — B56c shipped: chapter points override map derived fresh each build, stamped onto the generic units (S103)
+- **D172** — B56d shipped: chapter point overrides applied at resolveUnits (S104)
+- **D173** — B56g analysis: the Hunting Wolves escort is a model group, not wargear — direction (b) rejected (S105)
+- **D174** — B56g phase 1 shipped: escort resolver keys the primary bracket on the primary count, Wolf Guard Headtakers closes (S106)
+- **D175** — B56g phase 2 shipped: Hunting Wolves gains a per-bracket count and a price; new schema field, new HAND_AUTHORED entry (S107)
+- **D176** — B56g phase 3 shipped: Hunting Wolves escort is reachable as a 0-or-N toggle; B56g closes (S108)
+- **D177** — B11 shipped: SV/LD normalized to bare values at the pipeline source (S109)
+- **D178** — B54 shipped: Be'Lakor's Shadow Form sub-abilities added to CD data (S110)
+- **D179** — B21 diagnosis: the real blocker is banded optional model groups, not the mis-scoped options (S111)
+- **D180** — B58 phase 1 shipped: base-group min lands on every banded unit, not just the four D179 kill teams (S112)
+- **D181** — B58 phase 2 shipped: banded optional model groups become steppers, hard-capped by the base group's minimum (S113)
+- **D182** — B59 mechanism, category distinction, and pricing correction; B21 shipped (S114)
+- **D183** — B59a: non_consuming engine wiring, pure no-op on current data (S115)
+- **D184** — B59b: MFM additive-line parser + Outrider Squad Invader ATV data flip; B59 closes (S116)
+- **D185** — E2 shipped: collapsible left-panel role-group sections (S117)
+- **D186** — B57 resolved: no in-between sizes; MFM discrete sizes only (S118)
+- **D187** — E6 shipped: affordability dimming on left-panel units (S118)
+- **D188** — E19 opened + shipped: Configured/Remaining points moved next to Army Points (S119)
+- **D189** — E11 scope correction: full CSS-variable theme refactor, not a quick toggle (S119)
+- **D190** — E11 closed: S120 visual verification pass, full changelog (S120)
+- **D191** — S121 backlog housekeeping: B56e retired, E20 closed, E12 deferred, E1 formalized
+- **D192** — E1 scoped: MFM is the 11th-Edition detachment source; E1 splits into E1a/E1b/E1c; E21 opened (S122)
+- **D193** — E1a shipped: `detachments.json`, the Unique-tag finding, and a text ladder that self-corrects (S123)
+- **D194** — `detachments.json` deduplicated: 1.61 MB to 797 KB, and three dead Wahapedia join tables identified (S123)
+- **D195** — E1b shipped: detachment state, schema v2, and P3 brought back from the dead (S124)
+- **D196** — E1c shipped: detachment picker over the E1b read path, and the second-implementation guard (S125)
+- **D197** — Policy: no further extraction of code out of `index.html` without a positive reason (S126)
+- **D198** — S126 tooling session: repo custody check, gate consolidation, known-failure allowlist, backlog/decision-log split

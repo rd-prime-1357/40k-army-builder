@@ -6598,3 +6598,115 @@ Angels, Space Wolves, Death Guard) take the no-text gap from nine to zero and up
 detachments to current text; worth more now that E1c renders it. A single-column re-extraction of
 the Space Marines pack retires the column-splitter. Both are parser re-runs on E1a code as it
 stands, not redesigns.
+
+
+## D197 — Policy: no further extraction of code out of `index.html` without a positive reason (S126)
+
+**What.** `list_store.js` stays exactly as it is, guarded by its E1b-2 structural check. No new
+module gets pulled out of `index.html` unless there is a concrete, positive reason for that specific
+extraction — "it would be tidier" is not one.
+
+**Why this needed saying, not just doing.** `list_store.js` is the one extraction the project has
+done, and the code it holds has not yet been used anywhere a second time — the payoff modularity is
+supposed to buy (reuse, isolation, independent testing) has not materialized. What it did cost: a
+multi-week silent divergence between the extracted file and the copy inlined in `index.html`, caught
+only by building a new structural assertion (E1b-2, `e1b_check.js`) to police the two staying in
+sync. A single-file deploy model means every extraction creates a second copy that has to be kept
+byte-identical by a dedicated guard, forever, for as long as the extraction exists. That is a
+standing cost paid every session, for a benefit this project has not drawn on once.
+
+**The constraint is real, not aesthetic.** GitHub Pages serves `index.html` as the whole app; the
+single-file architecture is a property of the deploy model, not a habit that can be refactored away
+for free. Partial modularization — some logic inlined, some extracted — fights that constraint
+directly: it adds the sync-guard tax without removing the single-file property it would need to
+remove to pay for itself.
+
+**Reversal condition.** A "positive reason" means something the project can point to: actual reuse
+across more than one context, a testing need `e1b_check.js`'s pattern cannot cover, or a build-size
+problem the single file has started to cause. Wanting the code to look nicer, or a new session's
+default instinct toward tidiness, is not one. If a future ticket proposes an extraction, it should
+name which of these applies before any code moves.
+
+No rules-legality content — engine architecture and process precedent, logged per D107 so this
+doesn't have to be re-argued from scratch next time someone eyes `index.html`'s length.
+
+---
+
+## D198 — S126 tooling session: repo custody check, gate consolidation, known-failure allowlist, backlog/decision-log split
+
+**Turn type: tooling-only**, per the revised S126 prompt (E4 deferred to S127; a process review and a
+repo custody pass between sessions surfaced six items worth doing first). `index.html`, every `.json`
+data file, every parser and every CSV untouched — confirmed by `index.html` staying at 6.3 and the
+three repro gates passing unchanged at both open and close.
+
+**T1 — `repo_check.py` (net new).** Clones the public repo and classifies every file against the
+project working area: match / differs / missing-from-repo / repo-only. GW-derived material found in
+the repo is reported as a distinct, louder failure than ordinary drift — that class of finding is a
+publication problem, not a sync problem. Rather than hand-maintaining a second exclude-pattern list
+that could drift from `.gitignore`, the script reads `.gitignore` straight out of the clone and
+buckets its patterns by the section-header comments already there (the file itself already labels
+which blocks are GW-derived vs. local scratch), so the two sources cannot disagree. "Missing from
+repo" is scoped deliberately narrow — the manifest's guarded set (read live from
+`pipeline_manifest.json`, not hardcoded) plus a fixed doc list plus every `SESSION_HANDOFF_*.md`
+found locally — rather than walking the whole project area, most of which is GW/Wahapedia source
+material that is correctly and permanently excluded and would otherwise read as false "missing"
+noise. A clone failure fails clearly with the reason (exit 2) rather than reporting a false clean.
+Run against the real repo at session open: **the repo has been bulk-uploaded since S125** — 70
+files, every one shared with the project area byte-identical, confirming H4's per-session refresh
+happened and closing the immediate custody gap H3 flagged.
+
+**T2 — hash convention.** Every handoff's Files section now carries a first-12-characters SHA-256
+per changed and net-new file, verified by the next session before anything else runs. Deliberately
+redundant with T1 — this still catches a bad sync one session later even if the repo is unreachable
+or out of date when `repo_check.py` runs. Applied starting with this session's own handoff
+(`SESSION_HANDOFF_126.md`) so S127 inherits it.
+
+**T3 — `baseline.sh` (net new).** One command, one line per gate, covering both repro checks, both
+JSON repro checks, `rules_assertions.py`, all thirteen harnesses with their correct positional
+arguments baked in, `bundle_check.js`, `pipeline_manifest.py`, and `repo_check.py` (skippable via
+`--no-repo` for an offline run). The argument shapes were the actual point — several harnesses take
+three or four positional arguments and print a bare Node stack trace when called without them, which
+read identically to a real failure before this existed. Verified end-to-end mid-session: when the T4
+edit to `bundle_check.js` left the pipeline manifest stale, `baseline.sh` correctly went red on both
+`rules_assertions` (P3) and `pipeline_manifest` — proof it catches a real problem rather than
+rubber-stamping.
+
+**T4 — known-failure allowlist in `bundle_check.js`.** B36's two failures (the merged-radio-vs.-
+three-independent-Keep-rows shape) have printed on every run for many sessions. A gate that is
+expected to print red trains everyone to skim past red, which is how a third, unrelated failure
+would get missed. `ok()` now accepts an optional key; a keyed check that still fails prints `KNOWN`
+and does not count toward the exit code, but the gate fails loudly — `FAIL allowlist stale` — the
+moment either resolves without the allowlist being updated, and a third check that fails without a
+key still fails the gate normally. An allowlisted key that never runs during a given execution
+(renamed or removed check) also fails loudly, so a stale entry cannot hide silently either. Empty
+`KNOWN_FAILURES` when B36 ships.
+
+**T5 — backlog and decision-log split.** `OPEN_ITEMS_BACKLOG.md` had grown to 166 KB, almost entirely
+closed-ticket narrative loaded and unread every session. Of its 117 tracked tickets, exactly **7**
+are genuinely open: **H3, E21, E4, B56, E12, P2, B17.** Those 7 keep their full bodies in
+`OPEN_ITEMS_BACKLOG.md`; the other 110 move in full to `BACKLOG_ARCHIVE.md` (net new), with a
+one-line pointer (ID, title, closing status) left behind in the working file. Verified byte-for-byte
+against the original — zero ticket content lost or duplicated across the split. The short
+"Cross-cutting notes" section stays in the working file (still-live context for E4/E21); the S18-era
+"Shipped" and "Doc debt" sections, being pure history, moved to the archive with the rest. The
+decision log itself is **not** modified — `40K_Decision_Log_v3_0.md` remains authoritative — but
+`DECISION_INDEX.md` (net new) adds a one-line-per-entry index (number, title, session) so a session
+can find the two or three D-entries it needs without loading 537 KB.
+
+**T6 — module-extraction policy.** Recorded separately as **D197** (no code): no further extraction
+out of `index.html` without a positive, name-able reason.
+
+**Manifest note.** `bundle_check.js` is a guarded file; T4's edit changed its hash, so
+`pipeline_manifest.py` was regenerated at close (`--write`) after every gate passed. Guarded set
+unchanged at 36 files — this session added no new guarded file, `repo_check.py` and `baseline.sh`
+are tooling, not pipeline-guarded.
+
+**What did NOT change.** `index.html`, every `.json` data file, every parser, every CSV. The bundle
+of thirteen harnesses is otherwise unchanged. `40K_Decision_Log_v3_0.md` gained D197/D198 as append-
+only entries; its existing content is untouched.
+
+**Backlog.** T1–T6 and H4 opened as real tickets at session start per the prompt's instruction, and
+closed here as each shipped. H4 (Ryan's per-session repo refresh becoming routine) closes on the
+strength of the repo-check evidence above — the refresh has visibly been happening.
+`PROCESS_IMPROVEMENT_PLAN.md` is superseded by these six tickets and is not maintained further.
+

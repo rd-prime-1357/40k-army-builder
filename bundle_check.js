@@ -40,8 +40,32 @@ const flat = [];
 for (const b of U) for (const u of b.units) { raws[u.unit_id] = u; flat.push(u); }
 E.setUnits(flat);
 
+// T4 (S126): known-failure allowlist. B36 (merged-radio vs. independent Keep rows) has
+// printed the same two failures for many sessions. A gate that is expected to print red
+// trains everyone to skim past red, which is how a third, unrelated failure gets missed.
+// A key here makes the gate read green while exactly these two are present, and turns it
+// red again the moment either resolves (stale allowlist) or a new failure shows up
+// unkeyed. Empty this object when B36 ships.
+const KNOWN_FAILURES = {
+  'b36-keep-count':   'B36 open — bundle-at-default still renders one merged radio, not three independent Keep rows',
+  'b36-keep-offered': 'B36 open — keeping the master-crafted bolter is not yet rendered as an offered choice',
+};
+const seenAllowlisted = new Set();
+
 let fail = 0;
-const ok = (cond, msg) => { if (!cond) { fail++; console.log('  FAIL ' + msg); } else console.log('  ok   ' + msg); };
+const ok = (cond, msg, key) => {
+  if (key && Object.prototype.hasOwnProperty.call(KNOWN_FAILURES, key)) {
+    seenAllowlisted.add(key);
+    if (cond) {
+      fail++;
+      console.log(`  FAIL allowlist stale for "${key}" — this now passes; remove it from KNOWN_FAILURES: ${msg}`);
+    } else {
+      console.log(`  KNOWN ${msg} (${KNOWN_FAILURES[key]})`);
+    }
+    return;
+  }
+  if (!cond) { fail++; console.log('  FAIL ' + msg); } else console.log('  ok   ' + msg);
+};
 
 // Count how many distinct controls offer a given weapon name: bundle endpoint labels
 // plus rendered loadout choice rows.
@@ -70,7 +94,7 @@ console.log('Lieutenant 000001346 — bundle at default');
   ok(/Bolt Pistol Options/.test(r.html),           'bolt pistol pane renders');
   ok(/Close Combat Weapon Options/.test(r.html),   'close combat weapon pane renders');
   const keeps = (r.html.match(/Keep /g) || []).length;
-  ok(keeps === 3, `three independent choice clusters, not one merged radio (found ${keeps} "Keep" rows)`);
+  ok(keeps === 3, `three independent choice clusters, not one merged radio (found ${keeps} "Keep" rows)`, 'b36-keep-count');
 }
 
 console.log('Lieutenant 000001346 — acceptance (Ryan, corrected S54): master-crafted bolter KEPT + heavy bolt pistol + power fist');
@@ -83,7 +107,7 @@ console.log('Lieutenant 000001346 — acceptance (Ryan, corrected S54): master-c
   ok(r.entry.wargear.cho_4 === 'Power fist',        'power fist survives alongside it');
   ok(r.entry.wargear.cho_1 == null,                 'the master-crafted bolter is kept');
   const roll = r.html;
-  ok(/Keep Master-crafted bolter/i.test(roll),      'keeping the bolter is still an offered choice');
+  ok(/Keep Master-crafted bolter/i.test(roll),      'keeping the bolter is still an offered choice', 'b36-keep-offered');
 }
 
 console.log('Lieutenant 000001346 — plasma pistol + power fist (also legal; costs the bolter)');
@@ -106,6 +130,13 @@ console.log('Captain 000000073 — bundle owns the whole loadout');
 {
   const r = render('000000073', {});
   ok(r.html.trim() === '', 'no loadout panes render; the bundle picker is the single control');
+}
+
+for (const key of Object.keys(KNOWN_FAILURES)) {
+  if (!seenAllowlisted.has(key)) {
+    fail++;
+    console.log(`  FAIL allowlisted key "${key}" was never exercised this run — stale or renamed entry, fix KNOWN_FAILURES`);
+  }
 }
 
 console.log(fail ? `\n${fail} bundle check(s) FAILED` : '\nall bundle checks pass');
