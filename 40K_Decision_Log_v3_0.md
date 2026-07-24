@@ -8197,3 +8197,106 @@ no assertion added or removed, so the count is unchanged from S136).
 this session; this session builds them.
 
 **Repo custody:** all nine are project-generated and repo-eligible. No GW-derived text touched.
+
+## D216 — B62 shipped: `is_base_equipment` boolean fix, `units.json` re-banked, presence gate on the nine CD root CSVs (S138)
+
+**Turn type: data-only.** `convert_to_json.py` and `rules_assertions.py` changed; `index.html`
+untouched. Assertions **100/100 → 101/101**. Baseline **23/23** at open (all four S137 hashes
+verified against `SESSION_HANDOFF_137.md`) and **23/23** at close. E21d piece 3 was not picked up
+this session — it needs Ryan's confirmation in-conversation per the S137 prompt's own instruction,
+which had not arrived yet, so the session opened elsewhere in the backlog per the prompt's own
+fallback list.
+
+### Finding: the D205 quirk was not harmless
+
+D205 recorded that Keeper of Secrets' Shining Aegis and Soul Grinder's Warpclaw carry the literal
+string `"FALSE"` in `Is Base Equipment` rather than `Yes`/`No`, and that the converter passed it
+through unrecognised. It was filed as inert. It was not: a non-empty string is truthy in both Python
+and JavaScript, so `is_base_equipment` evaluated as **true** for both weapons everywhere it was read
+truthily. Checked against `Unit_Wargear_Options.csv` to confirm the correct value — both weapons are
+replacement options (Shining Aegis replaces Witstealer sword, Warpclaw replaces Warpsword), so `false`
+is right. `index.html`'s `shouldDimWeapon` was shielded from the bug by a second, independent
+replacement-detection check, so nothing visibly broke there — but `activeWeaponStatOverrides`
+(the function that applies a weapon's stat-modifying ability while it is equipped) had no such second
+check, and Shining Aegis's stat effect could apply even when not selected. Live on two Chaos Daemons
+weapons since the CSVs were rebuilt at D205.
+
+### The fix
+
+`convert_to_json.py`'s `clean()` now recognises `true`/`false` (case-insensitive) as booleans
+alongside the existing `yes`/`no`. `units.json` was regenerated through the full documented pipeline
+(SM + DG via `wahapedia_transform.py`, CD direct off the root CSVs, merged, then the three post-merge
+passes) and the committed file overwritten. Verified the rebuild changed **only** the two expected
+records — every other unit and all four merged glossary lookups (`abilities.json`, `rules.json`,
+`keywords.json`, `weapon_abilities.json`) byte-identical — before trusting the overwrite.
+`units_repro_check.py` re-verified byte-identical reproduction from the new fixed point.
+
+No `index.html` change was needed. Both read sites (`activeWeaponStatOverrides`,
+`shouldDimWeapon`) already treat `is_base_equipment` by truthiness; correcting the underlying data
+to a real boolean was sufficient to correct the behaviour.
+
+### The second half: presence-and-parse gate on the nine CD root CSVs
+
+New assertion **B62-1** in `rules_assertions.py`: checks each of the nine Gen-1 Chaos Daemons root
+CSVs (`Unit_Stats`, `Unit_Points`, `Unit_Wargear_Options`, `Unit_Other_Options`, `Unit_Weapons`,
+`Unit_Abilities`, `Keywords`, `Rules`, `Weapon_Abilities`) is present, non-empty, and carries its
+expected header columns — not just that the file exists. Verified it fires correctly by removing
+`Rules.csv` and confirming a named failure, then restored it and confirmed a clean pass. This is the
+gate D205 asked for: a missing or truncated CD root CSV now fails loudly and by name at session open
+instead of surfacing as a confusing `units.json` repro byte mismatch.
+
+### Housekeeping
+
+`pipeline_manifest.json` reissued for the three changed guarded files (`convert_to_json.py`,
+`rules_assertions.py`, `units.json`). **B62 closes.** Full ticket body moved to
+`BACKLOG_ARCHIVE.md`; a one-line pointer replaces it in `OPEN_ITEMS_BACKLOG.md`'s Closed/Shipped
+section. Open count 8 → 7.
+
+**Changed:** `convert_to_json.py`, `units.json`, `rules_assertions.py`, `pipeline_manifest.json`,
+`40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `BACKLOG_ARCHIVE.md`,
+`NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_137.md` superseded by `SESSION_HANDOFF_138.md`.
+
+**Net new:** none.
+
+**Repo custody:** `convert_to_json.py`, `rules_assertions.py`, `pipeline_manifest.json`, `units.json`
+are all project-generated and repo-eligible; `units.json` carries no new GW text, only a corrected
+boolean on two already-present weapon records. The nine CD root CSVs the new assertion reads remain
+excluded from the repo on GW-text grounds, as always.
+
+## D217 — `BACKLOG_ARCHIVE.md` is intentionally repo-only; fetch from GitHub rather than re-adding to the project area (S138 boundary)
+
+**Context.** S138's handoff flagged `BACKLOG_ARCHIVE.md` as absent from `/mnt/project` and,
+following D210's caution about the mount, treated the absence as unverified rather than assumed
+loss. Ryan clarified: it was deliberately removed from the project area and committed to the repo
+instead — he had understood this to be Claude's own prior recommendation, consistent with the
+capacity pressure D211 opened.
+
+**Decision: it stays out of the project area.** Nothing in the pipeline or gates reads it — grepped
+every `.py`/`.js` and `baseline.sh`, zero references — so unlike the built-faction sources D211
+found permanently pinned, this file has no fixed-point reason to be resident. It carries no
+GW-derived text, so the repo is a legitimate, sufficient custody record for it. Re-adding it at 93%
+capacity to satisfy a bookkeeping convenience would work against the exact problem D211/P4 exist to
+manage.
+
+**The maintenance pattern going forward.** `raw.githubusercontent.com` is on the network allowlist.
+When a full-body archive entry needs appending (a ticket closing), fetch the current committed copy
+from `https://raw.githubusercontent.com/rd-prime-1357/40k-army-builder/main/BACKLOG_ARCHIVE.md`,
+append, and hand the updated file back to Ryan to commit — never held resident in the project area
+for this. Demonstrated working this session: fetched (2270 lines, tail matched the expected B61
+entry), B62's body appended, handed back.
+
+**Where this is recorded so a future session doesn't misread the mount.** The pointer header in
+`OPEN_ITEMS_BACKLOG.md`'s Closed/Shipped section — read every time the archive is referenced — now
+states the file is intentionally repo-only and gives the fetch URL. This entry is the durable
+record; `NEXT_SESSION_PROMPT.md` is overwritten each session and is not relied on alone.
+
+**No code, data, or baseline impact.** Doc-only. `index.html` untouched. Baseline unaffected —
+`BACKLOG_ARCHIVE.md` was never a gate input.
+
+**Changed:** `OPEN_ITEMS_BACKLOG.md`, `40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`,
+`BACKLOG_ARCHIVE.md` (repo copy, appended and handed back), `NEXT_SESSION_PROMPT.md`.
+
+**Net new:** none.
+
+**Repo custody:** `BACKLOG_ARCHIVE.md` remains repo-eligible and repo-resident as before; no
+GW-derived text touched.

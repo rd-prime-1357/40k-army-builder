@@ -91,9 +91,9 @@ def clean(value):
     v = value.strip()
     if v == "":
         return None
-    if v.lower() == "yes":
+    if v.lower() in ("yes", "true"):
         return True
-    if v.lower() == "no":
+    if v.lower() in ("no", "false"):
         return False
     # Fix backslash-escaped inch marks from Excel CSV export
     v = v.replace('\\"', '"')

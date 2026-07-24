@@ -3,9 +3,9 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **8 open** as of S137: B62, P2, P4, E21 (E21a/E21b/E21c/E21d-pieces-1-2 shipped;
+not here, it isn't open. **7 open** as of S138: P2, P4, E21 (E21a/E21b/E21c/E21d-pieces-1-2 shipped;
 piece 3 — the stranded-allied roster warning — remains, pending Ryan's confirmation of D214's
-recommended direction), E23, B60, E12, B17. B64/B65/B66 shipped this session, same turn as E21d.
+recommended direction), E23, B60, E12, B17. B62 shipped S138 (D216).
 
 ## Open Items
 
@@ -151,20 +151,6 @@ against source for all six copies, decide where the selection lives in the list 
 whether the grant is modelled as a sixth effect kind or as its own mechanism.
 
 
-### B62 — `FALSE` string literal in Is Base Equipment, and no presence gate on the CD CSVs — **NEW S131 (D205); S**
-
-Keeper of Secrets' Shining Aegis and Soul Grinder's Warpclaw carry the literal string `FALSE` in the
-Is Base Equipment column instead of `Yes`/`No`. The converter does not recognise it and passes it
-through, so `units.json` ships the string `"FALSE"` where every other weapon carries a boolean.
-Harmless today, latent trap tomorrow — and it was the last six bytes standing between fail and pass
-during the S131 rebuild.
-
-Second half of the ticket: the nine Chaos Daemons CSVs have no presence-and-parse assertion. When
-three went missing this session the symptom was a confusing repro byte mismatch rather than a clear
-"missing pipeline input". Add the assertion to `rules_assertions.py` so a missing or malformed one
-fails loudly at session open.
-
-
 ### B60 — `detachment_parser.py`: `restrictions` is populated inconsistently — **NEW S130 (D203); S**
 
 Of the 25 built detachments carrying chapter-exclusivity text, **11 hold it in the `restrictions`
@@ -232,6 +218,13 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 ## Closed / Shipped — pointers
 
 Full history for every one of these lives in `BACKLOG_ARCHIVE.md`, in the same order.
+**`BACKLOG_ARCHIVE.md` is intentionally repo-only, not project-area resident (D217) — nothing in
+the pipeline or gates reads it, so it does not sit in `/mnt/project`. Its absence from the mount is
+not loss; fetch the current copy from
+`https://raw.githubusercontent.com/rd-prime-1357/40k-army-builder/main/BACKLOG_ARCHIVE.md` before
+appending to it, and hand the updated file back for Ryan to commit.
+
+- **B62** — `FALSE` string literal in Is Base Equipment (a real latent bug, not inert as first assumed), and no presence gate on the CD root CSVs — SHIPPED S138 (D216)
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched

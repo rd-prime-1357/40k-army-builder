@@ -1499,6 +1499,16 @@ ASSERTIONS = [
      'S135 park-and-rerun census over ./baseline.sh; static scan of the gate and parser sources (P4, D211)',
      lambda S: p4_source_census(S)),
 
+    ('B62-1',
+     'The nine Gen-1 Chaos Daemons root CSVs (Unit_Stats, Unit_Points, Unit_Wargear_Options, '
+     'Unit_Other_Options, Unit_Weapons, Unit_Abilities, Keywords, Rules, Weapon_Abilities) are all '
+     'present, non-empty, and carry their expected header columns. These are the only copy the '
+     'project holds — the repo excludes them on GW-text grounds — so a missing or truncated one '
+     'must fail loudly and by name here rather than surface as a confusing units.json repro '
+     'mismatch, which is what happened when three went missing at S131.',
+     'project root CD CSVs (D205, B62)',
+     lambda S: b62_cd_csv_presence(S)),
+
 ]
 
 
@@ -3334,6 +3344,54 @@ def p4_source_census(S):
 
 
 # ── runner ────────────────────────────────────────────────────────────────────
+
+
+# ── B62: presence-and-parse gate over the nine Gen-1 Chaos Daemons root CSVs ──
+# (D205). These are Gen-1 hand-built data, never routed through wahapedia_transform.py
+# (D132), and the only copy of them the project holds — the repo excludes them on
+# GW-text grounds (they carry rule and ability text verbatim). When three went missing
+# at S131 the symptom was a confusing repro byte mismatch, not a clear "missing
+# pipeline input". This checks each is present and parses as a non-empty CSV with its
+# expected header, so a missing or truncated one fails loudly and by name here instead.
+_B62_CD_CSVS = {
+    'Unit_Stats.csv':          ['Army Name', 'Unit Name', 'Unit Type'],
+    'Unit_Points.csv':         ['Army Name', 'Unit Name', 'Size_1'],
+    'Unit_Wargear_Options.csv': ['Army Name', 'Unit Name', 'Weapon Replaced', 'Replacement Weapon Name'],
+    'Unit_Other_Options.csv':  ['Army Name', 'Unit Name', 'Option Name'],
+    'Unit_Weapons.csv':        ['Army Name', 'Unit Name', 'Weapon Name', 'Is Base Equipment'],
+    'Unit_Abilities.csv':      ['Unit Ability Name', 'Unit Ability Description'],
+    'Keywords.csv':            ['Keyword Name', 'Keyword Description'],
+    'Rules.csv':               ['Rule Name', 'Rule Description'],
+    'Weapon_Abilities.csv':    ['Weapon Ability Name', 'Weapon Ability Description'],
+}
+
+
+def b62_cd_csv_presence(S):
+    bad = []
+    checked = 0
+    for fname, expect_cols in sorted(_B62_CD_CSVS.items()):
+        path = os.path.join(S.dir, fname)
+        if not os.path.exists(path):
+            bad.append(f'{fname}: missing')
+            continue
+        try:
+            with open(path, encoding='utf-8-sig', newline='') as f:
+                rows = list(csv.DictReader(f))
+        except Exception as e:
+            bad.append(f'{fname}: unreadable ({type(e).__name__})')
+            continue
+        if not rows:
+            bad.append(f'{fname}: present but has no data rows')
+            continue
+        header = set(rows[0].keys())
+        missing_cols = [c for c in expect_cols if c not in header]
+        if missing_cols:
+            bad.append(f'{fname}: missing expected column(s) {missing_cols}')
+            continue
+        checked += 1
+    if bad:
+        return False, '%d of 9 CD root CSV(s) failed: %s' % (len(bad), '; '.join(bad))
+    return True, 'all 9 Chaos Daemons root CSVs present, non-empty, and header-complete'
 
 
 # ── E21b: chapter exclusivity, structural ─────────────────────────────────────

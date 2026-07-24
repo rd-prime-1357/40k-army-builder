@@ -40877,7 +40877,7 @@
               "Shining Aegis"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": "FALSE",
+            "is_base_equipment": false,
             "allegiance_condition": null
           }
         ],
@@ -42467,7 +42467,7 @@
               "Extra Attacks"
             ],
             "weapon_keyword_names": [],
-            "is_base_equipment": "FALSE",
+            "is_base_equipment": false,
             "allegiance_condition": null
           }
         ],
