@@ -1,78 +1,94 @@
-# Next-session prompt — Session 130
+# Next-session prompt — Session 131
 
-Session 129 shipped **E4c** (UI: config-panel picker, roster chip) as **D201** — E4 is now fully
-shipped end to end. Session 129 also closed **B56** as **D202**, verified stale — the header had said
-"78/81 closed" since S104 but the real count against `units.json` is 270 total units, exactly 2
-null-points (both retired by Ryan already). `index.html` is **6.5**, assertions **80/80**, baseline
-**21/21**. Read `SESSION_HANDOFF_129.md`, then **D201** and **D202**.
+Session 130 scoped **E21** (**D203**), then took three rulings from Ryan and found a live bug
+(**D204**). `index.html` unchanged at **6.5**, assertions **80/80**, baseline **21/21**. Read
+`SESSION_HANDOFF_130.md`, then **D203** and **D204** — D204 reverses two of D203's three calls, so
+read them in that order and let D204 win.
 
 ## Turn type
 
-**Analysis/scoping.** No engine, data, or UI change this session — this is E4's pattern repeating:
-E4 got a scoping session (S127, D199) before any build. E21 needs the same treatment before a line
-of parser or engine code gets written against it.
+**Parser-only.** `mfm_points_parser.py` plus the `units.json` regeneration it produces, the
+`units_repro_check.py` fixed point, and new assertions. No `index.html`, no engine, no hand-edited
+data.
 
 ## Baseline at open
 
-Run `./baseline.sh` (`--no-repo` if offline). Verify the nine S129 hashes in
-`SESSION_HANDOFF_129.md`'s Files section before trusting the sync. Two files — `repo_check.py` and
-`BACKLOG_ARCHIVE.md` — were missing from the project area at S129's open and had to be recovered from
-GitHub; check whether they've been re-uploaded directly, and if not, pull them the same way S129 did
-(`raw.githubusercontent.com/rd-prime-1357/40k-army-builder/main/<file>`) rather than losing time
-rediscovering the gap.
+Run `./baseline.sh` (`--no-repo` if offline). Verify the four S130 hashes in
+`SESSION_HANDOFF_130.md`'s Files section before trusting the sync.
 
-## The task: scope E21 — detachment-driven army-construction effects
+## The task: B61 — the Plague Legions units are offered ungated
 
-Detachment rules that require or forbid units, unlock units from other factions, or elevate units to
-Battleline (moving the count cap — Functional Spec §5). This is real and biting on day one for a
-built faction: Chaos Daemons' *Shadow Legion* forbids Daemon Prince and Epic Hero units while
-unlocking a list of HERETIC ASTARTES units. **34 detachment abilities across the full dump carry
-require/forbid language, in free prose with no common shape** — this is a parsing-and-modelling
-problem in its own right, deliberately kept out of E1c. Until it ships, the app knows about
-detachments without enforcing their construction restrictions (recorded in D192, consistent with
-D0's undetermined-legality default of leaning permissive — but every session it stays unshipped is
-another session that gap sits open on a built faction).
+**This is a live D0 violation on a built faction, not an unshipped feature.** All six Plague Legions
+units — Beasts of Nurgle, Great Unclean One, Nurglings, Plaguebearers, Plague Drones, Rotigus — sit in
+the Death Guard army in `units.json` today with no gate. A Death Guard player can field Great Unclean
+One and Rotigus under any detachment or none, with no points sub-cap and with Rotigus eligible as
+Warlord. That is why this jumped ahead of E21.
 
-Re-derive from source before designing anything — don't trust the "34" figure forward without
-checking it, the same way D202 didn't trust "78/81" forward. Grep the actual detachment ability text
-in `Detachment_abilities.csv` / the faction pack markdown for require/forbid language and classify
-what shapes actually recur (unit-name lists, keyword-based forbids, faction-unlock text, Battleline
-elevation) before proposing a data model. Produce a D-numbered scope entry in the mould of D199:
-what the state shape looks like, what's data vs. parser vs. engine, and a session split (E21a/b/c or
-similar) the way E4 got E4a (cancelled)/E4b/E4c.
+**Cause (traced in D204 — verify it, do not re-derive from scratch):** Wahapedia carries these six
+datasheets twice, under faction `CD` and again under `DG`. `mfm_points_parser.py` reads a unit header
+as an ALLCAPS line followed by a tier header (`is_real_unit_header`); `PLAGUE LEGIONS` at
+`MFM_Death_Guard_v1_0.txt` line 140 is followed by a unit name, not a tier, so it is correctly not
+read as a unit — but is not read as anything else either, and the six units below it flow into the
+Death Guard block indistinguishable from Plague Marines.
 
-## Why this over the other three open items
+**The fix:** teach the parser to recognise an allied-group section header — an ALLCAPS line that is
+*not* followed by a tier header, is not one of the known non-group headers (`SUPPORT`, `LEADER`,
+`DETACHMENTS`, `ENHANCEMENTS`, `LEGENDS`, `YOUR …`), and sits between unit blocks — and tag every unit
+below it, to the next such header or `DETACHMENTS`, with an `allied_group` field carrying the header
+verbatim. Regenerate `units.json`; re-bank the `units_repro_check.py` fixed point.
 
-**P2** is process-only, softened since D123 — no urgency. **E12** (user accounts) is explicitly
-deferred by Ryan until near the end of the roadmap. **B17** (Deathwatch loadout-completeness
-remainder) is real but smaller and self-contained — a fine pickup for a later session, not blocking
-anything. E21 is the largest standing legality gap on a faction already built, is fully unblocked
-(E1c shipped S125), and — like E4 — is going to need its own scoping pass regardless of when it's
-tackled, so there's no cost to doing that pass now rather than later. My call; flag it if you'd
-rather sequence B17 or P2 first.
+**Generality matters here.** The same header shape carries **SCINTILLATING LEGIONS** (Thousand Sons,
+line 134), **BLOOD LEGIONS** (World Eaters, 117), **LEGIONS OF EXCESS** (Emperor's Children, 83) and
+**HARLEQUINS** / **YNNARI** (Aeldari, 233 / 266) — every god-legion case in the priority factions plus
+two Aeldari-family ones. Only Death Guard is built today, so only six units change, but write the
+recognition generally so the four Chaos factions land correctly when they arrive rather than each
+needing a parser turn of its own.
 
-## Backlog
+**Assertions — the deliverable as much as the parser change is:**
 
-**4 open:** P2, E21 (this session), E12, B17.
+1. The Death Guard `allied_group: "PLAGUE LEGIONS"` set is exactly those six units, no more and no
+   fewer.
+2. No unit in any other built army carries an `allied_group`.
+3. Every unit carrying an `allied_group` also exists in its home faction's block (all six are in
+   Chaos Daemons), so a future merge change cannot orphan them.
+4. `LEGENDS` stays excluded: none of Brother Corbulo, Deathwing Command Squad, Canis Wolfborn, Harald
+   Deathwolf or Death Guard Chaos Lord appears in any pool.
+
+**Do not gate the units in the engine this session.** Marking is B61; gating is E22b at S134. The
+units stay offered after S131, so B61's ticket stays open until E22b lands.
 
 ## Ground rules
 
-* Analysis/scoping only — no `index.html`, data file, or parser touched this session.
+* Parser-only. Fix the parser and regenerate; never hand-edit `units.json`.
 * Do not rename anything — project name still unsettled.
-* T2 hashes in this session's handoff Files section for S131 to verify.
-* If E21's scope turns out to need a data or parser turn to even assess cleanly (e.g. confirming
-  the require/forbid text shapes against the raw CSV), that's still scoping — reading and
-  classifying source data is not the same as writing a parser change.
+* T2 hashes in this session's handoff Files section for S132 to verify.
+* Net-new files expected: none.
+
+## After B61
+
+* **S132 — data-only.** E21a: `detachment_effects.json`, hand-authored, keyed `Army|DETACHMENT`,
+  effect kinds `battleline` | `forbid` | `unlock` | `warlord` (D204 dropped `require`). Author from
+  the rules, **not** from `rule_text` — D203 gives three reasons and D204 adds a fourth: the
+  faction-pack paraphrase inverted the logical shape of Shadow Legion's Be'Lakor rule.
+* **S133 — engine-only.** E21b: `effectiveUnitType(unit, selectedDetachments)` feeding
+  `instanceLimit()` **and** both grouping sites (`groupByType` and the roster `typeGroups` build), so
+  an elevated unit renders under Battleline per Ryan's ruling; plus the chapter-exclusivity structural
+  assertion.
+* **S134 — engine-only.** E21c (forbid + conditional Warlord) with E22b (allied gating, battle-size
+  points sub-cap, Warlord ban).
+* **S135 — UI-only.** E21d.
+
+## Backlog
+
+**7 open:** B61 (this session), P2, E21, E22, B60, E12, B17.
 
 ## Standing inputs, neither blocking, worth more now than before
 
-* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — enhancement
-  descriptions are now genuinely visible in the UI (E4c's detail expander, S129), which makes the
-  30 `none`-source and 265 `wahapedia_10e`-source descriptions more prominent than they were when
-  this note was first written.
+* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — S132 authors from
+  the rules, and D203/D204 rule out authoring from stored `rule_text`.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* The project's file storage is reportedly near capacity. S129 found duplicate-version CSVs
-  (differing row counts under the same filename) likely sitting in the underlying project knowledge
-  store, invisible to the flat file listing — worth Ryan clearing directly from the project's file
-  manager before anything else gets pruned.
+* **File storage.** Duplicate-version CSVs are still sitting in the project's underlying knowledge
+  store, invisible to the flat file listing — `Unit_Wargear_Options.csv` (16 rows vs. 13),
+  `Unit_Weapons.csv` (140 vs. 142), `Rules.csv` (13 vs. 18). Only Ryan can clear them from the
+  project's file manager. S130 produced zero net-new files; S131 should too.

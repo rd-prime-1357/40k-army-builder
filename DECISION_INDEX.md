@@ -199,3 +199,5 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D200** — E4b built: enhancement engine, schema v3, and a correction to D199's eligibility claim (S128)
 - **D201** — E4c built: enhancement picker UI, roster chip; E4 fully shipped (S129)
 - **D202** — B56 closed: verified against `units.json` directly, header had been stale (S129)
+- **D203** — E21 scoped: construction effects are a data table, not a parser; E21 splits a/b/c/d and E22 opens (S130)
+- **D204** — Ryan's rulings on D203's three calls; the Plague Legions leak (a live D0 violation); E21/E22 resequenced (S130)

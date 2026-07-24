@@ -7043,3 +7043,346 @@ No code or data touched — this is a documentation correction, not a fix. Worth
 Kastiel}" so this can never again silently drift stale in either direction; not built this session
 to avoid adding an engine-adjacent change to what was scoped as a UI-only turn. Candidate for
 whichever session next touches `rules_assertions.py`.
+
+---
+
+## D203 — E21 scoped: construction effects are a data table, not a parser; E21 splits a/b/c/d and E22 opens (S130)
+
+**Analysis/scoping session — no engine, data, parser or UI change.** Baseline opened **21/21** with
+all nine S129 hashes byte-identical. `repo_check.py` and `BACKLOG_ARCHIVE.md` were both present in
+the project area this session, so S129's GitHub recovery did not need repeating. This entry is E21's
+design, in the mould of D199. **No separate scope document was written.** D199 carried E4's entire
+scope inside this log and that worked; with the project's file area near capacity, a standalone
+`E21_*_SCOPE.md` would cost a file for no benefit. `E1_DETACHMENT_SCOPE.md` stays as it is — the
+precedent is not being retracted, just not extended.
+
+### The finding: E21's own ticket framed the problem wrongly, in the direction that matters
+
+Since S122 the ticket has read "**34** detachment abilities across the full dump carry require/forbid
+language, in free prose with no common shape," which implies a large free-text parsing job. Every
+part of that sentence turns out to be either wrong or misleading. Re-derived from source this
+session:
+
+**The dump-wide count is not 34.** Against the 284-row `Detachment_abilities.csv`, 57 abilities match
+construction-shaped language. Removing the in-battle false positives — charge-target selection,
+Combat Drug / Combat Doctrine / Deed re-selection bans, and the "cannot include that unit" clauses
+that are consequences of a mandatory points surcharge rather than restrictions in their own right —
+leaves roughly 41 with a real muster-time effect. Neither number is 34 and nobody has been able to
+say where 34 came from.
+
+**The dump is the wrong denominator anyway.** What governs the app is our **143 built detachment
+records across 14 armies**, not the 284-row 10th-Edition dump. Counting there gives a different and
+much smaller problem — and confirms the S130 prompt's warning about carrying figures forward: the
+dump shows 22 chapter-exclusivity detachments, our built data has **25**, because the faction-pack
+markdown carries three Dark Angels detachments (`DARK AGE ARSENAL`, `DARKFLIGHT PURSUIT`,
+`INTERROGATION CONCLAVE`) that the 10th-Edition dump does not.
+
+**The shapes are not formless.** Across both sources the effects fall into exactly four kinds:
+chapter exclusivity, Battleline elevation, ally unlock with a points sub-cap, and require/forbid of
+named units. There is a fifth adjacent kind — mandatory per-unit points surcharges at muster
+(Necrons' Necrodermal Binding, Officio Assassinorum's Extremis abilities, Aeldari Corsair
+Enhancements) — which is not E21 and does not touch a built faction; noted here so the next person
+to grep this text does not re-discover it as a surprise.
+
+### 25 of the 143 are already enforced, structurally, and E21 should build nothing for them
+
+Chapter exclusivity is the single largest cluster: *your army may include this Chapter's units and no
+other Chapter's*. It applies to 25 built detachments across Space Marines, Black Templars, Blood
+Angels, Dark Angels and Space Wolves.
+
+**`resolveUnits()` already makes the illegal state unreachable.** A chapter army's unit pool is
+composed as the generic Adeptus Astartes block plus that chapter's own units, with the chapter's
+version winning on name collision. No other chapter's units are ever in the pool, so no roster can
+ever contain one, so the restriction cannot be violated. This is D0 satisfied by construction rather
+than by enforcement — the best possible outcome, and it was already true before E21 was opened.
+
+**So the correct E21 work here is an assertion, not a feature.** The guarantee is currently an
+emergent property of one function that nothing polices; a future change to unit-pool composition
+(most plausibly when allied units arrive — see E22) could break it silently and no gate would fire.
+Per the project's standing principle that facts not expressed as executable checks do not hold, this
+becomes a `rules_assertions.py` check: for every faction in the taxonomy, the resolved unit set must
+contain no unit sourced from another chapter's army block.
+
+### What is actually left: six built detachments
+
+| Detachment | Effect kind | Status |
+|---|---|---|
+| Blood Angels \| THE LOST BRETHREN | Battleline elevation — Death Company Marines, Death Company Marines with Bolt Rifles | buildable now |
+| Dark Angels \| COMPANY OF HUNTERS | Battleline elevation — Outrider Squad | buildable now |
+| Death Guard \| SHAMBLEROT VECTORIUM | Battleline elevation — Poxwalkers | buildable now |
+| Chaos Daemons \| SHADOW LEGION | require Be'Lakor; forbid Daemon Princes and all other Epic Heroes | buildable now |
+| Chaos Daemons \| SHADOW LEGION | unlock HERETIC ASTARTES units + points sub-cap | **blocked** — E22 |
+| Death Guard \| TALLYBAND SUMMONERS | unlock Plague Legions units + points sub-cap + Warlord ban | **blocked** — E22 |
+
+Six, not thirty-four. The three elevation targets and the four forbid/require targets were all
+verified present in `units.json` this session.
+
+### Why this is a hand-authored data table and explicitly not a parser
+
+Three independent findings, any one of which would be sufficient on its own.
+
+**1. `rule_text` is not one source and one of its tiers is a paraphrase.** The 143 records carry
+three text tiers — 68 `faction_pack`, 66 `wahapedia_10e`, 9 `none`. The faction-pack tier is
+*condensed prose written for reference*, not GW's rules wording. Shadow Legion is the proof: our
+stored faction-pack text states that Be'Lakor **must be included**, a requirement the Wahapedia text
+does not state anywhere. The two sources disagree on the *content of the rule*, not merely on
+wording. A parser reading `rule_text` would produce different legality depending on which tier a
+detachment happened to land in.
+
+**2. Nine built detachments have no rule text at all.** `text_source: 'none'` covers
+`MARSHAL'S HOUSEHOLD`, `THE LIVING MIRACLE`, `ENCARMINE SPEARTIP`, `LEGACY OF GRACE`,
+`WRATH OF THE DOOMED`, `LEGENDS OF SAGA AND SONG`, `VETERANS OF THE FANG`, `CONTAGION ENGINES` and
+`PARAGONS OF PUTRESCENCE`. A text parser silently emits nothing for all nine and reports success.
+Under-enforcement that looks like a clean run is the worst failure mode a legality tool has.
+
+**3. The unit names in the prose do not match the unit names in the data.** Shadow Legion's text
+forbids "Daemon Prince" and "Daemon Prince with Wings"; `units.json` holds **Daemon Prince of Chaos**
+and **Daemon Prince of Chaos with Wings**. The same text excludes "Be'lakor"; the data holds
+**Be'Lakor**, with a capital L. A name-matching parser forbids nothing here while appearing to work
+perfectly. This is E4's name-collision finding (D199) reappearing from the opposite direction.
+
+**Decision: `detachment_effects.json`, hand-authored, keyed on the existing `Army|DETACHMENT` key,
+guarded by referential-integrity assertions.** Every unit name in the file must resolve against that
+army's resolved unit pool, and every detachment key must resolve against `detachments.json`. That
+gate is what makes hand-authoring safe: a typo fails the baseline by name rather than quietly
+disabling a restriction.
+
+This sits deliberately against the standing rule *fix parsers, never hand-edit output files*. It does
+not violate it. That rule protects **generated outputs**, which are lost on the next regeneration
+pass; `detachment_effects.json` is a hand-authored **input**, in the same class as the project's two
+documented `HAND_AUTHORED` exceptions, and no pipeline stage regenerates it. Recorded explicitly so
+the distinction is not re-litigated.
+
+The rejected alternative was a parser over the `wahapedia_10e` tier only, with a hand-authored
+override table for the rest. It buys nothing: the override table still has to exist, still has to be
+asserted, and the parser half adds a second code path that can disagree with it.
+
+### Two data defects found on the way, both filed rather than fixed
+
+**The `restrictions` field is populated inconsistently and cannot be trusted as the home for this
+text.** Of the 25 chapter-exclusivity detachments, 11 carry the sentence in `restrictions` and 14
+carry the identical sentence inside `rule_text` — **zero overlap**. The split tracks the text tier,
+not the content. Filed as **B60** against `detachment_parser.py`. It does not block E21 (the table
+does not read either field) but it means `restrictions` currently misrepresents itself as structured.
+
+**Nothing in the app represents an allied unit set.** "Plague Legions", "Heretic Astartes",
+"Legions of Excess", "Blood Legions" and "Scintillating Legions" appear nowhere in
+`faction_taxonomy.json`, `units.json` or `chaos_daemons_reference.md`. The unlock effects reference
+unit sets the app has no way to name, let alone offer. Filed as **E22**, blocked on faction coverage
+— Shadow Legion's HERETIC ASTARTES list needs Chaos Space Marines built, which is already next in
+the faction priority order after the Space Marine family.
+
+### State shape and the insertion point
+
+`detachment_effects.json`: a `_meta` block plus an `effects` object keyed by `Army|DETACHMENT`. Each
+record carries an `effects` array; each effect has a `kind` (`battleline` | `require` | `forbid` |
+`unlock`), a target expressed as an explicit list of unit names and/or unit types, an optional
+`points_cap` object keyed by battle size, and an `enforced` boolean. **`enforced: false` is
+load-bearing** — the E22-blocked unlock effects go into the file now, flagged unenforced, so the gap
+is visible in data and countable by an assertion rather than being invisible by absence. Absence from
+derived data is never evidence of absence from the rules; that principle applies to our own files
+too.
+
+**Battleline elevation must not overwrite `unit_type`.** `instanceLimit()` reads
+`unit_type === 'Battleline'` to double the cap, but `unit_type` also drives `TYPE_ORDER`, which
+groups the roster and the left panel. Overwriting it would move Outrider Squad out of Mounted and
+make the roster harder to scan for a change that is only about a count. The mechanism is a predicate
+— effectively `isBattlelineFor(unit, selectedDetachments)` — consulted by `instanceLimit()` alongside
+the type test, leaving display grouping untouched. One insertion point, one function.
+
+Effects from multiple selected detachments **union**; a unit elevated by any selected detachment is
+elevated. Forbids beat unlocks where they collide. Both are recommendations proceeded on, not
+irreversible.
+
+### The split
+
+* **E21a — data-only.** Author `detachment_effects.json` for all built detachments; add the
+  referential-integrity assertions and the `enforced: false` inventory assertion.
+* **E21b — engine-only.** Battleline elevation through `instanceLimit()`, plus the
+  chapter-exclusivity structural assertion. Smallest useful enforcement; one insertion point.
+* **E21c — engine-only.** Require/forbid: Shadow Legion's add-path refusal and army-level state, in
+  E4b's mould.
+* **E21d — UI-only.** Surfacing: refusal prose on disabled cards, roster warnings, and a Battleline
+  indicator on elevated units.
+* **E22 — new, blocked.** Ally unlock, points sub-cap, and the detachment-scoped Warlord ban.
+
+Four turns rather than E4's three, because E21 crosses data, engine and UI where E4 crossed only two,
+and turn typing forbids mixing. E21 closes at E21d without waiting on E22.
+
+### Three calls made this session, all reversible, all proceeded on
+
+1. **Be'Lakor is treated as required by Shadow Legion**, following the faction-pack text over the
+   Wahapedia text where they conflict. D192 established that MFM/11th-Edition sources win over the
+   10th-Edition dump on what exists, and also that Wahapedia is the only viable *prose* source — this
+   case falls between those two rules, so it is a judgment. Went with the faction-pack reading
+   because it is the edition-aligned source and the more restrictive of the two, and under D0 the
+   more restrictive reading is the safer default where the tool would otherwise permit something it
+   should not. One line in a data file to reverse.
+2. **An elevated unit stays in its own display group** with an indicator, rather than moving into
+   the Battleline group. The rule changes the count cap, not the datasheet's role.
+3. **Unenforced effects are recorded in data with `enforced: false`** rather than omitted pending
+   E22.
+
+**Still open for Ryan:** D199's four batched calls remain unreviewed since S127, three of them now
+load-bearing in shipped code (D200, D201). Added to that list: call 1 above is a legality precedent
+and worth an explicit yes/no when convenient, though nothing is blocked on it.
+
+**Changed:** `40K_Decision_Log_v3_0.md` (this entry), `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`
+(E21 rewritten and split, E22 and B60 opened), `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_130.md`.
+
+**Net new:** none. Deliberate — see the opening paragraph.
+
+**Repo custody:** all five files are project-generated prose with no GW rules text reproduced —
+short rule names and unit names only. All repo-eligible. Excluded from any push as always: the
+Wahapedia CSV export, the MFM `.txt` files, the faction web and pack files, `Army_Muster_Rules.txt`
+and `wh40k_core_rules.md`.
+
+---
+
+## D204 — Ryan's rulings on D203's three calls; the Plague Legions leak (a live D0 violation); E21/E22 resequenced (S130)
+
+Still S130, still analysis/scoping — no engine, data, parser or UI change. This entry records three
+product/legality rulings from Ryan, the source verification he asked for, and one finding that came
+out of that verification and reorders the next four sessions.
+
+### Ruling 1 — Be'Lakor: D203's call was wrong and is reversed
+
+D203 read the faction-pack text as making Be'Lakor **required** by Shadow Legion. He is not.
+
+**The correct rule:** Be'Lakor is optional; if he is included he **must be the Warlord**. Separately,
+when mustering, the army cannot include any Daemon Prince, Daemon Prince with Wings or Epic Hero
+units, excluding Be'Lakor.
+
+The condensed faction-pack line ("Be'lakor must be included") compressed a conditional Warlord
+constraint into an unconditional inclusion requirement and lost the condition. Which is the same
+lesson D203 already drew about that text tier, arriving one layer deeper than expected: the paraphrase
+is not merely lower-fidelity than the Wahapedia text, it can invert the logical shape of a rule. The
+argument for authoring `detachment_effects.json` from the rules rather than from `rule_text` is
+stronger after this, not weaker.
+
+**Schema consequence.** The `require` effect kind as D203 defined it does not fit — this is a
+conditional Warlord constraint, not an inclusion requirement. Effect kinds become:
+`battleline` | `forbid` | `unlock` | `warlord`. The `warlord` kind carries a mode (`must_be_if_present`
+for Be'Lakor, `cannot_be` for the allied-unlock Warlord bans) and a unit or group target. `require`
+is dropped; no built detachment needs it. This also connects to the existing per-unit
+`must_be_warlord` / `cannot_be_warlord` fields on `units.json` and E9's Warlord work — the difference
+is that these are detachment-scoped and conditional, so they cannot live on the unit record.
+
+### Ruling 2 — Battleline elevation displays under Battleline; D203's call is reversed
+
+D203 kept an elevated unit in its own display group with an indicator, on the grounds that moving
+Outrider Squad out of Mounted makes the roster harder to scan. Ryan disagreed and asked for the
+reasoning behind it. The reasoning does not survive contact:
+
+* The scanning argument is a mild convenience claim. The competing claim is comprehension of a
+  legality-relevant fact — the player needs to know the unit *is* Battleline, because that is what
+  changes its unit limit and how it behaves on objectives. A tool whose stated differentiator is
+  offering exactly what the rules allow should not hide a status change behind a badge.
+* New Recruit, the project's primary product reference, groups them under Battleline.
+* A badge on a unit sitting under Mounted communicates "this is Mounted, with a note." Grouping it
+  under Battleline communicates the rule.
+
+**Ruled: elevated units render under the Battleline group.** Cost of the change, checked this
+session: `unit_type` is read for grouping at exactly two sites (`groupByType`, and the roster's
+`typeGroups` build) and for the limit at one (`instanceLimit`). All three switch to a single
+`effectiveUnitType(unit, selectedDetachments)` helper. Three call sites, one predicate, and it must be
+live against the current detachment selection so that deselecting the detachment moves the unit back.
+Contained, and cheaper than D203 implied.
+
+### Ruling 3 — allied unit sets are defined by named MFM sections. Confirmed, with one exception
+
+Ryan's instruction was to identify unlocked units from the rule's own named group and to look for
+that group in the MFM files. **Verified, and it works.** The MFM faction files carry the group as a
+plain section header followed by that group's units and their in-context points:
+
+* `MFM_Death_Guard_v1_0.txt` line 140 — **PLAGUE LEGIONS**: Beasts of Nurgle, Great Unclean One,
+  Nurglings, Plaguebearers, Plague Drones, Rotigus. Section runs to the `DETACHMENTS` header.
+* `MFM_Thousand_Sons_v1_0.txt` line 134 — **SCINTILLATING LEGIONS**
+* `MFM_World_Eaters_v1_0.txt` line 117 — **BLOOD LEGIONS**
+* `MFM_Emperors_Children_v1_0.txt` line 83 — **LEGIONS OF EXCESS**
+* `MFM_Aeldari_v1_0.txt` lines 233 and 266 — **HARLEQUINS** and **YNNARI**, covering the Drukhari
+  Reaper's Wager and Aeldari Devoted of Ynnead cases
+
+That is every god-legion case in the priority factions plus the two Aeldari-family ones, all found
+the same way. The points in these sections are the *in-context* points for that host army, which is
+exactly what an unlocked unit needs.
+
+**The one exception: Chaos Daemons | Shadow Legion.** `MFM_Chaos_Daemons_v1_0.txt` has no HERETIC
+ASTARTES section — the file holds only the Shadow Legion detachment entry at line 266. That unlock is
+defined instead as an explicit ~15-name list inside the detachment's own rule text, and every name on
+it is a Chaos Space Marines datasheet. So Shadow Legion's unlock stays blocked on CSM being built,
+but for a different reason than D203 gave: not "nothing can name the unit set" — the set is named
+plainly — but simply that the units do not exist in the app yet.
+
+### The finding: the Plague Legions units are already in the Death Guard pool, unrestricted
+
+Checking Ruling 3 turned up something worse than an unshipped feature. **All six Plague Legions units
+are already in the Death Guard army in `units.json` and are offered with no gate whatsoever.**
+
+Right now a Death Guard player can put Great Unclean One and Rotigus into any Death Guard list, under
+any detachment or none, with no points sub-cap applied and with Rotigus eligible to be Warlord. Three
+separate illegalities, live, on a built faction. This is a **D0 violation** — an illegal state that is
+not merely unflagged but fully reachable — and D203 asserted the opposite ("nothing in the app can
+name an allied unit set"), which was wrong in the way that matters: the units are there, they are
+simply unmarked.
+
+**Cause, traced this session.** Wahapedia carries these six datasheets twice, once under faction `CD`
+and once under faction `DG` — the DG copies exist precisely because the detachment makes them
+includable. `mfm_points_parser.py` identifies a unit header as an ALLCAPS line followed by a tier
+header; `PLAGUE LEGIONS` is followed by a unit name rather than a tier, so it is correctly not read as
+a unit — but it is not read as anything else either, so the six units below it flow into the Death
+Guard block indistinguishable from Plague Marines.
+
+**Not a general leak.** Two adjacent worries were checked and both are clean. The `LEGENDS` sections
+are handled — `mfm_points_parser.py` carries an explicit skip map, and none of Brother Corbulo,
+Deathwing Command Squad, Canis Wolfborn, Harald Deathwolf or Death Guard Chaos Lord is in any pool.
+The chapter sub-sections in the Space Marines file split correctly, via the Wahapedia datasheet
+blocks rather than the MFM headers: Darnath Lysander is in Imperial Fists and not in the generic
+Adeptus Astartes pool, and the same holds for Caanok Var, Adrax Agatone and Aethon Shaan. An earlier
+crude scan of this session suggested five Space Wolves Legends units had leaked; that was a false
+positive from misreading leader-attachment lists as datasheet names, and is recorded here so it is
+not rediscovered as a real finding later.
+
+**Filed as B61**, separate from E22: B61 is *the units are wrongly offered*, E22 is *the detachment
+unlock, sub-cap and Warlord ban are enforced*. B61's fix is a parser change — teach
+`mfm_points_parser.py` to recognise an allied-group section header and tag the units below it with an
+`allied_group` field — plus a `units.json` regeneration and a new fixed point.
+
+### Resequencing
+
+B61 is a live reachable illegal state on a built faction. D0 makes that outrank an enforcement gap
+that is merely unshipped, so it goes first. Turn typing forces the order the rest of the way, since
+B61's fix is a parser turn and cannot share a session with data or engine work.
+
+* **S131 — parser-only.** B61: allied-group section recognition, `allied_group` on the six Death
+  Guard units, `units_repro_check.py` fixed point regenerated, assertions.
+* **S132 — data-only.** E21a: `detachment_effects.json` on the revised four-kind schema.
+* **S133 — engine-only.** E21b: `effectiveUnitType()` feeding `instanceLimit()` and both grouping
+  sites, plus the chapter-exclusivity structural assertion.
+* **S134 — engine-only.** E21c (forbid + conditional Warlord) and E22b (allied gating and sub-cap)
+  together — both are muster-time legality on the add path and both read the same table.
+* **S135 — UI-only.** E21d.
+
+E22 is now **partly unblocked**: its Death Guard half is fully buildable once B61 lands. Only Shadow
+Legion's HERETIC ASTARTES unlock waits on Chaos Space Marines, which is already next in the faction
+priority order.
+
+### Standing
+
+D203's remaining substance holds: the count correction, the 25 structurally-enforced chapter
+detachments, the three reasons a text parser fails, and the hand-authored-input decision. Two of its
+three batched calls are reversed above; the third (`enforced: false` rather than omission) stands and
+is reinforced — had the Plague Legions records existed in data flagged unenforced, the leak would
+have been visible as a contradiction rather than found by accident.
+
+D199's four batched calls remain unreviewed since S127.
+
+**Changed:** `40K_Decision_Log_v3_0.md` (this entry), `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`
+(E21 amended, E22 rewritten and split, B61 opened), `NEXT_SESSION_PROMPT.md`,
+`SESSION_HANDOFF_130.md`.
+
+**Net new:** none.
+
+**Repo custody:** all five are project-generated prose with no GW rules text reproduced. All
+repo-eligible. Excluded from any push as always: the Wahapedia CSV export, the MFM `.txt` files, the
+faction web and pack files, `Army_Muster_Rules.txt` and `wh40k_core_rules.md`.
