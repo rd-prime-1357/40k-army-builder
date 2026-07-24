@@ -2172,7 +2172,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.6';
+  const VERSION = '6.7';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2278,6 +2278,10 @@
         isCharacter,
         mustBeWarlord:    !!unit.must_be_warlord,
         cannotBeWarlord:  !!unit.cannot_be_warlord,
+        // B61/E22b: the allied-group tag drives the unlock offer filter, the
+        // points sub-cap and the detachment-scoped Warlord ban. Absent on all
+        // but the six Death Guard Plague Legions units.
+        alliedGroup:      unit.allied_group || null,
       };
     });
   }
@@ -2472,6 +2476,195 @@
   }
   // ── E21b block end ─────────────────────────────────────────────────────────
 
+  // ── E21c / E22b: forbid, unlock (points sub-cap), warlord ───────────────────
+  // The remaining three construction-effect kinds in detachment_effects.json.
+  // All read the table E21b reads and all land on the ADD path or the Warlord
+  // pick. D0 governs every one: an illegal state is made unreachable, not
+  // reached-then-flagged.
+  //
+  //   forbid  (Chaos Daemons | SHADOW LEGION) — named units and/or whole
+  //           unit_types cannot be included; except_units are exempt. Forbidden
+  //           units are not offered, the add path refuses them, and selecting
+  //           the detachment while one is already in the list is refused — the
+  //           reachable state D209 / the S136 prompt calls out.
+  //   unlock  (Death Guard | TALLYBAND SUMMONERS) — the six Plague Legions
+  //           units, tagged allied_group by B61, are offered ONLY while this
+  //           detachment is selected (closing the live D0 leak D204 found), and
+  //           only up to a points sub-cap keyed by battle size.
+  //   warlord (Death Guard | TALLYBAND SUMMONERS) — no Plague Legions model can
+  //           be the Warlord while this detachment is selected. Detachment-
+  //           scoped, so it cannot live on the unit record: those same six units
+  //           are legal Warlords natively in a Chaos Daemons army.
+  //
+  // enforced:false rows are skipped everywhere here, exactly as in E21b — carried
+  // in data so the gap is counted (D203), never applied.
+
+  // Every unit_name a selected detachment forbids. unit_types are expanded
+  // against the resolved pool so a unit added to the pool later is caught by
+  // type rather than slipping past a stale name list (D209). except_units are
+  // removed AFTER both the name list and the type expansion, so an Epic Hero on
+  // the exception list (Be'Lakor) survives being caught by the Epic Hero type.
+  function forbiddenUnitNames(keys, pool) {
+    const names = new Set();
+    for (const key of (keys || [])) {
+      const rec = detachmentEffects[key];
+      if (!rec || !Array.isArray(rec.effects)) continue;
+      for (const eff of rec.effects) {
+        if (eff.kind !== 'forbid' || eff.enforced === false) continue;
+        const t = eff.target || {};
+        for (const n of (t.units || [])) names.add(n);
+        const types = new Set(t.unit_types || []);
+        if (types.size) {
+          for (const u of (pool || [])) {
+            if (u && types.has(u.unit_type)) names.add(u.unit_name);
+          }
+        }
+        for (const n of (t.except_units || [])) names.delete(n);
+      }
+    }
+    return names;
+  }
+
+  // The allied_group labels a selected detachment currently unlocks. Only
+  // allied_group unlocks are handled; the keyword-targeted unlock (Shadow
+  // Legion's HERETIC ASTARTES) is enforced:false until CSM is built and is
+  // skipped by the same guard.
+  function unlockedAlliedGroups(keys) {
+    const groups = new Set();
+    for (const key of (keys || [])) {
+      const rec = detachmentEffects[key];
+      if (!rec || !Array.isArray(rec.effects)) continue;
+      for (const eff of rec.effects) {
+        if (eff.kind !== 'unlock' || eff.enforced === false) continue;
+        const g = eff.target && eff.target.allied_group;
+        if (g) groups.add(g);
+      }
+    }
+    return groups;
+  }
+
+  // The points sub-cap for one allied_group at the current battle size, or null
+  // if the group is not unlocked by any selected detachment. A group unlocked
+  // with no cap keyed for this battle size returns Infinity — unlocked, no
+  // sub-cap — which is UNDER-enforcement, the safe direction (E21b degrade rule).
+  // E21a-3 pins every unlock's points_cap to keys 1000/2000/3000, so at any
+  // offered battle size the lookup hits.
+  function alliedPointsCap(keys, group, pointsTotal) {
+    for (const key of (keys || [])) {
+      const rec = detachmentEffects[key];
+      if (!rec || !Array.isArray(rec.effects)) continue;
+      for (const eff of rec.effects) {
+        if (eff.kind !== 'unlock' || eff.enforced === false) continue;
+        if (!(eff.target && eff.target.allied_group === group)) continue;
+        const cap = eff.points_cap && eff.points_cap[String(pointsTotal)];
+        return (cap == null) ? Infinity : cap;
+      }
+    }
+    return null;
+  }
+
+  // Points already spent on units of one allied_group in the current list.
+  // Ghost entries do not count, matching totalPoints().
+  function alliedSubtotal(group) {
+    let sum = 0;
+    for (const e of armyList) {
+      if (e.unresolved) continue;
+      const u = allUnits.find(x => x.unit_name === e.unit_name);
+      if (u && u.alliedGroup === group) sum += (e.points || 0);
+    }
+    return sum;
+  }
+
+  // The add-path gate, layered on top of the unit-count limit (canAddUnit).
+  // Returns { ok, reason, ... } in the E4b canAssignEnhancement shape.
+  //   'forbidden'    — the selected detachment forbids this unit.
+  //   'not_unlocked' — an allied unit with no detachment currently unlocking it.
+  //   'allied_cap'   — adding it would push its allied_group over the sub-cap.
+  // A mute refusal is a bug (S136 ground rules): addRefusalText renders reason.
+  function canAddUnitToList(unit, prospectivePts) {
+    if (!unit) return { ok: false, reason: 'not_offered' };
+    const keys = selectedDetachments;
+    if (forbiddenUnitNames(keys, allUnits).has(unit.unit_name))
+      return { ok: false, reason: 'forbidden', unit_name: unit.unit_name };
+    const group = unit.alliedGroup || null;
+    if (group) {
+      const cap = alliedPointsCap(keys, group, POINTS_CAP);
+      if (cap == null) return { ok: false, reason: 'not_unlocked', group: group };
+      const used = alliedSubtotal(group);
+      if (used + (prospectivePts || 0) > cap)
+        return { ok: false, reason: 'allied_cap', group: group, used: used, cap: cap, adding: (prospectivePts || 0) };
+    }
+    return { ok: true, reason: null };
+  }
+
+  // Functional refusal text. E21d owns the polished prose and roster warnings;
+  // this exists so no refusal is silent in the meantime.
+  function addRefusalText(canAdd) {
+    if (!canAdd || canAdd.ok) return '';
+    switch (canAdd.reason) {
+      case 'forbidden':
+        return `${canAdd.unit_name} can't be included under the selected detachment.`;
+      case 'not_unlocked':
+        return `${canAdd.group} units need a detachment that unlocks them.`;
+      case 'allied_cap':
+        return `${canAdd.group} points sub-cap reached — ${canAdd.used} of ${canAdd.cap} pts used.`;
+      default:
+        return 'This unit cannot be added.';
+    }
+  }
+
+  // The units offered in the roster: forbidden units and not-yet-unlocked allied
+  // units are removed, not shown-then-flagged (D0). This is the offer side of the
+  // same rule canAddUnitToList enforces on the add.
+  function offerableUnits(units, keys) {
+    const forbidden = forbiddenUnitNames(keys, units);
+    const unlocked  = unlockedAlliedGroups(keys);
+    return (units || []).filter(u => {
+      if (forbidden.has(u.unit_name)) return false;
+      if (u.alliedGroup && !unlocked.has(u.alliedGroup)) return false;
+      return true;
+    });
+  }
+
+  // Units already in the list that `key`'s forbid effects would forbid. Reads app
+  // state (armyList, allUnits) because "does this detachment forbid something I've
+  // already added" is a roster-vs-detachment question, unlike canAddDetachment
+  // which is pure over the catalogue. toggleDetachment consumes it to refuse the
+  // selection (D0: the illegal pairing is never reached); E21d wires the disabled
+  // picker row and its reason off the same predicate.
+  function detachmentForbidConflicts(key) {
+    const forbidden = forbiddenUnitNames([key], allUnits);
+    if (!forbidden.size) return [];
+    const names = new Set();
+    for (const e of armyList) {
+      if (e.unresolved) continue;
+      if (forbidden.has(e.unit_name)) names.add(e.unit_name);
+    }
+    return [...names];
+  }
+
+  // Whether a selected detachment bars this unit from being Warlord. Only
+  // mode 'cannot_be' is consumed: 'must_be_if_present' is Be'Lakor's case, held
+  // as an unconditional unit flag and pinned by assertion E21a-6, never as a row.
+  // Both target shapes are read (allied_group and a named-unit list) so a future
+  // named-unit ban needs no engine change, though only the group form is used
+  // today.
+  function warlordBannedByDetachment(unit, keys) {
+    if (!unit) return false;
+    for (const key of (keys || [])) {
+      const rec = detachmentEffects[key];
+      if (!rec || !Array.isArray(rec.effects)) continue;
+      for (const eff of rec.effects) {
+        if (eff.kind !== 'warlord' || eff.enforced === false || eff.mode !== 'cannot_be') continue;
+        const t = eff.target || {};
+        if (t.allied_group && unit.alliedGroup === t.allied_group) return true;
+        if (Array.isArray(t.units) && t.units.indexOf(unit.unit_name) >= 0) return true;
+      }
+    }
+    return false;
+  }
+  // ── E21c / E22b block end ───────────────────────────────────────────────────
+
   // ── E1b: detachment selection rules ────────────────────────────────────────
   // Pure functions over (keys, catalogue, battle size). No DOM, no app state —
   // E1c wires them to controls. Everything here reads detachmentDefs live, the
@@ -2640,6 +2833,15 @@
     } else {
       const st = canAddDetachment(key, selectedDetachments, POINTS_CAP);
       if (!st.ok) return;   // disabled row — click is a no-op
+      // E21c/D0: selecting a detachment that forbids a unit already in the list
+      // would land the army in an illegal state. Refuse the selection with a
+      // reason (the reachable state the S136 prompt calls out) rather than
+      // reaching it and flagging. The player removes the unit first.
+      const conflicts = detachmentForbidConflicts(key);
+      if (conflicts.length) {
+        flashBanner(`Can't select this detachment — it forbids ${conflicts.join(', ')} already in your list.`);
+        return;
+      }
       selectedDetachments = selectedDetachments.concat([key]);
     }
     hasGhosts = armyList.some(e => e.unresolved) ||
@@ -3404,11 +3606,21 @@
 
   function renderRoster() {
     const roster = document.getElementById('roster');
-    const groups = groupByType(allUnits, 'unit_name');
+    // E21c/E22b: forbidden units and not-yet-unlocked allied units are removed
+    // from the offer entirely (D0 — unreachable, not shown-then-flagged).
+    const groups = groupByType(offerableUnits(allUnits, selectedDetachments), 'unit_name');
     // E6: a unit is "unaffordable" when even its cheapest legal build (minPts)
     // would not fit in what's left of the points cap. Recomputed on every render
     // since it depends on the current list total, not just the unit itself.
     const remaining = POINTS_CAP - totalPoints();
+    // E22b: an unlocked allied unit is also unaffordable once its group's points
+    // sub-cap is spent, even if the main cap still has room. Precompute the
+    // remaining sub-cap per unlocked group.
+    const alliedRemaining = {};
+    for (const g of unlockedAlliedGroups(selectedDetachments)) {
+      const cap = alliedPointsCap(selectedDetachments, g, POINTS_CAP);
+      alliedRemaining[g] = (cap == null ? Infinity : cap) - alliedSubtotal(g);
+    }
 
     const rolesHtml = groups.map(({ type, items }) => {
       const open = !collapsedRoleGroups.has(type);
@@ -3426,7 +3638,9 @@
           const state    = limitState(count, lim);
           const atLim    = state === 'at';
           const overLim  = state === 'over';
-          const unaffordable = u.minPts !== null && u.minPts > remaining;
+          const subCapBlocked = u.alliedGroup && (u.alliedGroup in alliedRemaining) &&
+                                u.minPts !== null && u.minPts > alliedRemaining[u.alliedGroup];
+          const unaffordable = (u.minPts !== null && u.minPts > remaining) || subCapBlocked;
           const cardCls  = (overLim ? ' over-limit' : (atLim ? ' at-limit' : '')) + (unaffordable ? ' unaffordable' : '');
           const badgeCls = overLim ? ' over-limit' : (atLim ? ' at-limit' : '');
           return `
@@ -3650,6 +3864,14 @@
       else                      pts = sizeEntry.third_plus;
     }
 
+    // E21c/E22b: forbid / allied-unlock / points-sub-cap gate, on top of the
+    // unit-count limit above. Refused with a reason, never silently.
+    const gate = canAddUnitToList(unit, pts);
+    if (!gate.ok) {
+      flashBanner(addRefusalText(gate));
+      return;
+    }
+
     const listId = nextId++;
 
     armyList.push({
@@ -3791,6 +4013,18 @@
       enhancement:      null,                        // E4b — never inherited
       attachedToListId: null,
     };
+    // E21c/E22b: the duplicate honours the same gate as a fresh add. A forbidden
+    // unit can only be present via import (an over-state), so duplicating one is
+    // refused rather than propagated; an allied duplicate is held to the sub-cap.
+    // ptsForEntry reads by listId < newListId, so the next-copy price is correct
+    // before the push.
+    const provPts = ptsForEntry(newEntry);
+    const dupGate = canAddUnitToList(unit, provPts);
+    if (!dupGate.ok) {
+      flashBanner(addRefusalText(dupGate));
+      return;
+    }
+
     armyList.push(newEntry);
     newEntry.points = ptsForEntry(newEntry);
 
@@ -3800,6 +4034,12 @@
       if (!leaderUnit) continue;
       const leaderCopyCount = armyList.filter(e => e.unit_name === leader.unit_name).length;
       if (!canAddUnit(leaderCopyCount, unitLimit(leaderUnit))) continue;   // same hard limit, silently skipped
+      // E21c/E22b: a duplicated leader is held to the same forbid/allied gate as
+      // any add. Reachable only from an imported over-state (a forbidden unit can
+      // never be added fresh), so — like the limit above — the copy is silently
+      // skipped rather than propagated. pts 0: the six allied units are not
+      // leaders, so only the forbid arm of the gate can fire here.
+      if (!canAddUnitToList(leaderUnit, 0).ok) continue;
 
       const newLeaderId = nextId++;
       const newLeader = {
@@ -3972,7 +4212,10 @@
     return armyList.filter(e => !e.unresolved).map(e => {
       const unit = allUnits.find(u => u.unit_name === e.unit_name);
       return { entry: e, unit };
-    }).filter(x => x.unit && x.unit.isCharacter && !x.unit.cannotBeWarlord);
+    }).filter(x => x.unit && x.unit.isCharacter && !x.unit.cannotBeWarlord
+                   // E22b: detachment-scoped cannot_be — e.g. no Plague Legions
+                   // model is Warlord-eligible while Tallyband Summoners is selected.
+                   && !warlordBannedByDetachment(x.unit, selectedDetachments));
   }
 
   function recomputeWarlord() {

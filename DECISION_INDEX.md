@@ -210,3 +210,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D211** — Project-area capacity: the metric is tokens; S134's three options all wrong; built factions pin their sources permanently; P4 opened and the source census made executable (S134/S135)
 - **D212** — E21b shipped: `effectiveUnitType()` across three call sites, chapter exclusivity made executable, two harness slices repaired (S135)
 - **D213** — P4 step 1 measured: capacity responds to volume (94% → 92% on 174 KB), but JSON whitespace is not yet priced; a second cheap measurement inserted before minification (S135)
+- **D214** — E21c/E22b shipped: forbid (Shadow Legion add + detachment-select refusal), allied unlock with battle-size points sub-cap and offer filter closing the live D0 leak, and the detachment-scoped Warlord ban (Tallyband Summoners); E22 closed; new harness `e21c_check.js`; one E21d residual recorded (stranded allied units after deselect) (S136)

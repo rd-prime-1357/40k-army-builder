@@ -23,6 +23,9 @@ function loadEngine(path) {
   const lines = fs.readFileSync(path, 'utf8').split('\n');
   const body = [
     slice(lines, '// ── E21b: effective unit type', '// ── E21b block end'),
+    // E21c/E22b: duplicateUnit now calls canAddUnitToList (forbid / allied-cap
+    // gate), so the block must be pulled in alongside the E21b one it depends on.
+    slice(lines, '// ── E21c / E22b: forbid, unlock', '// ── E21c / E22b block end'),
     slice(lines, 'function battleSizeUnitLimit', 'function limitState'),
     slice(lines, 'function limitState', 'function canAddUnit'),
     slice(lines, 'function canAddUnit', '// State'),

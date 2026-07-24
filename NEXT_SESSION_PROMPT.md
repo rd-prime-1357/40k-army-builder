@@ -1,93 +1,91 @@
-# Next-session prompt — Session 136
+# Next-session prompt — Session 137
 
-Session 135 shipped **E21b** (**D212**): `effectiveUnitType()` is live in `index.html` at **6.6**,
-feeding `unitLimit()`, `groupByType` and the roster's `typeGroups` build; chapter exclusivity is
-policed by **E21b-1**, read from `Datasheets_keywords.csv` rather than from block membership.
-Assertions **97/97**, baseline **22/22**. Read `SESSION_HANDOFF_135.md` **including its addendum**, then **D212** and **D213**, then **D204**
-(rulings 1 and 3, which govern this session's work) and **D208** (B61's `allied_group` tag).
+Session 136 shipped **E21c/E22b** (**D214**): forbid, allied unlock with a battle-size points
+sub-cap, and the detachment-scoped Warlord ban are all live in `index.html` at **6.7**, in one
+sliceable `E21c / E22b` block. Assertions **100/100**, baseline **23/23**. Read
+`SESSION_HANDOFF_136.md`, then **D214**, then **D204** (rulings 1–3) and **D212** (the E21b block E21d
+renders on top of). E22 is closed; **E21 stays open on E21d**, which closes it.
 
 ## Turn type
 
-**Engine-only.** `index.html` only, plus harnesses and assertions. No parser, no converter, no data
-file, no JSON regeneration. `detachment_effects.json` is a hand-authored **input** — never edit it to
-make the engine pass.
+**UI-only.** `index.html` only, plus harnesses and assertions if a rendered behaviour needs pinning.
+No parser, no converter, no data file, no JSON regeneration. `detachment_effects.json` is a
+hand-authored **input** — never edit it. E21c's engine predicates already decide legality; E21d only
+renders what they already know.
 
 ## Baseline at open
 
-Run `./baseline.sh` (`--no-repo` if offline) — **22 gates now**, including `e21b_check`. Verify the
-S135 hashes in `SESSION_HANDOFF_135.md`'s Files section before trusting the sync.
-`detachment_effects.json` is unchanged from S134 and its hash is still `e38c38dcef31`.
+Run `./baseline.sh` (`--no-repo` if offline) — **23 gates now**, including `e21c_check`. Verify the
+S136 hashes in `SESSION_HANDOFF_136.md`'s Files section before trusting the sync.
+`detachment_effects.json` is unchanged and its hash is still `e38c38dcef31`.
 
-## The task: E21c with E22b — the remaining three effect kinds
+## The task: E21d — the UI layer that closes E21
 
-Both read the same table and both land on the add path, which is why D204 put them in one session.
-`forbid`, `unlock` and `warlord` are all still unread by the engine; E21b touched only `battleline`.
+Three pieces, all presentation over predicates that already exist:
 
-**1. `forbid` — Chaos Daemons | SHADOW LEGION.** The army cannot include any Daemon Prince, Daemon
-Prince with Wings or Epic Hero, excluding Be'Lakor. The table expresses this as
-`unit_types: ["Epic Hero"]` with `except_units: ["Be'Lakor"]` plus the two Daemon Princes named
-explicitly — they are `unit_type: Character`, not Epic Hero, so a type rule alone misses them (D209).
-D0 applies: the add is **refused**, not flagged. Refusal must also cover a unit already in the list
-when the detachment is later selected — that is a reachable state and it needs a defined answer.
+**1. Refusal prose.** The add path refuses through `canAddUnitToList` → `addRefusalText`, and the
+detachment picker refuses a forbid-on-select through `detachmentForbidConflicts`. `addRefusalText` is
+functional, not polished — bring it up to `enhancementRefusalText`'s standard (it already names the
+unit, the group and the sub-cap numbers in the reason object). Wire the disabled picker row and its
+reason off `detachmentForbidConflicts(key)`: today the click is refused with a banner but the row is
+not visibly disabled, so extend `detachmentPickerRowState` — and note that doing so changes what
+**E1c-1** asserts about `disabled` (currently "disabled iff `canAddDetachment` is not OK"); update the
+assertion to include the forbid gate rather than loosening it.
 
-**2. `unlock` + points sub-cap — Death Guard | TALLYBAND SUMMONERS.** This closes the **live D0
-violation** D204 found: the six Plague Legions units are currently in the Death Guard pool with no
-gate at all. Without this detachment selected they must not be offered. With it, they are offered
-bounded by the points cap keyed by battle size (500 / 1000 / 1500 against 1000 / 2000 / 3000). B61
-already tagged the six with `allied_group`; consume that tag, do not re-derive the list.
+**2. Battleline indicator.** A detachment-elevated unit renders under Battleline (E21b) but nothing
+tells the player *why* it moved. Add the indicator D204 ruling 2 asked for.
 
-**3. `warlord`** — `cannot_be` for the Plague Legions group under Tallyband Summoners. Be'Lakor needs
-no row: his unit-level `must_be_warlord` is unconditional and strictly stronger (E21a-6 pins this).
-
-Add `e21c_check.js` covering all three kinds, in the mould of `e21b_check.js` — including the
-already-in-list case for `forbid` and the sub-cap arithmetic at both battle sizes. Register it in
-`baseline.sh` and in the manifest's guarded set (40 → 41).
-
-**Expect the same slice breakage E21b hit.** Any harness that slices the add path out of `index.html`
-will need the new block pulled in alongside it. Repair the slice; do not loosen the check.
+**3. The stranded-allied residual — the one product call in this session.** Deselecting or switching
+away from Tallyband Summoners while Plague Legions units are in the list strands them: the engine
+rejects them (`offerableUnits`, `canAddUnitToList`) but the roster shows no error. The recommendation
+in D214 is to **flag them as a visible error**, the enhancement over-state treatment — never a silent
+trim, and **not** by blocking the deselect (that would contradict flag-don't-drop). **Confirm this
+direction with Ryan before building it**, since it sets a precedent for how the tool treats a legal
+list that a later detachment change makes illegal. The engine predicate is already there; only the
+render is new.
 
 ## Ground rules
 
-* Engine-only. `index.html`, harnesses, assertions. No data file touched.
+* UI-only. `index.html`, harnesses, assertions. No data file touched.
 * Do not rename anything — project name still unsettled.
-* Refusals need a reason string. E4b's `canAssignEnhancement` refusal-reason shape is the precedent
-  and `enhancementRefusalText` is the model; prose polish is E21d's, but a mute refusal is a bug.
+* The render still needs Ryan's eyeball — Claude cannot see the DOM. Say so; do not claim a visual is
+  correct.
 
-## After E21c/E22b
+## After E21d
 
-* **S137 — UI-only.** E21d: refusal prose, roster warnings, Battleline indicator. E21 closes there.
+* **S138 — data-only.** P4 step 2. Decision rule fixed in D213: minify `unit_loadouts.json` alone
+  (77 KB), re-bank its fixed point, reissue the manifest, then read the percentage. If ~77 KB moves
+  the display ~0.6 points, step 3 minifies `units.json` and `detachments.json`; if it does not move,
+  step 3 is cancelled.
 * **E23** — scoping turn, unsequenced. Headhunter Task Force's Tank Ace → Character grant. A fifth
-  effect kind (muster-time keyword grant, count-limited, player-chosen recipients), so it is player
-  state rather than a static table row, and it lands on E4's enhancement eligibility and E9's Warlord
-  eligibility. Over-restriction, not a D0 violation.
+  effect kind (muster-time keyword grant, count-limited, player-chosen recipients), player state
+  rather than a static row; lands on E4's enhancement eligibility and E9's Warlord eligibility.
+  Over-restriction, not a D0 violation.
 * **B62** — the `FALSE` string-literal quirk and the missing presence-and-parse assertion over the
   nine CD CSVs. Open and untouched since D205.
-* **S138 — data-only.** P4 step 2. Decision rule fixed in advance in D213: ~0.6 points means step 3
-  minifies `units.json` and `detachments.json`; no movement means step 3 is cancelled.
+* Then the faction priority order resumes: Chaos Space Marines next (it unblocks Shadow Legion's
+  HERETIC ASTARTES unlock, still `enforced: false`).
 
 ## Standing inputs
 
-* **P4 step 1 is DONE (D213).** `BACKLOG_ARCHIVE.md` removed after park-and-rerun verification;
-  **94% → 92%** on 174 KB, so the capacity metric responds to volume at roughly 123 KB of prose per
-  displayed point. **Do not extrapolate that to the 797 KB of JSON whitespace** — prose and long runs
-  of identical spaces do not tokenise alike. **P4 step 2** (minify `unit_loadouts.json` alone, 77 KB,
-  then read the percentage) is a **data turn** and is sequenced after this session, not into it.
 * **A local backup folder** for the GW-derived files — the nine Chaos Daemons CSVs, the Wahapedia
-  export, the MFM `.txt` files, the faction web and pack files. The repo cannot hold them; S131 lost
-  three and rebuilt them only because `units.json` happened to carry enough. `wh40k_core_rules.md`
-  (139 KB) is opened by nothing and is the obvious first tenant.
+  export, the MFM `.txt` files, the faction web and pack files, `Army_Muster_Rules.txt` and
+  `wh40k_core_rules.md` (139 KB, opened by nothing — the obvious first tenant). The repo cannot hold
+  them; S131 lost three and rebuilt them only because `units.json` happened to carry enough.
 * Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard**.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* **D199's four batched calls remain unreviewed — since S127, now nine sessions.**
+* **D199's four batched calls remain unreviewed — since S127, now ten sessions.**
+* **New files and project-area capacity (92%).** S136 added one harness (~10 KB) — noise against a
+  ~12 MB area. The lever remains moving the GW-derived source files to local backup, not refusing to
+  add checks.
 
 ## Effort
 
-**Analysis — use a strong model at high effort.** This session decides what the tool refuses. Three
-effect kinds land on the add path, one of them closing a live D0 violation, and a wrong call ships a
-tool that either permits an illegal list or refuses a legal one. Do not run it mechanically.
+**Mostly mechanical with one product call.** The rendering is UI plumbing over predicates that already
+decide legality — moderate effort. The stranded-allied direction (piece 3) is a lasting precedent and
+must reach Ryan before it is built; do not decide it silently.
 
 ## Backlog
 
-**9 open:** B62, P2, P4, E21 (E21a/E21b shipped; c/d remain), E22 (E22a done, E22b remains), E23,
-B60, E12, B17.
+**8 open:** B62, P2, P4, E21 (E21a/b/c shipped; E21d remains), E23, B60, E12, B17.

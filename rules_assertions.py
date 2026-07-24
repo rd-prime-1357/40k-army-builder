@@ -1445,6 +1445,46 @@ ASSERTIONS = [
          and "unit_type || 'Other'" not in S.index_html(),
          'one predicate feeds the limit and both grouping sites')),
 
+    ('E21c-1',
+     'The three remaining construction-effect kinds are readable by the engine. E21b wired only '
+     'battleline; forbid, unlock and warlord land on the add path and the Warlord pick. Eight '
+     'functions carry them and all must exist, so a future edit that drops one fails here rather '
+     'than silently under-enforcing: forbiddenUnitNames, unlockedAlliedGroups, alliedPointsCap, '
+     'alliedSubtotal, canAddUnitToList, offerableUnits, detachmentForbidConflicts and '
+     'warlordBannedByDetachment.',
+     'index.html E21c/E22b block (E21c, D204, D208, D209)',
+     lambda S: (
+         all(('function ' + fn + '(') in S.index_html() for fn in (
+             'forbiddenUnitNames', 'unlockedAlliedGroups', 'alliedPointsCap', 'alliedSubtotal',
+             'canAddUnitToList', 'offerableUnits', 'detachmentForbidConflicts', 'warlordBannedByDetachment')),
+         'all eight E21c/E22b functions are present')),
+
+    ('E21c-2',
+     'The add path and the roster offer both go through the gate. Both add sites — a fresh add '
+     '(canAddUnitToList(unit, pts)) and the duplicate (canAddUnitToList(unit, provPts)) — call it, '
+     'so a forbidden or over-sub-cap unit cannot enter the list, and the roster offers through '
+     'offerableUnits(allUnits, selectedDetachments), so forbidden and not-yet-unlocked allied units '
+     'are removed rather than shown-then-flagged (D0). Pins the two current add paths and the offer; '
+     'a THIRD add path added later would not be caught here and must be gated by hand.',
+     'index.html addUnitFromRoster / duplicateUnit / renderRoster (E21c, E22b, D204, D0)',
+     lambda S: (
+         'canAddUnitToList(unit, pts)' in S.index_html()
+         and 'canAddUnitToList(unit, provPts)' in S.index_html()
+         and 'offerableUnits(allUnits, selectedDetachments)' in S.index_html(),
+         'both add paths and the roster offer route through the E21c gate')),
+
+    ('E21c-3',
+     'The warlord ban and the forbid-on-select refusal are wired live. Warlord eligibility filters '
+     'on warlordBannedByDetachment(x.unit, selectedDetachments), so a Plague Legions model is not '
+     'Warlord-eligible under Tallyband Summoners, and toggleDetachment consults '
+     'detachmentForbidConflicts(key) before selecting, so a detachment that forbids a unit already '
+     'in the list is refused rather than reached (the reachable state D209 / the S136 prompt names).',
+     'index.html eligibleWarlordEntries / toggleDetachment (E21c, E22b, D204, D209)',
+     lambda S: (
+         'warlordBannedByDetachment(x.unit, selectedDetachments)' in S.index_html()
+         and 'detachmentForbidConflicts(key)' in S.index_html(),
+         'warlord ban and forbid-on-select are both wired')),
+
     ('P4-1',
      'The GW-derived source census holds. Two halves. (a) The 18 source files the gates proved '
      'REQUIRED are all present — established S135 by removing each candidate and re-running the '

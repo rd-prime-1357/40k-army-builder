@@ -7984,3 +7984,131 @@ quietly fixed, per the same convention as S134's addendum.
 in Ryan's local backup.
 
 **Net new:** none.
+
+
+---
+
+
+## D214 — E21c/E22b shipped: forbid, allied unlock with points sub-cap, and the detachment-scoped Warlord ban (S136)
+
+**Turn type: engine-only.** `index.html` **6.6 → 6.7**. Assertions **97/97 → 100/100**. Baseline
+**22/22 at open → 23/23 at close** (the new gate is the 23rd). No parser, no converter, no data file
+regenerated; `detachment_effects.json` was read as an input and never touched (hash `e38c38dcef31`
+verified unchanged at open). All eleven S135 code/harness/manifest hashes verified byte-identical
+before any work started; the three doc mismatches (`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`,
+`NEXT_SESSION_PROMPT.md`) are the rolling docs rewritten by D213 after the S135 handoff hash was
+captured, not a bad sync.
+
+This session read the remaining three effect kinds. E21b had wired only `battleline`; `forbid`,
+`unlock` and `warlord` were all still unread by the engine. All three land on the add path or the
+Warlord pick, and D0 governs each: an illegal state is made unreachable, not reached-then-flagged.
+
+### What shipped — one marker-delimited block, three kinds
+
+`index.html` gains an `E21c / E22b` block after the E21b one, with eight functions and no state of its
+own — every answer is derived live from `detachment_effects.json` and the current selection, the same
+discipline E21b set. `enforced:false` rows are skipped everywhere, so Shadow Legion's HERETIC ASTARTES
+unlock (blocked until CSM is built) applies nothing.
+
+**forbid — Chaos Daemons | SHADOW LEGION.** `forbiddenUnitNames(keys, pool)` unions each selected
+detachment's forbid effects: named units are added directly, `unit_types` are expanded against the
+resolved pool, and `except_units` are removed **after** both — so Be'Lakor survives being caught by
+the Epic Hero type. Resolves to exactly fourteen units (the two Daemon Princes, which are `unit_type`
+Character and would be missed by a type rule, plus twelve Epic Heroes; Be'Lakor exempt). Forbidden
+units are removed from the roster offer (`offerableUnits`), refused on the add path with a reason
+(`canAddUnitToList` → `forbidden`), and — the reachable state the S136 prompt named — selecting the
+detachment while a forbidden unit is already in the list is refused by `toggleDetachment` via
+`detachmentForbidConflicts(key)`, with a reason. The illegal pairing is unreachable from both
+directions.
+
+**unlock + points sub-cap — Death Guard | TALLYBAND SUMMONERS.** This closes the **live D0 violation**
+D204 found: the six Plague Legions units B61 tagged were in the Death Guard pool with no gate at all.
+`offerableUnits` now hides any `allied_group` unit whose group is not unlocked by a selected
+detachment, so without Tallyband Summoners the six are not offered. With it, they are offered bounded
+by a points sub-cap keyed by battle size (`alliedPointsCap`: 500 / 1000 / 1500 against 1000 / 2000 /
+3000). `canAddUnitToList` refuses an add that would push the group's `alliedSubtotal` over the cap
+(reason `allied_cap`), and the roster card greys once the sub-cap is spent even when the main cap has
+room. The sub-cap counts only allied units — a native Plague Marines in the same list does not.
+
+**warlord `cannot_be` — Death Guard | TALLYBAND SUMMONERS.** `eligibleWarlordEntries()` now also
+filters on `warlordBannedByDetachment(unit, keys)`, so no Plague Legions model is Warlord-eligible
+while Tallyband Summoners is selected. Detachment-scoped, so it cannot live on the unit record — those
+same six units are legal Warlords natively in a Chaos Daemons army. Only `mode: cannot_be` is consumed;
+`must_be_if_present` is Be'Lakor's case, held as an unconditional unit flag and pinned by E21a-6, never
+as a row. `renderAll()` calls `recomputeWarlord()`, so toggling the detachment drops a now-ineligible
+Warlord live.
+
+### Two design points worth recording
+
+**The gate is layered, not merged.** `canAddUnitToList` sits on top of the existing unit-count limit
+(`canAddUnit`), returning the E4b `{ ok, reason, ... }` shape; both add paths call it. B41's count
+limit and E21c's construction gate are two orthogonal reasons an add can be refused and stay two
+functions, so neither can quietly swallow the other. The refusal always carries a reason
+(`addRefusalText`) — a mute refusal is a bug (S136 ground rules); E21d owns the polished prose.
+
+**The attached-leader duplicate path is gated too.** `duplicateUnit` copies a bodyguard's attached
+leaders, which was a third `armyList.push` with only the count limit on it. A forbidden unit can only
+be present via an imported over-state, but duplicating one would propagate it, so the leader copy is
+now held to the same gate and — like the count-limit case beside it — silently skipped rather than
+refused with a banner. All three push sites now pass through the gate.
+
+### The forbid already-in-list mechanism — the call made
+
+D204/the prompt directed **refusal, not flagging**, for a forbidden unit already in the list when the
+detachment is selected. The reversible implementation choice was **which** thing to refuse: the
+detachment selection, or the unit (auto-removal). Chose to **refuse the detachment selection** with a
+reason naming the conflicting unit — least destructive, keeps the player in control, and mirrors how
+`canAddDetachment` already gates selection. Auto-removal would silently delete the player's work.
+
+**The symmetric case is deferred to E21d, and is the one open product call.** Deselecting Tallyband
+Summoners (or switching to another Death Guard detachment) while Plague Legions units are in the list
+strands them as now-illegal allied units. `toggleDetachment`'s flag-don't-drop rule says a selected
+detachment is **always** removable, so blocking the deselect would contradict a settled principle.
+Recommendation, carried into E21d: **flag the stranded units as a visible error** in the roster, the
+same treatment the enhancement over-state gets after a battle-size or detachment change (never
+silently trimmed). The engine already knows they are illegal — `offerableUnits` and `canAddUnitToList`
+both reject them — so E21d only has to render it. Recorded here so it is not lost; Ryan's to confirm
+the direction when E21d is built.
+
+### Assertions — three structural, executable
+
+**E21c-1** — the eight functions exist, so a future edit that drops one fails rather than silently
+under-enforcing. **E21c-2** — both add paths (`canAddUnitToList(unit, pts)` and
+`canAddUnitToList(unit, provPts)`) and the roster offer (`offerableUnits(allUnits, selectedDetachments)`)
+route through the gate; the statement is honest that a THIRD add path added later would not be caught
+here and must be gated by hand. **E21c-3** — the Warlord ban and the forbid-on-select refusal are both
+wired to their call sites. Behavioural verification is the harness's job, not the assertions'.
+
+### The harness
+
+`e21c_check.js`, net new, slicing the E21c block out of `index.html` and driving it against the real
+table and the real pool. Forty-four checks in seven sections: forbid resolves to exactly fourteen with
+Be'Lakor exempt; forbid gates offer and add and reverses on deselect; the already-in-list conflict,
+including that a ghost entry does not trigger it; the unlock offer filter closing the D0 leak; the
+sub-cap arithmetic proven at **both** battle sizes on the same unit, with a native unit shown not to
+count; the detachment-scoped Warlord ban by group; and a synthetic-table section for the two shapes no
+built row exercises — `must_be_if_present` must not ban, and `enforced:false` rows of every kind must
+apply nothing.
+
+### Slice repair
+
+`e10_check.js` broke as E21b's did — it slices `duplicateUnit`, which now calls `canAddUnitToList`, so
+the E21c block was pulled into its engine slice alongside the E21b one. `limit_check.js` was untouched:
+it slices `unitLimit`, which E21c does not change. Repaired, not routed around.
+
+### Housekeeping
+
+`e21c_check.js` registered in `baseline.sh` (23rd gate) and in the manifest's guarded set (40 → 41
+files); `pipeline_manifest.json` reissued. **E22 closes** — E22a shipped as B61 (D208), E22b shipped
+here. **E21 stays open on E21d** (UI).
+
+**Changed:** `index.html` (6.7), `rules_assertions.py`, `e10_check.js`, `baseline.sh`,
+`pipeline_manifest.py`, `pipeline_manifest.json`, `40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`,
+`OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_136.md`.
+
+**Net new:** `e21c_check.js`.
+
+**Repo custody:** all twelve are project-generated and repo-eligible. `e21c_check.js` names units and
+detachments but reproduces no GW rules text. Excluded from any push as always: the Wahapedia CSV
+export, the MFM `.txt` files, the faction web and pack files, `Army_Muster_Rules.txt` and
+`wh40k_core_rules.md`.
