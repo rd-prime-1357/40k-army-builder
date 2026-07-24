@@ -2184,3 +2184,38 @@ re-derived from current data:
 own stale count: 270 total units, exactly 2 carry `points: null` — Judiciar Xacharus and Chaplain
 Kastiel, both retired. The header had never been updated after the last chapter fixes landed, so it
 had been sitting open for several sessions past its actual completion.
+
+### B63 — Soul Grinder ships all four god weapons at once — **NEW S131 (D206); LIVE D0 VIOLATION; SHIPPED S132 (D207)**
+
+`index.html` filters god-conditional weapons at lines 6580 and 6604 on `w.allegiance_condition`.
+`convert_to_json.py` never reads the `Allegiance_Condition` column, so the field never reaches
+`units.json` and the app's filter is dead code reading a field that is not there. Soul Grinder
+therefore shipped with torrent of burning blood, warp gaze, phlegm bombardment **and** scream of
+despair all flagged as base equipment simultaneously. Pick Khorne, receive all four.
+
+Predates the S131 recovery — the committed `units.json` pulled from the repo already lacked the data.
+The rebuild exposed it, it did not cause it.
+
+**Ryan's ruling (D206):** exactly one god weapon is added, set by the allegiance chosen at
+list-building. The four become allegiance-tagged conditionals rather than base equipment. Base
+equipment is Harvester cannon, Iron claw and Warpsword; Warpclaw stays the existing swap against
+Warpsword; one god weapon is added on top, replacing nothing.
+
+**Shipped S132 (D207).** `Allegiance_Condition` restored as `Unit_Weapons.csv`'s sixteenth column,
+matching `wahapedia_transform.py`'s existing header order. Populated on the four Soul Grinder rows per
+the D206 mapping; `Is Base Equipment` cleared on the same four (now `No`, was `Yes`). Threaded through
+`convert_to_json.py` into the weapon objects as `allegiance_condition` — present as `null` on every
+weapon that doesn't carry one, non-null only on Soul Grinder's four. The full pipeline was re-run
+exactly as `units_repro_check.py` runs it and its output copied over the committed `units.json` and
+the four merged lookups; diffing old against new confirmed the only substantive change in the entire
+catalogue is Soul Grinder's eight weapon rows. `units_repro_check.py` reports byte-identical
+reproduction again — the fixed point is re-banked, not hand-patched.
+
+Four assertions filed: **B63-1** (exactly four allegiance-tagged weapons, one per god), **B63-2**
+(none of the four is base equipment; Harvester cannon, Iron claw and Warpsword all are), **B63-3** (no
+unit anywhere else in the catalogue carries the field), **B63-4** (every value is one of the four god
+name strings `index.html`'s `GODS` array uses). Assertions 84/84 at close.
+
+**Converter-only turn, no engine work** — the app-side filter already existed and was simply reading a
+field that never arrived. `index.html` untouched at 6.5. **Not yet verified on the rendered app** —
+Ryan needs to confirm each god selection yields exactly one god weapon.

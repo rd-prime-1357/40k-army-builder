@@ -1247,6 +1247,37 @@ ASSERTIONS = [
      'e4b_check.js (E4b, S128)',
      lambda S: e4b_harness_gate(S)),
 
+    # ── B63. Soul Grinder's god weapons were reachable simultaneously — a live D0
+    # violation on a built faction (D206). Allegiance_Condition never reached units.json,
+    # so index.html's filter at lines 6580/6604 was dead code. Fixed at the converter;
+    # these four pin the shape so a future regeneration cannot silently drop it again.
+    ('B63-1',
+     'Soul Grinder carries exactly four weapons with a non-empty allegiance_condition, one '
+     'per god: Khorne, Nurgle, Slaanesh, Tzeentch.',
+     'chaos_daemons_reference.md Daemonic Allegiance line; units.json Soul Grinder (B63, D206)',
+     lambda S: b63_soul_grinder_four_god_weapons(S)),
+
+    ('B63-2',
+     'None of the four allegiance-tagged weapons is base equipment. Harvester cannon, Iron '
+     'claw and Warpsword are all base equipment; Warpclaw stays the existing swap and is '
+     'untouched by this fix.',
+     'chaos_daemons_reference.md Soul Grinder composition line (B63, D206)',
+     lambda S: b63_soul_grinder_base_equipment_correct(S)),
+
+    ('B63-3',
+     'No unit in any built army other than Soul Grinder carries an allegiance_condition. '
+     'D25/D26 name Soul Grinder as the column\'s only user; the Daemon Princes take stat '
+     'modifiers instead, detected through the app\'s hardcoded GOD_UNITS set.',
+     'units.json, all armies (B63, D206)',
+     lambda S: b63_no_other_unit_carries_allegiance(S)),
+
+    ('B63-4',
+     'Every non-empty allegiance_condition value across units.json is one of the four god '
+     'names — Khorne, Tzeentch, Nurgle or Slaanesh — matching the exact strings index.html '
+     'compares entry.god against.',
+     'index.html GODS array (B63, D206)',
+     lambda S: b63_allegiance_values_valid(S)),
+
 ]
 
 
@@ -2693,6 +2724,77 @@ def e4b_harness_gate(S):
         return False, (f'{len(failed)} E4b check(s) failed, e.g. {failed[:2]}' if failed
                        else f'e4b_check.js exited {r.returncode}')
     return True, f'e4b_check.js: {passed} checks pass'
+
+
+def _b63_soul_grinder(S):
+    """Locate Soul Grinder's weapon list in units.json, or raise if the unit or army has moved."""
+    for army in S.units():
+        if army['army'] != 'Chaos Daemons':
+            continue
+        for u in army['units']:
+            if u['unit_name'] == 'Soul Grinder':
+                return u['weapons']
+    raise AssertionError('Chaos Daemons / Soul Grinder not found in units.json')
+
+
+def b63_soul_grinder_four_god_weapons(S):
+    weapons = _b63_soul_grinder(S)
+    tagged = [w for w in weapons if w.get('allegiance_condition')]
+    gods = sorted(w['allegiance_condition'] for w in tagged)
+    expect = ['Khorne', 'Nurgle', 'Slaanesh', 'Tzeentch']
+    if len(tagged) != 4 or gods != expect:
+        return False, f'Soul Grinder carries {len(tagged)} allegiance-tagged weapon(s): {gods}'
+    return True, 'Soul Grinder carries exactly four allegiance-tagged weapons, one per god'
+
+
+def b63_soul_grinder_base_equipment_correct(S):
+    weapons = _b63_soul_grinder(S)
+    by_name = {w['weapon_name']: w for w in weapons}
+    bad = []
+    for name in ('Torrent of burning blood', 'Warp gaze', 'Phlegm bombardment', 'Scream of despair'):
+        w = by_name.get(name)
+        if w is None:
+            bad.append(f'{name}: missing')
+        elif w.get('is_base_equipment') not in (False, 'FALSE'):
+            bad.append(f'{name}: is_base_equipment={w.get("is_base_equipment")!r}, expected not base')
+    for name in ('Harvester cannon', 'Iron claw', 'Warpsword'):
+        w = by_name.get(name)
+        if w is None:
+            bad.append(f'{name}: missing')
+        elif w.get('is_base_equipment') is not True:
+            bad.append(f'{name}: is_base_equipment={w.get("is_base_equipment")!r}, expected True')
+    if bad:
+        return False, '; '.join(bad)
+    return True, ('the four god weapons are not base equipment; Harvester cannon, Iron claw '
+                  'and Warpsword all are')
+
+
+def b63_no_other_unit_carries_allegiance(S):
+    hits = []
+    for army in S.units():
+        for u in army['units']:
+            if u['unit_name'] == 'Soul Grinder' and army['army'] == 'Chaos Daemons':
+                continue
+            for w in u.get('weapons', []):
+                if w.get('allegiance_condition'):
+                    hits.append(f"{army['army']}/{u['unit_name']}/{w['weapon_name']}")
+    if hits:
+        return False, f'{len(hits)} unexpected allegiance_condition carrier(s): {hits[:5]}'
+    return True, 'no unit other than Soul Grinder carries an allegiance_condition'
+
+
+def b63_allegiance_values_valid(S):
+    valid = {'Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'}
+    bad = []
+    for army in S.units():
+        for u in army['units']:
+            for w in u.get('weapons', []):
+                v = w.get('allegiance_condition')
+                if v and v not in valid:
+                    bad.append(f"{u['unit_name']}/{w['weapon_name']}: {v!r}")
+    if bad:
+        return False, f'{len(bad)} allegiance_condition value(s) not a god name: {bad[:5]}'
+    return True, 'every allegiance_condition value is one of the four god names'
 
 
 # ── runner ────────────────────────────────────────────────────────────────────

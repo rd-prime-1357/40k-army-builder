@@ -203,3 +203,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D204** — Ryan's rulings on D203's three calls; the Plague Legions leak (a live D0 violation); E21/E22 resequenced (S130)
 - **D205** — Chaos Daemons source CSVs lost and rebuilt from shipped output; repo was never a backup for them (S131)
 - **D206** — Soul Grinder god weapons never gated: `Allegiance_Condition` dead between CSV and converter; Ryan's one-weapon ruling (S131)
+- **D207** — B63 shipped: Soul Grinder's god weapon gated at the converter, `units.json` re-banked, four assertions filed (S132)

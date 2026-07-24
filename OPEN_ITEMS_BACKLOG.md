@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S130 close: B61 (live D0 violation, next), P2, E21 (scoped a/b/c/d), E22 (partly unblocked), B60, E12, B17.
+not here, it isn't open. **8 open** as of S132 close: B62, B61 (live D0 violation, next), P2, E21 (scoped a/b/c/d), E22 (partly unblocked), B60, E12, B17.
 
 ## Open Items
 
@@ -86,31 +86,6 @@ in the detachment's own text and every name is a Chaos Space Marines datasheet, 
 - **E22a** — folded into **B61** (the marking is the same parser change).
 - **E22b — engine-only.** Gate allied units on the unlocking detachment; enforce the battle-size
   points sub-cap as a second budget; enforce the Warlord ban. Runs with E21c.
-
-
-### B63 — Soul Grinder ships all four god weapons at once — **NEW S131 (D206); LIVE D0 VIOLATION; S**
-
-`index.html` filters god-conditional weapons at lines 6580 and 6604 on `w.allegiance_condition`.
-`convert_to_json.py` never reads the `Allegiance_Condition` column, so the field never reaches
-`units.json` and the app's filter is dead code reading a field that is not there. Soul Grinder
-therefore ships with torrent of burning blood, warp gaze, phlegm bombardment **and** scream of despair
-all flagged as base equipment simultaneously. Pick Khorne, receive all four.
-
-Predates the S131 recovery — the committed `units.json` pulled from the repo already lacked the data.
-The rebuild exposed it, it did not cause it.
-
-**Ryan's ruling (D206):** exactly one god weapon is added, set by the allegiance chosen at
-list-building. The four become allegiance-tagged conditionals rather than base equipment. Base
-equipment is Harvester cannon, Iron claw and Warpsword; Warpclaw stays the existing swap against
-Warpsword; one god weapon is **added** on top, replacing nothing.
-
-**Fix (converter turn):** restore `Allegiance_Condition` to `Unit_Weapons.csv` with the four values
-from `chaos_daemons_reference.md`, clear `is_base_equipment` on those four rows, thread the column
-through `convert_to_json.py` into the weapons objects, regenerate, re-bank the fixed point, and add an
-assertion pinning exactly one god weapon per allegiance. No engine work — the app side already exists.
-
-**Sequenced ahead of B61.** Both are D0 violations on built factions; this one hands out weapons the
-unit cannot legally have, and needs no engine turn.
 
 
 ### B62 — `FALSE` string literal in Is Base Equipment, and no presence gate on the CD CSVs — **NEW S131 (D205); S**
@@ -266,6 +241,7 @@ Full history for every one of these lives in `BACKLOG_ARCHIVE.md`, in the same o
 - **B59** — Invader ATV should ride alongside the Outrider Squad and its +60 is uncharged — CLOSED S116 (D182/D183/D184); SHIPPED ACROSS B59a + B59b
 - **B59a** — Engine: `non_consuming` handling in `loOptHeadroom` / `loGroupCounts` — CLOSED S115 (D183); ENGINE-ONLY; M
 - **B59b** — Data / parser: MFM additive-line parser + Outriders group flip — CLOSED S116 (D184); DATA-ONLY; M
+- **B63** — Soul Grinder shipped all four god weapons at once, live D0 violation — SHIPPED S132 (D207); `Allegiance_Condition` restored, `units.json` re-banked, four assertions (B63-1..4) pin the shape; render not yet eyeballed by Ryan
 - **B32** — engine: `requires_weapon` with more than one weapon — CLOSED S49 (v5.57)
 - **B33** — negated gates — CLOSED S50 (data)
 - **B35** — paid wargear options — CLOSED (data half S51, engine half S52)

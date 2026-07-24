@@ -7473,3 +7473,41 @@ is why the datasheet lists seven weapons with four of them conditional.
 because the illegal state is worse and the app-side code is already written and waiting, so the fix is
 a converter turn with no engine work. B61 moves one session later.
 
+---
+
+## D207 — B63 shipped: Soul Grinder's god weapon is now gated at the converter (S132)
+
+**The fix.** `Allegiance_Condition` restored as `Unit_Weapons.csv`'s sixteenth column, matching the
+header order `wahapedia_transform.py` already writes. Populated on Soul Grinder's four god weapons
+per the D206 mapping (Khorne → torrent of burning blood, Tzeentch → warp gaze, Nurgle → phlegm
+bombardment, Slaanesh → scream of despair) and cleared on the same four rows' `Is Base Equipment`,
+which now reads `No` rather than `Yes`. `convert_to_json.py` threads the column into every weapon
+object as `allegiance_condition` — present as `null` on every weapon that doesn't carry one, matching
+the file's existing convention for optional fields, and non-null only on Soul Grinder's four.
+
+**Re-banked, not hand-patched.** The full pipeline — both `wahapedia_transform.py` runs, both
+`mfm_points_parser.py` passes, all three `convert_to_json.py` invocations, `merge_factions.py`, and
+the three post-merge passes — was re-run exactly as `units_repro_check.py` runs it, and its output
+copied over the committed `units.json` and the four merged lookups. `units_repro_check.py` now reports
+byte-identical reproduction again; the fixed point proves itself rather than being asserted. Diffing
+old against new confirmed the *only* substantive change anywhere in the 4,000-plus-unit catalogue is
+Soul Grinder's eight weapon rows — every other unit's diff is the additive `allegiance_condition: null`
+key landing on existing weapon objects, which is schema noise, not a data change.
+
+**Four assertions filed as B63-1 through B63-4** in `rules_assertions.py`, executing exactly what
+D206 specified as the deliverable: Soul Grinder carries exactly four allegiance-tagged weapons, one
+per god; none of the four is base equipment while Harvester cannon, Iron claw and Warpsword all are;
+no unit anywhere else in the catalogue carries the field; and every non-empty value is one of the four
+god name strings `index.html`'s `GODS` array uses, so a typo in a future hand-edit or a data
+regeneration that garbles the mapping fails loudly here rather than shipping quietly. Assertions
+84/84 at close.
+
+**Not verified this session: the render.** `index.html` was not touched — this was a converter-only
+turn per the S132 prompt's ground rules — so the fix is provable in data but not yet seen on screen.
+Ryan needs to eyeball the rendered app and confirm each god selection yields exactly one god weapon;
+the DOM is not visible from here.
+
+**Baseline 21/21 at close**, assertions 84/84, manifest regenerated to cover the three changed files
+(`Unit_Weapons.csv`, `convert_to_json.py`, `units.json`) plus `rules_assertions.py`. `index.html`
+untouched at **6.5**.
+

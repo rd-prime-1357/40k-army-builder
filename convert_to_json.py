@@ -491,6 +491,7 @@ def build_units(data):
                     "weapon_ability_names": split_list(row.get("Weapon Ability Names", "")),
                     "weapon_keyword_names": split_list(row.get("Weapon Keyword Names", "")),
                     "is_base_equipment":    clean(row.get("Is Base Equipment")),
+                    "allegiance_condition": clean(row.get("Allegiance_Condition")),
                 }
                 weapons.append(weapon_obj)
 
