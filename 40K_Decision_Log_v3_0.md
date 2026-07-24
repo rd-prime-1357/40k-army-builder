@@ -7915,3 +7915,72 @@ a documented cause rather than an assumed one.
 and detachments but reproduces no GW rules text. Excluded from any push as always: the Wahapedia CSV
 export, the MFM `.txt` files, the faction web and pack files, `Army_Muster_Rules.txt` and
 `wh40k_core_rules.md`.
+
+---
+
+## D213 — P4 step 1 measured: the capacity metric responds to volume, but whitespace is not yet priced (S135)
+
+Recorded after S135's close, in the same conversation. No code, no data, no gate change. This entry
+exists because P4's remaining steps were about to be planned on a number nobody had measured, and
+D211's whole point was that ranking before measuring is how the last three capacity proposals went
+wrong.
+
+### The experiment and the result
+
+`BACKLOG_ARCHIVE.md` (173,959 bytes) was removed from the project area. Verified safe first by
+park-and-rerun — moved out of the directory, full `./baseline.sh` re-run, **22/22 gates still pass** —
+and by a static scan showing no `.py`, `.js`, `.sh` or `.html` file references it and it is not in the
+manifest's guarded set. A copy was delivered to Ryan for local backup before deletion, per the standing
+rule that the repo is not a backup (D205).
+
+**Reading: 94% before, 92% after.** Predicted on a linear reading was 1.4 points. Observed is 2, but
+the display rounds to whole points, so the true move is anywhere in 1.1–2.9. **Consistent with linear,
+possibly better than linear.** Each displayed point is roughly 123 KB of prose.
+
+### The correction this makes to P4's plan
+
+On a naive linear extrapolation the 797 KB of JSON whitespace is worth about 6.5 points, which would
+settle it. **That extrapolation is not sound and P4 must not use it.**
+
+What was deleted was English prose, which tokenises at roughly four bytes per token. What the
+minification step removes is long runs of identical space characters, which tokenisers compress hard —
+plausibly ten to twenty bytes per token. If that holds, 797 KB of whitespace buys a fraction of 6.5
+points, perhaps a third. **The experiment proved that volume matters. It did not prove that all volume
+costs the same, and JSON whitespace is precisely the kind that might not.**
+
+This is the same error shape D211 recorded three times over: a quantity ranked before the right thing
+about it was measured. Byte count was the proxy under test; token density was not.
+
+### The revised sequencing
+
+P4 gets a **second cheap measurement before the expensive one**, not after.
+
+* **P4 step 2 — data-only, small.** Minify `unit_loadouts.json` alone (77 KB of whitespace, the
+  smallest of the three runtime files). One writer's separators changed, one regeneration, one fixed
+  point re-banked, manifest reissued. Then read the percentage.
+* **The decision rule, fixed in advance so it is not rationalised afterwards.** If ~77 KB moves the
+  display about 0.6 points, whitespace prices like prose and P4 step 3 minifies `units.json`
+  (650 KB) and `detachments.json` (70 KB). If it does not move the display at all, whitespace is
+  near-free to the tokeniser, step 3 is cancelled, and the project has spent one small data turn
+  instead of three re-banked fixed points on a wrong assumption.
+
+Step 2 is a **data turn** and therefore cannot share a session with S136's engine work. It is
+sequenced after E21c/E22b rather than jumping the queue: capacity is not blocking anything, and E22b
+closes a live D0 violation.
+
+### Standing correction
+
+Earlier in this conversation Claude stated that `DECISION_INDEX.md` preserves lookup for
+`BACKLOG_ARCHIVE.md`. It does not — zero references; `DECISION_INDEX.md` indexes the decision log
+only. Lookup is preserved by `OPEN_ITEMS_BACKLOG.md`'s six pointer lines, which are intact. The
+recommendation was right and the reason given for it named the wrong file. Recorded rather than
+quietly fixed, per the same convention as S134's addendum.
+
+**Changed:** `40K_Decision_Log_v3_0.md` (this entry), `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`
+(P4 rewritten with the result and the revised steps), `NEXT_SESSION_PROMPT.md`,
+`SESSION_HANDOFF_135.md` (addendum).
+
+**Removed from the project area:** `BACKLOG_ARCHIVE.md`, verified safe as above, held in the repo and
+in Ryan's local backup.
+
+**Net new:** none.

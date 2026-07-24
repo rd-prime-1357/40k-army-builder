@@ -209,3 +209,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D210** — The `/mnt/project` mount deduplicates by filename and is not evidence about presence, absence or duplication (S134)
 - **D211** — Project-area capacity: the metric is tokens; S134's three options all wrong; built factions pin their sources permanently; P4 opened and the source census made executable (S134/S135)
 - **D212** — E21b shipped: `effectiveUnitType()` across three call sites, chapter exclusivity made executable, two harness slices repaired (S135)
+- **D213** — P4 step 1 measured: capacity responds to volume (94% → 92% on 174 KB), but JSON whitespace is not yet priced; a second cheap measurement inserted before minification (S135)

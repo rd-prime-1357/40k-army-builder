@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **9 open** as of S135 close: B62, P2, P4, E21 (E21a/E21b shipped; c/d remain), E22 (E22a done, E22b remains), E23, B60, E12, B17.
+not here, it isn't open. **9 open** as of S135 close (P4 step 1 done): B62, P2, P4, E21 (E21a/E21b shipped; c/d remain), E22 (E22a done, E22b remains), E23, B60, E12, B17.
 
 ## Open Items
 
@@ -69,7 +69,25 @@ is forbid (E21c), the unlocks (E22b), and the UI layer (E21d).
 One genuine seventh construction effect was found that D203 missed — see **E23**.
 
 
-### P4 — Project-area capacity — **NEW S134 (D211); PROCESS; S then M**
+### P4 — Project-area capacity — **NEW S134 (D211); STEP 1 DONE S135 (D213); PROCESS; S then M**
+
+**Step 1 result (D213): 94% → 92% on removing `BACKLOG_ARCHIVE.md` (174 KB).** The metric responds
+to volume. Display rounds to whole points, so the true move is 1.1–2.9 against a 1.4 linear
+prediction — consistent with linear. Roughly 123 KB of prose per displayed point. `BACKLOG_ARCHIVE.md`
+is out of the project area, held in the repo and in Ryan's local backup; `OPEN_ITEMS_BACKLOG.md`'s
+six pointer lines preserve lookup. Verified safe before deletion by park-and-rerun (22/22 gates pass
+without it) and by a static scan finding no code reference and no manifest entry.
+
+**Do NOT extrapolate 797 KB × linear = 6.5 points.** Prose tokenises at ~4 bytes/token; runs of
+identical space characters compress far harder, plausibly 10–20. Step 1 proved volume matters, not
+that all volume costs the same.
+
+- **Step 2 — data-only, small. NEXT.** Minify `unit_loadouts.json` alone (77 KB of whitespace). One
+  writer, one regeneration, one fixed point re-banked, manifest reissued. Then read the percentage.
+- **Decision rule, fixed in advance:** ~0.6 points → whitespace prices like prose, step 3 minifies
+  `units.json` (650 KB) and `detachments.json` (70 KB). No movement → step 3 cancelled.
+- Sequenced **after** S136's E21c/E22b: it is a data turn, capacity is not blocking, and E22b closes
+  a live D0 violation.
 
 The project area is at ~94% and the metric is **tokens, not bytes** (Anthropic support docs: project
 knowledge capacity relates to context limits, with RAG expanding it). So file *count* is irrelevant —

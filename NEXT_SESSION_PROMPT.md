@@ -3,7 +3,7 @@
 Session 135 shipped **E21b** (**D212**): `effectiveUnitType()` is live in `index.html` at **6.6**,
 feeding `unitLimit()`, `groupByType` and the roster's `typeGroups` build; chapter exclusivity is
 policed by **E21b-1**, read from `Datasheets_keywords.csv` rather than from block membership.
-Assertions **97/97**, baseline **22/22**. Read `SESSION_HANDOFF_135.md`, then **D212**, then **D204**
+Assertions **97/97**, baseline **22/22**. Read `SESSION_HANDOFF_135.md` **including its addendum**, then **D212** and **D213**, then **D204**
 (rulings 1 and 3, which govern this session's work) and **D208** (B61's `allied_group` tag).
 
 ## Turn type
@@ -62,12 +62,16 @@ will need the new block pulled in alongside it. Repair the slice; do not loosen 
   eligibility. Over-restriction, not a D0 violation.
 * **B62** — the `FALSE` string-literal quirk and the missing presence-and-parse assertion over the
   nine CD CSVs. Open and untouched since D205.
+* **S138 — data-only.** P4 step 2. Decision rule fixed in advance in D213: ~0.6 points means step 3
+  minifies `units.json` and `detachments.json`; no movement means step 3 is cancelled.
 
 ## Standing inputs
 
-* **P4 step 1 is still outstanding and is Ryan's action.** Move `BACKLOG_ARCHIVE.md` and the archive
-  half of `40K_Decision_Log_v3_0.md` out of the project area, then report the capacity percentage.
-  The measurement is the point; do not plan the rest of P4 without it. Reasoning in **D211**.
+* **P4 step 1 is DONE (D213).** `BACKLOG_ARCHIVE.md` removed after park-and-rerun verification;
+  **94% → 92%** on 174 KB, so the capacity metric responds to volume at roughly 123 KB of prose per
+  displayed point. **Do not extrapolate that to the 797 KB of JSON whitespace** — prose and long runs
+  of identical spaces do not tokenise alike. **P4 step 2** (minify `unit_loadouts.json` alone, 77 KB,
+  then read the percentage) is a **data turn** and is sequenced after this session, not into it.
 * **A local backup folder** for the GW-derived files — the nine Chaos Daemons CSVs, the Wahapedia
   export, the MFM `.txt` files, the faction web and pack files. The repo cannot hold them; S131 lost
   three and rebuilt them only because `units.json` happened to carry enough. `wh40k_core_rules.md`
@@ -76,6 +80,12 @@ will need the new block pulled in alongside it. Repair the slice; do not loosen 
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
 * **D199's four batched calls remain unreviewed — since S127, now nine sessions.**
+
+## Effort
+
+**Analysis — use a strong model at high effort.** This session decides what the tool refuses. Three
+effect kinds land on the add path, one of them closing a live D0 violation, and a wrong call ships a
+tool that either permits an illegal list or refuses a legal one. Do not run it mechanically.
 
 ## Backlog
 

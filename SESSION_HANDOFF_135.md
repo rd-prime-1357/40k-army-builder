@@ -125,3 +125,17 @@ B60, E12, B17.
 - Resolved tickets: none (E21b shipped; E21 stays open on c/d)
 - Added tickets: none
 - Ending tickets: B62, P2, P4, E21, E22, E23, B60, E12, B17 (9)
+
+---
+
+## Addendum — P4 step 1 ran after close; see D213
+
+`BACKLOG_ARCHIVE.md` removed from the project area after verification (park-and-rerun: 22/22 gates
+pass without it; no code reference; not in the manifest). Copy delivered to Ryan for local backup
+first. **94% → 92%.** The capacity metric responds to volume, roughly 123 KB of prose per displayed
+point.
+
+The Decisions-needed section above asked for this reading and now has it, so that item is closed. What
+replaces it is narrower: the 797 KB JSON-whitespace figure **must not** be extrapolated from this
+result, because whitespace and prose do not tokenise alike. P4 step 2 prices whitespace with one small
+file before the expensive step commits. Full reasoning in **D213**.
