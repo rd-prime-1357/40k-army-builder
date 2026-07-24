@@ -88,6 +88,45 @@ in the detachment's own text and every name is a Chaos Space Marines datasheet, 
   points sub-cap as a second budget; enforce the Warlord ban. Runs with E21c.
 
 
+### B63 — Soul Grinder ships all four god weapons at once — **NEW S131 (D206); LIVE D0 VIOLATION; S**
+
+`index.html` filters god-conditional weapons at lines 6580 and 6604 on `w.allegiance_condition`.
+`convert_to_json.py` never reads the `Allegiance_Condition` column, so the field never reaches
+`units.json` and the app's filter is dead code reading a field that is not there. Soul Grinder
+therefore ships with torrent of burning blood, warp gaze, phlegm bombardment **and** scream of despair
+all flagged as base equipment simultaneously. Pick Khorne, receive all four.
+
+Predates the S131 recovery — the committed `units.json` pulled from the repo already lacked the data.
+The rebuild exposed it, it did not cause it.
+
+**Ryan's ruling (D206):** exactly one god weapon is added, set by the allegiance chosen at
+list-building. The four become allegiance-tagged conditionals rather than base equipment. Base
+equipment is Harvester cannon, Iron claw and Warpsword; Warpclaw stays the existing swap against
+Warpsword; one god weapon is **added** on top, replacing nothing.
+
+**Fix (converter turn):** restore `Allegiance_Condition` to `Unit_Weapons.csv` with the four values
+from `chaos_daemons_reference.md`, clear `is_base_equipment` on those four rows, thread the column
+through `convert_to_json.py` into the weapons objects, regenerate, re-bank the fixed point, and add an
+assertion pinning exactly one god weapon per allegiance. No engine work — the app side already exists.
+
+**Sequenced ahead of B61.** Both are D0 violations on built factions; this one hands out weapons the
+unit cannot legally have, and needs no engine turn.
+
+
+### B62 — `FALSE` string literal in Is Base Equipment, and no presence gate on the CD CSVs — **NEW S131 (D205); S**
+
+Keeper of Secrets' Shining Aegis and Soul Grinder's Warpclaw carry the literal string `FALSE` in the
+Is Base Equipment column instead of `Yes`/`No`. The converter does not recognise it and passes it
+through, so `units.json` ships the string `"FALSE"` where every other weapon carries a boolean.
+Harmless today, latent trap tomorrow — and it was the last six bytes standing between fail and pass
+during the S131 rebuild.
+
+Second half of the ticket: the nine Chaos Daemons CSVs have no presence-and-parse assertion. When
+three went missing this session the symptom was a confusing repro byte mismatch rather than a clear
+"missing pipeline input". Add the assertion to `rules_assertions.py` so a missing or malformed one
+fails loudly at session open.
+
+
 ### B61 — Plague Legions units are offered to every Death Guard army, ungated — **NEW S130 (D204); LIVE D0 VIOLATION; S–M**
 
 All six Plague Legions units — Beasts of Nurgle, Great Unclean One, Nurglings, Plaguebearers, Plague

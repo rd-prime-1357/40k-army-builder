@@ -1,94 +1,98 @@
-# Next-session prompt — Session 131
+# Next-session prompt — Session 132
 
-Session 130 scoped **E21** (**D203**), then took three rulings from Ryan and found a live bug
-(**D204**). `index.html` unchanged at **6.5**, assertions **80/80**, baseline **21/21**. Read
-`SESSION_HANDOFF_130.md`, then **D203** and **D204** — D204 reverses two of D203's three calls, so
-read them in that order and let D204 win.
+Session 131 was a recovery session (**D205**) that turned up a live D0 violation (**D206**). B61 did
+not start and is unchanged. `index.html` stays at **6.5**, assertions **80/80**, baseline **21/21**.
+Read `SESSION_HANDOFF_131.md`, then **D205** and **D206**.
 
 ## Turn type
 
-**Parser-only.** `mfm_points_parser.py` plus the `units.json` regeneration it produces, the
-`units_repro_check.py` fixed point, and new assertions. No `index.html`, no engine, no hand-edited
-data.
+**Converter-only.** `convert_to_json.py`, the `Unit_Weapons.csv` source edit it consumes, the
+`units_repro_check.py` fixed point, and new assertions. No `index.html`, no parser, no engine.
+
+The `Unit_Weapons.csv` edit is a legitimate hand edit, not a violation of the never-hand-edit rule:
+the Chaos Daemons CSVs are hand-built source, not parser output. They never route through
+`wahapedia_transform.py` — established at D132 and exercised again at S128 (Be'Lakor, Blue Horrors).
 
 ## Baseline at open
 
-Run `./baseline.sh` (`--no-repo` if offline). Verify the four S130 hashes in
-`SESSION_HANDOFF_130.md`'s Files section before trusting the sync.
+Run `./baseline.sh` (`--no-repo` if offline). Verify the eight S131 hashes in
+`SESSION_HANDOFF_131.md`'s Files section before trusting the sync. Three of them are the rebuilt CSVs
+— if any fails, stop, because the rebuild is the only copy that exists.
 
-## The task: B61 — the Plague Legions units are offered ungated
+## The task: B63 — Soul Grinder ships all four god weapons at once
 
-**This is a live D0 violation on a built faction, not an unshipped feature.** All six Plague Legions
-units — Beasts of Nurgle, Great Unclean One, Nurglings, Plaguebearers, Plague Drones, Rotigus — sit in
-the Death Guard army in `units.json` today with no gate. A Death Guard player can field Great Unclean
-One and Rotigus under any detachment or none, with no points sub-cap and with Rotigus eligible as
-Warlord. That is why this jumped ahead of E21.
+**A live D0 violation on a built faction, shipping today.** `index.html` filters god-conditional
+weapons at lines 6580 and 6604 on `w.allegiance_condition`. `convert_to_json.py` never reads the
+`Allegiance_Condition` column, so it never reaches `units.json` and the app's filter is dead code.
+Soul Grinder therefore offers torrent of burning blood, warp gaze, phlegm bombardment and scream of
+despair simultaneously, all flagged as base equipment.
 
-**Cause (traced in D204 — verify it, do not re-derive from scratch):** Wahapedia carries these six
-datasheets twice, under faction `CD` and again under `DG`. `mfm_points_parser.py` reads a unit header
-as an ALLCAPS line followed by a tier header (`is_real_unit_header`); `PLAGUE LEGIONS` at
-`MFM_Death_Guard_v1_0.txt` line 140 is followed by a unit name, not a tier, so it is correctly not
-read as a unit — but is not read as anything else either, and the six units below it flow into the
-Death Guard block indistinguishable from Plague Marines.
+**Ryan's ruling (D206), already given — do not re-ask:** exactly one god weapon is added, set by the
+allegiance chosen at list-building. The four become allegiance-tagged conditionals, not base
+equipment. Base equipment is Harvester cannon, Iron claw and Warpsword. Warpclaw stays the existing
+swap against Warpsword. One god weapon is **added** on top and replaces nothing — the reference
+wording is "adds", which is why the datasheet lists seven weapons with four conditional.
 
-**The fix:** teach the parser to recognise an allied-group section header — an ALLCAPS line that is
-*not* followed by a tier header, is not one of the known non-group headers (`SUPPORT`, `LEADER`,
-`DETACHMENTS`, `ENHANCEMENTS`, `LEGENDS`, `YOUR …`), and sits between unit blocks — and tag every unit
-below it, to the next such header or `DETACHMENTS`, with an `allied_group` field carrying the header
-verbatim. Regenerate `units.json`; re-bank the `units_repro_check.py` fixed point.
+**The mapping**, verbatim from `chaos_daemons_reference.md`: Khorne adds torrent of burning blood;
+Tzeentch adds warp gaze; Nurgle adds phlegm bombardment; Slaanesh adds scream of despair. Soul Grinder
+is the column's only user — D25 and D26 confirm the Daemon Princes take stat modifiers instead and are
+detected through the app's hardcoded `GOD_UNITS` set.
 
-**Generality matters here.** The same header shape carries **SCINTILLATING LEGIONS** (Thousand Sons,
-line 134), **BLOOD LEGIONS** (World Eaters, 117), **LEGIONS OF EXCESS** (Emperor's Children, 83) and
-**HARLEQUINS** / **YNNARI** (Aeldari, 233 / 266) — every god-legion case in the priority factions plus
-two Aeldari-family ones. Only Death Guard is built today, so only six units change, but write the
-recognition generally so the four Chaos factions land correctly when they arrive rather than each
-needing a parser turn of its own.
+**The work:**
 
-**Assertions — the deliverable as much as the parser change is:**
+1. Restore the `Allegiance_Condition` column to `Unit_Weapons.csv` as a sixteenth column, matching
+   `wahapedia_transform.py`'s existing header order (it already writes the column at line 983).
+2. Populate the four Soul Grinder rows; clear `is_base_equipment` on those same four.
+3. Thread the column through `convert_to_json.py` into the weapons objects as `allegiance_condition`,
+   the field name `index.html` already reads and D26 already specifies.
+4. Regenerate, re-bank the `units_repro_check.py` fixed point.
+5. Confirm on the rendered app that picking each god yields exactly one god weapon. **Ryan must eyeball
+   this** — the DOM is not visible from here.
 
-1. The Death Guard `allied_group: "PLAGUE LEGIONS"` set is exactly those six units, no more and no
-   fewer.
-2. No unit in any other built army carries an `allied_group`.
-3. Every unit carrying an `allied_group` also exists in its home faction's block (all six are in
-   Chaos Daemons), so a future merge change cannot orphan them.
-4. `LEGENDS` stays excluded: none of Brother Corbulo, Deathwing Command Squad, Canis Wolfborn, Harald
-   Deathwolf or Death Guard Chaos Lord appears in any pool.
+**Assertions — the deliverable as much as the fix:**
 
-**Do not gate the units in the engine this session.** Marking is B61; gating is E22b at S134. The
-units stay offered after S131, so B61's ticket stays open until E22b lands.
+1. Soul Grinder carries exactly four weapons with a non-empty `allegiance_condition`, one per god.
+2. None of those four is base equipment; Harvester cannon, Iron claw and Warpsword all are.
+3. No other unit in any built army carries an `allegiance_condition`.
+4. Every `allegiance_condition` value is one of the four god names.
+
+**Watch for:** the `FALSE` string literal (B62). Soul Grinder's Warpclaw is one of the two rows
+carrying it. Do not normalise it while editing nearby rows — it is load-bearing for the fixed point
+until B62 is done deliberately.
 
 ## Ground rules
 
-* Parser-only. Fix the parser and regenerate; never hand-edit `units.json`.
+* Converter-only. No parser, no engine, no `index.html`.
 * Do not rename anything — project name still unsettled.
-* T2 hashes in this session's handoff Files section for S132 to verify.
+* T2 hashes in this session's handoff Files section for S133 to verify.
 * Net-new files expected: none.
 
-## After B61
+## After B63
 
-* **S132 — data-only.** E21a: `detachment_effects.json`, hand-authored, keyed `Army|DETACHMENT`,
-  effect kinds `battleline` | `forbid` | `unlock` | `warlord` (D204 dropped `require`). Author from
-  the rules, **not** from `rule_text` — D203 gives three reasons and D204 adds a fourth: the
-  faction-pack paraphrase inverted the logical shape of Shadow Legion's Be'Lakor rule.
-* **S133 — engine-only.** E21b: `effectiveUnitType(unit, selectedDetachments)` feeding
-  `instanceLimit()` **and** both grouping sites (`groupByType` and the roster `typeGroups` build), so
-  an elevated unit renders under Battleline per Ryan's ruling; plus the chapter-exclusivity structural
-  assertion.
-* **S134 — engine-only.** E21c (forbid + conditional Warlord) with E22b (allied gating, battle-size
-  points sub-cap, Warlord ban).
-* **S135 — UI-only.** E21d.
+* **S133 — parser-only.** B61, exactly as scoped in S130's prompt: allied-group section recognition,
+  `allied_group` on the six Death Guard units, fixed point regenerated, four assertions. Write the
+  recognition generally — the same header shape carries SCINTILLATING LEGIONS, BLOOD LEGIONS, LEGIONS
+  OF EXCESS and HARLEQUINS / YNNARI.
+* **S134 — data-only.** E21a: `detachment_effects.json`, hand-authored, keyed `Army|DETACHMENT`,
+  effect kinds `battleline` | `forbid` | `unlock` | `warlord`. Author from the rules, **not** from
+  `rule_text` — D203 gives three reasons, D204 a fourth.
+* **S135 — engine-only.** E21b.
+* **S136 — engine-only.** E21c with E22b.
+* **S137 — UI-only.** E21d.
 
 ## Backlog
 
-**7 open:** B61 (this session), P2, E21, E22, B60, E12, B17.
+**9 open:** B63 (this session), B62, B61, P2, E21, E22, B60, E12, B17.
 
 ## Standing inputs, neither blocking, worth more now than before
 
-* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — S132 authors from
-  the rules, and D203/D204 rule out authoring from stored `rule_text`.
+* **A local backup folder** for the GW-derived and GW-text-carrying files — the nine Chaos Daemons
+  CSVs, the Wahapedia export, the MFM `.txt` files, the faction web and pack files. The repo cannot
+  hold them; S131 lost three and rebuilt them only because `units.json` happened to carry enough.
+* **File storage.** The project store is at capacity. `Adeptus_Astartes_Unit_Info.txt` (402K, read by
+  no script) and `NR_army_selection_windows__detachments.pdf` (173K) are the cleanest removals. Do not
+  delete anything else without checking what reads it first — that is what caused S131.
+* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — S134 authors from
+  the rules.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* **File storage.** Duplicate-version CSVs are still sitting in the project's underlying knowledge
-  store, invisible to the flat file listing — `Unit_Wargear_Options.csv` (16 rows vs. 13),
-  `Unit_Weapons.csv` (140 vs. 142), `Rules.csv` (13 vs. 18). Only Ryan can clear them from the
-  project's file manager. S130 produced zero net-new files; S131 should too.

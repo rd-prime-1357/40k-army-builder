@@ -201,3 +201,5 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D202** — B56 closed: verified against `units.json` directly, header had been stale (S129)
 - **D203** — E21 scoped: construction effects are a data table, not a parser; E21 splits a/b/c/d and E22 opens (S130)
 - **D204** — Ryan's rulings on D203's three calls; the Plague Legions leak (a live D0 violation); E21/E22 resequenced (S130)
+- **D205** — Chaos Daemons source CSVs lost and rebuilt from shipped output; repo was never a backup for them (S131)
+- **D206** — Soul Grinder god weapons never gated: `Allegiance_Condition` dead between CSV and converter; Ryan's one-weapon ruling (S131)

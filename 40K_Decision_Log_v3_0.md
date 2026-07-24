@@ -7386,3 +7386,90 @@ D199's four batched calls remain unreviewed since S127.
 **Repo custody:** all five are project-generated prose with no GW rules text reproduced. All
 repo-eligible. Excluded from any push as always: the Wahapedia CSV export, the MFM `.txt` files, the
 faction web and pack files, `Army_Muster_Rules.txt` and `wh40k_core_rules.md`.
+
+---
+
+## D205 — The Chaos Daemons source CSVs were lost and rebuilt from the shipped output (S131)
+
+**Context.** Chasing a full project file store, three Chaos Daemons source CSVs — `Unit_Weapons.csv`,
+`Unit_Wargear_Options.csv` and `Rules.csv` — were deleted from the project area. They are pipeline
+inputs, named in `units_repro_check.py`'s `CD_ROOT_CSVS`, and without them the fixed point cannot run
+at all. Their loss was traceable to a stale framing in S130's next-session prompt, which described
+them as duplicate junk; that framing was repeated without first checking whether anything read them.
+Recorded here because the failure was one of verification, not of the file store.
+
+**They were never recoverable from the repo.** Confirmed against the live repo this session: 82 files,
+zero CSVs. `index.html` and `units.json` fetch normally at the same path, so the 404s are real. This
+is the standing GW-text exclusion working exactly as designed — these files carry rule and ability
+text verbatim and have never been committed. The repo was therefore never a backup for them, and the
+only reason this was survivable is that `units.json` *is* committed and happens to carry nearly
+everything the CSVs held.
+
+**Restoring from history did not work.** The generation recovered from the original June-21 build
+conversation was wrong in four independent ways: 94 en dashes in `Unit_Weapons.csv` and 12 in
+`Unit_Wargear_Options.csv` where the shipped dataset uses plain hyphens throughout; a different data
+model that split Daemon Princes by god and carried no Soul Grinder rows at all (167 rows against the
+correct 142); a `Rules.csv` missing five Chaos Daemons rules, carrying four drifted descriptions and
+having lost its trailing blank column (13 rows against 18); and a row ordering that produced a
+content-identical but not byte-identical `rules.json`, since `merge_factions.py` unions the lookups on
+first-wins insertion order.
+
+**Decision: the three files were rebuilt from the committed `units.json` and `rules.json`, not from
+history.** This inverts the pipeline — deriving inputs from output — and that limitation is real and
+permanent: anything the CSVs held that the converter never consumed is not in the rebuilt files and
+cannot be. It was accepted because the rebuild is self-proving in a way a recovered historical file
+is not. `units_repro_check.py` now reports byte-identical reproduction of `units.json` *and* all four
+merged lookups, which is impossible if any consumed field is wrong. A file pulled from history would
+only ever have proved that someone once saved it.
+
+**Fidelity detail worth keeping.** Two weapons — Keeper of Secrets' Shining Aegis and Soul Grinder's
+Warpclaw — carry the literal string `FALSE` in the Is Base Equipment column rather than `Yes`/`No`.
+The converter does not recognise it and passes it through, so `units.json` ships the string `"FALSE"`
+where every other weapon carries a boolean. Reproducing that quirk faithfully was the last six bytes
+between fail and pass. Filed as **B62**; it is inert today and a latent trap tomorrow.
+
+**Standing consequence.** The nine Chaos Daemons CSVs are excluded from the repo on GW-text grounds
+and the project file area was their only copy. That is a single point of failure and it fired. Ryan
+now keeps a local backup folder for the GW-derived and GW-text-carrying files. A presence-and-parse
+assertion over the nine belongs in `rules_assertions.py` so a missing one fails loudly at session
+open rather than surfacing as a confusing repro mismatch — folded into **B62**.
+
+**Baseline 21/21 at close**, verified against the live project directory after Ryan's upload, with all
+three hashes matching. `index.html` untouched at **6.5**, assertions **80/80**.
+
+---
+
+## D206 — Soul Grinder's god weapons have never been gated; `Allegiance_Condition` is dead between CSV and converter (S131)
+
+**The bug.** `index.html` filters god-conditional weapons at lines 6580 and 6604, hiding any weapon
+whose `allegiance_condition` does not match the god chosen on the list entry. `convert_to_json.py`
+never reads the `Allegiance_Condition` column, so the field never reaches `units.json` — the deployed
+file contains zero allegiance data. The app's filter is dead code reading a field that is not there.
+
+**The live consequence.** Soul Grinder ships with all four god weapons flagged as base equipment at
+once: torrent of burning blood, warp gaze, phlegm bombardment and scream of despair. A player selects
+Khorne and still receives the Tzeentch, Nurgle and Slaanesh weapons. This is a reachable illegal state
+on a built faction, in the same class as B61 and sharper — B61 offers units that should be gated,
+whereas this hands out three weapons the unit cannot legally have.
+
+**This predates the S131 recovery.** The break is between the CSV and the converter and has been
+shipping since the Daemons build. Dropping the column during the rebuild exposed it rather than
+causing it; the committed `units.json` pulled from the repo already lacked the data.
+
+**The data is fully recoverable.** `chaos_daemons_reference.md` carries the Daemonic Allegiance line
+verbatim: Khorne adds torrent of burning blood, Tzeentch adds warp gaze, Nurgle adds phlegm
+bombardment, Slaanesh adds scream of despair. D25 and D26 confirm this is what the column encoded and
+that Soul Grinder is its only user — the Daemon Princes take stat modifiers and are detected through
+the app's hardcoded `GOD_UNITS` set instead.
+
+**Ryan's ruling.** Exactly one god weapon is added, determined by the allegiance chosen at
+list-building. The four stop being base equipment and become allegiance-tagged conditionals. Soul
+Grinder's correct shape is Harvester cannon, Iron claw and Warpsword as true base equipment, Warpclaw
+remaining the existing swap against Warpsword, and precisely one god weapon added. The reference
+wording is "adds", so the god weapon is an addition to the base loadout and replaces nothing — which
+is why the datasheet lists seven weapons with four of them conditional.
+
+**Filed as B63**, and sequenced ahead of B61. Both are D0 violations on built factions; B63 wins
+because the illegal state is worse and the app-side code is already written and waiting, so the fix is
+a converter turn with no engine work. B61 moves one session later.
+
