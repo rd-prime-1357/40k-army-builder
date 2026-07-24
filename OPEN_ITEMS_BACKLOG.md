@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S133 close: B62, P2, E21 (scoped a/b/c/d), E22 (E22a done, E22b remains), B60, E12, B17.
+not here, it isn't open. **8 open** as of S134 close: B62, P2, E21 (E21a shipped; b/c/d remain), E22 (E22a done, E22b remains), E23, B60, E12, B17.
 
 ## Open Items
 
@@ -15,7 +15,7 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### E21 — Detachment-driven army-construction effects — **SCOPED S130 (D203); AMENDED by D204; splits E21a/b/c/d**
+### E21 — Detachment-driven army-construction effects — **SCOPED S130 (D203); AMENDED by D204; E21a SHIPPED S134 (D209); b/c/d remain**
 
 Detachment rules that require or forbid units, or elevate units to Battleline (which moves the count
 cap — Functional Spec §5). Opened S122 (D192), gated on E1c, scoped S130.
@@ -54,14 +54,48 @@ hand-edit outputs* — that rule protects generated outputs, and this is an inpu
   single `effectiveUnitType(unit, selectedDetachments)` helper, live against the current selection.
 
 **The split:**
-- **E21a — data-only.** `detachment_effects.json` + referential-integrity and unenforced-inventory assertions.
+- **E21a — data-only. SHIPPED S134 (D209).** `detachment_effects.json` net new — seven effects across five detachments on the four-kind schema, plus assertions E21a-1..6 and the file added to the manifest's guarded set. Two authoring calls recorded in D209: Shadow Legion's forbid is expressed by `unit_type` with a `except_units` exemption rather than as a name list, and Shadow Legion gets **no** `warlord` row because Be'Lakor's unit-level `must_be_warlord` already covers it unconditionally.
 - **E21b — engine-only.** `effectiveUnitType()` feeding `instanceLimit()` **and** both grouping sites, plus the chapter-exclusivity structural assertion.
 - **E21c — engine-only.** Forbid + conditional Warlord — Shadow Legion add-path refusal and army state, in E4b's mould. Runs with E22b (same turn, same table).
 - **E21d — UI-only.** Refusal prose, roster warnings, Battleline indicator. E21 closes here; it does not wait on E22.
 
 **The six live cases:** Battleline elevation in Blood Angels|THE LOST BRETHREN (Death Company
 Marines ×2), Dark Angels|COMPANY OF HUNTERS (Outrider Squad), Death Guard|SHAMBLEROT VECTORIUM
-(Poxwalkers); require/forbid in Chaos Daemons|SHADOW LEGION; and two unlock cases moved to E22.
+(Poxwalkers); forbid in Chaos Daemons|SHADOW LEGION; and two unlock cases moved to E22. All six now
+sit in `detachment_effects.json`; what remains is engine and UI reading it.
+
+**S134 re-verified the survey from source** rather than carrying D203's list forward. The six hold.
+One genuine seventh construction effect was found that D203 missed — see **E23**.
+
+
+### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); M**
+
+Found by re-deriving E21's survey from source instead of trusting D203's list. `HEADHUNTER TASK FORCE`
+exists in **six built armies** — Space Marines, Black Templars, Blood Angels, Dark Angels, Deathwatch,
+Space Wolves — and grants the Vehicle keyword Tank Ace to most Adeptus Astartes Vehicles, then in the
+Muster Armies step lets the player select **up to three** Tank Ace units to gain the **Character**
+keyword. Its own Designer's Note confirms the consequence: those units can be given Enhancements, and
+one of them can be the Warlord.
+
+**The app currently gets this wrong.** Enhancement eligibility in `index.html` tests
+`unit_type === 'Character'` and refuses everything else with *"Only Characters can be given this
+enhancement."* Under this detachment that refusal is wrong on up to three vehicles per list.
+
+**Direction of the error: over-restriction, not a D0 violation.** The tool refuses something legal
+rather than permitting something illegal, so this does not outrank the enforcement work already
+sequenced behind E21b/c/d and E22b. It is still a real rule the app does not know about, on six built
+armies.
+
+**Why it is not folded into `detachment_effects.json` as-is.** It is a **fifth effect kind** — a
+muster-time keyword grant with a per-list count limit and a player choice of which units receive it.
+That is player state, not a static table row: the selection has to be stored on the list, survive
+save/load, and be re-validated when the detachment is deselected. It also lands on two pieces of
+shipped code at once (E4's enhancement eligibility and E9's Warlord eligibility). Scope it properly
+before touching the schema.
+
+**First step is a scoping turn**, in D199's and D203's mould: confirm the Tank Ace keyword definition
+against source for all six copies, decide where the selection lives in the list record, and decide
+whether the grant is modelled as a sixth effect kind or as its own mechanism.
 
 
 ### E22 — Detachment ally unlocks, points sub-caps and Warlord bans — **NEW S130 (D203); PARTLY UNBLOCKED by D204**

@@ -205,3 +205,5 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D206** — Soul Grinder god weapons never gated: `Allegiance_Condition` dead between CSV and converter; Ryan's one-weapon ruling (S131)
 - **D207** — B63 shipped: Soul Grinder's god weapon gated at the converter, `units.json` re-banked, four assertions filed (S132)
 - **D208** — B61 shipped: Plague Legions tagged at the parser via a known-label lookup, six-unit census pinned, four assertions filed (S133)
+- **D209** — E21a shipped: `detachment_effects.json` authored + six assertions; E23 opened (Headhunter Task Force Tank Ace keyword grant) (S134)
+- **D210** — The `/mnt/project` mount deduplicates by filename and is not evidence about presence, absence or duplication (S134)

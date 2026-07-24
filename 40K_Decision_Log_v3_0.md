@@ -7554,3 +7554,145 @@ depends on.
 (`mfm_points_parser.py`, `convert_to_json.py`, `units.json`, `rules_assertions.py`). `index.html`
 untouched at **6.5**.
 
+
+---
+
+## D209 — E21a shipped: `detachment_effects.json` authored, six assertions filed, and a seventh construction effect found that no prior session had seen (S134)
+
+**Turn type: data-only.** One net-new hand-authored data file, six new assertions, one line added to the
+manifest's guarded set. No parser, no converter, no engine, no `index.html`. `index.html` stays at
+**6.5**. Assertions **88/88 → 94/94**, baseline **21/21** at open and at close. All ten S133 hashes
+verified byte-identical before any work started.
+
+### The file
+
+`detachment_effects.json` — a `_meta` block plus an `effects` object keyed `Army|DETACHMENT`, holding
+**seven effects across five detachments**, on D204's four-kind schema (`battleline`, `forbid`,
+`unlock`, `warlord`; `require` dropped and never written).
+
+Authored against the rules as D204 ruled them, cross-checked against `detachments.json` `rule_text`
+and the MFM files — not parsed from either. The `points_cap` figures (Incursion 500 / Strike Force
+1000 / Onslaught 1500, identical for both unlock cases) were confirmed present in the Wahapedia text
+tier for Tallyband Summoners and in the faction-pack tier for Shadow Legion, agreeing with each other.
+Caps are keyed by the army points total for the battle size — `1000` / `2000` / `3000` — because that
+is how the engine already reads `POINTS_CAP`. Onslaught is carried even though the app does not yet
+offer it, so adding it later needs no re-derivation.
+
+### Two authoring calls, both made and proceeded on
+
+**1. Shadow Legion's forbid is expressed by type with an exception, not as a name list.** The rule
+bans Daemon Princes, Daemon Princes with Wings, and all other Epic Heroes excluding Be'Lakor. The two
+Daemon Princes are named explicitly because their `unit_type` is **Character**, not Epic Hero, so a
+type rule alone misses them — the same trap D203 flagged from the other direction. The remaining
+twelve Chaos Daemons Epic Heroes are caught by `unit_types: ["Epic Hero"]` with
+`except_units: ["Be'Lakor"]` rather than by naming all twelve, so a unit added to the pool later is
+forbidden automatically instead of quietly slipping through a stale list. Reversible: one target
+object.
+
+**2. Shadow Legion gets no `warlord` row, deliberately.** Be'Lakor's `units.json` record already
+carries `must_be_warlord: true`, from his Supreme Commander ability, and the Warlord engine (E9b) is
+live and reads it. That flag is **unconditional and army-wide**, so it is strictly stronger than the
+detachment's conditional version — the detachment rule cannot be violated while it holds. Writing a
+row as well would be two sources for one rule that can drift apart. Handled the way D203 handled
+chapter exclusivity: enforced by construction, policed by an assertion (**E21a-6**), not by a row.
+That assertion fails in both directions — if the unit flag ever goes false, or if a future session
+adds the redundant row.
+
+### The finding: a fifth construction effect kind, on six built detachments, that D203's survey missed
+
+Rather than trusting D203's list of six, all 143 built records were re-scanned this session for
+Battleline, forbid, unlock, Warlord and points-sub-cap language. D203's six hold, and the twenty-odd
+extra matches are in-battle false positives from the word "excluding" — **with one real exception.**
+
+`HEADHUNTER TASK FORCE`, which exists in six built armies (Space Marines, Black Templars, Blood
+Angels, Dark Angels, Deathwatch, Space Wolves), carries: *in the Muster Armies step, you can select up
+to three Tank Ace units from your army to gain the Character keyword*, where Tank Ace covers most
+Adeptus Astartes Vehicles. Its own Designer's Note spells out the consequence — those units can be
+given Enhancements and one of them can be the Warlord.
+
+**This is a muster-time construction effect and the app currently gets it wrong.** Enhancement
+eligibility in `index.html` tests `unit_type === 'Character'` and refuses everything else with *"Only
+Characters can be given this enhancement."* Under Headhunter Task Force that refusal is wrong on up to
+three vehicles per list, in six armies.
+
+The direction matters for how it is ranked. This is **over-restriction, not a D0 violation** — the
+tool refuses something legal rather than permitting something illegal, so it does not outrank the
+enforcement work already sequenced. But it is the same shape as B61: a real rule the app does not
+know about, sitting in a built faction, found only because the survey was redone from source instead
+of carried forward. **Filed as E23.** It is a fifth effect kind (a muster-time keyword grant with a
+count limit), it interacts with shipped E4 code and with E9's Warlord eligibility, and it is not
+squeezed into this file's four-kind schema on the way past.
+
+### Assertions
+
+Six filed, **E21a-1** through **E21a-6**: key referential integrity against `detachments.json`; unit-name
+referential integrity against each army's *resolved* pool rather than its own block (Outrider Squad is
+referenced by a Dark Angels detachment and lives in the generic Adeptus Astartes block — the case that
+makes the distinction load-bearing); schema integrity including that `require` never appears and every
+`points_cap` is keyed `1000`/`2000`/`3000` with strictly increasing values; allied-target resolution,
+which also pins the unenforced inventory to exactly one effect; coverage, re-derived by scanning all
+143 records rather than compared against a remembered list; and the Be'Lakor Warlord coverage check
+above.
+
+`rules_assertions.py` gained a `resolved_pool()` helper on `Sources` that mirrors `resolveUnits()`'s
+composition rule. That duplication is deliberate and worth noting for whoever changes unit-pool
+composition next: two independent implementations of the same rule, one in the app and one in the
+gate, is how a change to either surfaces as a failure rather than as agreement.
+
+### `detachment_effects.json` is in the manifest's guarded set
+
+Added to `GUARDED` in `pipeline_manifest.py`, taking it from 38 files to 39. It is the first guarded
+file that **no repro gate can regenerate**, which is precisely the argument for guarding it: for every
+other data file, a bad sync fails a reproduction check. For this one nothing would fire, and a bad
+sync changes legality silently.
+
+### The one `enforced: false` effect
+
+Chaos Daemons | SHADOW LEGION's HERETIC ASTARTES unlock, with an `unenforced_reason`, per D203's rule
+that a gap belongs in data where it can be counted rather than omitted where it is invisible. E21a-4
+pins the inventory at exactly that one effect, so it shrinks loudly when Chaos Space Marines is built
+and fails loudly if anything else quietly joins it.
+
+**Changed:** `rules_assertions.py`, `pipeline_manifest.py`, `pipeline_manifest.json`,
+`40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`,
+`SESSION_HANDOFF_134.md`.
+
+**Net new:** `detachment_effects.json` (7,649 bytes).
+
+**Repo custody:** all nine are project-generated. `detachment_effects.json` carries short rule names
+and unit names only — no GW rules text is reproduced in it, deliberately; the `source` fields describe
+each rule rather than quoting it. All repo-eligible. Excluded from any push as always: the Wahapedia
+CSV export, the MFM `.txt` files, the faction web and pack files, `Army_Muster_Rules.txt` and
+`wh40k_core_rules.md`.
+
+---
+
+## D210 — The `/mnt/project` mount is not evidence about what files exist (S134, recording a prior finding)
+
+Recorded at Ryan's instruction, carried forward from a housekeeping detour between sessions. The
+project instructions were already updated with it; this is the durable entry.
+
+**The behaviour.** The `/mnt/project` mount **deduplicates by filename**. If the project area holds two
+files with the same name, Claude sees one. Worse, when one copy of a duplicated pair is deleted, the
+mount drops the filename **entirely** and does not recover within the session — so a file that still
+exists in the project area can appear absent.
+
+**Why it matters here specifically.** This project has spent sessions on custody problems: S131 lost
+three Chaos Daemons source CSVs (D205) and D205's whole lesson was about what is and is not a backup.
+A mount that reports absence for a file that exists is exactly the input that produces a wrong custody
+conclusion, and the standing rule *absence from derived data is never evidence of absence from the
+rules* has a direct analogue: **absence from the mount is never evidence of absence from the project
+area.**
+
+**The rule.** The mount is reliable for file **contents**. It is not evidence about **presence,
+absence, or duplication**. When a question turns on any of those three, ask Ryan for a screenshot of
+the file list and wait, rather than answering from the mount. Ask in three cases: the project area has
+changed since the last session; Claude's account of the area conflicts with what Ryan reports seeing;
+or Claude is about to recommend deleting anything — and in that third case ask for the specific file's
+card, not the whole list.
+
+**Live consequence.** `40K_Data_Pipeline_Process_v0_6.md` is now the 211-line copy. The 195-line copy
+that earlier sessions were served is gone from the project area. Ryan holds it locally if a diff is
+ever wanted; it must **not** be re-uploaded, as that recreates the duplicate that caused the problem.
+
+**No file changed for this entry** beyond the log and its index.

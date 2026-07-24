@@ -85,6 +85,36 @@ class Sources:
                 self._cache['dt'] = json.load(f)
         return self._cache['dt']
 
+    def detachment_effects(self):
+        if 'de' not in self._cache:
+            with open(os.path.join(self.dir, 'detachment_effects.json'), encoding='utf-8') as f:
+                self._cache['de'] = json.load(f)
+        return self._cache['de']
+
+    def resolved_pool(self, army):
+        """The unit set a player of `army` can actually reach.
+
+        Mirrors index.html's resolveUnits(): a chapter subfaction is the generic
+        Adeptus Astartes block unioned with its own block, the chapter's copy winning
+        on a name collision. Everything else is just its own block. Returns
+        {unit_name: unit_record}.
+        """
+        blocks = {a['army']: a for a in self.units()}
+        tax = json.load(open(os.path.join(self.dir, 'faction_taxonomy.json'), encoding='utf-8'))
+        sub = set()
+        for g in tax['groups']:
+            for fx in g['factions']:
+                if fx.get('is_subfaction') and fx.get('data_army'):
+                    sub.add(fx['data_army'])
+        pool = {}
+        if army in sub and 'Adeptus Astartes' in blocks:
+            for u in blocks['Adeptus Astartes']['units']:
+                pool[u['unit_name']] = u
+        if army in blocks:
+            for u in blocks[army]['units']:
+                pool[u['unit_name']] = u
+        return pool
+
     def mfm_detachment_rows(self):
         """Re-derive the detachment catalogue straight from the MFM faction files.
 
@@ -1315,7 +1345,205 @@ ASSERTIONS = [
      'mfm_points_parser.py ALLIED_GROUP_HEADERS (B61, D208)',
      lambda S: b61_allied_group_headers_intact(S)),
 
+    ('E21a-1',
+     'Every key in detachment_effects.json resolves to a real record in detachments.json, and '
+     'the army named inside each record matches the army half of its own key. A typo in a key '
+     'silently disables a restriction, which is the exact failure mode hand-authoring risks.',
+     'detachment_effects.json vs detachments.json (E21a, D209)',
+     lambda S: e21a_keys_resolve(S)),
+
+    ('E21a-2',
+     'Every unit name referenced by any effect — in units, in except_units — resolves in that '
+     'army\'s RESOLVED pool, meaning its own block plus the generic Adeptus Astartes block for a '
+     'chapter subfaction. Outrider Squad is the case that makes the distinction matter: it is '
+     'referenced by a Dark Angels detachment but lives in the generic block.',
+     'detachment_effects.json vs units.json + faction_taxonomy.json (E21a, D209)',
+     lambda S: e21a_unit_names_resolve(S)),
+
+    ('E21a-3',
+     'The file obeys its own schema: every effect kind is one of the four D204 kinds '
+     '(battleline, forbid, unlock, warlord) and never the dropped "require"; every effect carries '
+     'an explicit boolean enforced; every warlord effect carries a mode of cannot_be or '
+     'must_be_if_present; every unlock carries a points_cap keyed only by 1000/2000/3000 with '
+     'strictly increasing values; and every unit_type named exists as a real unit_type in that '
+     'army\'s pool.',
+     'detachment_effects.json schema, _meta.effect_kinds (E21a, D204, D209)',
+     lambda S: e21a_schema_valid(S)),
+
+    ('E21a-4',
+     'Allied-set targets resolve exactly when they claim to. Every enforced unlock or warlord '
+     'effect targeting an allied_group matches at least one unit carrying that allied_group in '
+     'the army\'s pool; every effect targeting a bare keyword instead of an allied_group is '
+     'enforced: false and carries an unenforced_reason. The unenforced inventory is exactly one '
+     'effect — Chaos Daemons SHADOW LEGION\'s HERETIC ASTARTES unlock — so the gap is counted '
+     'rather than invisible, and shrinks loudly when Chaos Space Marines is built.',
+     'detachment_effects.json vs units.json allied_group (E21a, D203, D204, D209)',
+     lambda S: e21a_allied_targets(S)),
+
+    ('E21a-5',
+     'Coverage: every built detachment whose own text grants the BATTLELINE keyword, and every '
+     'built detachment whose own text unlocks a non-faction unit set, has a row in '
+     'detachment_effects.json. Re-derived by scanning all 143 built records rather than compared '
+     'against a remembered list, so a detachment added later with a construction effect fails the '
+     'baseline instead of being quietly unenforced.',
+     'detachments.json rule_text/restrictions scan vs detachment_effects.json (E21a, D209)',
+     lambda S: e21a_coverage(S)),
+
+    ('E21a-6',
+     'Be\'Lakor\'s units.json record carries must_be_warlord: true. This is why Chaos Daemons '
+     'SHADOW LEGION has no warlord row: his Supreme Commander ability is unconditional and '
+     'army-wide, so it is strictly stronger than the detachment\'s conditional version, and a row '
+     'would be a second source for one rule. If this flag ever goes false the detachment rule '
+     'stops being covered, and this assertion is what says so.',
+     'units.json Chaos Daemons Be\'Lakor; detachment_effects.json _meta.not_in_this_file (E21a, D209)',
+     lambda S: e21a_belakor_warlord_covered(S)),
+
 ]
+
+
+# ── E21a: detachment_effects.json integrity ───────────────────────────────────
+
+def _de_effects(S):
+    """Flatten to (key, record, effect) triples."""
+    out = []
+    for key, rec in S.detachment_effects()['effects'].items():
+        for eff in rec['effects']:
+            out.append((key, rec, eff))
+    return out
+
+
+def e21a_keys_resolve(S):
+    det = S.detachments()['detachments']
+    bad = []
+    for key, rec in S.detachment_effects()['effects'].items():
+        if key not in det:
+            bad.append(f'{key}: no such detachment record')
+            continue
+        army = key.split('|', 1)[0]
+        if rec.get('army') != army:
+            bad.append(f'{key}: record army={rec.get("army")!r} disagrees with key')
+    if bad:
+        return False, '; '.join(bad)
+    n = len(S.detachment_effects()['effects'])
+    return True, f'all {n} detachment keys resolve against the 143 built records'
+
+
+def e21a_unit_names_resolve(S):
+    bad = []
+    pools = {}
+    for key, rec, eff in _de_effects(S):
+        army = rec['army']
+        if army not in pools:
+            pools[army] = S.resolved_pool(army)
+        pool = pools[army]
+        for field in ('units', 'except_units'):
+            for name in eff.get('target', {}).get(field, []):
+                if name not in pool:
+                    bad.append(f'{key} [{eff["kind"]}.{field}]: {name!r} not in {army} pool')
+    if bad:
+        return False, '; '.join(bad)
+    total = sum(len(e.get('target', {}).get(f, []))
+                for _, _, e in _de_effects(S) for f in ('units', 'except_units'))
+    return True, f'all {total} unit-name references resolve in their army\'s resolved pool'
+
+
+def e21a_schema_valid(S):
+    kinds = {'battleline', 'forbid', 'unlock', 'warlord'}
+    modes = {'cannot_be', 'must_be_if_present'}
+    caps = ['1000', '2000', '3000']
+    bad = []
+    pools = {}
+    for key, rec, eff in _de_effects(S):
+        k = eff.get('kind')
+        if k not in kinds:
+            bad.append(f'{key}: kind {k!r} is not one of {sorted(kinds)}')
+        if not isinstance(eff.get('enforced'), bool):
+            bad.append(f'{key} [{k}]: enforced must be an explicit boolean')
+        if k == 'warlord' and eff.get('mode') not in modes:
+            bad.append(f'{key} [warlord]: mode {eff.get("mode")!r} not in {sorted(modes)}')
+        if k == 'unlock':
+            pc = eff.get('points_cap')
+            if not isinstance(pc, dict) or list(pc.keys()) != caps:
+                bad.append(f'{key} [unlock]: points_cap keys must be exactly {caps}')
+            else:
+                vals = [pc[c] for c in caps]
+                if vals != sorted(vals) or len(set(vals)) != 3:
+                    bad.append(f'{key} [unlock]: points_cap values not strictly increasing: {vals}')
+        army = rec['army']
+        if army not in pools:
+            pools[army] = S.resolved_pool(army)
+        types = {u['unit_type'] for u in pools[army].values()}
+        for t in eff.get('target', {}).get('unit_types', []):
+            if t not in types:
+                bad.append(f'{key} [{k}]: unit_type {t!r} does not exist in {army}')
+    if bad:
+        return False, '; '.join(bad)
+    return True, f'{len(_de_effects(S))} effects across {len(S.detachment_effects()["effects"])} detachments all schema-valid'
+
+
+def e21a_allied_targets(S):
+    bad = []
+    unenforced = []
+    pools = {}
+    for key, rec, eff in _de_effects(S):
+        tgt = eff.get('target', {})
+        army = rec['army']
+        if army not in pools:
+            pools[army] = S.resolved_pool(army)
+        if 'allied_group' in tgt:
+            g = tgt['allied_group']
+            hits = [u for u in pools[army].values() if u.get('allied_group') == g]
+            if eff['enforced'] and not hits:
+                bad.append(f'{key} [{eff["kind"]}]: enforced but no {army} unit carries '
+                           f'allied_group={g!r}')
+        if 'keyword' in tgt and eff['enforced']:
+            bad.append(f'{key} [{eff["kind"]}]: targets a bare keyword but claims enforced')
+        if not eff['enforced']:
+            unenforced.append(key + '/' + eff['kind'])
+            if not eff.get('unenforced_reason'):
+                bad.append(f'{key} [{eff["kind"]}]: enforced: false with no unenforced_reason')
+    expect = ['Chaos Daemons|SHADOW LEGION/unlock']
+    if sorted(unenforced) != expect:
+        bad.append(f'unenforced inventory is {sorted(unenforced)}, expected {expect}')
+    if bad:
+        return False, '; '.join(bad)
+    return True, 'allied targets resolve; exactly one documented unenforced effect (Shadow Legion / HERETIC ASTARTES)'
+
+
+def e21a_coverage(S):
+    det = S.detachments()['detachments']
+    have = set(S.detachment_effects()['effects'].keys())
+    bl = re.compile(r'(gain|gains|have|has).{0,40}BATTLELINE', re.I | re.S)
+    ul = re.compile(r'even though they do not have|allies allowed up to', re.I)
+    missing = []
+    for key, r in det.items():
+        text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
+        if (bl.search(text) or ul.search(text)) and key not in have:
+            missing.append(key)
+    if missing:
+        return False, ('built detachments with a construction effect and no row: '
+                       + '; '.join(sorted(missing)))
+    n = sum(1 for k, r in det.items()
+            if bl.search(' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions')))
+            or ul.search(' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))))
+    return True, f'{n} built detachments carry a Battleline-grant or unlock clause; all have rows'
+
+
+def e21a_belakor_warlord_covered(S):
+    cd = next((a for a in S.units() if a['army'] == 'Chaos Daemons'), None)
+    if cd is None:
+        return False, 'Chaos Daemons army block not found'
+    bl = next((u for u in cd['units'] if u['unit_name'] == "Be'Lakor"), None)
+    if bl is None:
+        return False, "Be'Lakor not found in Chaos Daemons"
+    if not bl.get('must_be_warlord'):
+        return False, ("Be'Lakor no longer carries must_be_warlord — SHADOW LEGION's conditional "
+                       'Warlord rule is now uncovered and needs a warlord row')
+    de = S.detachment_effects()['effects'].get('Chaos Daemons|SHADOW LEGION', {})
+    if any(e['kind'] == 'warlord' for e in de.get('effects', [])):
+        return False, ('SHADOW LEGION now carries a warlord row as well as the unit-level flag — '
+                       'two sources for one rule')
+    return True, "Be'Lakor must_be_warlord: true; SHADOW LEGION correctly carries no warlord row"
 
 
 def b58_engine_honours_bands(S):

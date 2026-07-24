@@ -53,6 +53,10 @@ GUARDED = [
     'wargear_points.json',
     'datasheet_wargear_abilities.json',
     'detachments.json',
+    # Hand-authored input, not a pipeline output — no repro gate can regenerate it,
+    # which is exactly why it needs the manifest. A bad sync of this file changes
+    # legality silently (E21a, D209).
+    'detachment_effects.json',
 
     # Parsers and transforms — the things the repro gates run.
     'loadout_parser.py',

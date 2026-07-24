@@ -1,84 +1,89 @@
-# Next-session prompt — Session 134
+# Next-session prompt — Session 135
 
-Session 133 shipped **B61** (**D208**): Plague Legions units are now tagged `allied_group: "Plague
-Legions"` at the parser via a known-label lookup (`ALLIED_GROUP_HEADERS`), `units.json` re-banked
-(exactly the six units changed, one new key each), four assertions filed. `index.html` stays at
-**6.5**, assertions **88/88**, baseline **21/21**. Read `SESSION_HANDOFF_133.md`, then **D208**.
+Session 134 shipped **E21a** (**D209**): `detachment_effects.json` is net new and holds seven effects
+across five detachments on D204's four-kind schema, with assertions **E21a-1** through **E21a-6** and
+the file added to the manifest's guarded set (38 → 39 files). `index.html` stays at **6.5**, assertions
+**94/94**, baseline **21/21**. Read `SESSION_HANDOFF_134.md`, then **D209**, then **D210**.
 
-**Tagged, not gated.** The six units are still selectable under any detachment or none, with no
-points sub-cap and Rotigus still Warlord-eligible. That gate is E22b, sequenced into S136 with E21c —
-not this session's work.
+**One new ticket: E23.** Re-deriving E21's survey from source found a seventh construction effect
+D203 missed — `HEADHUNTER TASK FORCE`'s Tank Ace → Character keyword grant, live on six built armies,
+where the app currently refuses a legal enhancement. Over-restriction, not a D0 violation, so it does
+not jump the queue. Not this session's work.
 
 ## Turn type
 
-**Data-only.** `detachment_effects.json` (net new), hand-authored. No parser, no converter, no engine,
-no `index.html`.
+**Engine-only.** `index.html` only. No parser, no converter, no data file, no JSON regeneration.
 
 ## Baseline at open
 
-Run `./baseline.sh` (`--no-repo` if offline). Verify the four S133 hashes in `SESSION_HANDOFF_133.md`'s
-Files section before trusting the sync.
+Run `./baseline.sh` (`--no-repo` if offline). Verify the S134 hashes in `SESSION_HANDOFF_134.md`'s
+Files section before trusting the sync — `detachment_effects.json` is hand-authored and no repro gate
+can regenerate it, so its hash is the only thing that catches a bad sync.
 
-## The task: E21a — `detachment_effects.json`
+## The task: E21b — `effectiveUnitType()`
 
-Author a hand-built table of detachment-driven army-construction effects, keyed `Army|DETACHMENT`,
-covering the six live cases D203 found plus the two unlock cases D204 resolved:
+Load `detachment_effects.json` alongside the other runtime data and add a single helper,
+`effectiveUnitType(unit, selectedDetachments)`, returning `'Battleline'` when any selected
+detachment's `battleline` effect names that unit and the unit's own `unit_type` otherwise.
 
-- **Battleline elevation** — Blood Angels|THE LOST BRETHREN (Death Company Marines ×2), Dark
-  Angels|COMPANY OF HUNTERS (Outrider Squad), Death Guard|SHAMBLEROT VECTORIUM (Poxwalkers).
-- **Forbid / conditional Warlord** — Chaos Daemons|SHADOW LEGION (Be'Lakor optional; if included must
-  be Warlord — not a require, per D204's correction to the faction-pack paraphrase).
-- **Unlock** — Death Guard|TALLYBAND SUMMONERS (Plague Legions, `enforced: true` — B61 already landed
-  the marking this reads); Chaos Daemons|SHADOW LEGION (HERETIC ASTARTES, `enforced: false` — no CSM
-  units are built yet, ships as a documented gap, not a silent omission).
+**Three call sites, per D204's ruling 2**, all of which must switch to the helper:
 
-Effect kinds are `battleline` | `forbid` | `unlock` | `warlord` (D204 — `require` is dropped; no built
-detachment needs it).
+1. `instanceLimit()` — the count cap (Battleline doubles it).
+2. `groupByType` — the left-panel grouping.
+3. The roster's `typeGroups` build.
 
-**Author from the rules, not from `rule_text`.** D203 gives three reasons and D204 a fourth: `rule_text`
-spans three fidelity tiers including a paraphrase that disagrees with actual rule content (Shadow
-Legion's Be'Lakor line); nine built detachments carry no rule text at all; the prose names don't match
-`units.json`'s names (`Daemon Prince` vs. **Daemon Prince of Chaos**, `Be'lakor` vs. **Be'Lakor**); and
-the faction-pack paraphrase inverted Shadow Legion's actual constraint (conditional Warlord, not
-unconditional inclusion) — a parser trusting the prose would have shipped the wrong rule with full
-confidence. Hand-author against the faction packs / MFM text directly, then add referential-integrity
-assertions (every unit name resolves in `units.json`, every army|detachment key resolves in
-`detachments.json`) so a typo fails loudly rather than silently.
+**Do not overwrite `unit_type` on the record.** The elevation is live against the current detachment
+selection: deselecting the detachment must move the unit back to its own group and restore its cap.
+D204 reversed D203 here — elevated units render **under Battleline**, not in their own group with a
+badge, because that is what New Recruit does and because the status change is legality-relevant.
 
-**25 of 143 built detachments carrying chapter-exclusivity text need no entry.** `resolveUnits()`
-already composes a chapter army as the generic pool plus that chapter's own units, so no foreign-chapter
-unit is ever reachable — D0 satisfied by construction. E21b adds the structural assertion; this session
-doesn't need a row for it.
+**Effects from multiple selected detachments union** — a unit elevated by any selected detachment is
+elevated (D203, unchanged by D204).
+
+Only the three `battleline` rows are in scope. `forbid`, `unlock` and `warlord` are E21c/E22b.
+
+## Also this session: the chapter-exclusivity structural assertion
+
+The other half of E21b. 25 built detachments say *your army may include this Chapter's units and no
+other Chapter's*, and `resolveUnits()` already makes that unreachable by composing a chapter army as
+the generic Adeptus Astartes block plus that chapter's own units. Nothing polices it. Add the
+assertion: for every faction in the taxonomy, the resolved unit set contains no unit sourced from
+another chapter's army block. `Sources.resolved_pool()` in `rules_assertions.py` already mirrors the
+composition rule and is the natural place to build from.
+
+Add a harness (`e21b_check.js`) in the mould of `e1b_check.js` / `e4b_check.js` covering the helper
+itself: elevation on, elevation off after deselect, union across two selected detachments, and the
+doubled cap.
 
 ## Ground rules
 
-* Data-only. No parser, no converter, no engine, no `index.html`.
-* `detachment_effects.json` is genuinely net new — no file has played this role before.
+* Engine-only. `index.html` and a new harness; no data file touched.
 * Do not rename anything — project name still unsettled.
+* `detachment_effects.json` is a hand-authored **input**. Never edit it to make the engine pass.
 
-## After E21a
+## After E21b
 
-* **S135 — engine-only.** E21b: `effectiveUnitType()` feeding `instanceLimit()` and both grouping
-  sites, plus the chapter-exclusivity structural assertion.
-* **S136 — engine-only.** E21c with E22b — Shadow Legion's forbid/conditional-Warlord path, Death
-  Guard's Plague Legions unlock gate (consuming B61's `allied_group` tag), points sub-cap, Warlord ban.
+* **S136 — engine-only.** E21c with E22b — Shadow Legion's forbid path, Death Guard's Plague Legions
+  unlock gate (consuming B61's `allied_group` tag), the points sub-cap, and the Warlord ban.
 * **S137 — UI-only.** E21d: refusal prose, roster warnings, Battleline indicator.
+* **E23** — scoping turn, unsequenced.
 
 ## Backlog
 
-**7 open:** B62, P2, E21 (scoped a/b/c/d), E22 (E22a done, E22b remains), B60, E12, B17.
+**8 open:** B62, P2, E21 (E21a shipped; b/c/d remain), E22 (E22a done, E22b remains), E23, B60, E12,
+B17.
 
 ## Standing inputs, neither blocking, worth more now than before
 
 * **A local backup folder** for the GW-derived and GW-text-carrying files — the nine Chaos Daemons
   CSVs, the Wahapedia export, the MFM `.txt` files, the faction web and pack files. The repo cannot
   hold them; S131 lost three and rebuilt them only because `units.json` happened to carry enough.
-* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard** — this session's
-  Battleline-elevation rows (THE LOST BRETHREN, SHAMBLEROT VECTORIUM) are exactly the kind of fact
-  these would let you author with more confidence than the MFM text alone gives.
+  D210 sharpens this: the mount cannot be trusted to tell us whether a file is still there.
+* **The project file area is near capacity.** E21a cost one 7.6 KB file. E21b costs one harness.
+  Beyond that, a plan is needed — see the handoff's note.
+* Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard**.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* **D199's four batched calls remain unreviewed — since S127, now seven sessions.** Worth a look
-  purely on staleness grounds even though nothing this session depends on them.
+* **D199's four batched calls remain unreviewed — since S127, now eight sessions.**
 * **B62** — the `FALSE` string-literal quirk and missing presence-and-parse assertion over the nine
   CD CSVs — still open, untouched since D205.
