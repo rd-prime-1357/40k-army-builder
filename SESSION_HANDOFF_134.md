@@ -148,3 +148,26 @@ B17.
 - Resolved tickets: none (E21a shipped; E21 stays open on b/c/d)
 - Added tickets: E23
 - Ending tickets: B62, P2, E21, E22, E23, B60, E12, B17 (8)
+
+---
+
+## Addendum — the capacity options in "Decisions needed" above are wrong; see D211
+
+Added after close, in the same conversation. Left in place rather than edited out, because a wrong
+recommendation that quietly disappears teaches nothing.
+
+All three options offered above are dead. **Option 1** (prune source files) was killed by
+measurement — everything removable without failing a gate is ~317 KB of a ~12.3 MB area, and six of
+those files are priority factions we would have to re-source. **Option 2** (prune old handoffs) was
+wrong on the facts: the project area holds one handoff, because Ryan already deletes the old before
+adding the new — asserted from habit rather than from the file list, which is precisely the error
+D210 was written to prevent, in the session that wrote it. **Option 3** (fold content into existing
+files) was killed by the metric: capacity is measured in **tokens, not bytes**, so file count is
+irrelevant and the same text costs the same wherever it sits.
+
+The common fault in all three: each was ranked before it was measured.
+
+Replaced by **P4** and **D211**, which carry the real census, the finding that built factions pin
+their sources permanently, the 797 KB JSON-whitespace lever, and a first step chosen to measure what
+the capacity metric actually responds to before anything expensive is committed to. Assertion **P4-1**
+makes the census executable, since the removable half is a claim about absence.

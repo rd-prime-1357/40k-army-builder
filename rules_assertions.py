@@ -1398,6 +1398,17 @@ ASSERTIONS = [
      'units.json Chaos Daemons Be\'Lakor; detachment_effects.json _meta.not_in_this_file (E21a, D209)',
      lambda S: e21a_belakor_warlord_covered(S)),
 
+    ('P4-1',
+     'The GW-derived source census holds. Two halves. (a) The 18 source files the gates proved '
+     'REQUIRED are all present — established S135 by removing each candidate and re-running the '
+     'full baseline, not by reading imports. (b) The set of GW-source filenames referenced anywhere '
+     'in the gates and parsers is unchanged, so a parser that starts reading a new source file '
+     'fails here and forces the census to be re-run. This exists because the removable half is a '
+     'claim about ABSENCE — that nothing opens these files — and absence claims go stale silently, '
+     'which is the whole reason the project does not trust prose.',
+     'S135 park-and-rerun census over ./baseline.sh; static scan of the gate and parser sources (P4, D211)',
+     lambda S: p4_source_census(S)),
+
 ]
 
 
@@ -3137,6 +3148,99 @@ def b61_allied_group_headers_intact(S):
     if have != expect:
         return False, f'ALLIED_GROUP_HEADERS={sorted(have)}, expected={sorted(expect)}'
     return True, 'all six documented allied-group labels are recognised'
+
+
+
+# ── P4: GW-derived source census ──────────────────────────────────────────────
+#
+# Derived S135 empirically: every candidate source file was moved out of the
+# directory one at a time and ./baseline.sh re-run. REQUIRED means at least one
+# of the 21 gates failed without it. Reading imports is not enough — several
+# files are NAMED in a parser's lookup table without ever being opened, because
+# the faction they belong to is not built yet.
+
+P4_REQUIRED_SOURCES = [
+    # MFM points files for the eight built army sources.
+    'MFM_Black_Templars_v1_0.txt', 'MFM_Blood_Angels_v1_0.txt',
+    'MFM_Chaos_Daemons_v1_0.txt', 'MFM_Dark_Angels_v1_0.txt',
+    'MFM_Death_Guard_v1_0.txt', 'MFM_Death_Watch_v1_0.txt',
+    'MFM_Space_Marines_v1_0.txt', 'MFM_Space_Wolves_v1_0.txt',
+    'MFM_Instructions.txt',
+    # Faction web composition files.
+    'Black_Templars_web.txt', 'Dark_Angels_web.txt', 'Death_Guard_web.txt',
+    'Space_Marines_web.txt', 'Space_Wolves_web.txt',
+    # Faction packs and reference text.
+    'Space_Marines_Faction_Pack_v1_0.md', 'Dark_Angels_Faction_Pack_June_2026.md',
+    'Army_Muster_Rules.txt', 'chaos_daemons_reference.md',
+]
+
+# Every GW-source filename that appears anywhere in the gates or parsers. Some are
+# referenced but not required — the priority-faction files below are named in
+# mfm_points_parser.py's faction map against the day those factions are built.
+# '_web.txt' is the interpolation stub the web filenames are constructed from.
+P4_REFERENCED_SOURCES = {
+    'Army_Muster_Rules.txt', 'Dark_Angels_Faction_Pack_June_2026.md',
+    'MFM_Black_Templars_v1_0.txt', 'MFM_Blood_Angels_v1_0.txt',
+    'MFM_Chaos_Daemons_v1_0.txt', 'MFM_Chaos_Space_Marines_v1_0.txt',
+    'MFM_Chapter_Pass.md', 'MFM_Dark_Angels_v1_0.txt', 'MFM_Death_Guard_v1_0.txt',
+    'MFM_Death_Watch_v1_0.txt', 'MFM_Drukhari_v1_0.txt',
+    'MFM_Emperors_Children_v1_0.txt', 'MFM_FW_Reconciliation.md',
+    'MFM_Grey_Knights_v1_0.txt', 'MFM_Instructions.txt',
+    'MFM_Space_Marines_v1_0.txt', 'MFM_Space_Wolves_v1_0.txt',
+    'MFM_Thousand_Sons_v1_0.txt', 'MFM_World_Eaters_v1_0.txt',
+    'Space_Marines_Faction_Pack_v1_0.md', 'Space_Marines_web.txt',
+    '_web.txt', 'chaos_daemons_reference.md', 'mfm_sm.txt',
+}
+
+P4_SCANNED = [
+    'repro_check.py', 'units_repro_check.py', 'detachments_repro_check.py',
+    'rules_assertions.py', 'mfm_points_parser.py', 'detachment_parser.py',
+    'wahapedia_transform.py', 'convert_to_json.py', 'merge_factions.py',
+    'loadout_parser.py', 'equipped_parser.py', 'ds_wargear_abilities_parser.py',
+    'mfm_reconcile.py', 'add_loadout_groups.py', 'integrity_check.py',
+    'pipeline_manifest.py',
+]
+
+_P4_PAT = re.compile(
+    r"[A-Za-z0-9_']*(?:MFM_[A-Za-z0-9_]+|_web|Faction_Pack[A-Za-z0-9_]*|mfm_sm"
+    r"|Army_Muster_Rules|wh40k_core_rules|chaos_daemons_reference)[A-Za-z0-9_]*\.(?:txt|md)")
+
+
+def p4_source_census(S):
+    bad = []
+    missing = [f for f in P4_REQUIRED_SOURCES
+               if not os.path.exists(os.path.join(S.dir, f))]
+    if missing:
+        bad.append('required source file(s) absent: ' + ', '.join(sorted(missing)))
+    found = set()
+    for f in P4_SCANNED:
+        p = os.path.join(S.dir, f)
+        if not os.path.exists(p):
+            continue
+        with open(p, encoding='utf-8') as fh:
+            text = fh.read()
+        # This file carries the census lists themselves. Scanning them would make the
+        # assertion agree with itself by construction, so the census block is cut out
+        # before the scan.
+        if f == 'rules_assertions.py':
+            cut = text.find('# \u2500\u2500 P4: GW-derived source census')
+            end = text.find('def p4_source_census(')
+            if cut != -1 and end != -1:
+                text = text[:cut] + text[end:]
+        for m in _P4_PAT.findall(text):
+            found.add(m.lstrip("'"))
+    added = found - P4_REFERENCED_SOURCES
+    dropped = P4_REFERENCED_SOURCES - found
+    if added:
+        bad.append('gates/parsers now reference source file(s) not in the census: '
+                   + ', '.join(sorted(added)) + ' — re-run the park-and-rerun census')
+    if dropped:
+        bad.append('census names source file(s) nothing references any more: '
+                   + ', '.join(sorted(dropped)) + ' — they may now be removable')
+    if bad:
+        return False, '; '.join(bad)
+    return True, (f'{len(P4_REQUIRED_SOURCES)} required source files present; '
+                  f'{len(found)} referenced filenames unchanged')
 
 
 # ── runner ────────────────────────────────────────────────────────────────────

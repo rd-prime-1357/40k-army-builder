@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **8 open** as of S134 close: B62, P2, E21 (E21a shipped; b/c/d remain), E22 (E22a done, E22b remains), E23, B60, E12, B17.
+not here, it isn't open. **9 open** as of S134 close: B62, P2, P4, E21 (E21a shipped; b/c/d remain), E22 (E22a done, E22b remains), E23, B60, E12, B17.
 
 ## Open Items
 
@@ -66,6 +66,38 @@ sit in `detachment_effects.json`; what remains is engine and UI reading it.
 
 **S134 re-verified the survey from source** rather than carrying D203's list forward. The six hold.
 One genuine seventh construction effect was found that D203 missed — see **E23**.
+
+
+### P4 — Project-area capacity — **NEW S134 (D211); PROCESS; S then M**
+
+The project area is at ~94% and the metric is **tokens, not bytes** (Anthropic support docs: project
+knowledge capacity relates to context limits, with RAG expanding it). So file *count* is irrelevant —
+only total content volume matters — and byte size is a proxy rather than a linear measure.
+
+**Established by measurement, not by reading imports.** Every candidate source file was moved out and
+`./baseline.sh` re-run. Results are pinned in assertion **P4-1**.
+
+- **Built factions pin their sources permanently.** All eight built-faction MFM files, all five
+  `_web.txt` files, both faction packs, `MFM_Instructions.txt`, `Army_Muster_Rules.txt` and
+  `chaos_daemons_reference.md` each fail three or four gates when absent. Sources can be swapped in for
+  an unbuilt faction; they can never be swapped back out once it is built.
+- **Pruning sources is not worth it.** ~317 KB removable in total (~2.6%), and six of those files are
+  priority factions we would have to re-source — about 285 KB genuinely free.
+- **`wh40k_core_rules.md` (139 KB) is removable** — nothing opens it. Largest single removable file.
+  GW text, so it belongs in the local backup folder, not the repo.
+- **Biggest lever: the runtime JSON is pretty-printed.** Compact separators save **797 KB** of pure
+  whitespace (`units.json` 650, `unit_loadouts.json` 77, `detachments.json` 70). Costs a data turn —
+  three repro fixed points re-banked and the manifest reissued.
+
+**Sequenced deliberately smallest-first, as an instrument.** Step 1 is the two free document moves:
+`BACKLOG_ARCHIVE.md` (174 KB) and the archive half of `40K_Decision_Log_v3_0.md` (~400 KB) become
+repo-only, with `DECISION_INDEX.md` and the backlog's pointer lines preserving lookup. Both are
+reversible in one upload. If ~574 KB moves the displayed percentage by about 4.7 points the metric is
+volume-linear and everything after can be planned against byte counts; if it barely moves, the JSON
+minification is not worth the churn. Measure, then decide. See **D211**.
+
+**Unknown, do not assume:** whether the displayed percentage is against the base ceiling or the
+RAG-expanded one.
 
 
 ### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); M**

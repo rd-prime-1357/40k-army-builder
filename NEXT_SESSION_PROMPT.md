@@ -3,7 +3,7 @@
 Session 134 shipped **E21a** (**D209**): `detachment_effects.json` is net new and holds seven effects
 across five detachments on D204's four-kind schema, with assertions **E21a-1** through **E21a-6** and
 the file added to the manifest's guarded set (38 → 39 files). `index.html` stays at **6.5**, assertions
-**94/94**, baseline **21/21**. Read `SESSION_HANDOFF_134.md`, then **D209**, then **D210**.
+**94/94**, baseline **21/21**. Read `SESSION_HANDOFF_134.md` **including its addendum**, then **D209**, **D210** and **D211**.
 
 **One new ticket: E23.** Re-deriving E21's survey from source found a seventh construction effect
 D203 missed — `HEADHUNTER TASK FORCE`'s Tank Ace → Character keyword grant, live on six built armies,
@@ -70,17 +70,25 @@ doubled cap.
 
 ## Backlog
 
-**8 open:** B62, P2, E21 (E21a shipped; b/c/d remain), E22 (E22a done, E22b remains), E23, B60, E12,
-B17.
+**9 open:** B62, P2, P4, E21 (E21a shipped; b/c/d remain), E22 (E22a done, E22b remains), E23, B60,
+E12, B17.
 
 ## Standing inputs, neither blocking, worth more now than before
 
 * **A local backup folder** for the GW-derived and GW-text-carrying files — the nine Chaos Daemons
   CSVs, the Wahapedia export, the MFM `.txt` files, the faction web and pack files. The repo cannot
   hold them; S131 lost three and rebuilt them only because `units.json` happened to carry enough.
-  D210 sharpens this: the mount cannot be trusted to tell us whether a file is still there.
-* **The project file area is near capacity.** E21a cost one 7.6 KB file. E21b costs one harness.
-  Beyond that, a plan is needed — see the handoff's note.
+  D210 sharpens this: the mount cannot be trusted to tell us whether a file is still there. D211
+  adds a concrete first tenant — `wh40k_core_rules.md` (139 KB) is opened by nothing and is the
+  largest single removable file in the area.
+* **P4 step 1 runs at the START of this session, before E21b.** It is two file moves and it is an
+  experiment, not housekeeping. Move `BACKLOG_ARCHIVE.md` (174 KB) and the archive half of
+  `40K_Decision_Log_v3_0.md` (~400 KB) out of the project area to repo-only; `DECISION_INDEX.md` and
+  the backlog's pointer lines preserve lookup for both. Then **ask Ryan what the capacity percentage
+  reads afterwards.** If ~574 KB moves it by about 4.7 points the metric is volume-linear and P4's
+  later steps can be planned against byte counts; if it barely moves, the 797 KB JSON-minification
+  step is not worth three re-banked fixed points. Do not skip the reading — the measurement is the
+  entire point of doing the cheap step first. Full reasoning in **D211**.
 * Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard**.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.

@@ -7696,3 +7696,109 @@ that earlier sessions were served is gone from the project area. Ryan holds it l
 ever wanted; it must **not** be re-uploaded, as that recreates the duplicate that caused the problem.
 
 **No file changed for this entry** beyond the log and its index.
+
+---
+
+## D211 — Project-area capacity: the metric is tokens, all three of S134's proposed options were wrong, and the source census is now executable (S134/S135 boundary)
+
+Recorded after S134's close, in the same conversation, because a capacity plan built on prose would
+be exactly the thing this log exists to stop. `index.html` untouched at **6.5**. Assertions
+**94/94 → 95/95**, baseline **21/21**.
+
+### The metric
+
+Anthropic's own support documentation states that project knowledge capacity relates to the model's
+**context limits**, with RAG mode expanding capacity by up to 10x as those limits are approached, and
+that projects retrieve relevant excerpts rather than loading everything. So the percentage Ryan sees
+is **content volume in tokens, not disk space**.
+
+Two consequences. **File count is irrelevant** — the same text costs the same whether it sits in one
+file or ten. And **byte size is a proxy, not a linear one**: dense CSV and JSON tokenise worse per
+byte than prose, so the Wahapedia export is probably consuming more of the figure than its share of
+the megabytes suggests. One thing remains unknown and should not be assumed either way: whether the
+displayed percentage is measured against the base ceiling or the RAG-expanded one.
+
+### All three options S134's handoff offered were wrong
+
+Worth recording plainly rather than quietly replacing, because the failure was the same one three
+times: each was ranked before it was measured.
+
+**Option 1 — prune source files.** Killed by measurement. Every candidate file was moved out of the
+directory one at a time and `./baseline.sh` re-run. Everything removable without failing a gate comes
+to roughly **317 KB against a ~12.3 MB area, about 2.6%** — and six of those files are priority
+factions (Chaos Space Marines, Thousand Sons, Emperor's Children, World Eaters, Drukhari, Grey
+Knights) that would have to be re-sourced, leaving about **285 KB genuinely free**. Not worth the
+custody risk D205 already demonstrated.
+
+**Option 2 — prune old handoffs.** Wrong on the facts, and Ryan said so. The project area holds one
+handoff; he already deletes the old before adding the new. The claim was asserted from a habit of
+mind rather than from the file list — **the exact error D210 had been written to prevent, made in the
+same session that wrote it.**
+
+**Option 3 — fold new content into existing files.** Killed by the metric above. It saves nothing.
+
+### The finding that came out of measuring: built factions pin their sources permanently
+
+Removing any of the eight built-faction MFM files, any of the five `_web.txt` files, either faction
+pack, `MFM_Instructions.txt`, `Army_Muster_Rules.txt` or `chaos_daemons_reference.md` fails three or
+four gates. That is fixed-point discipline working as designed — the repro gates re-run the parsers
+from source every session, so the source has to be present every session.
+
+**So sources can only ever be swapped in one direction.** An unbuilt faction's files can be held back
+and supplied when its session comes. The moment the faction is built, its files become permanent
+residents. Capacity pressure from this source therefore only ever increases. The good news is that the
+marginal cost per new faction is small — an MFM file is 4–11 KB and a web file similar — while the
+~5.95 MB Wahapedia CSV export is a fixed whole-dump cost that does not grow per faction.
+
+`wh40k_core_rules.md` (139 KB) turns out to be **removable** — nothing in the pipeline or the gates
+opens it. It is the single largest removable file, and it is GW text, so it belongs in the local
+backup folder that has been a standing ask since S131 rather than in the project area.
+
+### The largest lever, and why it is not free
+
+The runtime JSON files are pretty-printed. Re-emitting them with compact separators saves **797 KB of
+pure whitespace** — 650 KB from `units.json`, 77 KB from `unit_loadouts.json`, 70 KB from
+`detachments.json` — more than every other idea combined. It is not free: all three repro gates
+compare byte-for-byte, so it means changing the writers' separators, regenerating, re-banking three
+fixed points and reissuing the manifest. A proper data turn. It also makes the files chunk worse for
+retrieval, which matters less here than it normally would because this project already queries files
+by `bash` rather than trusting what the mount serves.
+
+### The plan: measure before committing
+
+Filed as **P4**. The sequencing call, made and proceeded on: **do the two free document moves first
+and use them as an instrument.** `BACKLOG_ARCHIVE.md` (174 KB) and the archive half of this log
+(~400 KB) are project-generated, fully recoverable from the repo, and indexed by `DECISION_INDEX.md`
+and by `OPEN_ITEMS_BACKLOG.md`'s pointer lines respectively. Moving them out is reversible in one
+upload.
+
+If moving ~574 KB moves the displayed percentage by about 4.7 points, the metric tracks volume
+linearly and everything after that can be planned against byte counts. If it barely moves, it does not,
+and the JSON minification is not worth the fixed-point churn. That is a cheap experiment that answers
+the question empirically instead of both parties guessing, and it is why P4 does not begin with the
+biggest lever.
+
+### The census is executable, not prose
+
+**P4-1** filed in `rules_assertions.py`. Two halves: the eighteen files proved REQUIRED must all be
+present, and the set of GW-source filenames referenced anywhere in the gates and parsers must be
+unchanged, so a parser that begins reading a new source file fails the baseline and forces the census
+to be re-run.
+
+The second half is the load-bearing one. **The removable list is a claim about absence** — that
+nothing opens these files — and an absence claim is the most drift-prone kind there is. It is also the
+kind that, if it goes stale, gets a file deleted. D205 is what that costs. Reading imports is not
+sufficient on its own and the assertion says so: six files are *named* in `mfm_points_parser.py`'s
+faction map without ever being opened, because their factions are not built yet. Only park-and-rerun
+distinguishes the two, and the assertion records which method produced the list.
+
+`SESSION_HANDOFF_134.md` was amended rather than left standing, since its Decisions-needed section
+recommended two options now known to be wrong and handoffs are read back through as the record.
+
+**Changed:** `rules_assertions.py`, `pipeline_manifest.json`, `40K_Decision_Log_v3_0.md`,
+`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_134.md`.
+
+**Net new:** none.
+
+**Repo custody:** all seven are project-generated and repo-eligible. `wh40k_core_rules.md` is GW text
+and stays out of the repo whatever else happens to it.
