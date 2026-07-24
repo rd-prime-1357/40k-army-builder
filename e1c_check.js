@@ -26,15 +26,22 @@ function loadEngine(path, defs, byArmy) {
   const limit = slice(lines, '// D115 — the unit limit depends', '// State');
   const e1b   = slice(lines, '// ── E1b: detachment selection rules', '// ── E1b block end');
   const e1c   = slice(lines, '// ── E1c: detachment picker', '// ── E1c block end');
+  // E21d: detachmentPickerRowState now also calls detachmentForbidConflicts,
+  // which lives in the E21c/E22b block. Pulled in whole, same as e10_check.js
+  // and limit_check.js already do for their own downstream call — the harness
+  // tests the real block, not a copy of it.
+  const e21c  = slice(lines, '// ── E21c / E22b: forbid, unlock', '// ── E21c / E22b block end');
   const src = 'let detachmentDefs = DEFS; let detachmentsByArmy = BYARMY; '
             + 'let POINTS_CAP = 2000; let selectedDetachments = []; '
-            + 'let openDetachmentDetail = null; let hasGhosts = false; '
-            + 'let armyList = []; '
-            + 'function renderAll(){} function renderRoster(){}\n'
-            + limit + '\n' + e1b + '\n' + e1c
+            + 'let hasGhosts = false; '
+            + 'let armyList = []; let allUnits = []; let detachmentEffects = {}; '
+            + 'function renderAll(){} function renderRoster(){} function flashBanner(){}\n'
+            + limit + '\n' + e1b + '\n' + e21c + '\n' + e1c
             + '\nreturn { detachmentPickerRowState, canAddDetachment, '
-            + 'detachmentSelectionState, detachmentRefusalText, detTier2Badge, '
-            + 'detachmentDefs };';
+            + 'detachmentSelectionState, detachmentRefusalText, detachmentForbidRefusalText, '
+            + 'detTier2Badge, detachmentDefs, '
+            + 'setArmyList: (l) => { armyList = l; }, setAllUnits: (u) => { allUnits = u; }, '
+            + 'setDetachmentEffects: (e) => { detachmentEffects = e; } };';
   return new Function('DEFS', 'BYARMY', src)(defs, byArmy);
 }
 
@@ -109,10 +116,14 @@ for (const sc of scenarios()) {
 
     // (d) The DISABLED rule. A selected row is toggle-off-able whatever else is
     //     wrong with the set; a non-selected row is disabled iff canAdd is not
-    //     ok. This is the one thing E1c-2 exists to guard.
-    const expectedDisabled = st.selected ? false : !can.ok;
+    //     ok OR the key would forbid a unit already in the (empty, here) list.
+    //     No scenario in this section populates armyList, so forbidConflicts is
+    //     always empty and this reduces to the pre-E21d rule — section 6 below
+    //     is where the forbid half is actually exercised. This is the thing
+    //     E1c-2 exists to guard.
+    const expectedDisabled = st.selected ? false : (!can.ok || st.forbidConflicts.length > 0);
     ok(st.disabled === expectedDisabled,
-       `${sc.name} / ${key}: disabled = selected ? false : !canAdd.ok`);
+       `${sc.name} / ${key}: disabled = selected ? false : (!canAdd.ok || forbidConflicts.length)`);
   }
 }
 
@@ -187,6 +198,56 @@ if (three.length >= 2) {
   const selfSt = E.detachmentPickerRowState(three[0], overSet, 2000);
   ok(selfSt.disabled === false, `${three[0]}: the row already selected is still toggle-off-able`);
 }
+
+// ── 6. E21d: the forbid gate disables a row before the click, not just after ─
+// Before E21d, a forbid conflict was only caught inside toggleDetachment (the
+// click was refused but the row looked selectable). Now detachmentPickerRowState
+// itself carries the same refusal, off the same detachmentForbidConflicts
+// predicate, so the disabled flag and the click outcome cannot disagree.
+console.log('E21d — a detachment that would forbid an already-listed unit is disabled, with prose');
+const FORBID_KEY = 'Synthetic|FORBIDS_X';
+// canAddDetachment refuses anything absent from detachmentDefs as 'unknown'
+// (index.html:2777). Without a real entry here, canAdd.ok is false for every
+// reason OTHER than the forbid gate too, and disabled stays true regardless —
+// masking the exact thing this section means to isolate. detachmentDefs is the
+// same object reference DEFS was constructed from, so mutating it here reaches
+// the engine directly.
+E.detachmentDefs[FORBID_KEY] = { dp: 1, name: 'Synthetic Forbids X' };
+E.setDetachmentEffects({
+  [FORBID_KEY]: { effects: [{ kind: 'forbid', enforced: true, target: { units: ['Forbidden Unit X'] } }] },
+});
+E.setAllUnits([{ unit_name: 'Forbidden Unit X', unit_type: 'Character' }]);
+
+// Not yet in the list: canAdd may be OK, but forbidConflicts is still empty
+// because there is nothing in armyList yet to conflict with.
+E.setArmyList([]);
+let st6 = E.detachmentPickerRowState(FORBID_KEY, [], 2000);
+ok(st6.forbidConflicts.length === 0, 'no conflict while the unit is not yet in the list');
+
+// Add the forbidden unit to the roster: the row must now disable, even though
+// nothing about canAddDetachment itself changed.
+E.setArmyList([{ unit_name: 'Forbidden Unit X', listId: 1 }]);
+st6 = E.detachmentPickerRowState(FORBID_KEY, [], 2000);
+ok(st6.forbidConflicts.length === 1 && st6.forbidConflicts[0] === 'Forbidden Unit X',
+   'forbidConflicts names the roster unit that would be forbidden');
+ok(st6.disabled === true, 'the row disables once the forbid target is in the list');
+const refusal6 = E.detachmentForbidRefusalText(st6.forbidConflicts);
+ok(refusal6.indexOf('Forbidden Unit X') >= 0, 'the forbid refusal names the conflicting unit');
+
+// Remove it: the row must re-enable with no lingering state (derived, not
+// stamped, same as effectiveUnitType's elevation).
+E.setArmyList([]);
+st6 = E.detachmentPickerRowState(FORBID_KEY, [], 2000);
+ok(st6.disabled === false, 'the row re-enables once the conflicting unit is removed');
+
+// A SELECTED row is never disabled by this gate either — flag-don't-drop still
+// holds: the forbid gate only applies to a fresh (non-selected) pick.
+E.setArmyList([{ unit_name: 'Forbidden Unit X', listId: 1 }]);
+const selfSt6 = E.detachmentPickerRowState(FORBID_KEY, [FORBID_KEY], 2000);
+ok(selfSt6.disabled === false, 'a SELECTED row stays toggle-off-able even with a forbid conflict in the list');
+E.setArmyList([]);
+E.setAllUnits([]);
+E.setDetachmentEffects({});
 
 console.log(fail === 0 ? '\nall E1c checks pass' : `\n${fail} E1c check(s) FAILED`);
 process.exit(fail === 0 ? 0 : 1);

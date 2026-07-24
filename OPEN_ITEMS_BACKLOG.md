@@ -3,7 +3,9 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **8 open** as of S136 close (E21c/E22b shipped, E22 closed): B62, P2, P4, E21 (E21a/E21b/E21c shipped; E21d remains), E23, B60, E12, B17.
+not here, it isn't open. **8 open** as of S137: B62, P2, P4, E21 (E21a/E21b/E21c/E21d-pieces-1-2 shipped;
+piece 3 — the stranded-allied roster warning — remains, pending Ryan's confirmation of D214's
+recommended direction), E23, B60, E12, B17. B64/B65/B66 shipped this session, same turn as E21d.
 
 ## Open Items
 
@@ -15,7 +17,7 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### E21 — Detachment-driven army-construction effects — **SCOPED S130 (D203); AMENDED by D204; E21a SHIPPED S134 (D209); E21b SHIPPED S135 (D212); E21c SHIPPED S136 (D214); E21d remains**
+### E21 — Detachment-driven army-construction effects — **SCOPED S130 (D203); AMENDED by D204; E21a SHIPPED S134 (D209); E21b SHIPPED S135 (D212); E21c SHIPPED S136 (D214); E21d pieces 1-2 SHIPPED S137 (D215); E21d piece 3 remains, pending Ryan**
 
 Detachment rules that require or forbid units, or elevate units to Battleline (which moves the count
 cap — Functional Spec §5). Opened S122 (D192), gated on E1c, scoped S130.
@@ -57,7 +59,7 @@ hand-edit outputs* — that rule protects generated outputs, and this is an inpu
 - **E21a — data-only. SHIPPED S134 (D209).** `detachment_effects.json` net new — seven effects across five detachments on the four-kind schema, plus assertions E21a-1..6 and the file added to the manifest's guarded set. Two authoring calls recorded in D209: Shadow Legion's forbid is expressed by `unit_type` with a `except_units` exemption rather than as a name list, and Shadow Legion gets **no** `warlord` row because Be'Lakor's unit-level `must_be_warlord` already covers it unconditionally.
 - **E21b — engine-only. SHIPPED S135 (D212).** `effectiveUnitType()` added to `index.html` (6.5 → 6.6) as a sliceable block, `detachment_effects.json` loaded at init, and all three D204 call sites switched — `unitLimit()`, `groupByType` and the roster `typeGroups` build. `unit_type` is never overwritten; the elevation is derived on every read and unwinds on deselect with no cleanup pass. Chapter exclusivity is now policed by **E21b-1**, read from `Datasheets_keywords.csv` rather than from block membership. New harness `e21b_check.js`; `limit_check.js` and `e10_check.js` slice-repaired; assertion **D115**'s matched string updated for the new call shape.
 - **E21c — engine-only. SHIPPED S136 (D214).** Forbid, allied unlock with points sub-cap, and the detachment-scoped Warlord ban, all in one sliceable block on E4b's refusal shape. E22b shipped in the same turn (same table). Shadow Legion forbid refuses the add and refuses selecting the detachment over a forbidden unit already in the list; Tallyband Summoners gates the six Plague Legions units on selection, bounds them by a battle-size points sub-cap, and bars them from Warlord. New harness `e21c_check.js`; `e10_check.js` slice-repaired; assertions E21c-1..3.
-- **E21d — UI-only.** Refusal prose (over the `addRefusalText` / `enhancementRefusalText` codes), Battleline indicator, and roster warnings — including the one residual E21c left for the UI layer (D214): a Plague Legions unit **stranded** by deselecting or switching away from Tallyband Summoners is now illegal but not visibly flagged. The engine already rejects it (`offerableUnits`, `canAddUnitToList`); E21d renders it as a visible error, the enhancement over-state treatment, never a silent trim. **Ryan to confirm that direction** (vs. blocking the deselect, which would contradict flag-don't-drop). E21 closes here.
+- **E21d — UI-only. Pieces 1-2 SHIPPED S137 (D215).** Refusal prose brought up to `enhancementRefusalText`'s standard, and the picker's forbid gate made visible on the row itself (disabled before the click, not only refused after it — E1c-2 extended, not loosened) — piece 1. Battleline indicator on an elevated unit's roster row — piece 2. **Piece 3 — the roster warning for a Plague Legions unit stranded by deselecting or switching away from Tallyband Summoners — NOT built.** The engine already rejects it (`offerableUnits`, `canAddUnitToList`); D214's recommendation is to render it as a visible error, the enhancement over-state treatment, never a silent trim — but this sets a lasting precedent for how the tool treats a legal list a later detachment change makes illegal, so it was deliberately held for Ryan's confirmation rather than built. **E21 closes once piece 3 ships.**
 
 **The six live cases:** Battleline elevation in Blood Angels|THE LOST BRETHREN (Death Company
 Marines ×2), Dark Angels|COMPANY OF HUNTERS (Outrider Squad), Death Guard|SHAMBLEROT VECTORIUM
@@ -280,6 +282,9 @@ Full history for every one of these lives in `BACKLOG_ARCHIVE.md`, in the same o
 - **B63** — Soul Grinder shipped all four god weapons at once, live D0 violation — SHIPPED S132 (D207); `Allegiance_Condition` restored, `units.json` re-banked, four assertions (B63-1..4) pin the shape; render not yet eyeballed by Ryan
 - **B61** — Plague Legions units offered to every Death Guard army, ungated — SHIPPED S133 (D208); `mfm_points_parser.py` tags via a known-label lookup, `units.json` re-banked (exactly six units gained one key), four assertions (B61-1..4) pin the census; selection-time gate is E22b (S136), not this ticket
 - **E22** — Detachment ally unlocks, points sub-caps and Warlord bans — CLOSED S136 (D214); E22a shipped as B61 (D208, allied_group tag), E22b shipped S136 as the engine gate (offer filter + battle-size points sub-cap + detachment-scoped Warlord ban) alongside E21c. Death Guard | TALLYBAND SUMMONERS fully enforced; Chaos Daemons | SHADOW LEGION HERETIC ASTARTES unlock stays enforced:false in detachment_effects.json until CSM is built. Full history in D203/D204/D208/D214
+- **B64** — Detachment (i) opened detail inline in the left panel — SHIPPED S137 (D215); now opens the shared centered modal, same treatment as the unit full-datasheet popup; row keeps only name/battle trait/DP
+- **B65** — Over-DP-budget detachment rows rendered their refusal in red — SHIPPED S137 (D215); red now reserved for the forbid-conflict case (a real D0 guard), budget/duplicate/tag-clash/unknown use a new muted `.det-refusal-neutral` style, per E3/D114's convention
+- **B66** — Config-panel single-item detail button used an eye icon — SHIPPED S137 (D215); `infoBtn()` is the one shared renderer for every configurable item across the panel, so the glyph swap (eye → info-circle) fixed it project-wide in one place
 - **B32** — engine: `requires_weapon` with more than one weapon — CLOSED S49 (v5.57)
 - **B33** — negated gates — CLOSED S50 (data)
 - **B35** — paid wargear options — CLOSED (data half S51, engine half S52)

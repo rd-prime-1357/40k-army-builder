@@ -8112,3 +8112,88 @@ here. **E21 stays open on E21d** (UI).
 detachments but reproduces no GW rules text. Excluded from any push as always: the Wahapedia CSV
 export, the MFM `.txt` files, the faction web and pack files, `Army_Muster_Rules.txt` and
 `wh40k_core_rules.md`.
+
+## D215 — E21d shipped: refusal prose, the picker's forbid gate, the Battleline indicator, plus three UI tickets from a screenshot review (S137)
+
+E21d closes E21. UI-only turn: `index.html` (6.7 → 6.8), plus `e1c_check.js` and `rules_assertions.py`
+for the one behaviour change that needed a new test. No parser, no converter, no data file touched.
+Baseline opened on a real reconciliation: `e21b_check.js` was absent from the project area at session
+open (Ryan: likely deleted by mistake, confused with another lettered check), re-added, verified
+against the S135 manifest hash before trusting it, and the baseline came up clean at 23/23 before any
+new work started — per the standing rule, the gate failure was reconciled, not worked around.
+
+### Piece 1 — refusal prose and the picker's forbid gate
+
+`addRefusalText` was functional but generic; brought up to `enhancementRefusalText`'s standard —
+each reason now names the unit, the group, and (for the sub-cap) the used/cap/adding numbers.
+
+The forbid-on-select refusal existed since E21c but only fired inside `toggleDetachment`, after the
+click — the row itself looked selectable up to that point. `detachmentPickerRowState` now also calls
+`detachmentForbidConflicts(key)` for a non-selected row, so a key that would forbid a unit already in
+the list disables before the click, not after it. **E1c-2 is deliberately extended, not loosened**: a
+non-selected row is now disabled iff `canAddDetachment` refuses it OR the forbid gate does — the
+prompt's explicit instruction. New prose function `detachmentForbidRefusalText` names the conflicting
+unit(s), same standard as everything else this session.
+
+`e1c_check.js` now pulls in the E21c/E22b block (`detachmentPickerRowState` calls into it), same
+slice-the-real-block pattern `e10_check.js` and `limit_check.js` already use downstream of E21b/E21c —
+tested behaviour, not a copy of it. New section 6 exercises the gate directly: no conflict before the
+unit is in the list, disabled + named conflict once it is, re-enabled once it's removed, and a
+SELECTED row stays toggle-off-able throughout (flag-don't-drop holds even under this new gate). One
+test-authoring mistake caught itself: the synthetic forbid key wasn't in `detachmentDefs`, so
+`canAddDetachment` refused it as `'unknown'` independent of the forbid gate, masking the exact thing
+under test — fixed by giving the synthetic key a minimal real catalogue entry via the same object
+reference `detachmentDefs` aliases, so `canAdd.ok` is genuinely true except for the forbid case.
+
+### Piece 2 — Battleline indicator (D204 ruling 2)
+
+A unit elevated to Battleline by a selected detachment now shows "Battleline — granted by selected
+detachment" in its roster sub-line. Reads `detachmentBattlelineNames(selectedDetachments)` — the same
+set `effectiveUnitType` already reads for the grouping itself — computed once per roster render, so
+the indicator and the grouping can never disagree about which units are elevated.
+
+### Piece 3 — the stranded-allied residual: NOT built
+
+D214's recommendation (flag the stranded Plague Legions units as a visible error, never a silent trim
+or a blocked deselect) is a lasting precedent for how the tool treats a legal list that a later
+detachment change makes illegal. Per the S136 prompt's own instruction, this needed Ryan's
+confirmation before being built and was not built this session. Still open, carried to next UI turn.
+
+### Three tickets from a screenshot review, batched into the same UI turn
+
+Ryan supplied four screenshots between sessions showing three separate defects, logged as **B64, B65,
+B66** and built alongside E21d since all three are UI-only against `index.html`:
+
+- **B64** — the detachment (i) button expanded detail inline in the left panel; now opens the shared
+  centered `#stat-modal` (`openDetachmentDetailModal`), the same popup the unit full-datasheet uses.
+  Scope call (Claude's recommendation, stated but not blocking): all detail moves into the popup: the
+  row itself carries only name, battle trait and DP. The old inline-expander state
+  (`openDetachmentDetail`) and its CSS (`.det-detail` / `.det-detail.open`) are removed — dead code, not
+  a parallel path left behind.
+- **B65** — a detachment row disabled only because the DP budget is fully used (not an illegal state)
+  was rendering its note in red. Split into two CSS classes: `.det-refusal` (red, reserved for the
+  forbid-conflict case — a real D0 guard) and new `.det-refusal-neutral` (muted secondary colour, for
+  budget/duplicate/tag-clash/unknown refusals). Direct application of E3/D114's existing convention
+  ("red only when a cap is EXCEEDED, not when it is met") to a row this hadn't reached yet — a
+  consistency fix, not a new precedent, so no separate decision was needed for the call itself.
+- **B66** — the config panel's single-item detail button (`infoBtn()`, `mkDetail('eye', ...)`) rendered
+  an eye-shaped SVG. `infoBtn` is the one shared renderer for every configurable item's detail button
+  across the whole config panel — enhancement rows, loadout swaps, wargear options, bundle endpoints —
+  so the glyph swap (eye → info-circle SVG) fixes the entire panel in one place, matching B47's
+  info-icon convention already used elsewhere (detachment rows, unit configured/full popups).
+
+### Housekeeping
+
+`pipeline_manifest.json` reissued for the three guarded files this session touched (`index.html`,
+`rules_assertions.py`, `e1c_check.js`). No harness added or removed — `e1c_check.js` grew a section,
+it did not become a new file. Baseline re-run clean, 23/23. Assertions 100/100 (E1c-2's prose changed;
+no assertion added or removed, so the count is unchanged from S136).
+
+**Changed:** `index.html` (6.8), `e1c_check.js`, `rules_assertions.py`, `pipeline_manifest.json`,
+`40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`,
+`SESSION_HANDOFF_136.md` (superseded by `SESSION_HANDOFF_137.md`).
+
+**Net new:** none. B64/B65/B66 were logged as backlog entries in the prior conversation turn, not
+this session; this session builds them.
+
+**Repo custody:** all nine are project-generated and repo-eligible. No GW-derived text touched.

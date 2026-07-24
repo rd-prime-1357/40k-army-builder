@@ -1239,11 +1239,14 @@ ASSERTIONS = [
 
     ('E1c-2',
      'e1c_check.js passes in full: for every catalogue key across every scenario, the picker\'s '
-     'disabled flag is exactly what canAddDetachment says (a selected row is toggle-off-able, a '
-     'non-selected row is disabled iff canAddDetachment is not OK), the row\'s ghost flag is '
-     '"not in the catalogue" and nothing else, and every refusal has prose. This is the guard '
-     'against the picker growing a second implementation of the three legality rules.',
-     'e1c_check.js (E1c, S125)',
+     'disabled flag is exactly what canAddDetachment says, extended by E21d to also disable a '
+     'non-selected row whose selection would forbid a unit already in the list (a selected row is '
+     'always toggle-off-able; a non-selected row is disabled iff canAddDetachment is not OK OR '
+     'detachmentForbidConflicts is non-empty), the row\'s ghost flag is "not in the catalogue" and '
+     'nothing else, and every refusal — including the forbid-conflict one — has prose naming the '
+     'conflicting unit. This is the guard against the picker growing a second implementation of '
+     'detachment legality, now including the forbid gate.',
+     'e1c_check.js (E1c, S125; extended E21d, S137)',
      lambda S: e1c_harness_gate(S)),
 
     # ── E4b. Enhancement assignment engine and persistence.

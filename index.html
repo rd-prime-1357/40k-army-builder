@@ -1094,17 +1094,20 @@
       margin-top: 0.2rem;
       font-style: italic;
     }
-
-    /* Info panel reuses lo-detail dropdown styling */
-    .det-detail {
-      display: none;
-      margin: 0.3rem 0 0.4rem;
-      padding: 0.5rem 0.6rem;
-      background: var(--c-141414);
-      border: 1px solid var(--c-2a2a2a);
-      border-radius: 4px;
+    /* B65: a full-DP-budget row (or any non-error reason a row can't be added)
+       is not an illegal state, so it does not get the red error colour — only
+       an actual conflict (a detachment that would forbid a unit already in the
+       list, .det-refusal above) does. Matches E3/D114's convention. */
+    .det-refusal-neutral {
+      font-size: 0.66rem;
+      color: var(--c-666666);
+      margin-top: 0.2rem;
+      font-style: italic;
     }
-    .det-detail.open { display: block; }
+
+    /* B64: detail now renders inside the shared modal body, not an inline
+       expander — the wrapper (display/open toggle) is gone; these section/
+       heading/name/text rules remain, reused inside .modal-body. */
     .det-detail-section { margin-bottom: 0.6rem; }
     .det-detail-section:last-child { margin-bottom: 0; }
     .det-detail-heading {
@@ -2172,7 +2175,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.7';
+  const VERSION = '6.8';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2377,12 +2380,12 @@
   // session-only UI preference, not saved with the list.
   let collapsedRoleGroups = new Set();
 
-  // E1c: the detachment picker section starts expanded. Collapse state and any
-  // open info panel are session-only UI, not persisted. openDetachmentDetail
-  // holds at most one key at a time — a second click just moves the panel, so
-  // the section does not grow arbitrarily tall while browsing.
+  // E1c: the detachment picker section starts expanded. Collapse state is
+  // session-only UI, not persisted. B64: detachment detail (rule, enhancements,
+  // stratagems) no longer expands inline in the row — it opens in the shared
+  // centered modal (openDetachmentDetailModal), the same treatment as the unit
+  // full-datasheet popup, so there is no separate open/closed row state to track.
   let collapsedDetachmentSection = false;
-  let openDetachmentDetail       = null;
 
   // List-management state (step 3)
   let store           = null;   // ListStorage.ListStore instance
@@ -2597,17 +2600,17 @@
     return { ok: true, reason: null };
   }
 
-  // Functional refusal text. E21d owns the polished prose and roster warnings;
-  // this exists so no refusal is silent in the meantime.
+  // E21d: polished refusal prose, brought up to enhancementRefusalText's standard —
+  // names the unit, the group and the sub-cap numbers rather than a generic line.
   function addRefusalText(canAdd) {
     if (!canAdd || canAdd.ok) return '';
     switch (canAdd.reason) {
       case 'forbidden':
-        return `${canAdd.unit_name} can't be included under the selected detachment.`;
+        return `${canAdd.unit_name} cannot be included under the selected detachment.`;
       case 'not_unlocked':
-        return `${canAdd.group} units need a detachment that unlocks them.`;
+        return `${canAdd.group} units need a detachment that unlocks them — none selected does.`;
       case 'allied_cap':
-        return `${canAdd.group} points sub-cap reached — ${canAdd.used} of ${canAdd.cap} pts used.`;
+        return `${canAdd.group} sub-cap reached for this battle size — ${canAdd.used} of ${canAdd.cap} pts already used, this would add ${canAdd.adding}.`;
       default:
         return 'This unit cannot be added.';
     }
@@ -2803,12 +2806,18 @@
 
   // One classifier for one row. Returns the shape the renderer needs and the
   // shape the harness checks, so the picker cannot disagree with itself.
-  //   selected  — is this key already in `keys`
-  //   isGhost   — key survives in `keys` but is not in the current catalogue
-  //   canAdd    — canAddDetachment's answer for adding this key to `keys`
-  //   disabled  — the picker's classification for how the row renders: a
+  //   selected       — is this key already in `keys`
+  //   isGhost        — key survives in `keys` but is not in the current catalogue
+  //   canAdd         — canAddDetachment's answer for adding this key to `keys`
+  //   forbidConflicts— units already in the roster this key would forbid (E21d)
+  //   disabled       — the picker's classification for how the row renders: a
   //               selected row is always toggle-off-able; a non-selected row is
-  //               disabled iff canAdd.ok is false. Nothing else can flip this.
+  //               disabled iff canAdd.ok is false OR selecting it would forbid a
+  //               unit already in the list. E21d/D0: toggleDetachment already
+  //               refused this click via detachmentForbidConflicts — this makes
+  //               the same refusal visible on the row instead of only surfacing
+  //               after the click, so the disabled state and the click outcome
+  //               never disagree. E1c-1 is updated to include this gate.
   function detachmentPickerRowState(key, keys, pointsTotal) {
     const selected = (keys || []).indexOf(key) >= 0;
     const isGhost  = !detachmentDefs[key];
@@ -2818,8 +2827,9 @@
     // toggled off then on again. It does not affect the disabled flag.
     const others = (keys || []).filter(k => k !== key);
     const canAdd = canAddDetachment(key, others, pointsTotal);
-    const disabled = selected ? false : !canAdd.ok;
-    return { selected, isGhost, canAdd, disabled };
+    const forbidConflicts = selected ? [] : detachmentForbidConflicts(key);
+    const disabled = selected ? false : (!canAdd.ok || forbidConflicts.length > 0);
+    return { selected, isGhost, canAdd, forbidConflicts, disabled };
   }
 
   // Toggle a detachment on or off. A selected key is always removable — the
@@ -2829,7 +2839,6 @@
     const idx = selectedDetachments.indexOf(key);
     if (idx >= 0) {
       selectedDetachments = selectedDetachments.slice(0, idx).concat(selectedDetachments.slice(idx + 1));
-      if (openDetachmentDetail === key) openDetachmentDetail = null;
     } else {
       const st = canAddDetachment(key, selectedDetachments, POINTS_CAP);
       if (!st.ok) return;   // disabled row — click is a no-op
@@ -2854,9 +2863,16 @@
     renderRoster();
   }
 
-  function toggleDetachmentDetail(key) {
-    openDetachmentDetail = (openDetachmentDetail === key) ? null : key;
-    renderRoster();
+  // B64: detachment detail (rule, enhancements, stratagems) opens in the shared
+  // centered modal — the same #stat-modal, #modal-title, #modal-body used by
+  // the unit full-datasheet popup — instead of expanding inline in the row.
+  function openDetachmentDetailModal(key) {
+    const d = detachmentDefs[key];
+    if (!d) return;
+    document.getElementById('modal-title').textContent = d.name;
+    document.getElementById('modal-mode-badge').textContent = '';
+    document.getElementById('modal-body').innerHTML = renderDetachmentDetailHtml(key);
+    document.getElementById('stat-modal').classList.remove('hidden');
   }
 
   // A prose refusal reason. canAddDetachment already carries the machine-
@@ -2876,6 +2892,14 @@
       return 'Clashes with ' + (canAdd.tag || 'Unique') + ' tag: ' + (other || 'another selection') + '.';
     }
     return 'Not currently addable.';
+  }
+
+  // E21d: prose for the forbid-conflict disable — a separate gate from
+  // canAddDetachment (D0: the click was already refused by toggleDetachment;
+  // this is that same refusal made visible on the row).
+  function detachmentForbidRefusalText(forbidConflicts) {
+    if (!forbidConflicts || !forbidConflicts.length) return '';
+    return 'Forbids ' + forbidConflicts.join(', ') + ' already in your list.';
   }
 
   // "Previous edition" tier-2 marker per D192, applied per item so the tier of
@@ -3734,11 +3758,18 @@
     const cls = 'det-item' + (st.selected ? ' selected' : '') + (st.disabled ? ' disabled' : '');
     const fd  = d.force_disposition ? String(d.force_disposition).toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : '';
     const uniq = d.unique_tag ? ` · Unique: ${escHtml(d.unique_tag)}` : '';
-    const refusal = st.disabled ? `<div class="det-refusal">${escHtml(detachmentRefusalText(st.canAdd))}</div>` : '';
-    const isOpen  = openDetachmentDetail === key;
-    // Whole row is the click target; the checkbox reflects state but is not
-    // itself the affordance — a click anywhere on the row toggles, matching
-    // how the roster card treats a unit tile.
+    // B65: a full-DP-budget row is not an error — nothing is exceeded, the row is
+    // simply not selectable at the current selection. det-refusal-neutral keeps
+    // that message in the normal secondary text colour; det-refusal (red) stays
+    // reserved for the forbid-conflict case below, which is a real illegal-state
+    // guard (E3/D114's convention: red only when something is actually violated).
+    const budgetNote = (st.disabled && st.canAdd && !st.canAdd.ok)
+      ? `<div class="det-refusal-neutral">${escHtml(detachmentRefusalText(st.canAdd))}</div>` : '';
+    const forbidNote = (st.disabled && st.forbidConflicts && st.forbidConflicts.length)
+      ? `<div class="det-refusal">${escHtml(detachmentForbidRefusalText(st.forbidConflicts))}</div>` : '';
+    // B64: detail no longer expands inline — the (i) button opens the shared
+    // centered modal, same treatment as the unit full-datasheet popup. The row
+    // itself carries only name, battle trait and DP.
     return `
       <div class="${cls}" onclick="toggleDetachment('${escAttr(key)}')">
         <div class="det-row">
@@ -3750,10 +3781,10 @@
           </div>
           <span class="det-dp-badge">${Number(d.dp) || 0} DP</span>
           <button type="button" class="info-btn" title="Show rule, enhancements, stratagems"
-                  onclick="event.stopPropagation();toggleDetachmentDetail('${escAttr(key)}')">ⓘ</button>
+                  onclick="event.stopPropagation();openDetachmentDetailModal('${escAttr(key)}')">ⓘ</button>
         </div>
-        ${refusal}
-        <div class="det-detail${isOpen ? ' open' : ''}">${isOpen ? renderDetachmentDetailHtml(key) : ''}</div>
+        ${budgetNote}
+        ${forbidNote}
       </div>
     `;
   }
@@ -4325,6 +4356,13 @@
 
     const topLevel = armyList.filter(e => !e.attachedToListId);
 
+    // E21d piece 2 (D204 ruling 2): a unit that renders under Battleline only
+    // because a selected detachment elevated it gets a visible reason — nothing
+    // told the player why it moved. detachmentBattlelineNames is the same set
+    // effectiveUnitType already reads; the indicator never disagrees with the
+    // grouping because both come from one source.
+    const elevatedNames = detachmentBattlelineNames(selectedDetachments);
+
     const typeGroups = {};
     for (const entry of topLevel) {
       const t = effectiveUnitType(entry, selectedDetachments) || 'Other';   // E21b/D204
@@ -4357,9 +4395,10 @@
         }
         const hasError   = entryHasError(entry);
         const isActive   = entry.listId === selectedListId;
+        const isElevated = elevatedNames.has(entry.unit_name);
         const sub        = [entry.god, entry.sizeIdx !== undefined
           ? (() => { const u = allUnits.find(u => u.unit_name === entry.unit_name); const s = u && u.sizes[entry.sizeIdx]; return s ? `${s.size} model${s.size===1?'':'s'}` : ''; })()
-          : ''].filter(Boolean).join(' · ');
+          : '', isElevated ? 'Battleline — granted by selected detachment' : ''].filter(Boolean).join(' · ');
 
         const attachedLeaders = getAttachedLeaders(entry.listId);
         const hasLeaders = attachedLeaders.length > 0;
@@ -6259,10 +6298,14 @@
     const el = document.getElementById(id);
     if (el) el.classList.toggle('open');
   }
+  // B66: the single-item glyph was an eye icon; every configurable item and
+  // option group in the config panel routes through this one function, so
+  // switching it here fixes the whole panel at once, matching B47's info-icon
+  // convention (already used by the detachment/unit info buttons elsewhere).
   function infoBtn(kind, id) {
     const glyph = kind === 'list'
       ? '\u2630'
-      : '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+      : '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.5" r="0.6" fill="currentColor" stroke="none"/></svg>';
     const title = kind === 'list' ? 'Show details for every item in this group' : 'Show details';
     return `<button type="button" class="info-btn${kind === 'list' ? ' info-list' : ''}" title="${title}" onclick="event.stopPropagation();toggleDetail('${id}')">${glyph}</button>`;
   }
