@@ -1,97 +1,83 @@
-# Next-session prompt — Session 135
+# Next-session prompt — Session 136
 
-Session 134 shipped **E21a** (**D209**): `detachment_effects.json` is net new and holds seven effects
-across five detachments on D204's four-kind schema, with assertions **E21a-1** through **E21a-6** and
-the file added to the manifest's guarded set (38 → 39 files). `index.html` stays at **6.5**, assertions
-**94/94**, baseline **21/21**. Read `SESSION_HANDOFF_134.md` **including its addendum**, then **D209**, **D210** and **D211**.
-
-**One new ticket: E23.** Re-deriving E21's survey from source found a seventh construction effect
-D203 missed — `HEADHUNTER TASK FORCE`'s Tank Ace → Character keyword grant, live on six built armies,
-where the app currently refuses a legal enhancement. Over-restriction, not a D0 violation, so it does
-not jump the queue. Not this session's work.
+Session 135 shipped **E21b** (**D212**): `effectiveUnitType()` is live in `index.html` at **6.6**,
+feeding `unitLimit()`, `groupByType` and the roster's `typeGroups` build; chapter exclusivity is
+policed by **E21b-1**, read from `Datasheets_keywords.csv` rather than from block membership.
+Assertions **97/97**, baseline **22/22**. Read `SESSION_HANDOFF_135.md`, then **D212**, then **D204**
+(rulings 1 and 3, which govern this session's work) and **D208** (B61's `allied_group` tag).
 
 ## Turn type
 
-**Engine-only.** `index.html` only. No parser, no converter, no data file, no JSON regeneration.
+**Engine-only.** `index.html` only, plus harnesses and assertions. No parser, no converter, no data
+file, no JSON regeneration. `detachment_effects.json` is a hand-authored **input** — never edit it to
+make the engine pass.
 
 ## Baseline at open
 
-Run `./baseline.sh` (`--no-repo` if offline). Verify the S134 hashes in `SESSION_HANDOFF_134.md`'s
-Files section before trusting the sync — `detachment_effects.json` is hand-authored and no repro gate
-can regenerate it, so its hash is the only thing that catches a bad sync.
+Run `./baseline.sh` (`--no-repo` if offline) — **22 gates now**, including `e21b_check`. Verify the
+S135 hashes in `SESSION_HANDOFF_135.md`'s Files section before trusting the sync.
+`detachment_effects.json` is unchanged from S134 and its hash is still `e38c38dcef31`.
 
-## The task: E21b — `effectiveUnitType()`
+## The task: E21c with E22b — the remaining three effect kinds
 
-Load `detachment_effects.json` alongside the other runtime data and add a single helper,
-`effectiveUnitType(unit, selectedDetachments)`, returning `'Battleline'` when any selected
-detachment's `battleline` effect names that unit and the unit's own `unit_type` otherwise.
+Both read the same table and both land on the add path, which is why D204 put them in one session.
+`forbid`, `unlock` and `warlord` are all still unread by the engine; E21b touched only `battleline`.
 
-**Three call sites, per D204's ruling 2**, all of which must switch to the helper:
+**1. `forbid` — Chaos Daemons | SHADOW LEGION.** The army cannot include any Daemon Prince, Daemon
+Prince with Wings or Epic Hero, excluding Be'Lakor. The table expresses this as
+`unit_types: ["Epic Hero"]` with `except_units: ["Be'Lakor"]` plus the two Daemon Princes named
+explicitly — they are `unit_type: Character`, not Epic Hero, so a type rule alone misses them (D209).
+D0 applies: the add is **refused**, not flagged. Refusal must also cover a unit already in the list
+when the detachment is later selected — that is a reachable state and it needs a defined answer.
 
-1. `instanceLimit()` — the count cap (Battleline doubles it).
-2. `groupByType` — the left-panel grouping.
-3. The roster's `typeGroups` build.
+**2. `unlock` + points sub-cap — Death Guard | TALLYBAND SUMMONERS.** This closes the **live D0
+violation** D204 found: the six Plague Legions units are currently in the Death Guard pool with no
+gate at all. Without this detachment selected they must not be offered. With it, they are offered
+bounded by the points cap keyed by battle size (500 / 1000 / 1500 against 1000 / 2000 / 3000). B61
+already tagged the six with `allied_group`; consume that tag, do not re-derive the list.
 
-**Do not overwrite `unit_type` on the record.** The elevation is live against the current detachment
-selection: deselecting the detachment must move the unit back to its own group and restore its cap.
-D204 reversed D203 here — elevated units render **under Battleline**, not in their own group with a
-badge, because that is what New Recruit does and because the status change is legality-relevant.
+**3. `warlord`** — `cannot_be` for the Plague Legions group under Tallyband Summoners. Be'Lakor needs
+no row: his unit-level `must_be_warlord` is unconditional and strictly stronger (E21a-6 pins this).
 
-**Effects from multiple selected detachments union** — a unit elevated by any selected detachment is
-elevated (D203, unchanged by D204).
+Add `e21c_check.js` covering all three kinds, in the mould of `e21b_check.js` — including the
+already-in-list case for `forbid` and the sub-cap arithmetic at both battle sizes. Register it in
+`baseline.sh` and in the manifest's guarded set (40 → 41).
 
-Only the three `battleline` rows are in scope. `forbid`, `unlock` and `warlord` are E21c/E22b.
-
-## Also this session: the chapter-exclusivity structural assertion
-
-The other half of E21b. 25 built detachments say *your army may include this Chapter's units and no
-other Chapter's*, and `resolveUnits()` already makes that unreachable by composing a chapter army as
-the generic Adeptus Astartes block plus that chapter's own units. Nothing polices it. Add the
-assertion: for every faction in the taxonomy, the resolved unit set contains no unit sourced from
-another chapter's army block. `Sources.resolved_pool()` in `rules_assertions.py` already mirrors the
-composition rule and is the natural place to build from.
-
-Add a harness (`e21b_check.js`) in the mould of `e1b_check.js` / `e4b_check.js` covering the helper
-itself: elevation on, elevation off after deselect, union across two selected detachments, and the
-doubled cap.
+**Expect the same slice breakage E21b hit.** Any harness that slices the add path out of `index.html`
+will need the new block pulled in alongside it. Repair the slice; do not loosen the check.
 
 ## Ground rules
 
-* Engine-only. `index.html` and a new harness; no data file touched.
+* Engine-only. `index.html`, harnesses, assertions. No data file touched.
 * Do not rename anything — project name still unsettled.
-* `detachment_effects.json` is a hand-authored **input**. Never edit it to make the engine pass.
+* Refusals need a reason string. E4b's `canAssignEnhancement` refusal-reason shape is the precedent
+  and `enhancementRefusalText` is the model; prose polish is E21d's, but a mute refusal is a bug.
 
-## After E21b
+## After E21c/E22b
 
-* **S136 — engine-only.** E21c with E22b — Shadow Legion's forbid path, Death Guard's Plague Legions
-  unlock gate (consuming B61's `allied_group` tag), the points sub-cap, and the Warlord ban.
-* **S137 — UI-only.** E21d: refusal prose, roster warnings, Battleline indicator.
-* **E23** — scoping turn, unsequenced.
+* **S137 — UI-only.** E21d: refusal prose, roster warnings, Battleline indicator. E21 closes there.
+* **E23** — scoping turn, unsequenced. Headhunter Task Force's Tank Ace → Character grant. A fifth
+  effect kind (muster-time keyword grant, count-limited, player-chosen recipients), so it is player
+  state rather than a static table row, and it lands on E4's enhancement eligibility and E9's Warlord
+  eligibility. Over-restriction, not a D0 violation.
+* **B62** — the `FALSE` string-literal quirk and the missing presence-and-parse assertion over the
+  nine CD CSVs. Open and untouched since D205.
 
-## Backlog
+## Standing inputs
 
-**9 open:** B62, P2, P4, E21 (E21a shipped; b/c/d remain), E22 (E22a done, E22b remains), E23, B60,
-E12, B17.
-
-## Standing inputs, neither blocking, worth more now than before
-
-* **A local backup folder** for the GW-derived and GW-text-carrying files — the nine Chaos Daemons
-  CSVs, the Wahapedia export, the MFM `.txt` files, the faction web and pack files. The repo cannot
-  hold them; S131 lost three and rebuilt them only because `units.json` happened to carry enough.
-  D210 sharpens this: the mount cannot be trusted to tell us whether a file is still there. D211
-  adds a concrete first tenant — `wh40k_core_rules.md` (139 KB) is opened by nothing and is the
-  largest single removable file in the area.
-* **P4 step 1 runs at the START of this session, before E21b.** It is two file moves and it is an
-  experiment, not housekeeping. Move `BACKLOG_ARCHIVE.md` (174 KB) and the archive half of
-  `40K_Decision_Log_v3_0.md` (~400 KB) out of the project area to repo-only; `DECISION_INDEX.md` and
-  the backlog's pointer lines preserve lookup for both. Then **ask Ryan what the capacity percentage
-  reads afterwards.** If ~574 KB moves it by about 4.7 points the metric is volume-linear and P4's
-  later steps can be planned against byte counts; if it barely moves, the 797 KB JSON-minification
-  step is not worth three re-banked fixed points. Do not skip the reading — the measurement is the
-  entire point of doing the cheap step first. Full reasoning in **D211**.
+* **P4 step 1 is still outstanding and is Ryan's action.** Move `BACKLOG_ARCHIVE.md` and the archive
+  half of `40K_Decision_Log_v3_0.md` out of the project area, then report the capacity percentage.
+  The measurement is the point; do not plan the rest of P4 without it. Reasoning in **D211**.
+* **A local backup folder** for the GW-derived files — the nine Chaos Daemons CSVs, the Wahapedia
+  export, the MFM `.txt` files, the faction web and pack files. The repo cannot hold them; S131 lost
+  three and rebuilt them only because `units.json` happened to carry enough. `wh40k_core_rules.md`
+  (139 KB) is opened by nothing and is the obvious first tenant.
 * Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard**.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* **D199's four batched calls remain unreviewed — since S127, now eight sessions.**
-* **B62** — the `FALSE` string-literal quirk and missing presence-and-parse assertion over the nine
-  CD CSVs — still open, untouched since D205.
+* **D199's four batched calls remain unreviewed — since S127, now nine sessions.**
+
+## Backlog
+
+**9 open:** B62, P2, P4, E21 (E21a/E21b shipped; c/d remain), E22 (E22a done, E22b remains), E23,
+B60, E12, B17.

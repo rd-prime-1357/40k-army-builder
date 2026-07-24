@@ -22,6 +22,7 @@ function slice(lines, startNeedle, endNeedle) {
 function loadEngine(path) {
   const lines = fs.readFileSync(path, 'utf8').split('\n');
   const body = [
+    slice(lines, '// ── E21b: effective unit type', '// ── E21b block end'),
     slice(lines, 'function battleSizeUnitLimit', 'function limitState'),
     slice(lines, 'function limitState', 'function canAddUnit'),
     slice(lines, 'function canAddUnit', '// State'),
@@ -39,6 +40,7 @@ function loadEngine(path) {
     let selectedListId = null;
     let POINTS_CAP = 2000;
     let detachmentDefs = {};
+    let detachmentEffects = {};
     let selectedDetachments = [];
     function wargearCostForEntry() { return 0; }
     function flashBanner(msg) { flashed.push(msg); }

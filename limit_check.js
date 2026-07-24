@@ -15,8 +15,14 @@ function slice(lines, startNeedle, endNeedle) {
 
 function loadEngine(path) {
   const lines = fs.readFileSync(path, 'utf8').split('\n');
-  const src = slice(lines, '// D115 — the unit limit depends', '// State');
-  return new Function('let POINTS_CAP = 2000;\n' + src +
+  // E21b: unitLimit now reads the effective type, so the helper block has to come
+  // with it. The effects table is left empty here — this harness is about the
+  // battle-size arithmetic; e21b_check.js owns the elevation behaviour.
+  const src = slice(lines, '// ── E21b: effective unit type', '// ── E21b block end')
+            + '\n'
+            + slice(lines, '// D115 — the unit limit depends', '// State');
+  return new Function('let POINTS_CAP = 2000; let detachmentEffects = {}; ' +
+    'let selectedDetachments = [];\n' + src +
     '\nreturn { battleSizeUnitLimit, instanceLimit, unitLimit, limitState, canAddUnit,' +
     ' setCap: (p) => { POINTS_CAP = p; } };')();
 }

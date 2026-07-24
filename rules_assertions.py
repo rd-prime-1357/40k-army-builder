@@ -91,6 +91,28 @@ class Sources:
                 self._cache['de'] = json.load(f)
         return self._cache['de']
 
+    def faction_keywords(self):
+        """datasheet_id -> set of FACTION keywords, straight from source.
+
+        E21b. Chapter exclusivity is a claim about which chapter a datasheet belongs
+        to, and the only place that is stated is the source export's is_faction_keyword
+        flag. Deriving it from units.json block membership instead would make the
+        assertion restate the thing it is supposed to police.
+        """
+        if 'fkw' not in self._cache:
+            out = {}
+            for r in pipe_rows(os.path.join(self.dir, 'Datasheets_keywords.csv')):
+                if r.get('is_faction_keyword') == 'true':
+                    out.setdefault(r['datasheet_id'], set()).add(r['keyword'])
+            self._cache['fkw'] = out
+        return self._cache['fkw']
+
+    def taxonomy(self):
+        if 'tax' not in self._cache:
+            with open(os.path.join(self.dir, 'faction_taxonomy.json'), encoding='utf-8') as f:
+                self._cache['tax'] = json.load(f)
+        return self._cache['tax']
+
     def resolved_pool(self, army):
         """The unit set a player of `army` can actually reach.
 
@@ -945,7 +967,7 @@ ASSERTIONS = [
      lambda S: (
          'function unitLimit' in S.index_html()
          and 'limitOverride: unit.instance_limit_override || null,' in S.index_html()
-         and 'instanceLimit(u.unit_type, POINTS_CAP)' in S.index_html(),
+         and 'instanceLimit(effectiveUnitType(u, selectedDetachments), POINTS_CAP)' in S.index_html(),
          'limit is derived live from POINTS_CAP, not stored on allUnits')),
 
     # ── E9a. must_be_warlord is true iff the unit carries SUPREME COMMANDER in
@@ -1397,6 +1419,31 @@ ASSERTIONS = [
      'stops being covered, and this assertion is what says so.',
      'units.json Chaos Daemons Be\'Lakor; detachment_effects.json _meta.not_in_this_file (E21a, D209)',
      lambda S: e21a_belakor_warlord_covered(S)),
+
+    ('E21b-1',
+     'Chapter exclusivity holds structurally. 25 built detachments say the army may include '
+     "this Chapter's units and no other Chapter's, and resolveUnits() already makes the illegal "
+     'state unreachable by composing a chapter army as the generic Adeptus Astartes block plus '
+     'that chapter one block. Until now nothing policed it. For every faction in the taxonomy, '
+     'no unit in its resolved pool carries another chapter\'s FACTION keyword in source — which '
+     'also means the generic block carries none at all, so Space Marines cannot reach Lysander '
+     'and White Scars cannot reach Ragnar. Read from Datasheets_keywords.csv rather than from '
+     'block membership, so the check does not restate its own premise.',
+     'units.json + faction_taxonomy.json vs Datasheets_keywords.csv is_faction_keyword (E21b, D204)',
+     lambda S: e21b_chapter_exclusive(S)),
+
+    ('E21b-2',
+     'All three unit_type read sites go through effectiveUnitType(). D204 ruling 2 named exactly '
+     'three — instanceLimit\'s caller, groupByType and the roster typeGroups build — and a fourth '
+     'site added later that read unit_type directly would silently disagree with the other three '
+     'about what a unit currently is. No grouping expression falls back on a raw unit_type.',
+     'index.html unitLimit / groupByType / renderList typeGroups (E21b, D204)',
+     lambda S: (
+         'function effectiveUnitType' in S.index_html()
+         and 'function detachmentBattlelineNames' in S.index_html()
+         and S.index_html().count("effectiveUnitType(") >= 4
+         and "unit_type || 'Other'" not in S.index_html(),
+         'one predicate feeds the limit and both grouping sites')),
 
     ('P4-1',
      'The GW-derived source census holds. Two halves. (a) The 18 source files the gates proved '
@@ -3245,6 +3292,40 @@ def p4_source_census(S):
 
 # ── runner ────────────────────────────────────────────────────────────────────
 
+
+# ── E21b: chapter exclusivity, structural ─────────────────────────────────────
+
+# The eleven chapter FACTION keywords that correspond to an app army. A datasheet
+# carrying one of these belongs to that chapter and to no other, which is what the
+# 25 chapter detachments assume when they say "and no other Chapter's".
+_CHAPTER_KEYWORDS = {
+    'Black Templars', 'Blood Angels', 'Dark Angels', 'Deathwatch', 'Imperial Fists',
+    'Iron Hands', 'Raven Guard', 'Salamanders', 'Space Wolves', 'Ultramarines',
+    'White Scars',
+}
+
+
+def e21b_chapter_exclusive(S):
+    fkw = S.faction_keywords()
+    blocks = {b['army'] for b in S.units()}
+    bad = []
+    checked = 0
+    for g in S.taxonomy()['groups']:
+        for fx in g['factions']:
+            army = fx.get('data_army')
+            if not army or army not in blocks:
+                continue
+            own = army if army in _CHAPTER_KEYWORDS else None
+            for name, u in sorted(S.resolved_pool(army).items()):
+                found = fkw.get(u['unit_id'], set()) & _CHAPTER_KEYWORDS
+                checked += 1
+                if found and found != {own}:
+                    bad.append('%s can reach %s (%s)' % (fx['name'], name, ', '.join(sorted(found))))
+    if bad:
+        return False, '%d cross-chapter unit(s): %s' % (len(bad), '; '.join(bad[:4]))
+    return True, 'no cross-chapter unit in any resolved pool (%d pool entries checked)' % checked
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dir', default='.', help='directory holding the source CSVs and unit_loadouts.json')
@@ -3274,3 +3355,4 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+

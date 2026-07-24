@@ -7802,3 +7802,116 @@ recommended two options now known to be wrong and handoffs are read back through
 
 **Repo custody:** all seven are project-generated and repo-eligible. `wh40k_core_rules.md` is GW text
 and stays out of the repo whatever else happens to it.
+
+---
+
+## D212 — E21b shipped: `effectiveUnitType()` across three call sites, and chapter exclusivity made executable (S135)
+
+**Turn type: engine-only.** `index.html` **6.5 → 6.6**, two assertions added, one net-new harness,
+two existing harnesses slice-repaired. No parser, no converter, no data file regenerated;
+`detachment_effects.json` was read as an input and never touched. Assertions **95/95 → 97/97**.
+Baseline **21/21 at open → 22/22 at close** (the new gate is the 22nd).
+
+### What shipped
+
+`detachment_effects.json` is now loaded at init alongside the other runtime data, into a
+`detachmentEffects` table keyed the same way `detachmentDefs` is. A missing file degrades to an empty
+table — no elevation, no forbid, no unlock — which is the pre-E21b behaviour. That direction is
+deliberate: the degraded state is **under**-enforcement, which is visible when a player looks for a
+rule and does not find it, rather than over-enforcement, which would refuse legal lists and be blamed
+on the tool.
+
+Two functions, in a marker-delimited block so harnesses can slice it:
+
+* `detachmentBattlelineNames(keys)` — the union of every `battleline` effect's named units across the
+  currently selected detachments. `enforced: false` rows are skipped, per D203's rule that an
+  unenforced effect is carried in data so the gap is counted rather than invisible.
+* `effectiveUnitType(unit, keys)` — returns `'Battleline'` when the unit is in that set and the
+  unit's own `unit_type` otherwise.
+
+All three D204 call sites now go through it: `unitLimit()`, `groupByType` and the roster's
+`typeGroups` build.
+
+### The one design point worth recording
+
+**`unit_type` on the record is never written to.** The elevation is derived on every read, so
+deselecting a detachment restores the unit's group and its cap with no cleanup pass anywhere. The
+alternative — stamping `unit_type = 'Battleline'` when the detachment is selected — would pass every
+on-state test and fail only after a deselect, and would need a reverse pass that has to know what the
+unit's original type was. That is a class of bug this project has shipped before, so the harness makes
+elevation-off its own numbered section rather than a trailing case.
+
+No memoisation. The obvious optimisation is to cache the name set against the joined key list, and it
+was written and then removed: `groupByType` runs over a few hundred units against at most three
+selected keys holding at most one effect each, so the cost is not measurable, and a cache is a second
+piece of state that can go stale. Simpler is worth more here than fast.
+
+### Chapter exclusivity is executable for the first time
+
+25 of the 143 built detachments say *your army may include this Chapter's units and no other
+Chapter's*. `resolveUnits()` has always made that unreachable by construction — a chapter army is the
+generic Adeptus Astartes block plus that chapter's own block, and nothing else. **Nothing policed it.**
+D203 recorded the fact in prose and the project's own rule is that prose claims do not hold.
+
+**E21b-1** now checks, for every faction in the taxonomy with a built block, that no unit in its
+resolved pool carries another chapter's FACTION keyword. It reads those keywords from
+`Datasheets_keywords.csv`'s `is_faction_keyword` flag, **not** from which `units.json` block a unit
+sits in. That distinction is the whole value of the assertion: deriving chapter membership from block
+membership would make the check restate its own premise and pass unconditionally. Reading from source
+means it catches the real failure — a chapter datasheet leaking into the generic block, which is
+exactly the Darnath Lysander worry D204 checked by hand and never pinned. Currently clean across all
+fourteen built blocks.
+
+**E21b-2** holds the three call sites together: `effectiveUnitType` must exist, must be called at
+least four times, and no grouping expression may fall back on a raw `unit_type`. A fourth read site
+added later would otherwise disagree silently with the other three about what a unit currently is.
+
+### Two gates broke on the change, and both were repaired rather than worked around
+
+* **`D115`** matched the literal string `instanceLimit(u.unit_type, POINTS_CAP)`. Its *substance* —
+  the limit is derived live from `POINTS_CAP` and never frozen onto a record — is untouched by E21b,
+  so the matched string was updated to the new call shape. Weakening the match to something laxer
+  would have been the easy move and would have retired a real check.
+* **`limit_check.js` and `e10_check.js`** both slice `unitLimit` out of `index.html` and evaluate it
+  in isolation, so they threw on an undefined `effectiveUnitType`. Both now pull the E21b block in
+  alongside it with an empty effects table. They stay about battle-size arithmetic and duplication;
+  `e21b_check.js` owns the elevation behaviour. This is the cost of the slice-the-real-source harness
+  design and it is worth paying — the alternative is harnesses testing a copy of the engine.
+
+### The harness
+
+`e21b_check.js`, net new, in the mould of `e1b_check.js` / `e4b_check.js`. Five sections: the table
+earns its keep (every named unit's own type is something other than Battleline, so the elevation is
+observable, plus a negative-control key that carries no battleline row); elevation on, including
+grouping; elevation off after deselect and again after re-select; union across three selected keys
+plus an unresolvable key that must be ignored rather than thrown on; and the doubled cap at both
+battle sizes, with a `limitOverride` case confirming a datasheet's own printed limit still outranks
+the doubled Battleline cap.
+
+Section 3's fixture selects three detachments belonging to three different factions, which is not a
+legal army. That is stated in the harness comments. What is under test is the union predicate, which
+has to hold for the two-Space-Marines-detachments case the app can actually reach.
+
+### Housekeeping and one correction to the record
+
+`e21b_check.js` added to `baseline.sh` and to the manifest's guarded set (39 → 40 files);
+`pipeline_manifest.json` reissued.
+
+**The S135 prompt said assertions were at 94/94. They were at 95/95 at open.** Both are right for
+their moment: 94 was S134's close, and P4-1 was filed afterwards in the same conversation, which D211
+records. Six of the eight S134 handoff hashes differ from the files as received, all for the same
+reason. `detachment_effects.json` matched exactly, which is the one that mattered — it is
+hand-authored and no repro gate can regenerate it, so its hash is the only thing that would have
+caught a bad sync. Noting it because a hash mismatch should never be waved through, and this one has
+a documented cause rather than an assumed one.
+
+**Changed:** `index.html` (6.6), `rules_assertions.py`, `limit_check.js`, `e10_check.js`,
+`baseline.sh`, `pipeline_manifest.py`, `pipeline_manifest.json`, `40K_Decision_Log_v3_0.md`,
+`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_135.md`.
+
+**Net new:** `e21b_check.js`.
+
+**Repo custody:** all thirteen are project-generated and repo-eligible. `e21b_check.js` names units
+and detachments but reproduces no GW rules text. Excluded from any push as always: the Wahapedia CSV
+export, the MFM `.txt` files, the faction web and pack files, `Army_Muster_Rules.txt` and
+`wh40k_core_rules.md`.

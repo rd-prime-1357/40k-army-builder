@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **9 open** as of S134 close: B62, P2, P4, E21 (E21a shipped; b/c/d remain), E22 (E22a done, E22b remains), E23, B60, E12, B17.
+not here, it isn't open. **9 open** as of S135 close: B62, P2, P4, E21 (E21a/E21b shipped; c/d remain), E22 (E22a done, E22b remains), E23, B60, E12, B17.
 
 ## Open Items
 
@@ -15,7 +15,7 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### E21 — Detachment-driven army-construction effects — **SCOPED S130 (D203); AMENDED by D204; E21a SHIPPED S134 (D209); b/c/d remain**
+### E21 — Detachment-driven army-construction effects — **SCOPED S130 (D203); AMENDED by D204; E21a SHIPPED S134 (D209); E21b SHIPPED S135 (D212); c/d remain**
 
 Detachment rules that require or forbid units, or elevate units to Battleline (which moves the count
 cap — Functional Spec §5). Opened S122 (D192), gated on E1c, scoped S130.
@@ -55,14 +55,15 @@ hand-edit outputs* — that rule protects generated outputs, and this is an inpu
 
 **The split:**
 - **E21a — data-only. SHIPPED S134 (D209).** `detachment_effects.json` net new — seven effects across five detachments on the four-kind schema, plus assertions E21a-1..6 and the file added to the manifest's guarded set. Two authoring calls recorded in D209: Shadow Legion's forbid is expressed by `unit_type` with a `except_units` exemption rather than as a name list, and Shadow Legion gets **no** `warlord` row because Be'Lakor's unit-level `must_be_warlord` already covers it unconditionally.
-- **E21b — engine-only.** `effectiveUnitType()` feeding `instanceLimit()` **and** both grouping sites, plus the chapter-exclusivity structural assertion.
+- **E21b — engine-only. SHIPPED S135 (D212).** `effectiveUnitType()` added to `index.html` (6.5 → 6.6) as a sliceable block, `detachment_effects.json` loaded at init, and all three D204 call sites switched — `unitLimit()`, `groupByType` and the roster `typeGroups` build. `unit_type` is never overwritten; the elevation is derived on every read and unwinds on deselect with no cleanup pass. Chapter exclusivity is now policed by **E21b-1**, read from `Datasheets_keywords.csv` rather than from block membership. New harness `e21b_check.js`; `limit_check.js` and `e10_check.js` slice-repaired; assertion **D115**'s matched string updated for the new call shape.
 - **E21c — engine-only.** Forbid + conditional Warlord — Shadow Legion add-path refusal and army state, in E4b's mould. Runs with E22b (same turn, same table).
 - **E21d — UI-only.** Refusal prose, roster warnings, Battleline indicator. E21 closes here; it does not wait on E22.
 
 **The six live cases:** Battleline elevation in Blood Angels|THE LOST BRETHREN (Death Company
 Marines ×2), Dark Angels|COMPANY OF HUNTERS (Outrider Squad), Death Guard|SHAMBLEROT VECTORIUM
 (Poxwalkers); forbid in Chaos Daemons|SHADOW LEGION; and two unlock cases moved to E22. All six now
-sit in `detachment_effects.json`; what remains is engine and UI reading it.
+sit in `detachment_effects.json`. **The three Battleline cases are enforced as of S135**; what remains
+is forbid (E21c), the unlocks (E22b), and the UI layer (E21d).
 
 **S134 re-verified the survey from source** rather than carrying D203's list forward. The six hold.
 One genuine seventh construction effect was found that D203 missed — see **E23**.
