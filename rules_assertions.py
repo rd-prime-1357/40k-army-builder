@@ -1278,6 +1278,43 @@ ASSERTIONS = [
      'index.html GODS array (B63, D206)',
      lambda S: b63_allegiance_values_valid(S)),
 
+    # ── B61. Wahapedia carries six Nurgle Chaos Daemons datasheets twice — once under the
+    # native CD faction, once again under DG because TALLYBAND SUMMONERS makes them includable —
+    # and the parser was silently absorbing the DG copies into the plain Death Guard roster with
+    # no marker at all (D208). Tagged, not yet gated: E22a/E22b (S136) still owes the selection-
+    # time gate. These four pin the tag's exact shape so that gate has a fact to build on.
+    ('B61-1',
+     'Exactly six Death Guard units carry allied_group == "Plague Legions": Beasts of Nurgle, '
+     'Great Unclean One, Nurglings, Plaguebearers, Plague Drones, Rotigus. No other Death Guard '
+     'unit carries the field at all — it is absent, not null, everywhere else in that army.',
+     'MFM_Death_Guard_v1_0.txt PLAGUE LEGIONS section; units.json Death Guard (B61, D208)',
+     lambda S: b61_plague_legions_census(S)),
+
+    ('B61-2',
+     'No unit in any other army block carries allied_group. The tag is scoped to the one '
+     'section it was derived from and has not leaked into Space Marines, the chapter variants, '
+     'or Chaos Daemons\' own native copies of the same six units.',
+     'units.json, all armies (B61, D208)',
+     lambda S: b61_no_other_army_carries_allied_group(S)),
+
+    ('B61-3',
+     'Chaos Daemons carries its own native copy of all six units under distinct unit_ids '
+     '(local:chaos-daemons:*), and none of those native copies carries allied_group. This is '
+     'the fact that makes the Death Guard six a genuine duplicate rather than a merge collision '
+     '— confirming Wahapedia\'s double-listing is intact on both sides of the fix.',
+     'units.json Chaos Daemons vs Death Guard (B61, D208)',
+     lambda S: b61_cd_native_copies_distinct(S)),
+
+    ('B61-4',
+     'mfm_points_parser.py\'s ALLIED_GROUP_HEADERS still recognises all six documented labels — '
+     'Plague Legions, Scintillating Legions, Blood Legions, Legions of Excess, Harlequins, Ynnari '
+     '— across the four factions not yet built. Written generally per the ticket rather than '
+     'Death-Guard-specific, so a future session building Thousand Sons/World Eaters/Emperor\'s '
+     'Children/Aeldari gets the tag for free; this guards against the set silently shrinking back '
+     'to one entry.',
+     'mfm_points_parser.py ALLIED_GROUP_HEADERS (B61, D208)',
+     lambda S: b61_allied_group_headers_intact(S)),
+
 ]
 
 
@@ -2795,6 +2832,83 @@ def b63_allegiance_values_valid(S):
     if bad:
         return False, f'{len(bad)} allegiance_condition value(s) not a god name: {bad[:5]}'
     return True, 'every allegiance_condition value is one of the four god names'
+
+
+def b61_plague_legions_census(S):
+    expect = {'Beasts of Nurgle', 'Great Unclean One', 'Nurglings',
+              'Plaguebearers', 'Plague Drones', 'Rotigus'}
+    dg = next((a for a in S.units() if a['army'] == 'Death Guard'), None)
+    if dg is None:
+        return False, 'Death Guard army block not found'
+    tagged = {u['unit_name'] for u in dg['units'] if u.get('allied_group') == 'Plague Legions'}
+    other_tagged = [u['unit_name'] for u in dg['units']
+                    if 'allied_group' in u and u.get('allied_group') != 'Plague Legions']
+    if tagged != expect or other_tagged:
+        return False, (f'tagged={sorted(tagged)}, expected={sorted(expect)}, '
+                        f'other-tagged={other_tagged}')
+    return True, 'exactly the six Plague Legions units carry the tag in Death Guard'
+
+
+def b61_no_other_army_carries_allied_group(S):
+    hits = []
+    for army in S.units():
+        if army['army'] == 'Death Guard':
+            continue
+        for u in army['units']:
+            if 'allied_group' in u:
+                hits.append(f"{army['army']}/{u['unit_name']}")
+    if hits:
+        return False, f'{len(hits)} unexpected allied_group carrier(s) outside Death Guard: {hits[:5]}'
+    return True, 'no army other than Death Guard carries allied_group'
+
+
+def b61_cd_native_copies_distinct(S):
+    names = {'Beasts of Nurgle', 'Great Unclean One', 'Nurglings',
+             'Plaguebearers', 'Plague Drones', 'Rotigus'}
+    cd = next((a for a in S.units() if a['army'] == 'Chaos Daemons'), None)
+    dg = next((a for a in S.units() if a['army'] == 'Death Guard'), None)
+    if cd is None or dg is None:
+        return False, 'Chaos Daemons or Death Guard army block not found'
+    cd_by_name = {u['unit_name']: u for u in cd['units'] if u['unit_name'] in names}
+    dg_by_name = {u['unit_name']: u for u in dg['units'] if u['unit_name'] in names}
+    bad = []
+    for n in sorted(names):
+        c, d = cd_by_name.get(n), dg_by_name.get(n)
+        if c is None:
+            bad.append(f'{n}: missing from Chaos Daemons')
+            continue
+        if d is None:
+            bad.append(f'{n}: missing from Death Guard')
+            continue
+        if c['unit_id'] == d['unit_id']:
+            bad.append(f'{n}: same unit_id in both armies ({c["unit_id"]})')
+        if 'allied_group' in c:
+            bad.append(f'{n}: Chaos Daemons native copy unexpectedly carries allied_group')
+    if bad:
+        return False, '; '.join(bad)
+    return True, 'all six units exist as distinct, untagged native copies in Chaos Daemons'
+
+
+def b61_allied_group_headers_intact(S):
+    import importlib, sys as _sys
+    sys_path_added = S.dir not in _sys.path
+    if sys_path_added:
+        _sys.path.insert(0, S.dir)
+    try:
+        mod_name = 'mfm_points_parser'
+        if mod_name in _sys.modules:
+            mod = importlib.reload(_sys.modules[mod_name])
+        else:
+            mod = importlib.import_module(mod_name)
+    finally:
+        if sys_path_added:
+            _sys.path.remove(S.dir)
+    expect = {'PLAGUE LEGIONS', 'SCINTILLATING LEGIONS', 'BLOOD LEGIONS',
+              'LEGIONS OF EXCESS', 'HARLEQUINS', 'YNNARI'}
+    have = set(getattr(mod, 'ALLIED_GROUP_HEADERS', {}).keys())
+    if have != expect:
+        return False, f'ALLIED_GROUP_HEADERS={sorted(have)}, expected={sorted(expect)}'
+    return True, 'all six documented allied-group labels are recognised'
 
 
 # ── runner ────────────────────────────────────────────────────────────────────

@@ -47629,7 +47629,8 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "allied_group": "Plague Legions"
       },
       {
         "unit_id": "000004112",
@@ -47834,7 +47835,8 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "allied_group": "Plague Legions"
       },
       {
         "unit_id": "000004113",
@@ -47943,7 +47945,8 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "allied_group": "Plague Legions"
       },
       {
         "unit_id": "000004114",
@@ -48096,7 +48099,8 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "allied_group": "Plague Legions"
       },
       {
         "unit_id": "000004115",
@@ -48191,7 +48195,8 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "allied_group": "Plague Legions"
       },
       {
         "unit_id": "000004116",
@@ -48285,7 +48290,8 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "allied_group": "Plague Legions"
       },
       {
         "unit_id": "000004209",

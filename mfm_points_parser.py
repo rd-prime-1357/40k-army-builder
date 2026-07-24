@@ -102,6 +102,26 @@ SKIP_HEADERS = re.compile(r"^(your |munitorum|points value|wargear|enhancement)"
 # collected separately below and attached to the preceding unit.
 WARGEAR_RE = re.compile(r"^[\u2022\-\*]\s*per\s+(.+?)\s*(\d+)\s*pts\s*$", re.I)
 
+# B61. Wahapedia carries an army's allied units a second time under the shared
+# codex that makes them includable (Death Guard's TALLYBAND SUMMONERS pulls the six
+# Chaos Daemons Nurgle units; the same shape recurs for Thousand Sons, World Eaters,
+# Emperor's Children, and Aeldari's Harlequins/Ynnari). Each block opens with a bare
+# section-name line (no tier line of its own — its first unit's tier line is what
+# follows) and always closes at the file's own DETACHMENTS/LEGENDS section. A known-
+# label lookup, not a structural guess: a structural rule (any all-caps line whose
+# next real line is a unit header) also matches LEADER eligible-unit lists and chapter
+# dividers throughout the SM/DG files, so it would mis-tag far more than it should.
+ALLIED_GROUP_HEADERS = {
+    "PLAGUE LEGIONS": "Plague Legions",
+    "SCINTILLATING LEGIONS": "Scintillating Legions",
+    "BLOOD LEGIONS": "Blood Legions",
+    "LEGIONS OF EXCESS": "Legions of Excess",
+    "HARLEQUINS": "Harlequins",
+    "YNNARI": "Ynnari",
+}
+# The two section headers known to close out an allied block in every MFM file seen.
+ALLIED_GROUP_RESET = {"DETACHMENTS", "LEGENDS"}
+
 def norm(s):
     s = (s or "").upper()
     s = s.replace("’", "'").replace("–", "-")
@@ -146,9 +166,13 @@ def parse_mfm(path):
     units = OrderedDict()
     cur = None
     collecting_support = False
+    allied_group = None
 
     def new_unit(name):
-        return {"name": name, "tiers": [], "support_lines": [], "mode": "single", "wargear": []}
+        u = {"name": name, "tiers": [], "support_lines": [], "mode": "single", "wargear": []}
+        if allied_group:
+            u["allied_group"] = allied_group
+        return u
 
     collecting_wargear = False
 
@@ -242,6 +266,15 @@ def parse_mfm(path):
                 "text": line,
             })
             i += 1; continue
+
+        t_upper = line.upper()
+        if t_upper in ALLIED_GROUP_HEADERS:
+            allied_group = ALLIED_GROUP_HEADERS[t_upper]
+            i += 1; continue
+        if t_upper in ALLIED_GROUP_RESET:
+            allied_group = None
+            # no continue — DETACHMENTS/LEGENDS still fall through to their existing
+            # (no-op) handling below exactly as before this change.
 
         if is_real_unit_header(i):
             cur = new_unit(line)
@@ -364,7 +397,9 @@ def to_points_row(army, unit_name, info):
             pts.append(eff[t].get(size, "") if size is not None else "")
     # schema column order is Points_1-1,2-1,3-1, 1-2,2-2,3-2, 1-3,2-3,3-3
     # eff index t already iterates tier; inner b iterates bracket -> matches col order
-    return [army, unit_name] + size_cells + pts
+    # B61: trailing Allied_Group column, empty for every unit except the ones tagged
+    # while parsing inside a recognised allied-group section (see ALLIED_GROUP_HEADERS).
+    return [army, unit_name] + size_cells + pts + [info.get("allied_group", "")]
 
 def read_stats_unitnames(path):
     """Return ordered list of (army, unit) and the raw rows for patching."""
@@ -733,7 +768,8 @@ def main():
     header = ["Army Name","Unit Name","Size_1","Size_2","Size_3",
               "Points_1-1","Points_2-1","Points_3-1",
               "Points_1-2","Points_2-2","Points_3-2",
-              "Points_1-3","Points_2-3","Points_3-3"]
+              "Points_1-3","Points_2-3","Points_3-3",
+              "Allied_Group"]
     out_points = os.path.join(args.out_dir, "Unit_Points.csv")
     append_mode = args.append and os.path.exists(out_points)
     if append_mode:

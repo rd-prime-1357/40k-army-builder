@@ -7511,3 +7511,46 @@ the DOM is not visible from here.
 (`Unit_Weapons.csv`, `convert_to_json.py`, `units.json`) plus `rules_assertions.py`. `index.html`
 untouched at **6.5**.
 
+---
+
+## D208 — B61 shipped: Plague Legions tagged at the parser, six-unit census pinned (S133)
+
+**The fix.** `mfm_points_parser.py` now recognises a known set of allied-group section headers —
+`ALLIED_GROUP_HEADERS`, keyed by the exact label text: Plague Legions (Death Guard), Scintillating
+Legions (Thousand Sons), Blood Legions (World Eaters), Legions of Excess (Emperor's Children), and
+Harlequins / Ynnari (Aeldari). A structural rule was tried first — any all-caps line whose next real
+line is itself a unit header — and rejected: scanned against every MFM file the pipeline actually
+runs, it also fired on LEADER eligible-unit comma-lists and on chapter-name dividers (Imperial Fists,
+Iron Hands, Salamanders, Raven Guard, Ultramarines, White Scars, plus every `LEGENDS`/`SPACE MARINES`
+divider) — dozens of false positives per file. The known-label lookup has none.
+
+**Boundary.** A recognised header opens the allied section; `DETACHMENTS` or `LEGENDS` closes it —
+confirmed as the closing marker in all five files carrying an allied-group header, not just Death
+Guard's. Every unit created by `new_unit()` while the section is open is tagged
+`allied_group: "<Label>"`; every other unit gets no such key at all — matching the existing
+file-wide convention (`co_leader_eligible_with`, `bodyguard_stat_flags`) that optional per-unit
+fields are absent, not present-with-null, when they don't apply.
+
+**Threaded through, not hand-patched.** `Unit_Points.csv` gains a trailing `Allied_Group` column
+(empty on every row except the six); `convert_to_json.py` reads it and sets `allied_group` on the
+unit object only when non-empty. Full pipeline re-run and diffed against the committed `units.json`:
+the *only* change anywhere in the catalogue is the six units — Beasts of Nurgle, Great Unclean One,
+Nurglings, Plaguebearers, Plague Drones, Rotigus — each gaining exactly one new key, nothing else
+touched. All four merged lookups and `faction_taxonomy.json` stayed byte-identical.
+
+**Four assertions filed as B61-1 through B61-4**: the exact six-unit census in Death Guard and
+nowhere else in that army; no other army block carries the field at all; Chaos Daemons' own native
+copies of the same six units carry distinct `unit_id`s and no tag, confirming this is Wahapedia's
+documented double-listing and not a merge collision; and `ALLIED_GROUP_HEADERS` still names all six
+labels, so a future edit can't silently narrow the general mechanism back to a Death-Guard special
+case. Assertions 88/88 at close.
+
+**Not in scope.** The six units are tagged but still selectable under any detachment or none, with
+no points sub-cap and Rotigus still Warlord-eligible — the D0 violation isn't gated yet. That's
+E22a/E22b, folded into the existing S136 engine session; this parser turn only lands the marking it
+depends on.
+
+**Baseline 21/21 at close**, assertions 88/88, manifest regenerated to cover the four changed files
+(`mfm_points_parser.py`, `convert_to_json.py`, `units.json`, `rules_assertions.py`). `index.html`
+untouched at **6.5**.
+

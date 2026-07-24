@@ -2219,3 +2219,52 @@ name strings `index.html`'s `GODS` array uses). Assertions 84/84 at close.
 **Converter-only turn, no engine work** — the app-side filter already existed and was simply reading a
 field that never arrived. `index.html` untouched at 6.5. **Not yet verified on the rendered app** —
 Ryan needs to confirm each god selection yields exactly one god weapon.
+
+### B61 — Plague Legions units are offered to every Death Guard army, ungated — **NEW S130 (D204); LIVE D0 VIOLATION; SHIPPED S133 (D208)**
+
+All six Plague Legions units — Beasts of Nurgle, Great Unclean One, Nurglings, Plaguebearers, Plague
+Drones, Rotigus — were already in the Death Guard army in `units.json` and offered with no gate at
+all. A Death Guard player could field Great Unclean One and Rotigus under any detachment or none, with
+no points sub-cap and with Rotigus eligible as Warlord: three live illegalities on a built faction.
+Not an unshipped gap — a reachable illegal state, which under D0 outranks everything else open.
+
+**Cause:** Wahapedia carries these six datasheets twice, under faction `CD` and again under `DG` (the
+DG copies exist because the TALLYBAND SUMMONERS detachment makes them includable). `mfm_points_parser.py`
+reads a unit header as an ALLCAPS line followed by a tier header; `PLAGUE LEGIONS` is followed by a
+unit name, so it is correctly not read as a unit — but is not read as anything else either, and the
+six units below it flowed into the Death Guard block indistinguishable from Plague Marines.
+
+**Shipped S133 (D208).** `mfm_points_parser.py` gained `ALLIED_GROUP_HEADERS`, a known-label lookup
+covering all six documented section labels, not a Death-Guard-specific check: Plague Legions (Death
+Guard), Scintillating Legions (Thousand Sons), Blood Legions (World Eaters), Legions of Excess
+(Emperor's Children), Harlequins and Ynnari (Aeldari). A structural rule was tried first — any
+all-caps line whose next real line is itself a unit header — and rejected after scanning every MFM
+file the pipeline actually runs: it also matched LEADER eligible-unit comma-lists and chapter-name
+dividers (Imperial Fists, Iron Hands, Salamanders, Raven Guard, Ultramarines, White Scars, every
+`LEGENDS`/`SPACE MARINES` divider) — dozens of false positives per file. The label lookup has none.
+A recognised header opens the section; `DETACHMENTS` or `LEGENDS` closes it, confirmed as the closing
+marker in all five files carrying an allied-group header. Units created while the section is open are
+tagged `allied_group: "<Label>"`; every other unit carries no such key at all, matching the file's
+existing convention that optional per-unit fields are absent rather than present-with-null.
+
+`Unit_Points.csv` gained a trailing `Allied_Group` column (empty except on the six rows);
+`convert_to_json.py` reads it and sets `allied_group` on the unit object only when non-empty. Full
+pipeline re-run and diffed against the committed `units.json`: the only change anywhere in the
+catalogue is the six units, each gaining exactly one new key; all four merged lookups and
+`faction_taxonomy.json` stayed byte-identical. `units_repro_check.py` reports byte-identical
+reproduction again — the fixed point is re-banked, not hand-patched.
+
+Four assertions filed: **B61-1** (the exact six-unit census in Death Guard and nowhere else in that
+army), **B61-2** (no other army block carries the field), **B61-3** (Chaos Daemons' own native copies
+of the same six units carry distinct `unit_id`s and no tag — the fact that makes this a genuine
+duplicate rather than a merge collision), **B61-4** (`ALLIED_GROUP_HEADERS` still names all six
+labels, guarding against the general mechanism silently narrowing back to a Death-Guard special case).
+Assertions 88/88 at close.
+
+**Not in scope.** The six units are tagged but still selectable under any detachment or none, with no
+points sub-cap and Rotigus still Warlord-eligible — the D0 violation isn't gated yet. That work is
+E22a/E22b; E22a shipped as this ticket (the marking is the same parser change), E22b (the selection-
+time gate) is sequenced into S136 with E21c.
+
+**Parser-only turn, no engine or UI work.** `index.html` untouched at 6.5.
+

@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **8 open** as of S132 close: B62, B61 (live D0 violation, next), P2, E21 (scoped a/b/c/d), E22 (partly unblocked), B60, E12, B17.
+not here, it isn't open. **7 open** as of S133 close: B62, P2, E21 (scoped a/b/c/d), E22 (E22a done, E22b remains), B60, E12, B17.
 
 ## Open Items
 
@@ -77,15 +77,15 @@ LEGIONS** (Thousand Sons), **BLOOD LEGIONS** (World Eaters), **LEGIONS OF EXCESS
 Children), **HARLEQUINS** and **YNNARI** (Aeldari). Every god-legion case in the priority factions,
 found the same way.
 
-**Death Guard half is fully buildable** once B61 lands the marking. **Shadow Legion stays blocked** —
-`MFM_Chaos_Daemons_v1_0.txt` has no HERETIC ASTARTES section; that unlock is an explicit ~15-name list
-in the detachment's own text and every name is a Chaos Space Marines datasheet, so it waits on CSM
-(already next in the faction priority order). Its record ships in `detachment_effects.json` with
-`enforced: false`.
+**Death Guard half is fully buildable** now that B61 has landed the marking (D208). **Shadow Legion
+stays blocked** — `MFM_Chaos_Daemons_v1_0.txt` has no HERETIC ASTARTES section; that unlock is an
+explicit ~15-name list in the detachment's own text and every name is a Chaos Space Marines
+datasheet, so it waits on CSM (already next in the faction priority order). Its record ships in
+`detachment_effects.json` with `enforced: false`.
 
-- **E22a** — folded into **B61** (the marking is the same parser change).
+- **E22a** — SHIPPED as **B61** (D208, S133): `allied_group: "Plague Legions"` tags the six units.
 - **E22b — engine-only.** Gate allied units on the unlocking detachment; enforce the battle-size
-  points sub-cap as a second budget; enforce the Warlord ban. Runs with E21c.
+  points sub-cap as a second budget; enforce the Warlord ban. Runs with E21c (S136).
 
 
 ### B62 — `FALSE` string literal in Is Base Equipment, and no presence gate on the CD CSVs — **NEW S131 (D205); S**
@@ -100,31 +100,6 @@ Second half of the ticket: the nine Chaos Daemons CSVs have no presence-and-pars
 three went missing this session the symptom was a confusing repro byte mismatch rather than a clear
 "missing pipeline input". Add the assertion to `rules_assertions.py` so a missing or malformed one
 fails loudly at session open.
-
-
-### B61 — Plague Legions units are offered to every Death Guard army, ungated — **NEW S130 (D204); LIVE D0 VIOLATION; S–M**
-
-All six Plague Legions units — Beasts of Nurgle, Great Unclean One, Nurglings, Plaguebearers, Plague
-Drones, Rotigus — are already in the Death Guard army in `units.json` and offered with **no gate at
-all**. A Death Guard player can field Great Unclean One and Rotigus under any detachment or none, with
-no points sub-cap and with Rotigus eligible as Warlord: three live illegalities on a built faction.
-Not an unshipped gap — a reachable illegal state, which under D0 outranks everything else open.
-
-**Cause:** Wahapedia carries these six datasheets twice, under faction `CD` and again under `DG` (the
-DG copies exist because the detachment makes them includable). `mfm_points_parser.py` reads a unit
-header as an ALLCAPS line followed by a tier header; `PLAGUE LEGIONS` is followed by a unit name, so it
-is correctly not read as a unit — but is not read as anything else either, and the six units below it
-flow into the Death Guard block indistinguishable from Plague Marines.
-
-**Fix (parser turn):** recognise the allied-group section header, tag the units below it with an
-`allied_group` field, regenerate `units.json`, re-bank the `units_repro_check.py` fixed point, add
-assertions pinning the allied set per army. E22b then consumes the field.
-
-**Checked and clean, so nobody re-opens these:** `LEGENDS` sections are handled (explicit skip map in
-the parser; no Legends unit is in any pool), and the Space Marines chapter sub-sections split
-correctly via the Wahapedia datasheet blocks (Darnath Lysander is in Imperial Fists, not in the
-generic pool). An early crude scan this session suggested five Space Wolves Legends leaks — a false
-positive from misreading leader-attachment lists as datasheet names.
 
 
 ### B60 — `detachment_parser.py`: `restrictions` is populated inconsistently — **NEW S130 (D203); S**
@@ -242,6 +217,7 @@ Full history for every one of these lives in `BACKLOG_ARCHIVE.md`, in the same o
 - **B59a** — Engine: `non_consuming` handling in `loOptHeadroom` / `loGroupCounts` — CLOSED S115 (D183); ENGINE-ONLY; M
 - **B59b** — Data / parser: MFM additive-line parser + Outriders group flip — CLOSED S116 (D184); DATA-ONLY; M
 - **B63** — Soul Grinder shipped all four god weapons at once, live D0 violation — SHIPPED S132 (D207); `Allegiance_Condition` restored, `units.json` re-banked, four assertions (B63-1..4) pin the shape; render not yet eyeballed by Ryan
+- **B61** — Plague Legions units offered to every Death Guard army, ungated — SHIPPED S133 (D208); `mfm_points_parser.py` tags via a known-label lookup, `units.json` re-banked (exactly six units gained one key), four assertions (B61-1..4) pin the census; selection-time gate is E22b (S136), not this ticket
 - **B32** — engine: `requires_weapon` with more than one weapon — CLOSED S49 (v5.57)
 - **B33** — negated gates — CLOSED S50 (data)
 - **B35** — paid wargear options — CLOSED (data half S51, engine half S52)

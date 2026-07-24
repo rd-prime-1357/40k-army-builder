@@ -569,9 +569,15 @@ def build_units(data):
                 points = {
                     "sizes": size_entries,
                 }
+                # B61: only present when mfm_points_parser.py recognised this unit as
+                # sitting inside an allied-group section (e.g. Death Guard's Plague
+                # Legions). Absent — not null — on every other unit, matching the
+                # existing convention for co_leader_eligible_with / bodyguard_stat_flags.
+                allied_group = clean(points_row.get("Allied_Group"))
             else:
                 print(f"  WARNING: No points data found for '{army_name}' / '{unit_name}'")
                 points = None
+                allied_group = None
 
             # ----------------------------------------------------------
             # abilities (embedded in full, per model group)
@@ -643,6 +649,8 @@ def build_units(data):
                 "points":         points,
                 "abilities":      abilities,
             }
+            if allied_group:
+                unit_obj["allied_group"] = allied_group
 
             army_obj["units"].append(unit_obj)
 
