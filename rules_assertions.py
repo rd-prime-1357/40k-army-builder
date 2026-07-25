@@ -1488,6 +1488,19 @@ ASSERTIONS = [
          and 'detachmentForbidConflicts(key)' in S.index_html(),
          'warlord ban and forbid-on-select are both wired')),
 
+    ('E21d-1',
+     'The render-side over-state is wired. entryAlliedError exists in the E21c/E22b block and '
+     'entryHasError calls it, so a unit stranded by a later change — its detachment deselected, its '
+     'group over the sub-cap after a battle-size drop, or a forbidden unit seated by import — reads '
+     'as a visible roster error rather than being silently trimmed (Ryan, S139: a quick detachment '
+     'switch-and-back must never discard a placed unit). Guards the wiring; e21c_check.js Section 8 '
+     'drives the three branches against the real Tallyband Summoners and Shadow Legion data.',
+     'index.html entryAlliedError / entryHasError (E21d piece 3, D218)',
+     lambda S: (
+         'function entryAlliedError(' in S.index_html()
+         and 'if (entryAlliedError(unit)) return true;' in S.index_html(),
+         'entryAlliedError exists and entryHasError routes through it')),
+
     ('P4-1',
      'The GW-derived source census holds. Two halves. (a) The 18 source files the gates proved '
      'REQUIRED are all present — established S135 by removing each candidate and re-running the '

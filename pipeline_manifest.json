@@ -1,7 +1,7 @@
 {
  "_note": "SHA-256 of every guarded pipeline file. Regenerated at session close (python3 pipeline_manifest.py --write). manifest_check verifies it at baseline; a mismatch names the file that arrived as the wrong copy.",
  "files": {
-  "index.html": "ba38463a87066be039722f80bdb9474d18302f4589fde565e8d4d1292b53d37e",
+  "index.html": "19362f8a573d7e4b5cccec1f1f23146d19c1bd9c63da2261b808f1069cd5a441",
   "list_store.js": "2bc2c445e2052f65287be0f60686d4bc26e675357d3ba599754243ce55874451",
   "units.json": "999c5c2c37dc5c8dbe1e79700ecc5c3d4d54ae89e23931bed15300c0c180172f",
   "unit_loadouts.json": "2de9497122841e1a4a563a959716eda98010727ac87e2414fee83b2a543e85ab",
@@ -19,7 +19,7 @@
   "mfm_reconcile.py": "fbfdfdcffafe56a08b0658a9f6f826e4c5c51b5541622927533e876898f8098d",
   "add_loadout_groups.py": "4b660b59fe9e2fcbaaeade11af93ab2f2e3c3984ee17161107a966e35cdebc58",
   "detachment_parser.py": "3ef3cdb93d0040da20a73ea5d72c380e14658d0fce6b36fe840b71617487326e",
-  "rules_assertions.py": "c74ce18a1aaa6ff18863c4c42163f922993e1239d64956e1150d69f34872ca22",
+  "rules_assertions.py": "8130862ea8dcf8bcfe8485ba233ead16de38e9932c3812ececeea95acb822c17",
   "repro_check.py": "241b34bde7218301afe2a8775d571f685753350dc41b28e61dc1f13a07b62f3a",
   "units_repro_check.py": "0394ce2694ed1e95ad0127ec2099d7c8340f5d3aef65bcceb2207d955d43b826",
   "detachments_repro_check.py": "b9d602b39e8cf8df08f139a1e47b8c5170b399417031ed433e1883fa6cf24e8d",
@@ -41,6 +41,6 @@
   "e4b_check.js": "7ca74addb5a0dc60d8ea134229ed68b1d6fdefcd8e582e86d91ac2500735c8ba",
   "e4c_check.js": "ace756aa91247a591bd1bc4e443f365f841a5a46dd4cbcd0b5e1c89ec6b0bb65",
   "e21b_check.js": "6762446ab9062a7b3a1f820532aca96c59a6dac2377b300e41b90d3ceee068fb",
-  "e21c_check.js": "240015e57809ac9db579bf994aab63928f3ba29e1980e9f45f8f106b916c3985"
+  "e21c_check.js": "a62c4b8ecc02e2da78816d63c84feaaf120ef724883c5a319d1bc024d1cc7ae2"
  }
 }

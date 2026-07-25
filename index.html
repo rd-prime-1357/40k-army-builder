@@ -2175,7 +2175,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.8';
+  const VERSION = '6.9';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2664,6 +2664,31 @@
         if (Array.isArray(t.units) && t.units.indexOf(unit.unit_name) >= 0) return true;
       }
     }
+    return false;
+  }
+
+  // E21d piece 3 (D218): an allied unit legal when it was added can be stranded
+  // by a change the player makes elsewhere — deselecting or switching away from
+  // the detachment that unlocked it, or dropping to a battle size whose points
+  // sub-cap is smaller than what its group has already spent — and an imported
+  // list can seat a unit the selected detachment forbids. All three are the same
+  // class as the enhancement over-state in entryHasError: the list was legal, a
+  // later choice made it illegal. D0 keeps these states from being REACHED by
+  // the add path and the offer; this keeps them VISIBLE once reached (by import,
+  // or by a later toggle), flagged as a roster error rather than silently
+  // trimmed or blocked (Ryan's ruling, S139 — never quietly discard a unit the
+  // player paid points for and placed, since a quick detachment switch-and-back
+  // must leave the list intact). Reads a pool unit record — the same
+  // unit_name / alliedGroup fields the block's other functions read.
+  function entryAlliedError(unit) {
+    if (!unit) return false;
+    const keys = selectedDetachments;
+    if (forbiddenUnitNames(keys, allUnits).has(unit.unit_name)) return true;
+    const group = unit.alliedGroup || null;
+    if (!group) return false;
+    const cap = alliedPointsCap(keys, group, POINTS_CAP);
+    if (cap == null) return true;                 // group no longer unlocked
+    if (alliedSubtotal(group) > cap) return true; // group over its sub-cap
     return false;
   }
   // ── E21c / E22b block end ───────────────────────────────────────────────────
@@ -3614,6 +3639,9 @@
       if (!enhancementTypeEligible(entry.unit_type, isUpgrade)) return true;
       if (groupEnhancementCarriers(entry.listId, entry.listId).length) return true;
     }
+    // E21d piece 3 (D218): allied-unlock / sub-cap / forbid over-states — the
+    // same visible-not-trimmed treatment as the enhancement over-state above.
+    if (entryAlliedError(unit)) return true;
     return false;
   }
 

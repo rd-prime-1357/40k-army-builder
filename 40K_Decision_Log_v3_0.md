@@ -8300,3 +8300,62 @@ record; `NEXT_SESSION_PROMPT.md` is overwritten each session and is not relied o
 
 **Repo custody:** `BACKLOG_ARCHIVE.md` remains repo-eligible and repo-resident as before; no
 GW-derived text touched.
+
+## D218 — E21d piece 3 shipped: stranded units read as visible roster errors, never trimmed; E21 closes (S139)
+
+**The product call Ryan confirmed.** A unit that was legal when added can be made illegal by a change
+the player makes *elsewhere* — most directly, deselecting or switching away from the detachment that
+unlocked it. D214 recommended, and Ryan confirmed in-conversation at S139 open, that such a unit stays
+in the list and reads as a **visible roster error**, cleared by the player removing it or re-selecting
+a detachment that makes it legal again. Never a silent trim (it destroys work the player paid points
+for and placed on purpose) and never a blocked deselect (that would contradict the settled
+flag-don't-drop rule that a selected detachment is always removable). Ryan's own framing: a player may
+switch a detachment briefly just to check something and switch straight back, so the list must survive
+the round-trip untouched. He extended the ruling explicitly — **the same treatment is the tool's
+standing answer for this whole class**, including enhancement over-states, not just this one allied
+case. This is the lasting precedent the ticket was held open for.
+
+**What it covers.** `entryAlliedError(unit)` (added at the end of the E21c/E22b block, so the
+`e21c_check.js` harness can drive it against the real table and pool) returns true in three cases,
+all the same "was legal, a later choice made it illegal" shape:
+- the unit's allied group is no longer unlocked by any selected detachment (`alliedPointsCap` → null)
+  — the core Tallyband-Summoners-deselected case;
+- the group is unlocked but over its points sub-cap for the current battle size
+  (`alliedSubtotal(group) > cap`) — reachable by dropping to a smaller battle size; **every** member
+  of the over-cap group is flagged, not one arbitrary victim, since there is no principled way to pick
+  which one is "the" overage;
+- the unit is forbidden by a selected detachment (`forbiddenUnitNames`) — reachable only by import,
+  since `toggleDetachment` refuses selecting a detachment over a forbidden present unit; flagging it
+  closes a small D0 visibility gap where an imported forbidden unit sat in the list looking clean.
+
+**How it renders.** `entryHasError` now calls `entryAlliedError(unit)` after its enhancement
+over-state checks. No new render path was needed — the existing `has-error` class and `!` flag on the
+roster row (both the main-unit and attached-leader paths) already flow from `entryHasError`, so making
+the predicate return true is the whole change. This is deliberately the identical treatment the
+enhancement over-state already gets in the same function.
+
+**Why the predicate lives in the E21c/E22b block, not beside `entryHasError`.** It reads the block's
+own helpers (`forbiddenUnitNames`, `alliedPointsCap`, `alliedSubtotal`) and the block is the sliceable
+unit `e21c_check.js` loads and drives against real data. Placing it there let Section 8 of that harness
+exercise all three branches on the real Tallyband Summoners and Shadow Legion rows and the real pool —
+each branch a state that passes an on-state test and fails only after a later toggle or battle-size
+change, which is exactly the bug shape worth a harness.
+
+**Assertion.** New `E21d-1` pins the wiring structurally: `entryAlliedError` must exist and
+`entryHasError` must route through it, so a future edit that drops either fails loudly rather than
+silently letting stranded units render clean. Assertions 101 → 102.
+
+**Turn type: engine (index.html only).** No data, parser, or CSV touched. `index.html` 6.8 → 6.9.
+`e21c_check.js` extended (Section 8 + one export). `rules_assertions.py` gains E21d-1.
+`pipeline_manifest.json` reissued for the three changed guarded files. Full baseline 23/23,
+assertions 102/102.
+
+**E21 closes.** The full arc — E21a (data), E21b (engine, Battleline elevation), E21c + E22b (engine,
+forbid/unlock/warlord), E21d pieces 1-2 (UI) and now piece 3 — is shipped. Backlog 7 → 6 open.
+
+**Changed:** `index.html` (6.9), `e21c_check.js`, `rules_assertions.py`, `pipeline_manifest.json`,
+`40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`.
+
+**Net new:** none.
+
+**Repo custody:** all changed files are repo-eligible; no GW-derived text touched.

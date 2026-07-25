@@ -3,9 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S138: P2, P4, E21 (E21a/E21b/E21c/E21d-pieces-1-2 shipped;
-piece 3 — the stranded-allied roster warning — remains, pending Ryan's confirmation of D214's
-recommended direction), E23, B60, E12, B17. B62 shipped S138 (D216).
+not here, it isn't open. **6 open** as of S139: P2, P4, E23, B60, E12, B17. E21 closed S139 (D218) —
+piece 3, the stranded-allied roster warning, shipped, closing the E21 arc.
 
 ## Open Items
 
@@ -15,60 +14,6 @@ The durable fix — commit the parser to the GitHub repo as canonical, mirror to
 Ryan's call. But the pipeline is now self-defending regardless of where the parser lives: a stale or wrong copy
 fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a bad copy can no longer cost a
 whole session's work silently. See **D119, D123**.
-
-
-### E21 — Detachment-driven army-construction effects — **SCOPED S130 (D203); AMENDED by D204; E21a SHIPPED S134 (D209); E21b SHIPPED S135 (D212); E21c SHIPPED S136 (D214); E21d pieces 1-2 SHIPPED S137 (D215); E21d piece 3 remains, pending Ryan**
-
-Detachment rules that require or forbid units, or elevate units to Battleline (which moves the count
-cap — Functional Spec §5). Opened S122 (D192), gated on E1c, scoped S130.
-
-**The S122 framing was wrong and is retracted.** The ticket read "34 detachment abilities across the
-full dump carry require/forbid language, in free prose with no common shape." Re-derived from source
-in S130: the dump-wide figure is ~41 real muster-time effects (57 raw matches, less in-battle false
-positives), the dump is the wrong denominator anyway, the shapes reduce to four recurring kinds, and
-against our **143 built detachment records** the untouched work is **six detachments, not
-thirty-four** — two of which are blocked and moved to E22. Full derivation in **D203**.
-
-**25 of the 143 are already enforced structurally.** Chapter exclusivity ("your army may include this
-Chapter and no other") cannot be violated: `resolveUnits()` composes a chapter army as the generic
-Adeptus Astartes block plus that chapter's own units, so no foreign-chapter unit is ever in the pool.
-D0 satisfied by construction. E21 adds an assertion to police it, not a feature.
-
-**Mechanism: a hand-authored `detachment_effects.json`, not a text parser.** Three findings kill the
-parser approach — `rule_text` spans three fidelity tiers of which one is a paraphrase that
-*disagrees on rule content* (Shadow Legion's Be'Lakor requirement exists in the faction-pack text and
-nowhere in Wahapedia); nine built detachments carry no rule text at all, so a parser silently emits
-nothing and reports success; and the unit names in the prose do not match `units.json` ("Daemon
-Prince" vs. **Daemon Prince of Chaos**, "Be'lakor" vs. **Be'Lakor**), so a name-matcher would forbid
-nothing while appearing to work. Hand-authored input + referential-integrity assertions fails loudly
-on a typo; a parser fails silently. See D203 for why this does not breach *fix parsers, never
-hand-edit outputs* — that rule protects generated outputs, and this is an input.
-
-**Amended by D204 (Ryan's rulings):**
-- **Effect kinds are `battleline` | `forbid` | `unlock` | `warlord`.** `require` is dropped — no built
-  detachment needs it. Be'Lakor is **not** required by Shadow Legion; he is optional, and *if included
-  must be the Warlord*. The faction-pack paraphrase had compressed a conditional Warlord constraint
-  into an unconditional inclusion requirement, inverting the rule's logical shape — which strengthens
-  D203's case for authoring from the rules rather than from `rule_text`.
-- **Elevated units render under the Battleline group**, not in their own group with a badge. D203's
-  scanning argument lost to comprehension of a legality-relevant fact, and New Recruit does it this
-  way. Cost checked: `unit_type` is read at two grouping sites and one limit site; all three take a
-  single `effectiveUnitType(unit, selectedDetachments)` helper, live against the current selection.
-
-**The split:**
-- **E21a — data-only. SHIPPED S134 (D209).** `detachment_effects.json` net new — seven effects across five detachments on the four-kind schema, plus assertions E21a-1..6 and the file added to the manifest's guarded set. Two authoring calls recorded in D209: Shadow Legion's forbid is expressed by `unit_type` with a `except_units` exemption rather than as a name list, and Shadow Legion gets **no** `warlord` row because Be'Lakor's unit-level `must_be_warlord` already covers it unconditionally.
-- **E21b — engine-only. SHIPPED S135 (D212).** `effectiveUnitType()` added to `index.html` (6.5 → 6.6) as a sliceable block, `detachment_effects.json` loaded at init, and all three D204 call sites switched — `unitLimit()`, `groupByType` and the roster `typeGroups` build. `unit_type` is never overwritten; the elevation is derived on every read and unwinds on deselect with no cleanup pass. Chapter exclusivity is now policed by **E21b-1**, read from `Datasheets_keywords.csv` rather than from block membership. New harness `e21b_check.js`; `limit_check.js` and `e10_check.js` slice-repaired; assertion **D115**'s matched string updated for the new call shape.
-- **E21c — engine-only. SHIPPED S136 (D214).** Forbid, allied unlock with points sub-cap, and the detachment-scoped Warlord ban, all in one sliceable block on E4b's refusal shape. E22b shipped in the same turn (same table). Shadow Legion forbid refuses the add and refuses selecting the detachment over a forbidden unit already in the list; Tallyband Summoners gates the six Plague Legions units on selection, bounds them by a battle-size points sub-cap, and bars them from Warlord. New harness `e21c_check.js`; `e10_check.js` slice-repaired; assertions E21c-1..3.
-- **E21d — UI-only. Pieces 1-2 SHIPPED S137 (D215).** Refusal prose brought up to `enhancementRefusalText`'s standard, and the picker's forbid gate made visible on the row itself (disabled before the click, not only refused after it — E1c-2 extended, not loosened) — piece 1. Battleline indicator on an elevated unit's roster row — piece 2. **Piece 3 — the roster warning for a Plague Legions unit stranded by deselecting or switching away from Tallyband Summoners — NOT built.** The engine already rejects it (`offerableUnits`, `canAddUnitToList`); D214's recommendation is to render it as a visible error, the enhancement over-state treatment, never a silent trim — but this sets a lasting precedent for how the tool treats a legal list a later detachment change makes illegal, so it was deliberately held for Ryan's confirmation rather than built. **E21 closes once piece 3 ships.**
-
-**The six live cases:** Battleline elevation in Blood Angels|THE LOST BRETHREN (Death Company
-Marines ×2), Dark Angels|COMPANY OF HUNTERS (Outrider Squad), Death Guard|SHAMBLEROT VECTORIUM
-(Poxwalkers); forbid in Chaos Daemons|SHADOW LEGION; and two unlock cases moved to E22. All six now
-sit in `detachment_effects.json`. **The three Battleline cases are enforced as of S135**; what remains
-is forbid (E21c), the unlocks (E22b), and the UI layer (E21d).
-
-**S134 re-verified the survey from source** rather than carrying D203's list forward. The six hold.
-One genuine seventh construction effect was found that D203 missed — see **E23**.
 
 
 ### P4 — Project-area capacity — **NEW S134 (D211); STEP 1 DONE S135 (D213); PROCESS; S then M**
@@ -224,6 +169,7 @@ not loss; fetch the current copy from
 `https://raw.githubusercontent.com/rd-prime-1357/40k-army-builder/main/BACKLOG_ARCHIVE.md` before
 appending to it, and hand the updated file back for Ryan to commit.
 
+- **E21** — Detachment-driven army-construction effects (battleline / forbid / unlock / warlord) — CLOSED S139 (D218); E21a data (D209), E21b engine (D212), E21c engine + E22b (D214), E21d UI pieces 1-2 (D215) and piece 3 — the stranded-allied roster warning (`entryAlliedError`, D218) — all shipped. Full history in D203/D204/D209/D212/D214/D215/D218
 - **B62** — `FALSE` string literal in Is Base Equipment (a real latent bug, not inert as first assumed), and no presence gate on the CD root CSVs — SHIPPED S138 (D216)
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo

@@ -45,7 +45,7 @@ function loadEngine(path) {
   const exports =
     '\nreturn { forbiddenUnitNames, unlockedAlliedGroups, alliedPointsCap, ' +
     'alliedSubtotal, canAddUnitToList, addRefusalText, offerableUnits, ' +
-    'detachmentForbidConflicts, warlordBannedByDetachment, ' +
+    'detachmentForbidConflicts, warlordBannedByDetachment, entryAlliedError, ' +
     'setEffects: (e) => { detachmentEffects = e; }, ' +
     'setList: (l) => { armyList = l; }, setPool: (u) => { allUnits = u; }, ' +
     'select: (k) => { selectedDetachments = k; }, setCap: (p) => { POINTS_CAP = p; } };';
@@ -227,6 +227,50 @@ const cdEpicHeroes = cdPool.filter(u => u.unit_type === 'Epic Hero').map(u => u.
   ok(E.unlockedAlliedGroups(['X|UNLOFF']).size === 0, 'S7: an enforced:false unlock unlocks nothing');
   ok(E.forbiddenUnitNames(['X|FORBOFF'], [{ unit_name: 'Zzz', unit_type: 'Character' }]).size === 0, 'S7: an enforced:false forbid forbids nothing');
   E.setEffects(EFF);
+}
+
+// ── Section 8: entryAlliedError — the render-side over-state (E21d piece 3) ───
+// The mirror of the add gate: a unit legal when added but stranded by a LATER
+// change elsewhere reads as a roster error, never trimmed. Three branches, all
+// on the real data: unlock removed, group over its sub-cap, and forbid-by-import.
+{
+  const pb     = view('Death Guard', 'Plaguebearers');       // allied
+  const nurg   = view('Death Guard', 'Nurglings');           // allied
+  const native = view('Death Guard', 'Plague Marines');      // native, no group
+
+  // Branch A — unlock removed (the core piece-3 case).
+  E.setPool(dgPool); E.setCap(2000);
+  E.setList([{ listId: 1, unit_name: 'Plaguebearers', unit_type: 'Battleline', points: 300 }]);
+  E.select([TALLY]);
+  ok(E.entryAlliedError(pb) === false, 'S8: an allied unit is NOT flagged while its detachment unlocks it');
+  E.select([]);
+  ok(E.entryAlliedError(pb) === true, 'S8: the same unit IS flagged once Tallyband Summoners is deselected (stranded)');
+  ok(E.entryAlliedError(native) === false, 'S8: a native unit is never flagged by the allied predicate');
+
+  // Branch B — group over its sub-cap after a battle-size drop.
+  E.select([TALLY]);
+  E.setList([
+    { listId: 1, unit_name: 'Plaguebearers', unit_type: 'Battleline', points: 300 },
+    { listId: 2, unit_name: 'Nurglings',     unit_type: 'Other',      points: 300 },
+    { listId: 3, unit_name: 'Plague Marines', unit_type: 'Battleline', points: 400 },
+  ]);
+  E.setCap(2000);   // cap 1000 — 600 of allied points is under
+  ok(E.entryAlliedError(pb) === false, 'S8: allied unit under the sub-cap is not flagged (600 <= 1000)');
+  E.setCap(1000);   // cap 500 — 600 of allied points is now over
+  ok(E.entryAlliedError(pb) === true,  'S8: dropping to a battle size whose sub-cap is exceeded flags the group (600 > 500)');
+  ok(E.entryAlliedError(nurg) === true, 'S8: every member of the over-cap group is flagged, not one arbitrary victim');
+  ok(E.entryAlliedError(native) === false, 'S8: the native unit in the same list is unaffected by the sub-cap');
+
+  // Branch C — forbid seated by import (toggleDetachment refuses it live; import can still seat it).
+  E.setPool(cdPool); E.setCap(2000);
+  const dp = view('Chaos Daemons', 'Daemon Prince of Chaos');
+  const bl = view('Chaos Daemons', "Be'Lakor");
+  E.setList([{ listId: 1, unit_name: 'Daemon Prince of Chaos', unit_type: 'Character', points: 210 }]);
+  E.select([SHADOW]);
+  ok(E.entryAlliedError(dp) === true,  'S8: a forbidden unit seated by import reads as a roster error');
+  ok(E.entryAlliedError(bl) === false, "S8: Be'Lakor is exempt from the forbid, so not flagged");
+  E.select([]);
+  ok(E.entryAlliedError(dp) === false, 'S8: same unit is clean once the forbidding detachment is deselected');
 }
 
 console.log(fail === 0 ? '\nall E21c checks pass' : `\n${fail} E21c check(s) failed`);
