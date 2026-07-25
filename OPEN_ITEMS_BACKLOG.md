@@ -3,9 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S146: P2, P4, E23, E12, B17, B61, B67b — unchanged from
-S145 (S146 was a tooling-only CSM build-scoping turn, D227; no ticket opened or closed. CSM is
-faction-priority roadmap work tracked in `CSM_BUILD_SCOPE.md`, not a backlog ticket). B67 CLOSED S145
+not here, it isn't open. **8 open** as of S147: P2, P4, E23, E12, B17, B61, B67b, B68 — S147 was
+CSM turn A (D229, data-only): 54 self-priced units shipped, diff-traced clean. It also opened B68
+(D230): building the CSM loadout-defaults pass surfaced a real parser bug (name-keyed matching bleeds
+across Death Guard/CSM's seven shared generic Chaos vehicle names), deferred to its own engine/parser
+turn — `unit_loadouts.json` and `repro_check.py` deliberately untouched. CSM is faction-priority
+roadmap work tracked in `CSM_BUILD_SCOPE.md`, not a backlog ticket in its own right. B67 CLOSED S145
 (D225) — both GW-derived files confirmed removed from the repo's HEAD; D223's "single commit" premise
 was wrong (249 commits), so a full history purge is a separate, optional action, filed as B67b.
 S145 also regenerated `unit_loadouts.json` (D225) after verifying a Dark Angels data fix and a new
@@ -14,6 +17,35 @@ B61 logged Ryan-side (combined-popup expand arrow, see below). E21 closed S139 (
 stranded-allied roster warning, shipped.
 
 ## Open Items
+
+
+### B68 — `loadout_parser.py`/`equipped_parser.py` resolve by unit name, not army+unit_id — **NEW S147 (D230); BLOCKS CSM's loadout-defaults pass**
+
+Death Guard and Chaos Space Marines each carry their own datasheet for seven generic Chaos vehicles
+(Chaos Rhino, Chaos Land Raider, Chaos Predator Annihilator, Chaos Predator Destructor, Chaos Spawn,
+Defiler, Helbrute) — same Unit Name, distinct unit_ids. CSM is the first faction added that shares
+generic vehicle names with an already-built faction, and that's what exposes this: somewhere in
+`loadout_parser.py`/`equipped_parser.py`, matching is keyed by name rather than army+unit_id or
+unit_id outright, so once a second same-named datasheet exists, one faction's stored defaults can
+silently pick up the other's.
+
+**Proven, not suspected (D230):** running the current, unmodified production chain — CSM named
+nowhere in `--factions` or the web passes — against a `units.json` that merely *contains* CSM's block
+still changes 23 pre-existing units' stored loadout defaults (list-order shifts on `default_weapons`,
+a `_defaults_source` flag dropped on at least one). Isolating loadout_parser.py alone, each web pass
+alone, and the final datasheets pass alone (each against the CSM-inclusive `units.json`) narrows it to
+mere co-presence in the file, not any processing of CSM's own data.
+
+**Fix is an engine/parser change** (turn typing forbids mixing with a data turn) — likely rekeying the
+relevant lookup(s) to (army, unit name) or unit_id. Needs its own scoped, verified turn: find every
+name-only key in both scripts touching model-group/weapon defaults, rekey, then re-run the full
+production chain and diff-trace against the currently-committed `unit_loadouts.json` to confirm zero
+drift outside what CSM's own web pass should add.
+
+**Blocks:** CSM_BUILD_SCOPE.md §5 (the sixth `equipped_parser.py` pass, CSM's own loadout defaults).
+Until B68 is fixed, `repro_check.py` and `rules_assertions.py`'s embedded P1 check will both show the
+same byte-mismatch, naming the same seven unit_ids, at every session open — expected, not a new
+regression.
 
 
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**

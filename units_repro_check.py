@@ -28,7 +28,7 @@ Usage:  python3 units_repro_check.py [--dir .]
 Exit 0 on byte-identical reproduction, 1 otherwise.
 Importable: repro(dir_) -> (ok, message).
 """
-import argparse, json, os, shutil, subprocess, sys, tempfile
+import argparse, csv, json, os, shutil, subprocess, sys, tempfile
 
 CD_ROOT_CSVS = [
     'Unit_Stats.csv', 'Unit_Points.csv', 'Unit_Wargear_Options.csv',
@@ -60,7 +60,36 @@ REQUIRED = [
     'MFM_Space_Wolves_v1_0.txt', 'MFM_Blood_Angels_v1_0.txt',
     'MFM_Black_Templars_v1_0.txt', 'MFM_Dark_Angels_v1_0.txt',
     'MFM_Death_Watch_v1_0.txt',
+    # D229 / S147 turn A: CSM's own MFM. Prices 54 of CSM's 58 current-edition
+    # datasheets; the four cult-troop units (Khorne Berzerkers, Rubric Marines,
+    # Plague Marines, Noise Marines) are priced in their god-legion's own MFM and
+    # are deliberately withheld from this run — see CSM_CULT_TROOP_IDS below.
+    'MFM_Chaos_Space_Marines_v1_0.txt',
 ] + CD_ROOT_CSVS
+
+# D229 (S147 turn A). These four CSM datasheets carry no cost in the CSM MFM — GW
+# prices them once, in their parent god-legion's own MFM (Khorne Berzerkers in
+# World Eaters', Plague Marines in Death Guard's, Rubric Marines in Thousand Sons',
+# Noise Marines in Emperor's Children's). Turn A ships only the 54 units the CSM MFM
+# prices on its own; committing an unpriced unit would trip b56a_residual_nulls and
+# is exactly the kind of state the pipeline is built to make unreachable. These four
+# are filtered out of the transform's own Unit_Stats.csv before pointing/converting,
+# and go in properly — stats and cross-sourced points together — in turn B, via the
+# --append --scope-to-army machinery (needs a relabel fix first; see NEXT_SESSION_PROMPT).
+CSM_CULT_TROOP_IDS = {'000003582', '000003583', '000003584', '000004099'}
+
+
+def _filter_stats_csv(path, exclude_ids):
+    """Drop rows whose Datasheet ID is in exclude_ids, in place. CRLF, utf-8-sig,
+    matching the transform's own output convention."""
+    with open(path, encoding='utf-8-sig', newline='') as f:
+        rows = list(csv.reader(f))
+    header = rows[0]
+    di = header.index('Datasheet ID')
+    kept = [header] + [r for r in rows[1:] if r[di] not in exclude_ids]
+    with open(path, 'w', encoding='utf-8-sig', newline='') as f:
+        w = csv.writer(f, lineterminator='\r\n')
+        w.writerows(kept)
 
 # B56a: chapter file -> the Army Name its own Unit_Stats.csv rows carry.
 CHAPTER_POINTS = [
@@ -140,6 +169,32 @@ def repro(dir_):
         if rc != 0:
             return False, 'convert_to_json.py (DG) failed:\n' + out[-600:]
 
+        # --- Chaos Space Marines: transform -> D229 cult-troop filter -> mfm points
+        # (self only — no chapter-style append) -> convert. S147 turn A: ships only
+        # the 54 units the CSM MFM prices on its own; see CSM_CULT_TROOP_IDS above. ---
+        csm_dir = os.path.join(tmp, 'csm')
+        os.makedirs(csm_dir)
+        rc, out = _run([sys.executable, 'wahapedia_transform.py',
+                        '--wahapedia-dir', dir_, '--seed-dir', dir_,
+                        '--out-dir', csm_dir, '--faction', 'CSM',
+                        '--army-name', 'Chaos Space Marines'], cwd=dir_)
+        if rc != 0:
+            return False, 'wahapedia_transform.py (CSM) failed:\n' + out[-600:]
+        _filter_stats_csv(os.path.join(csm_dir, 'Unit_Stats.csv'), CSM_CULT_TROOP_IDS)
+        rc, out = _run([sys.executable, 'mfm_points_parser.py',
+                        '--mfm', 'MFM_Chaos_Space_Marines_v1_0.txt',
+                        '--out-dir', csm_dir, '--stats', os.path.join(csm_dir, 'Unit_Stats.csv')],
+                        cwd=dir_)
+        if rc != 0:
+            return False, 'mfm_points_parser.py (CSM) failed:\n' + out[-600:]
+        csm_json = os.path.join(tmp, 'csm_json')
+        os.makedirs(csm_json)
+        rc, out = _run([sys.executable, 'convert_to_json.py',
+                        '--input-dir', csm_dir, '--output-dir', csm_json,
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json')], cwd=dir_)
+        if rc != 0:
+            return False, 'convert_to_json.py (CSM) failed:\n' + out[-600:]
+
         # --- Chaos Daemons: convert DIRECTLY off the project root's own CSVs. ---
         # No wahapedia_transform.py call here, ever — see module docstring / D132.
         cd_json = os.path.join(tmp, 'cd_json')
@@ -154,7 +209,7 @@ def repro(dir_):
         deploy = os.path.join(tmp, 'deploy')
         os.makedirs(deploy)
         rc, out = _run([sys.executable, 'merge_factions.py',
-                        '--in', sm_dir, '--in', cd_json, '--in', dg_json,
+                        '--in', sm_dir, '--in', cd_json, '--in', dg_json, '--in', csm_json,
                         '--taxonomy', 'faction_taxonomy.json',
                         '--out-dir', deploy], cwd=dir_)
         if rc != 0:

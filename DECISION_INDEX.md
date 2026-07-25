@@ -225,3 +225,5 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D226** — Process rule: before starting a Black Templars/Death Guard/Space Marines `_web.txt` regeneration turn, Claude pauses, asks Ryan to load that faction's new file, and waits — doesn't assume it's ready (S145)
 - **D227** — Chaos Space Marines build scoped: 58 units, 17 detachments, four cross-sourced cult-troop prices (S146)
 - **D228** — Prose-less current-edition detachments: build them selectable, prose-incomplete — recommendation, awaiting Ryan (S146)
+- **D229** — CSM turn A shipped: 54 self-priced units built (four cult-troop units deliberately withheld), `units_repro_check.py` updated, `datasheet_wargear_abilities.json` scope gap closed, E4B_KEYWORD_GAPS extended for three Character-typed units, manifest reissued (S147)
+- **D230** — B68 opened: `loadout_parser.py`/`equipped_parser.py` resolve by unit name not army+unit_id; Death Guard/CSM's seven shared generic Chaos vehicle names bleed across factions; deferred to a dedicated parser turn, `unit_loadouts.json` and `repro_check.py` left untouched (S147)

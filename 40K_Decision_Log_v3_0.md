@@ -8808,3 +8808,74 @@ reject legal armies — a worse failure than showing a detachment with incomplet
 E1's handling of prose-incomplete content. The call is reversible (one inclusion flag to hide them
 later), so the build proceeds on this recommendation unless Ryan says otherwise; flagged here for an
 explicit yes/no because it is precedent-setting.
+
+## D229 — CSM turn A shipped: 54 self-priced units, four cult-troop units deliberately withheld (S147)
+
+Data-only turn. Baseline verified clean at open (S146's five hashes matched byte-for-byte, 23/23
+gates, 104/104 assertions). Transform selected 58 current-edition CSM datasheets, matching D227
+exactly. Confirmed by source (the parser's own validation report, "Datasheets with NO MFM points — 0"
+once withheld): the four cult-troop units (Khorne Berzerkers, Rubric Marines, Plague Marines, Noise
+Marines) carry no price in the CSM MFM. `convert_to_json.py` does not exclude an unpriced unit — it
+ships it with `points: null` and a warning — so committing all 58 as-is would land four new nulls
+against `b56a_residual_nulls`'s hard pin of exactly two (Judiciar Xacharus, Chaplain Kastiel). An
+uncosted, addable unit is exactly the state D0 exists to make unreachable.
+
+**Resolution:** the four are filtered out of the transform's own `Unit_Stats.csv` before pricing and
+conversion — build-orchestration inside the turn's own working directory, not a hand-edit of a
+committed output and not a parser change. `build_units()` keys entirely off `Unit_Stats.csv` rows
+(confirmed by reading `convert_to_json.py`), so a unit absent there is simply absent from the
+output — no orphaned rows, no nulls. Turn A ships exactly 54, all priced. `units_repro_check.py`
+updated with the CSM block (transform → filter → self MFM points → convert, matching CSM_BUILD_SCOPE
+§6), `CSM_CULT_TROOP_IDS` and the filter helper documented in place, `MFM_Chaos_Space_Marines_v1_0.txt`
+added to `REQUIRED`. Merge call gains a fourth `--in`.
+
+**Diff-traced clean:** 54 new unit_ids, 0 lost, 0 changed among the existing 270 — isolated addition,
+verified by flattening both the old and rebuilt `units.json` and comparing every record. The three
+merged lookups drifted as expected (abilities.json +94, rules.json +1, weapon_abilities.json +5 —
+CSM's own ability/rule/weapon-ability names) and are re-banked as part of the same fixed point
+(B55/D164); `keywords.json` and `faction_taxonomy.json` did not move.
+
+**Scope gap found and closed:** `datasheet_wargear_abilities.json` (D105/B15) is restricted to the
+unit_ids present in `units.json` and needed regenerating too — CSM_BUILD_SCOPE.md's §6 file list named
+three regenerated outputs, not four. Regenerated (+7 datasheets, 0 lost, 0 changed) and folded into
+this turn rather than left to trip the gate unexplained.
+
+**E4B_KEYWORD_GAPS extended, not reinterpreted:** three new CSM units (Dark Apostle, Dark Commune,
+Traitor Enforcer) are typed Character with CHARACTER absent from the unit-level keyword list — the
+same shape as the existing Ravenwing Command Squad entry (CHARACTER scoped to one model group of a
+multi-model-group unit, correctly not promoted unit-wide by the transform). Added to the allowlist
+with the model-group named per unit; not a new judgment, the assertion's own docstring anticipates
+a third such unit surfacing.
+
+Manifest reissued (41 guarded files). End state: 21/23 gates pass; `repro_check` and `rules_assertions`'
+own embedded P1 check are the two exceptions, both the same root cause — see D230, not a second
+problem.
+
+## D230 — B68 opened: loadout defaults resolve by unit name, not army+unit_id; deferred, not fixed (S147)
+
+Building `unit_loadouts.json`'s CSM pass (CSM_BUILD_SCOPE §5) surfaced a bug that predates this
+session and has been invisible until now. Chaos Rhino, Chaos Land Raider, Chaos Predator Annihilator,
+Chaos Predator Destructor, Chaos Spawn, Defiler, and Helbrute are each separate datasheets under both
+Death Guard and Chaos Space Marines, with identical Unit Names and distinct unit_ids. CSM is the first
+faction ever added that shares generic Chaos vehicle names with an already-built faction.
+
+**Proven, not assumed:** reproducing the exact production chain (`loadout_parser.py --factions SM
+DG`, the five existing web passes, the final datasheets pass — CSM named nowhere) against the new,
+CSM-inclusive `units.json` still changed 23 pre-existing units' stored defaults (list-order shifts on
+`default_weapons`, a `_defaults_source` provenance flag dropped on at least one). Isolating each step
+individually (`loadout_parser.py` alone, each web pass alone, the final pass alone) versus the
+currently-committed `unit_loadouts.json` confirms the trigger is CSM's mere presence as data in
+`units.json`, not any processing of CSM's own units — a name-keyed lookup somewhere in
+`loadout_parser.py`/`equipped_parser.py`, not scoped by army or unit_id, is picking up the wrong
+same-named record once a second candidate exists.
+
+**Not fixed this session — cannot be, by the project's own rule.** This is a parser-level defect;
+fixing it is an engine/parser change, and turn typing forbids mixing that with a data turn. `deliver
+`unit_loadouts.json` and `repro_check.py` are untouched this session — no attempt to route around it,
+no partial edit. CSM_BUILD_SCOPE.md's loadout-defaults step (§5, the sixth `equipped_parser.py` pass)
+is blocked on this fix, not merely undone.
+
+**Filed as B68.** Until fixed, `repro_check.py`'s gate (and the identical check embedded in
+`rules_assertions.py` as P1) will show this exact byte-mismatch, naming the same seven unit_ids, at
+every session open. This is the expected, diagnosed state carried forward deliberately — not a new
+regression to re-diagnose.

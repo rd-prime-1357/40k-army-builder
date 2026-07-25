@@ -47,6 +47,18 @@
   "Auspex Array": "Ranged weapons equipped by the bearer have the [IGNORES COVER] ability.",
   "Infernum Halo-launcher": "The bearer has the <span class=\"kwb\">SMOKE</span> keyword."
  },
+ "000000939": {
+  "Chaos Familiar": "Once per battle, when an attack is allocated to the bearer, you can change the Damage characteristic to 0."
+ },
+ "000000952": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+ },
+ "000000953": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+ },
+ "000000957": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+ },
  "000001044": {
   "Icon of Despair (Aura)": "While an enemy unit is within 6\" of the bearer, worsen the Leadership characteristic of models in that unit by 1."
  },
@@ -62,6 +74,12 @@
  "000002568": {
   "Orbital Comms Array (Aura)": "While a friendly <span class=\"kwb\">ADEPTUS</span> <span class=\"kwb\">ASTARTES</span> unit is within 6\" of the bearer, each time you target that unit with a Stratagem, roll one D6: on a 5+, you gain 1CP.",
   "Shield Dome": "The bearer has a 5+ invulnerable save."
+ },
+ "000002569": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+ },
+ "000002570": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
  },
  "000002677": {
   "Terminator Storm Shield": "The bearer has a Wounds characteristic of 6."
@@ -90,6 +108,9 @@
  },
  "000003873": {
   "Storm Shield": "The bearer has a Wounds characteristic of 4."
+ },
+ "000003876": {
+  "Voice Eater": "Enemy units (excluding <span class=\"kwb\">MONSTERS</span> and <span class=\"kwb\">VEHICLES</span>) cannot be targeted with Stratagems while they are within Engagement Range of the bearer’s unit."
  },
  "000004113": {
   "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",

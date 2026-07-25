@@ -2953,6 +2953,13 @@ def e4b_limit_matches_muster(S):
 E4B_KEYWORD_GAPS = {
     ('Dark Angels', 'Ravenwing Command Squad'),      # CHARACTER sits on the Champion model group
     ('Chaos Daemons', 'Rendmaster on Blood Throne'), # Chaos Daemons carry ability-style keywords only
+    # S147 (CSM turn A) — same shape as Ravenwing Command Squad: a two-model-group
+    # Character datasheet where CHARACTER is scoped to only the named model, not
+    # "ALL MODELS", so the transform's (correct) refusal to promote a model-scoped
+    # keyword to the whole unit leaves the unit-level keyword list incomplete.
+    ('Chaos Space Marines', 'Dark Apostle'),         # CHARACTER sits on the DARK APOSTLE model
+    ('Chaos Space Marines', 'Dark Commune'),         # CHARACTER sits on the CULT DEMAGOGUE model
+    ('Chaos Space Marines', 'Traitor Enforcer'),     # CHARACTER sits on the TRAITOR ENFORCER model
 }
 
 

@@ -118,5 +118,25 @@
   {
     "weapon_ability_name": "Icon of Despair (Aura)",
     "weapon_ability_description": "While an enemy unit is within 6\" of the bearer, worsen the Leadership characteristic of models in that unit by 1."
+  },
+  {
+    "weapon_ability_name": "Chaos Familiar",
+    "weapon_ability_description": "Once per battle, when an attack is allocated to the bearer, you can change the Damage characteristic to 0."
+  },
+  {
+    "weapon_ability_name": "Chaos Icon",
+    "weapon_ability_description": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+  },
+  {
+    "weapon_ability_name": "Icon of Flame",
+    "weapon_ability_description": "Ranged weapons equipped by models in the bearer’s unit (excluding CHARACTERS ) have the [IGNORES COVER] ability."
+  },
+  {
+    "weapon_ability_name": "Icon of Khorne",
+    "weapon_ability_description": "If the bearer’s unit contains one or more Icons of Khorne, each time the bearer’s unit destroys an enemy unit, you gain 1 Bloodshed point. Each time you make a Blessings of Khorne roll, roll one additional D6 for each Bloodshed point you have, after which, all your Bloodshed points are lost."
+  },
+  {
+    "weapon_ability_name": "Voice Eater",
+    "weapon_ability_description": "Enemy units (excluding MONSTERS and VEHICLES ) cannot be targeted with Stratagems while they are within Engagement Range of the bearer’s unit."
   }
 ]
