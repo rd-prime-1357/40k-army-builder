@@ -3,7 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **6 open** as of S141: P2, P4, E23, B60, E12, B17. P4 step 3 cancelled S141
+not here, it isn't open. **7 open** as of S141 + Ryan report: P2, P4, E23, B60, E12, B17, B61.
+B61 logged Ryan-side (combined-popup expand arrow, see below). P4 step 3 cancelled S141
 (D220) — 77 KB of whitespace didn't move the display; `wh40k_core_rules.md` removed as the next
 lever instead, pending Ryan's deletion and a fresh percentage read. E21 closed S139 (D218) — piece 3,
 the stranded-allied roster warning, shipped.
@@ -27,12 +28,14 @@ far below prose, near-free to the tokeniser. Minifying `units.json` and `detachm
 further ~720 KB, at the cost of three re-banked fixed points, is cancelled — the whitespace line of
 P4 is done.
 
-**Next lever, taken the same session: `wh40k_core_rules.md` removed.** 139 KB, GW text, already
-flagged below as "nothing opens it. Largest single removable file." Verified safe by static scan
-(absent from `P4_REQUIRED_SOURCES`; the one filename match in `rules_assertions.py` is P4-1's own
-naming-pattern regex, not a file open) and park-and-rerun (23/23 gates pass without it). Delivered to
-Ryan for local backup — GW text, never repo-eligible regardless of project-area location.
-**Awaiting Ryan:** delete it from the project knowledge panel, then report the new percentage.
+**`wh40k_core_rules.md` removed and confirmed (S142).** 139 KB, GW text, already flagged below as
+"nothing opens it. Largest single removable file." Verified safe by static scan (absent from
+`P4_REQUIRED_SOURCES`; the one filename match in `rules_assertions.py` is P4-1's own naming-pattern
+regex, not a file open) and park-and-rerun (23/23 gates pass without it). Delivered to Ryan for local
+backup — GW text, never repo-eligible regardless of project-area location. **Ryan deleted it S142:
+92% → 90%, a 2-point move for 139 KB** — close to the ~123 KB/point rate found in step 1
+(`BACKLOG_ARCHIVE.md`, 174 KB → also 2 points), so prose keeps pricing consistently regardless of
+which file it's in.
 
 **Step 1 result (D213): 94% → 92% on removing `BACKLOG_ARCHIVE.md` (174 KB).** The metric responds
 to volume. Display rounds to whole points, so the true move is 1.1–2.9 against a 1.4 linear
@@ -50,8 +53,11 @@ matching the 77 KB estimate.** `equipped_parser.py`'s terminal writer switched t
 fixed point re-banked, manifest reissued, 23/23 gates and 102/102 assertions hold. **Percentage read
 (S141): 92% before, 92% after — no movement, step 3 cancelled per the pre-set rule (D220).**
 
-The project area was last read at 92% (S141, before `wh40k_core_rules.md`'s removal takes effect).
-The metric is **tokens, not bytes** (Anthropic support docs: project knowledge capacity relates to
+The project area reads **90% as of S142**, after `wh40k_core_rules.md`'s removal. Still tight ahead
+of B60 and the CSM data build, but B60 is a small parser fix and CSM's own footprint isn't yet sized —
+call made S142: proceed to B60 now rather than spend a turn on the decision-log split first; revisit
+capacity once CSM's actual file additions are scoped, since sizing the real cost beats pre-emptively
+cutting more prose against an unknown target. The metric is **tokens, not bytes** (Anthropic support docs: project knowledge capacity relates to
 context limits, with RAG expanding it). So file *count* is irrelevant — only total content volume
 matters — and byte size is a proxy rather than a linear measure.
 
@@ -80,6 +86,17 @@ matters — and byte size is a proxy rather than a linear measure.
 **Unknown, do not assume:** whether the displayed percentage is against the base ceiling or the
 RAG-expanded one.
 
+
+### B61 — Combined attached-unit popup: bodyguard's expand arrow opens the leader's rules/abilities — **NEW, Ryan-reported; S**
+Reported by Ryan against the configured-unit popup for an attached (leader + bodyguard) pairing.
+Confirmed on two separate pairs — Ultramarines Intercessors with an attached Lieutenant, and Chaos
+Daemons Bloodletters with an attached Bloodmaster — so this looks generic to any attached unit, not
+faction- or unit-specific. Symptom: in the combined popup, the expand arrow on the **bodyguard**
+unit's rules-and-abilities section opens the **leader's** content instead of the bodyguard's own.
+Likely a shared-key or index mix-up in the popup's expand-toggle wiring for the two stacked
+sections — same popup B53 (CLOSED S96, D162) reordered leader-above-bodyguard in. Needs an
+engine-only turn against `index.html`'s combined-popup renderer; not yet scoped or reproduced by
+Claude directly.
 
 ### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); M**
 
