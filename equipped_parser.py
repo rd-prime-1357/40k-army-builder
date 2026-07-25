@@ -670,7 +670,7 @@ def main():
             if opt.get('id') in patches:
                 opt['scope'] = patches[opt['id']]
 
-    json.dump(ld, open(args.out, 'w'), indent=2, ensure_ascii=False)
+    json.dump(ld, open(args.out, 'w'), separators=(',', ':'), ensure_ascii=False)
 
     with open(args.report, 'w') as f:
         f.write('# Equipped-With Parser Report\n\n')

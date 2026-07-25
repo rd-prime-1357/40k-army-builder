@@ -8359,3 +8359,41 @@ forbid/unlock/warlord), E21d pieces 1-2 (UI) and now piece 3 — is shipped. Bac
 **Net new:** none.
 
 **Repo custody:** all changed files are repo-eligible; no GW-derived text touched.
+
+## D219 — P4 step 2 shipped: `unit_loadouts.json` minified, 77,347 bytes removed; percentage read pending (S140)
+
+**What changed.** `equipped_parser.py`'s single terminal writer (the `json.dump` call at the end of
+`main()`, the one that produces every pass's `--out` and therefore the committed file) switched from
+`indent=2` to `separators=(',', ':')`. This is the one writer D213 identified — `loadout_parser.py`
+also calls `json.dump`, but its output is always an intermediate step file that `equipped_parser.py`
+reloads and rewrites, so only the terminal call's formatting reaches the committed file.
+
+**Regeneration.** Ran the same pipeline `repro_check.py` runs — `loadout_parser.py` seeded with only
+the four `HAND_AUTHORED` entries, then the five web passes (SM, DG, BT, DA, SW) plus the final
+`--datasheets` pass — and confirmed the result is semantically identical to the prior committed file
+(`json.load` equality) before overwriting. First attempt used the full committed file as the
+`--existing` seed instead of the four-entry seed `repro_check.py` actually uses, which produced three
+spurious content diffs (a pool_id fan-out difference on Thunderwolf Cavalry Pack Leader); re-run with
+the correct seed matched exactly. Worth recording since the wrong seed would have banked a fixed point
+against content nobody intended to change.
+
+**Result: 201,999 → 124,652 bytes, a 77,347-byte reduction** — within a few hundred bytes of D213's
+77 KB estimate. Fixed point re-banked (`repro_check.py` passes byte-for-byte against the new file).
+`pipeline_manifest.json` reissued. Full baseline 23/23, assertions 102/102, no regressions.
+
+**Decision rule from D213 not yet resolved.** Reading the displayed capacity percentage requires the
+file to be live in the project area, which happens only after Ryan re-uploads the changed files — not
+something checkable from this session. P4 stays open pending that reading. If the display moves about
+0.6 points, whitespace prices like prose and step 3 minifies `units.json` (650 KB) and
+`detachments.json` (70 KB) the same way; no movement cancels step 3.
+
+**Turn type: data-only.** `equipped_parser.py` (writer), `unit_loadouts.json` (regenerated, 124,652
+bytes), `pipeline_manifest.json` (reissued). No engine or parser-logic change beyond the formatting
+call; no CSV or rules content touched.
+
+**Changed:** `equipped_parser.py`, `unit_loadouts.json`, `pipeline_manifest.json`,
+`40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`.
+
+**Net new:** none.
+
+**Repo custody:** all changed files are repo-eligible; no GW-derived text touched.

@@ -3,8 +3,9 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **6 open** as of S139: P2, P4, E23, B60, E12, B17. E21 closed S139 (D218) —
-piece 3, the stranded-allied roster warning, shipped, closing the E21 arc.
+not here, it isn't open. **6 open** as of S140: P2, P4, E23, B60, E12, B17. P4 step 2 shipped S140
+(D219) — `unit_loadouts.json` minified; P4 stays open pending Ryan's percentage read and the step-3
+call. E21 closed S139 (D218) — piece 3, the stranded-allied roster warning, shipped.
 
 ## Open Items
 
@@ -16,7 +17,7 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### P4 — Project-area capacity — **NEW S134 (D211); STEP 1 DONE S135 (D213); PROCESS; S then M**
+### P4 — Project-area capacity — **NEW S134 (D211); STEP 1 DONE S135 (D213); STEP 2 DONE S140 (D219); PROCESS; S then M**
 
 **Step 1 result (D213): 94% → 92% on removing `BACKLOG_ARCHIVE.md` (174 KB).** The metric responds
 to volume. Display rounds to whole points, so the true move is 1.1–2.9 against a 1.4 linear
@@ -29,12 +30,14 @@ without it) and by a static scan finding no code reference and no manifest entry
 identical space characters compress far harder, plausibly 10–20. Step 1 proved volume matters, not
 that all volume costs the same.
 
-- **Step 2 — data-only, small. NEXT.** Minify `unit_loadouts.json` alone (77 KB of whitespace). One
-  writer, one regeneration, one fixed point re-banked, manifest reissued. Then read the percentage.
+**Step 2 result (D219): `unit_loadouts.json` minified, 201,999 → 124,652 bytes (77,347 removed),
+matching the 77 KB estimate.** `equipped_parser.py`'s terminal writer switched to compact separators;
+fixed point re-banked, manifest reissued, 23/23 gates and 102/102 assertions hold. **Awaiting Ryan:**
+re-upload the changed files to the project area, then report the displayed percentage.
+
 - **Decision rule, fixed in advance:** ~0.6 points → whitespace prices like prose, step 3 minifies
-  `units.json` (650 KB) and `detachments.json` (70 KB). No movement → step 3 cancelled.
-- Sequenced **after** S136's E21c/E22b: it is a data turn, capacity is not blocking, and E22b closes
-  a live D0 violation.
+  `units.json` (650 KB) and `detachments.json` (70 KB) the same way. No movement → step 3 cancelled
+  and P4 closes with step 2 as its final move.
 
 The project area is at ~94% and the metric is **tokens, not bytes** (Anthropic support docs: project
 knowledge capacity relates to context limits, with RAG expanding it). So file *count* is irrelevant —

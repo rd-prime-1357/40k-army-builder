@@ -1,46 +1,40 @@
-# Next-session prompt — Session 140
+# Next-session prompt — Session 141
 
-Session 139 shipped **E21d piece 3** (**D218**), closing the **E21** arc. A unit stranded by a later
-change — its unlocking detachment deselected or switched away, its allied group over the sub-cap
-after a battle-size drop, or a forbidden unit seated by import — now reads as a visible roster error
-(`entryAlliedError`, wired into `entryHasError`), never silently trimmed or blocked. Ryan's ruling:
-a quick detachment switch-and-back must leave the list intact, and the same treatment is the tool's
-standing answer for the whole "was-legal, a-later-choice-made-it-illegal" class (enhancement
-over-states included). Engine-only turn; `index.html` 6.8 -> 6.9. Read `SESSION_HANDOFF_139.md`, then
-**D218**.
+Session 140 shipped **P4 step 2** (**D219**): `unit_loadouts.json` minified via `equipped_parser.py`'s
+terminal writer, 201,999 -> 124,652 bytes, 77,347 removed — matching D213's 77 KB estimate. Fixed
+point re-banked, manifest reissued. Data-only turn; no engine or index.html change.
 
 ## Baseline at open
 
-Verify the eight S139 hashes in the handoff's Files section byte-for-byte, then run `./baseline.sh`.
-S139 closed at 23/23 gates, 102/102 assertions.
+Verify the six S140 hashes in the handoff's Files section byte-for-byte, then run `./baseline.sh`.
+S140 closed at 23/23 gates, 102/102 assertions.
 
-## Turn type and task: P4 step 2 — the capacity lever (data-only, small)
+## First: read Ryan's percentage report before picking the turn
 
-Ryan has flagged project-area capacity (93%) again. P4 step 2 is the sequenced next move and is
-small: minify `unit_loadouts.json` alone (77 KB of whitespace) — one writer, one regeneration, one
-fixed point re-banked via `repro_check.py`, manifest reissued, then read the percentage. **Decision
-rule fixed in D213:** ~0.6 points -> whitespace prices like prose and step 3 minifies `units.json`
-(650 KB) and `detachments.json` (70 KB); no movement -> step 3 cancelled. No new files; this is the
-lever that reduces capacity without adding to it.
+P4 step 2's decision rule (D213) needs the displayed capacity percentage after the S140 files are
+live in the project area — check `SESSION_HANDOFF_140.md`'s "Decisions needed" section and whatever
+Ryan reported before this session opened. **If ~0.6 points moved:** whitespace prices like prose;
+P4 step 3 minifies `units.json` (650 KB) and `detachments.json` (70 KB) the same way — same
+mechanism as step 2, mechanical, data-only. **If it didn't move:** step 3 is cancelled, P4 closes
+with step 2 as its final result, and the session goes straight to B60 below.
 
-## B60 is ready to build, but it is bigger than the ticket says — take it as a parser turn, higher effort
+## B60 — parser fix, higher effort (take this if P4 step 3 doesn't apply, or after it)
 
 S139's investigation (diagnosis only, nothing changed) found B60 is **not** the mechanical
-field-relabel the ticket describes. Three findings, all needing the source, so budget a stronger
-model for the fix:
+field-relabel the ticket describes. Budget a stronger model — this needs source-text judgment, not
+just routing:
 
-* In **four** of the eleven `rule_text` cases (Black Templars, Blood Angels, Dark Angels, Space
-  Wolves) the literal header word `RESTRICTIONS` is present in the source right before the
+* In **four** of eleven `rule_text` cases (Black Templars, Blood Angels, Dark Angels, Space Wolves)
+  the literal header word `RESTRICTIONS` is present in the source right before the
   chapter-exclusivity sentence — the parser's header detection is failing to catch it there, so the
-  whole block, header text included, falls through into `rule_text`. A real parse bug, not a
-  pack-formatting difference.
-* Two of the twelve records already in `restrictions` are **corrupted independently**: Dark Angels
+  whole block, header text included, falls through into `rule_text`. A real parse bug.
+* Two of twelve records already in `restrictions` are **corrupted independently**: Dark Angels
   `LION'S BLADE TASK FORCE` has stratagem text bled into the field, and `WRATH OF THE ROCK` has no
-  restriction text at all — just fragment text and stray CP tokens. A routing change alone will not
+  restriction text at all — just fragment text and stray CP tokens. A routing change alone won't
   clean these; root-cause both before fixing.
 
 It's a `detachment_parser.py` fix + `detachments_repro_check.py` regeneration, data-only, and blocks
-nothing else — so it can wait behind P4 step 2, but the diagnosis above should save the re-derivation.
+nothing else.
 
 ## After that, the faction priority order resumes
 
@@ -61,13 +55,13 @@ nothing else — so it can wait behind P4 step 2, but the diagnosis above should
 * Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard**.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* **D199's four batched calls remain unreviewed — since S127, now thirteen sessions.**
+* **D199's four batched calls remain unreviewed — since S127, now fourteen sessions.**
 
 ## Effort
 
-**Mostly mechanical.** P4 step 2 is data-only and low effort. B60, when taken, is the exception —
-its fix is parser diagnosis worth a stronger model, per the findings above. CSM is a large but
-mechanical data build once scoped.
+**Mostly mechanical.** P4 step 3, if it applies, is data-only and low effort — identical mechanism
+to step 2. B60 is the exception — its fix is parser diagnosis worth a stronger model. CSM is a large
+but mechanical data build once scoped.
 
 ## Backlog
 
