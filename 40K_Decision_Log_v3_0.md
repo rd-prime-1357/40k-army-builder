@@ -8753,3 +8753,58 @@ start a regeneration turn against a stale file because the file "should" be ther
 `SESSION_HANDOFF_145.md`.
 
 **Net new:** none.
+
+---
+
+## D227 — Chaos Space Marines build scoped: 58 units, 17 detachments, four cross-sourced cult-troop prices (S146)
+
+Scoping-only turn (tooling-typed; no committed data/engine/parser change — dry-run transforms went
+to a throwaway temp dir). Full scope in `CSM_BUILD_SCOPE.md`. Baseline verified clean at open:
+S145's six hashes matched byte-for-byte, `./baseline.sh --no-repo` 23/23 gates, 104/104 assertions.
+
+**Roster is 58, not 112.** The prompt's 112 is a raw `faction_id == CSM` row count; 54 of those are
+Warhammer Legends (edition 0) and are correctly excluded by the transform's existing filter. The CSM
+transform selects 58, matching `MFM_Standalone_Pass.md`. CSM is a clean single-faction build in the
+Death Guard mould — no chapter split, no allied codex, no new engine or UI mechanism.
+
+**Marks of Chaos are not a build-time choice** in the current codex — zero "Mark of …" option rows;
+marks appear only as baked-in god keywords and three E4-handled enhancements. The largest potential
+complication is ruled out.
+
+**Detachments reconcile to 17 under D192 (engineering rule, not a Ryan call).** MFM (11th ed) and the
+Wahapedia dump (10th ed) disagree: two detachments are MFM-only (Devotees of Destruction, Murdertalon
+Raiders — new in 11th), three are Wahapedia-only (Champions of Chaos, Infernal Reavers, Underdeck
+Uprising — removed in 11th). D192: MFM decides existence; text-source-only content is dropped as
+stale. So the three are dropped, the two are included, count is 17. `detachment_parser.py` already
+works this way; only three config lines are needed.
+
+**Four cult-troop units are priced in sibling MFMs, not the CSM MFM** — Khorne Berzerkers (WE), Plague
+Marines (DG), Rubric Marines (TS), Noise Marines (EC), all confirmed present. They must be priced (an
+uncosted unit can't be legally added). The existing `--append --scope-to-army` machinery covers it,
+with one wrinkle: those rows carry the parent legion's Army Name, so the append relabels four named
+units rather than scoping by a matching army name. This is the only part of the build with a real
+chance of running deeper than one clean turn; if it does, bank the 54-unit build and make cult pricing
+its own turn.
+
+**Build sequenced as three data turns + one tooling turn** (scope §8), strictly separated. Real
+project-area growth is ~540 KB across `units.json`/`detachments.json`/`unit_loadouts.json`; source
+inputs are already loaded. `index.html` unchanged.
+
+**Open for Ryan — D228 (see below).** One real product decision surfaced by this scope: whether the
+two prose-less new detachments are built at all.
+
+## D228 — Prose-less current-edition detachments: build them selectable, prose-incomplete (S146) — RECOMMENDATION, awaiting Ryan
+
+The two new 11th-ed CSM detachments (Devotees of Destruction, Murdertalon Raiders) exist per the MFM
+(D192) but have no rule text, no enhancement descriptions, and no stratagems in any held source — the
+Wahapedia dump predates them and the CSM MFM carries no rule prose for any detachment. Built, each
+renders as a legal selectable detachment with its two enhancements named and priced but with an empty
+rule and description-less enhancements, and zero stratagems.
+
+This sets a lasting precedent about how the tool treats current-edition content whose rules text we
+don't yet hold, so it reaches Ryan. **Recommendation: build them.** The tool's core promise is
+offering exactly what the current edition allows; suppressing two legal detachments would make it
+reject legal armies — a worse failure than showing a detachment with incomplete prose. This mirrors
+E1's handling of prose-incomplete content. The call is reversible (one inclusion flag to hide them
+later), so the build proceeds on this recommendation unless Ryan says otherwise; flagged here for an
+explicit yes/no because it is precedent-setting.

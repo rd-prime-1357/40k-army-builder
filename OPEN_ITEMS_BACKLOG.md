@@ -3,7 +3,9 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S145: P2, P4, E23, E12, B17, B61, B67b. B67 CLOSED S145
+not here, it isn't open. **7 open** as of S146: P2, P4, E23, E12, B17, B61, B67b — unchanged from
+S145 (S146 was a tooling-only CSM build-scoping turn, D227; no ticket opened or closed. CSM is
+faction-priority roadmap work tracked in `CSM_BUILD_SCOPE.md`, not a backlog ticket). B67 CLOSED S145
 (D225) — both GW-derived files confirmed removed from the repo's HEAD; D223's "single commit" premise
 was wrong (249 commits), so a full history purge is a separate, optional action, filed as B67b.
 S145 also regenerated `unit_loadouts.json` (D225) after verifying a Dark Angels data fix and a new
