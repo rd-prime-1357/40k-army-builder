@@ -1,28 +1,32 @@
-# Next-session prompt — Session 141
+# Next-session prompt — Session 142
 
-Session 140 shipped **P4 step 2** (**D219**): `unit_loadouts.json` minified via `equipped_parser.py`'s
-terminal writer, 201,999 -> 124,652 bytes, 77,347 removed — matching D213's 77 KB estimate. Fixed
-point re-banked, manifest reissued. Data-only turn; no engine or index.html change.
+Session 141 verified S140's baseline (23/23 clean, all hashes matched), then closed out P4's
+whitespace line: step 3 is **cancelled** (D220) — step 2's 77 KB removal moved the displayed
+percentage by nothing, so minifying `units.json`/`detachments.json` isn't expected to be worth three
+re-banked fixed points. In its place, `wh40k_core_rules.md` (139 KB, GW text, referenced by no
+script) was removed from the working directory, verified safe by static scan and park-and-rerun
+(23/23), and delivered to Ryan as a local-backup file — a direct response to Ryan flagging the
+project area's 92% capacity ahead of B60 and the CSM data build, both of which need to add or grow
+files. This was a PROCESS turn; no code, data, or engine change.
 
 ## Baseline at open
 
-Verify the six S140 hashes in the handoff's Files section byte-for-byte, then run `./baseline.sh`.
-S140 closed at 23/23 gates, 102/102 assertions.
+Verify the five S141 hashes in the handoff's Files section byte-for-byte, then run `./baseline.sh`.
+S141 closed at 23/23 gates, 102/102 assertions — unchanged from S140, since nothing engine- or
+data-side moved this session.
 
-## First: read Ryan's percentage report before picking the turn
+## First: confirm the deletion and read the new percentage
 
-P4 step 2's decision rule (D213) needs the displayed capacity percentage after the S140 files are
-live in the project area — check `SESSION_HANDOFF_140.md`'s "Decisions needed" section and whatever
-Ryan reported before this session opened. **If ~0.6 points moved:** whitespace prices like prose;
-P4 step 3 minifies `units.json` (650 KB) and `detachments.json` (70 KB) the same way — same
-mechanism as step 2, mechanical, data-only. **If it didn't move:** step 3 is cancelled, P4 closes
-with step 2 as its final result, and the session goes straight to B60 below.
+Check whether Ryan deleted `wh40k_core_rules.md` from the project knowledge panel and what the
+resulting percentage reads. If it's meaningfully down from 92%, note it in P4 and consider whether
+the remaining ~178 KB of identified removable prose, or the decision-log split (see
+`OPEN_ITEMS_BACKLOG.md`'s P4 entry), is worth a further turn before B60/CSM start adding volume. If
+capacity isn't the live concern anymore, move straight to B60.
 
-## B60 — parser fix, higher effort (take this if P4 step 3 doesn't apply, or after it)
+## B60 — parser fix, higher effort
 
-S139's investigation (diagnosis only, nothing changed) found B60 is **not** the mechanical
-field-relabel the ticket describes. Budget a stronger model — this needs source-text judgment, not
-just routing:
+S139's investigation (diagnosis only) found B60 is **not** the mechanical field-relabel the ticket
+describes. Budget a stronger model — this needs source-text judgment, not just routing:
 
 * In **four** of eleven `rule_text` cases (Black Templars, Blood Angels, Dark Angels, Space Wolves)
   the literal header word `RESTRICTIONS` is present in the source right before the
@@ -40,7 +44,7 @@ nothing else.
 
 * **Chaos Space Marines** is next in the priority order and the meaningful unblock — it flips Chaos
   Daemons | SHADOW LEGION's HERETIC ASTARTES unlock from `enforced: false` to live. Large data build;
-  scope it as its own turn.
+  scope it as its own turn. Mind the capacity picture before adding new large source/output files.
 * **B17 remainder** — Sanguinary Guard's max-1 Sanguinary Banner add + confirm the 3/6 size selector.
 * **E23** — scoping-only turn (no build). The Tank Ace keyword-grant across six copies; decide where
   the per-list selection state lives (the one genuine design call), and whether the Character-keyword
@@ -51,17 +55,17 @@ nothing else.
 
 * A **local backup folder** for the GW-derived files (the nine Chaos Daemons CSVs, the Wahapedia
   export, the MFM `.txt` files, the faction web/pack files, `Army_Muster_Rules.txt`,
-  `wh40k_core_rules.md`). The repo cannot hold them.
+  `wh40k_core_rules.md` as of S141). The repo cannot hold them.
 * Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard**.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* **D199's four batched calls remain unreviewed — since S127, now fourteen sessions.**
+* **D199's four batched calls remain unreviewed — since S127, now fifteen sessions.**
 
 ## Effort
 
-**Mostly mechanical.** P4 step 3, if it applies, is data-only and low effort — identical mechanism
-to step 2. B60 is the exception — its fix is parser diagnosis worth a stronger model. CSM is a large
-but mechanical data build once scoped.
+**Mostly mechanical.** The percentage check and any further capacity move are process-tier, low
+effort. B60 is the exception — its fix is parser diagnosis worth a stronger model. CSM is a large but
+mechanical data build once scoped.
 
 ## Backlog
 

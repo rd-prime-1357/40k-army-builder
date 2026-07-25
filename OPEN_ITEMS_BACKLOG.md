@@ -3,9 +3,10 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **6 open** as of S140: P2, P4, E23, B60, E12, B17. P4 step 2 shipped S140
-(D219) — `unit_loadouts.json` minified; P4 stays open pending Ryan's percentage read and the step-3
-call. E21 closed S139 (D218) — piece 3, the stranded-allied roster warning, shipped.
+not here, it isn't open. **6 open** as of S141: P2, P4, E23, B60, E12, B17. P4 step 3 cancelled S141
+(D220) — 77 KB of whitespace didn't move the display; `wh40k_core_rules.md` removed as the next
+lever instead, pending Ryan's deletion and a fresh percentage read. E21 closed S139 (D218) — piece 3,
+the stranded-allied roster warning, shipped.
 
 ## Open Items
 
@@ -17,7 +18,21 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### P4 — Project-area capacity — **NEW S134 (D211); STEP 1 DONE S135 (D213); STEP 2 DONE S140 (D219); PROCESS; S then M**
+### P4 — Project-area capacity — **NEW S134 (D211); STEP 1 DONE S135 (D213); STEP 2 DONE S140 (D219); STEP 3 CANCELLED S141 (D220); PROCESS; S then M**
+
+**Step 3 cancelled (D220).** Step 2's 77 KB whitespace removal did not move the displayed
+percentage at all (92% before, 92% after) — not even the fraction of a point the ~0.6-point
+prediction called for. Per D213's rule, fixed before the read: no movement means whitespace prices
+far below prose, near-free to the tokeniser. Minifying `units.json` and `detachments.json` for a
+further ~720 KB, at the cost of three re-banked fixed points, is cancelled — the whitespace line of
+P4 is done.
+
+**Next lever, taken the same session: `wh40k_core_rules.md` removed.** 139 KB, GW text, already
+flagged below as "nothing opens it. Largest single removable file." Verified safe by static scan
+(absent from `P4_REQUIRED_SOURCES`; the one filename match in `rules_assertions.py` is P4-1's own
+naming-pattern regex, not a file open) and park-and-rerun (23/23 gates pass without it). Delivered to
+Ryan for local backup — GW text, never repo-eligible regardless of project-area location.
+**Awaiting Ryan:** delete it from the project knowledge panel, then report the new percentage.
 
 **Step 1 result (D213): 94% → 92% on removing `BACKLOG_ARCHIVE.md` (174 KB).** The metric responds
 to volume. Display rounds to whole points, so the true move is 1.1–2.9 against a 1.4 linear
@@ -32,16 +47,13 @@ that all volume costs the same.
 
 **Step 2 result (D219): `unit_loadouts.json` minified, 201,999 → 124,652 bytes (77,347 removed),
 matching the 77 KB estimate.** `equipped_parser.py`'s terminal writer switched to compact separators;
-fixed point re-banked, manifest reissued, 23/23 gates and 102/102 assertions hold. **Awaiting Ryan:**
-re-upload the changed files to the project area, then report the displayed percentage.
+fixed point re-banked, manifest reissued, 23/23 gates and 102/102 assertions hold. **Percentage read
+(S141): 92% before, 92% after — no movement, step 3 cancelled per the pre-set rule (D220).**
 
-- **Decision rule, fixed in advance:** ~0.6 points → whitespace prices like prose, step 3 minifies
-  `units.json` (650 KB) and `detachments.json` (70 KB) the same way. No movement → step 3 cancelled
-  and P4 closes with step 2 as its final move.
-
-The project area is at ~94% and the metric is **tokens, not bytes** (Anthropic support docs: project
-knowledge capacity relates to context limits, with RAG expanding it). So file *count* is irrelevant —
-only total content volume matters — and byte size is a proxy rather than a linear measure.
+The project area was last read at 92% (S141, before `wh40k_core_rules.md`'s removal takes effect).
+The metric is **tokens, not bytes** (Anthropic support docs: project knowledge capacity relates to
+context limits, with RAG expanding it). So file *count* is irrelevant — only total content volume
+matters — and byte size is a proxy rather than a linear measure.
 
 **Established by measurement, not by reading imports.** Every candidate source file was moved out and
 `./baseline.sh` re-run. Results are pinned in assertion **P4-1**.
@@ -50,20 +62,20 @@ only total content volume matters — and byte size is a proxy rather than a lin
   `_web.txt` files, both faction packs, `MFM_Instructions.txt`, `Army_Muster_Rules.txt` and
   `chaos_daemons_reference.md` each fail three or four gates when absent. Sources can be swapped in for
   an unbuilt faction; they can never be swapped back out once it is built.
-- **Pruning sources is not worth it.** ~317 KB removable in total (~2.6%), and six of those files are
-  priority factions we would have to re-source — about 285 KB genuinely free.
-- **`wh40k_core_rules.md` (139 KB) is removable** — nothing opens it. Largest single removable file.
-  GW text, so it belongs in the local backup folder, not the repo.
-- **Biggest lever: the runtime JSON is pretty-printed.** Compact separators save **797 KB** of pure
-  whitespace (`units.json` 650, `unit_loadouts.json` 77, `detachments.json` 70). Costs a data turn —
-  three repro fixed points re-banked and the manifest reissued.
-
-**Sequenced deliberately smallest-first, as an instrument.** Step 1 is the two free document moves:
-`BACKLOG_ARCHIVE.md` (174 KB) and the archive half of `40K_Decision_Log_v3_0.md` (~400 KB) become
-repo-only, with `DECISION_INDEX.md` and the backlog's pointer lines preserving lookup. Both are
-reversible in one upload. If ~574 KB moves the displayed percentage by about 4.7 points the metric is
-volume-linear and everything after can be planned against byte counts; if it barely moves, the JSON
-minification is not worth the churn. Measure, then decide. See **D211**.
+- **Pruning sources: ~317 KB total was identified removable (~2.6%), six of those files are priority
+  factions we'd have to re-source.** Of the ~285 KB genuinely free, `wh40k_core_rules.md` (139 KB) is
+  out as of S141 (D220) — roughly 178 KB of identified prose remains a candidate if the next
+  percentage read shows it's still worth pursuing.
+- **The whitespace lever is done, and returned less than prose.** Compact separators on
+  `unit_loadouts.json` (77 KB) moved the display by 0 points (D220) — the opposite of D213's ~0.6-point
+  prediction. `units.json` (650 KB) and `detachments.json` (70 KB) stay pretty-printed; minifying them
+  is not expected to be worth three re-banked fixed points given step 2's result.
+- **Not yet attempted: splitting `40K_Decision_Log_v3_0.md`.** Original step-1 plan (D211) included
+  moving the log's archive half (~400 KB, out of 660 KB now) to a repo-only file the way
+  `BACKLOG_ARCHIVE.md` was split off, with `DECISION_INDEX.md` preserving lookup. Deferred, not
+  ruled out — the next candidate if capacity is still tight after `wh40k_core_rules.md`'s removal
+  lands, though it is a bigger move (a new archive file, a cut-line decision) than the file removals
+  done so far.
 
 **Unknown, do not assume:** whether the displayed percentage is against the base ceiling or the
 RAG-expanded one.

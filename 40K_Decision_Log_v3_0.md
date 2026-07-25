@@ -8397,3 +8397,52 @@ call; no CSV or rules content touched.
 **Net new:** none.
 
 **Repo custody:** all changed files are repo-eligible; no GW-derived text touched.
+
+
+## D220 — P4 step 3 cancelled: 77 KB of whitespace did not move the display; `wh40k_core_rules.md` removed as the next prose lever (S141)
+
+### The percentage read
+
+Ryan reported 92% at this session's open, with the S140 files already live (all seven hashes
+verified byte-identical against the project mount before this entry). That is the same rounded
+figure D213 recorded at S135 close, after removing `BACKLOG_ARCHIVE.md` and before step 2 existed.
+Two small net-new files landed between then and now (`e21b_check.js`, `e21c_check.js`, D212/D214) —
+together well under the ~123 KB/point resolution D213 established, so the pre-upload baseline for
+this reading was still effectively 92%. Step 2 removed 77,347 bytes and the display did not move at
+all, not even the fraction of a point the ~0.6-point prediction implied.
+
+**Per D213's decision rule, fixed in advance of this reading:** no movement means whitespace is
+near-free to the tokeniser. **Step 3 is cancelled.** Minifying `units.json` and `detachments.json`
+(a further ~720 KB, three re-banked fixed points of churn) on a lever that returned nothing at this
+scale is not worth it. P4's whitespace line closes here with step 2 as its result.
+
+### The next lever, executed the same session
+
+Ryan raised project-area capacity again this session, ahead of B60 and the CSM data build, both of
+which add or grow files. P4's backlog record had already identified the next candidate:
+`wh40k_core_rules.md` (139 KB, GW text) — "nothing opens it. Largest single removable file." Verified
+by the same method D213 used on `BACKLOG_ARCHIVE.md`:
+
+* **Static scan.** The only match for the filename anywhere in `.py`/`.js`/`.sh`/`.html` is
+  `rules_assertions.py`'s own `_P4_PAT` regex — the naming pattern P4-1's source census uses to
+  detect *other* files referencing it, not a file open. The file is absent from
+  `P4_REQUIRED_SOURCES`.
+* **Park-and-rerun.** Removed from the working directory, full `./baseline.sh` re-run: **23/23 gates
+  still pass**, including `pipeline_manifest` and `rules_assertions` (P4-1 itself).
+
+Delivered to Ryan as a local-backup file — GW text, so per standing custody it can never go to the
+repo regardless of where it sits in the project area. Recommend deleting it from the project
+knowledge panel; the resulting percentage will show whether prose removal is still worth pursuing
+against the backlog's remaining removable sources (~178 KB left of the ~317 KB total once this file
+is out).
+
+**Changed:** `40K_Decision_Log_v3_0.md` (this entry), `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`
+(P4 updated), `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_141.md`.
+
+**Removed from the project area (pending Ryan's deletion):** `wh40k_core_rules.md`, verified safe as
+above, delivered for local backup. Never repo-eligible.
+
+**Net new:** none.
+
+**Repo custody:** no repo-eligible files touched. `wh40k_core_rules.md` was excluded from the repo
+before this and stays excluded — its project-area location doesn't change its custody status.
