@@ -356,20 +356,72 @@ def load_wahapedia(root):
     return idx
 
 
+# Wahapedia marks in-description section headers -- RESTRICTIONS, KEYWORDS, named
+# sub-abilities -- with a hi_custom span. These are always headers, never mid-sentence
+# emphasis, so a detachment's chapter-exclusivity restriction can be lifted out cleanly
+# by splitting on them (B60).
+HI_CUSTOM = re.compile(r'<span class="hi_custom">\s*(.*?)\s*</span>', re.I)
+
+
+def _split_hi_sections(desc):
+    """Split a description into (lead_html, [(label_norm, header_html, body_html), ...]).
+
+    lead_html is everything before the first hi_custom header. Each section runs from
+    just after its header span to the next header or the end.
+    """
+    if not desc:
+        return desc, []
+    marks = list(HI_CUSTOM.finditer(desc))
+    if not marks:
+        return desc, []
+    lead = desc[:marks[0].start()]
+    sections = []
+    for i, m in enumerate(marks):
+        start = m.end()
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(desc)
+        sections.append((norm_key(m.group(1)), m.group(0), desc[start:end]))
+    return lead, sections
+
+
 def waha_text(rec):
     if not rec:
-        return None, None, {}, []
+        return None, None, None, {}, []
     rule_name = None
     rule_bits = []
+    restr_bits = []
+    # The 10th-Ed dump carries the detachment's chapter-exclusivity restriction in one
+    # of two shapes: as its own ability row named "Restrictions" (any case), or as a
+    # hi_custom RESTRICTIONS section embedded inside a rule's own description. Either
+    # way it is not a detachment rule and must not fold into rule_text -- route it to
+    # the restrictions field, leaving any other embedded section (KEYWORDS, sub-rules)
+    # attached to the rule. Whether the rule name is prepended to each bit depends on
+    # the count of *real* rules, so a single rule accompanied only by a Restrictions
+    # row still renders as bare body text (B60).
+    real_rule_count = sum(1 for nm, _ in rec["rules"] if norm_key(nm) != "RESTRICTIONS")
     for nm, desc in rec["rules"]:
-        body = strip_html(desc)
+        if norm_key(nm) == "RESTRICTIONS":
+            b = strip_html(desc)
+            if b:
+                restr_bits.append(b)
+            continue
+        lead, sections = _split_hi_sections(desc)
+        kept = lead
+        for lab_norm, header_html, seg_html in sections:
+            if lab_norm == "RESTRICTIONS":
+                rb = strip_html(seg_html)
+                if rb:
+                    restr_bits.append(rb)
+            else:
+                kept += header_html + seg_html
+        body = strip_html(kept)
         if not body:
             continue
         if rule_name is None:
             rule_name = clean_chars(nm).strip() or None
         rule_bits.append(("%s\n%s" % (clean_chars(nm).strip(), body)).strip()
-                         if len(rec["rules"]) > 1 else body)
+                         if real_rule_count > 1 else body)
     rule_text = "\n\n".join(rule_bits) if rule_bits else None
+    restrictions = "\n".join(restr_bits) if restr_bits else None
 
     enh = {}
     for e in rec["enh"]:
@@ -385,7 +437,7 @@ def waha_text(rec):
             "description": strip_html(s.get("description", "")),
         })
     strat.sort(key=lambda x: x["name"])
-    return rule_name, rule_text, enh, strat
+    return rule_name, rule_text, restrictions, enh, strat
 
 
 # ---------------------------------------------------------------------------
@@ -449,6 +501,8 @@ def parse_da_pack(path, wanted_keys):
                 continue
             body = lines
         _da_consume(body, cur)
+    for rec in out.values():
+        rec.pop("_strat_region", None)
     return out
 
 
@@ -486,6 +540,18 @@ def _da_consume(lines, det):
         bare = re.sub(r"[\s\u2022\u25aa\u25a0.]+$", "", ln).strip()
         up = bare.upper()
 
+        # A detachment's chapter-exclusivity restriction always sits in its rule /
+        # enhancement block, ahead of the stratagems. Stratagems each carry their own
+        # "RESTRICTIONS:" clause; on well-formed pages those are absorbed in strat mode
+        # and skipped by the mode!="strat" guard below. But where the pack collates a
+        # page's CP tokens at the foot instead of beside each stratagem name, stratagem
+        # recognition fails, mode never becomes "strat", and those clauses would re-open
+        # detachment-restrict mode and swallow the rest of the page. Marking the start of
+        # the stratagem region closes that door regardless of whether the CP tokens sat
+        # where the recogniser expected them (B60).
+        if re.search(r"STRATAGEM\s*$", bare, re.I):
+            det["_strat_region"] = True
+
         if up in ("DETACHMENT RULE", "DETACHMENT RULES"):
             flush(); mode = "rule"; pending_name = None
             # the next non-blank all-caps line is the rule's name
@@ -500,9 +566,9 @@ def _da_consume(lines, det):
             continue
         if up == "ENHANCEMENTS":
             flush(); mode = "enh"; pending_name = None; i += 1; continue
-        if up in ("RESTRICTIONS", "RESTRICTIONS:"):
+        if up in ("RESTRICTIONS", "RESTRICTIONS:") and not det.get("_strat_region"):
             flush(); mode = "restrict"; pending_name = None; i += 1; continue
-        if up.startswith("RESTRICTIONS:") and mode != "strat":
+        if up.startswith("RESTRICTIONS:") and mode != "strat" and not det.get("_strat_region"):
             flush(); mode = "restrict"; buf = [bare.split(":", 1)[1]]; i += 1; continue
 
         # A stratagem opens as NAME / nCP / "<DETACHMENT> STRATAGEM" in either order.
@@ -948,7 +1014,7 @@ def build(root, out_path, report_path=None):
             key = norm_key(d["name_raw"])
             pack_name, pack = pack_by_army[army].get(key, (None, None))
             w = waha.get(fac, {}).get(key)
-            w_rule_name, w_rule_text, w_enh, w_strat = waha_text(w)
+            w_rule_name, w_rule_text, w_restrictions, w_enh, w_strat = waha_text(w)
 
             if pack and (pack.get("rule_text") or pack.get("enh")):
                 text_source = "faction_pack"
@@ -970,7 +1036,7 @@ def build(root, out_path, report_path=None):
                 text_source = "wahapedia_10e"
                 rule_name = w_rule_name
                 rule_text = w_rule_text
-                restrictions = None
+                restrictions = w_restrictions
                 strat = w_strat
                 strat_source = "wahapedia_10e" if strat else "none"
                 src_label = "Wahapedia 10th Edition"

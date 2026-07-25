@@ -2289,8 +2289,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Righteous Fervour",
-   "rule_text": "You can re-roll Advance and Charge rolls made for ADEPTUS ASTARTES units from your army.\nRESTRICTIONS\nYour army can include Black Templars units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "You can re-roll Advance and Charge rolls made for ADEPTUS ASTARTES units from your army.",
+   "restrictions": "Your army can include Black Templars units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Incendiary Animus",
@@ -2603,8 +2603,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Shock and Awe",
-   "rule_text": "▪ Each time an ADEPTUS ASTARTES unit from your army declares a charge, if it disembarked from a Transport this turn, after selecting the targets of that charge, select one of those targets; that enemy unit must take a Battle-shock test.\n▪ Each time a model in an ADEPTUS ASTARTES unit from your army makes a melee attack, if it disembarked from a TRANSPORT this turn, add 1 to the Hit roll.\nRESTRICTIONS\nYour army can include Black Templars units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "▪ Each time an ADEPTUS ASTARTES unit from your army declares a charge, if it disembarked from a Transport this turn, after selecting the targets of that charge, select one of those targets; that enemy unit must take a Battle-shock test.\n▪ Each time a model in an ADEPTUS ASTARTES unit from your army makes a melee attack, if it disembarked from a TRANSPORT this turn, add 1 to the Hit roll.",
+   "restrictions": "Your army can include Black Templars units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Augury Servo-Host",
@@ -3238,8 +3238,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Purge and Sanctify",
-   "rule_text": "▪ Each time an attack targets an Ancient unit from your army, if that unit is within range of one or more objective markers and the Strength characteristic of that attack is greater than the Toughness characteristic of that unit, subtract 1 from the Wound roll.\n▪ Each time a Crusader Squad unit from your army makes a Righteous Zeal move, that unit can end that move as close as possible to the closest objective marker instead of as close as possible to the closest enemy unit.\nRESTRICTIONS\nYour army can include Black Templars units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "▪ Each time an attack targets an Ancient unit from your army, if that unit is within range of one or more objective markers and the Strength characteristic of that attack is greater than the Toughness characteristic of that unit, subtract 1 from the Wound roll.\n▪ Each time a Crusader Squad unit from your army makes a Righteous Zeal move, that unit can end that move as close as possible to the closest objective marker instead of as close as possible to the closest enemy unit.",
+   "restrictions": "Your army can include Black Templars units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Consecrating Aura",
@@ -3325,8 +3325,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Zealous Litanies",
-   "rule_text": "At the start of the battle round, you can select one of the Litanies listed below. If you do, until the end of the battle round, that Litany is active and its effects apply to all Adeptus Astartes Infantry and Adeptus Astartes Mounted units from your army.\nChorus of Relentless Hate\nAdd 2\" to the Move characteristic of models in this unit and add 1 to Advance rolls made for it.\nRite of Perfervid Wrath\nAdd 1 to the Strength characteristic of melee weapons equipped by models in this unit.\nCHANT OF DEATHLESS DEVOTION\nModels in this unit have a 5+ invulnerable save against ranged attacks.\nRESTRICTIONS\nYour army can include Black Templars units, but it cannot include ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "At the start of the battle round, you can select one of the Litanies listed below. If you do, until the end of the battle round, that Litany is active and its effects apply to all Adeptus Astartes Infantry and Adeptus Astartes Mounted units from your army.\nChorus of Relentless Hate\nAdd 2\" to the Move characteristic of models in this unit and add 1 to Advance rolls made for it.\nRite of Perfervid Wrath\nAdd 1 to the Strength characteristic of melee weapons equipped by models in this unit.\nCHANT OF DEATHLESS DEVOTION\nModels in this unit have a 5+ invulnerable save against ranged attacks.",
+   "restrictions": "Your army can include Black Templars units, but it cannot include ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Adaptable Executioner",
@@ -3483,8 +3483,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Legacy of the Angel",
-   "rule_text": "At the start of the first battle round, select two of the Angelic Legacy abilities listed below. Until the end of the battle, those Angelic Legacy abilities are active and their effects apply to all Adeptus Astartes Character units from your army.\nSanguinary Grace: This unit is eligible to shoot and declare a charge in a turn in which it Fell Back.\nCarmine Wrath: Each time a model in this unit makes an attack, re-roll a Hit roll of 1 and re-roll a Wound roll of 1.\nTheir Appointed Hour: You can re-roll Advance and Charge rolls made for this unit.\nRestrictions\nYour army can include Blood Angels units, but it cannot include ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "At the start of the first battle round, select two of the Angelic Legacy abilities listed below. Until the end of the battle, those Angelic Legacy abilities are active and their effects apply to all Adeptus Astartes Character units from your army.\nSanguinary Grace: This unit is eligible to shoot and declare a charge in a turn in which it Fell Back.\nCarmine Wrath: Each time a model in this unit makes an attack, re-roll a Hit roll of 1 and re-roll a Wound roll of 1.\nTheir Appointed Hour: You can re-roll Advance and Charge rolls made for this unit.",
+   "restrictions": "Your army can include Blood Angels units, but it cannot include ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Blazing Icon",
@@ -4381,8 +4381,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Red Thirst",
-   "rule_text": "Each time an ADEPTUS ASTARTES unit from your army is selected to fight, if that unit made a Charge move this turn, until the end of the phase, add 1 to the Attacks characteristic and add 2 to the Strength characteristic of melee weapons equipped by models in that unit.\nRESTRICTIONS\nYour army can include BLOOD ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "Each time an ADEPTUS ASTARTES unit from your army is selected to fight, if that unit made a Charge move this turn, until the end of the phase, add 1 to the Attacks characteristic and add 2 to the Strength characteristic of melee weapons equipped by models in that unit.",
+   "restrictions": "Your army can include BLOOD ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Gift of Foresight",
@@ -4650,8 +4650,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Maddened Ferocity",
-   "rule_text": "Each time an ADEPTUS ASTARTES model from your army makes a melee attack, re-roll a Wound roll of 1.\nEach time an ADEPTUS ASTARTES unit from your army is selected to fight, if that unit made a Charge move this turn, until the end of the phase, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit. If your unit is Battle-shocked, add 2 to the Attacks characteristic of melee weapons equipped by models in that unit instead.\nRestrictions\nYour army can include Blood Angels units, but it cannot include ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "Each time an ADEPTUS ASTARTES model from your army makes a melee attack, re-roll a Wound roll of 1.\nEach time an ADEPTUS ASTARTES unit from your army is selected to fight, if that unit made a Charge move this turn, until the end of the phase, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit. If your unit is Battle-shocked, add 2 to the Attacks characteristic of melee weapons equipped by models in that unit instead.",
+   "restrictions": "Your army can include Blood Angels units, but it cannot include ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Angel's Fang",
@@ -4877,8 +4877,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Upon Wings of Fire",
-   "rule_text": "At the end of your opponent s turn, you can select a number of Adeptus Astartes Jump Pack units from your army (excluding units that are within Engagement Range of one or more enemy units). The maximum number of units you can select depends on the battle size, as follows:\nBATTLE SIZE - UNITS\nIncursion - Up to 1 units\nStrike Force - Up to 2 units\nOnslaught - Up to 3 units\nOnce you have made your selections, remove those units from the battlefield and place them into Strategic Reserves. In the Reinforcements step of your next Movement phase, set each of those units up using their Deep Strike ability.\nRESTRICTIONS\nYour army can include BLOOD ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "At the end of your opponent s turn, you can select a number of Adeptus Astartes Jump Pack units from your army (excluding units that are within Engagement Range of one or more enemy units). The maximum number of units you can select depends on the battle size, as follows:\nBATTLE SIZE - UNITS\nIncursion - Up to 1 units\nStrike Force - Up to 2 units\nOnslaught - Up to 3 units\nOnce you have made your selections, remove those units from the battlefield and place them into Strategic Reserves. In the Reinforcements step of your next Movement phase, set each of those units up using their Deep Strike ability.",
+   "restrictions": "Your army can include BLOOD ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Archangel's Shard",
@@ -4964,8 +4964,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "A Noble Death in Combat",
-   "rule_text": "Each time a Death Company model from your army makes a melee attack, re-roll a Wound roll of 1 if that model's unit is below its Starting Strength; if that model's unit is Below Half-strength, you can re-roll the Wound roll instead.\nKEYWORDS\nIf you select this Detachment, Death Company Marines and Death Company Marines with Bolt Rifles units from your army have the BATTLELINE keyword.\nRESTRICTIONS\nYour army can include BLOOD ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "Each time a Death Company model from your army makes a melee attack, re-roll a Wound roll of 1 if that model's unit is below its Starting Strength; if that model's unit is Below Half-strength, you can re-roll the Wound roll instead.\nKEYWORDS\nIf you select this Detachment, Death Company Marines and Death Company Marines with Bolt Rifles units from your army have the BATTLELINE keyword.",
+   "restrictions": "Your army can include BLOOD ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Blood Shard",
@@ -5601,8 +5601,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Masters Of Manoeuvre",
-   "rule_text": "ADEPTUS ASTARTES units from your army are eligible to shoot in a turn in which they Advanced or Fell Back.\nAdeptus Astartes Mounted units from your army are eligible to shoot and declare a charge in a turn in which they Advanced or Fell Back.\nRESTRICTIONS\nYour army can include DARK ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.\nKEYWORDS\nOutrider Squad units from your army gain the Battleline keyword.",
-   "restrictions": null,
+   "rule_text": "ADEPTUS ASTARTES units from your army are eligible to shoot in a turn in which they Advanced or Fell Back.\nAdeptus Astartes Mounted units from your army are eligible to shoot and declare a charge in a turn in which they Advanced or Fell Back.\nKEYWORDS\nOutrider Squad units from your army gain the Battleline keyword.",
+   "restrictions": "Your army can include DARK ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Master-crafted Weapon",
@@ -6108,8 +6108,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Vowed Target",
-   "rule_text": "At the start of your Movement phase, select one of the following:\n▪ Defensive Footing: Select one objective marker you control. Until the start of your next Movement phase, that objective marker is your Vowed objective marker.\n▪ Aggressive Push: Select one or more objective markers you do not control. Until the start of your next Movement phase, each of those objective markers is one of your Vowed objective markers. If a rule refers to a unit or model being within range of your Vowed objective marker, that rule takes effect if that unit or model is within range of one or more of your Vowed objective markers.Each time a Deathwing Infantry unit from your army makes an attack that targets a unit within range of one or more of your Vowed objective markers, add 1 to the Wound roll.\nRESTRICTIONS\nYour army can include DARK ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "At the start of your Movement phase, select one of the following:\n▪ Defensive Footing: Select one objective marker you control. Until the start of your next Movement phase, that objective marker is your Vowed objective marker.\n▪ Aggressive Push: Select one or more objective markers you do not control. Until the start of your next Movement phase, each of those objective markers is one of your Vowed objective markers. If a rule refers to a unit or model being within range of your Vowed objective marker, that rule takes effect if that unit or model is within range of one or more of your Vowed objective markers.Each time a Deathwing Infantry unit from your army makes an attack that targets a unit within range of one or more of your Vowed objective markers, add 1 to the Wound roll.",
+   "restrictions": "Your army can include DARK ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Champion of the Deathwing",
@@ -6431,7 +6431,7 @@
    "text_source_detail": "Dark Angels Faction Pack June 2026",
    "rule_name": "In the Lion's Claws",
    "rule_text": "Those unfortunate enough to be caught between the devastating speed of the Ravenwing and the adamantine might of the Deathwing are pinned in place and torn to shreds by their combined fury.\n■ Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more Ravenwing units from your army Falls Back, all models in that enemy unit must take a Desperate Escape test. When doing so, if that enemy unit is Battle-shocked, subtract 1 from each of those tests.\n■ Each time a Deathwing unit from your army declares a charge, if one or more targets of that charge are within Engagement Range of one or more Ravenwing units from your army, add 2 to the Charge roll.",
-   "restrictions": "Your army can include Dark Angels units, but it cannot include any Adeptus Astartes units drawn from any other Chapter.\nYou can only use this Stratagem once per battle round. ARMOUR OF CONTEMPT LION'S BLADE TASK FORCE - BATTLE TACTIC STRATAGEM The belligerence of the Adeptus Astartes combined with their transhuman physiology makes them unyielding foes to face. WHEN: Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets. TARGET: One Adeptus Astartes unit from your army that was selected as the target of one or more of the attacking unit's attacks. EFFECT: Until the attacking unit has finished making its attacks, each time an attack targets your unit, worsen the Armour Penetration characteristic of that attack by 1. STRENGTH IN UNITY LION'S BLADE TASK FORCE - BATTLE TACTIC STRATAGEM Combining their specialised methods of warfare, the Ravenwing and Deathwing confound their enemies with high-speed manoeuvrability and stalwart fortitude. WHEN: Fight phase, just after an enemy unit has selected its targets. TARGET: One Adeptus Astartes unit from your army that was selected as the target of one or more of the attacking unit's attacks. EFFECT: If that enemy unit is within Engagement Range of one or more Ravenwing units from your army, until the end of the phase, each time a model in that enemy unit makes an attack, subtract 1 from the Hit roll. If that enemy unit is within Engagement Range of one or more Deathwing units from your army, until the end of the phase, each time a model in that enemy unit makes an attack, if the Strength characteristic of that attack is greater than the Toughness characteristic of the target, subtract 1 from the Wound roll.\nA unit cannot be targeted by this and the Armour of Contempt Stratagem in the same phase. KNIGHTS OF IRON LION'S BLADE TASK FORCE - STRATEGIC PLOY STRATAGEM Atop their snarling mechanical steeds, the warriors of the Ravenwing surge through seemingly impassable terrain, smashing through rubble and ruin to unleash the wrath of the Unforgiven upon unsuspecting targets. WHEN: Your Movement phase or your Charge phase. TARGET: One Ravenwing unit from your army. EFFECT: Until the end of the phase, each time a model in your unit makes a Normal, Advance or Charge move, it can move horizontally through terrain features. ILLUMINATING FIRE LION'S BLADE TASK FORCE - BATTLE TACTIC STRATAGEM Ravenwing vehicles tear across the battlefield, identifying priority threats and targeting them with volleys of killing fire. The storm of blazing fury serves as a beacon for the wrathful battle-brothers of the Inner Circle, who strive to bring final judgement to the foe. WHEN: Your Shooting phase, just after a Ravenwing unit from your army has selected its targets. TARGET: That Ravenwing unit. EFFECT: Select one enemy unit within 12\" of your unit that was selected as the target of one or more of the attacking unit's attacks. Until the end of the phase, each time a friendly Deathwing unit makes an attack that targets that enemy unit, add 1 to the Wound roll. INESCAPABLE WRATH LION'S BLADE TASK FORCE - STRATEGIC PLOY STRATAGEM The Dark Angels' Inner Circle warriors pursue the Chapter's sworn foes and any who shield them with relentless endurance and a determination borne of indoctrinated hatred. WHEN: End of your opponent's Charge phase. TARGET: One Deathwing Infantry or Deathwing Walker unit from your army that is within 6\" of one or more enemy units and would be eligible to declare a charge against one or more of those enemy units if it were your Charge phase. EFFECT: Your unit now declares a charge that only targets one or more of those enemy units, and you resolve that charge.\nNote that even if this charge is successful, your unit does not receive any Charge bonus this turn. 1CP 1CP 1CP 1CP 1CP 2CP 6",
+   "restrictions": "Your army can include Dark Angels units, but it cannot include any Adeptus Astartes units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Calibanite Armaments",
@@ -6744,8 +6744,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Grim Resolve",
-   "rule_text": "While an ADEPTUS ASTARTES unit from your army is Battle-shocked, change the Objective Control characteristic of models in that unit to 1, instead of 0. In your Command phase, select one ADEPTUS ASTARTES unit from your army; until the start of your next Command phase, add 1 to the Objective Control characteristic of models in that unit.\nRESTRICTIONS\nYour army can include DARK ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "While an ADEPTUS ASTARTES unit from your army is Battle-shocked, change the Objective Control characteristic of models in that unit to 1, instead of 0. In your Command phase, select one ADEPTUS ASTARTES unit from your army; until the start of your next Command phase, add 1 to the Objective Control characteristic of models in that unit.",
+   "restrictions": "Your army can include DARK ANGELS units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Pennant of Remembrance",
@@ -6919,7 +6919,7 @@
    "text_source_detail": "Dark Angels Faction Pack June 2026",
    "rule_name": "Dutiful Tenacity",
    "rule_text": "Even amongst the Adeptus Astartes, the battle-brothers of the Dark Angels are renowned for their tenacity and resilience on the battlefield. When ordered to war, they are utterly relentless in pursuing their objectives, wading into fields of withering fire and shrugging off blows that would slay mortal warriors outright. Each time an attack targets an Adeptus Astartes Infantry or Adeptus Astartes Mounted unit from your army, if the Strength characteristic of that attack is greater than the Toughness characteristic of that unit, subtract 1 from the Wound roll.",
-   "restrictions": "Note that even if this charge is successful, your unit does not receive any Charge bonus this turn. 2CP 1CP 1CP 1CP 1CP 1CP 8",
+   "restrictions": null,
    "enhancements": [
     {
      "name": "Ancient Weapons",
@@ -8760,8 +8760,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "The Great Wolf Watches",
-   "rule_text": "At the end of your opponent's Charge phase, each Adeptus Astartes Infantry and Adeptus Astartes Walker unit from your army that is within 3\" of one or more enemy units and would be eligible to declare a charge against one or more of those units can declare a charge against one or more of those units, and you resolve that charge as if it were your Charge phase. If that charge is successful, your unit does not receive any Charge bonus this turn.\nWhile Adeptus Astartes Terminator units from your army are not Battle-shocked, add 1 to the Objective Control characteristic of models in those units.\nRESTRICTIONS\nYour army can include Space Wolves units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "At the end of your opponent's Charge phase, each Adeptus Astartes Infantry and Adeptus Astartes Walker unit from your army that is within 3\" of one or more enemy units and would be eligible to declare a charge against one or more of those units can declare a charge against one or more of those units, and you resolve that charge as if it were your Charge phase. If that charge is successful, your unit does not receive any Charge bonus this turn.\nWhile Adeptus Astartes Terminator units from your army are not Battle-shocked, add 1 to the Objective Control characteristic of models in those units.",
+   "restrictions": "Your army can include Space Wolves units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "A Giant Amongst Giants",
@@ -9622,8 +9622,8 @@
    "text_source": "wahapedia_10e",
    "text_source_detail": "Wahapedia 10th Edition",
    "rule_name": "Master of Wolves",
-   "rule_text": "Master of Wolves\nAt the start of your Command phase, you can select one of the Hunting Packs listed below. Until the start of your next Command phase, that Hunting Pack is active and its effects apply to all ADEPTUS ASTARTES units from your army. You can only select each Hunting Pack once per battle.\n▪ Encircling Jaws: This unit can re-roll Advance rolls and Charge rolls.\n▪ Hunter's Eye: Each time a model in this unit makes a ranged attack, add 1 to the Hit roll.\n▪ Ferocious Strike: Each time this unit is selected to fight, select either the [LETHAL HITS] or [SUSTAINED HITS 1] ability. Until the end of the phase, weapons equipped by models in this unit have the selected ability.\n\nHowling Onslaught\nOnce per battle, when selecting a Hunting Pack for the Master of Wolves Detachment rule, if a Logan Grimnar model from your army is on the battlefield, you can select a Hunting Pack you have already selected this battle.\n\nRestrictions\nYour army can include Space Wolves units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
-   "restrictions": null,
+   "rule_text": "Master of Wolves\nAt the start of your Command phase, you can select one of the Hunting Packs listed below. Until the start of your next Command phase, that Hunting Pack is active and its effects apply to all ADEPTUS ASTARTES units from your army. You can only select each Hunting Pack once per battle.\n▪ Encircling Jaws: This unit can re-roll Advance rolls and Charge rolls.\n▪ Hunter's Eye: Each time a model in this unit makes a ranged attack, add 1 to the Hit roll.\n▪ Ferocious Strike: Each time this unit is selected to fight, select either the [LETHAL HITS] or [SUSTAINED HITS 1] ability. Until the end of the phase, weapons equipped by models in this unit have the selected ability.\n\nHowling Onslaught\nOnce per battle, when selecting a Hunting Pack for the Master of Wolves Detachment rule, if a Logan Grimnar model from your army is on the battlefield, you can select a Hunting Pack you have already selected this battle.",
+   "restrictions": "Your army can include Space Wolves units, but it cannot include any ADEPTUS ASTARTES units drawn from any other Chapter.",
    "enhancements": [
     {
      "name": "Chariots of the Storm",

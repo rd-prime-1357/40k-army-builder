@@ -8446,3 +8446,79 @@ above, delivered for local backup. Never repo-eligible.
 
 **Repo custody:** no repo-eligible files touched. `wh40k_core_rules.md` was excluded from the repo
 before this and stays excluded — its project-area location doesn't change its custody status.
+
+
+## D221 — B60 closed: `detachment_parser.py` routes every chapter-exclusivity restriction to `restrictions`, consistently (S142)
+
+**Turn type: data.** `detachment_parser.py` fix + `detachments.json` regeneration + manifest reissue.
+No engine, UI, or tooling change.
+
+### The defect
+
+`restrictions` was populated by text-source accident, not by content. Before this session, 12 of 143
+records carried it and 13 more carried the identical chapter-exclusivity sentence buried in
+`rule_text` instead — the split tracked which text tier a detachment landed in, so a field that
+presents itself as structured was right for roughly half the records that should have it. Two of the
+12 already populated were separately corrupted. B60 was filed at D203 (S130) and diagnosed, not
+fixed, at S139.
+
+### Two independent causes, root-caused against source before any change
+
+**1. Wahapedia tier folded the restriction into `rule_text`, in two shapes.** The 10th-Ed dump states
+a detachment's chapter-exclusivity restriction either as its own `Detachment_abilities` row named
+"Restrictions", or as a `<span class="hi_custom">RESTRICTIONS</span>` section embedded inside a
+rule's own description (some records also carry a `KEYWORDS` Battleline-grant section the same way).
+`waha_text` treated every row as a rule and never looked inside a description, so both shapes fell
+into `rule_text`. Fixed by (a) skipping any rule row whose name normalises to `RESTRICTIONS` and
+routing its body to the restriction field, and (b) splitting each description on its `hi_custom`
+section headers — confirmed by census to be header markers only, never mid-sentence emphasis — and
+lifting out the `RESTRICTIONS` section while leaving every other section (`KEYWORDS`, named
+sub-rules) attached to the rule. Structural, not text-matching: it caught phrase variants
+("cannot include ADEPTUS ASTARTES" with no "any") that a sentence match would have missed.
+
+**2. The Dark Angels faction pack bled stratagem text into two records' `restrictions`.** In the DA
+pack a detachment's own restriction is a bare `RESTRICTIONS` header, while each stratagem carries its
+own inline `RESTRICTIONS:` clause. On well-formed pages the pack prints each stratagem's CP cost
+beside its name, the parser recognises the stratagem, enters strat mode, and its existing
+`mode != "strat"` guard skips the stratagem clauses. But on LION'S BLADE's and WRATH OF THE ROCK's
+pages the pack collates all the CP tokens at the page foot instead. Stratagem recognition — which
+requires the CP token adjacent to the name — fails, mode never becomes `strat`, and each stratagem's
+`RESTRICTIONS:` clause re-opens detachment-restrict mode and swallows the rest of the page. That is
+why LION'S BLADE held its real restriction plus five stratagems' worth of text and a run of CP
+tokens, and why WRATH OF THE ROCK — which has no printed detachment restriction at all — held only a
+stray stratagem clause and CP tokens.
+
+Fixed at the root by marking when a detachment's stratagem region begins (any line ending in
+`STRATAGEM`) and refusing to open detachment-restrict mode past that point. Detachment restrictions
+always precede the stratagems in the pack, so the gate closes the door on the collated-CP pages
+without depending on CP placement and without touching stratagem parsing. LION'S BLADE now holds only
+its exclusivity sentence; WRATH OF THE ROCK correctly holds nothing. The 3 DA records that already
+parsed cleanly (whose restriction uses the pack's inline `Restrictions:` form, ahead of their
+stratagems) are unchanged.
+
+### Result
+
+`restrictions` now holds the chapter-exclusivity sentence for all **25** detachments that carry one,
+and **zero** records leave it in `rule_text`; no restriction field contains stratagem or CP debris.
+The change is fully contained: 16 records changed, only their `restrictions` (16) and `rule_text`
+(14) fields; no key set change and every `_meta` count identical. 23/23 gates, 102/102 assertions.
+
+### Not pinned as an assertion this turn — filed as B60a
+
+This was a data-only turn; adding a check to `rules_assertions.py` is a tooling change and would
+break turn typing. `restrictions` is not yet read for legality (enforcement runs through
+`detachment_effects.json`), so nothing is under-enforced today, but per *facts as executable checks*
+the consistency should be pinned before anything starts consuming the field. Filed as **B60a**
+(tooling, S): assert that every chapter-exclusivity detachment carries the sentence in `restrictions`
+and none carries it in `rule_text`.
+
+**Changed:** `detachment_parser.py`, `detachments.json`, `pipeline_manifest.json`,
+`40K_Decision_Log_v3_0.md` (this entry), `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`,
+`NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_142.md`.
+
+**Net new:** none.
+
+**Repo custody:** `detachment_parser.py`, `detachments.json` and `pipeline_manifest.json` are
+repo-eligible pipeline files (no GW source text — `detachments.json` carries GW rule prose in its
+`rule_text`/`restrictions`/enhancement fields and is therefore **not** repo-eligible; it stays out on
+the same grounds as the other prose-bearing outputs). The parser and manifest go to the repo.

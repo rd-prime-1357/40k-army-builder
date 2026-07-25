@@ -3,7 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S141 + Ryan report: P2, P4, E23, B60, E12, B17, B61.
+not here, it isn't open. **7 open** as of S142: P2, P4, E23, E12, B17, B61, B60a. B60 closed S142
+(D221); B60a added same session (pin the fix as an assertion — tooling).
 B61 logged Ryan-side (combined-popup expand arrow, see below). P4 step 3 cancelled S141
 (D220) — 77 KB of whitespace didn't move the display; `wh40k_core_rules.md` removed as the next
 lever instead, pending Ryan's deletion and a fresh percentage read. E21 closed S139 (D218) — piece 3,
@@ -128,16 +129,13 @@ against source for all six copies, decide where the selection lives in the list 
 whether the grant is modelled as a sixth effect kind or as its own mechanism.
 
 
-### B60 — `detachment_parser.py`: `restrictions` is populated inconsistently — **NEW S130 (D203); S**
-
-Of the 25 built detachments carrying chapter-exclusivity text, **11 hold it in the `restrictions`
-field and 14 hold the identical sentence inside `rule_text` — zero overlap.** The split tracks the
-text-source tier, not the content, so `restrictions` currently presents itself as a structured field
-while being unreliable as one. Only 12 of 143 records have it populated at all.
-
-Does not block E21 — `detachment_effects.json` reads neither field — but anything downstream that
-trusts `restrictions` will be reading a field that is right less than half the time. Parser fix and
-a `detachments_repro_check.py` regeneration; no engine or UI impact.
+### B60a — Pin the `restrictions` consistency as an assertion — **NEW S142 (D221); TOOLING; S**
+B60 (D221) made `restrictions` consistent but did not add an executable check, because that turn was
+data-only and a `rules_assertions.py` edit is tooling. `restrictions` is not read for legality today
+(enforcement is via `detachment_effects.json`), so nothing is under-enforced — but per *facts as
+executable checks* the shape should be pinned before anything starts consuming the field. Add a check:
+every chapter-exclusivity detachment carries the sentence in `restrictions` and none carries it in
+`rule_text`; no `restrictions` value contains stratagem or CP debris. Tooling-only turn.
 
 
 ### E12 — User accounts (login/passwords) — **OPEN; DEFERRED S121 (Ryan: hold until near the end); L; architectural**
@@ -203,6 +201,7 @@ appending to it, and hand the updated file back for Ryan to commit.
 
 - **E21** — Detachment-driven army-construction effects (battleline / forbid / unlock / warlord) — CLOSED S139 (D218); E21a data (D209), E21b engine (D212), E21c engine + E22b (D214), E21d UI pieces 1-2 (D215) and piece 3 — the stranded-allied roster warning (`entryAlliedError`, D218) — all shipped. Full history in D203/D204/D209/D212/D214/D215/D218
 - **B62** — `FALSE` string literal in Is Base Equipment (a real latent bug, not inert as first assumed), and no presence gate on the CD root CSVs — SHIPPED S138 (D216)
+- **B60** — `detachment_parser.py`: `restrictions` populated inconsistently — CLOSED S142 (D221); DATA. Two root causes fixed (Wahapedia folding the restriction into `rule_text` in two shapes; DA pack bleeding stratagem clauses in where page-collated CP tokens defeat stratagem recognition). All 25 chapter-exclusive detachments now carry the restriction in `restrictions`, none in `rule_text`; 16 records changed, restrictions/rule_text only. Assertion follow-up split off as B60a
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched
