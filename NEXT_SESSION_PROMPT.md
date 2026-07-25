@@ -1,37 +1,40 @@
-# Next-session prompt — Session 145
+# Next-session prompt — Session 146
 
-Session 144 shipped no pipeline changes — a verification/process session (D224). Ryan replaced
-`Space_Marines_web.txt` (stratagem sections stripped, 11,364 → 7,906 lines) and supplied
-`Chaos_Space_Marines_web.txt` (8,337 lines). Both checked against source and mechanically before
-being trusted: no parser reads stratagem content from any `_web.txt` file, `repro_check.py`
-reproduces `unit_loadouts.json` byte-for-byte with the smaller file, 104/104 assertions and 23/23
-gates hold. CSM's build blocker is cleared.
+Session 145 was data-only (D225): the S144→S145 gap turned out to be real drift, not a stale sync —
+`Space_Marines_web.txt` and `Chaos_Space_Marines_web.txt` had both been edited further, and
+`Space_Wolves_web.txt` was entirely missing. Reconciled: B67 corrected and closed (repo has 249
+commits, not one — D223 was wrong; both GW-derived files confirmed removed from HEAD; full history
+purge filed as B67b, optional), a complete Dark Angels file and a new Space Wolves file verified
+against the real pipeline (one genuine Dark Angels data bug found and fixed — Ravenwing Dark Talon's
+missing second Hurricane bolter), and `unit_loadouts.json` regenerated. Baseline is clean.
 
 ## Baseline at open
 
-Verify the S144 hashes in the handoff's Files section byte-for-byte, then run `./baseline.sh`.
-S144 closed at 23/23 gates, 104/104 assertions (unchanged from S143 — no assertion or pipeline file
-touched this session). Re-pull `repo_check.py` from the repo and check whether **B67** has been
-remediated (see below) before doing anything else.
+Verify the S145 hashes in the handoff's Files section byte-for-byte, then run `./baseline.sh`.
+S145 closed at **23/23 gates, 104/104 assertions** — the first fully clean baseline since S143.
 
-## Still open from S143 — check before proceeding
+## Chaos Space Marines — still ready to build, still not started
 
-* **B67, CRITICAL.** `Unit_Weapons.csv` and `wh40k_core_rules.md` were found committed to the public
-  repo (S143, D223) — its entire history is one commit. Claude has no push credentials. Confirm with
-  Ryan whether this has been remediated; if not, it is still the first thing to raise.
-* **`detachments.json` is repo-eligible** (D223 correction) — do not exclude it from any push.
-
-## Chaos Space Marines — ready to build
-
-Fully unblocked: 112 datasheets, 18 detachments, `MFM_Chaos_Space_Marines_v1_0.txt` (499 lines),
-`Chaos_Space_Marines_web.txt` (8,337 lines, 58 `UNIT COMPOSITION` anchors — structure checked, not
-yet run through `equipped_parser.py`). This is a **large data build** — scope it as its own turn
-before running the pipeline for real; do not fold scoping and building into one turn. Get a fresh
-capacity percentage from Ryan first — S144 removed ~3,458 lines from one source file and added
-~8,337 in another, and the net direction isn't known yet.
+Fully unblocked since S144: 112 datasheets, 18 detachments, `MFM_Chaos_Space_Marines_v1_0.txt` (499
+lines), `Chaos_Space_Marines_web.txt` (structure checked, not yet run through `equipped_parser.py`).
+This is the largest single faction build since Space Marines itself — **scope it as its own turn
+before running the pipeline for real; do not fold scoping and building into one turn.** Get a fresh
+capacity percentage from Ryan first (96% as of S145) — CSM's real build will add further volume on
+top (`detachments.json`/`units.json`/`unit_loadouts.json` growth from 112 new datasheets and 18 new
+detachments), and that's the actual number that matters for whether this fits.
 
 ## Also open
 
+* **Ryan's `_web.txt` regeneration plan** — Ryan has a script (used for the new Space Wolves file) he
+  intends to use on Black Templars, Death Guard, and a rerun of Space Marines, for consistency and
+  some capacity relief. S145's recommendation: **one file at a time, each its own verified data-only
+  turn** — not a batch — the same way Dark Angels and Space Wolves were handled. **Before starting any
+  one of these (D226): pause, explicitly ask Ryan to load that faction's new file, and wait — do not
+  assume it's already loaded or proceed against the existing file.** Once it's supplied, treat it
+  exactly like S145 treated Dark Angels/Space Wolves: run the real pipeline, diff against committed
+  `unit_loadouts.json`, trace every difference to a cause before trusting it.
+* **B67b** — optional, not time-sensitive. Purge `Unit_Weapons.csv`/`wh40k_core_rules.md` from git
+  history via `git filter-repo` or BFG + force-push. Ryan's call whether it's worth doing at all.
 * **B17 remainder** — Sanguinary Guard's max-1 Sanguinary Banner add + confirm the 3/6 size selector.
 * **E23** — scoping-only turn (no build). Tank Ace Character-keyword grant across six copies; decide
   where per-list selection state lives and whether it's a fifth `detachment_effects.json` kind or its
@@ -39,8 +42,9 @@ capacity percentage from Ryan first — S144 removed ~3,458 lines from one sourc
 * **B61** — Ryan-reported, not yet scoped by Claude: in the combined attached-unit popup the
   bodyguard's expand arrow opens the leader's rules/abilities. Engine-only turn against
   `index.html`'s combined-popup renderer.
-* **P4** — capacity direction unknown pending a fresh read (see above); decision-log archive split
-  (not yet attempted) remains the next prose lever if still needed once CSM's real cost is known.
+* **P4** — 96% as of S145. The decision-log archive split (flagged since D211/step 1 — move the log's
+  archive half to a repo-only file, `DECISION_INDEX.md` covering lookup, same treatment
+  `BACKLOG_ARCHIVE.md` got) is the next lever if still needed; hasn't been attempted.
 
 ## Standing inputs (unchanged from S138–S141)
 
@@ -50,13 +54,13 @@ capacity percentage from Ryan first — S144 removed ~3,458 lines from one sourc
 * Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard**.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* **D199's four batched calls remain unreviewed — since S127, now eighteen sessions.**
+* **D199's four batched calls remain unreviewed — since S127, now nineteen sessions.**
 
 ## Effort
 
-B67 confirmation is mechanical (low effort). CSM's build-turn scoping wants a stronger model —
+Baseline verification is mechanical (low effort). CSM's build-turn scoping wants a stronger model —
 112 datasheets across 18 detachments is the largest single faction build since Space Marines itself.
 
 ## Backlog
 
-**7 open:** P2, P4, E23, E12, B17, B61, B67.
+**7 open:** P2, P4, E23, E12, B17, B61, B67b.

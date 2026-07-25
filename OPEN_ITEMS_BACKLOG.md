@@ -3,12 +3,13 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S144: P2, P4, E23, E12, B17, B61, B67. No tickets closed
-S144 — verification/process session (D224): Ryan's `Space_Marines_web.txt` edit confirmed safe,
-`Chaos_Space_Marines_web.txt` supplied, CSM's build blocker cleared.
-B61 logged Ryan-side (combined-popup expand arrow, see below). B67 (S143, D223) is open and
-time-sensitive — two GW-derived files remain committed to the public repo pending Ryan's
-remediation. E21 closed S139 (D218) — piece 3, the stranded-allied roster warning, shipped.
+not here, it isn't open. **7 open** as of S145: P2, P4, E23, E12, B17, B61, B67b. B67 CLOSED S145
+(D225) — both GW-derived files confirmed removed from the repo's HEAD; D223's "single commit" premise
+was wrong (249 commits), so a full history purge is a separate, optional action, filed as B67b.
+S145 also regenerated `unit_loadouts.json` (D225) after verifying a Dark Angels data fix and a new
+Space Wolves file against the real pipeline — no ticket, routine data maintenance.
+B61 logged Ryan-side (combined-popup expand arrow, see below). E21 closed S139 (D218) — piece 3, the
+stranded-allied roster warning, shipped.
 
 ## Open Items
 
@@ -58,13 +59,25 @@ The project area reads **90% as of S142**, after `wh40k_core_rules.md`'s removal
 
 **CSM sized S143, unblocked S144.** 112 datasheets (vs. Death Guard's 71 — CSM is roughly 1.5x DG's
 build), 18 detachments, `MFM_Chaos_Space_Marines_v1_0.txt` present (499 lines). `Chaos_Space_Marines_web.txt`
-supplied S144 (8,337 lines, 58 UNIT COMPOSITION anchors, structurally sound — D224). Ryan also
-shrank `Space_Marines_web.txt` 11,364 → 7,906 lines (stratagem sections stripped) same session,
-verified safe (D224). Net effect on the displayed capacity percentage from these two changes is not
-yet known — get a fresh read before scoping CSM's build turn. CSM itself is now fully unblocked:
-nothing left to source, only the build. The metric is **tokens, not bytes** (Anthropic support docs: project knowledge capacity relates to
-context limits, with RAG expanding it). So file *count* is irrelevant — only total content volume
-matters — and byte size is a proxy rather than a linear measure.
+supplied S144 (8,337 lines, 58 UNIT COMPOSITION anchors, structurally sound — D224). CSM itself is
+fully unblocked: nothing left to source, only the build. The metric is **tokens, not bytes**
+(Anthropic support docs: project knowledge capacity relates to context limits, with RAG expanding
+it). So file *count* is irrelevant — only total content volume matters — and byte size is a proxy
+rather than a linear measure.
+
+**S145: reads 96%.** Since S144's read, Ryan replaced `Dark_Angels_web.txt` (was incomplete) and
+`Space_Wolves_web.txt` (was missing entirely, now complete), on top of `Chaos_Space_Marines_web.txt`
+landing S144. All three verified against the real pipeline (D225) — no break, one genuine Dark Angels
+data bug fixed in the process. Ryan has a script (used for the new Space Wolves file) he intends to
+use to regenerate the remaining hand-sourced `_web.txt` files (Black Templars, Death Guard, and a
+rerun of Space Marines) for consistency and some further capacity relief. **Recommendation: not as
+one batch.** Each of those files is load-bearing for a built faction's committed data; regenerating
+several at once means a script quirk on any one faction shows up smeared across all of them at once
+instead of pointed at one. Do them one at a time, each its own verified data-only turn, the way Dark
+Angels and Space Wolves were handled in S145. Expected capacity return from this alone is modest — the
+new script drops Windows line endings for plain ones, roughly a byte a line, well under what moved
+the needle in steps 1 and 2 below. **The decision-log archive split (next paragraph) is very likely
+the bigger lever and hasn't been tried yet.**
 
 **Established by measurement, not by reading imports.** Every candidate source file was moved out and
 `./baseline.sh` re-run. Results are pinned in assertion **P4-1**.
@@ -133,15 +146,14 @@ against source for all six copies, decide where the selection lives in the list 
 whether the grant is modelled as a sixth effect kind or as its own mechanism.
 
 
-### B67 — Remove two GW-derived files from the public repo — **NEW S143 (D223); Ryan action; blocking nothing, but time-sensitive**
-`repo_check.py` (pulled fresh from the repo — absent from the project mount since S141/S142) found
-`Unit_Weapons.csv` and `wh40k_core_rules.md` committed to the **public** repo, arrived via today's
-single "Add files via upload" commit — which is also the repo's entire history, one commit only.
-Claude has no push credentials and cannot remediate. Recommendation: since this is the repo's only
-commit, `git commit --amend` to drop both files, then force-push, is a complete removal — no separate
-history-purge step needed, as there is no earlier history to preserve. Alternative: delete and
-recreate the repo (trivial given the single-commit history), reconfiguring GitHub Pages after.
-Ryan's call on method; not Claude's to execute either way.
+### B67b — Optional: purge `Unit_Weapons.csv` / `wh40k_core_rules.md` from git history — **NEW S145 (D225); Ryan action; low priority, not time-sensitive**
+Both files are confirmed gone from the repo's HEAD (B67 closed S145). D223's belief that the repo was
+a single commit was wrong — 249 commits — so the two commits that originally added these files are
+still reachable in history even though neither file has been touched since; `git filter-repo` or BFG
+plus a force-push would be needed for a full purge. Bigger and more disruptive than the HEAD-level
+fix already done. Precedent: the repo already has an early batch of `_web.txt` files committed by
+mistake and deleted the same HEAD-only way, still sitting in that old history today, apparently
+without incident. Ryan's call whether this is worth doing at all.
 
 
 ### E12 — User accounts (login/passwords) — **OPEN; DEFERRED S121 (Ryan: hold until near the end); L; architectural**
@@ -209,6 +221,7 @@ appending to it, and hand the updated file back for Ryan to commit.
 - **B62** — `FALSE` string literal in Is Base Equipment (a real latent bug, not inert as first assumed), and no presence gate on the CD root CSVs — SHIPPED S138 (D216)
 - **B60** — `detachment_parser.py`: `restrictions` populated inconsistently — CLOSED S142 (D221); DATA. Two root causes fixed (Wahapedia folding the restriction into `rule_text` in two shapes; DA pack bleeding stratagem clauses in where page-collated CP tokens defeat stratagem recognition). All 25 chapter-exclusive detachments now carry the restriction in `restrictions`, none in `rule_text`; 16 records changed, restrictions/rule_text only. Assertion follow-up split off as B60a
 - **B60a** — Pin the `restrictions` consistency as an assertion — SHIPPED S143 (D222); TOOLING. Two new assertions in `rules_assertions.py`: 25 detachments carry the chapter-exclusivity sentence in `restrictions` and 0 in `rule_text`; no `restrictions` value carries stratagem/CP debris. 104/104 assertions pass
+- **B67** — Two GW-derived files (`Unit_Weapons.csv`, `wh40k_core_rules.md`) removed from the public repo — CLOSED S145 (D225); Ryan deleted both, confirmed gone from HEAD via the API. D223's "single commit" premise corrected (249 commits); full history purge is a separate optional action, filed as B67b
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched
