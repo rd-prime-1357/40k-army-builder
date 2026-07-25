@@ -1522,6 +1522,24 @@ ASSERTIONS = [
      'project root CD CSVs (D205, B62)',
      lambda S: b62_cd_csv_presence(S)),
 
+    # ── B60a. D221 fixed the two defects that let a chapter-exclusivity restriction sit in
+    # rule_text instead of restrictions, or carry stratagem/CP debris from a mis-scoped
+    # DA pack region. The fix itself was verified once, by hand, at S142 close. These two
+    # pin the resulting shape so a future detachments.json regeneration cannot silently
+    # reopen either defect — restrictions is not read for legality today (D221's session
+    # note), but the shape should be a fact, not a memory, before anything comes to depend on it.
+    ('B60a-1',
+     'Exactly 25 detachments carry the chapter-exclusivity sentence ("...drawn from any other '
+     'Chapter") in restrictions, and zero carry it in rule_text.',
+     'detachments.json, all detachments (B60a, D221)',
+     lambda S: b60a_restrictions_carries_sentence_not_rule_text(S)),
+
+    ('B60a-2',
+     'No restrictions value contains stratagem/CP debris — none of the literal tokens '
+     'STRATAGEM, WHEN:, or a standalone CP appears in any detachment\'s restrictions field.',
+     'detachments.json, all detachments (B60a, D221)',
+     lambda S: b60a_restrictions_no_stratagem_cp_debris(S)),
+
 ]
 
 
@@ -3438,6 +3456,38 @@ def e21b_chapter_exclusive(S):
     if bad:
         return False, '%d cross-chapter unit(s): %s' % (len(bad), '; '.join(bad[:4]))
     return True, 'no cross-chapter unit in any resolved pool (%d pool entries checked)' % checked
+
+
+# ── B60a: chapter-exclusivity restriction shape, pinned (D221) ────────────────
+
+_B60A_EXCLUSIVITY_RE = re.compile(r'drawn from any other Chapter', re.I)
+_B60A_DEBRIS_RE = re.compile(r'STRATAGEM|WHEN:|\bCP\b')
+
+
+def b60a_restrictions_carries_sentence_not_rule_text(S):
+    dets = S.detachments()['detachments']
+    in_restrictions = 0
+    in_rule_text = []
+    for key, v in dets.items():
+        if _B60A_EXCLUSIVITY_RE.search(v.get('restrictions') or ''):
+            in_restrictions += 1
+        if _B60A_EXCLUSIVITY_RE.search(v.get('rule_text') or ''):
+            in_rule_text.append(key)
+    if in_rule_text:
+        return False, '%d detachment(s) still carry the sentence in rule_text: %s' % (
+            len(in_rule_text), '; '.join(in_rule_text[:5]))
+    if in_restrictions != 25:
+        return False, 'expected exactly 25 detachments with the sentence in restrictions, found %d' % in_restrictions
+    return True, 'all 25 chapter-exclusive detachments carry the sentence in restrictions; none carry it in rule_text'
+
+
+def b60a_restrictions_no_stratagem_cp_debris(S):
+    dets = S.detachments()['detachments']
+    bad = [key for key, v in dets.items()
+           if v.get('restrictions') and _B60A_DEBRIS_RE.search(v['restrictions'])]
+    if bad:
+        return False, '%d restrictions value(s) contain stratagem/CP debris: %s' % (len(bad), '; '.join(bad[:5]))
+    return True, 'no restrictions value contains stratagem/CP debris (STRATAGEM, WHEN:, CP)'
 
 
 def main():

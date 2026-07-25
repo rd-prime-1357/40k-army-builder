@@ -19,7 +19,7 @@
   "mfm_reconcile.py": "fbfdfdcffafe56a08b0658a9f6f826e4c5c51b5541622927533e876898f8098d",
   "add_loadout_groups.py": "4b660b59fe9e2fcbaaeade11af93ab2f2e3c3984ee17161107a966e35cdebc58",
   "detachment_parser.py": "ecb29b0358a4a09dfba35f54072ff4f1216ad6b6c884e56482788d59fc465810",
-  "rules_assertions.py": "8130862ea8dcf8bcfe8485ba233ead16de38e9932c3812ececeea95acb822c17",
+  "rules_assertions.py": "dbc4e975c1ac50a33b2369772671af39c4789cfc22346d06cb369604938634ed",
   "repro_check.py": "241b34bde7218301afe2a8775d571f685753350dc41b28e61dc1f13a07b62f3a",
   "units_repro_check.py": "0394ce2694ed1e95ad0127ec2099d7c8340f5d3aef65bcceb2207d955d43b826",
   "detachments_repro_check.py": "b9d602b39e8cf8df08f139a1e47b8c5170b399417031ed433e1883fa6cf24e8d",

@@ -3,12 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S142: P2, P4, E23, E12, B17, B61, B60a. B60 closed S142
-(D221); B60a added same session (pin the fix as an assertion — tooling).
-B61 logged Ryan-side (combined-popup expand arrow, see below). P4 step 3 cancelled S141
-(D220) — 77 KB of whitespace didn't move the display; `wh40k_core_rules.md` removed as the next
-lever instead, pending Ryan's deletion and a fresh percentage read. E21 closed S139 (D218) — piece 3,
-the stranded-allied roster warning, shipped.
+not here, it isn't open. **7 open** as of S144: P2, P4, E23, E12, B17, B61, B67. No tickets closed
+S144 — verification/process session (D224): Ryan's `Space_Marines_web.txt` edit confirmed safe,
+`Chaos_Space_Marines_web.txt` supplied, CSM's build blocker cleared.
+B61 logged Ryan-side (combined-popup expand arrow, see below). B67 (S143, D223) is open and
+time-sensitive — two GW-derived files remain committed to the public repo pending Ryan's
+remediation. E21 closed S139 (D218) — piece 3, the stranded-allied roster warning, shipped.
 
 ## Open Items
 
@@ -54,11 +54,15 @@ matching the 77 KB estimate.** `equipped_parser.py`'s terminal writer switched t
 fixed point re-banked, manifest reissued, 23/23 gates and 102/102 assertions hold. **Percentage read
 (S141): 92% before, 92% after — no movement, step 3 cancelled per the pre-set rule (D220).**
 
-The project area reads **90% as of S142**, after `wh40k_core_rules.md`'s removal. Still tight ahead
-of B60 and the CSM data build, but B60 is a small parser fix and CSM's own footprint isn't yet sized —
-call made S142: proceed to B60 now rather than spend a turn on the decision-log split first; revisit
-capacity once CSM's actual file additions are scoped, since sizing the real cost beats pre-emptively
-cutting more prose against an unknown target. The metric is **tokens, not bytes** (Anthropic support docs: project knowledge capacity relates to
+The project area reads **90% as of S142**, after `wh40k_core_rules.md`'s removal.
+
+**CSM sized S143, unblocked S144.** 112 datasheets (vs. Death Guard's 71 — CSM is roughly 1.5x DG's
+build), 18 detachments, `MFM_Chaos_Space_Marines_v1_0.txt` present (499 lines). `Chaos_Space_Marines_web.txt`
+supplied S144 (8,337 lines, 58 UNIT COMPOSITION anchors, structurally sound — D224). Ryan also
+shrank `Space_Marines_web.txt` 11,364 → 7,906 lines (stratagem sections stripped) same session,
+verified safe (D224). Net effect on the displayed capacity percentage from these two changes is not
+yet known — get a fresh read before scoping CSM's build turn. CSM itself is now fully unblocked:
+nothing left to source, only the build. The metric is **tokens, not bytes** (Anthropic support docs: project knowledge capacity relates to
 context limits, with RAG expanding it). So file *count* is irrelevant — only total content volume
 matters — and byte size is a proxy rather than a linear measure.
 
@@ -129,13 +133,15 @@ against source for all six copies, decide where the selection lives in the list 
 whether the grant is modelled as a sixth effect kind or as its own mechanism.
 
 
-### B60a — Pin the `restrictions` consistency as an assertion — **NEW S142 (D221); TOOLING; S**
-B60 (D221) made `restrictions` consistent but did not add an executable check, because that turn was
-data-only and a `rules_assertions.py` edit is tooling. `restrictions` is not read for legality today
-(enforcement is via `detachment_effects.json`), so nothing is under-enforced — but per *facts as
-executable checks* the shape should be pinned before anything starts consuming the field. Add a check:
-every chapter-exclusivity detachment carries the sentence in `restrictions` and none carries it in
-`rule_text`; no `restrictions` value contains stratagem or CP debris. Tooling-only turn.
+### B67 — Remove two GW-derived files from the public repo — **NEW S143 (D223); Ryan action; blocking nothing, but time-sensitive**
+`repo_check.py` (pulled fresh from the repo — absent from the project mount since S141/S142) found
+`Unit_Weapons.csv` and `wh40k_core_rules.md` committed to the **public** repo, arrived via today's
+single "Add files via upload" commit — which is also the repo's entire history, one commit only.
+Claude has no push credentials and cannot remediate. Recommendation: since this is the repo's only
+commit, `git commit --amend` to drop both files, then force-push, is a complete removal — no separate
+history-purge step needed, as there is no earlier history to preserve. Alternative: delete and
+recreate the repo (trivial given the single-commit history), reconfiguring GitHub Pages after.
+Ryan's call on method; not Claude's to execute either way.
 
 
 ### E12 — User accounts (login/passwords) — **OPEN; DEFERRED S121 (Ryan: hold until near the end); L; architectural**
@@ -202,6 +208,7 @@ appending to it, and hand the updated file back for Ryan to commit.
 - **E21** — Detachment-driven army-construction effects (battleline / forbid / unlock / warlord) — CLOSED S139 (D218); E21a data (D209), E21b engine (D212), E21c engine + E22b (D214), E21d UI pieces 1-2 (D215) and piece 3 — the stranded-allied roster warning (`entryAlliedError`, D218) — all shipped. Full history in D203/D204/D209/D212/D214/D215/D218
 - **B62** — `FALSE` string literal in Is Base Equipment (a real latent bug, not inert as first assumed), and no presence gate on the CD root CSVs — SHIPPED S138 (D216)
 - **B60** — `detachment_parser.py`: `restrictions` populated inconsistently — CLOSED S142 (D221); DATA. Two root causes fixed (Wahapedia folding the restriction into `rule_text` in two shapes; DA pack bleeding stratagem clauses in where page-collated CP tokens defeat stratagem recognition). All 25 chapter-exclusive detachments now carry the restriction in `restrictions`, none in `rule_text`; 16 records changed, restrictions/rule_text only. Assertion follow-up split off as B60a
+- **B60a** — Pin the `restrictions` consistency as an assertion — SHIPPED S143 (D222); TOOLING. Two new assertions in `rules_assertions.py`: 25 detachments carry the chapter-exclusivity sentence in `restrictions` and 0 in `rule_text`; no `restrictions` value carries stratagem/CP debris. 104/104 assertions pass
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched

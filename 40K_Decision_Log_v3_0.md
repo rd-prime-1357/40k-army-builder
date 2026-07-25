@@ -8522,3 +8522,127 @@ and none carries it in `rule_text`.
 repo-eligible pipeline files (no GW source text — `detachments.json` carries GW rule prose in its
 `rule_text`/`restrictions`/enhancement fields and is therefore **not** repo-eligible; it stays out on
 the same grounds as the other prose-bearing outputs). The parser and manifest go to the repo.
+
+---
+
+## D222 — B60a shipped: the chapter-exclusivity restriction shape pinned as an assertion (S143)
+
+**Turn type: tooling.** `rules_assertions.py` only — two new assertions, no parser, data, or engine
+change.
+
+`B60a-1` asserts exactly 25 detachments carry the chapter-exclusivity sentence ("...drawn from any
+other Chapter") in `restrictions` and zero carry it in `rule_text`. `B60a-2` asserts no `restrictions`
+value contains stratagem/CP debris (`STRATAGEM`, `WHEN:`, a standalone `CP`). Both read
+`detachments.json` directly through `Sources.detachments()`; no new loader needed. `restrictions` is
+still not read for legality anywhere in `index.html` — nothing was under-enforced before this, but per
+*facts as executable checks* the D221 shape now holds as a fact rather than a memory. 104/104
+assertions pass; `pipeline_manifest.json` reissued (guarded copy of `rules_assertions.py` moved);
+23/23 gates hold.
+
+**Changed:** `rules_assertions.py`, `pipeline_manifest.json`, `40K_Decision_Log_v3_0.md` (this entry),
+`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_143.md`.
+
+**Net new:** none.
+
+**Repo custody:** `rules_assertions.py` and `pipeline_manifest.json` are repo-eligible, no GW text
+touched.
+
+---
+
+## D223 — Repo custody audit: two GW-derived files found committed to the public repo; `detachments.json`'s repo-eligibility corrected (S143)
+
+**Turn type: tooling** (investigation only — no file the app serves was changed).
+
+`repo_check.py` was absent from the project mount at S143 open (flagged since S142). The repo was
+reachable, so `repo_check.py` was pulled from it directly and run for real, closing the gap S141/S142
+carried forward.
+
+### Finding 1 — CRITICAL: two GW-derived files are live on the public repo
+
+`Unit_Weapons.csv` and `wh40k_core_rules.md` are both present in the repo, each matching a
+GW-derived `.gitignore` pattern (`*.csv`, and the file's own explicit entry). Both arrived in a single
+"Add files via upload" commit dated today — which is also the repo's **entire history**: one commit,
+99 files, no prior commits to preserve. `wh40k_core_rules.md`'s presence directly contradicts D220/the
+S142 handoff, which recorded it as removed from the project area specifically because it is "never
+repo-eligible regardless of project-area location" — it was removed locally but was never actually
+absent from the repo; nobody had run a real `repo_check.py` against the live repo since S141 to catch
+that the bulk upload re-introduced it. Claude has no push credentials in this environment and cannot
+remediate directly. **Flagged to Ryan; tracked as B67.** Recommendation: because this is the repo's
+only commit, `git commit --amend` to drop both files and force-push is a clean, complete removal — no
+separate history-rewrite step needed since there is no earlier history to preserve.
+
+### Finding 2 — correction: `detachments.json` IS repo-eligible; D221 and the S142 handoff were wrong
+
+D221's closing custody note and `SESSION_HANDOFF_142.md` both stated `detachments.json` is "not
+repo-eligible" because it carries GW rule prose. This is contradicted by every mechanical source of
+truth checked this session: `pipeline_manifest.json` guards `detachments.json` as an expected,
+synced pipeline output (not excluded); `repo_check.py`'s GW-pattern detection (driven live off
+`.gitignore`'s own section headers) does not flag it, because no `.gitignore` pattern covers `.json`
+at all — only `*.csv`, `*.txt`, `*.pdf`, and the named faction-pack/core-rules `.md` files are marked
+GW-derived; the file is sitting in the repo right now, byte-identical to the project copy; and the
+live GitHub Pages deployment cannot function without it — `index.html` loads it client-side to render
+the detachment picker, so a repo without it is a broken site, not a protected one. No prior decision
+log entry before D221 ever excluded it; the four entries before D221 that mention `detachments.json`
+custody (E1a and its neighbors) all call it repo-eligible. This looks like a claim that entered D221's
+prose without being checked against the manifest or the live repo — the exact failure mode *facts as
+executable checks* exists to catch, just in the decision log rather than in code. Corrected here;
+`detachments.json` stays repo-eligible and continues going to the repo as it always has. Genuine
+GW-source exclusions (Wahapedia CSV exports, MFM `.txt` files, faction web/pack files,
+`wh40k_core_rules.md`, third-party PDFs) are unaffected by this correction.
+
+**Decisions needed (Ryan):** how to remediate the two exposed files (amend-and-force-push
+recommended; full repo delete/recreate is the alternative given the single-commit history). No action
+needed on Finding 2 beyond this correction unless Ryan wants `detachments.json` treated differently
+going forward, which would be a first-time policy call, not a return to a prior one.
+
+**Changed:** `40K_Decision_Log_v3_0.md` (this entry), `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`
+(B67 added), `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_143.md`.
+
+**Net new:** none.
+
+**Repo custody:** no file the app serves was touched. This entry documents repo state; it does not
+change it.
+
+---
+
+## D224 — Space_Marines_web.txt's stratagem-section removal verified safe; Chaos_Space_Marines_web.txt supplied, CSM unblocked (S144)
+
+**Turn type: tooling/process.** No pipeline script, parser, or generated output changed. Two source
+inputs replaced by Ryan; both verified against the pipeline mechanically before being trusted.
+
+### Space_Marines_web.txt reduced 11,364 → 7,906 lines
+
+Ryan had stratagem sections stripped out (via ChatGPT) on the belief that `equipped_parser.py` never
+reads them — stratagem text is sourced from the faction pack `.md` instead. Checked against source
+rather than taken on the stated belief, per *source-first verification*: `equipped_parser.py`'s own
+docstring bounds every parsed region to "between UNIT COMPOSITION and the points line," and a grep
+across every parser (`wahapedia_transform.py`, `equipped_parser.py`, `mfm_points_parser.py`,
+`detachment_parser.py`) for stratagem-related reads found none — the only consumer of any `_web.txt`
+file is `equipped_parser.py`, and stratagem sections sit outside its bounded region entirely. Mechanical
+proof, not just a design read: `repro_check.py` reproduces the committed `unit_loadouts.json`
+byte-for-byte with the smaller file in place, all 104/104 assertions still pass (including the one
+citing exact Space_Marines_web.txt content for a Lieutenant options fact), and the full 23/23-gate
+baseline holds. Ryan's belief confirmed correct.
+
+### Chaos_Space_Marines_web.txt supplied — CSM's build blocker (flagged S143/D223) is cleared
+
+8,337 lines, 58 `UNIT COMPOSITION` anchors — structurally consistent with the format every other
+faction's web.txt uses. Not run through `equipped_parser.py` yet (that belongs to CSM's own scoped
+data-build turn, not this verification turn) — structure checked only, not executed. CSM is now
+unblocked: MFM points file present (S143), composition file present (this session), only the build
+turn itself remains.
+
+**Capacity note:** this session removed ~3,458 lines from one source file and added ~8,337 lines in a
+new one — net direction on the P4 percentage is not yet known. Ask Ryan for a fresh read at next
+session's open rather than assuming either direction.
+
+**Changed:** `Space_Marines_web.txt` (Ryan, not Claude), `Chaos_Space_Marines_web.txt` (Ryan, net
+new to the project — not Claude-authored). `40K_Decision_Log_v3_0.md` (this entry),
+`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_144.md`.
+
+**Net new:** none from Claude this session. `Chaos_Space_Marines_web.txt` is net-new to the project
+area but Ryan-supplied, not built here.
+
+**Repo custody:** both `_web.txt` files are GW-derived source text — excluded from the repo under
+the existing `*.txt` `.gitignore` pattern, same as every other faction's composition file. No repo
+action needed for either.

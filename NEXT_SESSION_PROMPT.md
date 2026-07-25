@@ -1,36 +1,37 @@
-# Next-session prompt — Session 143
+# Next-session prompt — Session 145
 
-Session 142 closed B60 (D221): `detachment_parser.py` now routes every detachment's
-chapter-exclusivity restriction to `restrictions` consistently — 25 chapter-exclusive detachments
-populated, zero left in `rule_text`, no stratagem/CP debris. Data-only; `detachments.json` re-banked,
-manifest reissued. 23/23 gates, 102/102 assertions. The assertion that would pin this shape was
-deliberately not added (turn typing) and is filed as **B60a**.
+Session 144 shipped no pipeline changes — a verification/process session (D224). Ryan replaced
+`Space_Marines_web.txt` (stratagem sections stripped, 11,364 → 7,906 lines) and supplied
+`Chaos_Space_Marines_web.txt` (8,337 lines). Both checked against source and mechanically before
+being trusted: no parser reads stratagem content from any `_web.txt` file, `repro_check.py`
+reproduces `unit_loadouts.json` byte-for-byte with the smaller file, 104/104 assertions and 23/23
+gates hold. CSM's build blocker is cleared.
 
 ## Baseline at open
 
-Verify the six S142 hashes in the handoff's Files section byte-for-byte, then run `./baseline.sh`.
-S142 closed at 23/23 gates, 102/102 assertions.
+Verify the S144 hashes in the handoff's Files section byte-for-byte, then run `./baseline.sh`.
+S144 closed at 23/23 gates, 104/104 assertions (unchanged from S143 — no assertion or pipeline file
+touched this session). Re-pull `repo_check.py` from the repo and check whether **B67** has been
+remediated (see below) before doing anything else.
 
-Note `detachments.json` is not repo-eligible (it carries GW rule prose in `rule_text`,
-`restrictions` and enhancement descriptions). `detachment_parser.py` and `pipeline_manifest.json`
-are. `repo_check.py` was not runnable in the S142 sandbox (no clone) — baseline ran `--no-repo`;
-run the repo custody check at S143 open if the repo is reachable.
+## Still open from S143 — check before proceeding
 
-## B60a — pin the fix (tooling, small)
+* **B67, CRITICAL.** `Unit_Weapons.csv` and `wh40k_core_rules.md` were found committed to the public
+  repo (S143, D223) — its entire history is one commit. Claude has no push credentials. Confirm with
+  Ryan whether this has been remediated; if not, it is still the first thing to raise.
+* **`detachments.json` is repo-eligible** (D223 correction) — do not exclude it from any push.
 
-A `rules_assertions.py`-only turn. Assert, against `detachments.json`: every chapter-exclusivity
-detachment carries the sentence in `restrictions` and none carries it in `rule_text`; no
-`restrictions` value contains stratagem/CP debris (`STRATAGEM`, `WHEN:`, `\bCP\b`). This is cheap
-and closes the *facts as executable checks* gap D221 left open. Do it before or after CSM as
-convenient — it blocks nothing.
+## Chaos Space Marines — ready to build
 
-## Faction priority order resumes — Chaos Space Marines is the meaningful unblock
+Fully unblocked: 112 datasheets, 18 detachments, `MFM_Chaos_Space_Marines_v1_0.txt` (499 lines),
+`Chaos_Space_Marines_web.txt` (8,337 lines, 58 `UNIT COMPOSITION` anchors — structure checked, not
+yet run through `equipped_parser.py`). This is a **large data build** — scope it as its own turn
+before running the pipeline for real; do not fold scoping and building into one turn. Get a fresh
+capacity percentage from Ryan first — S144 removed ~3,458 lines from one source file and added
+~8,337 in another, and the net direction isn't known yet.
 
-* **Chaos Space Marines** is next in the priority order. Building it flips Chaos Daemons |
-  SHADOW LEGION's HERETIC ASTARTES unlock from `enforced: false` to live (E22). Large data build;
-  scope it as its own turn. Mind capacity — the project area read **90%** after S141's core-rules
-  removal; CSM adds source and output volume. Size CSM's real file footprint first; if it's tight,
-  the decision-log archive split (P4, not yet attempted) is the next prose lever.
+## Also open
+
 * **B17 remainder** — Sanguinary Guard's max-1 Sanguinary Banner add + confirm the 3/6 size selector.
 * **E23** — scoping-only turn (no build). Tank Ace Character-keyword grant across six copies; decide
   where per-list selection state lives and whether it's a fifth `detachment_effects.json` kind or its
@@ -38,6 +39,8 @@ convenient — it blocks nothing.
 * **B61** — Ryan-reported, not yet scoped by Claude: in the combined attached-unit popup the
   bodyguard's expand arrow opens the leader's rules/abilities. Engine-only turn against
   `index.html`'s combined-popup renderer.
+* **P4** — capacity direction unknown pending a fresh read (see above); decision-log archive split
+  (not yet attempted) remains the next prose lever if still needed once CSM's real cost is known.
 
 ## Standing inputs (unchanged from S138–S141)
 
@@ -47,13 +50,13 @@ convenient — it blocks nothing.
 * Faction packs for **Black Templars, Blood Angels, Space Wolves, Death Guard**.
 * A **single-column re-extraction of the Space Marines pack** — still flips 15 detachments'
   stratagems to current text.
-* **D199's four batched calls remain unreviewed — since S127, now sixteen sessions.**
+* **D199's four batched calls remain unreviewed — since S127, now eighteen sessions.**
 
 ## Effort
 
-B60a is mechanical (low effort). CSM is a large but mechanical data build once scoped. E23 and B61
-scoping want a stronger model when reached.
+B67 confirmation is mechanical (low effort). CSM's build-turn scoping wants a stronger model —
+112 datasheets across 18 detachments is the largest single faction build since Space Marines itself.
 
 ## Backlog
 
-**7 open:** P2, P4, E23, E12, B17, B61, B60a.
+**7 open:** P2, P4, E23, E12, B17, B61, B67.
