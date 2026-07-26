@@ -32,6 +32,22 @@ as a way of making a failure go away.
     python3 pipeline_manifest.py            # verify, exit 0 / 1
     python3 pipeline_manifest.py --write    # regenerate pipeline_manifest.json
     python3 pipeline_manifest.py --dir ..   # both, against another directory
+
+M0 EXTENSION (P4/D231, S149) — FROM PIPELINE OUTPUTS TO THE WHOLE PUBLIC REPO
+------------------------------------------------------------------------------
+Originally this guarded only the 41 files a repro/gate run touches. The new
+fetch-open (baseline.sh) pulls the *entire* public repo as one tarball and
+needs to verify the whole tree came across intact before anything is
+overlaid or gated — a corrupted or short fetch has to be caught here, before
+any gate spends time on a tree that was never right to begin with. GUARDED
+now lists every repo-resident file a session consumes (101 files); the four
+files that are deliberately never guarded are documented at the end of the
+list, with the reason each is excluded.
+
+Adding a new session's handoff: append its filename to the list at session
+close, same turn the handoff is written — the guarded set is append-only by
+design (D-log precedent: prose claims drift, the list is the executable
+record of what "the whole repo" means).
 """
 
 import argparse, hashlib, json, os, sys
@@ -77,6 +93,7 @@ GUARDED = [
     'units_repro_check.py',
     'detachments_repro_check.py',
     'integrity_check.py',
+    'pipeline_manifest.py',
 
     # Build-time harnesses run at every session baseline.
     'pts_check.js',
@@ -97,7 +114,72 @@ GUARDED = [
     'e4c_check.js',
     'e21b_check.js',
     'e21c_check.js',
+    'harness.js',
+    'sweep.js',
+    'baseline.sh',
+    'repo_check.py',
+
+    # Additional parsers/transforms (repo-only, same treatment as the group above).
+    'add_bodyguard_stat_flags.py',
+    'add_chapter_point_overrides.py',
+    'add_co_leader.py',
+    'build_cd_ability_details.py',
+    'equipped_parser_B18c_banked.py',
+
+    # Additional built data / fixtures (repo-only; not loaded at runtime by index.html
+    # but consumed by parsers, gates, or fixtures above).
+    'abilities.json',
+    'rules.json',
+    'weapon_abilities.json',
+    'bundled_swaps.json',
+    'core_glossary.json',
+    'faction_taxonomy.json',
+    'keywords.json',
+    'B18c_repro_fixture.json',
+    'B18d_fixture.json',
+
+    # Reference docs and specs — repo-only, read by sessions as needed.
+    '40K_Architecture_Overview_v0_5.md',
+    '40K_Data_Dictionary_v2_0.md',
+    '40K_Data_Pipeline_Process_v0_6.md',
+    '40K_Decision_Log_v3_0.md',
+    '40K_Functional_Spec_v0_7.md',
+    'BACKLOG_ARCHIVE.md',
+    'CSM_BUILD_SCOPE.md',
+    'D231_entry.md',
+    'DECISION_INDEX.md',
+    'E1_DETACHMENT_SCOPE.md',
+    'MFM_Chapter_Pass.md',
+    'MFM_FW_Reconciliation.md',
+    'MFM_Standalone_Pass.md',
+    'OPEN_ITEMS_BACKLOG.md',
+    'OUTPUT_FORMAT_SPEC_for_project_instructions.md',
+    'P4_ARCHITECTURE_SCOPE.md',
+    'PROCESS_IMPROVEMENT_PLAN.md',
+
+    # The handoff chain — one entry per session, append-only. A new handoff file is
+    # added to this list at the session that creates it (see write_addendum below).
+    'SESSION_HANDOFF_125.md', 'SESSION_HANDOFF_126.md', 'SESSION_HANDOFF_127.md',
+    'SESSION_HANDOFF_128.md', 'SESSION_HANDOFF_129.md', 'SESSION_HANDOFF_130.md',
+    'SESSION_HANDOFF_131.md', 'SESSION_HANDOFF_132.md', 'SESSION_HANDOFF_133.md',
+    'SESSION_HANDOFF_134.md', 'SESSION_HANDOFF_135.md', 'SESSION_HANDOFF_136.md',
+    'SESSION_HANDOFF_137.md', 'SESSION_HANDOFF_138.md', 'SESSION_HANDOFF_139.md',
+    'SESSION_HANDOFF_140.md', 'SESSION_HANDOFF_141.md', 'SESSION_HANDOFF_142.md',
+    'SESSION_HANDOFF_143.md', 'SESSION_HANDOFF_144.md', 'SESSION_HANDOFF_145.md',
+    'SESSION_HANDOFF_146.md', 'SESSION_HANDOFF_147.md', 'SESSION_HANDOFF_148.md',
 ]
+
+# Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):
+#   NEXT_SESSION_PROMPT.md — legitimately edited after the handoff/manifest that
+#     covered it was finalized (D231). Verifying it against a pin can only ever
+#     match by luck or false-alarm, exactly like the handoff hash list it was
+#     dropped from. The fetch-open always overlays the area's live copy over
+#     whatever the repo holds, unconditionally, without checking this manifest.
+#   README.md, .gitignore, _headers — repo/hosting metadata; no session logic,
+#     parser, gate, or harness reads these, so there is nothing to protect by
+#     hashing them.
+#   pipeline_manifest.json — the manifest cannot guard itself (build() writes it
+#     from the state of every *other* guarded file).
 
 
 def sha256(path):

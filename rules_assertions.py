@@ -3326,6 +3326,7 @@ P4_REFERENCED_SOURCES = {
     'MFM_Grey_Knights_v1_0.txt', 'MFM_Instructions.txt',
     'MFM_Space_Marines_v1_0.txt', 'MFM_Space_Wolves_v1_0.txt',
     'MFM_Thousand_Sons_v1_0.txt', 'MFM_World_Eaters_v1_0.txt',
+    'MFM_Standalone_Pass.md',
     'Space_Marines_Faction_Pack_v1_0.md', 'Space_Marines_web.txt',
     '_web.txt', 'chaos_daemons_reference.md', 'mfm_sm.txt',
 }
@@ -3497,15 +3498,108 @@ def b60a_restrictions_no_stratagem_cp_debris(S):
     return True, 'no restrictions value contains stratagem/CP debris (STRATAGEM, WHEN:, CP)'
 
 
+# ── tier classification (P4/D231, M0/S149) ────────────────────────────────────
+#
+# WHY AUTO-DETECTED, NOT HAND-TAGGED: a fifth tuple element ('A' or 'B' typed by
+# hand on ~150 entries) is exactly the kind of prose claim this whole file exists
+# to replace — it would be correct the day it's written and silently wrong the
+# day someone edits a helper function to start reading a new source file. Instead,
+# tier is computed from what each assertion's code actually touches: walk the
+# reachable global/attribute names of its callable (one hop into any named
+# module-level function it calls, recursively), and check that set against the
+# small, closed list of things that require a raw GW source file to be present.
+#
+# TIER_B_NAMES — every Sources method that opens a raw GW export directly
+# (Wahapedia CSVs, MFM .txt, faction web/pack files), plus the embedded
+# reproduction rebuilds and the two gates that check for GW source files by
+# name. Everything else — units.json, detachments.json, wargear_points.json,
+# datasheet_wargear_abilities.json, index.html, faction_taxonomy.json, the
+# manifest — is built output or app code, and asserting against it needs no
+# source at all.
+TIER_B_NAMES = {
+    # Sources methods that open a raw GW export.
+    'abilities', 'models', 'datasheets', 'mfm_instructions', 'faction_keywords',
+    'mfm_detachment_rows', 'options', 'composition', 'option_text', 'mfm_all',
+    'wargear_ability', 'model_stat',
+    # Embedded rebuild-from-source gates (P1/P4/detachments).
+    'repro_gate', 'units_repro_gate', 'detachments_repro_gate',
+    # Gates that check for GW source files by name/presence.
+    'p4_source_census', 'b62_cd_csv_presence',
+}
+
+
+# GW-derived source filenames, loaded from source_manifest.json (M0) so this list
+# has exactly one home and can't drift from the real file set. Falls back to a
+# small hardcoded set if the manifest is absent (e.g. a --tier a run after M2
+# eviction, when the manifest itself may not be locally present) — the fallback
+# only needs to cover names actually referenced by inline open() calls in this
+# file, not the full 70, so a stale fallback degrades gracefully rather than
+# breaking classification outright.
+def _load_gw_source_filenames():
+    try:
+        with open('source_manifest.json', encoding='utf-8') as f:
+            return set(json.load(f).get('files', {}).keys())
+    except Exception:
+        return {'Army_Muster_Rules.txt'}
+
+
+GW_SOURCE_FILENAMES = _load_gw_source_filenames()
+
+
+def _reachable_names(fn, _seen=None):
+    """Every global/attribute name AND string constant `fn`'s bytecode touches,
+    plus the same for any module-level function among those names (one level of
+    recursion, cycle-safe). Constants matter as much as names here: several
+    assertions (B41-3, E1b-1, E4b-1) open a GW source file directly by literal
+    filename rather than through a Sources method, and a names-only walk missed
+    every one of them — caught by testing the tier-a path with sources absent,
+    not by reading the code. This is what makes classify_tier self-maintaining:
+    if a helper function is edited to start calling a source-reading method OR
+    to open a new source filename literally, the next run re-derives the tier
+    from the new code, nothing to remember to update by hand."""
+    if _seen is None:
+        _seen = set()
+    code = getattr(fn, '__code__', None)
+    if code is None:
+        return set()
+    names = set(code.co_names)
+    consts = {c for c in code.co_consts if isinstance(c, str)}
+    result = names | (consts & GW_SOURCE_FILENAMES)
+    for n in names:
+        if n in _seen:
+            continue
+        _seen.add(n)
+        target = globals().get(n)
+        if callable(target) and hasattr(target, '__code__'):
+            result |= _reachable_names(target, _seen)
+    return result
+
+
+def classify_tier(fn):
+    """'B' if this assertion's code reaches any raw-GW-source-reading name or
+    opens a GW source filename directly; 'A' otherwise (built data + index.html
+    only — safe with no sources loaded)."""
+    return 'B' if _reachable_names(fn) & (TIER_B_NAMES | GW_SOURCE_FILENAMES) else 'A'
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dir', default='.', help='directory holding the source CSVs and unit_loadouts.json')
     ap.add_argument('-v', '--verbose', action='store_true')
+    ap.add_argument('--tier', choices=['a', 'all'], default='all',
+                     help="'a' = skip every assertion that reaches a raw-GW-source read "
+                          "(no sources needed); 'all' = every assertion (default, today's behaviour)")
     a = ap.parse_args()
 
     S = Sources(a.dir)
     fails = []
+    skipped = []
     for aid, stmt, src, fn in ASSERTIONS:
+        if a.tier == 'a' and classify_tier(fn) == 'B':
+            skipped.append(aid)
+            if a.verbose:
+                print(f'SKIP  {aid}  tier B — sources not loaded')
+            continue
         try:
             ok, detail = fn(S)
         except Exception as e:
@@ -3515,7 +3609,9 @@ def main():
         if a.verbose or not ok:
             print(f'{"PASS" if ok else "FAIL"}  {aid}  {detail}')
 
-    print(f'\n{len(ASSERTIONS) - len(fails)}/{len(ASSERTIONS)} rules assertions pass.')
+    ran = len(ASSERTIONS) - len(skipped)
+    tier_note = f' ({len(skipped)} tier-B skipped)' if skipped else ''
+    print(f'\n{ran - len(fails)}/{ran} rules assertions pass{tier_note}.')
     if fails:
         print('\nA stated fact is not true of the data. One of the two is wrong — find out which '
               'before doing anything else.\n')

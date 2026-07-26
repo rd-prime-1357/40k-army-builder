@@ -59,10 +59,18 @@ repo with no problems.
     python3 repo_check.py --dir /path/to/area    # check another directory
 """
 
-import argparse, fnmatch, json, os, subprocess, sys, tempfile, shutil, hashlib
+import argparse, fnmatch, json, os, re, subprocess, sys, tempfile, shutil, hashlib
 
 REPO_URL = 'https://github.com/rd-prime-1357/40k-army-builder.git'
 MANIFEST = 'pipeline_manifest.json'
+
+# The read-only private-sources-repo token (P4/D231, M0/S149) lives in the project
+# area as this exact filename, and only there — it must never reach a file list
+# bound for the *public* repo. TOKEN_PATTERN is a second, content-shaped check:
+# GitHub fine-grained tokens all start with this literal prefix, so a rename of
+# the file doesn't defeat the guard.
+TOKEN_FILENAME = 'SOURCE_REPO_TOKEN.txt'
+TOKEN_PATTERN = re.compile(r'github_pat_[A-Za-z0-9_]+')
 
 # Fixed, non-accumulating docs. SESSION_HANDOFF_*.md accumulates and is discovered
 # live from the project area instead of listed here (see docstring).
@@ -212,8 +220,47 @@ def run(project_dir):
 
         missing_from_repo = sorted(f for f in expected if f not in repo_files)
 
+        # ---- token custody guard (P4/D231, M0/S149) ----
+        # Three independent ways the token could reach the public repo, each checked
+        # separately so a fail names exactly which one happened:
+        #   (a) it is already sitting in the live clone — an actual leak, worst case.
+        #   (b) its filename is in one of the file lists this script treats as
+        #       "public-repo-bound" (DOC_FILES, the discovered handoffs, or the
+        #       pipeline_manifest.json guarded set) — a mistake that would leak it
+        #       on the next push, caught before that push happens.
+        #   (c) a token-shaped string (github_pat_...) sits in the content of any
+        #       file this check already reads byte-for-byte in the local area —
+        #       catches a pasted-into-the-wrong-file accident even under a renamed
+        #       filename.
+        token_leaked_in_repo = TOKEN_FILENAME in repo_files
+        token_in_bound_lists = TOKEN_FILENAME in expected
+        token_in_content = []
+        for rel in sorted(set(matches) | set(differs)):
+            local_path = os.path.join(project_dir, rel)
+            try:
+                with open(local_path, encoding='utf-8', errors='ignore') as f:
+                    if TOKEN_PATTERN.search(f.read()):
+                        token_in_content.append(rel)
+            except (OSError, UnicodeDecodeError):
+                continue
+        token_problem = token_leaked_in_repo or token_in_bound_lists or bool(token_in_content)
+
         # ---- report ----
         problems = 0
+
+        if token_problem:
+            problems += 1
+            print('CRITICAL — SOURCE_REPO_TOKEN.txt custody guard tripped (credential exposure risk):')
+            if token_leaked_in_repo:
+                print(f'    {TOKEN_FILENAME} is present in the live public-repo clone — revoke this '
+                      f'token on GitHub now, then investigate.')
+            if token_in_bound_lists:
+                print(f'    {TOKEN_FILENAME} appears in a public-repo-bound file list (DOC_FILES, the '
+                      f'handoff set, or the pipeline_manifest.json guarded set) — remove it before the '
+                      f'next push.')
+            if token_in_content:
+                print(f'    a token-shaped string (github_pat_...) was found inside: '
+                      + ', '.join(token_in_content))
 
         if gw_found:
             problems += len(gw_found)

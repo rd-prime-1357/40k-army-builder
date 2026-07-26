@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# baseline.sh — every session-open gate in one command (T3, S126).
+# baseline.sh — every session-open gate in one command (T3, S126; fetch-open + tiering, M0/S149).
 #
 # WHY: the session prompt used to list each gate's command separately, several with
 # positional arguments that are easy to get wrong — several harnesses take three or
@@ -10,22 +10,40 @@
 # One line of output per gate: "PASS <gate>: <the gate's own summary line>" or
 # "FAIL <gate>: <the gate's own summary line>". Exits non-zero if any gate fails.
 #
-#   ./baseline.sh              # run every gate against the current directory
-#   ./baseline.sh --no-repo    # skip repo_check.py (e.g. offline / sandboxed run)
+#   ./baseline.sh                # old path: everything local, repo_check via git clone
+#   ./baseline.sh --no-repo      # old path, skip repo_check.py (offline / sandboxed)
+#   ./baseline.sh --fetch        # new path (P4/D231, M0): fetch the public repo as one
+#                                 tarball, verify it against pipeline_manifest.json,
+#                                 overlay (area copy wins), then gate as usual
+#   ./baseline.sh --fetch --data-turn   # new path; also fetch/verify GW sources (token,
+#                                 falling back to gw_sources.zip) and FAIL if neither the
+#                                 private repo nor the zip nor already-local sources are
+#                                 available — a data turn must not silently start tier-A-only
+#
+# TIERING (P4/D231): rules_assertions.py and the three repro rebuilds (repro_check,
+# units_repro_check, detachments_repro_check) need the 70-odd GW source files. Whether
+# those are loaded is detected from source_manifest.json's own file list, not assumed
+# from which flag was passed — so both paths report the same tier truthfully in a
+# session where sources are simply still sitting in the area (true throughout M0).
 
 set -u
 cd "$(dirname "$0")"
 
 SKIP_REPO=0
+FETCH=0
+DATA_TURN=0
 for arg in "$@"; do
-  [ "$arg" = "--no-repo" ] && SKIP_REPO=1
+  case "$arg" in
+    --no-repo)   SKIP_REPO=1 ;;
+    --fetch)     FETCH=1 ;;
+    --data-turn) DATA_TURN=1 ;;
+  esac
 done
 
 FAILS=0
 TOTAL=0
+SKIPS=0
 
-# Runs one gate, captures its last non-empty output line as the summary, and prints
-# a single PASS/FAIL line. $1 = gate name, remaining args = the command to run.
 gate() {
   local name="$1"; shift
   TOTAL=$((TOTAL+1))
@@ -42,10 +60,160 @@ gate() {
   fi
 }
 
-gate repro_check          python3 repro_check.py
-gate units_repro_check    python3 units_repro_check.py
-gate detachments_repro    python3 detachments_repro_check.py
-gate rules_assertions     python3 rules_assertions.py
+# Prints a loud, counted skip line instead of silence — a skip must never read like a
+# pass, and must never look identical to ordinary output that scrolled past.
+skip_gate() {
+  local name="$1"; shift
+  TOTAL=$((TOTAL+1))
+  SKIPS=$((SKIPS+1))
+  printf 'SKIP %-24s SKIP (tier B — sources not loaded)\n' "$name"
+}
+
+# ── sources-loaded detection (P4/D231) ─────────────────────────────────────────
+# True tier is whatever is actually on disk right now, checked against
+# source_manifest.json's own file list — never assumed from a flag.
+sources_loaded() {
+  [ -f source_manifest.json ] || return 1
+  python3 - <<'PYEOF'
+import json, os, sys
+try:
+    files = json.load(open('source_manifest.json', encoding='utf-8'))['files']
+except Exception:
+    sys.exit(1)
+sys.exit(0 if all(os.path.exists(f) for f in files) else 1)
+PYEOF
+}
+
+SOURCES_OK=0
+if sources_loaded; then
+  SOURCES_OK=1
+fi
+
+# ── fetch-unpack-verify-overlay (P4/D231, M0) ──────────────────────────────────
+if [ "$FETCH" -eq 1 ]; then
+  TMP_REPO="$(mktemp -d)"
+  trap 'rm -rf "$TMP_REPO"' EXIT
+  if curl -sL --fail -o "$TMP_REPO/repo.tar.gz" \
+      https://codeload.github.com/rd-prime-1357/40k-army-builder/tar.gz/main; then
+    tar -xzf "$TMP_REPO/repo.tar.gz" -C "$TMP_REPO"
+    FETCHED_DIR="$(find "$TMP_REPO" -mindepth 1 -maxdepth 1 -type d | head -1)"
+    if [ -z "$FETCHED_DIR" ]; then
+      echo "FAIL fetch-verify           tarball unpacked but no directory found inside"
+      FAILS=$((FAILS+1)); TOTAL=$((TOTAL+1))
+    else
+      TOTAL=$((TOTAL+1))
+      if VERIFY_OUT="$(python3 pipeline_manifest.py --dir "$FETCHED_DIR" 2>&1)"; then
+        printf 'PASS %-24s %s\n' fetch-verify "$VERIFY_OUT"
+        # Overlay: area copy wins. Only bring in files the workspace does not already have.
+        while IFS= read -r -d '' f; do
+          rel="${f#"$FETCHED_DIR"/}"
+          [ -f "$rel" ] || { mkdir -p "$(dirname "$rel")"; cp "$f" "$rel"; }
+        done < <(find "$FETCHED_DIR" -type f -print0)
+      else
+        printf 'FAIL %-24s %s\n' fetch-verify "$VERIFY_OUT"
+        FAILS=$((FAILS+1))
+      fi
+    fi
+  else
+    echo "FAIL fetch-verify           could not fetch the public repo tarball (network / repo unreachable)"
+    FAILS=$((FAILS+1)); TOTAL=$((TOTAL+1))
+  fi
+
+  # ── private sources repo (data turns): token first, zip fallback, then already-
+  # local sources — never silently proceed tier-A-only on a data turn.
+  if [ "$DATA_TURN" -eq 1 ] && [ "$SOURCES_OK" -eq 0 ]; then
+    TOTAL=$((TOTAL+1))
+    if [ -f SOURCE_REPO_TOKEN.txt ]; then
+      TOKEN="$(cat SOURCE_REPO_TOKEN.txt)"
+      TMP_SRC="$(mktemp -d)"
+      if curl -sL --fail -H "Authorization: Bearer $TOKEN" \
+          -o "$TMP_SRC/src.tar.gz" \
+          https://codeload.github.com/rd-prime-1357/data-sources/tar.gz/main; then
+        tar -xzf "$TMP_SRC/src.tar.gz" -C "$TMP_SRC"
+        SRC_DIR="$(find "$TMP_SRC" -mindepth 1 -maxdepth 1 -type d | head -1)"
+        if SRC_VERIFY="$(python3 - "$SRC_DIR" <<'PYEOF'
+import json, hashlib, os, sys
+d = sys.argv[1]
+files = json.load(open('source_manifest.json', encoding='utf-8'))['files']
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        for chunk in iter(lambda: f.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+bad = [f for f, want in files.items()
+       if not os.path.exists(os.path.join(d, f)) or sha256(os.path.join(d, f)) != want]
+if bad:
+    print('FAIL', len(bad), 'source file(s) failed verification:', ', '.join(sorted(bad)[:5]))
+    sys.exit(1)
+print('OK', len(files), 'source files verified against source_manifest.json')
+PYEOF
+        )"; then
+          printf 'PASS %-24s %s\n' source-fetch "$SRC_VERIFY"
+          cp -n "$SRC_DIR"/* . 2>/dev/null
+          SOURCES_OK=1
+        else
+          printf 'FAIL %-24s %s\n' source-fetch "$SRC_VERIFY"
+          FAILS=$((FAILS+1))
+        fi
+      else
+        echo "FAIL source-fetch            token present but the private-repo fetch failed"
+        FAILS=$((FAILS+1))
+      fi
+      rm -rf "$TMP_SRC"
+    elif [ -f gw_sources.zip ]; then
+      TMP_SRC="$(mktemp -d)"
+      unzip -q gw_sources.zip -d "$TMP_SRC"
+      if SRC_VERIFY="$(python3 - "$TMP_SRC" <<'PYEOF'
+import json, hashlib, os, sys
+d = sys.argv[1]
+files = json.load(open('source_manifest.json', encoding='utf-8'))['files']
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        for chunk in iter(lambda: f.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+bad = [f for f, want in files.items()
+       if not os.path.exists(os.path.join(d, f)) or sha256(os.path.join(d, f)) != want]
+if bad:
+    print('FAIL', len(bad), 'source file(s) failed verification:', ', '.join(sorted(bad)[:5]))
+    sys.exit(1)
+print('OK', len(files), 'source files verified against source_manifest.json (zip fallback)')
+PYEOF
+      )"; then
+        printf 'PASS %-24s %s\n' source-fetch "$SRC_VERIFY"
+        cp -n "$TMP_SRC"/* . 2>/dev/null
+        SOURCES_OK=1
+      else
+        printf 'FAIL %-24s %s\n' source-fetch "$SRC_VERIFY"
+        FAILS=$((FAILS+1))
+      fi
+      rm -rf "$TMP_SRC"
+    else
+      echo "FAIL source-fetch            data turn with no SOURCE_REPO_TOKEN.txt and no gw_sources.zip — refusing to start"
+      FAILS=$((FAILS+1))
+    fi
+  fi
+fi
+
+# ── tiered gates ────────────────────────────────────────────────────────────
+if [ "$SOURCES_OK" -eq 1 ]; then
+  gate repro_check          python3 repro_check.py
+  gate units_repro_check    python3 units_repro_check.py
+  gate detachments_repro    python3 detachments_repro_check.py
+  gate rules_assertions     python3 rules_assertions.py --tier all
+else
+  skip_gate repro_check
+  skip_gate units_repro_check
+  skip_gate detachments_repro
+  gate rules_assertions     python3 rules_assertions.py --tier a
+  if [ "$DATA_TURN" -eq 1 ]; then
+    echo "FAIL data-turn-gate          sources not loaded — a data turn must not start tier-A-only"
+    FAILS=$((FAILS+1)); TOTAL=$((TOTAL+1))
+  fi
+fi
+
 gate pool_check           node pool_check.js index.html B18c_repro_fixture.json
 gate e10_check            node e10_check.js index.html
 gate b18d_check           node b18d_check.js index.html B18d_fixture.json
@@ -70,8 +238,13 @@ if [ "$SKIP_REPO" -eq 0 ]; then
 fi
 
 echo "---"
+GATED=$((TOTAL-SKIPS))
 if [ $FAILS -eq 0 ]; then
-  echo "OK   $TOTAL/$TOTAL gates pass"
+  if [ $SKIPS -gt 0 ]; then
+    echo "OK   $((GATED))/$((GATED)) gates pass ($SKIPS tier-B skipped)"
+  else
+    echo "OK   $TOTAL/$TOTAL gates pass"
+  fi
   exit 0
 else
   echo "FAIL $FAILS/$TOTAL gate(s) failed — reconcile before starting work"
