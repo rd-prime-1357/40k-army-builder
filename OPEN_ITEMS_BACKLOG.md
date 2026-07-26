@@ -55,7 +55,29 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### P4 — Project-area capacity — **NEW S134 (D211); STEP 1 DONE S135 (D213); STEP 2 DONE S140 (D219); STEP 3 CANCELLED S141 (D220); PROCESS; S then M**
+### P4 — Project-area capacity → long-term architecture — **NEW S134 (D211); STEPS 1–3 (D213/D219/D220); SCOPED S148 (D231); PROCESS; S then M**
+
+**Scoped S148 (D231) — the target architecture.** P4 stops being incremental capacity-clawing and
+becomes a design: the area's size must be independent of faction count. Area = per-session working set
+(~450 KB); built data and GW sources become fetch-on-demand into the workspace. Three homes — public
+repo (built outputs + tooling/docs), a new private repo `rd-prime-1357/data-sources` (the 71 GW
+source files, created S148), and the slimmed area. Session open: verify area → fetch public repo as
+one tarball, verify against an extended `pipeline_manifest.json` → overlay working set → on data turns
+fetch the private sources repo with a read-only token (`SOURCE_REPO_TOKEN.txt` in the area,
+hard-guarded out of the public repo by `repo_check.py`), verify against a new `source_manifest.json`.
+Gates tiered: A every open, B when sources load / mandatory at data-turn open+close. Full design in
+`P4_ARCHITECTURE_SCOPE.md`; custody calls (accept-risk for pre-release, revisit at public launch;
+private repo over zip; token in area) recorded in D231.
+
+**Migration M0–M3 (dev-manager sequence):** M0 next session (tooling-only, no eviction — build the
+new open, tier-tag the gates, create `source_manifest.json`, add the token guard, codify close-protocol
+changes; exit test is old + new open both green same session). Then M1 (evict repo-resident set,
+~3.9 MB) → B68 (engine) → CSM turn B as the M2 dress rehearsal → M2 (evict the 71 sources, ~7.3 MB) →
+CSM turn C. One added session total. M0 goes before the remaining CSM turns because the area is at
+capacity now. Two low-stakes items M0 proceeds on unless Ryan objects: the bulk-deletion screenshot
+amendment for M1/M2, and dropping `NEXT_SESSION_PROMPT.md` from the handoff hash list.
+
+---
 
 **Step 3 cancelled (D220).** Step 2's 77 KB whitespace removal did not move the displayed
 percentage at all (92% before, 92% after) — not even the fraction of a point the ~0.6-point
