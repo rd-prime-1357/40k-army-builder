@@ -3,7 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **8 open** as of S147: P2, P4, E23, E12, B17, B61, B67b, B68 — S147 was
+not here, it isn't open. **8 open** as of S149: P2, P4, E23, E12, B17, B61, B67b, B68 — S149 was
+M0 (D232, tooling-only): the new fetch-open path built and proven; nothing closed or added. S147 was
 CSM turn A (D229, data-only): 54 self-priced units shipped, diff-traced clean. It also opened B68
 (D230): building the CSM loadout-defaults pass surfaced a real parser bug (name-keyed matching bleeds
 across Death Guard/CSM's seven shared generic Chaos vehicle names), deferred to its own engine/parser
@@ -55,27 +56,25 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### P4 — Project-area capacity → long-term architecture — **NEW S134 (D211); STEPS 1–3 (D213/D219/D220); SCOPED S148 (D231); PROCESS; S then M**
+### P4 — Project-area capacity → long-term architecture — **NEW S134 (D211); STEPS 1–3 (D213/D219/D220); SCOPED S148 (D231); M0 BUILT S149 (D232); PROCESS; M1 NEXT**
 
-**Scoped S148 (D231) — the target architecture.** P4 stops being incremental capacity-clawing and
-becomes a design: the area's size must be independent of faction count. Area = per-session working set
-(~450 KB); built data and GW sources become fetch-on-demand into the workspace. Three homes — public
-repo (built outputs + tooling/docs), a new private repo `rd-prime-1357/data-sources` (the 71 GW
-source files, created S148), and the slimmed area. Session open: verify area → fetch public repo as
-one tarball, verify against an extended `pipeline_manifest.json` → overlay working set → on data turns
-fetch the private sources repo with a read-only token (`SOURCE_REPO_TOKEN.txt` in the area,
-hard-guarded out of the public repo by `repo_check.py`), verify against a new `source_manifest.json`.
-Gates tiered: A every open, B when sources load / mandatory at data-turn open+close. Full design in
-`P4_ARCHITECTURE_SCOPE.md`; custody calls (accept-risk for pre-release, revisit at public launch;
-private repo over zip; token in area) recorded in D231.
+**M0 built and proven S149 (D232).** `pipeline_manifest.py` extended 41 → 101 guarded files (full
+public-repo coverage; fixed a pre-existing gap where it never guarded itself). `baseline.sh` gained
+`--fetch` (tarball fetch-verify-overlay against the manifest) and `--data-turn` (token-authed
+private-source fetch, zip fallback, refuses to start with neither). `rules_assertions.py` gained
+`--tier a`, auto-classified per assertion (reachable-code walk against source-reading names AND
+literal GW filenames — the filename half was a real gap the sources-absent simulation caught: three
+assertions open `Army_Muster_Rules.txt` directly, missed by a names-only first pass). `repo_check.py`
+gained the `SOURCE_REPO_TOKEN.txt` custody guard (live clone + bound-file-lists + content scan).
+`source_manifest.json` created, 70 entries, confirmed against Ryan's real file-list screenshots. Exit test:
+mechanism proven correct by simulation (fetch-verify passes against a simulated post-push tree; a
+literal live-green run of `--fetch` against the real remote is blocked until tonight's push lands,
+an inherent one-session chicken-and-egg, not a bug — noted for S150 to confirm for real at open).
 
-**Migration M0–M3 (dev-manager sequence):** M0 next session (tooling-only, no eviction — build the
-new open, tier-tag the gates, create `source_manifest.json`, add the token guard, codify close-protocol
-changes; exit test is old + new open both green same session). Then M1 (evict repo-resident set,
-~3.9 MB) → B68 (engine) → CSM turn B as the M2 dress rehearsal → M2 (evict the 71 sources, ~7.3 MB) →
-CSM turn C. One added session total. M0 goes before the remaining CSM turns because the area is at
-capacity now. Two low-stakes items M0 proceeds on unless Ryan objects: the bulk-deletion screenshot
-amendment for M1/M2, and dropping `NEXT_SESSION_PROMPT.md` from the handoff hash list.
+**Migration M0–M3 (dev-manager sequence):** M0 done. M1 next (Ryan, ~10 minutes, no session needed) —
+evict the repo-resident set (~3.9 MB) once tonight's push lands and S150 confirms `--fetch` comes back
+green against the live repo. Then B68 (engine) → CSM turn B as the M2 dress rehearsal → M2 (evict the
+71 sources) → CSM turn C.
 
 ---
 
