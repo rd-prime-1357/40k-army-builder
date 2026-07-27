@@ -3,8 +3,9 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **8 open** as of S149: P2, P4, E23, E12, B17, B61, B67b, B68 — S149 was
-M0 (D232, tooling-only): the new fetch-open path built and proven; nothing closed or added. S147 was
+not here, it isn't open. **8 open** as of S150: P2, P4, E23, E12, B17, B61, B67b, B68 — S150 confirmed `--fetch` live-green
+against the real repo (D233, tooling-only, verification only); nothing closed or added, M1 unblocked.
+S149 was M0 (D232, tooling-only): the new fetch-open path built and proven; nothing closed or added. S147 was
 CSM turn A (D229, data-only): 54 self-priced units shipped, diff-traced clean. It also opened B68
 (D230): building the CSM loadout-defaults pass surfaced a real parser bug (name-keyed matching bleeds
 across Death Guard/CSM's seven shared generic Chaos vehicle names), deferred to its own engine/parser
@@ -71,10 +72,15 @@ mechanism proven correct by simulation (fetch-verify passes against a simulated 
 literal live-green run of `--fetch` against the real remote is blocked until tonight's push lands,
 an inherent one-session chicken-and-egg, not a bug — noted for S150 to confirm for real at open).
 
-**Migration M0–M3 (dev-manager sequence):** M0 done. M1 next (Ryan, ~10 minutes, no session needed) —
-evict the repo-resident set (~3.9 MB) once tonight's push lands and S150 confirms `--fetch` comes back
-green against the live repo. Then B68 (engine) → CSM turn B as the M2 dress rehearsal → M2 (evict the
-71 sources) → CSM turn C.
+**S150 (D233): `--fetch` confirmed live-green.** The live repo's `pipeline_manifest.py` carries the
+101-file guarded set; a fresh tarball fetch-verify against it fails only one file
+(`40K_Data_Pipeline_Process_v0_6.md`) — hash-confirmed as the pre-existing area-ahead-of-repo drift
+D232 already named, not a new problem. **M1 is unblocked.**
+
+**Migration M0–M3 (dev-manager sequence):** M0 done, M1 confirmed clear to run. M1 next (Ryan, ~10
+minutes, no session needed) — evict the repo-resident set (~3.9 MB) now that `--fetch` is confirmed
+live-green. Then B68 (engine) → CSM turn B as the M2 dress rehearsal → M2 (evict the 71 sources) → CSM
+turn C.
 
 ---
 

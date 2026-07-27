@@ -1,50 +1,45 @@
-# Next-session prompt — Session 150
+# Next-session prompt — Session 151
 
-Session 149 built and proved M0 (D232) — the new fetch-open, tiered gates, `source_manifest.json`,
-and the token custody guard. Nothing was evicted. Read `SESSION_HANDOFF_149.md` and `D232_entry.md`
-before starting.
+S150 confirmed `--fetch` comes back live-green against the real public repo (D233) — only the one
+pre-existing, already-diagnosed drift (`40K_Data_Pipeline_Process_v0_6.md`) shows, not a new problem.
+**M1 is unblocked.**
 
-## Step 1 — confirm M0 for real, at open
+## Read this first
 
-S149's exit test proved the mechanism correct by simulation but could not get a literal green
-`--fetch` run, because the real public repo hadn't received S149's push yet. That push should have
-landed by now. Open with:
+`SESSION_HANDOFF_150.md`, `D233_entry.md`, and the P4 body in `OPEN_ITEMS_BACKLOG.md` before starting.
+Do not trust remembered session/version numbers — this file's own header is the only thing to check
+against `SESSION_HANDOFF_150.md`.
 
-    ./baseline.sh --fetch --no-repo
+## M1 status
 
-Expect `fetch-verify` to PASS this time (101/101 guarded files match) — if it still reports files
-missing from the manifest, the push didn't land as expected; stop and reconcile before doing anything
-else, don't route around it. `repo_check.py` is skipped by `--no-repo` here deliberately — check it
-separately once M1 has run (see Step 2), since right now it would still show S149's now-pushed files
-as "differs" against whatever Ryan's git history looks like mid-push.
+M1 (evict the repo-resident set, ~3.9 MB) is Ryan's task, not a session — no session should attempt it.
+If S151 opens and M1 has already run, the baseline will look different from S150's (`--no-repo` may no
+longer find its old copies locally; `--fetch` becomes the only path). Reconcile against whatever
+`baseline.sh` actually reports at open rather than assuming M1 did or didn't happen.
 
-Verify carried-forward hashes match S149's handoff: units.json `eb370386ccf7`, abilities.json
-`051bdd9ceb08`, rules.json `b347222a3bc9`, weapon_abilities.json `ff4379837df4`,
-datasheet_wargear_abilities.json `af5be2824e54`, units_repro_check.py `81cb0f825727`.
+## Baseline at open
 
-## Step 2 — M1, if not already done
+Run `baseline.sh` (try `--fetch` first now that it's confirmed live; fall back to `--no-repo` only if
+`--fetch` itself fails for a new reason, not the known `40K_Data_Pipeline_Process_v0_6.md` drift).
+Verify S150's carried-forward files match — nothing was built or changed in S150 itself, so this
+should match S149's set byte-for-byte plus `DECISION_INDEX.md`/`OPEN_ITEMS_BACKLOG.md`/`D233_entry.md`.
 
-M1 is Ryan's task, not a session (~10 minutes, screenshot-verified per the amendment D231/D232
-settled). If the area is still near 100% capacity, M1 hasn't happened yet — ask Ryan to run it
-before this session does substantive work, rather than opening a data/engine turn against a
-capacity-constrained area. If the area is already slim (~450 KB), M1 is done; open on the new
-`--fetch` path as the default going forward and confirm `repo_check.py` comes back clean too.
+## What's next after M1
 
-## Step 3 — B68 (engine turn)
+Per the standing sequence: B68 (engine — `loadout_parser.py`/`equipped_parser.py` resolve by unit name
+not army+unit_id, blocking CSM's loadout-defaults pass) → CSM turn B as the M2 dress rehearsal → M2
+(evict the 71 GW sources) → CSM turn C. Pick whichever of these is actually next given what M1's state
+turns out to be at open — this is a sequencing call, not one that needs Ryan's input.
 
-Per D231's migration sequence, B68 is next: `loadout_parser.py`/`equipped_parser.py` resolve by unit
-name, not army+unit_id, so Death Guard and Chaos Space Marines' seven shared generic Chaos vehicle
-names bleed across factions. Full detail in `OPEN_ITEMS_BACKLOG.md`'s B68 entry and D230. This is an
-engine/parser turn — per turn typing, it must not mix with any data change. Fix: rekey the relevant
-lookup(s) to (army, unit name) or unit_id outright; re-run the full production chain; diff-trace
-against the currently-committed `unit_loadouts.json` to confirm the only changes are the seven known
-unit_ids resolving correctly, nothing else drifting.
+## Two small items carried from S150
 
-**Do not start CSM turn B** (the M2 dress rehearsal) until B68 is closed — it's the next item in the
-same sequence, not this session's work unless B68 finishes with room to spare.
+- Recommend pushing the area's `40K_Data_Pipeline_Process_v0_6.md` to the repo in the next upload
+  batch, closing the one remaining drift. Proceed on this unless Ryan objects.
+- A batch of CSVs matching files already in the project area was attached to S150's opening message
+  and was not added to the area (flagged, not actioned). If Ryan re-sends them intentionally, confirm
+  what they're meant to replace before treating them as anything other than duplicates.
 
 ## Turn type
 
-**Engine-only** (B68), once Steps 1–2 confirm M0/M1 are genuinely settled. If M1 hasn't happened yet,
-this session's real job is coordinating that with Ryan, not B68 — don't force an engine turn onto a
-still-capacity-constrained area.
+Depends on what's picked. B68 is engine-only. CSM turn B is data-only. M2 (if reached) is tooling-only.
+Whichever is chosen, hold to single-type discipline — no mixing.
