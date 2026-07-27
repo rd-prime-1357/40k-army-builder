@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **8 open** as of S150: P2, P4, E23, E12, B17, B61, B67b, B68 — S150 confirmed `--fetch` live-green
+not here, it isn't open. **7 open** as of S152: P2, P4, E23, E12, B17, B61, B67b — B68 closed S152 (D235, engine); S150 confirmed `--fetch` live-green
 against the real repo (D233, tooling-only, verification only); nothing closed or added, M1 unblocked.
 S149 was M0 (D232, tooling-only): the new fetch-open path built and proven; nothing closed or added. S147 was
 CSM turn A (D229, data-only): 54 self-priced units shipped, diff-traced clean. It also opened B68
@@ -21,35 +21,6 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
-### B68 — `loadout_parser.py`/`equipped_parser.py` resolve by unit name, not army+unit_id — **NEW S147 (D230); BLOCKS CSM's loadout-defaults pass**
-
-Death Guard and Chaos Space Marines each carry their own datasheet for seven generic Chaos vehicles
-(Chaos Rhino, Chaos Land Raider, Chaos Predator Annihilator, Chaos Predator Destructor, Chaos Spawn,
-Defiler, Helbrute) — same Unit Name, distinct unit_ids. CSM is the first faction added that shares
-generic vehicle names with an already-built faction, and that's what exposes this: somewhere in
-`loadout_parser.py`/`equipped_parser.py`, matching is keyed by name rather than army+unit_id or
-unit_id outright, so once a second same-named datasheet exists, one faction's stored defaults can
-silently pick up the other's.
-
-**Proven, not suspected (D230):** running the current, unmodified production chain — CSM named
-nowhere in `--factions` or the web passes — against a `units.json` that merely *contains* CSM's block
-still changes 23 pre-existing units' stored loadout defaults (list-order shifts on `default_weapons`,
-a `_defaults_source` flag dropped on at least one). Isolating loadout_parser.py alone, each web pass
-alone, and the final datasheets pass alone (each against the CSM-inclusive `units.json`) narrows it to
-mere co-presence in the file, not any processing of CSM's own data.
-
-**Fix is an engine/parser change** (turn typing forbids mixing with a data turn) — likely rekeying the
-relevant lookup(s) to (army, unit name) or unit_id. Needs its own scoped, verified turn: find every
-name-only key in both scripts touching model-group/weapon defaults, rekey, then re-run the full
-production chain and diff-trace against the currently-committed `unit_loadouts.json` to confirm zero
-drift outside what CSM's own web pass should add.
-
-**Blocks:** CSM_BUILD_SCOPE.md §5 (the sixth `equipped_parser.py` pass, CSM's own loadout defaults).
-Until B68 is fixed, `repro_check.py` and `rules_assertions.py`'s embedded P1 check will both show the
-same byte-mismatch, naming the same seven unit_ids, at every session open — expected, not a new
-regression.
-
-
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
 The durable fix — commit the parser to the GitHub repo as canonical, mirror to project knowledge — is still
 Ryan's call. But the pipeline is now self-defending regardless of where the parser lives: a stale or wrong copy
@@ -57,7 +28,7 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### P4 — Project-area capacity → long-term architecture — **NEW S134 (D211); STEPS 1–3 (D213/D219/D220); SCOPED S148 (D231); M0 BUILT S149 (D232); M1 DONE; PROCESS; B68 NEXT**
+### P4 — Project-area capacity → long-term architecture — **NEW S134 (D211); STEPS 1–3 (D213/D219/D220); SCOPED S148 (D231); M0 BUILT S149 (D232); M1 DONE; B68 CLOSED S152 (D235); PROCESS; M2 NEXT**
 
 **M0 built and proven S149 (D232).** `pipeline_manifest.py` extended 41 → 101 guarded files (full
 public-repo coverage; fixed a pre-existing gap where it never guarded itself). `baseline.sh` gained
@@ -293,6 +264,7 @@ appending to it, and hand the updated file back for Ryan to commit.
 - **B60** — `detachment_parser.py`: `restrictions` populated inconsistently — CLOSED S142 (D221); DATA. Two root causes fixed (Wahapedia folding the restriction into `rule_text` in two shapes; DA pack bleeding stratagem clauses in where page-collated CP tokens defeat stratagem recognition). All 25 chapter-exclusive detachments now carry the restriction in `restrictions`, none in `rule_text`; 16 records changed, restrictions/rule_text only. Assertion follow-up split off as B60a
 - **B60a** — Pin the `restrictions` consistency as an assertion — SHIPPED S143 (D222); TOOLING. Two new assertions in `rules_assertions.py`: 25 detachments carry the chapter-exclusivity sentence in `restrictions` and 0 in `rule_text`; no `restrictions` value carries stratagem/CP debris. 104/104 assertions pass
 - **B67** — Two GW-derived files (`Unit_Weapons.csv`, `wh40k_core_rules.md`) removed from the public repo — CLOSED S145 (D225); Ryan deleted both, confirmed gone from HEAD via the API. D223's "single commit" premise corrected (249 commits); full history purge is a separate optional action, filed as B67b
+- **B68** — `equipped_parser.py` resolved web-composition titles through a flat name→unit_id map (last-write-wins), misrouting Death Guard's seven shared generic Chaos vehicle equipped lines to their CSM twins once both factions co-existed in `units.json` — CLOSED S152 (D235); ENGINE. Diagnosis corrected: bug was in `equipped_parser.py` alone, not `loadout_parser.py`. Fixed with army-scoped title resolution (`scoped_name2id()`, scope inferred from the composition filename); no caller edit, pure engine turn. `repro_check` byte-identical, no data regenerated, durable for the future CSM web pass. Unblocks CSM turn B
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched

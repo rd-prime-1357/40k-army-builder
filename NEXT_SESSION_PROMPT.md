@@ -1,44 +1,55 @@
-# Next-session prompt — Session 152
+# Next-session prompt — Session 153
 
-S151 confirmed M1 already ran and fixed a real fetch-verify design gap along the way (D234). The area
-now holds only the per-session working set; `--fetch` correctly recovers the repo-resident set at open.
+B68 closed (S152, D235): `equipped_parser.py` now resolves web-composition titles within the
+composition file's own faction, so Death Guard and Chaos Space Marines no longer bleed loadout defaults
+across their seven shared generic Chaos vehicle names. `repro_check` is byte-identical again.
 
 ## Read this first
 
-`SESSION_HANDOFF_151.md`, `D234_entry.md`, and the P4 body in `OPEN_ITEMS_BACKLOG.md` before starting.
-Don't trust remembered numbers — check this file's header against `SESSION_HANDOFF_151.md`.
+`SESSION_HANDOFF_152.md`, the D235 entry at the tail of `40K_Decision_Log_v3_0.md`, and
+`CSM_BUILD_SCOPE.md` (especially §5 Loadout defaults and §6 the exact build surface) before starting.
+Don't trust remembered numbers — check this file's header against `SESSION_HANDOFF_152.md`.
 
 ## Baseline at open
 
-Run `baseline.sh --fetch`. Expect 22/25 gates green: `repro_check` and `rules_assertions` fail naming
-the same seven B68 unit_ids as every session since S147 (`000001046`-`000001050`, `000002461`,
-`000004209`) - carried-forward, diagnosed, not a regression, and this session's actual assignment.
-`repo_check` fails naming `baseline.sh`, `pipeline_manifest.py`, `pipeline_manifest.json`,
-`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `40K_Data_Pipeline_Process_v0_6.md` (differ) and
-`SESSION_HANDOFF_151.md` (missing from repo) - all S151's own edits and the one pre-existing drift,
-pending the next upload batch. None of this blocks starting; if the count or file names differ from
-this list, reconcile before proceeding.
+Run `baseline.sh --fetch --data-turn` (this is a data turn — sources must be verified loaded, not
+tier-A-only). Expect all pipeline/gate/repro gates green. `repo_check` will fail naming this batch's
+push-pending files (`equipped_parser.py`, `pipeline_manifest.py`, `pipeline_manifest.json`,
+`40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_152.md`) plus
+the long-standing `40K_Data_Pipeline_Process_v0_6.md` drift — all pending the next upload batch, none
+blocking. If the count or names differ from that list, reconcile before proceeding.
 
-## This session - B68 (engine-only)
+## This session — CSM turn B (data-only)
 
-Per `OPEN_ITEMS_BACKLOG.md`'s B68 entry (D230): `loadout_parser.py`/`equipped_parser.py` resolve by
-unit name rather than army+unit_id, so Death Guard and Chaos Space Marines' seven shared generic Chaos
-vehicle datasheets (Chaos Rhino, Chaos Land Raider, Chaos Predator Annihilator/Destructor, Chaos Spawn,
-Defiler, Helbrute) bleed loadout defaults across factions once both are present in `units.json`.
-Isolate the name-keyed match in both parsers, switch to army+unit_id (or unit_id outright), and confirm
-via `repro_check.py` that the seven previously-diverging unit_ids reproduce clean and that no other
-unit's defaults shift as a side effect.
+CSM's loadout-defaults pass, `CSM_BUILD_SCOPE.md` §5. Now unblocked by B68. Per §6, the config edits are
+small and additive:
 
-**Blocks:** `CSM_BUILD_SCOPE.md` section 5 (CSM's own loadout-defaults pass, i.e. CSM turn B).
+- `repro_check.py` — add `CSM` to `FACTIONS`; add `Chaos_Space_Marines` to `WEB_PASSES`.
+- `units_repro_check.py` — add the CSM per-faction block and a fourth `--in` to the merge call.
+- `detachment_parser.py` — add CSM rows to `ARMY_TO_MFM`, `MFM_SOURCE_NAME`, `ARMY_TO_WAHA_FACTION`.
+- `detachments_repro_check.py` — add `MFM_Chaos_Space_Marines_v1_0.txt` to its required-inputs list.
 
-## Turn type
+Then run the CSM web pass (`Chaos_Space_Marines_web.txt`) as the sixth `equipped_parser.py` pass and
+`loadout_parser.py --factions ... CSM`, regenerate `unit_loadouts.json`, and diff-trace against the
+currently-committed file: every change should be CSM's own new entries plus (correctly) the DG/CSM
+shared vehicles now each carrying their own faction-scoped defaults. Nothing else should move.
 
-**Engine-only.** `loadout_parser.py`/`equipped_parser.py` only. No data file content changes beyond
-what the fixed parsers regenerate; no tooling changes. `unit_loadouts.json` regeneration is expected as
-the parser's own output, not a separate data turn.
+**B68 dependency — do not rename the web file.** `equipped_parser.py` infers the pass's faction scope
+from the composition filename. `Chaos_Space_Marines_web.txt` must keep exactly that name so it maps to
+the "Chaos Space Marines" army block; renaming it silently drops the scope back to flat resolution and
+reopens the bleed.
 
-## After B68
+**Turn type: data-only.** Config-list additions plus the parser output they regenerate. No engine logic
+change to `loadout_parser.py`/`equipped_parser.py` beyond what the config lists drive; no tooling change.
+This is the M2 dress rehearsal per the P4 sequence.
 
-Per the standing sequence: CSM turn B (data) as the M2 dress rehearsal -> M2 (Ryan, evict the 71 GW
-sources) -> CSM turn C. Confirm B68 actually closes the repro_check divergence before treating CSM turn
-B as unblocked - don't assume from the diagnosis alone.
+## Housekeeping (fold in when convenient, not blocking)
+
+The standalone `D2NN_entry.md` pattern was a workaround for the decision log being evicted under M1;
+the log is workspace-resident again. Fold `D232`–`D234` into `40K_Decision_Log_v3_0.md` and retire the
+standalone-entry pattern. Small, do it opportunistically.
+
+## After CSM turn B
+
+Per the standing sequence: M2 (Ryan, evict the 71 GW sources) → CSM turn C. Confirm CSM turn B's
+diff-trace is clean before treating M2 as unblocked.

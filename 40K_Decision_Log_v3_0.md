@@ -8879,3 +8879,41 @@ is blocked on this fix, not merely undone.
 `rules_assertions.py` as P1) will show this exact byte-mismatch, naming the same seven unit_ids, at
 every session open. This is the expected, diagnosed state carried forward deliberately — not a new
 regression to re-diagnose.
+
+## D235 — B68 closed: equipped-pass title resolution scoped to the composition file's own faction (S152)
+
+The seven-unit `repro_check`/`rules_assertions` divergence carried since S147 is resolved. Diagnosis
+confirmed empirically, not from the D230 framing alone: the bug lives entirely in `equipped_parser.py`,
+not `loadout_parser.py`. `load_roster` built a single flat `name2id` (name → unit_id, last-write-wins
+across every army block), and `find_titles`/`segment` resolve each web-composition datasheet title
+through it. Once Chaos Space Marines entered `units.json` after Death Guard, the seven generic Chaos
+vehicle names (Helbrute, Chaos Rhino, Chaos Spawn, Chaos Land Raider, Chaos Predator
+Annihilator/Destructor, Defiler) each gained a second candidate; last-write-wins pointed every one at
+the CSM unit_id, so the Death Guard web pass routed its equipped lines to CSM ids that aren't in the
+SM+DG loadouts dict — the update silently vanished and the seven DG entries kept the loadout-parser
+default (`_defaults_source` unset) instead of the committed `equipped` values.
+
+**Fix — army-scoped title resolution.** `load_roster` now also returns every candidate per name and the
+set of army-block names. A new `scoped_name2id()` infers the owning faction from the composition
+filename (`<Army_Name>_web.txt` → `<Army Name>`, used only when that string is a real block in
+`units.json`) and, for a name with more than one candidate, prefers the candidate in that block;
+single-candidate names and unscoped passes (Space Marines, whose codex spans many blocks and has no
+single block; the datasheets pass over `os.devnull`) fall through to the old flat behaviour unchanged.
+No caller changed — the scope is read from the filename the chain already passes — so this stayed a
+pure `equipped_parser.py` engine turn with no tooling edit.
+
+**Proven surgical.** Before touching the parser, a simulation of scoped-vs-flat resolution across all
+five web passes differed on exactly the seven Death Guard collisions and nothing else. After the fix,
+`repro_check.py` reproduces the committed `unit_loadouts.json` byte-for-byte; no data file needed
+regenerating (the committed file predates CSM co-presence and was already correct). Full baseline green
+but for the expected push-pending `repo_check` drift.
+
+**Durable for CSM turn B.** The same mechanism routes the future CSM web pass correctly:
+`Chaos_Space_Marines_web.txt` infers the "Chaos Space Marines" block, so its shared vehicles resolve to
+CSM ids while Death Guard's continue resolving to DG ids. The CSM web file must keep that exact name for
+the inference to hold — noted in the handoff.
+
+**Loadout_parser.py left untouched, deliberately.** Its lookups are unit_id-keyed throughout; its one
+name-keyed structure (`ds_by_name`) is dead (built, never read). Byte-identical reproduction with the
+`equipped_parser.py` change alone proves it needs no change for B68. Removing the dead `ds_by_name` is
+tidiness, not a positive reason, and is left for a future turn if ever.

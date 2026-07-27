@@ -16,7 +16,7 @@ by the stat block, i.e. a lone 'M' line) so that roster names appearing inside
 region is bounded to the block between UNIT COMPOSITION and the points line, so
 a neighbouring datasheet's wargear-option text cannot leak in.
 """
-import json, re, unicodedata, argparse, csv
+import json, re, unicodedata, argparse, csv, os
 
 
 def norm(s):
@@ -180,11 +180,20 @@ def load_roster(units_path):
     data = json.load(open(units_path))
     name2id, exact_by_id, base_by_id, roster_ids = {}, {}, {}, set()
     g_exact, g_base = {}, {}
+    # name_cands / army_blocks support army-scoped title resolution (B68): a generic
+    # datasheet name (e.g. "Helbrute", "Chaos Rhino") can exist in two faction blocks
+    # with different unit_ids. name2id alone is last-write-wins, so once a second
+    # same-named datasheet is present a per-faction web pass can silently route its
+    # equipped line to the wrong faction's unit_id. name_cands keeps every candidate
+    # so the pass can prefer the one in its own army block.
+    name_cands, army_blocks = {}, set()
     for blk in data:
+        army_blocks.add(blk.get('army'))
         for u in blk['units']:
             uid = u['unit_id']
             roster_ids.add(uid)
             name2id[norm_name(u['unit_name'])] = uid
+            name_cands.setdefault(norm_name(u['unit_name']), []).append((blk.get('army'), uid))
             ex, ba = {}, {}
             for w in u.get('weapons', []):
                 nm = w['weapon_name']; n = norm(nm)
@@ -197,7 +206,33 @@ def load_roster(units_path):
                 if nm not in g_base[base(n)]:
                     g_base[base(n)].append(nm)
             exact_by_id[uid] = ex; base_by_id[uid] = ba
-    return name2id, exact_by_id, base_by_id, roster_ids, g_exact, g_base
+    return name2id, exact_by_id, base_by_id, roster_ids, g_exact, g_base, name_cands, army_blocks
+
+
+def scoped_name2id(name_cands, army_blocks, composition_path):
+    """Return a name -> uid map resolved for the faction the composition file owns.
+
+    Scope is inferred from the composition filename: '<Army_Name>_web.txt' -> '<Army Name>',
+    used only if that army is an actual block in units.json (so the Space Marines pass,
+    which has no single block, and the datasheets pass over os.devnull both fall through
+    to flat behaviour). For a name with one candidate the sole uid is used regardless of
+    scope; only genuinely colliding names are steered to the in-scope block, and when no
+    in-scope candidate exists the last-declared candidate is kept — byte-identical to the
+    old flat name2id for every non-colliding title in every pass."""
+    stem = os.path.splitext(os.path.basename(composition_path or ''))[0]
+    if stem.endswith('_web'):
+        stem = stem[:-len('_web')]
+    scope = stem.replace('_', ' ')
+    if scope not in army_blocks:
+        scope = None
+    out = {}
+    for name, cands in name_cands.items():
+        if len(cands) == 1 or scope is None:
+            out[name] = cands[-1][1]
+            continue
+        pick = next((uid for army, uid in cands if army == scope), None)
+        out[name] = pick if pick is not None else cands[-1][1]
+    return out
 
 
 def resolve(tok, ex, ba, g_ex, g_ba):
@@ -458,7 +493,11 @@ def main():
                          'units the web.txt composition dump misses (web.txt takes precedence).')
     args = ap.parse_args()
 
-    name2id, ex_by_id, ba_by_id, roster_ids, g_ex, g_ba = load_roster(args.units)
+    name2id, ex_by_id, ba_by_id, roster_ids, g_ex, g_ba, name_cands, army_blocks = load_roster(args.units)
+    # B68: resolve titles within the composition file's own faction so generic Chaos
+    # vehicle names shared between Death Guard and Chaos Space Marines route to the
+    # correct unit_id instead of last-write-wins across blocks.
+    name2id = scoped_name2id(name_cands, army_blocks, args.composition)
     ld = json.load(open(args.loadouts))
     text = open(args.composition, encoding='utf-8').read()
     owner_lines, dropped_lines = segment(text, name2id)
