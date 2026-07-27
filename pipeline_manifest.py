@@ -167,6 +167,7 @@ GUARDED = [
     'SESSION_HANDOFF_140.md', 'SESSION_HANDOFF_141.md', 'SESSION_HANDOFF_142.md',
     'SESSION_HANDOFF_143.md', 'SESSION_HANDOFF_144.md', 'SESSION_HANDOFF_145.md',
     'SESSION_HANDOFF_146.md', 'SESSION_HANDOFF_147.md', 'SESSION_HANDOFF_148.md',
+    'SESSION_HANDOFF_149.md', 'SESSION_HANDOFF_150.md', 'SESSION_HANDOFF_151.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):
@@ -255,10 +256,60 @@ def check(d):
     return True, f'{len(recorded)} guarded files all match'
 
 
+def check_overlay(fetched_dir, local_dir):
+    """(ok, message, overlay_targets). Verifies ONLY the guarded files the overlay is
+    about to pull in — i.e. files GUARDED lists but that are absent from local_dir.
+    Files already present locally are never checked here: per the fetch-open's own
+    authority rule ("area copy wins"), a locally-resident file's content is never
+    sourced from the fetch, so a fetched copy that differs from the manifest (stale
+    manifest, or repo behind local edits not yet pushed) must not block pulling in the
+    files that ARE only sourced from the fetch. Scoping verification to the overlay
+    set is what makes that rule real instead of just documented (M0 originally
+    verified the whole tree unconditionally, which let ordinary area-ahead-of-repo
+    drift on unrelated files block every eviction-recovery fetch — S151 finding).
+    """
+    p = os.path.join(fetched_dir, MANIFEST)
+    if not os.path.exists(p):
+        p = MANIFEST
+    if not os.path.exists(p):
+        return False, f'{MANIFEST} not found — nothing to verify against', []
+    try:
+        recorded = json.load(open(p, encoding='utf-8')).get('files', {})
+    except Exception as e:
+        return False, f'{MANIFEST} is unreadable: {type(e).__name__}: {e}', []
+
+    overlay_targets = [f for f in GUARDED if not os.path.exists(os.path.join(local_dir, f))]
+
+    absent, mismatch = [], []
+    for f in overlay_targets:
+        fp = os.path.join(fetched_dir, f)
+        if not os.path.exists(fp):
+            absent.append(f)
+        elif f in recorded and sha256(fp) != recorded[f]:
+            mismatch.append(f)
+
+    problems = []
+    if absent:
+        problems.append(f'{len(absent)} file(s) needed for overlay are absent from the fetch: '
+                         + ', '.join(sorted(absent)))
+    if mismatch:
+        problems.append(f'{len(mismatch)} file(s) needed for overlay do not match the manifest: '
+                         + ', '.join(sorted(mismatch)))
+
+    if problems:
+        return False, '; '.join(problems), overlay_targets
+    return True, (f'{len(overlay_targets)} overlay-needed file(s) verified '
+                  f'({len(GUARDED) - len(overlay_targets)} already local, not checked)'), overlay_targets
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dir', default='.', help='directory holding the guarded files')
     ap.add_argument('--write', action='store_true', help='regenerate pipeline_manifest.json')
+    ap.add_argument('--overlay-check', metavar='LOCAL_DIR',
+                     help='verify only the guarded files absent from LOCAL_DIR (the overlay set), '
+                          'reading their content from --dir. Prints the overlay file list on OK, '
+                          'one per line, after the summary line, for a caller to copy.')
     a = ap.parse_args()
 
     if a.write:
@@ -269,6 +320,14 @@ def main():
             return 1
         print(f'OK   wrote {MANIFEST} with {n} guarded files')
         return 0
+
+    if a.overlay_check is not None:
+        ok, msg, targets = check_overlay(a.dir, a.overlay_check)
+        print(('OK   ' if ok else 'FAIL ') + msg)
+        if ok:
+            for f in targets:
+                print(f)
+        return 0 if ok else 1
 
     ok, msg = check(a.dir)
     print(('OK   ' if ok else 'FAIL ') + msg)

@@ -57,7 +57,7 @@ fails P1 (reproduction) and P3 (manifest) on the baseline run and by name, so a 
 whole session's work silently. See **D119, D123**.
 
 
-### P4 — Project-area capacity → long-term architecture — **NEW S134 (D211); STEPS 1–3 (D213/D219/D220); SCOPED S148 (D231); M0 BUILT S149 (D232); PROCESS; M1 NEXT**
+### P4 — Project-area capacity → long-term architecture — **NEW S134 (D211); STEPS 1–3 (D213/D219/D220); SCOPED S148 (D231); M0 BUILT S149 (D232); M1 DONE; PROCESS; B68 NEXT**
 
 **M0 built and proven S149 (D232).** `pipeline_manifest.py` extended 41 → 101 guarded files (full
 public-repo coverage; fixed a pre-existing gap where it never guarded itself). `baseline.sh` gained
@@ -77,10 +77,20 @@ an inherent one-session chicken-and-egg, not a bug — noted for S150 to confirm
 (`40K_Data_Pipeline_Process_v0_6.md`) — hash-confirmed as the pre-existing area-ahead-of-repo drift
 D232 already named, not a new problem. **M1 is unblocked.**
 
-**Migration M0–M3 (dev-manager sequence):** M0 done, M1 confirmed clear to run. M1 next (Ryan, ~10
-minutes, no session needed) — evict the repo-resident set (~3.9 MB) now that `--fetch` is confirmed
-live-green. Then B68 (engine) → CSM turn B as the M2 dress rehearsal → M2 (evict the 71 sources) → CSM
-turn C.
+**S151 (D234): M1 confirmed already run; fetch-verify design gap fixed.** Session open found 27
+repo-resident guarded files absent from the area — M1 had run. The fetch-open's own verify step was
+blocking their recovery: it checked the whole fetched tree unconditionally, so area-ahead-of-repo drift
+on two unrelated files (`DECISION_INDEX.md`/`OPEN_ITEMS_BACKLOG.md`, edited S150 without a manifest
+refresh) blocked pulling in files that had nothing to do with the mismatch. `pipeline_manifest.py`
+gained `check_overlay()`/`--overlay-check`, scoping verification to only files absent locally, per the
+"area copy wins" rule. Also closed a manifest gap: `SESSION_HANDOFF_149.md`/`.150.md` were never
+appended to `GUARDED` (S149 missed its own append step). Manifest regenerated, 104 guarded files. Full
+baseline clean except the carried-forward B68 failure and three known push-pending files
+(`baseline.sh`, `pipeline_manifest.py`, `pipeline_manifest.json`, plus the pre-existing
+`40K_Data_Pipeline_Process_v0_6.md` drift).
+
+**Migration M0–M3 (dev-manager sequence):** M0 and M1 done. B68 next (engine, S152) → CSM turn B as the
+M2 dress rehearsal → M2 (Ryan, evict the 71 sources) → CSM turn C.
 
 ---
 

@@ -1,45 +1,44 @@
-# Next-session prompt — Session 151
+# Next-session prompt — Session 152
 
-S150 confirmed `--fetch` comes back live-green against the real public repo (D233) — only the one
-pre-existing, already-diagnosed drift (`40K_Data_Pipeline_Process_v0_6.md`) shows, not a new problem.
-**M1 is unblocked.**
+S151 confirmed M1 already ran and fixed a real fetch-verify design gap along the way (D234). The area
+now holds only the per-session working set; `--fetch` correctly recovers the repo-resident set at open.
 
 ## Read this first
 
-`SESSION_HANDOFF_150.md`, `D233_entry.md`, and the P4 body in `OPEN_ITEMS_BACKLOG.md` before starting.
-Do not trust remembered session/version numbers — this file's own header is the only thing to check
-against `SESSION_HANDOFF_150.md`.
-
-## M1 status
-
-M1 (evict the repo-resident set, ~3.9 MB) is Ryan's task, not a session — no session should attempt it.
-If S151 opens and M1 has already run, the baseline will look different from S150's (`--no-repo` may no
-longer find its old copies locally; `--fetch` becomes the only path). Reconcile against whatever
-`baseline.sh` actually reports at open rather than assuming M1 did or didn't happen.
+`SESSION_HANDOFF_151.md`, `D234_entry.md`, and the P4 body in `OPEN_ITEMS_BACKLOG.md` before starting.
+Don't trust remembered numbers — check this file's header against `SESSION_HANDOFF_151.md`.
 
 ## Baseline at open
 
-Run `baseline.sh` (try `--fetch` first now that it's confirmed live; fall back to `--no-repo` only if
-`--fetch` itself fails for a new reason, not the known `40K_Data_Pipeline_Process_v0_6.md` drift).
-Verify S150's carried-forward files match — nothing was built or changed in S150 itself, so this
-should match S149's set byte-for-byte plus `DECISION_INDEX.md`/`OPEN_ITEMS_BACKLOG.md`/`D233_entry.md`.
+Run `baseline.sh --fetch`. Expect 22/25 gates green: `repro_check` and `rules_assertions` fail naming
+the same seven B68 unit_ids as every session since S147 (`000001046`-`000001050`, `000002461`,
+`000004209`) - carried-forward, diagnosed, not a regression, and this session's actual assignment.
+`repo_check` fails naming `baseline.sh`, `pipeline_manifest.py`, `pipeline_manifest.json`,
+`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `40K_Data_Pipeline_Process_v0_6.md` (differ) and
+`SESSION_HANDOFF_151.md` (missing from repo) - all S151's own edits and the one pre-existing drift,
+pending the next upload batch. None of this blocks starting; if the count or file names differ from
+this list, reconcile before proceeding.
 
-## What's next after M1
+## This session - B68 (engine-only)
 
-Per the standing sequence: B68 (engine — `loadout_parser.py`/`equipped_parser.py` resolve by unit name
-not army+unit_id, blocking CSM's loadout-defaults pass) → CSM turn B as the M2 dress rehearsal → M2
-(evict the 71 GW sources) → CSM turn C. Pick whichever of these is actually next given what M1's state
-turns out to be at open — this is a sequencing call, not one that needs Ryan's input.
+Per `OPEN_ITEMS_BACKLOG.md`'s B68 entry (D230): `loadout_parser.py`/`equipped_parser.py` resolve by
+unit name rather than army+unit_id, so Death Guard and Chaos Space Marines' seven shared generic Chaos
+vehicle datasheets (Chaos Rhino, Chaos Land Raider, Chaos Predator Annihilator/Destructor, Chaos Spawn,
+Defiler, Helbrute) bleed loadout defaults across factions once both are present in `units.json`.
+Isolate the name-keyed match in both parsers, switch to army+unit_id (or unit_id outright), and confirm
+via `repro_check.py` that the seven previously-diverging unit_ids reproduce clean and that no other
+unit's defaults shift as a side effect.
 
-## Two small items carried from S150
-
-- Recommend pushing the area's `40K_Data_Pipeline_Process_v0_6.md` to the repo in the next upload
-  batch, closing the one remaining drift. Proceed on this unless Ryan objects.
-- A batch of CSVs matching files already in the project area was attached to S150's opening message
-  and was not added to the area (flagged, not actioned). If Ryan re-sends them intentionally, confirm
-  what they're meant to replace before treating them as anything other than duplicates.
+**Blocks:** `CSM_BUILD_SCOPE.md` section 5 (CSM's own loadout-defaults pass, i.e. CSM turn B).
 
 ## Turn type
 
-Depends on what's picked. B68 is engine-only. CSM turn B is data-only. M2 (if reached) is tooling-only.
-Whichever is chosen, hold to single-type discipline — no mixing.
+**Engine-only.** `loadout_parser.py`/`equipped_parser.py` only. No data file content changes beyond
+what the fixed parsers regenerate; no tooling changes. `unit_loadouts.json` regeneration is expected as
+the parser's own output, not a separate data turn.
+
+## After B68
+
+Per the standing sequence: CSM turn B (data) as the M2 dress rehearsal -> M2 (Ryan, evict the 71 GW
+sources) -> CSM turn C. Confirm B68 actually closes the repro_check divergence before treating CSM turn
+B as unblocked - don't assume from the diagnosis alone.

@@ -102,13 +102,19 @@ if [ "$FETCH" -eq 1 ]; then
       FAILS=$((FAILS+1)); TOTAL=$((TOTAL+1))
     else
       TOTAL=$((TOTAL+1))
-      if VERIFY_OUT="$(python3 pipeline_manifest.py --dir "$FETCHED_DIR" 2>&1)"; then
-        printf 'PASS %-24s %s\n' fetch-verify "$VERIFY_OUT"
-        # Overlay: area copy wins. Only bring in files the workspace does not already have.
-        while IFS= read -r -d '' f; do
-          rel="${f#"$FETCHED_DIR"/}"
-          [ -f "$rel" ] || { mkdir -p "$(dirname "$rel")"; cp "$f" "$rel"; }
-        done < <(find "$FETCHED_DIR" -type f -print0)
+      # Overlay-scoped verify (S151 fix): only the guarded files actually absent from
+      # the workspace are checked against the manifest, using the fetched copy as their
+      # source. Files already resident locally are never checked here — area-ahead-of-
+      # repo drift on files we are not overlaying (e.g. an edited backlog doc not yet
+      # pushed) must not block recovering files that were genuinely evicted (M1).
+      if VERIFY_OUT="$(python3 pipeline_manifest.py --dir "$FETCHED_DIR" --overlay-check . 2>&1)"; then
+        SUMMARY_LINE="$(printf '%s\n' "$VERIFY_OUT" | head -1)"
+        printf 'PASS %-24s %s\n' fetch-verify "$SUMMARY_LINE"
+        printf '%s\n' "$VERIFY_OUT" | tail -n +2 | while IFS= read -r rel; do
+          [ -z "$rel" ] && continue
+          mkdir -p "$(dirname "$rel")"
+          cp "$FETCHED_DIR/$rel" "$rel"
+        done
       else
         printf 'FAIL %-24s %s\n' fetch-verify "$VERIFY_OUT"
         FAILS=$((FAILS+1))
