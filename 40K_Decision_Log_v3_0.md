@@ -8880,6 +8880,204 @@ is blocked on this fix, not merely undone.
 every session open. This is the expected, diagnosed state carried forward deliberately — not a new
 regression to re-diagnose.
 
+## D231 — P4 scoped: area as working set, public repo fetch, private sources repo with token-in-area; Ryan's custody calls settled (S148)
+
+P4 stops being a whitespace/eviction firefight (D211/D213/D219/D220) and becomes a target
+architecture. Scoping note only — `P4_ARCHITECTURE_SCOPE.md` delivered, nothing built, no app/data/
+gate touched this session. The problem restated at the right size: the project area cannot be the
+long-term home for built data or GW sources, because at the full-faction goal built JSON alone
+plausibly exceeds the entire area. The design target is therefore that **the area's size is
+independent of faction count** — it holds only the per-session working set; everything else is
+fetch-on-demand or regenerated into the workspace.
+
+**Three homes.** (1) The public repo (`rd-prime-1357/40k-army-builder`) — built outputs, parsers,
+harnesses, fixtures, all docs, the decision log, the handoff chain; already true today, verified this
+session (units.json / index.html / unit_loadouts.json / detachments.json all hash-match the area
+byte-for-byte). (2) A new private repo (`rd-prime-1357/data-sources`, created by Ryan this session) —
+the 71 GW-derived source files, fetched into the workspace on data turns. (3) The area — a ~450 KB
+working set: the prompt, the latest handoff, the backlog, DECISION_INDEX, index.html,
+pipeline_manifest.json (the trust anchor), baseline.sh + support doc, and the source-repo token.
+
+**The open, redesigned.** Read+verify the area against the handoff → fetch the public repo as one
+tarball and verify every file against an extended `pipeline_manifest.json` (the area-resident manifest
+is the pin; no commit SHAs needed) → overlay the dual-resident working set (area copy wins) → on data
+turns, fetch the private sources repo with the token and verify against a new `source_manifest.json`
+→ run the gates, tiered. Proven feasible this session: one codeload tarball request pulls all 102
+public-repo files (1.07 MB).
+
+**Gates tiered.** Tier A (every open, no sources): area-hash check, fetch-verify, all JS harnesses,
+bundle_check, pipeline_manifest, repo custody check, and rules_assertions in a new `--tier a` mode.
+Tier B (whenever sources are loaded; mandatory at every data-turn open and close): the three full
+repro rebuilds and the source-first assertions. Skips are loud and counted; a data turn with sources
+absent refuses to start. Net effect on the fixed-point discipline: no protection lost — the only
+change is that detection of a silently corrupted *source* file moves from "next repro run" to "next
+time sources load," which `source_manifest.json` closes by hash-pinning the sources themselves.
+
+**Recovered gate.** `repo_check.py` — absent from the area since before S147, every recent baseline
+run `--no-repo` — lives in the repo; the fetch-open brings it back as a standing tier-A gate.
+
+**Ryan's custody calls, settled this session (the reason this is a decision entry, not just a note):**
+- **Accept-risk posture.** GW-derived text in a *private* repo is acceptable for the pre-release,
+  non-commercial, personal-use window. GW points/rules text is copyrighted regardless of being
+  published, so this is a real, small, deliberate exposure — worst realistic case is a takedown
+  notice. **Public launch is the custody checkpoint** where this is revisited (private repo vs. fully
+  local vs. a changed posture). Recorded so a future session treats launch as a decision point, not a
+  silent continuation.
+- **Private repo, not the earlier zip-on-machine recommendation.** Removes the per-turn attach step
+  for the same custody outcome; sources sync by push like everything else. The zip (`gw_sources.zip`,
+  same 71 files, same `source_manifest.json`) is demoted to the offline/no-credential fallback, so no
+  single point of failure gates data work.
+- **Token lives in the area.** A fine-grained, read-only, single-repo personal access token in
+  `SOURCE_REPO_TOKEN.txt` — persistent, so no per-session paste. Ryan's threat-model reasoning
+  accepted: the real risk is not an attacker (GW will not hunt a token) but the one accident that the
+  area syncs to the *public* repo and carries the token in. Defused by a **hard custody gate**, not a
+  prose reminder: `repo_check.py` gains a fail-loud rule that fails the session if the token filename
+  (or a token-pattern match) ever appears in a public-repo-bound file list, backed by a `.gitignore`
+  line. Read-only-single-repo scoping means a leak exposes only GW points files (mostly gettable from
+  Wahapedia anyway) and is revocable in seconds.
+- **Product call folded in:** app stays in the current public repo (open/forkable path preserved),
+  only GW sources go private. Whole-project-private was considered and rejected.
+
+**Rejected:** encrypting sources into the public repo (ciphertext of GW's text, publicly hosted, is
+legally murkier for no gain); a token pasted per-session (more friction, same or worse exposure than
+the guarded area file for this threat model).
+
+**Migration M0–M3, sequenced (dev-manager call):** M0 next session (tooling-only — extend the
+manifest to full public-repo coverage; add fetch-unpack-verify-overlay + token-authed private fetch
+with zip fallback to baseline.sh; tier-tag rules_assertions and the three repro gates; create
+source_manifest.json; wire repo_check.py back in with its token guard; codify close-protocol changes.
+Exit test: old and new open both green same session, tier B green since sources still local. No
+eviction, no rollback needed). Then M1 (Ryan evicts the repo-resident set from the area, ~3.9 MB,
+screenshot-verified), B68 (engine turn), CSM turn B doubling as the M2 dress rehearsal (runs from the
+token-fetched private copy while area copies still exist), M2 eviction of the 71 sources (~7.3 MB),
+CSM turn C. One added session total; every migration step after M0 rides queued work. M0 goes before
+the remaining CSM turns because the area is at capacity now.
+
+**Close-protocol changes recorded for M0 to implement:** the handoff Files section gains a line for
+the updated `pipeline_manifest.json` hash, and **drops `NEXT_SESSION_PROMPT.md` from the hash list** —
+this session's own open confirmed the prompt is legitimately edited after the handoff is finalized
+(its S147 hash didn't match while all ten substantive files did; not a bad sync, the prompt documents
+the log removal and post-dates the handoff), so its hash can only ever false-alarm.
+
+**Amendment, for Ryan's confirmation:** for migration eviction batches only (M1, M2), verification is
+full file-list screenshots before and after, in place of the per-file card the one-off deletion rule
+calls for — that rule doesn't scale to ~70-file batches.
+
+## D232 — M0 built and proven: fetch-open, tiered gates, source manifest, token custody guard (S149)
+
+M0 (P4/D231's first migration step) built, tooling-only, nothing evicted. All five deliverables from
+the M0 scope shipped:
+
+**`pipeline_manifest.py` extended 41 → 101 guarded files** — from pipeline-output coverage to every
+file the new fetch-open pulls from the public repo. Four files stay deliberately unguarded, documented
+in the script itself: `NEXT_SESSION_PROMPT.md` (legitimately edited after the manifest that covered it
+is finalized, same reasoning as its drop from the handoff hash list), `README.md`/`.gitignore`/
+`_headers` (repo/hosting metadata nothing reads programmatically), and the manifest can't guard itself.
+Also fixed a pre-existing gap unrelated to this extension: `pipeline_manifest.py` never guarded itself,
+unlike every other gate script — now it does.
+
+**`baseline.sh` gained `--fetch` and `--data-turn`.** `--fetch` pulls the public repo as one
+`codeload.github.com` tarball, verifies the whole tree against `pipeline_manifest.py --dir`, and
+overlays it into the workspace (area copy wins — anything already present locally is left alone).
+`--data-turn` adds the private-sources fetch: `SOURCE_REPO_TOKEN.txt` first, `gw_sources.zip` fallback,
+and refuses to start (exits non-zero, loud) if a data turn has neither and sources aren't already
+local. Whether tier-B gates run is detected live from `source_manifest.json`'s own file list, never
+assumed from which flag was passed — correct in a session where sources are simply still sitting in
+the area (true throughout M0) without needing a special case.
+
+**`rules_assertions.py` gained `--tier a`, tier auto-detected, not hand-tagged.** Hand-tagging ~150
+assertions with a fifth tuple element was rejected on the same grounds this whole file exists —
+prose-shaped tags drift the moment a helper function is edited. Instead `classify_tier` walks each
+assertion's reachable bytecode (names AND string constants, one level of recursion into any
+module-level function it calls) against a closed list of source-reading `Sources` methods, the three
+embedded rebuild gates, and the actual GW filenames listed in `source_manifest.json`. Caught two real
+gaps by testing rather than reading: (1) a first names-only pass missed three assertions (B41-3, E1b-1,
+E4b-1) that `open()` `Army_Muster_Rules.txt` directly rather than through a `Sources` method — fixed by
+adding the filename-constant check; (2) extending `pipeline_manifest.py`'s guarded list to include
+`MFM_Standalone_Pass.md` tripped the existing P4-1 park-and-rerun census (a new, legitimate reference
+to a project-authored, already-public reconciliation doc) — fixed by adding it to
+`P4_REFERENCED_SOURCES`. With sources present, tier-a now correctly skips 37 tier-B assertions and
+passes 67/67 of the rest; tier-all matches today's behaviour exactly (same carried-forward B68 finding,
+same seven unit_ids, not a regression).
+
+**`repo_check.py` gained the `SOURCE_REPO_TOKEN.txt` custody guard.** Three independent checks, each
+named separately on failure: the token filename actually present in the live public clone (an active
+leak); the filename appearing in any of the file lists this script already treats as public-repo-bound
+(`DOC_FILES`, the discovered handoff set, or the manifest's guarded set); a token-shaped string
+(`github_pat_...`) found inside any file this check already reads. `.gitignore` gained an explicit
+line too, belt-and-braces alongside the broader `*.txt` pattern that already caught it.
+
+**`source_manifest.json` created — NET NEW.** 70 entries: area-files-minus-repo-files (same method
+D231 used), excluding one `__pycache__` sandbox artifact from the raw 71-file delta. Confirmed
+against Ryan's real file-list screenshots (see the resolved decision below).
+
+**Exit test — proven correct, not literally green this session, and that gap is structural, not a
+bug.** `--no-repo` (old path): 21/23, the same carried-forward B68 state as S148's open — not a
+regression. `--fetch` (new path): fails exactly one gate, `fetch-verify`, and only because the *real*
+public repo hasn't received tonight's push yet — it still holds the old 41-entry manifest, so checking
+the freshly-fetched tree against my new 101-entry `pipeline_manifest.py` correctly reports the old tree
+as short 60 files. Confirmed this is the live remote being stale, not a code defect, by copying this
+session's changed files into a local copy of the fetched tree and re-running the same check: it passes
+clean (101/101). A live, literal green `--fetch` run is therefore only possible *after* the push lands
+— an inherent one-session chicken-and-egg in the M0 design, not a divergence to route around. `repo_check.py`
+similarly reports 7 "differs," all seven being exactly the files this session touched plus one
+pre-existing, previously-uncaught drift (`40K_Data_Pipeline_Process_v0_6.md` — area is ahead of repo by
+a documented B56a step the repo copy lacks; not caused this session, surfaced for the first time only
+because M0 brought `repo_check.py` back into the loop after its long `--no-repo` absence). Sources-absent
+behaviour independently verified by stashing all GW files and re-running: the three repro gates
+print loud, counted `SKIP` lines; `--tier a` correctly passes without touching any missing file (after
+the filename-constant fix above); restoring the files returns everything to the pre-stash state.
+
+**Decision needed, carried to next session — RESOLVED same-day, count confirmed as 70.** A first
+screenshot pass appeared to show three files absent — `MFM_Tau_Empire_v1_0.txt`,
+`MFM_Titan_Legions_v1_0.txt`, `MFM_Thousand_Sons_v1_0.txt` — and `source_manifest.json` was
+rebuilt to 67 on that basis. Ryan re-checked and found the screenshot pass had skipped a row; all
+three are genuinely present. The mount's original 70-file count was correct throughout.
+`source_manifest.json` restored to 70 entries, local workspace restored to match, full baseline
+re-run clean afterward (still 21/23, same carried-forward B68 state).
+
+**Not started, not blocking:** M0's scope is complete. M1 (Ryan, no session) is next once tonight's
+push lands and S150 confirms `--fetch` truly comes back green against the live repo.
+
+## D233 — `--fetch` confirmed live-green against the real public repo; M1 unblocked (S150)
+
+Tonight's push landed. Confirmed two ways: `raw.githubusercontent.com`'s copy of `pipeline_manifest.py`
+carries the 101-file guarded set and the self-guard fix (not the old 41-file version), and a fresh
+`codeload.github.com` tarball fetch of the whole repo, verified against `pipeline_manifest.py --dir`,
+comes back with only one failing file: `40K_Data_Pipeline_Process_v0_6.md`.
+
+That one failure is the exact pre-existing drift D232 already named, not a new problem — confirmed by
+hashing both copies directly: the area's version and the fetched repo's version are genuinely
+different files (area is ahead by the documented B56a step the repo copy still lacks). Nothing else
+in the fetch, unpack, or verify path needed a workaround.
+
+**M1 (Ryan, ~10 minutes, no session) is now unblocked** — the P4/D231 migration's second step, evicting
+the repo-resident set from the project area, can proceed on the confirmation this session was scoped
+to provide.
+
+**Also this session:** `NEXT_SESSION_PROMPT.md` in the project area was found stale — still S149's
+opening prompt, never overwritten at S149's close. Reconciled by writing a fresh one for S151 as part
+of this close. Flagged, not silently fixed, since a skipped close-step is worth Ryan knowing about.
+
+**Recommendation, not yet actioned:** push the area's current `40K_Data_Pipeline_Process_v0_6.md` in
+the next repo upload batch to close the one remaining drift. Proceeding on this unless Ryan objects —
+low-cost, reversible, no build required.
+
+Turn type: tooling-only (verification only; nothing built, nothing evicted, no code or data edited).
+
+## D234 — M1 confirmed already run; overlay-check scoping gap fixed (S151)
+
+M1 confirmed already run (27 repo-resident guarded files absent from the area, matching
+the S151 prompt's own anticipation). Found and fixed a real M0 design gap along the way: the
+fetch-open's verify step checked the *entire* fetched tree unconditionally against
+`pipeline_manifest.json`, so any single mismatched file — including ordinary area-ahead-of-repo drift
+on a file that wasn't even part of the overlay — blocked recovering every evicted file, contradicting
+the stated "area copy wins" authority rule. `pipeline_manifest.py` gained `check_overlay()` /
+`--overlay-check`, scoping verification to only the guarded files absent locally; `baseline.sh`'s
+fetch-verify wired to it. Also closed a manifest-housekeeping gap: `SESSION_HANDOFF_149.md` and
+`.150.md` were never appended to `GUARDED` (S149 missed its own append-at-close step) — added, along
+with `.151.md`. `pipeline_manifest.json` regenerated to bless current state. Tooling-only (S151).
+
 ## D235 — B68 closed: equipped-pass title resolution scoped to the composition file's own faction (S152)
 
 The seven-unit `repro_check`/`rules_assertions` divergence carried since S147 is resolved. Diagnosis
@@ -8917,3 +9115,48 @@ the inference to hold — noted in the handoff.
 name-keyed structure (`ds_by_name`) is dead (built, never read). Byte-identical reproduction with the
 `equipped_parser.py` change alone proves it needs no change for B68. Removing the dead `ds_by_name` is
 tidiness, not a positive reason, and is left for a future turn if ever.
+
+## D236 — CSM turn B shipped: loadout defaults built, `wargear_points.json` gap surfaced and closed (S153)
+
+`CSM_BUILD_SCOPE.md` §5, now unblocked by D235. `repro_check.py` gained `CSM` in `FACTIONS` and
+`Chaos_Space_Marines` in `WEB_PASSES` (sixth `equipped_parser.py` pass). Regenerating
+`unit_loadouts.json` against source added exactly CSM's 54 units and changed nothing already committed
+— 0 removed, 0 existing entries altered, confirmed by set-diff before committing. The regenerated set
+matches CSM's own unit_id list from `units.json` exactly.
+
+**A second, undiagnosed gap surfaced once CSM had loadout data: `wargear_points.json` was stale.**
+`build_wargear_points()` requires a unit to already have a `unit_loadouts.json` entry before its MFM
+WARGEAR OPTIONS lines can resolve (`no_loadout` gate) — CSM's wargear was silently skipped at every prior
+run because CSM had no loadout entries yet, not because of any bug. Once CSM's loadout data landed this
+session, E14-1 (the wargear-rebuilds-from-MFM assertion) correctly caught the now-derivable gap.
+Regenerating `wargear_points.json` from all MFM files added exactly two new entries — `000000967`
+(Hades lascannon, Heavy reaper autocannon) and `000000969` (Ectoplasma cannon), both sourced to
+`MFM_Chaos_Space_Marines_v1_0.txt` — with zero existing entries changed, once the MFM file order matched
+the established generic-before-chapter convention (`FACTION_BY_MFM`'s own insertion order + remaining
+files appended). A first attempt using a naive alphabetical `glob` sort reproduced identical prices but
+cited different (still-correct-cost) provenance for two pre-existing entries purely from processing
+Black Templars before Space Marines — caught by a byte-level diff before committing, discarded in favor
+of the canonical order, not shipped.
+
+**E14-2's hardcoded expected count updated 53/33 → 64/44.** The 11-option delta is exactly CSM's 11 own
+units' free-seeded adds (Chaos Icon, Havoc launcher, Chaos Familiar, Plasma pistol) — spot-checked
+against `_e14_quals()` output before updating the literal, not assumed.
+
+**Scope call — `detachment_parser.py`/`detachments_repro_check.py` NOT touched this session,
+deliberately**, despite being listed among CSM_BUILD_SCOPE §6's full build-surface. `units.json` still
+has no CSM detachment data to regenerate against; adding the config lines now without a same-session
+regeneration to prove them would leave an inert, unverified edit sitting in the codebase — exactly the
+class of untested-state risk the project's own turn-typing discipline exists to prevent. Deferred to CSM
+turn C, when they land together with the actual `detachments.json` regeneration and diff-trace.
+
+Full baseline: 23/23 gates green (`--no-repo`; `repo_check`'s only finding remains the known
+`40K_Data_Pipeline_Process_v0_6.md` push-pending drift, unrelated to this session). Data-only turn — no
+engine logic changed in either parser; `repro_check.py`'s edit is config-list plus a docstring
+correction, `rules_assertions.py`'s edit is a literal count update to an existing assertion whose ground
+truth shifted as a direct, mechanical consequence of the regeneration.
+
+**Reconciliation at open, unscoped by the S153 prompt:** `pipeline_manifest.json`'s blessed hash for
+`OPEN_ITEMS_BACKLOG.md` didn't match the file on disk, though `repo_check` confirmed the disk copy
+matched the public repo — Ryan had appended B69–B73 after S152's manifest was last blessed, and the
+reissue never happened. Reconciled by reissuing the manifest against the current, repo-matching file
+before starting CSM work; no content was altered or lost.

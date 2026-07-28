@@ -4,7 +4,10 @@ Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticke
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
 not here, it isn't open. **12 open** as of S152: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73 — B69–B73 logged
-Ryan-side S152, not yet scoped or reproduced by Claude. B68 closed S152 (D235, engine); S150 confirmed `--fetch` live-green
+Ryan-side S152, not yet scoped or reproduced by Claude. CSM loadout defaults shipped S153 (D236, data-only):
+`unit_loadouts.json` +54 CSM entries, `wargear_points.json` +2 entries (a second gap surfaced by the
+first); nothing else moved. `detachment_parser.py`/`detachments_repro_check.py` still untouched —
+CSM turn C (detachment build). B68 closed S152 (D235, engine); S150 confirmed `--fetch` live-green
 against the real repo (D233, tooling-only, verification only); nothing closed or added, M1 unblocked.
 S149 was M0 (D232, tooling-only): the new fetch-open path built and proven; nothing closed or added. S147 was
 CSM turn A (D229, data-only): 54 self-priced units shipped, diff-traced clean. It also opened B68
@@ -93,8 +96,9 @@ baseline clean except the carried-forward B68 failure and three known push-pendi
 (`baseline.sh`, `pipeline_manifest.py`, `pipeline_manifest.json`, plus the pre-existing
 `40K_Data_Pipeline_Process_v0_6.md` drift).
 
-**Migration M0–M3 (dev-manager sequence):** M0 and M1 done. B68 next (engine, S152) → CSM turn B as the
-M2 dress rehearsal → M2 (Ryan, evict the 71 sources) → CSM turn C.
+**Migration M0–M3 (dev-manager sequence):** M0 and M1 done. B68 closed S152. CSM turn B (loadout
+defaults, the M2 dress rehearsal) shipped S153 (D236) → M2 (Ryan, evict the 71 sources) → CSM turn C
+(detachment build).
 
 ---
 

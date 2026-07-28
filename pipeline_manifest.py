@@ -146,7 +146,6 @@ GUARDED = [
     '40K_Functional_Spec_v0_7.md',
     'BACKLOG_ARCHIVE.md',
     'CSM_BUILD_SCOPE.md',
-    'D231_entry.md',
     'DECISION_INDEX.md',
     'E1_DETACHMENT_SCOPE.md',
     'MFM_Chapter_Pass.md',
@@ -168,7 +167,7 @@ GUARDED = [
     'SESSION_HANDOFF_143.md', 'SESSION_HANDOFF_144.md', 'SESSION_HANDOFF_145.md',
     'SESSION_HANDOFF_146.md', 'SESSION_HANDOFF_147.md', 'SESSION_HANDOFF_148.md',
     'SESSION_HANDOFF_149.md', 'SESSION_HANDOFF_150.md', 'SESSION_HANDOFF_151.md',
-    'SESSION_HANDOFF_152.md',
+    'SESSION_HANDOFF_152.md', 'SESSION_HANDOFF_153.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

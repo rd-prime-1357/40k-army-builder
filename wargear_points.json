@@ -47,6 +47,29 @@
    }
   }
  },
+ "000000967": {
+  "items": {
+   "ectoplasma cannon": {
+    "cost": 5,
+    "display": "Ectoplasma cannon",
+    "source": "MFM_Chaos_Space_Marines_v1_0.txt:117"
+   }
+  }
+ },
+ "000000969": {
+  "items": {
+   "hades lascannon": {
+    "cost": 10,
+    "display": "Hades lascannon",
+    "source": "MFM_Chaos_Space_Marines_v1_0.txt:102"
+   },
+   "heavy reaper autocannon": {
+    "cost": 10,
+    "display": "Heavy reaper autocannon",
+    "source": "MFM_Chaos_Space_Marines_v1_0.txt:101"
+   }
+  }
+ },
  "000002717": {
   "items": {
    "macro plasma incinerator": {

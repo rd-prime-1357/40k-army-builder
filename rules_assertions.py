@@ -302,7 +302,10 @@ def e14_free(S):
 def e14_count(S):
     q = _e14_quals(S)
     units = {u for u, _, _ in q}
-    return (len(q) == 53 and len(units) == 33), f'{len(q)} options across {len(units)} units'
+    # 53/33 through S152; CSM's loadout-defaults pass (S153) adds 11 qualifying free
+    # seeds across 11 CSM units (Chaos Icon, Havoc launcher, Chaos Familiar, Plasma
+    # pistol) -> 64/44.
+    return (len(q) == 64 and len(units) == 44), f'{len(q)} options across {len(units)} units'
 
 def b18_named_body(S):
     lines = [re.sub(r'<[^>]+>', ' ', r['description'])
