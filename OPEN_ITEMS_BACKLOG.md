@@ -3,7 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **7 open** as of S152: P2, P4, E23, E12, B17, B61, B67b — B68 closed S152 (D235, engine); S150 confirmed `--fetch` live-green
+not here, it isn't open. **12 open** as of S152: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73 — B69–B73 logged
+Ryan-side S152, not yet scoped or reproduced by Claude. B68 closed S152 (D235, engine); S150 confirmed `--fetch` live-green
 against the real repo (D233, tooling-only, verification only); nothing closed or added, M1 unblocked.
 S149 was M0 (D232, tooling-only): the new fetch-open path built and proven; nothing closed or added. S147 was
 CSM turn A (D229, data-only): 54 self-priced units shipped, diff-traced clean. It also opened B68
@@ -19,6 +20,38 @@ B61 logged Ryan-side (combined-popup expand arrow, see below). E21 closed S139 (
 stranded-allied roster warning, shipped.
 
 ## Open Items
+
+
+### B69 — Roboute Guilliman popup: "Author of the Codex" mislabel + orphaned ability grouping — **NEW, Ryan-reported; S**
+Roboute's popup text for "Author of the Codex" says "(see left)" — should say "(see below)". The
+three abilities that follow it (Primarch of the XIII, Master of Battle, Supreme Strategist) are not
+clearly tied to that section; either fold them under the "Author of the Codex" header or add a
+distinct header above the three identifying them as its grants. Likely a data/text issue in source
+or a rendering gap in the popup, not yet diagnosed.
+
+### B70 — Wardens of Ultramar cannot be attached to a unit — **NEW, Ryan-reported; S**
+The detachment enhancement/unit "Wardens of Ultramar" cannot currently be attached to any unit in the
+app. Ryan points to the "Heroes of Ultramar" ability as the source of the eligible-unit list and to a
+Leader restriction that should apply. Needs the eligibility rule traced from that ability's rules text
+into whatever governs attachment, likely a Leader-restriction gap similar to prior Leader-eligibility
+bugs.
+
+### B71 — Config panel: expanded options collapse on selection, not just on the toggle icon — **NEW, Ryan-reported; S**
+In the configuration panel, expanded option groups should only collapse when the expand/contract icon
+itself is clicked. Currently making a selection inside an expanded group also collapses it. The icon
+should be a pure on/off toggle with no other control able to change that state.
+
+### B72 — Outrider Squad: ATV gated on wrong squad size — **NEW, Ryan-reported; S**
+The app only offers the Attack Bike (ATV) option when 6 Outriders are selected; it should be available
+regardless of squad size, including at 3. The ATV option is independent of unit size per the rules.
+
+### B73 — Ultramarine Leader abilities list units outside their actual 40k eligibility — **NEW, Ryan-reported; M; likely spans multiple leaders**
+Uriel Ventris's Leader ability text lists eligible units (Deathwatch, Crusaders, Kill Teams, etc.) that
+are not valid attachments in a 40k Matched Play list — likely a case where the source ability text
+covers eligibility across multiple game modes/contexts and the app is surfacing all of it rather than
+filtering to what's legal in this app's scope. Ryan suspects this is not unique to Uriel and other
+Ultramarine (and possibly other) Leaders carry the same over-broad list. Needs a source-level audit of
+Leader eligibility text against actual Matched Play legality before scoping a fix.
 
 
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
