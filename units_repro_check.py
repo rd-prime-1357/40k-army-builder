@@ -65,18 +65,25 @@ REQUIRED = [
     # Plague Marines, Noise Marines) are priced in their god-legion's own MFM and
     # are deliberately withheld from this run — see CSM_CULT_TROOP_IDS below.
     'MFM_Chaos_Space_Marines_v1_0.txt',
+    # D240 (S147 turn B): the four sibling-legion MFMs the cult-troop points come from.
+    'MFM_World_Eaters_v1_0.txt', 'MFM_Death_Guard_v1_0.txt',
+    'MFM_Thousand_Sons_v1_0.txt', 'MFM_Emperors_Children_v1_0.txt',
 ] + CD_ROOT_CSVS
 
-# D229 (S147 turn A). These four CSM datasheets carry no cost in the CSM MFM — GW
-# prices them once, in their parent god-legion's own MFM (Khorne Berzerkers in
-# World Eaters', Plague Marines in Death Guard's, Rubric Marines in Thousand Sons',
-# Noise Marines in Emperor's Children's). Turn A ships only the 54 units the CSM MFM
-# prices on its own; committing an unpriced unit would trip b56a_residual_nulls and
-# is exactly the kind of state the pipeline is built to make unreachable. These four
-# are filtered out of the transform's own Unit_Stats.csv before pointing/converting,
-# and go in properly — stats and cross-sourced points together — in turn B, via the
-# --append --scope-to-army machinery (needs a relabel fix first; see NEXT_SESSION_PROMPT).
-CSM_CULT_TROOP_IDS = {'000003582', '000003583', '000003584', '000004099'}
+# D229 (S147 turn A) / D240 (S147 turn B). These four CSM datasheets carry no cost in
+# the CSM MFM — GW prices them once, in their parent god-legion's own MFM. Turn A
+# shipped only the 54 units the CSM MFM prices on its own (these four filtered out of
+# Unit_Stats.csv before pointing/converting, to keep b56a_residual_nulls from tripping
+# on unpriced rows). Turn B (below) prices them properly via --scope-to-army --append
+# against each unit's own legion MFM, one unit at a time, each isolated to a
+# single-row Unit_Stats.csv via _scope_stats_csv — see that function's docstring for
+# why the full 58-row CSM stats block can't be used here.
+CSM_CULT_TROOP_POINTS = [
+    ('000003582', 'MFM_World_Eaters_v1_0.txt'),      # Khorne Berzerkers
+    ('000003584', 'MFM_Death_Guard_v1_0.txt'),        # Plague Marines
+    ('000003583', 'MFM_Thousand_Sons_v1_0.txt'),      # Rubric Marines
+    ('000004099', 'MFM_Emperors_Children_v1_0.txt'),  # Noise Marines
+]
 
 
 def _filter_stats_csv(path, exclude_ids):
@@ -88,6 +95,26 @@ def _filter_stats_csv(path, exclude_ids):
     di = header.index('Datasheet ID')
     kept = [header] + [r for r in rows[1:] if r[di] not in exclude_ids]
     with open(path, 'w', encoding='utf-8-sig', newline='') as f:
+        w = csv.writer(f, lineterminator='\r\n')
+        w.writerows(kept)
+
+
+def _scope_stats_csv(src_path, out_path, include_ids):
+    """D240 (S147 turn B): write a Unit_Stats.csv containing ONLY the rows whose
+    Datasheet ID is in include_ids. Isolates a single cult-troop unit as the --stats
+    input for one --scope-to-army --append call, so that call can only ever match
+    that one name against the sibling legion's MFM — never any of CSM's other 54
+    already-priced units. Several of those (Chaos Rhino, Helbrute, Defiler, etc.)
+    are generic Chaos vehicles also separately priced in every god-legion's own MFM;
+    passing the full CSM stats block here would let those names resolve in scope and
+    get silently overridden by append mode's same-key-wins rule. This file exists to
+    make that unreachable."""
+    with open(src_path, encoding='utf-8-sig', newline='') as f:
+        rows = list(csv.reader(f))
+    header = rows[0]
+    di = header.index('Datasheet ID')
+    kept = [header] + [r for r in rows[1:] if r[di] in include_ids]
+    with open(out_path, 'w', encoding='utf-8-sig', newline='') as f:
         w = csv.writer(f, lineterminator='\r\n')
         w.writerows(kept)
 
@@ -169,9 +196,12 @@ def repro(dir_):
         if rc != 0:
             return False, 'convert_to_json.py (DG) failed:\n' + out[-600:]
 
-        # --- Chaos Space Marines: transform -> D229 cult-troop filter -> mfm points
-        # (self only — no chapter-style append) -> convert. S147 turn A: ships only
-        # the 54 units the CSM MFM prices on its own; see CSM_CULT_TROOP_IDS above. ---
+        # --- Chaos Space Marines: transform -> mfm points (self, 54 of 58) -> D240
+        # cult-troop cross-file append (the remaining 4, one at a time, each isolated
+        # to its own single-row stats scope) -> convert. Unit_Stats.csv is left
+        # unfiltered now (turn A's exclusion is gone): the four cult-troop datasheets
+        # carry real stat rows from Wahapedia regardless of MFM pricing, so nothing
+        # needs hiding from convert_to_json.py once all 58 are priced. ---
         csm_dir = os.path.join(tmp, 'csm')
         os.makedirs(csm_dir)
         rc, out = _run([sys.executable, 'wahapedia_transform.py',
@@ -180,13 +210,22 @@ def repro(dir_):
                         '--army-name', 'Chaos Space Marines'], cwd=dir_)
         if rc != 0:
             return False, 'wahapedia_transform.py (CSM) failed:\n' + out[-600:]
-        _filter_stats_csv(os.path.join(csm_dir, 'Unit_Stats.csv'), CSM_CULT_TROOP_IDS)
+        csm_stats = os.path.join(csm_dir, 'Unit_Stats.csv')
         rc, out = _run([sys.executable, 'mfm_points_parser.py',
                         '--mfm', 'MFM_Chaos_Space_Marines_v1_0.txt',
-                        '--out-dir', csm_dir, '--stats', os.path.join(csm_dir, 'Unit_Stats.csv')],
+                        '--out-dir', csm_dir, '--stats', csm_stats],
                         cwd=dir_)
         if rc != 0:
             return False, 'mfm_points_parser.py (CSM) failed:\n' + out[-600:]
+        for ds_id, mfm_file in CSM_CULT_TROOP_POINTS:
+            scoped_stats = os.path.join(csm_dir, f'_cult_troop_{ds_id}.csv')
+            _scope_stats_csv(csm_stats, scoped_stats, {ds_id})
+            rc, out = _run([sys.executable, 'mfm_points_parser.py',
+                            '--mfm', mfm_file, '--army', 'Chaos Space Marines',
+                            '--scope-to-army', '--append',
+                            '--out-dir', csm_dir, '--stats', scoped_stats], cwd=dir_)
+            if rc != 0:
+                return False, f'mfm_points_parser.py (CSM cult troop {ds_id}) failed:\n' + out[-600:]
         csm_json = os.path.join(tmp, 'csm_json')
         os.makedirs(csm_json)
         rc, out = _run([sys.executable, 'convert_to_json.py',

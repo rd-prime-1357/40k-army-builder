@@ -304,8 +304,10 @@ def e14_count(S):
     units = {u for u, _, _ in q}
     # 53/33 through S152; CSM's loadout-defaults pass (S153) adds 11 qualifying free
     # seeds across 11 CSM units (Chaos Icon, Havoc launcher, Chaos Familiar, Plasma
-    # pistol) -> 64/44.
-    return (len(q) == 64 and len(units) == 44), f'{len(q)} options across {len(units)} units'
+    # pistol) -> 64/44. D240 (S157): cult-troop cross-file points turn adds Khorne
+    # Berzerkers' Icon of Khorne (its only qualifying free add; the other three
+    # cult-troop units' options are all sized/pooled/priced and don't qualify) -> 65/45.
+    return (len(q) == 65 and len(units) == 45), f'{len(q)} options across {len(units)} units'
 
 def b18_named_body(S):
     lines = [re.sub(r'<[^>]+>', ' ', r['description'])
@@ -519,7 +521,7 @@ ASSERTIONS = [
     ('E14-2',
      'The seeding rule is total, not a hand-picked list: an add qualifies iff it is '
      'type=add, has no requires_weapon, no pool_id, no per_n_models, max_total == 1, and '
-     'its item is unpriced. 53 options across 33 units qualify today.',
+     'its item is unpriced. 65 options across 45 units qualify today.',
      'unit_loadouts.json; wargear_points.json',
      lambda S: e14_count(S)),
 
@@ -1545,16 +1547,16 @@ ASSERTIONS = [
      'detachments.json, all detachments (B60a, D221)',
      lambda S: b60a_restrictions_no_stratagem_cp_debris(S)),
 
-    # ── CSM: roster and detachment build census (S154 data turn, S155 tooling turn).
+    # ── CSM: roster and detachment build census (S154 data turn, S155 tooling turn,
+    # S157 data turn B — cult-troop cross-file points, closing the roster gap).
     # CSM_BUILD_SCOPE.md §1 fixed the real current-edition roster at 58, not the 112 the
     # raw source carries (54 of those 112 are Warhammer Legends units, out of scope). The
-    # four cult-troop units remain unpriced pending their own cross-file data turn (§4), so
-    # the built roster is honestly 54 of 58 today — pinned as such, not rounded up.
+    # four cult-troop units are now priced via §4's cross-file append (D240); the roster
+    # is complete at 58 of 58.
     ('CSM-1',
-     'units.json carries 54 of the 58 real current-edition Chaos Space Marines units. The '
-     'gap is the four cult-troop units (Khorne Berzerkers, Plague Marines, Rubric Marines, '
-     'Noise Marines), unpriced pending their own cross-file data turn per '
-     'CSM_BUILD_SCOPE.md §4 — a known, scoped gap, not a build defect.',
+     'units.json carries all 58 real current-edition Chaos Space Marines units, including '
+     'the four cult-troop units (Khorne Berzerkers, Plague Marines, Rubric Marines, Noise '
+     'Marines) priced via their own cross-file MFM append per CSM_BUILD_SCOPE.md §4 (D240).',
      'units.json Chaos Space Marines army block; CSM_BUILD_SCOPE.md §1/§4',
      lambda S: csm_roster_count(S)),
 
@@ -1684,17 +1686,17 @@ def e21a_allied_targets(S):
 
 
 def csm_roster_count(S):
-    """CSM_BUILD_SCOPE.md §1: real current-edition roster is 58, not the 112 the raw source
-    carries. 54 of the 58 are built (S154 turn A); the four cult-troop units remain unpriced
-    pending §4's own cross-file data turn. Pinned as 54/58, not rounded up."""
+    """CSM_BUILD_SCOPE.md §1: real current-edition roster is 58, not the 112 the raw
+    source carries. All 58 are built as of D240 (S157) — the four cult-troop units
+    priced via §4's cross-file legion-MFM append."""
     armies = S.units()
     csm = next((a for a in armies if a.get('army') == 'Chaos Space Marines'), None)
     if csm is None:
         return False, 'Chaos Space Marines army block not found in units.json'
     n = len(csm.get('units') or [])
-    if n != 54:
-        return False, f'{n} CSM units built, expected 54 (of 58 real current-edition target)'
-    return True, '54 of 58 CSM units built; the 4-unit gap is the unpriced cult troops (§4)'
+    if n != 58:
+        return False, f'{n} CSM units built, expected 58 (real current-edition target)'
+    return True, 'all 58 real current-edition CSM units built'
 
 
 def csm_detachment_count(S):

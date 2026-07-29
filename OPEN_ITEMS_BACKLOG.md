@@ -3,8 +3,11 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **12 open** as of S156: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73 —
-B69–B73 logged Ryan-side S152, not yet scoped or reproduced by Claude. B74 CLOSED S156 (D239) — Chaos
+not here, it isn't open. **12 open** as of S157: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73 —
+B69–B73 logged Ryan-side S152, not yet scoped or reproduced by Claude. CSM cult-troop cross-file
+points shipped S157 (D240, data-only): `units.json` +4 (58/58 roster complete), `unit_loadouts.json`
++4, `CSM-1`/`E14-2` updated; closes `CSM_BUILD_SCOPE.md` §4 — CSM's build is now complete except for
+M2 (Ryan, no Claude action). B74 CLOSED S156 (D239) — Chaos
 Cult BATTLELINE grant now has its `detachment_effects.json` row; closes the CSM tooling arc from
 `CSM_BUILD_SCOPE.md` §8 in full, full body moved to `BACKLOG_ARCHIVE.md`. CSM tooling turn shipped S155
 (D238, tooling-only): three new CSM census assertions (roster 54/58, detachment count 17, no-prose

@@ -9251,3 +9251,53 @@ untouched — data-only turn, matching the S156 prompt's scope. This closes the 
 `CSM_BUILD_SCOPE.md` §8 in full; the sole remaining CSM gap is the cult-troop cross-file points turn
 (§4), still open, unscheduled.
 
+
+## D240 — CSM cult-troop cross-file points shipped, closing the roster gap 58/58 (S157)
+
+**What shipped.** The four remaining CSM datasheets — Khorne Berzerkers, Plague Marines, Rubric
+Marines, Noise Marines — carry no cost in `MFM_Chaos_Space_Marines_v1_0.txt`; GW prices each once,
+in its own god-legion's MFM (World Eaters, Death Guard, Thousand Sons, Emperor's Children
+respectively), per `CSM_BUILD_SCOPE.md` §4. `units_repro_check.py`'s CSM build no longer filters
+these four out of the transform's own `Unit_Stats.csv` before pointing (the S147-turn-A `_filter_stats_csv`
+exclusion is gone); instead, after the base 54-unit CSM points run, each of the four gets its own
+`mfm_points_parser.py --scope-to-army --append` call against its own legion's MFM.
+
+**The relabel wrinkle, resolved.** Each unit's source MFM entry is written under the legion's own
+Army Name in that MFM's own text, but the datasheet these prices need to land on is CSM's own
+(`faction_id=CSM`), which the transform already labels `Army Name: Chaos Space Marines`. Passing
+`--army "Chaos Space Marines" --scope-to-army` resolves this correctly — no manual relabeling code
+needed — **provided** the `--stats` input is scoped to that one unit alone. It can't be the full
+58-row CSM stats block: checked directly, several generic Chaos vehicles CSM already prices itself
+(Chaos Rhino, Helbrute, Defiler, Chaos Predator variants, Chaos Land Raider, Chaos Spawn, and more)
+are *also* priced, separately, in one or more of the four legion MFMs. Passing the full CSM block
+would let those names resolve in scope too, and append mode's same-key-wins override rule would
+silently replace their existing correct CSM prices with the legion file's price the moment any of
+this session's four calls happened to run against a file that also prices them — which three of the
+four do. New helper `_scope_stats_csv()` writes a single-row `Unit_Stats.csv` (keyed by Datasheet
+ID) for exactly the one target unit before each of the four calls, making that override
+unreachable. Verified empirically: each call added precisely one row, confirmed via each parser
+run's own report — no other unit touched.
+
+**Data checked directly against source (not just derived output).** Grepped all five relevant MFM
+files for the four units' names, Icon of Khorne, Khornate eviscerator, Blastmaster, Soulreaper
+cannon, and the other wargear items on their loadouts: none carry a separate WARGEAR OPTIONS price
+anywhere. `wargear_points.json` correctly gains no new entries — confirmed as a source fact, not an
+absence-of-evidence assumption.
+
+**Regenerated in sequence, each checked for byte-identical fixed point before moving to the next:**
+`units.json` (+4 units: `000003582`/`000003583`/`000003584`/`000004099`; 324 → 328 total; 0 changed,
+0 removed elsewhere — diff-traced key-by-key). `unit_loadouts.json` (+4 entries, additive only,
+re-derived from the updated `units.json` per the standing `repro_check.py` mechanism — no hand
+edit). `rules_assertions.py`: `CSM-1` updated from the 54/58-gap pin to a clean 58/58 pass; `E14-2`'s
+literal updated 64/44 → 65/45 (Khorne Berzerkers' Icon of Khorne is the only one of the four units'
+options that qualifies as a free, unpriced, ungated single add — Plague Marines/Rubric
+Marines/Noise Marines' options are all sized, pooled, or genuinely priced and don't qualify).
+`pipeline_manifest.py --write` reissued twice (once after the units/loadouts regeneration, once
+after the two assertion literal updates) — 108 guarded files, clean both times.
+
+**Full baseline:** 20/20 gates green (`--no-repo`; tier-B repro checks skip in the sandbox with no
+live-fetched sources, but both `repro_check.py` and `units_repro_check.py` were run directly and
+pass byte-identical). `rules_assertions.py`: 70/70 (37 tier-B skipped). `index.html` untouched —
+data-only turn, matching the S157 prompt's scope. This closes `CSM_BUILD_SCOPE.md` §4 and the CSM
+roster gap in full; CSM's build is now complete except for M2 (Ryan, GW source eviction, already
+unblocked since D237).

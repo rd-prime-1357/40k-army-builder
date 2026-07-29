@@ -1,46 +1,48 @@
-# Next-session prompt — Session 157
+# Next-session prompt — Session 158
 
-B74 closed (S156, D239): `detachment_effects.json` gained the Chaos Cult BATTLELINE row,
-`e21b_check.js`'s pinned count updated 4→5. This closes the CSM tooling arc from
-`CSM_BUILD_SCOPE.md` §8 in full. 107/107 assertions pass, 23/23 gates green.
-
-Also fixed at S156 open: a real `pipeline_manifest.py` sync-order bug (S155's write ran before
-`DECISION_INDEX.md`/`OPEN_ITEMS_BACKLOG.md` reached final edited state, never repeated). Reissued
-clean. And: confirmed via a live repo clone that the decision log and all guarded files are intact
-in the repo — the project area's repeated absences are pruning under 96% capacity, not repo drift.
-D237/D238 folded into the main log; all six standalone `D2NN_entry.md` files deleted.
+D240 closed (S157): the four CSM cult-troop units (Khorne Berzerkers, Plague Marines, Rubric
+Marines, Noise Marines) are now priced via cross-file `--scope-to-army --append` calls against
+their own god-legion's MFM, each isolated to a single-row stats scope so it can't touch any of
+CSM's other 54 already-priced units. `units.json` and `unit_loadouts.json` both +4, additive only.
+`CSM-1` now asserts a clean 58/58; `E14-2`'s literal moved 64/44 → 65/45. This closes
+`CSM_BUILD_SCOPE.md` §4 and the CSM build in full — the only thing left for CSM is M2 (Ryan, GW
+source eviction, no Claude action, already unblocked since D237).
 
 ## Read this first
 
-`SESSION_HANDOFF_156.md` before starting. The decision log and backlog are both current as of D239 —
-no standalone `D2NN_entry.md` fallback files remain; if the project area's `40K_Decision_Log_v3_0.md`
-is absent again, treat it as area-capacity pruning per S156's finding and pull it from the repo
-directly rather than re-flagging or banking standalone again.
+`SESSION_HANDOFF_157.md` before starting. If the project area is missing guarded files (including
+`40K_Decision_Log_v3_0.md` or standalone `D2NN_entry.md` files), that is expected under the
+documented 96%-capacity pruning — clone the public repo directly to verify content rather than
+re-flagging or asking Ryan.
 
 ## Baseline at open
 
-Full `baseline.sh --no-repo` should be clean (23/23, 107/107). If the project area is missing guarded
-files, that's expected under 96% capacity — clone the public repo directly to verify content rather
-than treating mount absence as a signal. If anything actually fails against the repo-verified content,
-that's real drift; reconcile before starting.
+Full `baseline.sh --no-repo` should be clean (20/20, 70/70 tier-A, 37 tier-B skipped in a
+no-live-sources sandbox). If sources are loaded (live session with fetch), tier-B should also pass:
+`repro_check.py` and `units_repro_check.py` both byte-identical, `detachments_repro_check.py`
+likewise. If anything fails against repo-verified content, that's real drift — reconcile before
+starting.
 
-Worth a proactive check this session: run `pipeline_manifest.py` against the full repo-cloned tree (not
-just whatever the area happens to hold) at least once per session going forward, since S156 showed a
-partial area can silently hide a real manifest mismatch for multiple sessions.
+## This session — scope the Thousand Sons build (tooling/scoping-only turn)
 
-## This session — CSM cult-troop cross-file points (data-only turn)
+Per the standing faction priority roadmap, CSM being complete moves the queue to the remaining
+Chaos Marine variants: Thousand Sons, Death Guard, Emperor's Children, World Eaters. Thousand Sons
+is next.
 
-The last piece of the CSM roster gap (54/58 → 58/58), per `CSM_BUILD_SCOPE.md` §4. Four cult-troop
-units — Khorne Berzerkers, Plague Marines, Rubric Marines, Noise Marines — are shared across CSM and
-their respective god-legion factions, and need their points sourced cross-file rather than from CSM's
-own MFM file alone. Re-read `CSM_BUILD_SCOPE.md` §4 for the exact sourcing rule before starting; this
-is a genuine data-sourcing question, not a mechanical regeneration, so confirm the cross-file lookup
-logic against source before writing anything to `units.json`.
+This session does NOT build Thousand Sons. It produces `THOUSAND_SONS_BUILD_SCOPE.md`, modeled on
+`CSM_BUILD_SCOPE.md`'s shape (real current-edition roster count vs. raw source count including
+Legends; which units/points/detachments/enhancements/stratagems are self-contained vs. cross-file;
+any shared-datasheet units whose points or stats live outside Thousand Sons' own MFM, the mirror
+image of what CSM turn B just closed — Thousand Sons prices Rubric Marines in its own MFM, so
+check whether Thousand Sons has any reciprocal gaps of its own). Confirm every claim against
+`MFM_Thousand_Sons_v1_0.txt`, `Datasheets.csv`, and the other Wahapedia CSVs directly — source-first,
+not derived-data-first. Flag anything genuinely ambiguous (a rules-legality call, not a "how it's
+built" call) for Ryan; everything else, decide and note in the scope doc.
 
 ## After this session
 
+- Thousand Sons build (turns A/B/C, mirroring CSM's arc) — scoped by this session, built next.
+- Then Death Guard, Emperor's Children, World Eaters (remaining Chaos Marine variants), then Chaos
+  Daemons, then Drukhari, per the standing faction priority order.
 - **M2** (Ryan, evict the 71 GW sources) — unblocked since D237; no Claude action, but don't assume
   it's done without confirming.
-- Faction priority roadmap: once CSM's roster gap closes, CSM is essentially complete. Next in
-  priority order per the standing faction list: Thousand Sons, Death Guard, Emperor's Children, World
-  Eaters (remaining Chaos Marine variants), then Chaos Daemons, then Drukhari.

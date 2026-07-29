@@ -56,7 +56,7 @@ them either (it carries no rule prose for any detachment — structure + enhance
 exactly like DG). So if built, each renders as a legal, selectable detachment with its two enhancements
 named and priced but with an empty rule and description-less enhancements, and no stratagems.
 
-## 4. Points: 4 cult-troop units are priced in sibling MFM files
+## 4. Points: 4 cult-troop units are priced in sibling MFM files — **CLOSED (D240, S157)**
 
 `mfm_points_parser.py` on the CSM MFM prices 85 rows, covering 54 of the 58. The four it misses are the
 cult troops, whose points live in their god-legion MFMs (confirmed present in each):
@@ -66,13 +66,12 @@ cult troops, whose points live in their god-legion MFMs (confirmed present in ea
 - Rubric Marines → `MFM_Thousand_Sons_v1_0.txt`
 - Noise Marines → `MFM_Emperors_Children_v1_0.txt`
 
-An uncosted unit can't be legally added, so these four must be priced. The mechanism already exists:
-the same `mfm_points_parser.py --append --scope-to-army` machinery that appends chapter points for the
-SM family. The wrinkle to solve in the build turn is that those rows carry the *parent legion's* Army
-Name in their source MFM, whereas the append scopes by Army Name — so the append needs to relabel four
-named units to "Chaos Space Marines" rather than scope by a matching army name. **This is the only part
-of the CSM build with a real chance of running deeper than one clean turn.** If it does, bank the
-straight 54-unit build and treat cult-troop pricing as a second data-turn rather than half-finishing.
+**Shipped.** Each unit priced via its own `--scope-to-army --append` call against its own legion's
+MFM, isolated to a single-row `Unit_Stats.csv` scope (new `_scope_stats_csv()` in
+`units_repro_check.py`) so the call can only ever match that one unit — not any of CSM's other 54
+already-priced units, several of which (Chaos Rhino, Helbrute, Defiler, etc.) are also priced,
+separately, in one or more of these same four legion MFMs. `units.json` now carries all 58; see
+D240 for the full account.
 
 ## 5. Loadout defaults
 
