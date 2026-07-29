@@ -134,7 +134,7 @@ if [ "$FETCH" -eq 1 ]; then
       TMP_SRC="$(mktemp -d)"
       if curl -sL --fail -H "Authorization: Bearer $TOKEN" \
           -o "$TMP_SRC/src.tar.gz" \
-          https://codeload.github.com/rd-prime-1357/data-sources/tar.gz/main; then
+          https://codeload.github.com/rd-prime-1357/rd-prime-1357-data-sources/tar.gz/main; then
         tar -xzf "$TMP_SRC/src.tar.gz" -C "$TMP_SRC"
         SRC_DIR="$(find "$TMP_SRC" -mindepth 1 -maxdepth 1 -type d | head -1)"
         if SRC_VERIFY="$(python3 - "$SRC_DIR" <<'PYEOF'
