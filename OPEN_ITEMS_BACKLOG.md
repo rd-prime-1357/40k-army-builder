@@ -3,11 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **12 open** as of S152: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73 — B69–B73 logged
-Ryan-side S152, not yet scoped or reproduced by Claude. CSM loadout defaults shipped S153 (D236, data-only):
-`unit_loadouts.json` +54 CSM entries, `wargear_points.json` +2 entries (a second gap surfaced by the
-first); nothing else moved. `detachment_parser.py`/`detachments_repro_check.py` still untouched —
-CSM turn C (detachment build). B68 closed S152 (D235, engine); S150 confirmed `--fetch` live-green
+not here, it isn't open. **13 open** as of S154: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73, B74 —
+B69–B73 logged Ryan-side S152, not yet scoped or reproduced by Claude. CSM detachment build shipped
+S154 (D237, data-only): `detachments.json` +17 CSM detachments (160 total), diff-traced clean against
+the committed file; closes the CSM build arc and unblocks M2. Surfaced new ticket B74 (Chaos Cult's
+BATTLELINE grant has no `detachment_effects.json` row) and a stale literal in E4b-3 (29→30 same-army
+enhancement collisions), both filed for the CSM tooling turn next. CSM loadout defaults shipped S153
+(D236, data-only): `unit_loadouts.json` +54 CSM entries, `wargear_points.json` +2 entries (a second gap
+surfaced by the first); nothing else moved. B68 closed S152 (D235, engine); S150 confirmed `--fetch` live-green
 against the real repo (D233, tooling-only, verification only); nothing closed or added, M1 unblocked.
 S149 was M0 (D232, tooling-only): the new fetch-open path built and proven; nothing closed or added. S147 was
 CSM turn A (D229, data-only): 54 self-priced units shipped, diff-traced clean. It also opened B68
@@ -24,6 +27,14 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### B74 — Chaos Cult (CSM) grants BATTLELINE with no `detachment_effects.json` row — **NEW, Claude-found S154 (D237); S**
+Surfaced by `rules_assertions.py` E21a-5 the moment `detachments.json` carried CSM's Chaos Cult text:
+"TRAITOR GUARDSMEN SQUAD units from your army gain the BATTLELINE keyword" is a real construction
+effect, the same shape E21a already polices for other armies' Battleline-grant detachments, and it has
+no row yet in `detachment_effects.json`. The assertion is correctly failing, not a false positive. Needs
+its own small data turn against `detachment_effects.json` — hold until the CSM tooling turn's own
+assertions are in and the file's shape is fresh in view, rather than mixing into a data-only turn.
 
 ### B69 — Roboute Guilliman popup: "Author of the Codex" mislabel + orphaned ability grouping — **NEW, Ryan-reported; S**
 Roboute's popup text for "Author of the Codex" says "(see left)" — should say "(see below)". The

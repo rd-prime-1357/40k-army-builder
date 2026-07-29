@@ -1,50 +1,50 @@
-# Next-session prompt — Session 154
+# Next-session prompt — Session 155
 
-CSM turn B closed (S153, D236): `unit_loadouts.json` +54 CSM entries, `wargear_points.json` +2 entries
-(a second gap the loadout data surfaced), `rules_assertions.py` E14-2 updated 53/33 → 64/44. All 23
-non-repo gates green. `detachment_parser.py` / `detachments_repro_check.py` deliberately untouched —
-CSM turn C's job.
+CSM turn C closed (S154, D237): `detachments.json` +17 CSM detachments (160 total), diff-traced clean
+against the committed file, `detachments_repro_check.py` green. This closes the CSM detachment build
+arc and unblocks M2. Two gaps surfaced and filed, neither fixed this session: E4b-3's same-army
+enhancement-collision literal is stale (29→30), and new ticket B74 — CSM's Chaos Cult detachment grants
+BATTLELINE with no `detachment_effects.json` row.
 
 ## Read this first
 
-`SESSION_HANDOFF_153.md` and the D236 entry at the tail of `40K_Decision_Log_v3_0.md` before starting.
-Don't trust remembered numbers — check this file's header against `SESSION_HANDOFF_153.md`.
+`SESSION_HANDOFF_154.md` and `D237_entry.md` before starting. `40K_Decision_Log_v3_0.md` was unreachable
+in the mounted project area at S154 open (contradicting S153's own account of it) — check whether a
+fresh upload has resolved this. If the log is present and intact, fold `D237_entry.md` into it (same
+treatment D231–D234 got at S153) and delete the standalone file. If it's still absent, keep banking
+standalone and flag again.
 
 ## Baseline at open
 
-Run `baseline.sh --fetch --data-turn`. Expect all pipeline/gate/repro gates green. `repo_check` will
-fail naming this batch's push-pending files (`repro_check.py`, `unit_loadouts.json`,
-`wargear_points.json`, `rules_assertions.py`, `pipeline_manifest.py`, `pipeline_manifest.json`,
-`40K_Decision_Log_v3_0.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_153.md`)
-plus the deletion of `D231_entry.md`–`D234_entry.md` (folded into the main log, S153) plus the
-long-standing `40K_Data_Pipeline_Process_v0_6.md` drift — all pending the next upload batch, none
-blocking. If the count or names differ from that list, reconcile before proceeding.
+Full `baseline.sh --fetch --data-turn` run needed — S154 only verified `detachments_repro_check.py`
+against the detachment-build input set, not the full gate suite. Expect `repo_check` to name this
+batch's push-pending files (`detachment_parser.py`, `detachments_repro_check.py`, `detachments.json`,
+`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_154.md`, `NEXT_SESSION_PROMPT.md`, plus
+`D237_entry.md` if still standalone) alongside the long-standing `40K_Data_Pipeline_Process_v0_6.md`
+drift — none blocking. `rules_assertions.py` is expected to fail E4b-3 and E21a-5 until this session's
+work lands them — both are known, both are this session's job, not baseline drift.
 
-## This session — CSM turn C (data-only): detachment build
+## This session — CSM tooling turn (tooling-only)
 
-Per `CSM_BUILD_SCOPE.md` §3 and §6. The config edits:
+Per `CSM_BUILD_SCOPE.md` §8 step 4. Roster stands at 54 of 58 (four cult-troop units — Khorne
+Berzerkers, Plague Marines, Rubric Marines, Noise Marines — remain unpriced pending their own
+cross-file data turn per §4; not this session's job).
 
-- `detachment_parser.py` — add CSM rows to `ARMY_TO_MFM` (`"Chaos Space Marines": "MFM_Chaos_Space_Marines_v1_0.txt"`),
-  `MFM_SOURCE_NAME` (`"MFM_Chaos_Space_Marines_v1_0.txt": "Chaos Space Marines"`), and
-  `ARMY_TO_WAHA_FACTION` (`"Chaos Space Marines": "CSM"`).
-- `detachments_repro_check.py` — add `MFM_Chaos_Space_Marines_v1_0.txt` to its required-inputs list.
+- **New CSM assertions in `rules_assertions.py`:** roster count (58 target / 54 actual, recorded as
+  such — do not round up), detachment count 17, the two prose-less detachments named and recorded as
+  `text_source: none` by design, not a gap.
+- **E4b-3 literal update:** 29→30 same-army enhancement collisions, 5→6 distinct colliding names —
+  re-derive from a fresh scan, don't just bump the number; confirm which name is the new sixth collision
+  and that it's CSM-internal before writing the literal.
+- **Manifest reissue** (`pipeline_manifest.py --write`) once the above lands.
+- **Full harness pass** — confirm nothing else moved.
 
-Then regenerate `detachments.json` and verify: **17 CSM detachments** (D192/§3 — MFM is the source of
-record; the two MFM-only detachments, Devotees of Destruction and Murdertalon Raiders, are included
-with no rule prose and enhancement names/points only; the three Wahapedia-only detachments are dropped
-as stale). Diff-trace against the currently-committed file: every change should be CSM's own 17 new
-detachment entries; nothing else should move. `detachments_repro_check.py` must reproduce the result
-byte-for-byte.
+## After the tooling turn
 
-**Turn type: data-only.** Config-list additions plus the parser output they regenerate. No engine logic
-change to `detachment_parser.py` beyond what the config lines drive; no tooling change.
-
-## After CSM turn C
-
-Per the standing sequence: M2 (Ryan, evict the 71 GW sources) is unblocked once CSM turn C's diff-trace
-is confirmed clean — CSM turn C was the last piece of CSM build work gating it. Then the tooling turn:
-CSM-specific assertions into `rules_assertions.py` (roster count 58/54-plus-4-pending-cult-troop-pricing,
-detachment count 17, the two prose-less detachments recorded as such), manifest reissue, full harness
-pass. Cult-troop cross-file points (the four units in sibling MFMs — Khorne Berzerkers, Plague Marines,
-Rubric Marines, Noise Marines, per `CSM_BUILD_SCOPE.md` §4) remains open, unscheduled — CSM's roster
-stays at 54 of 58 until that lands as its own data turn.
+- **B74** (Chaos Cult BATTLELINE grant, no `detachment_effects.json` row) — its own small data turn,
+  once this session's CSM assertions are in and the effects-file shape is fresh in view. Don't fold it
+  into the tooling turn itself; it's a data edit, not an assertion.
+- **Cult-troop cross-file points** (the four units, `CSM_BUILD_SCOPE.md` §4) — remains open, unscheduled,
+  its own data turn.
+- **M2** (Ryan, evict the 71 GW sources) — unblocked as of D237; no Claude action, but don't assume it's
+  done without confirming.

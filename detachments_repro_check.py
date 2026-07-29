@@ -34,6 +34,7 @@ REQUIRED = [
     'MFM_Blood_Angels_v1_0.txt', 'MFM_Dark_Angels_v1_0.txt',
     'MFM_Death_Watch_v1_0.txt', 'MFM_Space_Wolves_v1_0.txt',
     'MFM_Chaos_Daemons_v1_0.txt', 'MFM_Death_Guard_v1_0.txt',
+    'MFM_Chaos_Space_Marines_v1_0.txt',
     # Tier-1 prose.
     'Space_Marines_Faction_Pack_v1_0.md',
     'Dark_Angels_Faction_Pack_June_2026.md',
