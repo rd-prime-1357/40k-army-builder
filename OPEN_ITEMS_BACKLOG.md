@@ -25,6 +25,11 @@ No backlog ticket opened or closed; the build itself is tracked in the scope doc
 CSM. Also fixed a real B15-9 drift found at baseline open: S157 added 4 units to `units.json` but
 never regenerated `datasheet_wargear_abilities.json` against them — reran the parser, +3 entries,
 additive only, no ticket needed (a session-open reconciliation, not a standing bug).
+M2 dress rehearsal shipped S158 (D242, same session): Ryan's private sources repo and read-only token
+verified live — full fetch/unpack/byte-compare of all 70 files against `source_manifest.json` passed
+clean. Found and fixed a real bug: `baseline.sh`'s private-fetch URL was hardcoded to a nonexistent
+repo name. Deletion of the 71 area-resident source files is Ryan's remaining step (screenshot-verified
+protocol), not yet done.
 S149 was M0 (D232, tooling-only): the new fetch-open path built and proven; nothing closed or added. S147 was
 CSM turn A (D229, data-only): 54 self-priced units shipped, diff-traced clean. It also opened B68
 (D230): building the CSM loadout-defaults pass surfaced a real parser bug (name-keyed matching bleeds

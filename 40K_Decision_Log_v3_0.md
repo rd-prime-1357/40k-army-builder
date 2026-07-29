@@ -9348,3 +9348,31 @@ content drift; the repo's version is authoritative and unaffected. Also confirme
 appending, per standing practice, so no prior decisions were lost or overwritten.
 `pipeline_manifest.py --write` reissued once, covering the wargear-abilities fix. Tooling/scoping-only
 (S158)
+
+
+## D242 — M2 dress rehearsal shipped: token verified, a real repo-name bug found and fixed
+
+**What shipped.** Ryan created the private sources repo (`rd-prime-1357/rd-prime-1357-data-sources`,
+private, 70 files pushed) and generated a fine-grained, read-only, single-repo, no-expiration token.
+Verified directly against the GitHub API before trusting it: the token authenticates, lists all 70
+files, and — critically — a full fetch-and-verify pass (the exact logic `baseline.sh`'s data-turn path
+runs) pulled the tarball, unpacked it, and byte-compared all 70 files against `source_manifest.json`'s
+recorded hashes. **0 missing, 0 mismatches.** This is the real M2 dress rehearsal the plan called for
+(`P4_ARCHITECTURE_SCOPE.md` §6), not just a connectivity check.
+
+**Found and fixed a real bug along the way.** `baseline.sh`'s private-source fetch URL was hardcoded to
+`codeload.github.com/rd-prime-1357/data-sources` — a repo that doesn't exist. Ryan's repo (correctly
+named for GitHub's own uniqueness rules) is `rd-prime-1357/rd-prime-1357-data-sources`. Confirmed the
+old URL 404s and the corrected one 200s before touching anything. One-line fix in `baseline.sh`
+(codeload path only; the public-repo fetch on the line above is unrelated and untouched). Would have
+silently blocked every future data turn's private-source fetch had it shipped as designed and only been
+discovered live.
+
+`SOURCE_REPO_TOKEN.txt` written (raw token string, no wrapper — matches `baseline.sh`'s own `cat`
+read) and handed to Ryan to upload into the project area under that exact filename, hard-guarded out
+of the public repo by `repo_check.py`'s existing custody check (`TOKEN_FILENAME`/`TOKEN_PATTERN`).
+
+**Not yet done, and deliberately so:** per the M2 procedure, the 71-file area copies stay in place
+until Ryan runs the file-list-screenshot protocol (before/after) and confirms deletion separately —
+this session verified the fetch path works, it did not delete anything from the area. Tooling-only,
+no product data touched.

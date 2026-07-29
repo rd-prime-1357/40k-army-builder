@@ -69,14 +69,34 @@ sources repo, generate a read-only fine-grained token, and send it back for `SOU
 No deletion from the area yet — that only happens after a live session fetches from the token
 successfully and confirms outputs match byte-for-byte, per the standing M2 dress-rehearsal rule.
 
+## Addendum — M2 dress rehearsal shipped (D242), same session
+
+Ryan created the private sources repo (`rd-prime-1357/rd-prime-1357-data-sources`, 70 files pushed)
+and generated a fine-grained, read-only, single-repo token. Verified live against the GitHub API
+before trusting it: authenticates, lists all 70 files, and — the real test — a full fetch/unpack/
+byte-compare against `source_manifest.json` passed clean, 0 missing, 0 mismatches.
+
+**Found and fixed a real bug along the way.** `baseline.sh`'s private-source fetch URL was hardcoded to
+`codeload.github.com/rd-prime-1357/data-sources` — a repo that doesn't exist. The real one, per
+GitHub's own naming, is `rd-prime-1357/rd-prime-1357-data-sources`. Confirmed the old URL 404s and the
+new one 200s before editing. One-line fix, the public-repo fetch line above it untouched.
+`pipeline_manifest.py --write` reissued again after this edit — 109 guarded files, clean.
+
+`SOURCE_REPO_TOKEN.txt` written (raw token, no wrapper, matching `baseline.sh`'s own `cat` read) and
+handed to Ryan to upload into the project area under that exact filename.
+
+**Deliberately not done:** deletion of the 71 area-resident GW source files. That is Ryan's
+screenshot-verified step per the standing M2 procedure — this session proved the fetch path works, it
+did not touch the area's contents.
+
 ## Decisions needed
 
 1. **Thousand_Sons_web.txt** — Ryan needs to source and paste the Wahapedia composition text for
    Thousand Sons before the TS loadout-defaults turn can run. Nothing else in the TS build depends on
    it.
-2. **M2 setup** — Ryan needs to create the private sources repo, push `gw_sources.zip`'s contents, and
-   send back a read-only token. Recommended before or alongside the TS build turns, since it frees far
-   more room than TS will ever cost.
+2. **M2 deletion** — the dress rehearsal (D242) is done and clean. Ryan can now run the
+   screenshot-verified deletion of the 71 area-resident GW source files whenever convenient — before
+   or after the TS build, his call. Not yet done as of this handoff.
 
 ## Net New Files
 
@@ -87,8 +107,10 @@ guarded set.
 ## Files (SHA-256, first 12 chars)
 
 - `datasheet_wargear_abilities.json` — `6d3afcf63051`
-- `40K_Decision_Log_v3_0.md` — `1d001f0378ee`
-- `DECISION_INDEX.md` — `e260814d0ad0`
-- `OPEN_ITEMS_BACKLOG.md` — `308dea4b10f1`
+- `40K_Decision_Log_v3_0.md` — `b46bc24bd8ab` (D241 + D242)
+- `DECISION_INDEX.md` — `19657a9a759e` (D241 + D242)
+- `OPEN_ITEMS_BACKLOG.md` — `5771e6d2c845` (D241 + D242 notes)
 - `THOUSAND_SONS_BUILD_SCOPE.md` — `3e3877d78167`
-- `pipeline_manifest.json` — `f718001b8ca5`
+- `baseline.sh` — `192cdc9ec8b2` (private-fetch repo-name fix)
+- `SOURCE_REPO_TOKEN.txt` — for Ryan to upload to the project area; not a hash-tracked pipeline file
+- `pipeline_manifest.json` — `e93cd38088b5`, reissued a second time, 109 guarded files

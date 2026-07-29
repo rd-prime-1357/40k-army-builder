@@ -258,3 +258,11 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   no `Thousand_Sons_web.txt` exists for loadout defaults, needs Ryan to source it. Also fixed a real
   B15-9 drift at baseline open: S157 added 4 units to `units.json` without regenerating
   `datasheet_wargear_abilities.json`; reran the parser, +3 entries, additive only (S158)
+- **D242** — M2 dress rehearsal shipped: Ryan's private sources repo and read-only token verified
+  live against the GitHub API — full fetch, unpack, and byte-compare of all 70 files against
+  `source_manifest.json` passed clean (0 missing, 0 mismatches). Found and fixed a real bug:
+  `baseline.sh`'s private-source fetch URL was hardcoded to a nonexistent repo name
+  (`rd-prime-1357/data-sources` instead of the actual `rd-prime-1357/rd-prime-1357-data-sources`) —
+  would have silently broken every future data-turn fetch. `SOURCE_REPO_TOKEN.txt` written and handed
+  to Ryan to upload. Deletion from the area deliberately not done this session — that's Ryan's
+  screenshot-verified step, per the standing M2 procedure (S158)
