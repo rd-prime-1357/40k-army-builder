@@ -10,7 +10,7 @@
 Six scripts turn raw source data into the JSON files the app consumes.
 
 - **`wahapedia_transform.py`** — reads the Wahapedia structured export and produces eight CSVs. Requires `--army-name "Faction Name"` for any non-Space-Marines faction (D48); without it, all units default to "Adeptus Astartes" and collide on merge.
-- **`mfm_points_parser.py`** — reads the MFM text and produces Unit_Points, then patches Leader Eligible Units into Unit_Stats. Carries a `POINT_NAME_OVERRIDES` dict for name mismatches and Legends suppression — update it when adding a new faction.
+- **`mfm_points_parser.py`** — reads the MFM text and produces Unit_Points, then patches Leader Eligible Units into Unit_Stats. Carries a `POINT_NAME_OVERRIDES` dict for name mismatches and Legends suppression — update it when adding a new faction. For a chapter-supplement file layered on a base faction, use `--army "Chapter Name" --scope-to-army --append` (B56a) — see Step 2b below.
 - **`integrity_check.py`** — validates the nine CSVs and writes a report. Blocking issues must be resolved before converting. **Important:** "missing_rule" flags for Nurgle's Gift and Pact of Decay are false alarms — they resolve via the abilities lookup in-app and are not blocking.
 - **`convert_to_json.py`** — produces `units.json` + four lookup JSONs from the nine CSVs.
 - **`merge_factions.py`** — merges per-faction `units.json` outputs into the master file. Always re-merge after rebuilding any faction.
@@ -51,6 +51,22 @@ python wahapedia_transform.py --wahapedia-dir . --seed-dir . --out-dir dg_out --
 # Step 2: Parse MFM points (patches Unit_Stats in place)
 python mfm_points_parser.py --mfm MFM_Space_Marines_v1_0.txt --out-dir out --stats out/Unit_Stats.csv
 python mfm_points_parser.py --mfm MFM_Death_Guard_v1_0.txt --out-dir dg_out --stats dg_out/Unit_Stats.csv
+
+# Step 2b: Space Marines chapter points (B56a). Scoped and appended into the SAME out-dir,
+# ahead of Step 4's convert. --scope-to-army restricts the name->army map to that chapter's
+# own Unit_Stats.csv rows and DROPS any MFM entry with no datasheet there, instead of writing
+# it under --army as a fallback (that fallback is what let Black Templars rows overwrite the
+# generic Adeptus Astartes prices before B56a). --append extends out/Unit_Points.csv with no
+# header/BOM rather than overwriting it. Run in this order, after the base SM points parse
+# above and before Step 4.
+python mfm_points_parser.py --mfm MFM_Space_Wolves_v1_0.txt --army "Space Wolves" --scope-to-army --append --out-dir out --stats out/Unit_Stats.csv
+python mfm_points_parser.py --mfm MFM_Blood_Angels_v1_0.txt --army "Blood Angels" --scope-to-army --append --out-dir out --stats out/Unit_Stats.csv
+python mfm_points_parser.py --mfm MFM_Black_Templars_v1_0.txt --army "Black Templars" --scope-to-army --append --out-dir out --stats out/Unit_Stats.csv
+python mfm_points_parser.py --mfm MFM_Dark_Angels_v1_0.txt --army "Dark Angels" --scope-to-army --append --out-dir out --stats out/Unit_Stats.csv
+python mfm_points_parser.py --mfm MFM_Death_Watch_v1_0.txt --army "Deathwatch" --scope-to-army --append --out-dir out --stats out/Unit_Stats.csv
+# Check out/points_validation_report.md after each run — "Already-priced collisions" means a
+# chapter file disagrees with an already-armed unit's price (B56f is the current example).
+# The existing value is kept automatically; nothing to do unless the report is new.
 
 # Step 3: Integrity check (review reports before proceeding)
 python integrity_check.py --dir out
