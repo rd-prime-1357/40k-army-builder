@@ -1960,6 +1960,17 @@ allowlist into `equipment_parts`. Widened past the three named carriers to the w
 13 options now carry `equipment_parts`. Flags 41 → 27. The **source** side is untouched: see B28.
 
 
+### B74 — Chaos Cult (CSM) grants BATTLELINE with no `detachment_effects.json` row — **NEW, Claude-found S154 (D237); CLOSED S156 (D239)**
+Surfaced by `rules_assertions.py` E21a-5 the moment `detachments.json` carried CSM's Chaos Cult text:
+"TRAITOR GUARDSMEN SQUAD units from your army gain the BATTLELINE keyword" is a real construction
+effect, the same shape E21a already polices for other armies' Battleline-grant detachments, and it had
+no row yet in `detachment_effects.json`. The assertion was correctly failing, not a false positive.
+Closed by adding a `battleline`-kind row for `Chaos Space Marines|CHAOS CULT`, elevating Traitor
+Guardsmen Squad (Chaos Space Marines Infantry in `units.json`, sole unit named in the detachment's
+KEYWORDS clause, no cross-army resolution needed), matching the shape of the five existing rows
+exactly. `e21b_check.js`'s pinned full-table sweep count updated 4→5 alongside it. This closes out the
+CSM tooling arc from `CSM_BUILD_SCOPE.md` §8 in full.
+
 ### B31 — an "A or B and C" source — **CLOSED S99 (D165); DATA; `bundled_swaps.json` + `units.json`**
 Shipped as a 5-endpoint `owns` bundle on Space Wolves / Wulfen Dreadnought `000004133`, not as a schema
 extension. **Two flags closed, not one** — S99 found a second live flag on the same unit that this entry

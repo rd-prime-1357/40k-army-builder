@@ -9160,3 +9160,94 @@ truth shifted as a direct, mechanical consequence of the regeneration.
 matched the public repo — Ryan had appended B69–B73 after S152's manifest was last blessed, and the
 reissue never happened. Reconciled by reissuing the manifest against the current, repo-matching file
 before starting CSM work; no content was altered or lost.
+## D237 — CSM turn C: detachment build shipped, closing the CSM build arc (S154)
+
+`detachment_parser.py` gained Chaos Space Marines' three config lines: `ARMY_TO_MFM` ("Chaos Space
+Marines" → `MFM_Chaos_Space_Marines_v1_0.txt`), `MFM_SOURCE_NAME` (that file → "Chaos Space Marines"),
+and `ARMY_TO_WAHA_FACTION` ("Chaos Space Marines" → "CSM"). `detachments_repro_check.py` gained the
+CSM MFM file in its required-inputs list.
+
+Regenerated `detachments.json`: +17 CSM detachments (143 → 160 records, 14 → 15 armies, 275 → 292
+army-detachment slots). Diff-traced key-by-key against the previously-committed file: every added key
+belongs to Chaos Space Marines, zero existing records changed, zero removed, and no other army's
+detachment-slot list moved. Matches CSM_BUILD_SCOPE.md §3/§6 and D192's ruling exactly — MFM is the
+source of record for the roster; the two MFM-only detachments (Devotees of Destruction, Murdertalon
+Raiders) came through with no rule prose, enhancement names/points only; the three Wahapedia-only
+detachments were dropped as stale. The other 15 CSM detachments sourced their prose from Wahapedia's
+tier-2 text, since CSM has no faction-pack tier-1 source. `detachments_repro_check.py` reproduces the
+regenerated file byte-for-byte.
+
+Per the standing sequence, M2 (Ryan, evict the 71 GW sources) is now unblocked — CSM turn C's clean
+diff-trace was the last piece of CSM build work gating it.
+
+Two real gaps surfaced, both filed for the tooling turn rather than fixed here (turn-typing: this was
+a data-only turn, config lines plus the regeneration they drive, no assertion or effects-file edits):
+E4b-3's collision census went stale (29 → 30, fixed at D238), and B74 opened — Chaos Cult grants
+BATTLELINE with no `detachment_effects.json` row (fixed at D239).
+
+Full baseline outside `--fetch`/repo gates: `detachments_repro_check.py` green. `index.html`
+untouched — CSM's detachment picker uses only existing mechanisms. Turn type: data-only.
+
+## D238 — CSM tooling turn C: assertions, census correction, manifest reissue (S155)
+
+Three new assertions in `rules_assertions.py`: `CSM-1` (roster count, pinned at 54 of 58 real
+current-edition units — four cult-troop units remain unpriced pending their own cross-file data turn,
+recorded honestly rather than rounded up); `CSM-2` (detachment count, pinned at 17); `CSM-3` (the two
+MFM-only detachments pinned as carrying `text_source: none` by design, not a parser gap).
+
+E4b-3's pinned collision census re-derived fresh from `detachments.json` rather than trusted from
+D237's handoff prose — confirmed 30 reachable same-army cross-detachment collisions across 6 distinct
+names (was 29/5). The new sixth colliding name is Warp-Fuelled Thrusters, confirmed CSM-internal. The
+one differing-price collision is unchanged and unrelated to CSM (Dark Angels / Deathwing Assault).
+Both the assertion statement and the function body's pinned constants and docstring updated.
+
+Manifest reissued (105 guarded files). Full harness pass: 22/23 gates, the sole failure `E21a-5`
+(B74), correctly failing by design and out of scope this session. `index.html` untouched — tooling-only.
+
+## D239 — B74 shipped; a real manifest sync-order bug found and fixed at open (S156)
+
+**Baseline reconciliation, before B74 work started.** `40K_Decision_Log_v3_0.md` and five other
+guarded files were absent from the mounted project area again this session — the fourth session
+running with some part of this drift. With the project area now at 96% capacity, read as Ryan pruning
+older files from the area to make room, not a real repo regression — confirmed directly this session
+by cloning the public repo fresh: the log, all 31 session handoffs, and every guarded file are present
+and intact there. The area mount's absence is not evidence against the repo; this closes out the
+three-session flag from D237/D238 without needing to ask Ryan, since the live repo answered it
+directly.
+
+**A second, real finding while cross-checking area content against the repo:** `pipeline_manifest.json`'s
+own stored per-file hash for `DECISION_INDEX.md` and `OPEN_ITEMS_BACKLOG.md` did not match either
+file's actual content — in the area or in the repo — even though both files' content matched what
+D238's handoff recorded as their final post-session hash, and even though the manifest's own overall
+hash matched what D238 recorded as "reissued, 105 guarded files, all clean." Conclusion: at S155, both
+files were edited to their final state *after* `pipeline_manifest.py --write` last ran, and the write
+was never repeated — the handoff's stated hashes for the two files were correct, but the manifest
+shipped stale internal entries for them regardless, undetected because no session between S155 and
+now re-ran the gate against a full guarded-file set (the area mount was missing 32 of them, silently
+narrowing what `pipeline_manifest.py` could check). Fixed by reissuing the manifest against the full,
+repo-verified file set; only those two files' entries (plus the long-standing, already-known
+`40K_Data_Pipeline_Process_v0_6.md` push-pending drift) changed. No content lost or altered — a pure
+manifest-truth correction. Filed as a reminder that the manifest gate is only as strong as the file set
+it's run against; a partial area is a silent way to under-check it.
+
+**Housekeeping:** D237 and D238 folded into this log directly from their standalone entries, plus
+D231–D234 (already folded at S153 but whose standalone files had not actually been deleted — the area
+mount's D231-234 reappearance at S154 was this, not a regression). All six standalone `D2NN_entry.md`
+files deleted now that the repo confirms the log holds all six in full.
+
+**B74 shipped.** Added a `battleline`-kind row to `detachment_effects.json` for
+`Chaos Space Marines|CHAOS CULT`, elevating Traitor Guardsmen Squad — the sole unit named in the
+detachment's KEYWORDS clause, confirmed as Chaos Space Marines Infantry in `units.json`, reachable
+without cross-army resolution. Matches the shape of the five existing battleline rows exactly; no
+`restrictions` text on the detachment, so the effect is unconditional while selected.
+
+`e21b_check.js`'s full-table sweep had a pinned count of 4 named units for elevation, now 5 — updated
+alongside the data row since the check's own fixture is a direct census of this file's battleline
+rows, not an engine or parser change. `pipeline_manifest.py --write` reissued twice (once after the
+sync-order fix, once after the data row and check update) — 105 guarded files, all clean both times.
+
+Full baseline: 23/23 gates green (`--no-repo`). `rules_assertions.py`: 107/107. `index.html`
+untouched — data-only turn, matching the S156 prompt's scope. This closes the CSM tooling arc from
+`CSM_BUILD_SCOPE.md` §8 in full; the sole remaining CSM gap is the cult-troop cross-file points turn
+(§4), still open, unscheduled.
+

@@ -103,6 +103,21 @@
       ]
     },
 
+    "Chaos Space Marines|CHAOS CULT": {
+      "army": "Chaos Space Marines",
+      "detachment": "Chaos Cult",
+      "effects": [
+        {
+          "kind": "battleline",
+          "target": {
+            "units": ["Traitor Guardsmen Squad"]
+          },
+          "enforced": true,
+          "source": "Traitor Guardsmen Squad is Chaos Space Marines Infantry in units.json and is the sole unit named in the detachment's KEYWORDS clause."
+        }
+      ]
+    },
+
     "Chaos Daemons|SHADOW LEGION": {
       "army": "Chaos Daemons",
       "detachment": "Shadow Legion",
