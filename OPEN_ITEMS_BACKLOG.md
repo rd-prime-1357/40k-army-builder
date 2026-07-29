@@ -3,12 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **13 open** as of S154: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73, B74 —
-B69–B73 logged Ryan-side S152, not yet scoped or reproduced by Claude. CSM detachment build shipped
-S154 (D237, data-only): `detachments.json` +17 CSM detachments (160 total), diff-traced clean against
-the committed file; closes the CSM build arc and unblocks M2. Surfaced new ticket B74 (Chaos Cult's
-BATTLELINE grant has no `detachment_effects.json` row) and a stale literal in E4b-3 (29→30 same-army
-enhancement collisions), both filed for the CSM tooling turn next. CSM loadout defaults shipped S153
+not here, it isn't open. **13 open** as of S155: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73, B74 —
+B69–B73 logged Ryan-side S152, not yet scoped or reproduced by Claude. CSM tooling turn shipped S155
+(D238, tooling-only): three new CSM census assertions (roster 54/58, detachment count 17, no-prose
+detachments), E4b-3's collision census corrected 29/5 → 30/6 (CSM's Warp-Fuelled Thrusters), manifest
+reissued. B74 (Chaos Cult BATTLELINE grant, no `detachment_effects.json` row) deliberately untouched —
+still open, its own small data turn next. CSM detachment build shipped S154 (D237, data-only):
+`detachments.json` +17 CSM detachments (160 total), diff-traced clean against the committed file;
+closes the CSM build arc and unblocks M2. CSM loadout defaults shipped S153
 (D236, data-only): `unit_loadouts.json` +54 CSM entries, `wargear_points.json` +2 entries (a second gap
 surfaced by the first); nothing else moved. B68 closed S152 (D235, engine); S150 confirmed `--fetch` live-green
 against the real repo (D233, tooling-only, verification only); nothing closed or added, M1 unblocked.

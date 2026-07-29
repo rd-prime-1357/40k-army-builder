@@ -1275,13 +1275,15 @@ ASSERTIONS = [
      lambda S: e4b_eligibility_derivations_agree(S)),
 
     ('E4b-3',
-     'The name-collision census is pinned: 29 reachable same-army cross-detachment collisions '
-     'across 5 distinct names, exactly one of them priced differently in its two detachments. '
-     'These are the two findings that forced the design — a non-zero count forces the duplicate '
-     'rule to be keyed by name army-wide rather than by (detachment, name), and the differing '
-     'price forces a stored assignment to carry a detachment key rather than a bare name. If a '
-     'regeneration moves either number, both choices need revisiting rather than inheriting.',
-     'detachments.json enhancements per army (E4b, D199)',
+     'The name-collision census is pinned: 30 reachable same-army cross-detachment collisions '
+     'across 6 distinct names, exactly one of them priced differently in its two detachments. '
+     'The sixth name (Warp-Fuelled Thrusters, CSM-internal) entered with the CSM detachment '
+     'build (D237/S154) and does not change the design: a non-zero count still forces the '
+     'duplicate rule to be keyed by name army-wide rather than by (detachment, name), and the '
+     'one differing price (Dark Angels/Deathwing Assault, unrelated to CSM) still forces a '
+     'stored assignment to carry a detachment key rather than a bare name. If a regeneration '
+     'moves either number, both choices need revisiting rather than inheriting.',
+     'detachments.json enhancements per army (E4b, D199; updated S155 for CSM, D237)',
      lambda S: e4b_name_collision_census(S)),
 
     ('E4b-4',
@@ -1543,6 +1545,32 @@ ASSERTIONS = [
      'detachments.json, all detachments (B60a, D221)',
      lambda S: b60a_restrictions_no_stratagem_cp_debris(S)),
 
+    # ── CSM: roster and detachment build census (S154 data turn, S155 tooling turn).
+    # CSM_BUILD_SCOPE.md §1 fixed the real current-edition roster at 58, not the 112 the
+    # raw source carries (54 of those 112 are Warhammer Legends units, out of scope). The
+    # four cult-troop units remain unpriced pending their own cross-file data turn (§4), so
+    # the built roster is honestly 54 of 58 today — pinned as such, not rounded up.
+    ('CSM-1',
+     'units.json carries 54 of the 58 real current-edition Chaos Space Marines units. The '
+     'gap is the four cult-troop units (Khorne Berzerkers, Plague Marines, Rubric Marines, '
+     'Noise Marines), unpriced pending their own cross-file data turn per '
+     'CSM_BUILD_SCOPE.md §4 — a known, scoped gap, not a build defect.',
+     'units.json Chaos Space Marines army block; CSM_BUILD_SCOPE.md §1/§4',
+     lambda S: csm_roster_count(S)),
+
+    ('CSM-2',
+     'detachments.json carries exactly 17 Chaos Space Marines detachments, matching the '
+     'MFM roster (D237, CSM turn C).',
+     'detachments.json armies["Chaos Space Marines"] (CSM_BUILD_SCOPE.md §3/§6, D237)',
+     lambda S: csm_detachment_count(S)),
+
+    ('CSM-3',
+     'Exactly two Chaos Space Marines detachments — Devotees of Destruction and Murdertalon '
+     'Raiders — carry text_source: none. Both are MFM-only detachments with no Wahapedia '
+     'tier-2 prose to source from; this is the documented shape, not a parser gap.',
+     'detachments.json Chaos Space Marines detachments (D237)',
+     lambda S: csm_no_prose_detachments(S)),
+
 ]
 
 
@@ -1653,6 +1681,41 @@ def e21a_allied_targets(S):
     if bad:
         return False, '; '.join(bad)
     return True, 'allied targets resolve; exactly one documented unenforced effect (Shadow Legion / HERETIC ASTARTES)'
+
+
+def csm_roster_count(S):
+    """CSM_BUILD_SCOPE.md §1: real current-edition roster is 58, not the 112 the raw source
+    carries. 54 of the 58 are built (S154 turn A); the four cult-troop units remain unpriced
+    pending §4's own cross-file data turn. Pinned as 54/58, not rounded up."""
+    armies = S.units()
+    csm = next((a for a in armies if a.get('army') == 'Chaos Space Marines'), None)
+    if csm is None:
+        return False, 'Chaos Space Marines army block not found in units.json'
+    n = len(csm.get('units') or [])
+    if n != 54:
+        return False, f'{n} CSM units built, expected 54 (of 58 real current-edition target)'
+    return True, '54 of 58 CSM units built; the 4-unit gap is the unpriced cult troops (§4)'
+
+
+def csm_detachment_count(S):
+    """D237: CSM's 17-detachment MFM roster, built S154."""
+    dj = S.detachments()
+    keys = dj.get('armies', {}).get('Chaos Space Marines', [])
+    if len(keys) != 17:
+        return False, f'{len(keys)} Chaos Space Marines detachments, expected 17'
+    return True, '17 Chaos Space Marines detachments present'
+
+
+def csm_no_prose_detachments(S):
+    """D237: two CSM detachments are MFM-only with no Wahapedia tier-2 text to source prose
+    from — text_source: none by design, not a gap."""
+    dj = S.detachments()
+    dets, keys = dj.get('detachments', {}), dj.get('armies', {}).get('Chaos Space Marines', [])
+    none_keys = sorted(k for k in keys if dets.get(k, {}).get('text_source') == 'none')
+    expect = ['Chaos Space Marines|DEVOTEES OF DESTRUCTION', 'Chaos Space Marines|MURDERTALON RAIDERS']
+    if none_keys != expect:
+        return False, f'text_source:none detachments are {none_keys}, expected {expect}'
+    return True, 'exactly the two documented MFM-only CSM detachments carry text_source: none'
 
 
 def e21a_coverage(S):
@@ -3028,9 +3091,9 @@ def e4b_name_collision_census(S):
     detachments inside one army. If a data regeneration moves this number, the choice of key has
     to be revisited, so the census is pinned rather than merely described.
 
-    Counted as distinct (army, name) pairs. Only five distinct NAMES collide; they repeat across
-    seven chapter armies, so the name count and the pair count are very different numbers and
-    pinning the wrong one would look equally plausible."""
+    Counted as distinct (army, name) pairs. Only six distinct NAMES collide; they repeat across
+    the chapter armies plus one CSM-internal collision, so the name count and the pair count
+    are very different numbers and pinning the wrong one would look equally plausible."""
     dj = S.detachments()
     dets, armies = dj.get('detachments', {}), dj.get('armies', {})
     if not dets or not armies:
@@ -3051,7 +3114,7 @@ def e4b_name_collision_census(S):
                 if len({r[1] for r in rows}) > 1:
                     differing.append(f'{army}/{n}')
 
-    EXPECTED_PAIRS, EXPECTED_NAMES, EXPECTED_DIFFERING = 29, 5, 1
+    EXPECTED_PAIRS, EXPECTED_NAMES, EXPECTED_DIFFERING = 30, 6, 1
     bad = []
     if len(pairs) != EXPECTED_PAIRS:
         bad.append(f'{len(pairs)} reachable same-army cross-detachment collisions, expected '
