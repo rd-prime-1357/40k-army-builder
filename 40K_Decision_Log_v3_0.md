@@ -9301,3 +9301,50 @@ pass byte-identical). `rules_assertions.py`: 70/70 (37 tier-B skipped). `index.h
 data-only turn, matching the S157 prompt's scope. This closes `CSM_BUILD_SCOPE.md` §4 and the CSM
 roster gap in full; CSM's build is now complete except for M2 (Ryan, GW source eviction, already
 unblocked since D237).
+
+
+## D241 — Thousand Sons build scoped (S158): self-sourced, one blocking gap on loadout defaults
+
+**Scoping-only pass, no committed file changed** except the B15-9 reconciliation found at baseline
+open (below). `THOUSAND_SONS_BUILD_SCOPE.md` written, modeled on `CSM_BUILD_SCOPE.md`'s shape. Real
+roster is 34 current-edition datasheets (60 raw, 26 Legends-FW excluded) — confirmed via a live
+`wahapedia_transform.py --faction TS` dry run, matching `MFM_Standalone_Pass.md`'s prior figure. No
+selectable Cabal-point/Mark mechanism needed (`Cabal of Sorcerers`/`Pact of Sorcery` are passive
+army-wide text, same shape as CSM's `Blessings of Khorne`; zero matching option rows in
+`Datasheets_options.csv`). Detachments: 9 current via the same D192 MFM-is-authoritative pattern CSM
+used (3 MFM-only new, 3 Wahapedia-only dropped, 6 shared); the 3 new ones are prose-less exactly like
+CSM's two, not a fresh call.
+
+**The reciprocal-gap check this session was asked to run comes back clean.** Thousand Sons' own MFM
+prices Rubric Marines (CSM's fourth cult troop, closed D240) — the question was whether TS has any
+units of its own priced outside its own MFM, mirroring CSM's gap. A live `mfm_points_parser.py` dry
+run against TS's own 34-unit stats block and its own MFM produced 34/34 point rows: full,
+self-sourced coverage, zero misses. Thousand Sons needs no cross-file points call anywhere in its
+build — simpler than CSM in this respect.
+
+**One real gap, not a scoping call: no `Thousand_Sons_web.txt` exists.** Every one of the six
+existing per-faction loadout-defaults passes is a hand-pasted Wahapedia composition dump (the CSV
+export drops per-model default-weapon wording entirely); no equivalent file for Thousand Sons exists
+in the project or the repo. This blocks only the loadout-defaults turn (turn B) of the eventual TS
+build; the roster and detachment turns (A and C) don't depend on it and can ship first. Needs Ryan to
+paste the source text from Wahapedia before turn B can run.
+
+**Baseline reconciliation before scoping began.** `rules_assertions.py`'s B15-9 failed at session open
+("3 missing datasheets") — not the documented 96%-capacity mount-pruning pattern (which accounted for
+the other 35 absent-file entries separately). Traced to a real gap in S157's regeneration sequence:
+D240 added 4 units to `units.json` but `datasheet_wargear_abilities.json` was never regenerated
+against the updated roster, so the three of those four units with a wargear-conferred ability (Khorne
+Berzerkers' Icon of Khorne, Rubric Marines' Icon of Flame, Plague Marines' Icon of Despair) were
+missing their entries. Re-ran `ds_wargear_abilities_parser.py` (no code change, parser fix per
+standing practice — never hand-edit): 45 → 48 datasheets, 3 added, 0 removed, additive only.
+`rules_assertions.py`: 106/107 (sole remaining failure is the documented mount-pruning P3 gap plus
+the now-expected one-file manifest mismatch for the file just regenerated, cleared by the reissue
+below). Also confirmed the mount's copy of `40K_Data_Pipeline_Process_v0_6.md` differs from both the
+manifest hash and the repo's copy — read as a stale duplicate in the project area (a second, older
+upload sitting alongside a newer one, invisible to the mount per standing constraint), not real
+content drift; the repo's version is authoritative and unaffected. Also confirmed the mount's copy of
+`40K_Decision_Log_v3_0.md` used to draft this entry was itself one of the 35 pruning-absent files
+(empty in the working copy, not a stale duplicate) — rebuilt from the live repo clone before
+appending, per standing practice, so no prior decisions were lost or overwritten.
+`pipeline_manifest.py --write` reissued once, covering the wargear-abilities fix. Tooling/scoping-only
+(S158)

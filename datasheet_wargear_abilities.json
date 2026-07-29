@@ -106,6 +106,15 @@
  "000002801": {
   "Blizzard Shield": "The bearer has a 4+ invulnerable save."
  },
+ "000003582": {
+  "Icon of Khorne": "If the bearer’s unit contains one or more Icons of Khorne, each time the bearer’s unit destroys an enemy unit, you gain 1 Bloodshed point. Each time you make a Blessings of Khorne roll, roll one additional D6 for each Bloodshed point you have, after which, all your Bloodshed points are lost."
+ },
+ "000003583": {
+  "Icon of Flame": "Ranged weapons equipped by models in the bearer’s unit (excluding <span class=\"kwb\">CHARACTERS</span>) have the [IGNORES COVER] ability."
+ },
+ "000003584": {
+  "Icon of Despair (Aura)": "While an enemy unit is within 6\" of the bearer, worsen the Leadership characteristic of models in that unit by 1."
+ },
  "000003873": {
   "Storm Shield": "The bearer has a Wounds characteristic of 4."
  },

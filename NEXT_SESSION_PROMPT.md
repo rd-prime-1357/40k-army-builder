@@ -1,48 +1,51 @@
-# Next-session prompt — Session 158
+# Next-session prompt — Session 159
 
-D240 closed (S157): the four CSM cult-troop units (Khorne Berzerkers, Plague Marines, Rubric
-Marines, Noise Marines) are now priced via cross-file `--scope-to-army --append` calls against
-their own god-legion's MFM, each isolated to a single-row stats scope so it can't touch any of
-CSM's other 54 already-priced units. `units.json` and `unit_loadouts.json` both +4, additive only.
-`CSM-1` now asserts a clean 58/58; `E14-2`'s literal moved 64/44 → 65/45. This closes
-`CSM_BUILD_SCOPE.md` §4 and the CSM build in full — the only thing left for CSM is M2 (Ryan, GW
-source eviction, no Claude action, already unblocked since D237).
+D241 closed (S158): Thousand Sons build scoped in `THOUSAND_SONS_BUILD_SCOPE.md` — 34 current-edition
+units, no new mechanism needed, 9 current detachments (same D192 pattern as CSM), fully self-sourced
+points (the reciprocal cross-file-points check comes back clean, no cult-troop-style gap). One real
+gap: no `Thousand_Sons_web.txt` exists, blocking only the loadout-defaults turn — flagged to Ryan.
+Also this session: found and fixed a real B15-9 drift (S157 added 4 units to `units.json` without
+regenerating `datasheet_wargear_abilities.json`; +3 entries, additive). Separately, handed Ryan a
+70-file GW-source zip for the M2 capacity migration (unblocked since D237, still not done).
 
 ## Read this first
 
-`SESSION_HANDOFF_157.md` before starting. If the project area is missing guarded files (including
-`40K_Decision_Log_v3_0.md` or standalone `D2NN_entry.md` files), that is expected under the
-documented 96%-capacity pruning — clone the public repo directly to verify content rather than
-re-flagging or asking Ryan.
+`SESSION_HANDOFF_158.md` before starting. If the project area is missing guarded files (including
+`40K_Decision_Log_v3_0.md`, `BACKLOG_ARCHIVE.md`, or any `SESSION_HANDOFF_N.md`), that is expected
+under the documented 96%-capacity pruning — clone the public repo directly to verify content rather
+than re-flagging or asking Ryan.
+
+**Before anything else, confirm whether Ryan has sent a `SOURCE_REPO_TOKEN.txt` token.** If so, that's
+the M2 dress rehearsal — see `P4_ARCHITECTURE_SCOPE.md` §6 for the exact procedure (run the next data
+turn against the token-fetched private copy while area copies still exist, byte-compare, only then is
+deletion eligible). If not, M2 is still pending Ryan-side; proceed with the TS build regardless, since
+it doesn't depend on M2.
 
 ## Baseline at open
 
-Full `baseline.sh --no-repo` should be clean (20/20, 70/70 tier-A, 37 tier-B skipped in a
-no-live-sources sandbox). If sources are loaded (live session with fetch), tier-B should also pass:
-`repro_check.py` and `units_repro_check.py` both byte-identical, `detachments_repro_check.py`
-likewise. If anything fails against repo-verified content, that's real drift — reconcile before
-starting.
+Full `baseline.sh --no-repo` should be clean (23/23; if sources are loaded, tier-B should also pass:
+`repro_check.py`, `units_repro_check.py`, `detachments_repro_check.py` all byte-identical).
+`rules_assertions.py` should be 107/107 (up from 106/107 — B15-9 was fixed this session). If anything
+fails against repo-verified content, that's real drift — reconcile before starting, the way S158 did
+for B15-9.
 
-## This session — scope the Thousand Sons build (tooling/scoping-only turn)
+## This session — Thousand Sons build, turn A (data-only)
 
-Per the standing faction priority roadmap, CSM being complete moves the queue to the remaining
-Chaos Marine variants: Thousand Sons, Death Guard, Emperor's Children, World Eaters. Thousand Sons
-is next.
+Per `THOUSAND_SONS_BUILD_SCOPE.md` §8, run turn A: `wahapedia_transform.py --faction TS` →
+`mfm_points_parser.py` against `MFM_Thousand_Sons_v1_0.txt` (self-sourced, no cross-file append step
+needed — confirmed 34/34 in scoping) → convert → merge → post-processors. Add TS's config lines to
+`units_repro_check.py` (new per-faction block, fifth `--in` to the merge call) and `repro_check.py`
+(`FACTIONS`). Regenerate `units.json` (328 → 362), diff-trace every change, confirm 0 changed/removed
+elsewhere. Bank before moving to turn C (detachments) — do not mix data turns with the tooling turn.
 
-This session does NOT build Thousand Sons. It produces `THOUSAND_SONS_BUILD_SCOPE.md`, modeled on
-`CSM_BUILD_SCOPE.md`'s shape (real current-edition roster count vs. raw source count including
-Legends; which units/points/detachments/enhancements/stratagems are self-contained vs. cross-file;
-any shared-datasheet units whose points or stats live outside Thousand Sons' own MFM, the mirror
-image of what CSM turn B just closed — Thousand Sons prices Rubric Marines in its own MFM, so
-check whether Thousand Sons has any reciprocal gaps of its own). Confirm every claim against
-`MFM_Thousand_Sons_v1_0.txt`, `Datasheets.csv`, and the other Wahapedia CSVs directly — source-first,
-not derived-data-first. Flag anything genuinely ambiguous (a rules-legality call, not a "how it's
-built" call) for Ryan; everything else, decide and note in the scope doc.
+Turn B (loadout defaults) stays blocked until `Thousand_Sons_web.txt` arrives from Ryan; turns A and C
+don't depend on it and can both ship first.
 
 ## After this session
 
-- Thousand Sons build (turns A/B/C, mirroring CSM's arc) — scoped by this session, built next.
+- Thousand Sons turn C (detachment build) and the tooling turn (assertions, manifest) — per
+  `THOUSAND_SONS_BUILD_SCOPE.md` §8.
+- Thousand Sons turn B (loadout defaults) — blocked on Ryan sourcing `Thousand_Sons_web.txt`.
 - Then Death Guard, Emperor's Children, World Eaters (remaining Chaos Marine variants), then Chaos
   Daemons, then Drukhari, per the standing faction priority order.
-- **M2** (Ryan, evict the 71 GW sources) — unblocked since D237; no Claude action, but don't assume
-  it's done without confirming.
+- **M2** — Ryan side, in progress as of S158 (zip handed over); confirm status, don't assume done.

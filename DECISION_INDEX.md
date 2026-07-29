@@ -251,3 +251,10 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   64/44 → 65/45 (Khorne Berzerkers' Icon of Khorne, the only qualifying free add among the four).
   Manifest reissued twice, 108 guarded files. 20/20 gates, 70/70 assertions, data-only, `index.html`
   untouched. Closes `CSM_BUILD_SCOPE.md` §4 — CSM's build is complete except for M2 (S157)
+- **D241** — Thousand Sons build scoped (S158, tooling/scoping-only): `THOUSAND_SONS_BUILD_SCOPE.md`
+  written. 34 current-edition units (60 raw, 26 Legends-FW), no new selection mechanism needed, 9
+  current detachments via the same D192 MFM-authoritative pattern as CSM. Reciprocal cross-file
+  points gap checked and comes back clean — TS is fully self-sourced, 34/34. One real blocking gap:
+  no `Thousand_Sons_web.txt` exists for loadout defaults, needs Ryan to source it. Also fixed a real
+  B15-9 drift at baseline open: S157 added 4 units to `units.json` without regenerating
+  `datasheet_wargear_abilities.json`; reran the parser, +3 entries, additive only (S158)
