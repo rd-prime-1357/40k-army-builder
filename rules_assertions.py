@@ -1573,6 +1573,24 @@ ASSERTIONS = [
      'detachments.json Chaos Space Marines detachments (D237)',
      lambda S: csm_no_prose_detachments(S)),
 
+    # ── Thousand Sons: detachment census (S160 data turn, turn C). THOUSAND_SONS_BUILD_SCOPE.md
+    # §3 (D241, S158) worked out the correct count of 9 by diffing the MFM against Wahapedia;
+    # D245 (S159) regressed it to 7 without checking the scope doc. Re-derived from
+    # MFM_Thousand_Sons_v1_0.txt directly at S160 open, confirming D241 over D245 (D248).
+    ('TS-1',
+     'detachments.json carries exactly 9 Thousand Sons detachments, matching the MFM roster '
+     '(THOUSAND_SONS_BUILD_SCOPE.md §3, D241, D248).',
+     'detachments.json armies["Thousand Sons"] (D241, D248)',
+     lambda S: ts_detachment_count(S)),
+
+    ('TS-2',
+     'No Thousand Sons detachment carries text_source: none — all 9 have real rule text, '
+     'better than D241 anticipated (it expected the 3 MFM-only detachments to be prose-less '
+     'like CSM\'s two). The 3 with no Wahapedia coverage — Ritual of Regeneration, Sekhetar '
+     'Cohort, Servants of Change — are sourced from the faction pack instead (parse_ts_pack, D248).',
+     'detachments.json Thousand Sons detachments (D248)',
+     lambda S: ts_full_text_coverage(S)),
+
 ]
 
 
@@ -1677,12 +1695,16 @@ def e21a_allied_targets(S):
             unenforced.append(key + '/' + eff['kind'])
             if not eff.get('unenforced_reason'):
                 bad.append(f'{key} [{eff["kind"]}]: enforced: false with no unenforced_reason')
-    expect = ['Chaos Daemons|SHADOW LEGION/unlock']
+    expect = ['Chaos Daemons|SHADOW LEGION/unlock',
+              'Thousand Sons|CHANGEHOST OF DECEIT/unlock',
+              'Thousand Sons|CHANGEHOST OF DECEIT/warlord']
     if sorted(unenforced) != expect:
         bad.append(f'unenforced inventory is {sorted(unenforced)}, expected {expect}')
     if bad:
         return False, '; '.join(bad)
-    return True, 'allied targets resolve; exactly one documented unenforced effect (Shadow Legion / HERETIC ASTARTES)'
+    return True, ('allied targets resolve; exactly three documented unenforced effects '
+                  '(Shadow Legion / HERETIC ASTARTES; Changehost of Deceit unlock+warlord, '
+                  'awaiting Thousand Sons turn A)')
 
 
 def csm_roster_count(S):
@@ -1720,23 +1742,68 @@ def csm_no_prose_detachments(S):
     return True, 'exactly the two documented MFM-only CSM detachments carry text_source: none'
 
 
+def ts_detachment_count(S):
+    """D241/D248: TS's 9-detachment MFM roster (6 shared with Wahapedia, 3 MFM-only new in
+    11th Ed), built S160."""
+    dj = S.detachments()
+    keys = dj.get('armies', {}).get('Thousand Sons', [])
+    if len(keys) != 9:
+        return False, f'{len(keys)} Thousand Sons detachments, expected 9'
+    return True, '9 Thousand Sons detachments present'
+
+
+def ts_full_text_coverage(S):
+    """D248: unlike CSM, all 9 TS detachments carry real rule text -- the 3 with no Wahapedia
+    coverage are sourced from the faction pack via parse_ts_pack instead of falling to none."""
+    dj = S.detachments()
+    dets, keys = dj.get('detachments', {}), dj.get('armies', {}).get('Thousand Sons', [])
+    none_keys = sorted(k for k in keys if dets.get(k, {}).get('text_source') == 'none')
+    if none_keys:
+        return False, f'Thousand Sons detachments with text_source:none: {none_keys}, expected none'
+    return True, 'all 9 Thousand Sons detachments carry real rule text (none, none)'
+
+
 def e21a_coverage(S):
     det = S.detachments()['detachments']
     have = set(S.detachment_effects()['effects'].keys())
     bl = re.compile(r'(gain|gains|have|has).{0,40}BATTLELINE', re.I | re.S)
     ul = re.compile(r'even though they do not have|allies allowed up to', re.I)
+    # Thousand Sons turn C (D245/E24) built the detachment catalogue ahead of turn A's
+    # unit ingestion, deliberately -- there was no detachment to hang the allied unlock
+    # on otherwise (E24). Both detachments below grant TZAANGORS units BATTLELINE in
+    # their own text (Servants of Change in the faction pack, Warpmeld Pact in its
+    # Wahapedia KEYWORDS clause), but no Tzaangor unit exists in units.json until turn A,
+    # and e21b_check.js's battleline sweep resolves every named unit unconditionally
+    # regardless of enforced -- a row cannot be added correctly before then. Tracked here,
+    # not silently dropped: this set must shrink to empty the session turn A ships the
+    # battleline rows, and the self-check below fails loudly if it goes stale first.
+    known_gap = {'Thousand Sons|SERVANTS OF CHANGE', 'Thousand Sons|WARPMELD PACT'}
     missing = []
     for key, r in det.items():
         text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
-        if (bl.search(text) or ul.search(text)) and key not in have:
+        if (bl.search(text) or ul.search(text)) and key not in have and key not in known_gap:
             missing.append(key)
     if missing:
         return False, ('built detachments with a construction effect and no row: '
                        + '; '.join(sorted(missing)))
+    stale = []
+    for key in known_gap:
+        r = det.get(key)
+        if r is None:
+            stale.append(f'{key}: no longer a built detachment, remove from known_gap')
+            continue
+        text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
+        if key in have:
+            stale.append(f'{key}: now has a detachment_effects.json row, remove from known_gap')
+        elif not (bl.search(text) or ul.search(text)):
+            stale.append(f'{key}: no longer flagged by the regex, remove from known_gap')
+    if stale:
+        return False, 'known_gap allowlist is stale: ' + '; '.join(stale)
     n = sum(1 for k, r in det.items()
             if bl.search(' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions')))
             or ul.search(' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))))
-    return True, f'{n} built detachments carry a Battleline-grant or unlock clause; all have rows'
+    return True, (f'{n} built detachments carry a Battleline-grant or unlock clause; all have '
+                  f'rows except the tracked Thousand Sons turn-A gap: {sorted(known_gap)}')
 
 
 def e21a_belakor_warlord_covered(S):

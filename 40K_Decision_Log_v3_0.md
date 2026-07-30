@@ -9514,3 +9514,101 @@ rules) was given the same ID.
 The open ticket is renumbered to **B80**; the shipped ID stays, because renaming it would orphan four
 assertion IDs and two decision-log references. Caught while counting open tickets for the S159 handoff,
 which is the only reason it surfaced — worth a periodic ID-collision check.
+
+## D248 — Thousand Sons has nine detachments, not seven; D245 regressed a count D241 already had right
+
+D245 (S159) established seven Thousand Sons detachments from the faction pack and closed the question as
+"established from source." Re-deriving from source at S160 open (per standing instruction: prior-session
+diagnoses are re-checked, not trusted) found this incomplete, and worse, a regression: `THOUSAND_SONS_BUILD_SCOPE.md`
+(S158, D241) had already worked out the correct count — **9** — by diffing the MFM's `DETACHMENTS` block
+against Wahapedia's CSV directly: three in MFM but not Wahapedia (Ritual of Regeneration, Sekhetar Cohort,
+Servants of Change — new in 11th Ed), three in Wahapedia but not MFM (Chosen Cabal, Devoted Thralls,
+Fateseekers — Boarding-Actions-only, dropped per D192's MFM-is-authoritative rule), six in both. D245, a
+session later, re-derived "the real TS detachments" from the faction pack's page-1 contents list and
+page-9 errata alone, without cross-checking the scope doc that had already done this work correctly, and
+landed on the six-in-both plus Ritual of Regeneration — missing Sekhetar Cohort and Servants of Change,
+both of which D241 had already named. Cross-referencing `MFM_Thousand_Sons_v1_0.txt` directly at S160 open
+confirmed D241's 9, not D245's 7: both missing detachments carry real Detachment Point costs and priced
+enhancements in the MFM, and both have full Detachment Rules / Enhancements / Stratagems write-ups on
+clean (non-SUSPECT) pages of the same pack D245 already had open. Process note: a session re-deriving
+"from source" should check whether an existing scope doc already did that derivation, not just the raw
+source text — D241 had, and citing it would have caught the gap immediately instead of a session later.
+
+`detachment_parser.py` is now wired for Thousand Sons: `ARMY_TO_MFM`, `MFM_SOURCE_NAME` and
+`ARMY_TO_WAHA_FACTION` all carry the new entries, and a new `parse_ts_pack()` (section 3b-2) extracts
+tier-1 text for the three detachments with zero Wahapedia 10th-Ed coverage (Ritual of Regeneration,
+Sekhetar Cohort, Servants of Change) — the other six already had valid `wahapedia_10e` text and are left
+on that tier unchanged, the same treatment Death Guard's detachments get. This is a better outcome than
+D241 anticipated: the scope doc expected these three to be prose-less like CSM's two MFM-only detachments
+(§3, "the one prose gap"), but the pack's pages 2–4 turned out clean and fully parseable, so all nine TS
+detachments carry real rule text, not six of nine. `parse_ts_pack()` reuses the Dark Angels pack's
+`_da_consume` state machine unchanged; the only new logic is an explicit page-to-detachment map (this
+pack's stylized banner titles split across column tops defeat the DA parser's leading-heading
+auto-detection) and a line-splitter for this pack's stratagem headers, which put the name and CP cost on
+one combined line (`"RELENTLESS REBIRTH 1CP"`) rather than on two lines like the DA pack. Verified:
+`detachments_repro_check.py` passes byte-identical; all nine TS detachments carry correct
+DP/disposition/unique_tag from the MFM; the three pack-sourced ones show correct rule name, full rule
+text, both enhancement descriptions, and all three stratagems each, matching the source pages by eye. Two
+new assertions pin this: `ts_detachment_count` (9) and `ts_full_text_coverage` (no TS detachment carries
+`text_source: none`), mirroring D241 §6's anticipated CSM-style assertions but corrected for the better-
+than-expected prose coverage.
+
+**Established from source, resolving E24's open question.** Wahapedia's `Detachment_abilities.csv` ability
+`Infernal Pacts` (id `000010196`) is keyed directly to detachment id `000001062`, which is **Changehost of
+Deceit** — not a guess or a fallback. Its text and points caps (500/1000/1500 by battle size) match Death
+Guard's Plague Legions clause under Tallyband Summoners exactly, including the no-Warlord restriction.
+Added to `detachment_effects.json` as an `unlock` + `warlord(cannot_be)` pair targeting
+`allied_group: "Scintillating Legions"`, both shipped `enforced: false` — not because the carrying
+detachment was unknown (it now is), but because turn A (which tags the six carrier units with
+`allied_group` on their TS-priced `units.json` records) has not shipped. `unenforced_reason` on both
+records this explicitly. `e21a_allied_targets`'s hardcoded expected-unenforced-inventory list is extended
+to include both new keys; `e1c_check.js` confirms an enforced:false unlock/warlord is correctly a no-op.
+
+**Correcting B78 and B79's premises while scoping the remaining work.** Both tickets were filed assuming
+the underlying engine mechanism did not exist. It does, and is not new:
+- **B78** (detachment-granted BATTLELINE): `detachment_effects.json`'s `battleline` effect kind,
+  `detachmentBattlelineNames()` and `effectiveUnitType()` are all shipped and already elevate four units
+  across Blood Angels, Dark Angels, Death Guard and Chaos Space Marines (D204 ruling 2). Adding Thousand
+  Sons needs a data row, not new code — but **two** detachments need one, not the one B78 named:
+  `SERVANTS OF CHANGE` (pack text) and, found this session, `WARPMELD PACT` (its Wahapedia `KEYWORDS`
+  clause: "Tzaangors units from your army have the BATTLELINE keyword"). Neither row can be added yet —
+  `e21b_check.js`'s battleline sweep resolves every named unit against `units.json` unconditionally
+  (`enforced` is not checked), and no Tzaangor unit exists there until turn A. `rules_assertions.py`'s
+  `e21a_coverage` (E21a-5) is extended with a small, self-checking `known_gap` allowlist naming exactly
+  these two keys, so the coverage gate passes without going silent — the allowlist fails loudly if either
+  key stops being flagged or gains a row without the allowlist being updated to match.
+- **B79** (tag exclusivity): `index.html`'s `uniqueTagConflicts()` / `canAddDetachment()` already read
+  `unique_tag` straight off `detachments.json` and refuse a second same-tag detachment (tested by
+  `e1b_check.js`/`e1c_check.js` against Blood Angels' GRACE tag already). It needs no data row at all —
+  unlike battleline, this reads `detachments.json` directly, not `detachment_effects.json`. The moment
+  Thousand Sons banked this session, both `SERVANTS OF CHANGE` and `WARPMELD PACT` carry `unique_tag:
+  "MUTANT"` from the MFM, and the engine already refuses selecting both — confirmed live, not deferred.
+  **B79 is closed.** Death Guard's `ENGINES`/`FLYBLOWN` and Chaos Space Marines' `NIGHTMARE` tags were
+  already enforced the same way before this session; the ticket's premise (no mechanism reads the tag)
+  was simply wrong.
+
+**What was not attempted, and why.** The B61 census assertions (`b61_plague_legions_census` and its three
+siblings) were left untouched. `NEXT_SESSION_PROMPT.md`'s turn-C scope item 3 listed extending them as
+this session's work, but D245's own "what turn A actually needs" framing is the accurate one: there is
+nothing to extend yet, since no Thousand Sons unit carries `allied_group` until turn A creates the six
+TS-priced carrier records. `b61_no_other_army_carries_allied_group` currently (correctly) asserts Death
+Guard is the only army carrying the field, and stays true until turn A. Extending it now would mean
+asserting six TS units exist that don't. This belongs to turn A, not turn C — the prompt's phrasing was
+imprecise where D245's was not.
+
+## D249 — Manifest custody gap from S158/S159 reconciled at S160 open
+
+Baseline failed at open: `pipeline_manifest.json` carried stale hashes for `40K_Decision_Log_v3_0.md` and
+`OPEN_ITEMS_BACKLOG.md` (both edited in S159's D243–D247, per `--write` never having been re-run against
+that content before the repo push), and `pipeline_manifest.py`'s `GUARDED` list had not been extended past
+`SESSION_HANDOFF_157.md` — S158 and S159 both skipped the append-only step the file's own docstring
+requires at the session that creates each handoff. This blocked `baseline.sh --fetch`'s overlay from
+pulling in 36 repo-only files (the stale hash on the decision log tripped `--overlay-check` before it
+reached the copy step).
+
+Reconciled, not worked around: appended `SESSION_HANDOFF_158.md` and `SESSION_HANDOFF_159.md` to
+`GUARDED`, regenerated `pipeline_manifest.json` against the actual current content of all 111 guarded
+files (verified against the fetched repo tarball, not assumed), and reran the full baseline —
+**24/24 gates pass.** `repo_check.py` confirms the only diffs from the pushed repo afterward are the
+files this session actually changed.
+

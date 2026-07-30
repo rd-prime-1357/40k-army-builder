@@ -2279,3 +2279,24 @@ time gate) is sequenced into S136 with E21c.
 
 **Parser-only turn, no engine or UI work.** `index.html` untouched at 6.5.
 
+---
+
+## B79 — Detachment tag exclusivity — CLOSED S160 (D248)
+
+Filed S159 (D245) as "Detachment tag exclusivity is unenforced," premised on "Detachments carry
+mutual-exclusion tags no mechanism reads." That premise was wrong. `index.html`'s `uniqueTagConflicts()`
+and `canAddDetachment()` already read `unique_tag` straight off `detachments.json` and refuse a second
+same-tag detachment — shipped generically well before this ticket was filed, and already tested against
+Blood Angels' GRACE tag (`e1b_check.js`/`e1c_check.js` fixtures). Death Guard's `ENGINES`/`FLYBLOWN` and
+Chaos Space Marines' `NIGHTMARE` tags were already enforced the same way, live, before this session.
+
+Confirmed live for Thousand Sons the moment turn C (S160) banked `detachments.json`: both `SERVANTS OF
+CHANGE` and `WARPMELD PACT` carry `unique_tag: "MUTANT"` — sourced automatically from the MFM's
+`UNIQUE: MUTANT` line via `detachment_parser.py`'s existing `MFM_UNIQUE_RE`, no new parser code needed —
+and the engine already refuses selecting both in the same list, matching the pack's own restriction text
+("This detachment has the MUTANT tag and cannot be taken with another MUTANT detachment").
+
+**No engine or data work shipped for this ticket.** It closes because the mechanism it asked for already
+existed; the ticket's only real function was to prompt the verification that confirmed it.
+
+

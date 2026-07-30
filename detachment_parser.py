@@ -64,6 +64,7 @@ ARMY_TO_MFM = OrderedDict([
     ("Chaos Daemons",    "MFM_Chaos_Daemons_v1_0.txt"),
     ("Death Guard",      "MFM_Death_Guard_v1_0.txt"),
     ("Chaos Space Marines", "MFM_Chaos_Space_Marines_v1_0.txt"),
+    ("Thousand Sons",   "MFM_Thousand_Sons_v1_0.txt"),
 ])
 
 # Human-readable name of the MFM source list, for the source_faction field.
@@ -77,6 +78,7 @@ MFM_SOURCE_NAME = {
     "MFM_Chaos_Daemons_v1_0.txt":  "Chaos Daemons",
     "MFM_Death_Guard_v1_0.txt":    "Death Guard",
     "MFM_Chaos_Space_Marines_v1_0.txt": "Chaos Space Marines",
+    "MFM_Thousand_Sons_v1_0.txt": "Thousand Sons",
 }
 
 # Wahapedia faction_id supplying tier-2 prose for each app army. The 10th Edition
@@ -87,6 +89,7 @@ ARMY_TO_WAHA_FACTION = {
     "Iron Hands": "SM", "Raven Guard": "SM", "Salamanders": "SM",
     "Space Wolves": "SM", "Ultramarines": "SM", "White Scars": "SM",
     "Chaos Daemons": "CD", "Death Guard": "DG", "Chaos Space Marines": "CSM",
+    "Thousand Sons": "TS",
 }
 
 FORCE_DISPOSITIONS = (
@@ -705,6 +708,66 @@ def _split_top_level(s):
     return parts
 
 
+# ---- 3b-2. Thousand Sons pack (faction_pack_transform.py output) -----------
+# Converter output uses "## Page N" markers (double hash), unlike the DA pack's
+# single "# Page N". Structurally the pages this function consumes are DA-shaped
+# (DETACHMENT RULES / ENHANCEMENTS / stratagems), so page bodies are fed straight
+# into _da_consume once split out — but this pack's stratagem headers put the
+# name and CP cost on one line ("RELENTLESS REBIRTH 1CP") rather than on separate
+# lines, which _da_consume's recogniser does not match. _ts_split_name_cp splits
+# those before handing the page to _da_consume.
+#
+# Only pages 2-4 are consumed here (Ritual of Regeneration, Sekhetar Cohort,
+# Servants of Change) -- the three detachments absent from the Wahapedia 10th-Ed
+# dump entirely, so tier-2 text does not exist as a fallback for them. The other
+# six TS detachments (Changehost of Deceit, Grand Coven, Warpforged Cabal,
+# Warpmeld Pact, Hexwarp Thrallband, Rubricae Phalanx) already have valid
+# wahapedia_10e text and are left on that tier, same as Death Guard. Page 5's
+# Hexwarp Thrallband enhancements are flagged single-SUSPECT in the source
+# (interleaved columns, B75) and are not read here even though the detachment
+# itself is wanted, since Wahapedia already covers it validly. Pages 1 and 9-11
+# (rules-updates errata, also partly SUSPECT) are not full detachment text and
+# are out of scope for this parser (B75 tracks resolving page 9's column split).
+
+TS_PAGE_KEY = {2: "RITUAL OF REGENERATION", 3: "SEKHETAR COHORT", 4: "SERVANTS OF CHANGE"}
+TS_NAME_CP_TRAILING = re.compile(r"^(.*\S)\s+(\d+)\s*CP\s*$", re.I)
+
+
+def _ts_split_name_cp(lines):
+    out = []
+    for ln in lines:
+        m = TS_NAME_CP_TRAILING.match(ln.strip())
+        if m and _is_upper_head(m.group(1)) and len(m.group(1)) > 2:
+            out.append(m.group(1).strip())
+            out.append("%sCP" % m.group(2))
+        else:
+            out.append(ln)
+    return out
+
+
+def parse_ts_pack(path, wanted_keys):
+    if not os.path.exists(path):
+        return {}
+    raw = clean_chars(open(path, encoding="utf-8").read())
+    parts = re.split(r"(?m)^##\s*Page\s+(\d+)\s*$", raw)
+    out = OrderedDict()
+    for i in range(1, len(parts), 2):
+        pagenum = int(parts[i])
+        key = TS_PAGE_KEY.get(pagenum)
+        if key is None or key not in wanted_keys:
+            continue
+        body = parts[i + 1]
+        lines = [ln.rstrip() for ln in body.split("\n")]
+        lines = [ln for ln in lines if ln.strip() and not ln.strip().startswith("<!--")]
+        lines = _ts_split_name_cp(lines)
+        det = out.setdefault(key, {"rule_name": None, "rule_text": None,
+                                    "restrictions": None, "enh": OrderedDict(), "strat": []})
+        _da_consume(lines, det)
+    for rec in out.values():
+        rec.pop("_strat_region", None)
+    return out
+
+
 # ---- 3c. Space Marines pack (two-column extraction) ------------------------
 
 def _fenced_pages(path):
@@ -991,6 +1054,7 @@ def build(root, out_path, report_path=None):
     # and CD sources cover names the SM pack does not, so simple update is safe.
     da = parse_da_pack(os.path.join(root, "Dark_Angels_Faction_Pack_June_2026.md"), wanted)
     cd = parse_cd_reference(os.path.join(root, "chaos_daemons_reference.md"), wanted)
+    ts = parse_ts_pack(os.path.join(root, "thousand_sons-June_27th_2026.md"), wanted)
 
     pack_by_army = {}
     for army in ARMY_TO_MFM:
@@ -999,6 +1063,8 @@ def build(root, out_path, report_path=None):
             m.update({k: ("Dark Angels Faction Pack June 2026", v) for k, v in da.items()})
         if army == "Chaos Daemons":
             m = {k: ("Chaos Daemons Faction Reference (condensed)", v) for k, v in cd.items()}
+        if army == "Thousand Sons":
+            m.update({k: ("Thousand Sons Faction Pack v1.1", v) for k, v in ts.items()})
         pack_by_army[army] = m
 
     armies = OrderedDict()

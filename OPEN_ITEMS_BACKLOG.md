@@ -111,28 +111,32 @@ empty `keywords` list with `allied_group: "Scintillating Legions"` standing in. 
 keyword has nothing to match against. Parser fix (never hand-edit output). Note `allied_group` must be
 **retained** — it is B61's shipped mechanism feeding E22b's gate, not a placeholder to be replaced.
 
-### B78 — Detachment rules that grant unit types are not modelled — **NEW S159 (D245); M**
-Thousand Sons' `SERVANTS OF CHANGE` detachment rule states "Friendly TZAANGORS units have BATTLELINE".
-A detachment therefore promotes a unit's type, which cannot be baked into the datasheet record — it is a
-detachment effect. Interacts with E22b's per-god Battleline ratio enforcement (non-Battleline units of a
-god keyword cannot outnumber Battleline ones), so a promotion changes what is legal. Belongs with turn C
-detachment work.
+### B78 — Thousand Sons Battleline grant needs two detachment_effects.json rows, blocked on turn A — **UPDATED S160 (D248); S**
+The `battleline` effect mechanism this needs already exists and is shipped (D204 ruling 2 — four units
+elevated across Blood Angels, Dark Angels, Death Guard and Chaos Space Marines already). Not new engine
+work: two data rows. Both `SERVANTS OF CHANGE` ("Friendly TZAANGORS units have BATTLELINE") and
+`WARPMELD PACT` (found S160: its Wahapedia `KEYWORDS` clause grants the same) need one. Blocked until
+turn A lands Tzaangor units in `units.json` — `e21b_check.js`'s battleline sweep resolves every named unit
+unconditionally, so a row added before then fails that gate regardless of `enforced`. Tracked meanwhile by
+`rules_assertions.py`'s `e21a_coverage` (E21a-5) via a self-checking `known_gap` allowlist naming both
+keys; the allowlist itself fails if it goes stale.
 
-### B79 — Detachment tag exclusivity is unenforced — **NEW S159 (D245); M**
-Detachments carry mutual-exclusion tags no mechanism reads: "This detachment has the MUTANT tag and
-cannot be taken with another MUTANT detachment" (TS Servants of Change), likewise ENGINES (DG Contagion
-Engines) and FLYBLOWN (DG Flyblown Host). D0 applies — an illegal pairing should be unreachable, not
-flagged. Belongs with turn C detachment work.
-
-### E24 — Thousand Sons allied unlock: gate the six Scintillating Legions carriers — **NEW S159 (D245); M; BLOCKS TS turn A**
+### E24 — Thousand Sons allied unlock: gate the six Scintillating Legions carriers — **UPDATED S160 (D248); M; BLOCKS TS turn A**
 Turn A adds six TS units carrying `allied_group` (Kairos Fateweaver, Lord of Change, Flamers, Screamers,
 Pink Horrors, Blue Horrors). They must not be offered ungated — that is the D0 violation D204 found and
-E22b closes for Death Guard. Two pieces: extend the B61 census assertions (B61-1..4) to include the six
-TS carriers, and add a TS allied unlock to `detachment_effects.json` mirroring
-`Death Guard|TALLYBAND SUMMONERS`.
-Blocked on turn C: TS has **no detachments** in `detachments.json` yet, so there is no detachment to
-hang the unlock on. Precedent for the interim state is `Chaos Daemons|SHADOW LEGION`, which sits with
-`enforced:false` until CSM is built. **Turn C therefore precedes turn A.**
+E22b closes for Death Guard.
+
+Turn C (S160) resolved which detachment carries the unlock — not a guess: Wahapedia's `Infernal Pacts`
+ability (id `000010196`) is keyed directly to detachment id `000001062`, **Changehost of Deceit**. Shipped
+in `detachment_effects.json` as an `unlock` + `warlord(cannot_be)` pair targeting
+`allied_group: "Scintillating Legions"`, both `enforced: false` with `unenforced_reason` recorded, mirroring
+`Death Guard|TALLYBAND SUMMONERS`'s shape exactly (500/1000/1500 caps, no-Warlord restriction).
+`e21a_allied_targets`'s expected-unenforced list is extended to match.
+
+What remains, now scoped precisely to turn A: create the six TS-priced carrier records in `units.json`
+with `allied_group: "Scintillating Legions"` set, flip both effects to `enforced: true`, and extend the
+B61 census assertions (`b61_plague_legions_census` and its three siblings) to cover them — none of that
+can happen before the units exist.
 
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
 The durable fix — commit the parser to the GitHub repo as canonical, mirror to project knowledge — is still
@@ -379,6 +383,7 @@ appending to it, and hand the updated file back for Ryan to commit.
 - **B60a** — Pin the `restrictions` consistency as an assertion — SHIPPED S143 (D222); TOOLING. Two new assertions in `rules_assertions.py`: 25 detachments carry the chapter-exclusivity sentence in `restrictions` and 0 in `rule_text`; no `restrictions` value carries stratagem/CP debris. 104/104 assertions pass
 - **B67** — Two GW-derived files (`Unit_Weapons.csv`, `wh40k_core_rules.md`) removed from the public repo — CLOSED S145 (D225); Ryan deleted both, confirmed gone from HEAD via the API. D223's "single commit" premise corrected (249 commits); full history purge is a separate optional action, filed as B67b
 - **B68** — `equipped_parser.py` resolved web-composition titles through a flat name→unit_id map (last-write-wins), misrouting Death Guard's seven shared generic Chaos vehicle equipped lines to their CSM twins once both factions co-existed in `units.json` — CLOSED S152 (D235); ENGINE. Diagnosis corrected: bug was in `equipped_parser.py` alone, not `loadout_parser.py`. Fixed with army-scoped title resolution (`scoped_name2id()`, scope inferred from the composition filename); no caller edit, pure engine turn. `repro_check` byte-identical, no data regenerated, durable for the future CSM web pass. Unblocks CSM turn B
+- **B79** — Detachment tag exclusivity — CLOSED S160 (D248); premise was wrong, not a gap: `index.html`'s `uniqueTagConflicts()`/`canAddDetachment()` already read `unique_tag` straight off `detachments.json` and refuse a second same-tag detachment, shipped generically (tested against Blood Angels' GRACE tag) before Thousand Sons existed. Death Guard's `ENGINES`/`FLYBLOWN` and CSM's `NIGHTMARE` tags were already enforced the same way. Confirmed live for Thousand Sons the moment turn C banked `detachments.json`: `SERVANTS OF CHANGE` and `WARPMELD PACT` both carry `unique_tag: "MUTANT"` and the engine already refuses selecting both
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched
