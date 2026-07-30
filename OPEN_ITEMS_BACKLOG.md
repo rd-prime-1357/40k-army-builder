@@ -3,8 +3,15 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **16 open** as of S162: B69, B70, B71, B72, B73, B75, B76, B77, E25,
-P2, P4, B80, E23, B67b, E12, B17. E25 (Force Disposition selection) designed and filed S162 (D251,
+not here, it isn't open. **16 open** as of S163: B69, B70, B71, B72, B73, B75, B76, B77, E25,
+P2, P4, B80, E23, B67b, E12, B17. Thousand Sons turn B shipped S163 (D252, data-only):
+`unit_loadouts.json` +34 TS entries (309 total, additive-only, diff-traced clean), `wargear_points.json`
++1 entry (TS's own Defiler, `000001030` — same class of gap D236 found for CSM: an MFM-priced wargear
+swap silently free until a loadout entry exists). `repro_check.py` registered TS (`FACTIONS`,
+`WEB_PASSES`), mirroring the other six factions. `E14-2`'s stale hardcoded count corrected 65/45 ->
+75/54 to reflect the new qualifying free-add seeds TS's roster surfaces. No backlog ticket opened or
+closed; TS build progress is tracked in `THOUSAND_SONS_BUILD_SCOPE.md`, same convention as CSM's build.
+E25 (Force Disposition selection) designed and filed S162 (D251,
 doc-only turn) — data already fully retained, engine work only. Thousand Sons turn A shipped S161 (D250, data-only): `units.json` +34
 (362 total), the six Scintillating Legions carriers TS-priced and tagged; closes **E24** (allied
 unlock now enforced) and **B78** (both Battleline rows shipped, scoped to the sole TZAANGORS-

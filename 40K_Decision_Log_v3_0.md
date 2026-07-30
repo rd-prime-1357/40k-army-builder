@@ -9705,3 +9705,47 @@ S161's third and final manifest issue. Same family as D249, one step further dow
 handoff's final bytes) remained. Manifest reissued; 24/24 remaining gates then passed (tier B — repro
 checks skipped, sources not loaded, correct for a doc turn). Going forward the close sequence is:
 finish the handoff text completely, then issue the manifest last, touching nothing after.
+
+## D252 — Thousand Sons turn B shipped: loadout defaults banked; Defiler wargear gap fixed; E14-2 corrected (S163)
+
+**Data-only turn** (loadout defaults; no engine or tooling change beyond `repro_check.py`'s own
+faction-list registration, which is the turn's documented first step, not scope creep).
+
+**Turn B scope, all five steps complete.** (1) `repro_check.py`: `TS` added to `FACTIONS`, `Thousand_Sons`
+added to `WEB_PASSES`, mirroring the other six factions' entries exactly; docstring updated from six
+passes to seven. (2) Dry-run against the real pipeline before touching the committed file: diff came
+back 34 new entries (all Thousand Sons unit_ids), zero changed, zero removed among the existing 275 —
+confirms `THOUSAND_SONS_BUILD_SCOPE.md` §6's additive-only prediction (its +~24 KB estimate ran a bit
+high against the actual +15.5 KB compact delta; the key-level diff, not the byte estimate, is what
+matters and it is clean). (3) Checked `wargear_points.json` for the same class of gap D236 found in
+CSM turn B — confirmed real: Thousand Sons' own Defiler (`000001030`, a distinct unit_id from CSM's
+`000000969` and Death Guard's `000004209`, so never shares their price rows) has an MFM WARGEAR OPTIONS
+block pricing Hades lascannon and Heavy reaper autocannon at 10 pts each, and its `unit_loadouts.json`
+wargear_options include exactly those two swaps as unpriced substitutions — meaning without a fix they
+would price free. Ran `mfm_points_parser.py`'s wargear command with `MFM_Thousand_Sons_v1_0.txt` added
+to the existing SM/CSM/DG file list, against the freshly regenerated loadouts: added exactly one new
+unit entry, zero changes to the other nine, zero flags of any kind (no unknown-faction files, no
+ambiguous names, no missing datasheets, no missing loadout entries, no unmatched items, no cost
+conflicts). (4) Both files banked. (5) `repro_check.py` reproduces the banked `unit_loadouts.json`
+byte-for-byte; full assertion suite re-run.
+
+**E14-2 was a stale fact, not a bug.** Adding 34 Thousand Sons units surfaces new qualifying free-add
+seeds under E14-2's total rule (unpriced, type=add, no requires_weapon/pool_id/per_n_models, max_total
+== 1). Traced the TS-specific delta by hand before touching the assertion: +10 qualifying options
+across +9 TS units — Prosperine khopesh x3, Havoc launcher x4, and Pink Horrors (`000004127`) carrying
+two (Instrument of Chaos, Daemonic Icon) — matching the same shape as the CSM and cult-troop deltas
+already tracked in the assertion's own history comment. Updated the hardcoded expectation and comment
+from 65/45 to 75/54; assertion count is a total re-derivation each time (`_e14_quals`), not the hand-picked
+list the comment might suggest, so the fix is a number correction, not a logic change.
+
+Verified: full `rules_assertions.py` **109/109** after the E14-2 fix (108/109 immediately before it,
+with only E14-2 failing — every other assertion, including all seven faction-web harnesses, unaffected).
+Full `baseline.sh --fetch --data-turn`: **22/25** clean, the three expected failures being
+`pipeline_manifest.json`/`repo_check` on exactly this session's four changed files
+(`repro_check.py`, `rules_assertions.py`, `unit_loadouts.json`, `wargear_points.json`) — manifest
+reissued last per D251's ordering rule, after this handoff's text was final.
+
+TS turn B is the last data turn before the TS build's tooling wrap-up (roster/detachment-count
+assertions into `rules_assertions.py`, mirroring `CSM-1`-`CSM-3`), targeted next session per the S162
+prompt's sequencing.
+

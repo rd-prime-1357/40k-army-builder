@@ -10,8 +10,8 @@ committed unit_loadouts.json:
      cannot regenerate.
   2. Run loadout_parser.py against source (Datasheets_options.csv + the roster
      units.json), which regenerates every other entry and preserves the two seeds.
-  3. Run equipped_parser.py across the six faction web.txt passes in order
-     (SM -> DG -> BT -> DA -> SW -> CSM), then the final --datasheets Datasheets.csv pass.
+  3. Run equipped_parser.py across the seven faction web.txt passes in order
+     (SM -> DG -> BT -> DA -> SW -> CSM -> TS), then the final --datasheets Datasheets.csv pass.
   4. cmp the result against the committed unit_loadouts.json.
 
 This does not care what the parser file is called or which functions it defines —
@@ -32,8 +32,8 @@ HAND_AUTHORED = ['000001157', '000001044', '000004131', '000002712']
 # non_consuming + a literal MFM price_per_model, neither derivable from Wahapedia
 # source (Datasheets_options.csv doesn't know MFM pricing or "does not consume the
 # bracket") — same class of problem as 000004131 (D175).
-WEB_PASSES = ['Space_Marines', 'Death_Guard', 'Black_Templars', 'Dark_Angels', 'Space_Wolves', 'Chaos_Space_Marines']
-FACTIONS = ['SM', 'DG', 'CSM']
+WEB_PASSES = ['Space_Marines', 'Death_Guard', 'Black_Templars', 'Dark_Angels', 'Space_Wolves', 'Chaos_Space_Marines', 'Thousand_Sons']
+FACTIONS = ['SM', 'DG', 'CSM', 'TS']
 
 
 def _run(cmd, cwd):

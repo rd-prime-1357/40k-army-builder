@@ -70,6 +70,20 @@
    }
   }
  },
+ "000001030": {
+  "items": {
+   "hades lascannon": {
+    "cost": 10,
+    "display": "Hades lascannon",
+    "source": "MFM_Thousand_Sons_v1_0.txt:46"
+   },
+   "heavy reaper autocannon": {
+    "cost": 10,
+    "display": "Heavy reaper autocannon",
+    "source": "MFM_Thousand_Sons_v1_0.txt:47"
+   }
+  }
+ },
  "000002717": {
   "items": {
    "macro plasma incinerator": {

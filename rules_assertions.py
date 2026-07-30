@@ -307,7 +307,10 @@ def e14_count(S):
     # pistol) -> 64/44. D240 (S157): cult-troop cross-file points turn adds Khorne
     # Berzerkers' Icon of Khorne (its only qualifying free add; the other three
     # cult-troop units' options are all sized/pooled/priced and don't qualify) -> 65/45.
-    return (len(q) == 65 and len(units) == 45), f'{len(q)} options across {len(units)} units'
+    # Thousand Sons turn B (S163): +10 qualifying free seeds across +9 TS units —
+    # Prosperine khopesh x3, Havoc launcher x4, and one unit (Pink Horrors, 000004127)
+    # carrying two (Instrument of Chaos, Daemonic Icon) -> 75/54.
+    return (len(q) == 75 and len(units) == 54), f'{len(q)} options across {len(units)} units'
 
 def b18_named_body(S):
     lines = [re.sub(r'<[^>]+>', ' ', r['description'])
@@ -521,7 +524,7 @@ ASSERTIONS = [
     ('E14-2',
      'The seeding rule is total, not a hand-picked list: an add qualifies iff it is '
      'type=add, has no requires_weapon, no pool_id, no per_n_models, max_total == 1, and '
-     'its item is unpriced. 65 options across 45 units qualify today.',
+     'its item is unpriced. 75 options across 54 units qualify today.',
      'unit_loadouts.json; wargear_points.json',
      lambda S: e14_count(S)),
 

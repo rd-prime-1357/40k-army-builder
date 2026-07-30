@@ -275,3 +275,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D249** — Manifest custody gap from S158/S159 reconciled at S160 open (S160)
 - **D250** — Thousand Sons turn A shipped: 34 units banked, closing E24 and B78; B61's four census assertions generalised to cover Death Guard and Thousand Sons (S161)
 - **D251** — Force Disposition selection designed and filed as E25 (data already retained 169/169; engine-only work); S161 handoff manifest-ordering drift reconciled (S162)
+- **D252** — Thousand Sons turn B shipped: loadout defaults banked (34 new entries, additive-only); TS Defiler wargear gap fixed (same class as D236's CSM finding); E14-2's stale count corrected 65/45 -> 75/54 (S163)
