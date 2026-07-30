@@ -1,64 +1,71 @@
-# Next-session prompt — Session 161
+# Next-session prompt — Session 162
 
-**Assigned: Thousand Sons turn A (units), data-only.** Turn C shipped S160 (D248) — TS now has 9
-detachments in `detachments.json`, and the Changehost of Deceit allied unlock exists (enforced:false).
-Turn A's gate (E24) is unblocked: the detachment to hang the unlock on now exists.
+**Assigned: Thousand Sons turn B (loadout defaults), data-only.** Turn A shipped S161 (D250) — TS now
+has 34 units in `units.json` (362 total across all armies), all TS-priced, the six Scintillating
+Legions carriers tagged and gated. Turn C (S160, D248) shipped 9 detachments. Turn B is the last data
+turn before the TS build's tooling wrap-up.
 
 ## Open at session start
 
-Read `SESSION_HANDOFF_160.md` first, then D248/D249 in `40K_Decision_Log_v3_0.md`. Do not trust any
+Read `SESSION_HANDOFF_161.md` first, then D250 in `40K_Decision_Log_v3_0.md`. Do not trust any
 session/version/decision number from memory; the handoff chain is the only authority.
 
-Run the full baseline before any new work: `./baseline.sh --fetch --data-turn`. It closed **24/24**,
-109/109 assertions, at the end of S160.
+Run the full baseline before any new work: `./baseline.sh --fetch --data-turn`. It closed **24/25** at
+the end of S161, the sole (expected) failure being `repo_check` — 12 files differing from the pushed
+repo, confirmed to be exactly S161's own changes. If S161's files have been pushed since, this should
+now be **25/25**; if `repo_check` still fails on a *different* file list than S161's, stop and reconcile
+before proceeding — don't assume it's the same known gap without checking.
 
-**Ryan cannot download from the project Files panel.** Any file needed in the repo that lives only in
-the project area must be re-delivered by Claude. Build this into close.
+**Before touching `Thousand_Sons_web.txt`:** per D226's standing process rule, ask Ryan to confirm the
+file is current before running the loadout-defaults regeneration turn. Don't assume it's ready without
+asking.
 
-## Turn A scope
+## Turn B scope
 
-1. Run the TS block through the pipeline: transform -> mfm-points -> convert -> merge (a per-faction
-   block in `units_repro_check.py`, ~26 lines mirroring Death Guard's, verified working dry-run in S159 -
-   34 units, 328 -> 362, `abilities.json` +43, `weapon_abilities.json` +2 Brayhorn/Herd Banner). Bank it
-   this time; S159 ran it clean but deliberately did not bank because turn C hadn't shipped yet.
-2. Extend the B61 census assertions to the six TS allied carriers (Kairos Fateweaver, Lord of Change,
-   Flamers, Screamers, Pink Horrors, Blue Horrors) - `b61_plague_legions_census` and its three siblings
-   are currently Death-Guard-specific; generalise them to cover both armies' carrier sets, or add TS-
-   specific siblings mirroring the four B61-1..4 assertions. Confirm points stay TS-priced, not CD-priced
-   (D245's correction: Pink Horrors 115 TS vs 150 CD, Blue Horrors 90 vs 125 - do not source from the CD
-   pool).
-3. Flip `detachment_effects.json`'s `Thousand Sons|CHANGEHOST OF DECEIT` unlock and warlord-ban entries
-   from `enforced: false` to `enforced: true` once the six carriers exist with `allied_group:
-   "Scintillating Legions"` set. Verify against `e21a_allied_targets` (E21a-4) - its expected-unenforced
-   list will need the two Changehost of Deceit keys removed once this flips.
-4. Ship the two Battleline rows B78 has been waiting on: `Thousand Sons|SERVANTS OF CHANGE` and
-   `Thousand Sons|WARPMELD PACT`, both granting Tzaangor units BATTLELINE (mirroring the four existing
-   `battleline`-kind rows, D204 ruling 2). Once these land, remove `rules_assertions.py`'s `e21a_coverage`
-   `known_gap` allowlist (currently tracking exactly these two keys) - its self-check will fail loudly if
-   you add a row without also updating the allowlist, so update both in the same edit.
-5. Verify `units_repro_check.py` reproduces byte-identical; run the full assertion suite; confirm TS-1/
-   TS-2 (detachment count/coverage, S160) still pass unaffected.
+1. Add `TS` to `repro_check.py`'s `FACTIONS` and `Thousand_Sons` to its `WEB_PASSES`, mirroring the other
+   six factions' entries exactly.
+2. Dry-run `repro_check.py` against the real pipeline (`equipped_parser.py`/`loadout_parser.py` reading
+   `Thousand_Sons_web.txt`) before touching the committed `unit_loadouts.json`. Diff the result:
+   `THOUSAND_SONS_BUILD_SCOPE.md` §6 estimates **+~24 KB**, additive only (34 new entries, 0
+   changed/removed elsewhere) — confirm this holds, don't assume it.
+3. Check whether `wargear_points.json` needs anything new. D236 (CSM turn B) found a real gap here —
+   MFM wargear silently never picks up until a loadout entry exists for that faction. Check TS's own MFM
+   for wargear entries the same way, don't assume TS is clean just because CSM needed a fix.
+4. Bank `unit_loadouts.json` (and `wargear_points.json` if turn 3 finds something) only after the diff is
+   traced and clean.
+5. Verify `repro_check.py` reproduces byte-identical; run the full assertion suite; confirm nothing
+   outside loadout defaults moved.
 
-## Read before touching the allied units (carried forward from S159/S160, still true)
+## Read before touching the allied units (carried forward, still true)
 
-- **`allied_group` is deliberate and must be retained.** B61 shipped it (S133, D208); four assertions
-  (B61-1..4) pin its census. Do not reduce it to a provenance field.
-- **The six are not duplicates of Chaos Daemons entries.** Different `unit_id`s, different points (see
-  above). Never source TS allied points from the CD pool.
-- **`SCINTILLATING LEGIONS` is a keyword, not a detachment** (still true after D248's 9-detachment
-  correction - neither of the two newly-added detachments is named Scintillating Legions either).
+- **`allied_group` is deliberate and must be retained.** B61 shipped it (S133, D208); its four census
+  assertions were generalised at S161 (D250) to cover Death Guard *and* Thousand Sons via a single
+  `ALLIED_CARRIER_GROUPS` dict. Do not reduce `allied_group` to a provenance field, and if a future
+  session adds a third allied-group army, extend that dict rather than forking new assertions.
+- **The six Scintillating Legions carriers are not duplicates of Chaos Daemons entries.** Different
+  `unit_id`s, different points (Pink Horrors 115 TS vs 150 CD; Blue Horrors 90 vs 125). Never source TS
+  allied points from the CD pool. This is now enforced (`Changehost of Deceit`'s unlock is
+  `enforced: true`), not just tagged.
+- **Only one of the four Tzaangor-named datasheets carries the TZAANGORS keyword.** `Tzaangors` (unit_id
+  `000001034`) is BATTLELINE via `Servants of Change`/`Warpmeld Pact`; Tzaangor Shaman and both Tzaangor
+  Enlightened datasheets carry their own distinct keywords and are correctly not elevated. If turn B's
+  loadout-defaults pass touches any of the four, don't assume they share treatment.
 
 ## Then, in later sessions
 
-- **Turn B** (loadout defaults) - `Thousand_Sons_web.txt` exists now, so `repro_check.py` gains
-  `Thousand_Sons` in `WEB_PASSES` and `TS` in `FACTIONS`. Both change `unit_loadouts.json`, so this is
-  its own turn, after turn A.
-- **B77** - emit the `SCINTILLATING LEGIONS` keyword properly (parser fix, never hand-edit output).
-  Untouched this session; still open.
-- **B75** - Rules Updates column resolution (pages 1/9 of the TS pack, and Death Guard's equivalent).
+- **Tooling turn** — TS-specific roster/detachment-count assertions into `rules_assertions.py`
+  (mirroring `CSM-1`–`CSM-3`), closing `THOUSAND_SONS_BUILD_SCOPE.md` §8 in full. This is turn B's
+  natural successor, not part of turn B itself (turn typing).
+- **B77** — emit the `SCINTILLATING LEGIONS` keyword properly (parser fix, never hand-edit output).
+  Untouched since S159; still open. Note `keyword_names` per model_group already carries real keywords
+  (`Chaos`, `Infantry`, `Mutant`, `Tzaangors`, `Tzeentch`, etc.) — B77 is specifically about the
+  `SCINTILLATING LEGIONS` faction-level keyword Rituals/stratagems reference, which is genuinely absent,
+  not about the per-unit keyword list being empty (re-check this framing against source before starting;
+  it may be stale from when the six carriers still had empty keyword lists pre-turn-A).
+- **B75** — Rules Updates column resolution (pages 1/9 of the TS pack, and Death Guard's equivalent).
   Awaiting Ryan's flag counts across the pack set to size it. Untouched this session; still open.
-- **B76** - rolling documents drop version numbers from filenames. Filed S159, sequenced behind the TS
-  build; TS build isn't done until turn B closes, so this stays behind it.
+- **B76** — rolling documents drop version numbers from filenames. Filed S159, sequenced behind the TS
+  build; TS build isn't done until turn B and the tooling turn both close, so this stays behind them.
 
 ## Standing reminders
 
@@ -69,6 +76,9 @@ the project area must be re-delivered by Claude. Build this into close.
 - GW-derived material never enters the public repo. The faction pack PDFs, their converted `.md` files,
   and `Thousand_Sons_web.txt` are GW-derived - private sources repo only.
 - Diagnoses from prior sessions are re-derived from source before building on them, not trusted - this
-  caught a real regression twice now (S159's repo-push gap; S160's detachment-count regression). Check
-  existing scope docs (`THOUSAND_SONS_BUILD_SCOPE.md` etc.) too, not just raw source text - D241 already
-  had the right detachment count and a session skipped checking it.
+  caught real regressions three times now (S159's repo-push gap; S160's detachment-count regression;
+  S161 found two unrelated stale hardcoded counts while touching adjacent code). Check existing scope
+  docs (`THOUSAND_SONS_BUILD_SCOPE.md` etc.) too, not just raw source text.
+- `DECISION_INDEX.md` was stale from D243 through D250 (last updated at S158) until S161 caught and
+  fixed it. Worth a periodic glance at the tail of the index vs. the actual log to catch this early next
+  time, rather than letting eight entries' worth of drift accumulate again.

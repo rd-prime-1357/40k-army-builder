@@ -9612,3 +9612,63 @@ files (verified against the fetched repo tarball, not assumed), and reran the fu
 **24/24 gates pass.** `repo_check.py` confirms the only diffs from the pushed repo afterward are the
 files this session actually changed.
 
+## D250 — Thousand Sons turn A shipped: 34 units banked, closing E24 and B78 (S161)
+
+**Type: data-only.** `units_repro_check.py` gained a Thousand Sons pipeline block (transform --faction
+TS -> mfm points -> convert), mirroring the Death Guard block exactly — fully self-sourced, no chapter
+points, no cross-file cult-troop append (`THOUSAND_SONS_BUILD_SCOPE.md` §4/§8) — and `merge_factions.py`'s
+call gained a fifth `--in`. Dry-run diffed clean before banking: `units.json` +34 (328 -> 362, 0
+changed/lost elsewhere), `abilities.json` +43, `weapon_abilities.json` +2 (Brayhorn, Herd Banner),
+`rules.json`/`keywords.json` unchanged — matching S159's dry-run numbers exactly. `units_repro_check.py`
+now reproduces byte-identical.
+
+Found and fixed the same class of gap D241 hit for a 4-unit case: banking 34 new units left
+`datasheet_wargear_abilities.json` stale (B15-9). Regenerated via `ds_wargear_abilities_parser.py` —
++3 datasheets, additive only, diffed clean before banking.
+
+**E24 closed.** The six Scintillating Legions carrier units (Kairos Fateweaver, Lord of Change, Flamers,
+Screamers, Pink Horrors, Blue Horrors) came through tagged `allied_group: "Scintillating Legions"`
+automatically via the existing generic `ALLIED_GROUP_HEADERS` mechanism (D208) reading
+`MFM_Thousand_Sons_v1_0.txt`'s own section header — no new tagging code needed. Confirmed TS-priced, not
+CD-priced (Pink Horrors 115 vs Chaos Daemons' 150; Blue Horrors 90 vs 125), and confirmed distinct
+`unit_id`s from their Chaos Daemons native copies. `detachment_effects.json`'s `Thousand Sons|CHANGEHOST
+OF DECEIT` unlock + warlord-ban pair flipped `enforced: false -> true`; `e21a_allied_targets`'s
+expected-unenforced list trimmed from three entries to the one remaining Chaos Space Marines gap
+(Shadow Legion / HERETIC ASTARTES, still awaiting that build).
+
+**B61's four census assertions generalised, not forked.** Rather than add TS-specific siblings
+alongside the existing Death-Guard-only `b61_plague_legions_census` and its three companions, all four
+were rewritten around a single `ALLIED_CARRIER_GROUPS` dict (army -> label -> expected six-unit set),
+covering Death Guard and Thousand Sons in one pass. A future allied-group army (World Eaters/Emperor's
+Children/Aeldari) is a one-line addition to the dict, not a fifth near-duplicate function set. B61-1..4's
+IDs and prose updated to describe both armies; the assertion bodies changed, the IDs did not, since they
+are referenced load-bearing throughout the decision log and backlog.
+
+**B78 closed.** Both detachments naming a Battleline grant in their own text (`Servants of Change`:
+"Friendly TZAANGORS units have BATTLELINE"; `Warpmeld Pact`'s `KEYWORDS` clause, same wording) now have
+`detachment_effects.json` rows. Checked which of the four Tzaangor-named datasheets actually carry the
+TZAANGORS keyword before writing the rows: only `Tzaangors` (unit_id `000001034`) does — Tzaangor
+Shaman and both Tzaangor Enlightened datasheets carry their own distinct keywords, not TZAANGORS, and
+are correctly excluded, matching the D204 ruling 2 precedent of targeting the exact keyword named rather
+than a unit-name substring. `e21a_coverage`'s `known_gap` allowlist (which tracked exactly these two keys
+since S160) removed now that both have rows; the assertion's self-check confirmed clean before removal.
+`e21b_check.js`'s pinned battleline-table literal updated 5 -> 7 to match. While in that code, fixed two
+unrelated stale hardcoded detachment counts (143 -> 169, current since D248's nine-detachment
+correction) found in `e21a_keys_resolve`'s and `e21a_coverage`'s pass-message prose.
+
+Verified: full `rules_assertions.py` **109/109**; `e21b_check.js`, `e21c_check.js`, `pool_check.js`,
+`e10_check.js` all re-run clean given the newly-enforced unlock and the new battleline rows.
+`pipeline_manifest.json` reissued three times, the last after finding `SESSION_HANDOFF_160.md` had never
+been appended to `pipeline_manifest.py`'s `GUARDED` list — the same class of gap D249 reconciled for
+S158/S159, recurring one session later because S160's own close skipped the same append-only step.
+Fixed (plus `.161.md`), 113 guarded files, all match. Full `baseline.sh --fetch --data-turn`:
+**24/25** — the sole expected failure is `repo_check` (9 files differ from the pushed repo, confirmed
+by its own diff to be exactly the 9 files this session touched, nothing unexpected) — clean until push.
+`detachments_repro_check.py` and `repro_check.py` (loadout defaults) both untouched and still pass,
+confirming this session's changes stayed inside units + detachment-effects + assertions as scoped.
+
+Turn B (loadout defaults) is next: `Thousand_Sons_web.txt` exists in the project file area, so the
+blocking gap `THOUSAND_SONS_BUILD_SCOPE.md` §5 flagged is resolved — not yet confirmed loaded by
+Claude this session, so the next session should still open by asking Ryan to confirm it, per D226's
+standing process rule for a faction's first `_web.txt` regeneration turn.
+

@@ -176,9 +176,8 @@
             "2000": 1000,
             "3000": 1500
           },
-          "enforced": false,
-          "unenforced_reason": "Turn A (which tags the six Scintillating Legions carrier units \u2014 Kairos Fateweaver, Lord of Change, Flamers, Screamers, Pink Horrors, Blue Horrors \u2014 with allied_group on their TS-priced units.json records) has not shipped yet (E24, D245). Nothing is currently reachable through this effect, so the gap costs no legality today; enforce it the session turn A lands.",
-          "source": "Wahapedia Detachment_abilities.csv id 000010196 'Infernal Pacts', keyed to detachment id 000001062 (Changehost of Deceit). Points caps mirror Death Guard's Plague Legions clause under Tallyband Summoners exactly (500/1000/1500 by battle size)."
+          "enforced": true,
+          "source": "Wahapedia Detachment_abilities.csv id 000010196 'Infernal Pacts', keyed to detachment id 000001062 (Changehost of Deceit). Points caps mirror Death Guard's Plague Legions clause under Tallyband Summoners exactly (500/1000/1500 by battle size). Turn A (D248/E24) tagged the six Scintillating Legions carrier units with allied_group; without this detachment selected they must not be offered at all."
         },
         {
           "kind": "warlord",
@@ -186,9 +185,40 @@
           "target": {
             "allied_group": "Scintillating Legions"
           },
-          "enforced": false,
-          "unenforced_reason": "Same as the unlock effect above \u2014 depends on turn A's allied_group tagging.",
+          "enforced": true,
           "source": "Same ability text (Infernal Pacts, restrictions): 'No SCINTILLATING LEGIONS models from your army can be your WARLORD.'"
+        }
+      ]
+    },
+    "Thousand Sons|SERVANTS OF CHANGE": {
+      "army": "Thousand Sons",
+      "detachment": "Servants of Change",
+      "effects": [
+        {
+          "kind": "battleline",
+          "target": {
+            "units": [
+              "Tzaangors"
+            ]
+          },
+          "enforced": true,
+          "source": "Detachment rule: 'Friendly TZAANGORS units have BATTLELINE.' Tzaangors (unit_id 000001034) is the sole Thousand Sons unit carrying the TZAANGORS keyword \u2014 Tzaangor Shaman and the two Tzaangor Enlightened datasheets carry their own distinct keywords, not TZAANGORS, and are not targeted (D204 ruling 2 pattern: elevation follows the exact keyword named, not the unit name substring)."
+        }
+      ]
+    },
+    "Thousand Sons|WARPMELD PACT": {
+      "army": "Thousand Sons",
+      "detachment": "Warpmeld Pact",
+      "effects": [
+        {
+          "kind": "battleline",
+          "target": {
+            "units": [
+              "Tzaangors"
+            ]
+          },
+          "enforced": true,
+          "source": "Detachment rule KEYWORDS clause: 'Tzaangors units from your army have the BATTLELINE keyword.' Same TZAANGORS-keyword scoping as Servants of Change above \u2014 Tzaangors (unit_id 000001034) only."
         }
       ]
     }

@@ -10,7 +10,14 @@ to the committed units.json:
      single-army-name command).
   2. Death Guard: wahapedia_transform.py (--faction DG) -> mfm_points_parser.py ->
      convert_to_json.py, in its own working dir.
-  3. Chaos Daemons: convert_to_json.py run DIRECTLY against the project root's own
+  3. Thousand Sons: wahapedia_transform.py (--faction TS) -> mfm_points_parser.py ->
+     convert_to_json.py, in its own working dir. Fully self-sourced (34/34, no cross-file
+     append, no chapter points) — mirrors the Death Guard block exactly (THOUSAND_SONS_
+     BUILD_SCOPE.md §4/§8). The six Scintillating Legions carrier units get their
+     allied_group tag automatically from MFM_Thousand_Sons_v1_0.txt's own section header,
+     the same generic ALLIED_GROUP_HEADERS mechanism Death Guard's Plague Legions tag
+     uses (D208) — no TS-specific tagging code needed here.
+  4. Chaos Daemons: convert_to_json.py run DIRECTLY against the project root's own
      Unit_Stats.csv / Unit_Points.csv / Unit_Wargear_Options.csv / Unit_Other_Options.csv /
      Unit_Weapons.csv / Unit_Abilities.csv / Keywords.csv / Rules.csv / Weapon_Abilities.csv.
      CD is Gen-1 hand-built data in Wahapedia-shaped CSVs; it is NEVER routed through
@@ -19,8 +26,8 @@ to the committed units.json:
      roster (see D132). Running wahapedia_transform.py --faction CD anywhere near this
      input directory would silently overwrite these same CSV filenames with the wrong
      source; this check never does that.
-  4. merge_factions.py across the three outputs.
-  5. cmp the merged result against the committed units.json.
+  5. merge_factions.py across the four outputs.
+  6. cmp the merged result against the committed units.json.
 
 All work happens in a temp dir; nothing in the project directory is touched.
 
@@ -196,6 +203,31 @@ def repro(dir_):
         if rc != 0:
             return False, 'convert_to_json.py (DG) failed:\n' + out[-600:]
 
+        # --- Thousand Sons: transform -> mfm points -> convert. Fully self-sourced,
+        # 34/34 (THOUSAND_SONS_BUILD_SCOPE.md §4) — no chapter points, no cross-file
+        # cult-troop append. Mirrors the Death Guard block exactly. ---
+        ts_dir = os.path.join(tmp, 'ts')
+        os.makedirs(ts_dir)
+        rc, out = _run([sys.executable, 'wahapedia_transform.py',
+                        '--wahapedia-dir', dir_, '--seed-dir', dir_,
+                        '--out-dir', ts_dir, '--faction', 'TS',
+                        '--army-name', 'Thousand Sons'], cwd=dir_)
+        if rc != 0:
+            return False, 'wahapedia_transform.py (TS) failed:\n' + out[-600:]
+        rc, out = _run([sys.executable, 'mfm_points_parser.py',
+                        '--mfm', 'MFM_Thousand_Sons_v1_0.txt',
+                        '--out-dir', ts_dir, '--stats', os.path.join(ts_dir, 'Unit_Stats.csv')],
+                        cwd=dir_)
+        if rc != 0:
+            return False, 'mfm_points_parser.py (TS) failed:\n' + out[-600:]
+        ts_json = os.path.join(tmp, 'ts_json')
+        os.makedirs(ts_json)
+        rc, out = _run([sys.executable, 'convert_to_json.py',
+                        '--input-dir', ts_dir, '--output-dir', ts_json,
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json')], cwd=dir_)
+        if rc != 0:
+            return False, 'convert_to_json.py (TS) failed:\n' + out[-600:]
+
         # --- Chaos Space Marines: transform -> mfm points (self, 54 of 58) -> D240
         # cult-troop cross-file append (the remaining 4, one at a time, each isolated
         # to its own single-row stats scope) -> convert. Unit_Stats.csv is left
@@ -249,6 +281,7 @@ def repro(dir_):
         os.makedirs(deploy)
         rc, out = _run([sys.executable, 'merge_factions.py',
                         '--in', sm_dir, '--in', cd_json, '--in', dg_json, '--in', csm_json,
+                        '--in', ts_json,
                         '--taxonomy', 'faction_taxonomy.json',
                         '--out-dir', deploy], cwd=dir_)
         if rc != 0:

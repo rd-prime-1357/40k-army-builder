@@ -266,3 +266,11 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   would have silently broken every future data-turn fetch. `SOURCE_REPO_TOKEN.txt` written and handed
   to Ryan to upload. Deletion from the area deliberately not done this session — that's Ryan's
   screenshot-verified step, per the standing M2 procedure (S158)
+- **D243** — Project-area GW-source reconciliation closed; S158's repo batch was simply unpushed (S159)
+- **D244** — `faction_pack_transform.py` (NET NEW): GW faction pack PDF → markdown, with a known limitation on portrait Rules Updates pages (S159)
+- **D245** — Thousand Sons turn A deferred; correcting a wrong reading of `allied_group` (S159)
+- **D246** — Rolling documents drop version numbers from their filenames (S159)
+- **D247** — Duplicate ticket ID: open B61 renumbered to B80 (S159)
+- **D248** — Thousand Sons has nine detachments, not seven; D245 regressed a count D241 already had right (S160)
+- **D249** — Manifest custody gap from S158/S159 reconciled at S160 open (S160)
+- **D250** — Thousand Sons turn A shipped: 34 units banked, closing E24 and B78; B61's four census assertions generalised to cover Death Guard and Thousand Sons (S161)

@@ -138,5 +138,13 @@
   {
     "weapon_ability_name": "Voice Eater",
     "weapon_ability_description": "Enemy units (excluding MONSTERS and VEHICLES ) cannot be targeted with Stratagems while they are within Engagement Range of the bearer’s unit."
+  },
+  {
+    "weapon_ability_name": "Brayhorn",
+    "weapon_ability_description": "You can re-roll Advance and Charge rolls made for the bearer’s unit."
+  },
+  {
+    "weapon_ability_name": "Herd Banner",
+    "weapon_ability_description": "While the bearer’s unit is within range of one or more objective markers you control, improve the Leadership characteristic of models in the bearer’s unit by 1."
   }
 ]

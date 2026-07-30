@@ -59,6 +59,13 @@
  "000000957": {
   "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
  },
+ "000001020": {
+  "Icon of Flame": "Ranged weapons equipped by models in the bearer’s unit (excluding <span class=\"kwb\">CHARACTERS</span>) have the [IGNORES COVER] ability."
+ },
+ "000001034": {
+  "Brayhorn": "You can re-roll Advance and Charge rolls made for the bearer’s unit.",
+  "Herd Banner": "While the bearer’s unit is within range of one or more objective markers you control, improve the Leadership characteristic of models in the bearer’s unit by 1."
+ },
  "000001044": {
   "Icon of Despair (Aura)": "While an enemy unit is within 6\" of the bearer, worsen the Leadership characteristic of models in that unit by 1."
  },
@@ -126,6 +133,10 @@
   "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
  },
  "000004114": {
+  "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
+  "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
+ },
+ "000004127": {
   "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
   "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
  },

@@ -1340,40 +1340,46 @@ ASSERTIONS = [
      'index.html GODS array (B63, D206)',
      lambda S: b63_allegiance_values_valid(S)),
 
-    # ── B61. Wahapedia carries six Nurgle Chaos Daemons datasheets twice — once under the
-    # native CD faction, once again under DG because TALLYBAND SUMMONERS makes them includable —
-    # and the parser was silently absorbing the DG copies into the plain Death Guard roster with
-    # no marker at all (D208). Tagged, not yet gated: E22a/E22b (S136) still owes the selection-
-    # time gate. These four pin the tag's exact shape so that gate has a fact to build on.
+    # ── B61. Wahapedia carries several Chaos Daemons datasheets twice — once under the
+    # native CD faction, once again under an allied-unlock army (TALLYBAND SUMMONERS for
+    # Death Guard, CHANGEHOST OF DECEIT for Thousand Sons) — and the parser was silently
+    # absorbing the borrowing army's copies into its plain roster with no marker at all
+    # (D208). Turn A (D248/E24) extended the same mechanism to Thousand Sons' Scintillating
+    # Legions carriers; these four now pin the tag's exact shape across both armies via
+    # ALLIED_CARRIER_GROUPS rather than one Death-Guard-specific census.
     ('B61-1',
-     'Exactly six Death Guard units carry allied_group == "Plague Legions": Beasts of Nurgle, '
-     'Great Unclean One, Nurglings, Plaguebearers, Plague Drones, Rotigus. No other Death Guard '
-     'unit carries the field at all — it is absent, not null, everywhere else in that army.',
-     'MFM_Death_Guard_v1_0.txt PLAGUE LEGIONS section; units.json Death Guard (B61, D208)',
+     'Exactly the expected six units carry allied_group in each allied-carrier army: Death '
+     'Guard carries "Plague Legions" (Beasts of Nurgle, Great Unclean One, Nurglings, '
+     'Plaguebearers, Plague Drones, Rotigus); Thousand Sons carries "Scintillating Legions" '
+     '(Kairos Fateweaver, Lord of Change, Flamers, Screamers, Pink Horrors, Blue Horrors). No '
+     'other unit in either army carries the field at all — it is absent, not null, elsewhere.',
+     'MFM_Death_Guard_v1_0.txt PLAGUE LEGIONS section, MFM_Thousand_Sons_v1_0.txt SCINTILLATING '
+     'LEGIONS section; units.json Death Guard/Thousand Sons (B61, D208; TS added D248/E24)',
      lambda S: b61_plague_legions_census(S)),
 
     ('B61-2',
-     'No unit in any other army block carries allied_group. The tag is scoped to the one '
-     'section it was derived from and has not leaked into Space Marines, the chapter variants, '
-     'or Chaos Daemons\' own native copies of the same six units.',
-     'units.json, all armies (B61, D208)',
+     'No unit in any army block outside the allied-carrier armies (Death Guard, Thousand Sons) '
+     'carries allied_group. The tag is scoped to the sections it was derived from and has not '
+     'leaked into Space Marines, the chapter variants, Chaos Space Marines, or Chaos Daemons\' '
+     'own native copies of the same units.',
+     'units.json, all armies (B61, D208; TS added D248/E24)',
      lambda S: b61_no_other_army_carries_allied_group(S)),
 
     ('B61-3',
-     'Chaos Daemons carries its own native copy of all six units under distinct unit_ids '
+     'Chaos Daemons carries its own native copy of every carrier unit under distinct unit_ids '
      '(local:chaos-daemons:*), and none of those native copies carries allied_group. This is '
-     'the fact that makes the Death Guard six a genuine duplicate rather than a merge collision '
-     '— confirming Wahapedia\'s double-listing is intact on both sides of the fix.',
-     'units.json Chaos Daemons vs Death Guard (B61, D208)',
+     'the fact that makes each allied-carrier army\'s copies genuine duplicates rather than a '
+     'merge collision — confirming Wahapedia\'s double-listing is intact on both sides of the '
+     'fix, for Death Guard and now Thousand Sons.',
+     'units.json Chaos Daemons vs Death Guard/Thousand Sons (B61, D208; TS added D248/E24)',
      lambda S: b61_cd_native_copies_distinct(S)),
 
     ('B61-4',
      'mfm_points_parser.py\'s ALLIED_GROUP_HEADERS still recognises all six documented labels — '
      'Plague Legions, Scintillating Legions, Blood Legions, Legions of Excess, Harlequins, Ynnari '
-     '— across the four factions not yet built. Written generally per the ticket rather than '
-     'Death-Guard-specific, so a future session building Thousand Sons/World Eaters/Emperor\'s '
-     'Children/Aeldari gets the tag for free; this guards against the set silently shrinking back '
-     'to one entry.',
+     '— across the factions not yet built. Written generally per the ticket rather than '
+     'faction-specific, so a future session building World Eaters/Emperor\'s Children/Aeldari '
+     'gets the tag for free; this guards against the set silently shrinking back down.',
      'mfm_points_parser.py ALLIED_GROUP_HEADERS (B61, D208)',
      lambda S: b61_allied_group_headers_intact(S)),
 
@@ -1415,7 +1421,7 @@ ASSERTIONS = [
     ('E21a-5',
      'Coverage: every built detachment whose own text grants the BATTLELINE keyword, and every '
      'built detachment whose own text unlocks a non-faction unit set, has a row in '
-     'detachment_effects.json. Re-derived by scanning all 143 built records rather than compared '
+     'detachment_effects.json. Re-derived by scanning all 169 built records rather than compared '
      'against a remembered list, so a detachment added later with a construction effect fails the '
      'baseline instead of being quietly unenforced.',
      'detachments.json rule_text/restrictions scan vs detachment_effects.json (E21a, D209)',
@@ -1618,7 +1624,7 @@ def e21a_keys_resolve(S):
     if bad:
         return False, '; '.join(bad)
     n = len(S.detachment_effects()['effects'])
-    return True, f'all {n} detachment keys resolve against the 143 built records'
+    return True, f'all {n} detachment keys resolve against the 169 built records'
 
 
 def e21a_unit_names_resolve(S):
@@ -1695,16 +1701,14 @@ def e21a_allied_targets(S):
             unenforced.append(key + '/' + eff['kind'])
             if not eff.get('unenforced_reason'):
                 bad.append(f'{key} [{eff["kind"]}]: enforced: false with no unenforced_reason')
-    expect = ['Chaos Daemons|SHADOW LEGION/unlock',
-              'Thousand Sons|CHANGEHOST OF DECEIT/unlock',
-              'Thousand Sons|CHANGEHOST OF DECEIT/warlord']
+    expect = ['Chaos Daemons|SHADOW LEGION/unlock']
     if sorted(unenforced) != expect:
         bad.append(f'unenforced inventory is {sorted(unenforced)}, expected {expect}')
     if bad:
         return False, '; '.join(bad)
-    return True, ('allied targets resolve; exactly three documented unenforced effects '
-                  '(Shadow Legion / HERETIC ASTARTES; Changehost of Deceit unlock+warlord, '
-                  'awaiting Thousand Sons turn A)')
+    return True, ('allied targets resolve; exactly one documented unenforced effect remains '
+                  '(Shadow Legion / HERETIC ASTARTES, awaiting Chaos Space Marines build) — '
+                  'Changehost of Deceit flipped to enforced at Thousand Sons turn A (D248/E24)')
 
 
 def csm_roster_count(S):
@@ -1768,42 +1772,18 @@ def e21a_coverage(S):
     have = set(S.detachment_effects()['effects'].keys())
     bl = re.compile(r'(gain|gains|have|has).{0,40}BATTLELINE', re.I | re.S)
     ul = re.compile(r'even though they do not have|allies allowed up to', re.I)
-    # Thousand Sons turn C (D245/E24) built the detachment catalogue ahead of turn A's
-    # unit ingestion, deliberately -- there was no detachment to hang the allied unlock
-    # on otherwise (E24). Both detachments below grant TZAANGORS units BATTLELINE in
-    # their own text (Servants of Change in the faction pack, Warpmeld Pact in its
-    # Wahapedia KEYWORDS clause), but no Tzaangor unit exists in units.json until turn A,
-    # and e21b_check.js's battleline sweep resolves every named unit unconditionally
-    # regardless of enforced -- a row cannot be added correctly before then. Tracked here,
-    # not silently dropped: this set must shrink to empty the session turn A ships the
-    # battleline rows, and the self-check below fails loudly if it goes stale first.
-    known_gap = {'Thousand Sons|SERVANTS OF CHANGE', 'Thousand Sons|WARPMELD PACT'}
     missing = []
     for key, r in det.items():
         text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
-        if (bl.search(text) or ul.search(text)) and key not in have and key not in known_gap:
+        if (bl.search(text) or ul.search(text)) and key not in have:
             missing.append(key)
     if missing:
         return False, ('built detachments with a construction effect and no row: '
                        + '; '.join(sorted(missing)))
-    stale = []
-    for key in known_gap:
-        r = det.get(key)
-        if r is None:
-            stale.append(f'{key}: no longer a built detachment, remove from known_gap')
-            continue
-        text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
-        if key in have:
-            stale.append(f'{key}: now has a detachment_effects.json row, remove from known_gap')
-        elif not (bl.search(text) or ul.search(text)):
-            stale.append(f'{key}: no longer flagged by the regex, remove from known_gap')
-    if stale:
-        return False, 'known_gap allowlist is stale: ' + '; '.join(stale)
     n = sum(1 for k, r in det.items()
             if bl.search(' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions')))
             or ul.search(' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))))
-    return True, (f'{n} built detachments carry a Battleline-grant or unlock clause; all have '
-                  f'rows except the tracked Thousand Sons turn-A gap: {sorted(known_gap)}')
+    return True, f'{n} built detachments carry a Battleline-grant or unlock clause; all have rows'
 
 
 def e21a_belakor_warlord_covered(S):
@@ -3346,59 +3326,82 @@ def b63_allegiance_values_valid(S):
     return True, 'every allegiance_condition value is one of the four god names'
 
 
+# B61/D208 shipped Death Guard's Plague Legions carriers; turn A (D248/E24) adds Thousand
+# Sons' Scintillating Legions carriers on the same mechanism. One dict, generalising all
+# four B61-1..4 census assertions below rather than forking TS-specific siblings, so a
+# future allied-group army (Emperor's Children/Legions of Excess, etc.) is a one-line add
+# here, not a fifth set of near-duplicate functions.
+ALLIED_CARRIER_GROUPS = {
+    'Death Guard': ('Plague Legions', {'Beasts of Nurgle', 'Great Unclean One', 'Nurglings',
+                                        'Plaguebearers', 'Plague Drones', 'Rotigus'}),
+    'Thousand Sons': ('Scintillating Legions', {'Kairos Fateweaver', 'Lord of Change',
+                                                 'Flamers', 'Screamers', 'Pink Horrors',
+                                                 'Blue Horrors'}),
+}
+
+
 def b61_plague_legions_census(S):
-    expect = {'Beasts of Nurgle', 'Great Unclean One', 'Nurglings',
-              'Plaguebearers', 'Plague Drones', 'Rotigus'}
-    dg = next((a for a in S.units() if a['army'] == 'Death Guard'), None)
-    if dg is None:
-        return False, 'Death Guard army block not found'
-    tagged = {u['unit_name'] for u in dg['units'] if u.get('allied_group') == 'Plague Legions'}
-    other_tagged = [u['unit_name'] for u in dg['units']
-                    if 'allied_group' in u and u.get('allied_group') != 'Plague Legions']
-    if tagged != expect or other_tagged:
-        return False, (f'tagged={sorted(tagged)}, expected={sorted(expect)}, '
+    bad = []
+    for army_name, (label, expect) in ALLIED_CARRIER_GROUPS.items():
+        army = next((a for a in S.units() if a['army'] == army_name), None)
+        if army is None:
+            bad.append(f'{army_name} army block not found')
+            continue
+        tagged = {u['unit_name'] for u in army['units'] if u.get('allied_group') == label}
+        other_tagged = [u['unit_name'] for u in army['units']
+                        if 'allied_group' in u and u.get('allied_group') != label]
+        if tagged != expect or other_tagged:
+            bad.append(f'{army_name}: tagged={sorted(tagged)}, expected={sorted(expect)}, '
                         f'other-tagged={other_tagged}')
-    return True, 'exactly the six Plague Legions units carry the tag in Death Guard'
+    if bad:
+        return False, '; '.join(bad)
+    return True, ('exactly the expected carrier units carry the tag in each allied-carrier '
+                  'army (' + ', '.join(ALLIED_CARRIER_GROUPS) + ')')
 
 
 def b61_no_other_army_carries_allied_group(S):
+    carrier_armies = set(ALLIED_CARRIER_GROUPS)
     hits = []
     for army in S.units():
-        if army['army'] == 'Death Guard':
+        if army['army'] in carrier_armies:
             continue
         for u in army['units']:
             if 'allied_group' in u:
                 hits.append(f"{army['army']}/{u['unit_name']}")
     if hits:
-        return False, f'{len(hits)} unexpected allied_group carrier(s) outside Death Guard: {hits[:5]}'
-    return True, 'no army other than Death Guard carries allied_group'
+        return False, (f'{len(hits)} unexpected allied_group carrier(s) outside '
+                        f'{sorted(carrier_armies)}: {hits[:5]}')
+    return True, f'no army other than {sorted(carrier_armies)} carries allied_group'
 
 
 def b61_cd_native_copies_distinct(S):
-    names = {'Beasts of Nurgle', 'Great Unclean One', 'Nurglings',
-             'Plaguebearers', 'Plague Drones', 'Rotigus'}
     cd = next((a for a in S.units() if a['army'] == 'Chaos Daemons'), None)
-    dg = next((a for a in S.units() if a['army'] == 'Death Guard'), None)
-    if cd is None or dg is None:
-        return False, 'Chaos Daemons or Death Guard army block not found'
-    cd_by_name = {u['unit_name']: u for u in cd['units'] if u['unit_name'] in names}
-    dg_by_name = {u['unit_name']: u for u in dg['units'] if u['unit_name'] in names}
+    if cd is None:
+        return False, 'Chaos Daemons army block not found'
     bad = []
-    for n in sorted(names):
-        c, d = cd_by_name.get(n), dg_by_name.get(n)
-        if c is None:
-            bad.append(f'{n}: missing from Chaos Daemons')
+    for army_name, (label, names) in ALLIED_CARRIER_GROUPS.items():
+        army = next((a for a in S.units() if a['army'] == army_name), None)
+        if army is None:
+            bad.append(f'{army_name} army block not found')
             continue
-        if d is None:
-            bad.append(f'{n}: missing from Death Guard')
-            continue
-        if c['unit_id'] == d['unit_id']:
-            bad.append(f'{n}: same unit_id in both armies ({c["unit_id"]})')
-        if 'allied_group' in c:
-            bad.append(f'{n}: Chaos Daemons native copy unexpectedly carries allied_group')
+        cd_by_name = {u['unit_name']: u for u in cd['units'] if u['unit_name'] in names}
+        army_by_name = {u['unit_name']: u for u in army['units'] if u['unit_name'] in names}
+        for n in sorted(names):
+            c, d = cd_by_name.get(n), army_by_name.get(n)
+            if c is None:
+                bad.append(f'{n}: missing from Chaos Daemons')
+                continue
+            if d is None:
+                bad.append(f'{n}: missing from {army_name}')
+                continue
+            if c['unit_id'] == d['unit_id']:
+                bad.append(f'{n}: same unit_id in both {army_name} and Chaos Daemons '
+                            f'({c["unit_id"]})')
+            if 'allied_group' in c:
+                bad.append(f'{n}: Chaos Daemons native copy unexpectedly carries allied_group')
     if bad:
         return False, '; '.join(bad)
-    return True, 'all six units exist as distinct, untagged native copies in Chaos Daemons'
+    return True, 'all carrier units exist as distinct, untagged native copies in Chaos Daemons'
 
 
 def b61_allied_group_headers_intact(S):

@@ -3,7 +3,13 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **12 open** as of S157: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73 —
+not here, it isn't open. **15 open** as of S161: B69, B70, B71, B72, B73, B75, B76, B77, P2, P4,
+B80, E23, B67b, E12, B17. Thousand Sons turn A shipped S161 (D250, data-only): `units.json` +34
+(362 total), the six Scintillating Legions carriers TS-priced and tagged; closes **E24** (allied
+unlock now enforced) and **B78** (both Battleline rows shipped, scoped to the sole TZAANGORS-
+keyword datasheet). B61's four census assertions generalised to cover both Death Guard and
+Thousand Sons rather than forked into TS-specific siblings.
+**12 open** as of S157: P2, P4, E23, E12, B17, B61, B67b, B69, B70, B71, B72, B73 —
 B69–B73 logged Ryan-side S152, not yet scoped or reproduced by Claude. CSM cult-troop cross-file
 points shipped S157 (D240, data-only): `units.json` +4 (58/58 roster complete), `unit_loadouts.json`
 +4, `CSM-1`/`E14-2` updated; closes `CSM_BUILD_SCOPE.md` §4 — CSM's build is now complete except for
@@ -110,33 +116,6 @@ keyword exists nowhere in our data: zero hits in `keywords.json`, and the six ca
 empty `keywords` list with `allied_group: "Scintillating Legions"` standing in. Any TS rule naming the
 keyword has nothing to match against. Parser fix (never hand-edit output). Note `allied_group` must be
 **retained** — it is B61's shipped mechanism feeding E22b's gate, not a placeholder to be replaced.
-
-### B78 — Thousand Sons Battleline grant needs two detachment_effects.json rows, blocked on turn A — **UPDATED S160 (D248); S**
-The `battleline` effect mechanism this needs already exists and is shipped (D204 ruling 2 — four units
-elevated across Blood Angels, Dark Angels, Death Guard and Chaos Space Marines already). Not new engine
-work: two data rows. Both `SERVANTS OF CHANGE` ("Friendly TZAANGORS units have BATTLELINE") and
-`WARPMELD PACT` (found S160: its Wahapedia `KEYWORDS` clause grants the same) need one. Blocked until
-turn A lands Tzaangor units in `units.json` — `e21b_check.js`'s battleline sweep resolves every named unit
-unconditionally, so a row added before then fails that gate regardless of `enforced`. Tracked meanwhile by
-`rules_assertions.py`'s `e21a_coverage` (E21a-5) via a self-checking `known_gap` allowlist naming both
-keys; the allowlist itself fails if it goes stale.
-
-### E24 — Thousand Sons allied unlock: gate the six Scintillating Legions carriers — **UPDATED S160 (D248); M; BLOCKS TS turn A**
-Turn A adds six TS units carrying `allied_group` (Kairos Fateweaver, Lord of Change, Flamers, Screamers,
-Pink Horrors, Blue Horrors). They must not be offered ungated — that is the D0 violation D204 found and
-E22b closes for Death Guard.
-
-Turn C (S160) resolved which detachment carries the unlock — not a guess: Wahapedia's `Infernal Pacts`
-ability (id `000010196`) is keyed directly to detachment id `000001062`, **Changehost of Deceit**. Shipped
-in `detachment_effects.json` as an `unlock` + `warlord(cannot_be)` pair targeting
-`allied_group: "Scintillating Legions"`, both `enforced: false` with `unenforced_reason` recorded, mirroring
-`Death Guard|TALLYBAND SUMMONERS`'s shape exactly (500/1000/1500 caps, no-Warlord restriction).
-`e21a_allied_targets`'s expected-unenforced list is extended to match.
-
-What remains, now scoped precisely to turn A: create the six TS-priced carrier records in `units.json`
-with `allied_group: "Scintillating Legions"` set, flip both effects to `enforced: true`, and extend the
-B61 census assertions (`b61_plague_legions_census` and its three siblings) to cover them — none of that
-can happen before the units exist.
 
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
 The durable fix — commit the parser to the GitHub repo as canonical, mirror to project knowledge — is still
@@ -384,6 +363,8 @@ appending to it, and hand the updated file back for Ryan to commit.
 - **B67** — Two GW-derived files (`Unit_Weapons.csv`, `wh40k_core_rules.md`) removed from the public repo — CLOSED S145 (D225); Ryan deleted both, confirmed gone from HEAD via the API. D223's "single commit" premise corrected (249 commits); full history purge is a separate optional action, filed as B67b
 - **B68** — `equipped_parser.py` resolved web-composition titles through a flat name→unit_id map (last-write-wins), misrouting Death Guard's seven shared generic Chaos vehicle equipped lines to their CSM twins once both factions co-existed in `units.json` — CLOSED S152 (D235); ENGINE. Diagnosis corrected: bug was in `equipped_parser.py` alone, not `loadout_parser.py`. Fixed with army-scoped title resolution (`scoped_name2id()`, scope inferred from the composition filename); no caller edit, pure engine turn. `repro_check` byte-identical, no data regenerated, durable for the future CSM web pass. Unblocks CSM turn B
 - **B79** — Detachment tag exclusivity — CLOSED S160 (D248); premise was wrong, not a gap: `index.html`'s `uniqueTagConflicts()`/`canAddDetachment()` already read `unique_tag` straight off `detachments.json` and refuse a second same-tag detachment, shipped generically (tested against Blood Angels' GRACE tag) before Thousand Sons existed. Death Guard's `ENGINES`/`FLYBLOWN` and CSM's `NIGHTMARE` tags were already enforced the same way. Confirmed live for Thousand Sons the moment turn C banked `detachments.json`: `SERVANTS OF CHANGE` and `WARPMELD PACT` both carry `unique_tag: "MUTANT"` and the engine already refuses selecting both
+- **E24** — Thousand Sons allied unlock: gate the six Scintillating Legions carriers — CLOSED S161 (D250); turn A tagged the six carrier records in `units.json` with `allied_group: "Scintillating Legions"`, TS-priced (Pink Horrors 115, Blue Horrors 90, not the CD 150/125); `Changehost of Deceit`'s unlock + warlord-ban flipped `enforced: true` in `detachment_effects.json`; `e21a_allied_targets`'s expected-unenforced list trimmed to the one remaining Chaos Space Marines gap (Shadow Legion / HERETIC ASTARTES)
+- **B78** — Thousand Sons Battleline grant needs two `detachment_effects.json` rows — CLOSED S161 (D250); both rows shipped once turn A landed a Tzaangor unit: `Servants of Change` and `Warpmeld Pact` each target only `Tzaangors` (unit_id `000001034`), the sole TS datasheet carrying the TZAANGORS keyword — Tzaangor Shaman and both Tzaangor Enlightened datasheets carry their own distinct keywords and are correctly not elevated. `e21a_coverage`'s `known_gap` allowlist removed (no longer needed); `e21b_check.js`'s pinned battleline-table count updated 5 → 7
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched

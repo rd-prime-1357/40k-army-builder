@@ -2090,5 +2090,177 @@
   {
     "ability_name": "Warptime (Psychic)",
     "ability_description": "While this model is leading a unit, you can re-roll Advance and Charge rolls made for that unit."
+  },
+  {
+    "ability_name": "Aetherstride (Psychic)",
+    "ability_description": "In your Movement phase, when this model is set up on the battlefield using the Deep Strike ability, it can perform an aetherstride. If it does: It can be set up anywhere on the battlefield that is more than 6\" horizontally away from all enemy units.; Until the end of the turn, its Dark Blessing has the [SUSTAINED HITS D3] ability.; Until the end of the turn, it is not eligible to declare a charge."
+  },
+  {
+    "ability_name": "Ambushing Hunters",
+    "ability_description": "At the end of your opponent’s turn, if this unit is more than 6\" horizontally away from all enemy units, you can remove this unit from the battlefield and place it into Strategic Reserves."
+  },
+  {
+    "ability_name": "Arcane Shield (Psychic)",
+    "ability_description": "While this model is leading a unit, models in that unit have a 4+ invulnerable save."
+  },
+  {
+    "ability_name": "Arch-Sorcerer of Tzeentch (Psychic)",
+    "ability_description": "Each time this model attempts a Ritual, add 1 to the Psychic test result."
+  },
+  {
+    "ability_name": "Bestial Prophet",
+    "ability_description": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Binding Tendrils (Psychic)",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy INFANTRY unit hit by one or more of those attacks made with Arcane Fire. Until the start of your next turn, that unit is ensnared. While a unit is ensnared, subtract 2\" from its Move characteristic and subtract 2 from Charge rolls made for it."
+  },
+  {
+    "ability_name": "Blazing Salvoes",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next turn, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+  },
+  {
+    "ability_name": "Cabal of Sorcerers",
+    "ability_description": "If your Army Faction is Thousand Sons, at the start of your Shooting phase, one or more models from your army with this ability can attempt Rituals from those listed below. To do so, select one model from your army with this ability that has not yet attempted a Ritual this turn and select one Ritual no model from your army has attempted to manifest this turn, then take a Psychic test for that model by following the sequence below. PSYCHIC TEST SEQUENCE Roll 2D6 Channel the Warp (Optional) Then, if one or more doubles or triples were rolled during this test, that model’s unit suffers D3 mortal wounds. If that model is not destroyed, the combined total of all the dice rolled during this test is the Psychic test result. If this equals or exceeds the Warp Charge value of the Ritual being attempted, that model manifests that Ritual and you resolve its effects. DESTINY’S RUIN (PSYCHIC) WARP CHARGE 5 Select one enemy unit within 24\" of and visible to the manifesting model. Until the end of the phase, each time a THOUSAND SONS or SCINTILLATING LEGIONS model from your army makes an attack that targets that unit, re-roll a Hit roll of 1. If the Psychic test result for this Ritual was 10+, you can re-roll the Hit roll instead. TEMPORAL SURGE (PSYCHIC) WARP CHARGE 6 Select one friendly THOUSAND SONS or SCINTILLATING LEGIONS unit that is not within Engagement Range of one or more enemy units and is within 24\" of and visible to the manifesting model. That unit can make a Normal move of up to D6\". If the Psychic test result for this Ritual was 10+, that unit can make a Normal move of up to 6\" instead. In either case, until the end of the turn, that unit is not eligible to declare a charge . DOOMBOLT (PSYCHIC) WARP CHARGE 7 Select one enemy unit within 24\" of and visible to the manifesting model (excluding units with the Lone Operative ability that are not part of an Attached unit and are not within 12\" of the manifesting model); that unit suffers D3 mortal wounds . If the Psychic test result for this Ritual was 11+, that unit suffers D3+3 mortal wounds instead. TWIST OF FATE (PSYCHIC) WARP CHARGE 9 Select one enemy unit within 24\" of and visible to the manifesting model. Until the end of the phase, each time a THOUSAND SONS or SCINTILLATING LEGIONS model from your army makes an attack that targets that unit, improve the Armour Penetration characteristic of that attack by 1. If the Psychic test result for this Ritual was 12+, improve the Armour Penetration characteristic of that attack by 2 instead."
+  },
+  {
+    "ability_name": "Cabal of Sorcerers (Scarab Occult Sorcerer only)",
+    "ability_description": "If your Army Faction is Thousand Sons, at the start of your Shooting phase, one or more models from your army with this ability can attempt Rituals from those listed below. To do so, select one model from your army with this ability that has not yet attempted a Ritual this turn and select one Ritual no model from your army has attempted to manifest this turn, then take a Psychic test for that model by following the sequence below. PSYCHIC TEST SEQUENCE Roll 2D6 Channel the Warp (Optional) Then, if one or more doubles or triples were rolled during this test, that model’s unit suffers D3 mortal wounds. If that model is not destroyed, the combined total of all the dice rolled during this test is the Psychic test result. If this equals or exceeds the Warp Charge value of the Ritual being attempted, that model manifests that Ritual and you resolve its effects. DESTINY’S RUIN (PSYCHIC) WARP CHARGE 5 Select one enemy unit within 24\" of and visible to the manifesting model. Until the end of the phase, each time a THOUSAND SONS or SCINTILLATING LEGIONS model from your army makes an attack that targets that unit, re-roll a Hit roll of 1. If the Psychic test result for this Ritual was 10+, you can re-roll the Hit roll instead. TEMPORAL SURGE (PSYCHIC) WARP CHARGE 6 Select one friendly THOUSAND SONS or SCINTILLATING LEGIONS unit that is not within Engagement Range of one or more enemy units and is within 24\" of and visible to the manifesting model. That unit can make a Normal move of up to D6\". If the Psychic test result for this Ritual was 10+, that unit can make a Normal move of up to 6\" instead. In either case, until the end of the turn, that unit is not eligible to declare a charge . DOOMBOLT (PSYCHIC) WARP CHARGE 7 Select one enemy unit within 24\" of and visible to the manifesting model (excluding units with the Lone Operative ability that are not part of an Attached unit and are not within 12\" of the manifesting model); that unit suffers D3 mortal wounds . If the Psychic test result for this Ritual was 11+, that unit suffers D3+3 mortal wounds instead. TWIST OF FATE (PSYCHIC) WARP CHARGE 9 Select one enemy unit within 24\" of and visible to the manifesting model. Until the end of the phase, each time a THOUSAND SONS or SCINTILLATING LEGIONS model from your army makes an attack that targets that unit, improve the Armour Penetration characteristic of that attack by 1. If the Psychic test result for this Ritual was 12+, improve the Armour Penetration characteristic of that attack by 2 instead."
+  },
+  {
+    "ability_name": "Destroyer of Futures",
+    "ability_description": "Each time you target this unit with the Fire Overwatch Stratagem, hits are scored on unmodified Hit rolls of 5+ when resolving that Stratagem. For each of those attacks that targets an enemy unit within 9\" of one or more Thousand Sons Psyker units from your army, a hit is scored on an unmodified Hit roll of 4+ instead."
+  },
+  {
+    "ability_name": "Empyric Guidance (Psychic)",
+    "ability_description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+  },
+  {
+    "ability_name": "Ensorcelled Annihilation",
+    "ability_description": "Each time this model makes a ranged attack that targets a MONSTER or VEHICLE unit that was hit by one or more Psychic Attacks made by a Thousand Sons Psyker model from your army this phase (including the Doombolt Ritual), you can re-roll the Hit roll and you can re-roll the Damage roll."
+  },
+  {
+    "ability_name": "Ensorcelled Destruction",
+    "ability_description": "Each time this model makes a ranged attack that targets a unit (excluding MONSTERS and VEHICLES ) that was hit by one or more Psychic Attacks made by a Thousand Sons Psyker model from your army this phase (including the Doombolt Ritual), improve the Strength and Armour Penetration characteristics of that attack by 1."
+  },
+  {
+    "ability_name": "Flame-wreathed",
+    "ability_description": "Each time this model ends a Normal move, select one enemy unit it moved over during that move. Until the end of the turn, models in that unit cannot have the Benefit of Cover."
+  },
+  {
+    "ability_name": "Glamour of Tzeentch (Aura; Psychic)",
+    "ability_description": "While a friendly Thousand Sons Infantry unit is within 6\" of this model, models in that unit have the Stealth ability."
+  },
+  {
+    "ability_name": "Glimpse of Eternity (Psychic)",
+    "ability_description": "Once per turn, you can change the result of one Hit roll, one Wound roll or one saving throw made for this model to an unmodified 6."
+  },
+  {
+    "ability_name": "HORRORS ARE PINK. HORRORS ARE BLUE. WHEREONCE THERE WAS ONE, NOW THERE ARE TWO.",
+    "ability_description": "If, at any point, this unit contains no PINK HORROR models, use the BLUE HORRORS datasheet for this unit. Designer’s Note: While this unit contains one or more PINK HORROR models, the Sullen Malevolence and Exploding Horrors abilities from the BLUE HORRORS datasheet do not apply to this unit."
+  },
+  {
+    "ability_name": "Hunter of Souls",
+    "ability_description": "Each time this model makes an attack that targets a CHARACTER unit, re-roll a Hit roll of 1 and re-roll a Wound roll of 1 (if that attack targets a PSYKER CHARACTER unit, you can re-roll the Hit roll and you can re-roll the Wound roll instead). Each time this model destroys a CHARACTER unit, this model regains up to D3 lost wounds (if that CHARACTER unit was a PSYKER unit, this model regains up to 3 lost wounds instead)."
+  },
+  {
+    "ability_name": "Illusions of Tzeentch (Psychic)",
+    "ability_description": "While this model is leading a unit, that unit can only be selected as the target of a ranged attack if the attacking model is within 18\"."
+  },
+  {
+    "ability_name": "Immaterial Flare (Aura)",
+    "ability_description": "While a friendly Thousand Sons Psyker model is within 6\" of this model, each time that model Channels the Warp, add 1 to the Psychic test result. This is not cumulative with any other modifiers to the Psychic test result."
+  },
+  {
+    "ability_name": "Impossible Form (Psychic)",
+    "ability_description": "Each time an attack is made against this PSYKER (excluding Psychic Attacks), subtract 1 from the Damage characteristic of that attack."
+  },
+  {
+    "ability_name": "Lord of the Planet of the Sorcerers (Psychic)",
+    "ability_description": "This model can attempt up to two Rituals per turn instead of one, and each time this model attempts a Ritual, add 2 to the Psychic test result."
+  },
+  {
+    "ability_name": "Malefic Maelstrom (Psychic)",
+    "ability_description": "While this model is leading a unit, weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
+  },
+  {
+    "ability_name": "Malign Trickery",
+    "ability_description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, if this unit is not within Engagement Range of one or more enemy units, it can make a Normal move of up to D6\"."
+  },
+  {
+    "ability_name": "Marked by Fate (Psychic)",
+    "ability_description": "At the start of your Shooting phase, select one enemy unit that is visible to this PSYKER model. Until the end of the phase, each time a model in this unit makes an attack that targets that enemy unit, add 1 to the Hit roll."
+  },
+  {
+    "ability_name": "Mutating Vortex (Aura)",
+    "ability_description": "At the end of your Movement phase, roll one D6 for each enemy unit within 6\" of this model: on a 2-3, that unit suffers 1 mortal wound; on a 4-5, that unit suffers D3 mortal wounds; on a 6, that unit suffers D6 mortal wounds. Each enemy unit within range of this ability must then take a Battle-shock test."
+  },
+  {
+    "ability_name": "One Head Looks Back (Aura)",
+    "ability_description": "Each time your opponent targets a unit from their army with a Stratagem, if that unit is within 12\" of this model, increase the cost of that use of that Stratagem by 1CP."
+  },
+  {
+    "ability_name": "Pact of Sorcery",
+    "ability_description": "When mustering your army, unless specifically stated otherwise, you cannot select Scintillating Legions as your Army Faction."
+  },
+  {
+    "ability_name": "Prophesied Doom",
+    "ability_description": "Each time this unit ends a Charge move, select one enemy unit within Engagement Range of it, then roll one D6 for each model in this unit that is within Engagement Range of that enemy unit: for each 4+, that enemy unit suffers 1 mortal wound."
+  },
+  {
+    "ability_name": "Prophetic Sentinels",
+    "ability_description": "Once per battle round, you can target this unit with the Fire Overwatch or Heroic Intervention Stratagem for 0CP."
+  },
+  {
+    "ability_name": "Rebind Rubricae (Psychic)",
+    "ability_description": "In your Command phase, if this model is leading a unit, you can roll one D6: on a 1, that unit suffers D3 mortal wounds; on a 2-5, you can return 1 destroyed Bodyguard model to that unit; on a 6, you can return up to 2 destroyed Bodyguard models to that unit."
+  },
+  {
+    "ability_name": "Regenerating Monstrosities",
+    "ability_description": "At the start of each player’s Command phase, one model in this unit regains up to 3 lost wounds."
+  },
+  {
+    "ability_name": "Rites of Coalescence",
+    "ability_description": "While this unit contains one or more PSYKER models, each time an attack targets this unit, subtract 1 from the Wound roll."
+  },
+  {
+    "ability_name": "Sacrificial Blessing",
+    "ability_description": "While this model is leading a unit, in your Shooting phase and the Fight phase, each time that unit is selected to shoot or fight, this model can use this ability. If it does, select one Bodyguard model in that unit; that Bodyguard model is destroyed and, until the end of the phase, add D3 to the Attacks and Strength characteristics of Psychic weapons equipped by this model."
+  },
+  {
+    "ability_name": "Scryer of Fates (Psychic)",
+    "ability_description": "If your army includes this model, after both players have deployed their armies, you can select up to three Thousand Sons units from your army and redeploy them. When doing so, you can set those units up in Strategic Reserves if you wish, regardless of how many units are already in Strategic Reserves."
+  },
+  {
+    "ability_name": "Servile Pawns",
+    "ability_description": "While this model is within 3\" of one or more friendly Thousand Sons Infantry units, this model has the Lone Operative ability."
+  },
+  {
+    "ability_name": "Snarling Protector",
+    "ability_description": "You can target this model with the Heroic Intervention Stratagem for 0CP, and can do so even if you have already targeted a different unit with that Stratagem this phase. In addition, each time this model declares a charge that targets an enemy unit within Engagement Range of one or more Thousand Sons Psyker units from your army, you can re-roll the Charge roll."
+  },
+  {
+    "ability_name": "Sorcerous Support",
+    "ability_description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, each time a friendly model that disembarked from this TRANSPORT this turn makes a Psychic Attack that targets that enemy unit, add 1 to the Hit roll and add 1 to the Wound roll."
+  },
+  {
+    "ability_name": "Spirit Snare",
+    "ability_description": "Each time a friendly Thousand Sons Psyker model with the Cabal of Sorcerers ability is destroyed while within 9\" of one or more models with this ability, select one of those models with this ability: until the end of the battle, each time the selected model attempts a Ritual, add 1 to the Psychic test result (to a maximum of +2)."
+  },
+  {
+    "ability_name": "Time Flux (Aura; Psychic)",
+    "ability_description": "While a friendly Thousand Sons unit is within 6\" of this PSYKER , add 2\" to the Move characteristic of models in that unit."
+  },
+  {
+    "ability_name": "Treason of Tzeentch (Psychic)",
+    "ability_description": "At the start of your opponent’s Shooting phase, select one enemy unit within 24\" of this PSYKER . Until the end of the phase, ranged weapons equipped by models in that unit have the [HAZARDOUS] ability."
+  },
+  {
+    "ability_name": "Twisted Sorceries (Psychic)",
+    "ability_description": "Once per battle, in your Shooting phase or the Fight phase, this model can use this ability. If it does, until the end of the phase, improve the Strength and Attacks characteristics of Psychic weapons equipped by this model by 3."
+  },
+  {
+    "ability_name": "Unearthly Power",
+    "ability_description": "At the start of the battle round, select one of the abilities in the Crimson King section (see left). Until the start of the next battle round, this model has that ability."
   }
 ]
