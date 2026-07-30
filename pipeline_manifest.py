@@ -171,6 +171,7 @@ GUARDED = [
     'SESSION_HANDOFF_155.md', 'SESSION_HANDOFF_156.md', 'SESSION_HANDOFF_157.md',
     'SESSION_HANDOFF_158.md', 'SESSION_HANDOFF_159.md', 'SESSION_HANDOFF_160.md',
     'SESSION_HANDOFF_161.md', 'SESSION_HANDOFF_162.md', 'SESSION_HANDOFF_163.md',
+    'SESSION_HANDOFF_164.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

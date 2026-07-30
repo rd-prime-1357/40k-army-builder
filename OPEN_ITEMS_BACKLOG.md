@@ -3,8 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **16 open** as of S163: B69, B70, B71, B72, B73, B75, B76, B77, E25,
-P2, P4, B80, E23, B67b, E12, B17. Thousand Sons turn B shipped S163 (D252, data-only):
+not here, it isn't open. **16 open** as of S164: B69, B70, B71, B72, B73, B75, B76, B77, E25,
+P2, P4, B80, E23, B67b, E12, B17. Thousand Sons tooling turn shipped S164 (D253, tooling-only):
+`TS-3` added to `rules_assertions.py`, asserting `units.json` carries all 34 real current-edition
+Thousand Sons units, mirroring `CSM-1`. No `CSM-3` equivalent added — `TS-2` (S160/D248) already
+asserts zero TS detachments carry `text_source: none`, the stronger and correct shape given the
+faction pack covers all three MFM-only detachments' text. No backlog ticket opened or closed; this
+closes the Thousand Sons build (`THOUSAND_SONS_BUILD_SCOPE.md` turns A/B/C/tooling all shipped).
+Thousand Sons turn B shipped S163 (D252, data-only):
 `unit_loadouts.json` +34 TS entries (309 total, additive-only, diff-traced clean), `wargear_points.json`
 +1 entry (TS's own Defiler, `000001030` — same class of gap D236 found for CSM: an MFM-priced wargear
 swap silently free until a loadout entry exists). `repro_check.py` registered TS (`FACTIONS`,

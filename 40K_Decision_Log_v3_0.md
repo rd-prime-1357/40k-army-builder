@@ -9749,3 +9749,22 @@ TS turn B is the last data turn before the TS build's tooling wrap-up (roster/de
 assertions into `rules_assertions.py`, mirroring `CSM-1`-`CSM-3`), targeted next session per the S162
 prompt's sequencing.
 
+## D253 — Thousand Sons tooling turn shipped: TS-3 roster census closes the TS build (S164)
+
+**Tooling-only turn** (no `units.json`, `unit_loadouts.json`, or `detachments.json` changes).
+
+`THOUSAND_SONS_BUILD_SCOPE.md` §8's tooling turn had one real gap: a roster census mirroring `CSM-1`.
+Added `TS-3` to `rules_assertions.py`, asserting `units.json` carries all 34 real current-edition
+Thousand Sons units — count re-verified live against the banked file this session (34), not assumed
+from `THOUSAND_SONS_BUILD_SCOPE.md` §1's prose. `TS-2` (S160/D248) already asserts zero TS detachments
+carry `text_source: none`, which is the CSM-3 equivalent already in place — a fresh assertion there
+would be redundant, since §6's original plan text (predicting three prose-less detachments) is the
+part that went stale, not the coverage. `allied_group`/Scintillating Legions carriers were already
+generalised into `ALLIED_CARRIER_GROUPS` at D250; nothing else in §8 called for a new check.
+
+Full assertion suite passes with `TS-3` added: 110 total (up from 109), 73 tier-A / 37 tier-B; 72/73
+tier-A pass before manifest reissue (P3 fails on its own two guarded files — this decision log and
+`rules_assertions.py` — until the manifest below picks up their new hashes). Manifest reissued last
+per D251's ordering rule. This closes `THOUSAND_SONS_BUILD_SCOPE.md`'s build — turns A, B, C, and
+tooling all shipped (S161/D250, S163/D252, S160/D248, this entry).
+

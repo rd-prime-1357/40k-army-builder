@@ -1600,6 +1600,18 @@ ASSERTIONS = [
      'detachments.json Thousand Sons detachments (D248)',
      lambda S: ts_full_text_coverage(S)),
 
+    # ── Thousand Sons: roster census, closing the tooling turn (S164). Mirrors CSM-1.
+    # THOUSAND_SONS_BUILD_SCOPE.md §1 fixed the real current-edition roster at 34, not the
+    # 60 the raw source carries (26 of those are Warhammer Legends, out of scope). No CSM-3
+    # equivalent is needed here — TS-2 above already asserts zero TS detachments carry
+    # text_source: none, which is the stronger and correct shape (§6's plan text expected
+    # three prose-less detachments; D248 found the faction pack covers all of them instead).
+    ('TS-3',
+     'units.json carries all 34 real current-edition Thousand Sons units '
+     '(THOUSAND_SONS_BUILD_SCOPE.md §1).',
+     'units.json Thousand Sons army block; THOUSAND_SONS_BUILD_SCOPE.md §1',
+     lambda S: ts_roster_count(S)),
+
 ]
 
 
@@ -1768,6 +1780,19 @@ def ts_full_text_coverage(S):
     if none_keys:
         return False, f'Thousand Sons detachments with text_source:none: {none_keys}, expected none'
     return True, 'all 9 Thousand Sons detachments carry real rule text (none, none)'
+
+
+def ts_roster_count(S):
+    """THOUSAND_SONS_BUILD_SCOPE.md §1: real current-edition roster is 34, not the 60 the
+    raw source carries (26 are Warhammer Legends, excluded). Built S163 (D252, turn B)."""
+    armies = S.units()
+    ts = next((a for a in armies if a.get('army') == 'Thousand Sons'), None)
+    if ts is None:
+        return False, 'Thousand Sons army block not found in units.json'
+    n = len(ts.get('units') or [])
+    if n != 34:
+        return False, f'{n} Thousand Sons units built, expected 34 (real current-edition target)'
+    return True, 'all 34 real current-edition Thousand Sons units built'
 
 
 def e21a_coverage(S):
