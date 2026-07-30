@@ -1,6 +1,6 @@
 # 40K Army Builder — Functional Specification
 **Version 0.7 — Draft**
-**Last Updated: June 2026**
+**Last Updated: July 2026**
 
 ---
 
@@ -316,3 +316,25 @@ Priority chain for any rule/ability name:
 **Optional groups & compound choices.** Optional model groups (composition `0-N`) become include/exclude controls (toggle at max 1). A weapon-swap choice may be **compound** ("Weapon A + Weapon B") — one pick granting two weapons (D63). All *legal* options are shown regardless of competitiveness (D0); the tool guides via defaults, never by removing legal choices.
 
 **Un-onboarded units (D61).** Units without points data are shown with an "unverified" badge and, in the configure pane, an explicit "not yet onboarded — points and options pending" empty-state rather than a blank panel. The badge is derived from points-presence and clears automatically as units are onboarded.
+
+---
+
+## Session 162 addendum (July 2026) — Force Disposition selection (E25, designed; not yet built)
+
+11th Edition gives every detachment exactly one Force Disposition (five values: Priority Assets, Take
+and Hold, Purge the Foe, Disruption, Reconnaissance). A Matched Play list must declare exactly one.
+
+- **Available options** are the deduplicated dispositions of the list's selected detachments. Selecting
+  two detachments can therefore offer one option (shared) or two (distinct).
+- **Auto-select** when only one option is available, mirroring mandatory warlord selection. When more
+  than one is available, the user must choose.
+- **After selection** (or auto-selection) the disposition displays in the selection panel and appears
+  as a line in the army list output.
+- **Changing detachments** keeps the selection if still offered, otherwise clears it and re-runs the
+  auto-select rule.
+- **Missing selection** is an incomplete list, surfaced flag-and-warn per §6.4 — same treatment as a
+  missing warlord, not a hard block.
+- The data relationship is 1:1 today and enforced as such at parse time; the engine reads the field
+  list-tolerantly so a future 1-to-many print needs no schema migration.
+
+Full spec: backlog ticket E25; decision D251.

@@ -3,8 +3,9 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **15 open** as of S161: B69, B70, B71, B72, B73, B75, B76, B77, P2, P4,
-B80, E23, B67b, E12, B17. Thousand Sons turn A shipped S161 (D250, data-only): `units.json` +34
+not here, it isn't open. **16 open** as of S162: B69, B70, B71, B72, B73, B75, B76, B77, E25,
+P2, P4, B80, E23, B67b, E12, B17. E25 (Force Disposition selection) designed and filed S162 (D251,
+doc-only turn) — data already fully retained, engine work only. Thousand Sons turn A shipped S161 (D250, data-only): `units.json` +34
 (362 total), the six Scintillating Legions carriers TS-priced and tagged; closes **E24** (allied
 unlock now enforced) and **B78** (both Battleline rows shipped, scoped to the sole TZAANGORS-
 keyword datasheet). B61's four census assertions generalised to cover both Death Guard and
@@ -116,6 +117,37 @@ keyword exists nowhere in our data: zero hits in `keywords.json`, and the six ca
 empty `keywords` list with `allied_group: "Scintillating Legions"` standing in. Any TS rule naming the
 keyword has nothing to match against. Parser fix (never hand-edit output). Note `allied_group` must be
 **retained** — it is B61's shipped mechanism feeding E22b's gate, not a placeholder to be replaced.
+
+### E25 — Force Disposition selection: one required per army list — **NEW S162 (D251); ENGINE; M**
+11th Edition ties each detachment to exactly one Force Disposition (verified: 169/169 records in
+`detachments.json` carry exactly one of the five values; `detachment_parser.py` hard-errors on a missing
+or second disposition, so a future 1-to-many MFM print fails loudly, not silently; `e1a_dp_and_disposition`
+pins it). The data side is done — this ticket is engine-only. The app currently shows the disposition in
+the detachment picker but has no army-level selection, so a "complete" list ships without the required
+declaration.
+
+Spec (product behaviour per Ryan, S162):
+1. **Available set** = deduplicated `force_disposition` values across the list's selected detachments.
+   Engine reads the field list-tolerantly (`[].concat(...)`) so the design stays open to 1-to-many
+   without a schema change; the data file stays scalar until a real 1-to-many case exists.
+2. **Auto-select** when the set has exactly one member — covering both a single detachment and two
+   detachments sharing a disposition — mirroring the mandatory-warlord pattern. When the set has more
+   than one member, the user must pick one.
+3. **Per-list state**: additive `force_disposition` field inside the list_store v1 envelope (precedent:
+   `warlord_entry_id` was added inside v1 purely additively). Older saved lists load as unselected and
+   the auto-select rule runs.
+4. **Invalidation**: on any detachment change, keep the selection if still in the available set;
+   otherwise clear and re-derive (auto-select if the new set is a singleton).
+5. **Missing selection** = incomplete list, same flag-and-warn mechanism as a missing warlord (spec
+   §6.4 / D0 — surface the violation, don't hard-block). Zero detachments selected → no picker.
+6. **UI**: selection control in the Army List subheader area near the warlord picker (exact placement is
+   a build-session call); once selected (or auto-selected) it displays in the selection panel and the
+   army list output gains a Force Disposition line.
+7. **Harness**: new `e25_check.js` pinning derivation, auto-select, invalidation and the output line.
+
+Sequenced as the next engine-only session after the Thousand Sons arc closes (turn B data, then the TS
+tooling turn), i.e. target S165. `faction_pack_transform.py` needs no change — packs supply prose; the
+MFM files supply name/DP/disposition/unique/enhancements.
 
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
 The durable fix — commit the parser to the GitHub repo as canonical, mirror to project knowledge — is still

@@ -274,3 +274,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D248** — Thousand Sons has nine detachments, not seven; D245 regressed a count D241 already had right (S160)
 - **D249** — Manifest custody gap from S158/S159 reconciled at S160 open (S160)
 - **D250** — Thousand Sons turn A shipped: 34 units banked, closing E24 and B78; B61's four census assertions generalised to cover Death Guard and Thousand Sons (S161)
+- **D251** — Force Disposition selection designed and filed as E25 (data already retained 169/169; engine-only work); S161 handoff manifest-ordering drift reconciled (S162)

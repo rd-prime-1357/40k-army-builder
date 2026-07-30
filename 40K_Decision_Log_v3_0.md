@@ -9672,3 +9672,36 @@ blocking gap `THOUSAND_SONS_BUILD_SCOPE.md` §5 flagged is resolved — not yet 
 Claude this session, so the next session should still open by asking Ryan to confirm it, per D226's
 standing process rule for a faction's first `_web.txt` regeneration turn.
 
+## D251 — Force Disposition selection designed and filed as E25; S161 handoff manifest drift reconciled (S162)
+
+**Doc-only turn** (design + rolling documents; no engine, data or tooling change).
+
+**E25 filed.** Ryan set the product behaviour: every army list must carry exactly one Force
+Disposition, drawn from the disposition(s) of its selected detachments; auto-select when only one is
+available (mirroring mandatory warlord); explicit user choice when more than one; display after
+selection and include in the list output. Development calls made without asking, per standing
+authority: (a) the data schema stays scalar — the source is strictly 1:1 (all 169 records verified to
+carry exactly one of the five values this session; `detachment_parser.py` hard-errors on a missing or
+duplicated disposition, so a future 1-to-many MFM print fails loudly) and the engine instead reads the
+field list-tolerantly, keeping the design open to 1-to-many with zero data churn now; (b) selection
+invalidation on detachment change keeps a still-available choice, otherwise clears and re-derives;
+(c) a missing required selection is flag-and-warn like a missing warlord (spec §6.4 / D0), not a hard
+block; (d) per-list state is an additive field inside the list_store v1 envelope, the same way
+`warlord_entry_id` shipped; (e) sequencing — engine-only session after the TS arc closes (target S165).
+Full spec lives in the E25 backlog ticket and a Session 162 addendum in `40K_Functional_Spec_v0_7.md`.
+
+**Ryan's pipeline question answered from source, not memory:** no adjustment to
+`faction_pack_transform.py` is needed. Force Disposition never passes through the pack converter —
+`detachment_parser.py` reads it from each MFM faction file's DETACHMENTS block (packs supply prose
+only), and `detachments.json` retains it per record plus a `force_disposition_counts` tally in `_meta`
+(PRIORITY ASSETS 40, TAKE AND HOLD 43, PURGE THE FOE 32, DISRUPTION 31, RECONNAISSANCE 23).
+
+**Baseline reconciliation.** Session open found 2/25 gates failing on one file:
+`SESSION_HANDOFF_161.md` no longer matched `pipeline_manifest.json` (recorded `fb4f32f828715681…`,
+actual `d52f3577c242…`), while `repo_check` passed — area and repo agree with each other but not the
+manifest. Cause: the handoff is a guarded self-referential file whose content was finalised after
+S161's third and final manifest issue. Same family as D249, one step further down: S161 fixed the
+*membership* gap (handoffs missing from `GUARDED`) but the *ordering* gap (hash recorded before the
+handoff's final bytes) remained. Manifest reissued; 24/24 remaining gates then passed (tier B — repro
+checks skipped, sources not loaded, correct for a doc turn). Going forward the close sequence is:
+finish the handoff text completely, then issue the manifest last, touching nothing after.
