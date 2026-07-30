@@ -78,6 +78,62 @@ Ultramarine (and possibly other) Leaders carry the same over-broad list. Needs a
 Leader eligibility text against actual Matched Play legality before scoping a fix.
 
 
+### B75 — Faction pack Rules Updates pages: column resolution fails, text interleaves — **NEW S159 (D244); M**
+`faction_pack_transform.py` resolves every datasheet and detachment page correctly (stat tables intact,
+verified on Thousand Sons and Death Guard packs) but cannot resolve the portrait **Rules Updates** pages,
+which mix a full-width title and intro with columns starting at different heights. Those pages extract
+full-width and the two columns interleave mid-sentence: "Each time a PLAGUE LEGIONS unit from your
+**this PSYKER) and roll one D6**". Threshold tuning is exhausted — five values swept, none fixed Death
+Guard p7 while keeping Thousand Sons correct, and one attempt regressed TS while fixing DG.
+The converter now flags these pages (`single-SUSPECT` + a KNOWN LIMITATION note naming page numbers), so
+the failure is loud, not silent. **Do not parse flagged pages.** This matters because Rules Updates
+pages carry the keyword changes.
+Recommended fix: cluster words into columns by x-position per row band, which handles ragged column
+starts. Cheaper alternative Ryan may prefer: hand-correct the ~1 page per pack, at the cost of breaking
+determinism. Awaiting Ryan's flag-count report across the full pack set to size the work.
+
+### B76 — Rolling documents carry frozen version numbers in their filenames — **NEW S159 (D246); S; clarity not safety**
+Five docs carry `_vN_M` labels that have never incremented: the decision log has 29 commits under
+`v3_0`, and no predecessor volume exists in repo history. Cost real time this session — a backup copy of
+`40K_Data_Pipeline_Process_v0_6.md` was 16 lines short (missing Step 2b / B56a chapter-points procedure)
+under an identical version string.
+Rename to drop versions: `40K_Decision_Log.md`, `40K_Data_Pipeline_Process.md`, `40K_Functional_Spec.md`,
+`40K_Architecture_Overview.md`, `40K_Data_Dictionary.md`. Cost: each name is referenced in 3–6 other
+files, all five are manifest-keyed, historical handoffs keep pointing at old names (and stay untouched —
+they are the record), and the repo needs a delete-plus-add the web uploader cannot do in one step.
+Content identity is already handled by the manifest hash, so this adds no safety. Sequenced behind the
+Thousand Sons build.
+
+### B77 — `SCINTILLATING LEGIONS` keyword absent from our data — **NEW S159 (D245); S**
+Thousand Sons Rituals and stratagems target "THOUSAND SONS **or SCINTILLATING LEGIONS**" units, but the
+keyword exists nowhere in our data: zero hits in `keywords.json`, and the six carrier units have an
+empty `keywords` list with `allied_group: "Scintillating Legions"` standing in. Any TS rule naming the
+keyword has nothing to match against. Parser fix (never hand-edit output). Note `allied_group` must be
+**retained** — it is B61's shipped mechanism feeding E22b's gate, not a placeholder to be replaced.
+
+### B78 — Detachment rules that grant unit types are not modelled — **NEW S159 (D245); M**
+Thousand Sons' `SERVANTS OF CHANGE` detachment rule states "Friendly TZAANGORS units have BATTLELINE".
+A detachment therefore promotes a unit's type, which cannot be baked into the datasheet record — it is a
+detachment effect. Interacts with E22b's per-god Battleline ratio enforcement (non-Battleline units of a
+god keyword cannot outnumber Battleline ones), so a promotion changes what is legal. Belongs with turn C
+detachment work.
+
+### B79 — Detachment tag exclusivity is unenforced — **NEW S159 (D245); M**
+Detachments carry mutual-exclusion tags no mechanism reads: "This detachment has the MUTANT tag and
+cannot be taken with another MUTANT detachment" (TS Servants of Change), likewise ENGINES (DG Contagion
+Engines) and FLYBLOWN (DG Flyblown Host). D0 applies — an illegal pairing should be unreachable, not
+flagged. Belongs with turn C detachment work.
+
+### E24 — Thousand Sons allied unlock: gate the six Scintillating Legions carriers — **NEW S159 (D245); M; BLOCKS TS turn A**
+Turn A adds six TS units carrying `allied_group` (Kairos Fateweaver, Lord of Change, Flamers, Screamers,
+Pink Horrors, Blue Horrors). They must not be offered ungated — that is the D0 violation D204 found and
+E22b closes for Death Guard. Two pieces: extend the B61 census assertions (B61-1..4) to include the six
+TS carriers, and add a TS allied unlock to `detachment_effects.json` mirroring
+`Death Guard|TALLYBAND SUMMONERS`.
+Blocked on turn C: TS has **no detachments** in `detachments.json` yet, so there is no detachment to
+hang the unlock on. Precedent for the interim state is `Chaos Daemons|SHADOW LEGION`, which sits with
+`enforced:false` until CSM is built. **Turn C therefore precedes turn A.**
+
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
 The durable fix — commit the parser to the GitHub repo as canonical, mirror to project knowledge — is still
 Ryan's call. But the pipeline is now self-defending regardless of where the parser lives: a stale or wrong copy
@@ -205,7 +261,7 @@ the bigger lever and hasn't been tried yet.**
 RAG-expanded one.
 
 
-### B61 — Combined attached-unit popup: bodyguard's expand arrow opens the leader's rules/abilities — **NEW, Ryan-reported; S**
+### B80 — Combined attached-unit popup: bodyguard's expand arrow opens the leader's rules/abilities — **NEW, Ryan-reported; S; renumbered from B61 in S159 (D247) — B61 is taken by the shipped Plague Legions ticket (D208) and is referenced by assertions B61-1..4**
 Reported by Ryan against the configured-unit popup for an attached (leader + bodyguard) pairing.
 Confirmed on two separate pairs — Ultramarines Intercessors with an attached Lieutenant, and Chaos
 Daemons Bloodletters with an attached Bloodmaster — so this looks generic to any attached unit, not

@@ -9376,3 +9376,141 @@ of the public repo by `repo_check.py`'s existing custody check (`TOKEN_FILENAME`
 until Ryan runs the file-list-screenshot protocol (before/after) and confirms deletion separately —
 this session verified the fetch path works, it did not delete anything from the area. Tooling-only,
 no product data touched.
+
+## D243 — Project-area GW-source reconciliation closed; S158's repo batch was simply unpushed
+
+Ryan completed the 70-item GW-source deletion checklist in the project area by hand. Verified from
+file-list screenshots (the mount is not evidence of presence/absence per standing constraint): all 70
+checklist items gone, nothing outside the checklist touched, `SOURCE_REPO_TOKEN.txt` present.
+
+`MFM_Chapter_Pass.md`, `MFM_Standalone_Pass.md` and `MFM_FW_Reconciliation.md` **stay**. They are our
+own analysis write-ups about the MFM parsing process, contain no GW rules/ability/points text, and were
+never on the checklist. The `MFM_` prefix means "about MFM", not "is an MFM file"; the GW-source MFM
+files are the `.txt` ones and all 31 are gone.
+
+Three gates failed at session open and resolved to one cause: **S158's end-of-day repo batch had never
+been pushed.** Seven files were ahead in the project area — six present (`baseline.sh`,
+`pipeline_manifest.json`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_158.md`,
+`40K_Data_Pipeline_Process_v0_6.md`) and `40K_Decision_Log_v3_0.md`, which is repo-only for capacity and
+so existed in neither place. Walked the full git history (12 prior versions of the log, none matching
+the manifest hash) to confirm it was never pushed rather than pushed and reverted. After Ryan pushed,
+the log hashed exactly to the manifest's recorded `b46bc24bd8aba4a0` — nothing lost, no reconstruction.
+
+Also found and fixed: `gw_source_deletion_checklist.txt` was committed to the **public** repo despite
+`.gitignore`'s `*.txt` rule. Content-checked first — a filename tick-list only, no GW text, so nothing
+sensitive was published — but untracked anyway rather than adding a `.gitignore` re-include exception.
+`*.txt` is blunt on purpose, since `.txt` is the extension of every GW source file, and carving
+exceptions weakens the net for no gain. Confirmed `SOURCE_REPO_TOKEN.txt` is **not** in the public repo.
+
+Baseline closed at 26/26.
+
+**Process learning.** Ryan cannot download from the project Files panel. Any repo sync needing a file
+held only there must route through Claude re-delivering it. Build this into session close rather than
+rediscovering it.
+
+## D244 — `faction_pack_transform.py` (NET NEW): GW faction pack PDF → markdown, with a known limitation
+
+Ryan can supply GW faction packs as PDFs. Converting them via a chat assistant was the alternative;
+rejected in favour of a script because a deterministic converter re-runs byte-identically (required by
+the repro-check discipline), is auditable when a parse goes wrong, and keeps GW source out of a
+third-party service. Zero-argument invocation converts every PDF in the current directory, one `.md`
+per PDF; `--force` to overwrite, `--dir` to point elsewhere.
+
+`pdftotext -layout` is unusable on these packs: they are two-column, and it welds columns onto shared
+lines, producing fragments like "attempt Rituals from those listed on the right. To do so, select one
+SCINTILLATING LEGIONS unit." That is worse than useless because it reads as valid prose.
+
+**Three layout revisions, each found by testing rather than reasoning:**
+
+1. Midline split — wrong. On landscape datasheet pages the gutter sits near 60%, so a 50% cut ran
+   through the stat columns: `48" 2 3+ 12 -3 D6+1` became `48" 2 3+ 1`, losing Damage and turning
+   Strength 12 into 1, with nothing about the output looking wrong.
+2. Widest-whitespace-band detection — fixed the tables but flattened occupancy down the whole page, so
+   one centred heading closed the gutter and the page fell back to full-width extraction.
+3. Row-aware occupancy plus stripping leading/trailing full-width bands — current. 4% row-occupancy
+   threshold.
+
+**KNOWN LIMITATION, deliberately not solved.** The portrait Rules Updates pages mix a full-width title
+and intro with columns that start at different heights, and detection cannot resolve them at any
+threshold — swept five values; none fixed Death Guard p7 while keeping Thousand Sons correct, and one
+attempt regressed Thousand Sons while fixing Death Guard. Threshold tuning is the wrong tool. Stopped
+per the standing rule rather than half-finish.
+
+Instead the converter **flags** unresolved pages loudly: per-page `single-SUSPECT` markers plus a
+KNOWN LIMITATION note naming the page numbers and stating the text is likely interleaved and must not
+be parsed unchecked. Converting a silent corruption into a loud one is the substantive win. Filed as
+B75. This matters because the Rules Updates pages carry the keyword changes.
+
+Verified good on both packs: all datasheet and detachment pages, stat tables intact, deterministic
+output. The converter contains no GW content and is repo-safe; the converted `.md` files are
+GW-derived and are private-sources-repo only.
+
+## D245 — Thousand Sons turn A deferred; correcting a wrong reading of `allied_group`
+
+Turn A ran clean mechanically: 328 → 362 units, 34 Thousand Sons units added, **zero existing units
+changed, zero removed**, all 34 priced from the TS MFM with no gaps, fixed point reproduces
+byte-identically, `unit_loadouts.json` untouched (so turns A and B are cleanly separable as scoped).
+`abilities.json` +43 and `weapon_abilities.json` +2 (Brayhorn, Herd Banner — Tzaangors), both additive.
+
+`rules_assertions.py` then flagged six unexpected `allied_group` carriers outside Death Guard:
+Kairos Fateweaver, Lord of Change, Flamers, Screamers, Pink Horrors, Blue Horrors. **Nothing was
+banked.**
+
+**Wrong turns taken, recorded so they are not repeated:**
+
+- Claimed the six were duplicates of Chaos Daemons entries and should not be ingested. **False** —
+  compared by name only. They carry different `unit_id`s and differ in `model_groups`, `weapons` and
+  `unit_ability_details`, and critically in points: Pink Horrors 115 in TS vs 150 in CD, Blue Horrors
+  90 vs 125. Drawing from the CD pool would have priced every Scintillating Legions list 35 points
+  high per Horror unit and looked correct.
+- Recommended reducing `allied_group` to a provenance-only field. **Would have broken four shipped
+  assertions (B61-1..4) and disabled E22b's gate**, re-opening the D0 violation D204 found.
+- Treated B61 as an open blocker and re-sequenced it ahead of the TS build. **B61 closed S133 (D208)**
+  — it is what created `allied_group`. **E22 closed S136 (D214)**; E22b already ships the offer filter,
+  battle-size points sub-cap and detachment-scoped Warlord ban.
+- Stated the Daemonic Pact constraints were unenforced. They are enforced, by E22b.
+
+**Established from source (`thousand_sons_faction_pack`, June 27 2026).** SCINTILLATING LEGIONS is a
+**keyword**, not a detachment: TS Rituals and stratagems target "THOUSAND SONS or SCINTILLATING LEGIONS"
+units. Allies do not receive the army's own psychic rituals. The real TS detachments are Changehost of
+Deceit, Grand Coven, Warpforged Cabal, Warpmeld Pact, Hexwarp Thrallband, Rubricae Phalanx and Ritual
+of Regeneration — none named Scintillating Legions. Death Guard's pack uses PLAGUE LEGIONS the same
+way, confirming one pattern. Daemonic Pact (Chaos Daemons army rule) is a separate army-level mechanism
+for plain CSM and Chaos Knights armies and does not bear on the TS build.
+
+So the TS roster is genuinely 34; the scope doc's count was right, only its assumption that all 34 were
+Rubric-side units was wrong.
+
+**What turn A actually needs, and why it waits for turn C.** Extend the B61 census assertions to
+include the six TS carriers, and add a TS allied unlock to `detachment_effects.json`. TS has no
+detachments in `detachments.json` until turn C, so there is no detachment to hang the unlock on.
+Precedent already set: `Chaos Daemons|SHADOW LEGION` sits with `enforced:false` until CSM is built.
+**Turn C therefore precedes turn A.**
+
+## D246 — Rolling documents drop version numbers from their filenames
+
+`40K_Decision_Log_v3_0.md` has been committed 29 times under a frozen label. No predecessor volume
+(`v0_5`, `v2_0`, etc.) exists anywhere in repo history, so those numbers have never meant what they
+appear to mean. A label that never moves is worse than none: it invites treating a same-named backup as
+the same content, which cost real time this session when a backup copy of
+`40K_Data_Pipeline_Process_v0_6.md` proved to be 16 lines short (missing Step 2b, the B56a
+chapter-points procedure) under an identical version string.
+
+Policy: rolling documents edited in place carry no version in the filename. Git history plus the
+manifest SHA-256 are the version record — they cannot drift. A number belongs in a filename only when a
+document genuinely supersedes another that must stay readable, as a volume marker, with the old file
+frozen. `equipped_parser_B18c_banked.py` stays as-is; that name marks a deliberately frozen snapshot.
+
+This is a **clarity** fix, not a safety fix — content identity is already handled by the manifest hash,
+which is what caught the short backup. Sequenced accordingly: filed as B76, behind the TS build.
+
+## D247 — Duplicate ticket ID: open B61 renumbered to B80
+
+`B61` was in use twice. The shipped ticket (S133, D208) tagged the six Death Guard Plague Legions units
+with `allied_group` and is load-bearing: four assertions are named `B61-1` through `B61-4`, and D208 and
+D214 both reference it. A later Ryan-reported popup bug (bodyguard's expand arrow opening the leader's
+rules) was given the same ID.
+
+The open ticket is renumbered to **B80**; the shipped ID stays, because renaming it would orphan four
+assertion IDs and two decision-log references. Caught while counting open tickets for the S159 handoff,
+which is the only reason it surfaced — worth a periodic ID-collision check.
