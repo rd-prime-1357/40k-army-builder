@@ -9865,3 +9865,20 @@ after this fix, before the final baseline run.
   moment `--write` runs. `repo_check.py` run clean: 82 files byte-identical, 53 repo-only (all expected
   — old handoffs, `40K_Decision_Log_v3_0.md`, `BACKLOG_ARCHIVE.md`, per routine housekeeping), 0 GW
   material, 0 differs. No engine or data change; `index.html` untouched (S167)
+
+- **D257** — B81 shipped: close-time manifest freshness check (S168, tooling-only). Closes B81.
+  `pipeline_manifest.py` gains `--freshness-check`: re-hashes only the decision log and the
+  highest-numbered `SESSION_HANDOFF_*.md` file present against `pipeline_manifest.json`'s current
+  content, independent of `--write` or the full `check()` pass over all 121 guarded files. Intended
+  use is the last command of session close, after `--write` and after any other edit this turn made —
+  it converts D251's prose ordering rule ("finish the text, then write the manifest, touch nothing
+  after") into something that fails loudly instead of surviving silently until the next session's
+  baseline catches it, which is how D239 and D256 were both found. Verified both directions before
+  banking: run clean against the current tree (decision log and `SESSION_HANDOFF_167.md` both match),
+  then a deliberate one-line edit to the decision log made `--freshness-check` fail with the edited
+  file named, then the edit was reverted and the check passed again. No change to `--write`, `check()`,
+  or `check_overlay()` — additive only. `pipeline_manifest.py` itself is a guarded file, so the manifest
+  was reissued after this edit landed. Standing convention going forward: every session close ends with
+  `pipeline_manifest.py --write` followed by `pipeline_manifest.py --freshness-check`, the latter's PASS
+  being part of what "session close is done" means from S168 on. No engine or data change; `index.html`
+  untouched at v6.11 (S168).

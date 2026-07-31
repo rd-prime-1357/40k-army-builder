@@ -3,7 +3,11 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **15 open** as of S167: B69, B70, B72, B73, B75, B76, B77, B81, P2, P4,
+not here, it isn't open. **14 open** as of S168: B69, B70, B72, B73, B75, B76, B77, P2, P4,
+B80, E23, B67b, E12, B17. B81 shipped S168 (D257, tooling-only): `pipeline_manifest.py` gained
+`--freshness-check`, verifying only the decision log and the latest handoff against the manifest as
+the last command of session close, converting D251's ordering rule into an automated check rather
+than a remembered one. **15 open** as of S167: B69, B70, B72, B73, B75, B76, B77, B81, P2, P4,
 B80, E23, B67b, E12, B17. B81 opened S167 (D256, tooling-only): manifest hashes for two guarded
 files went stale between write and session-close text finalization, third occurrence of the same
 defect class as D239; content unaffected, manifest reissued clean, ticket filed to automate the
@@ -69,16 +73,6 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
-
-### B81 — Manifest write can run before the decision log/handoff reach final text — **NEW S167 (D256); S; process**
-Third occurrence of the same defect (first: D239, S155/S156, `DECISION_INDEX.md` and
-`OPEN_ITEMS_BACKLOG.md`; this time: `40K_Decision_Log_v3_0.md` and `SESSION_HANDOFF_166.md`). D251's
-rule — finish the handoff's text, then reissue the manifest last, touching nothing after — is a prose
-instruction with nothing checking it is actually followed. Each time, the file's real content is fine;
-only the manifest's stored hash for that file goes stale, undetected until a later session's baseline
-catches it. Add an automated close-time check: after `pipeline_manifest.py --write`, re-hash the
-decision log and the session handoff and fail loudly if either changed since the write — cheap, and it
-converts "remember to do this last" into something that can't silently slip.
 
 ### B69 — Roboute Guilliman popup: "Author of the Codex" mislabel + orphaned ability grouping — **NEW, Ryan-reported; S**
 Roboute's popup text for "Author of the Codex" says "(see left)" — should say "(see below)". The
@@ -379,6 +373,7 @@ not loss; fetch the current copy from
 `https://raw.githubusercontent.com/rd-prime-1357/40k-army-builder/main/BACKLOG_ARCHIVE.md` before
 appending to it, and hand the updated file back for Ryan to commit.
 
+- **B81** — Manifest write could run before the decision log/handoff reached final text — SHIPPED S168 (D257); TOOLING. Third occurrence of the D239 defect class. `pipeline_manifest.py --freshness-check` added: re-hashes only the decision log and the latest session handoff against the manifest, run as the last command of session close after `--write`. Verified both directions (clean pass, then a deliberate edit made it fail with the file named, then reverted and passed again). Standing convention from S168: session close ends with `--write` then `--freshness-check`.
 - **E21** — Detachment-driven army-construction effects (battleline / forbid / unlock / warlord) — CLOSED S139 (D218); E21a data (D209), E21b engine (D212), E21c engine + E22b (D214), E21d UI pieces 1-2 (D215) and piece 3 — the stranded-allied roster warning (`entryAlliedError`, D218) — all shipped. Full history in D203/D204/D209/D212/D214/D215/D218
 - **B62** — `FALSE` string literal in Is Base Equipment (a real latent bug, not inert as first assumed), and no presence gate on the CD root CSVs — SHIPPED S138 (D216)
 - **B60** — `detachment_parser.py`: `restrictions` populated inconsistently — CLOSED S142 (D221); DATA. Two root causes fixed (Wahapedia folding the restriction into `rule_text` in two shapes; DA pack bleeding stratagem clauses in where page-collated CP tokens defeat stratagem recognition). All 25 chapter-exclusive detachments now carry the restriction in `restrictions`, none in `rule_text`; 16 records changed, restrictions/rule_text only. Assertion follow-up split off as B60a

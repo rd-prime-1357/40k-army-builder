@@ -48,9 +48,29 @@ Adding a new session's handoff: append its filename to the list at session
 close, same turn the handoff is written — the guarded set is append-only by
 design (D-log precedent: prose claims drift, the list is the executable
 record of what "the whole repo" means).
+
+CLOSE-TIME FRESHNESS CHECK (B81, S168)
+---------------------------------------
+D251's ordering rule — finish the decision log and handoff text, THEN run
+`--write`, touching nothing after — depends on nobody editing either file
+after the write. That has slipped three times (D239, and twice more folded
+into D256) because nothing checked it; the drift was only ever caught by
+the *next* session's baseline, after the wrong hash was already banked.
+
+`--freshness-check` closes that gap. Run it as the last command of session
+close, after `--write` and after any other file this turn touches:
+
+    python3 pipeline_manifest.py --write
+    python3 pipeline_manifest.py --freshness-check
+
+It re-hashes only the decision log and the highest-numbered
+`SESSION_HANDOFF_*.md` file present and compares each against what
+`--write` just banked. A mismatch means one of those two files was touched
+after the write — reissue the manifest and check again before delivering.
+It does not replace `--write`; it verifies `--write` was truly last.
 """
 
-import argparse, hashlib, json, os, sys
+import argparse, hashlib, json, os, re, sys
 
 MANIFEST = 'pipeline_manifest.json'
 
@@ -177,6 +197,7 @@ GUARDED = [
     'SESSION_HANDOFF_165.md',
     'SESSION_HANDOFF_166.md',
     'SESSION_HANDOFF_167.md',
+    'SESSION_HANDOFF_168.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):
@@ -311,6 +332,53 @@ def check_overlay(fetched_dir, local_dir):
                   f'({len(GUARDED) - len(overlay_targets)} already local, not checked)'), overlay_targets
 
 
+DECISION_LOG = '40K_Decision_Log_v3_0.md'
+_HANDOFF_RE = re.compile(r'^SESSION_HANDOFF_(\d+)\.md$')
+
+
+def latest_handoff(d):
+    """Highest-numbered SESSION_HANDOFF_N.md present in d, or None if none exist."""
+    nums = []
+    for f in os.listdir(d):
+        m = _HANDOFF_RE.match(f)
+        if m:
+            nums.append((int(m.group(1)), f))
+    return max(nums)[1] if nums else None
+
+
+def freshness_check(d):
+    """(ok, message). Verifies ONLY the decision log and the latest session handoff
+    against pipeline_manifest.json — the two files D251's ordering rule depends on
+    being untouched after `--write` (B81, S168). Run this as the last command of
+    session close, after --write. A mismatch means one of the two was edited after
+    the write ran and the manifest needs reissuing before delivery."""
+    targets = [f for f in (DECISION_LOG, latest_handoff(d)) if f]
+    if not targets:
+        return False, 'neither the decision log nor a session handoff was found'
+
+    p = os.path.join(d, MANIFEST)
+    if not os.path.exists(p):
+        return False, f'{MANIFEST} not found — run --write first'
+    try:
+        recorded = json.load(open(p, encoding='utf-8')).get('files', {})
+    except Exception as e:
+        return False, f'{MANIFEST} is unreadable: {type(e).__name__}: {e}'
+
+    problems = []
+    for f in targets:
+        fp = os.path.join(d, f)
+        if not os.path.exists(fp):
+            problems.append(f'{f} absent')
+        elif f not in recorded:
+            problems.append(f'{f} not in {MANIFEST} — run --write')
+        elif sha256(fp) != recorded[f]:
+            problems.append(f'{f} does not match the manifest — edited after --write, reissue it')
+
+    if problems:
+        return False, '; '.join(problems)
+    return True, f'{", ".join(targets)} match the manifest banked by the last --write'
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dir', default='.', help='directory holding the guarded files')
@@ -319,7 +387,16 @@ def main():
                      help='verify only the guarded files absent from LOCAL_DIR (the overlay set), '
                           'reading their content from --dir. Prints the overlay file list on OK, '
                           'one per line, after the summary line, for a caller to copy.')
+    ap.add_argument('--freshness-check', action='store_true',
+                     help='B81: verify only the decision log and the latest session handoff '
+                          'against pipeline_manifest.json. Run last at session close, after '
+                          '--write, to catch either file being edited after the write ran.')
     a = ap.parse_args()
+
+    if a.freshness_check:
+        ok, msg = freshness_check(a.dir)
+        print(('OK   ' if ok else 'FAIL ') + msg)
+        return 0 if ok else 1
 
     if a.write:
         try:

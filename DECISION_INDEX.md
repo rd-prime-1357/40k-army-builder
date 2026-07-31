@@ -282,3 +282,5 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D256** — Session-open reconciliation: manifest hashes for the decision log and prior session's
   handoff were stale versus their (repo-matching) real content — same defect class as D239, third
   occurrence; filed B81 (S167)
+- **D257** — B81 shipped: `pipeline_manifest.py --freshness-check`, a close-time gate that re-hashes
+  the decision log and latest handoff against the manifest, run last after `--write` (S168)
