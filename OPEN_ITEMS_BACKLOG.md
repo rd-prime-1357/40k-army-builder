@@ -3,7 +3,11 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **16 open** as of S164: B69, B70, B71, B72, B73, B75, B76, B77, E25,
+not here, it isn't open. **15 open** as of S167: B69, B70, B72, B73, B75, B76, B77, B81, P2, P4,
+B80, E23, B67b, E12, B17. B81 opened S167 (D256, tooling-only): manifest hashes for two guarded
+files went stale between write and session-close text finalization, third occurrence of the same
+defect class as D239; content unaffected, manifest reissued clean, ticket filed to automate the
+check. **16 open** as of S164: B69, B70, B71, B72, B73, B75, B76, B77, E25,
 P2, P4, B80, E23, B67b, E12, B17. Thousand Sons tooling turn shipped S164 (D253, tooling-only):
 `TS-3` added to `rules_assertions.py`, asserting `units.json` carries all 34 real current-edition
 Thousand Sons units, mirroring `CSM-1`. No `CSM-3` equivalent added — `TS-2` (S160/D248) already
@@ -65,6 +69,16 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### B81 — Manifest write can run before the decision log/handoff reach final text — **NEW S167 (D256); S; process**
+Third occurrence of the same defect (first: D239, S155/S156, `DECISION_INDEX.md` and
+`OPEN_ITEMS_BACKLOG.md`; this time: `40K_Decision_Log_v3_0.md` and `SESSION_HANDOFF_166.md`). D251's
+rule — finish the handoff's text, then reissue the manifest last, touching nothing after — is a prose
+instruction with nothing checking it is actually followed. Each time, the file's real content is fine;
+only the manifest's stored hash for that file goes stale, undetected until a later session's baseline
+catches it. Add an automated close-time check: after `pipeline_manifest.py --write`, re-hash the
+decision log and the session handoff and fail loudly if either changed since the write — cheap, and it
+converts "remember to do this last" into something that can't silently slip.
 
 ### B69 — Roboute Guilliman popup: "Author of the Codex" mislabel + orphaned ability grouping — **NEW, Ryan-reported; S**
 Roboute's popup text for "Author of the Codex" says "(see left)" — should say "(see below)". The

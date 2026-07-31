@@ -9850,3 +9850,18 @@ that slice outright (a thrown error, not a silent pass). Re-anchored on the bloc
 instead (`// ── B47: inline detail expanders`), which is stable regardless of what the block's internals
 are named. `bundle_check.js` itself is a guarded file, so the manifest was regenerated a second time
 after this fix, before the final baseline run.
+
+- **D256** — Session-open reconciliation (S167, tooling-only): baseline found `40K_Decision_Log_v3_0.md`
+  and `SESSION_HANDOFF_166.md` both mismatched `pipeline_manifest.json`'s stored hashes, though the
+  repo and project area agreed with each other on both files' actual content. Verified via a fresh repo
+  clone: every other guarded file matched; only these two differed, and only from the manifest, not from
+  each other. This is the same defect class as D239 (S155/S156, `DECISION_INDEX.md` and
+  `OPEN_ITEMS_BACKLOG.md`): the manifest write at session close ran before the decision log and/or
+  handoff reached their final edited text, and was never repeated. Third known occurrence of this
+  pattern. Manifest regenerated against the confirmed-consistent content (120 guarded files) — no
+  content lost, both files' real text kept as-is. Filed **B81** to stop relying on remembering to
+  reissue the manifest last: an automated close-time check that fails loudly if the manifest's stored
+  hash for the decision log or the session handoff doesn't match the file's on-disk content at the
+  moment `--write` runs. `repo_check.py` run clean: 82 files byte-identical, 53 repo-only (all expected
+  — old handoffs, `40K_Decision_Log_v3_0.md`, `BACKLOG_ARCHIVE.md`, per routine housekeeping), 0 GW
+  material, 0 differs. No engine or data change; `index.html` untouched (S167)
