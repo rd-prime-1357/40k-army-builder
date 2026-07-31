@@ -304,4 +304,9 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   positive per datasheet, drowning the real notes), B86 (image-only page needs OCR); converter's
   install message fixed for Windows; recorded that this conversation opened against a 12-session-stale
   project area (S172)
+- **D263** — B84 shipped (converter's KNOWN LIMITATION note no longer names a page type it doesn't
+  own); B75/B85 found blocked on real PDF access rather than judgment — no PDFs reachable from this
+  environment, a synthetic test of B85's reported bleed pattern didn't reproduce it, so a diagnostic
+  was added instead of a guessed fix; manifest gap from S172 (never reissued, guarded set missing
+  `SESSION_HANDOFF_172.md`) reconciled at open (S173)
 

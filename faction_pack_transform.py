@@ -268,6 +268,16 @@ def _find_anomalies(pages):
             name = m.group(1).strip()
             if 0 < len(name) < 60:
                 factions.setdefault(name, []).append(num)
+                # B85 diagnostic (not yet fixed — see note below): print the raw
+                # text immediately before the match so the next real run shows
+                # exactly what precedes "FACTION KEYWORDS" on the source page,
+                # rather than guessing at the bleed pattern without a PDF to
+                # check it against.
+                ctx_start = max(0, m.start() - 30)
+                print(
+                    f"      B85-CONTEXT p{num}: ...{text[ctx_start:m.start()]!r}"
+                    f"[{m.group(0)}]"
+                )
     if len(factions) > 1:
         listed = "; ".join(
             f"{name} (p{', p'.join(str(p) for p in pgs)})"
@@ -294,8 +304,7 @@ def _find_anomalies(pages):
             "KNOWN LIMITATION — page(s) " + ", ".join(suspect)
             + " could not be resolved into columns and were extracted full-width. "
               "Text on those pages is very likely INTERLEAVED between the two "
-              "columns and must not be parsed without checking it by eye. In "
-              "these packs that is the Rules Updates page."
+              "columns and must not be parsed without checking it by eye."
         )
     empty = [str(n) for n, t, layout in pages if layout == "empty"]
     if empty:

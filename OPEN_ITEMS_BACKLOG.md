@@ -3,7 +3,16 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **11 open** as of S171 (down from 12 at S169/S170): B69, B70, B73, B75,
+not here, it isn't open. **13 open** as of S173 (down from 14 at S172): B69, B70, B73, B75, B76,
+B85, B86, P2, P4, E23, B67b, E12, B17. B84 closed S173 (D263, tooling, shipped) — the converter's
+KNOWN LIMITATION note no longer names a page type it doesn't own. B85 not closed — a diagnostic
+was added but the root cause needs a real converter run to confirm; still open.
+
+**14 open** as of S172 (up from 11 at S171): B69, B70, B73, B75, B76, B84, B85, B86, P2, P4, E23,
+B67b, E12, B17. B75 resized and its diagnosis corrected (D262); B84/B85/B86 filed as new tickets
+from the same full-pack-run finding.
+
+**11 open** as of S171 (down from 12 at S169/S170): B69, B70, B73, B75,
 B76, P2, P4, E23, B67b, E12, B17. B77 closed S171 (D261, audit-only, no code/data shipped) — its
 S159 diagnosis was already stale: the six Scintillating Legions carriers already carry the faction
 keyword in `units.json` and it already renders in the UI, so there was nothing to build.
@@ -96,20 +105,21 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
-### B84 — Converter's KNOWN LIMITATION note names the wrong page type — **NEW S172 (D262); XS**
-The note ends "In these packs that is the Rules Updates page." False: Thousand Sons p1 is the
-cover/contents and p5 is the Hexwarp Thrallband **detachment** page, both flagged. The claim was
-generalised from a two-pack sample and sends a reader looking in the wrong place — worse than no
-guidance. Drop the sentence; the page numbers the note already prints are the useful part.
-
-### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); S**
+### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:
 "Skarbrand Legiones Daemonica", "Kairos Fateweaver Legiones Daemonica". Chaos Daemons reports ~34
 "faction keywords", Space Marines ~33 — roughly one per datasheet.
 Worse than cosmetic: the false positives sit directly beside the KNOWN LIMITATION notes and train the
 reader to skim past them, undermining the loud-failure design that justified stopping the build in D244.
-Anchor the match to the keyword label, stop at the line boundary, and only report when the distinct set
-is genuinely small.
+**S173: not fixed blind.** No PDF access this session — the private source repo holds only already-
+converted `.md` output for two packs, never the raw PDFs, and a synthetic string built to reproduce the
+reported bleed ("Skarbrand FACTION KEYWORDS: Legiones Daemonica" on one line) did **not** reproduce it —
+the regex correctly captured only "Legiones Daemonica" in that shape, so the real cause is something
+other than same-line adjacency and guessing at it risks a third wrong diagnosis of this exact area (D262
+already corrected two). Added a stdout-only diagnostic instead: each match now prints 30 characters of
+raw context immediately before it, so Ryan's next real run against the actual packs shows the true
+bleed pattern instead of speculation. Does not touch committed `.md` output, no determinism risk. Fix
+still needs that real-run output before it can be written correctly.
 
 ### B86 — Chaos Daemons faction pack p13 has no extractable text — **NEW S172 (D262); XS; may be nothing**
 Image-only page; the converter flags it. Needs an eye to confirm whether it carries rules. If it does,
@@ -195,8 +205,16 @@ determinism. Awaiting Ryan's flag-count report across the full pack set to size 
 **Sized S172 (D262) from a full 11-pack run: 64 flagged pages of 635 (~10%).** Range 3–16 per pack;
 Black Templars is 3 of its 5. The original estimate — roughly one page per pack — came from a two-pack
 sample. **Hand-correction is therefore not viable**: 64 pages of manual work that permanently breaks
-determinism. Cluster words into columns by x-position per row band. Do B84 and B85 in the same pass so
-the flags stay trustworthy.
+determinism. Cluster words into columns by x-position per row band. Do B85 in the same pass so
+the flags stay trustworthy (B84 shipped S173, no longer bundled here).
+
+**S173: still blocked on real PDF access, not a product decision.** The private source repo carries only
+already-converted `.md` output for two packs (Dark Angels, Space Marines), never the raw PDFs — Ryan's
+local machine is the only place they exist. A column-clustering rewrite designed and shipped without
+testing it against the actual flagged pages is exactly how B75's diagnosis got corrected twice already
+(D262). Needs either the flagged pages themselves (screenshot or a small PDF excerpt) or a Ryan-run
+diagnostic dump (word text + x0/x1/top per row on 2-3 representative flagged pages, e.g. Thousand Sons
+p1/p5) before the rewrite can be designed on real evidence instead of guessed.
 
 ### B76 — Rolling documents carry frozen version numbers in their filenames — **NEW S159 (D246); S; clarity not safety**
 Five docs carry `_vN_M` labels that have never incremented: the decision log has 29 commits under
@@ -431,6 +449,7 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B84** — Converter's KNOWN LIMITATION note names the wrong page type — **NEW S172 (D262); SHIPPED S173 (D263); TOOLING.** The note ended "In these packs that is the Rules Updates page," which is false (Thousand Sons p1 is cover/contents, p5 is the Hexwarp Thrallband detachment page). Sentence dropped; the note now stops at the page numbers it already prints. Pure string edit in `faction_pack_transform.py`, verified by code inspection and a synthetic `_find_anomalies` run — no PDF needed for this one.
 - **B77** — `SCINTILLATING LEGIONS` keyword absent from our data — **NEW S159 (D245); CLOSED S171 (D261),
   already-resolved, no build.** The S159 diagnosis (zero hits in `keywords.json`, carrier units carry an
   empty keyword list) does not match the current `units.json`: all six carriers (Kairos Fateweaver, Lord
