@@ -295,3 +295,6 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D260** — B70/B73 audit complete: root cause is `mfm_points_parser.py`'s LEADER/SUPPORT-blind backfill;
   B70 not-a-bug (Wardens has no Leader ability in any source), B73 confirmed systemic across 13 characters;
   source-of-truth decision needed from Ryan; no code/data shipped (S170)
+- **D261** — B77 audited and closed as already-resolved: the six Scintillating Legions carriers already
+  carry the faction keyword in `units.json` and it already renders in the UI; ticket's S159 diagnosis was
+  stale, not something this session fixed; closed on standing authority, no code/data shipped (S171)

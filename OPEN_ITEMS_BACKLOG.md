@@ -3,7 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **12 open** as of S170 (unchanged from S169): B69, B70, B73, B75, B76,
+not here, it isn't open. **11 open** as of S171 (down from 12 at S169/S170): B69, B70, B73, B75,
+B76, P2, P4, E23, B67b, E12, B17. B77 closed S171 (D261, audit-only, no code/data shipped) — its
+S159 diagnosis was already stale: the six Scintillating Legions carriers already carry the faction
+keyword in `units.json` and it already renders in the UI, so there was nothing to build.
+
+**12 open** as of S170 (unchanged from S169): B69, B70, B73, B75, B76,
 B77, P2, P4, E23, B67b, E12, B17. B70/B73 audited S170 (D260, audit-only, no code/data shipped):
 one root mechanism found in `mfm_points_parser.py`'s Leader-list backfill (blind to the MFM's
 own LEADER vs. SUPPORT distinction, plus a one-line block-boundary over-read). B70 looks like
@@ -177,13 +182,6 @@ files, all five are manifest-keyed, historical handoffs keep pointing at old nam
 they are the record), and the repo needs a delete-plus-add the web uploader cannot do in one step.
 Content identity is already handled by the manifest hash, so this adds no safety. Sequenced behind the
 Thousand Sons build.
-
-### B77 — `SCINTILLATING LEGIONS` keyword absent from our data — **NEW S159 (D245); S**
-Thousand Sons Rituals and stratagems target "THOUSAND SONS **or SCINTILLATING LEGIONS**" units, but the
-keyword exists nowhere in our data: zero hits in `keywords.json`, and the six carrier units have an
-empty `keywords` list with `allied_group: "Scintillating Legions"` standing in. Any TS rule naming the
-keyword has nothing to match against. Parser fix (never hand-edit output). Note `allied_group` must be
-**retained** — it is B61's shipped mechanism feeding E22b's gate, not a placeholder to be replaced.
 
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
 The durable fix — commit the parser to the GitHub repo as canonical, mirror to project knowledge — is still
@@ -406,6 +404,15 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B77** — `SCINTILLATING LEGIONS` keyword absent from our data — **NEW S159 (D245); CLOSED S171 (D261),
+  already-resolved, no build.** The S159 diagnosis (zero hits in `keywords.json`, carrier units carry an
+  empty keyword list) does not match the current `units.json`: all six carriers (Kairos Fateweaver, Lord
+  of Change, Flamers, Screamers, Pink Horrors, Blue Horrors) already carry `"Scintillating Legions"` in
+  `faction_keyword_names`, sourced from Wahapedia's own `Datasheets_keywords.csv`, and `index.html`
+  already renders it as a `Faction: Scintillating Legions` pill. `keywords.json`'s absence of an entry is
+  correct — that file is a tooltip glossary for plain `keyword_names` only; faction keywords never look
+  it up. `allied_group` (B61's mechanism) is untouched and still drives all real legality. No parser,
+  engine, or data change made.
 - **B72** — Outrider Squad ATV gated on wrong squad size — CLOSED S169 (D258); engine-only; `loOptMax` now exempts `non_consuming` optional groups from the headroom clamp so the Invader ATV is offered at every legal size; `index.html` v6.12
 - **B80** — Combined popup: bodyguard's expand arrow opened the leader's section — CLOSED S169 (D258); engine-only; per-member `idScope` on `buildModalConfigured` so stacked panels no longer share section IDs; `b72_check.js` added; `index.html` v6.12
 

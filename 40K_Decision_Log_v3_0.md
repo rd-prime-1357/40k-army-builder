@@ -9993,3 +9993,27 @@ after this fix, before the final baseline run.
   prompt.
   **Not shipped.** No parser, engine, or data change this session — the audit found real mechanism but the
   correct fix depends on Ryan's call on source-of-truth. B70 and B73 stay open. Open count unchanged at 12.
+
+- **D261** — B77 audited: already resolved, not a build (S171, audit-only — no code, no data, no
+  `index.html` change). The ticket's own diagnosis (filed S159/D245: "the keyword exists nowhere in our
+  data... zero hits in `keywords.json`, and the six carrier units have an empty keywords list") does not
+  match the current committed `units.json`. Checked directly: all six Scintillating Legions carriers
+  (Kairos Fateweaver, Lord of Change, Flamers, Screamers, Pink Horrors, Blue Horrors) already carry
+  `"Scintillating Legions"` in their `model_groups[].faction_keyword_names`, and `index.html` already
+  renders it as a `Faction: Scintillating Legions` pill (same code path as every other faction keyword,
+  e.g. `Adeptus Astartes`). This field comes straight from Wahapedia's own `Datasheets_keywords.csv` via
+  `convert_to_json.py` — real source data, not synthesized from `allied_group` — so the ticket's premise
+  was already false by the time it reached this session, not something this session changed.
+  `keywords.json` (the tooltip-description glossary for plain `keyword_names`, e.g. Fly, Infantry) has no
+  `Scintillating Legions` entry, but that's expected and correct: faction keywords render as a plain
+  `Faction: X` line with no tooltip lookup (confirmed in `index.html`'s keyword-rendering block), so
+  `keywords.json` was never supposed to carry it. All list-building legality already runs entirely off
+  `allied_group` (the offer filter and Warlord ban shipped under B61/E22b, D208/D214/D245/D248) — this
+  ticket's rules-text-matching concern never touched an actual code path; TS Rituals/stratagems that
+  target "THOUSAND SONS or SCINTILLATING LEGIONS" units are in-game ability targeting, not list-build
+  legality, and the tool does not (and does not need to) resolve that at muster time.
+  Baseline re-run clean this session (29/29, sources loaded) before this audit; nothing in the pipeline
+  regressed. Recommend closing B77 as already-resolved. Ryan does not need to weigh in — this is a data
+  finding, not a product or rules-legality call — so it is closed on my own authority per the standing
+  decision-authority rule; noted here for the record rather than surfaced as a question. Open count
+  drops to 11 (B69, B70, B73, B75, B76, P2, P4, E23, B67b, E12, B17).
