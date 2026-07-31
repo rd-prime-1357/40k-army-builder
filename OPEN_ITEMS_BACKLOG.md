@@ -3,7 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **13 open** as of S173 (down from 14 at S172): B69, B70, B73, B75, B76,
+not here, it isn't open. **12 open** as of S174 (down from 13 at S173): B69, B70, B73, B75, B85,
+B86, P2, P4, E23, B67b, E12, B17. B76 shipped S174 (D265, tooling) — five versioned docs renamed,
+content unchanged. A manifest-hash mismatch on `SESSION_HANDOFF_172.md` was also found and
+reconciled at open (D264) — not a backlog ticket, recorded in the decision log only.
+
+**13 open** as of S173 (down from 14 at S172): B69, B70, B73, B75, B76,
 B85, B86, P2, P4, E23, B67b, E12, B17. B84 closed S173 (D263, tooling, shipped) — the converter's
 KNOWN LIMITATION note no longer names a page type it doesn't own. B85 not closed — a diagnostic
 was added but the root cause needs a real converter run to confirm; still open.
@@ -216,18 +221,6 @@ testing it against the actual flagged pages is exactly how B75's diagnosis got c
 diagnostic dump (word text + x0/x1/top per row on 2-3 representative flagged pages, e.g. Thousand Sons
 p1/p5) before the rewrite can be designed on real evidence instead of guessed.
 
-### B76 — Rolling documents carry frozen version numbers in their filenames — **NEW S159 (D246); S; clarity not safety**
-Five docs carry `_vN_M` labels that have never incremented: the decision log has 29 commits under
-`v3_0`, and no predecessor volume exists in repo history. Cost real time this session — a backup copy of
-`40K_Data_Pipeline_Process_v0_6.md` was 16 lines short (missing Step 2b / B56a chapter-points procedure)
-under an identical version string.
-Rename to drop versions: `40K_Decision_Log.md`, `40K_Data_Pipeline_Process.md`, `40K_Functional_Spec.md`,
-`40K_Architecture_Overview.md`, `40K_Data_Dictionary.md`. Cost: each name is referenced in 3–6 other
-files, all five are manifest-keyed, historical handoffs keep pointing at old names (and stay untouched —
-they are the record), and the repo needs a delete-plus-add the web uploader cannot do in one step.
-Content identity is already handled by the manifest hash, so this adds no safety. Sequenced behind the
-Thousand Sons build.
-
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
 The durable fix — commit the parser to the GitHub repo as canonical, mirror to project knowledge — is still
 Ryan's call. But the pipeline is now self-defending regardless of where the parser lives: a stale or wrong copy
@@ -344,7 +337,7 @@ the bigger lever and hasn't been tried yet.**
   `unit_loadouts.json` (77 KB) moved the display by 0 points (D220) — the opposite of D213's ~0.6-point
   prediction. `units.json` (650 KB) and `detachments.json` (70 KB) stay pretty-printed; minifying them
   is not expected to be worth three re-banked fixed points given step 2's result.
-- **Not yet attempted: splitting `40K_Decision_Log_v3_0.md`.** Original step-1 plan (D211) included
+- **Not yet attempted: splitting `40K_Decision_Log.md`.** Original step-1 plan (D211) included
   moving the log's archive half (~400 KB, out of 660 KB now) to a repo-only file the way
   `BACKLOG_ARCHIVE.md` was split off, with `DECISION_INDEX.md` preserving lookup. Deferred, not
   ruled out — the next candidate if capacity is still tight after `wh40k_core_rules.md`'s removal
@@ -449,6 +442,7 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B76** — Rolling documents carried frozen version numbers in their filenames — **NEW S159 (D246); SHIPPED S174 (D265); TOOLING, clarity not safety.** Renamed all five (`40K_Decision_Log.md`, `40K_Data_Pipeline_Process.md`, `40K_Functional_Spec.md`, `40K_Architecture_Overview.md`, `40K_Data_Dictionary.md`) — content unchanged. `pipeline_manifest.py`, `repo_check.py`, `DECISION_INDEX.md`, and the P4 backlog entry updated to the new names; every historical decision-log entry, closed-backlog history, and session handoff left untouched, per the ticket's own scoping note. Delivered for Ryan to push, with the five old-named files to be deleted from the repo once the new ones land.
 - **B84** — Converter's KNOWN LIMITATION note names the wrong page type — **NEW S172 (D262); SHIPPED S173 (D263); TOOLING.** The note ended "In these packs that is the Rules Updates page," which is false (Thousand Sons p1 is cover/contents, p5 is the Hexwarp Thrallband detachment page). Sentence dropped; the note now stops at the page numbers it already prints. Pure string edit in `faction_pack_transform.py`, verified by code inspection and a synthetic `_find_anomalies` run — no PDF needed for this one.
 - **B77** — `SCINTILLATING LEGIONS` keyword absent from our data — **NEW S159 (D245); CLOSED S171 (D261),
   already-resolved, no build.** The S159 diagnosis (zero hits in `keywords.json`, carrier units carry an

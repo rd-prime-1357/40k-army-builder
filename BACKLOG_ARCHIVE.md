@@ -2300,3 +2300,35 @@ and the engine already refuses selecting both in the same list, matching the pac
 existed; the ticket's only real function was to prompt the verification that confirmed it.
 
 
+## B76 — Rolling documents carried frozen version numbers in their filenames — SHIPPED S174 (D265)
+
+Filed S159 (D246) as clarity-only, not safety: five docs carried `_vN_M` labels that had never
+incremented — the decision log alone had 29 commits under `v3_0` with no predecessor volume anywhere
+in repo history. It had already cost real time once: a backup copy of
+`40K_Data_Pipeline_Process_v0_6.md` was found 16 lines short (missing Step 2b / B56a's chapter-points
+procedure) under an identical version string, with nothing in the name to tell the two copies apart.
+
+**Shipped S174, tooling-only.** Renamed all five, content unchanged in every case (verified — this is
+a rename, not an edit):
+
+- `40K_Decision_Log_v3_0.md` → `40K_Decision_Log.md`
+- `40K_Data_Pipeline_Process_v0_6.md` → `40K_Data_Pipeline_Process.md`
+- `40K_Functional_Spec_v0_7.md` → `40K_Functional_Spec.md`
+- `40K_Architecture_Overview_v0_5.md` → `40K_Architecture_Overview.md`
+- `40K_Data_Dictionary_v2_0.md` → `40K_Data_Dictionary.md`
+
+Updated the two live scripts that reference these names by name — `pipeline_manifest.py`'s `GUARDED`
+list and `DECISION_LOG` constant, and `repo_check.py`'s `DOC_FILES` list — and the two live doc
+cross-references: `DECISION_INDEX.md`'s header note, and the P4 entry in `OPEN_ITEMS_BACKLOG.md`
+describing a possible future decision-log split.
+
+Left untouched, per the ticket's own scoping note: every historical decision-log entry that names a
+file by the name true at the time it was written, the closed-backlog history in this archive,
+`PROCESS_IMPROVEMENT_PLAN.md`'s S126-era file list, and every session handoff. Those are the record
+of what was true when they were written, not living references.
+
+The repo's web uploader cannot rename in one step, exactly as the ticket anticipated — the five
+renamed files and the five updated live files were delivered for Ryan to upload, with the five
+old-named files to be deleted from the repo once the new ones land.
+
+

@@ -75,13 +75,13 @@ TOKEN_PATTERN = re.compile(r'github_pat_[A-Za-z0-9_]+')
 # Fixed, non-accumulating docs. SESSION_HANDOFF_*.md accumulates and is discovered
 # live from the project area instead of listed here (see docstring).
 DOC_FILES = [
-    '40K_Decision_Log_v3_0.md',
+    '40K_Decision_Log.md',
     'OPEN_ITEMS_BACKLOG.md',
     'NEXT_SESSION_PROMPT.md',
-    '40K_Functional_Spec_v0_7.md',
-    '40K_Architecture_Overview_v0_5.md',
-    '40K_Data_Dictionary_v2_0.md',
-    '40K_Data_Pipeline_Process_v0_6.md',
+    '40K_Functional_Spec.md',
+    '40K_Architecture_Overview.md',
+    '40K_Data_Dictionary.md',
+    '40K_Data_Pipeline_Process.md',
     'OUTPUT_FORMAT_SPEC_for_project_instructions.md',
     'E1_DETACHMENT_SCOPE.md',
     'MFM_Chapter_Pass.md',

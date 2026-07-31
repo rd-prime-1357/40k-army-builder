@@ -1,6 +1,6 @@
 # Decision Index
 
-One line per entry in `40K_Decision_Log_v3_0.md` (number, title) — net new at **S126 (T5)**,
+One line per entry in `40K_Decision_Log.md` (number, title) — net new at **S126 (T5)**,
 so a session can find the two or three entries it needs without loading a 537 KB file. The
 decision log itself is authoritative and is not modified by this index; if the two ever
 disagree, the decision log wins.
@@ -309,4 +309,9 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   environment, a synthetic test of B85's reported bleed pattern didn't reproduce it, so a diagnostic
   was added instead of a guessed fix; manifest gap from S172 (never reissued, guarded set missing
   `SESSION_HANDOFF_172.md`) reconciled at open (S173)
+- **D264** — Manifest hash for `SESSION_HANDOFF_172.md` didn't match the actual repo file (verified
+  two ways); only entry affected across all 128 guarded files; manifest regenerated against a
+  verified repo clone, corrected copy delivered for Ryan to push (S174)
+- **D265** — B76 shipped: five versioned docs renamed to drop frozen version suffixes, content
+  unchanged; live scripts and live cross-references updated, historical text left untouched (S174)
 

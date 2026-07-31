@@ -162,11 +162,11 @@ GUARDED = [
     'B18d_fixture.json',
 
     # Reference docs and specs — repo-only, read by sessions as needed.
-    '40K_Architecture_Overview_v0_5.md',
-    '40K_Data_Dictionary_v2_0.md',
-    '40K_Data_Pipeline_Process_v0_6.md',
-    '40K_Decision_Log_v3_0.md',
-    '40K_Functional_Spec_v0_7.md',
+    '40K_Architecture_Overview.md',
+    '40K_Data_Dictionary.md',
+    '40K_Data_Pipeline_Process.md',
+    '40K_Decision_Log.md',
+    '40K_Functional_Spec.md',
     'BACKLOG_ARCHIVE.md',
     'CSM_BUILD_SCOPE.md',
     'DECISION_INDEX.md',
@@ -203,7 +203,7 @@ GUARDED = [
     'SESSION_HANDOFF_170.md',
     'SESSION_HANDOFF_171.md',
     'SESSION_HANDOFF_172.md',
-    'SESSION_HANDOFF_173.md',
+    'SESSION_HANDOFF_173.md', 'SESSION_HANDOFF_174.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):
@@ -338,7 +338,7 @@ def check_overlay(fetched_dir, local_dir):
                   f'({len(GUARDED) - len(overlay_targets)} already local, not checked)'), overlay_targets
 
 
-DECISION_LOG = '40K_Decision_Log_v3_0.md'
+DECISION_LOG = '40K_Decision_Log.md'
 _HANDOFF_RE = re.compile(r'^SESSION_HANDOFF_(\d+)\.md$')
 
 
