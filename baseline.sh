@@ -238,6 +238,7 @@ gate e4c_check            node e4c_check.js index.html detachments.json
 gate e21b_check           node e21b_check.js index.html detachment_effects.json units.json
 gate e21c_check           node e21c_check.js index.html detachment_effects.json units.json
 gate e25_check            node e25_check.js index.html detachments.json list_store.js
+gate b71_check             node b71_check.js index.html
 gate bundle_check         node bundle_check.js index.html unit_loadouts.json units.json
 gate pipeline_manifest    python3 pipeline_manifest.py
 if [ "$SKIP_REPO" -eq 0 ]; then

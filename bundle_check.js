@@ -18,7 +18,7 @@ function loadEngine(path) {
   const rows    = slice(lines, 'function loStepper', 'function loadoutWeaponHtml');
   // B47: buildLoadoutHtml now references the inline-detail helpers (mkDetail,
   // itemDetailHtml, groupDetailHtml, …). Pull that block in too.
-  const detail  = slice(lines, 'let _detSeq = 0;', 'function buildModalFull');
+  const detail  = slice(lines, '// ── B47: inline detail expanders', 'function buildModalFull');
   const prelude = `const PROFILE_SEP=/\\s[\u2013\\-\u00e2]\\s/;
 function stripProfile(n){return String(n||'').split(PROFILE_SEP)[0].trim();}
 function weaponBase(n){return stripProfile(n).toLowerCase();}

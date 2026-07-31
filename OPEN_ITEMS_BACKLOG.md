@@ -80,11 +80,6 @@ Leader restriction that should apply. Needs the eligibility rule traced from tha
 into whatever governs attachment, likely a Leader-restriction gap similar to prior Leader-eligibility
 bugs.
 
-### B71 — Config panel: expanded options collapse on selection, not just on the toggle icon — **NEW, Ryan-reported; S**
-In the configuration panel, expanded option groups should only collapse when the expand/contract icon
-itself is clicked. Currently making a selection inside an expanded group also collapses it. The icon
-should be a pure on/off toggle with no other control able to change that state.
-
 ### B72 — Outrider Squad: ATV gated on wrong squad size — **NEW, Ryan-reported; S**
 The app only offers the Attack Bike (ATV) option when 6 Outriders are selected; it should be available
 regardless of squad size, including at 3. The ATV option is independent of unit size per the rules.
@@ -380,6 +375,7 @@ appending to it, and hand the updated file back for Ryan to commit.
 - **E24** — Thousand Sons allied unlock: gate the six Scintillating Legions carriers — CLOSED S161 (D250); turn A tagged the six carrier records in `units.json` with `allied_group: "Scintillating Legions"`, TS-priced (Pink Horrors 115, Blue Horrors 90, not the CD 150/125); `Changehost of Deceit`'s unlock + warlord-ban flipped `enforced: true` in `detachment_effects.json`; `e21a_allied_targets`'s expected-unenforced list trimmed to the one remaining Chaos Space Marines gap (Shadow Legion / HERETIC ASTARTES)
 - **B78** — Thousand Sons Battleline grant needs two `detachment_effects.json` rows — CLOSED S161 (D250); both rows shipped once turn A landed a Tzaangor unit: `Servants of Change` and `Warpmeld Pact` each target only `Tzaangors` (unit_id `000001034`), the sole TS datasheet carrying the TZAANGORS keyword — Tzaangor Shaman and both Tzaangor Enlightened datasheets carry their own distinct keywords and are correctly not elevated. `e21a_coverage`'s `known_gap` allowlist removed (no longer needed); `e21b_check.js`'s pinned battleline-table count updated 5 → 7
 - **E25** — Force Disposition selection: one required per army list — CLOSED S165 (D254); ENGINE. All seven spec points shipped: deduplicated list-tolerant derivation (`[].concat(...)`), auto-select on a singleton set, additive `force_disposition` field inside the unbumped schema (mirrors `warlord_entry_id`), invalidation on detachment change, missing-selection flag-and-warn (found no existing missing-warlord precedent to mirror — built on the real `det-list-warning` pattern instead), a `fdisp-picker` control next to the warlord picker, and the Army List output line (`det-list-info` when resolved, `det-list-warning` when not). New `e25_check.js`, 25/25 checks pass, added to `baseline.sh` and `pipeline_manifest.py`
+- **B71** — Config panel: expanded options collapsed on any selection, not just the toggle icon — CLOSED S166 (D255); ENGINE. Root cause: `mkDetail()`'s expander ids were assigned from a per-render sequence counter, so an id (and thus "open" state) could not survive the rebuild a selection elsewhere in the group triggers. Fixed by keying expanders on a stable string (entry id + option/group identity) hashed into the DOM id, with a persistent `openDetailIds` Set read at render time; only `toggleDetail()` (the icon click) changes membership. All 20 call sites across the enhancement picker, wargear swap/indep/bundle groups, unit options, and the main loadout modal updated with real stable keys. New `b71_check.js`, 9/9 checks pass, added to `baseline.sh` and `pipeline_manifest.py`
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched

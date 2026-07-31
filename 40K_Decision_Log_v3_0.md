@@ -9801,3 +9801,52 @@ a new baseline gate and to `pipeline_manifest.py`'s `GUARDED` list.
 loaded — correct for an engine-only session), including every pre-existing harness with no
 regressions. Manifest reissued last per D251's ordering rule.
 
+
+## D255 — B71 shipped: config-panel expanders now survive a re-render (S166)
+
+**Type: engine-only.** Closes B71.
+
+Root cause confirmed in code, not just from Ryan's report: `mkDetail()`'s expander DOM ids came from
+a per-render sequence counter (`_detSeq`). A selection made anywhere inside a config-panel group forces
+a re-render to show the new state, and every expander on the panel got a fresh id on that rebuild — so
+an "open" expander could not survive a rebuild even in principle. A comment already in the code called
+this out explicitly as a known v1 shortcut ("acceptable for v1"), not an oversight.
+
+Fix: `mkDetail(kind, html, key)` now takes a caller-supplied stable key — built from the list entry id
+plus the option/group identity, never render order — and hashes it into the DOM id via a small
+deterministic string hash (`_detIdFromKey`). A persistent `openDetailIds` Set (module-level, survives
+across renders) tracks which ids are currently open; `toggleDetail()` is the only place that changes
+membership. `mkDetail` reads the Set at render time and pre-opens any expander whose key is already in
+it, so a rebuild triggered by an unrelated selection reproduces whatever was open before, and only the
+expand/contract icon itself (via `toggleDetail`) can change that state — the ticket's actual ask.
+
+All 20 call sites across the three affected surfaces were updated with a real stable key: the
+enhancement picker (1 site), the wargear swap/indep/bundle groups (7 sites), unit options (3 sites),
+and the main loadout modal (9 sites, covering choice clusters, count/add options, and steppers). None
+were missed — verified by grepping every `mkDetail(` call site after the edit and confirming a key
+argument on each.
+
+No data or schema change. `list_store.js` has no reference to `mkDetail`/`toggleDetail` (grepped,
+confirmed empty) — this is a rendering-only fix, so no inlined-copy parity question applies, unlike
+E25's `force_disposition` field.
+
+New `b71_check.js`: 9 checks against the real B47/B71 block extracted from `index.html`, run under a
+minimal stubbed DOM. Covers deterministic id derivation from a key, pre-open-on-rebuild (the exact bug,
+reproduced directly: open via the icon, force a second `mkDetail` call for the same key without an
+intervening toggle, assert the second render carries the `open` class), close-and-rebuild-stays-closed,
+independence between unrelated keys, and a regression guard that twenty-five intervening calls for
+other keys never shift a given key's id (guards against any future reintroduction of call-order
+dependence). All 9 pass. Added as a new baseline gate and to `pipeline_manifest.py`'s `GUARDED` list.
+
+`index.html` bumped 6.10 → 6.11. Full baseline: 26/27 gates pass (3 tier-B skipped, sources not
+loaded — correct for an engine-only session), including every pre-existing harness with no
+regressions. `repo_check` shows 10 problems, all of them the 10 files this session actually changed
+(2 new, 8 modified) — expected area-ahead-of-repo drift until push, not a real failure. Manifest
+reissued last per D251's ordering rule.
+
+**Collateral fix found during verification:** `bundle_check.js` sliced `index.html` using the literal
+text `let _detSeq = 0;` as an anchor to pull in the B47 detail-expander block. Removing `_detSeq` broke
+that slice outright (a thrown error, not a silent pass). Re-anchored on the block's comment header
+instead (`// ── B47: inline detail expanders`), which is stable regardless of what the block's internals
+are named. `bundle_check.js` itself is a guarded file, so the manifest was regenerated a second time
+after this fix, before the final baseline run.

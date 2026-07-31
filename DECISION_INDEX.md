@@ -278,3 +278,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D252** — Thousand Sons turn B shipped: loadout defaults banked (34 new entries, additive-only); TS Defiler wargear gap fixed (same class as D236's CSM finding); E14-2's stale count corrected 65/45 -> 75/54 (S163)
 - **D253** — Thousand Sons tooling turn shipped: TS-3 roster census (34 units) added to `rules_assertions.py`, mirroring CSM-1; closes the Thousand Sons build (S164)
 - **D254** — E25 shipped: Force Disposition selection — derivation, auto-select, invalidation, persistence, and the Army List output line; `e25_check.js` added (S165)
+- **D255** — B71 shipped: config-panel expanders now survive a re-render — `mkDetail` keyed by stable id instead of a render-order counter, `openDetailIds` persists open state; `b71_check.js` added (S166)
