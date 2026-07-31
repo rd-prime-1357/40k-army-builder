@@ -314,4 +314,10 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   verified repo clone, corrected copy delivered for Ryan to push (S174)
 - **D265** — B76 shipped: five versioned docs renamed to drop frozen version suffixes, content
   unchanged; live scripts and live cross-references updated, historical text left untouched (S174)
+- **D266** — B70: Ryan approved building the join/Starting-Strength mechanic (new scope, sizing TBD).
+  B73: Ryan chose MFM as authoritative wherever both exist; re-deriving from source found D260's
+  LEADER/SUPPORT mechanism description didn't match the actual code — the parser has no `LEADER`
+  handling at all today, only `SUPPORT`, so the real fix needs a new collection path before any
+  override logic, not a one-line change; also surfaces that Wardens' `SUPPORT` list is currently
+  mislabeled as leader data, which the B73 fix and B70's build both touch (S175)
 

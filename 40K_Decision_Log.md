@@ -10115,3 +10115,37 @@ after this fix, before the final baseline run.
   this session; the five old-named files still sit in the repo and need deleting once Ryan uploads
   the new ones (the web uploader can't rename in one step, as B76 already flagged). Open count drops
   to 12 (B69, B70, B73, B75, B85, B86, P2, P4, E23, B67b, E12, B17).
+
+- **D266** — B70/B73: Ryan's decisions taken, and re-deriving the mechanism from source (not from D260's
+  prose) found the fix shape is bigger than D260 assumed (S175, audit-only — no code, no data, no
+  `index.html` change).
+  **B70 — Ryan's call: build the join-and-Starting-Strength mechanic.** Confirmed new scope, not a bug
+  fix. Sizing and a build plan are a separate scoping turn, not done this session.
+  **B73 — Ryan's call: MFM is the later source, use it wherever both exist.** Re-deriving `mfm_points_parser.py`
+  against the actual MFM text (`MFM_Space_Marines_v1_0.txt`, the file the documented pipeline command
+  names — not `mfm_sm.txt`, a differently-sized file with the same rough shape that also lives in the
+  source set but isn't what `40K_Data_Pipeline_Process.md`'s own invocation points at) found D260's
+  mechanism description does not match the code as it stands: the parser has no code path for a
+  `LEADER` header at all — `collecting_support` only ever triggers on the literal string `SUPPORT`
+  (checked every reference to both words in the file; there is exactly one trigger condition, and it
+  is not `LEADER`). D260's line "the backfill does not distinguish LEADER and SUPPORT — it copies
+  whichever it finds" describes behavior the current code doesn't have; the truer statement is the
+  parser is blind to `LEADER` blocks and only ever captures `SUPPORT` blocks. Confirmed against the
+  real source text: Wardens of Ultramar's block in `MFM_Space_Marines_v1_0.txt` is headed `SUPPORT`
+  (four units listed), exactly as D260 said — but Kor'sarro Khan's block two entries later is headed
+  `LEADER` (six units, a narrower list than his Wahapedia-derived one), and that block is never read by
+  today's parser at all. Counted headers in the actual file: 34 `LEADER` blocks and 16 `SUPPORT` blocks
+  in `MFM_Space_Marines_v1_0.txt` alone — this is not a one-line override fix, it requires adding a
+  second collection path (`LEADER`, parallel to the existing `SUPPORT` one but written to a separate
+  field, since the two headers mean different things) before any override logic can run against it.
+  It also surfaces a second, previously unnoticed problem that touches B70: today's blank-fill
+  backfill draws only from `SUPPORT`-headed blocks, and for Wardens (which has no Leader ability and a
+  blank Wahapedia cell) it fills `leader_eligible_units` from its `SUPPORT` list — mislabeling a
+  join-eligible-units list as a leader-eligible-units list. Building B73 correctly (capture `LEADER`
+  separately, stop treating `SUPPORT` content as leader data) also cleans up this mislabeling, which is
+  the data half of what B70's new join mechanic will need to consume. Not shipped: this needs a proper
+  scoping/build turn (new parser field, an override rule for named Epic Heroes vs. generic shared
+  datasheets, reprocessing, diff-guard, and an assertion) rather than a same-session patch on top of a
+  partially-wrong prior diagnosis. **Ryan also flagged that MFM updates will need providing at some
+  point** — noted for future data turns, no action needed now. B70 and B73 stay open, now scoped by
+  Ryan's decision rather than blocked on it. Open count unchanged at 12.
