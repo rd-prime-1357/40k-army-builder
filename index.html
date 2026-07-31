@@ -2220,7 +2220,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.11';
+  const VERSION = '6.12';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -5457,11 +5457,11 @@
       const lraw = rawUnits.find(u => u.unit_name === leader.unit_name);
       if (!lraw) continue;
       html += `<div class="combined-member-header">${leader.unit_name}</div>`;
-      html += buildModalConfigured(lraw, leader);
+      html += buildModalConfigured(lraw, leader, null, 'm' + leader.listId);
       html += '<hr class="combined-member-divider">';
     }
     html += `<div class="combined-member-header">${bodyguard.unit_name}</div>`;
-    html += buildModalConfigured(bgRaw, bodyguard, auraFlags);
+    html += buildModalConfigured(bgRaw, bodyguard, auraFlags, 'm' + bodyguard.listId);
     return html;
   }
 
@@ -5596,11 +5596,18 @@
     if (!ct.optional) return 0;
     const band = ct.per_bracket ? 1 : (ct.max != null ? ct.max : 1);
     if (ct.per_bracket) return band;          // escort: does not consume the bracket
+    // B72: a non_consuming optional group (Invader ATV) rides alongside the size
+    // bracket rather than drawing models from it, so its ceiling is its own band —
+    // never narrowed by headroom. loGroupCounts and loOptHeadroom already exempt it;
+    // without the same exemption here, the headroom clamp wrongly hid it at the
+    // smallest bracket (headroom is 0 for the 3-model Outrider Squad, so the ATV
+    // read as "no models left" and was only offered at size 6).
+    if (ct.non_consuming) return band;
     const oc = optCounts || {};
     let used = 0;
     for (const o of def.model_groups) {
       const c = o.count || {};
-      if (!c.optional || c.per_bracket || o.name === groupName) continue;
+      if (!c.optional || c.per_bracket || c.non_consuming || o.name === groupName) continue;
       used += Math.max(0, Number(oc[o.name]) || 0);
     }
     return Math.max(0, Math.min(band, loOptHeadroom(def, size) - used));
@@ -6701,8 +6708,15 @@
 
   // ── Modal: Configured view ─────────────────────────────────────────────────
 
-  function buildModalConfigured(raw, entry, auraFlags) {
+  function buildModalConfigured(raw, entry, auraFlags, idScope) {
     let html = '';
+    // B80: collapsible-section IDs default to 'cfg-...'. In the combined attached-unit
+    // popup this function runs twice (leader panel, then bodyguard panel), so without a
+    // scope both panels emit identical IDs and getElementById returns the first — the
+    // leader's — which is why the bodyguard's chevron opened the leader's section.
+    // idScope suffixes the base so each member's sections are addressed on their own;
+    // the single-unit popup passes no scope and keeps the original 'cfg-...' IDs.
+    const sidBase = 'cfg' + (idScope ? '-' + idScope : '');
 
     // Determine which weapons are "active" based on wargear state
     const hasWargear = (raw.wargear_options && raw.wargear_options.length > 0) ||
@@ -6806,7 +6820,7 @@
     if (cfgLoDef) html += loadoutWeaponHtml(entry, cfgLoDef, raw);
 
     // Leader — B49, placed first among ability sections (not merged into Abilities)
-    html += leaderSectionHtml(raw, 'cfg');
+    html += leaderSectionHtml(raw, sidBase);
 
     // Abilities
     const allAbilityNames = [];
@@ -6816,7 +6830,7 @@
       }
     }
     if (allAbilityNames.length > 0) {
-      const sid = 'cfg-abilities';
+      const sid = sidBase + '-abilities';
       html += `<div class="modal-section">
         <div class="modal-section-header" onclick="toggleSection('${sid}')">
           <span class="modal-section-heading"><span>Abilities</span><span class="modal-section-names">${allAbilityNames.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
@@ -6859,7 +6873,7 @@
       }
     }
     if (allRuleNames.length > 0) {
-      const sid = 'cfg-rules';
+      const sid = sidBase + '-rules';
       html += `<div class="modal-section">
         <div class="modal-section-header" onclick="toggleSection('${sid}')">
           <span class="modal-section-heading"><span>Rules</span><span class="modal-section-names">${allRuleNames.join(', ')}</span></span><span class="modal-section-chevron">▶</span>
@@ -6887,7 +6901,7 @@
       cfgWA.push({ name: name, partial: mode === 'some' });
     }
     if (cfgWA.length > 0) {
-      const sid = 'cfg-wargear-abilities';
+      const sid = sidBase + '-wargear-abilities';
       const heading = cfgWA.map(x => x.name + (x.partial ? '*' : '')).join(', ');
       html += `<div class="modal-section">
         <div class="modal-section-header" onclick="toggleSection('${sid}')">

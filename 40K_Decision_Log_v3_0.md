@@ -9882,3 +9882,66 @@ after this fix, before the final baseline run.
   `pipeline_manifest.py --write` followed by `pipeline_manifest.py --freshness-check`, the latter's PASS
   being part of what "session close is done" means from S168 on. No engine or data change; `index.html`
   untouched at v6.11 (S168).
+
+- **D258** — B72 and B80 shipped: two engine-only bug fixes (S169, engine-only). `index.html` v6.11 → v6.12.
+  Both were re-derived from source before building; both reproduced from the current code, not taken on the
+  prior report's word.
+  **B72 — Invader ATV gated on the wrong squad size.** The Outrider Squad's Invader ATV is the only
+  `non_consuming` optional model group in the data (`unit_loadouts.json`, unit_id `000002712`): it rides
+  alongside the size bracket rather than drawing a model from it. `loGroupCounts` and `loOptHeadroom`
+  already exempt `non_consuming` groups from the model-count reservation, but `loOptMax` did not — it ran
+  the general headroom clamp, `min(band, headroom - used)`. Headroom is 0 at the 3-model bracket (sergeant 1
+  + fill min 2 = 3), so `loOptMax` returned 0, the render's `noRoom` gate read "no models left," and the ATV
+  was offered only at size 6. Fix: `loOptMax` returns the band directly for a `non_consuming` group, matching
+  the exemption its two siblings already carry; also stops counting a `non_consuming` sibling toward `used`
+  for consistency (no current group exercises the sibling path — the ATV is the only one — but it keeps the
+  three functions' semantics aligned). D0-facing: a legal option must be reachable. Blast radius is exactly
+  one unit.
+  **B80 — combined attached-unit popup: bodyguard's expand arrow opened the leader's section.** The combined
+  popup renders `buildModalConfigured` twice (leader panel, then bodyguard panel). Its collapsible sections
+  used hardcoded element IDs (`cfg-abilities`, `cfg-rules`, `cfg-wargear-abilities`, and `cfg-leader` via
+  `leaderSectionHtml(raw, 'cfg')`), so both panels emitted identical IDs and `getElementById` returned the
+  first match — the leader's, rendered first — which is exactly Ryan's symptom, confirmed generic across two
+  unrelated pairs. Fix: `buildModalConfigured` gains an optional `idScope` parameter woven into every section
+  ID via `sidBase = 'cfg' + (idScope ? '-' + idScope : '')`; the single-unit caller passes no scope and keeps
+  the original `cfg-...` IDs unchanged, while `buildModalCombined` passes a distinct `'m' + listId` scope per
+  member. No extraction from `index.html` (single-file constraint respected).
+  **Verification.** New harness `b72_check.js` (21 checks) — B72 half pulls `loOptMax`/`loGroupCounts`/
+  `loOptHeadroom` straight out of `index.html` and asserts the ATV is offerable at both size 3 and 6 and that
+  taking it leaves the Outrider body at fill; B80 half is a static guard that the section IDs are scoped and
+  the combined caller passes distinct per-member scopes. Wired into `baseline.sh` and guarded in
+  `pipeline_manifest.py`. `rules_assertions.py`'s existing B7b render assertion (`b7b_combined_popup`) fired
+  at baseline because its literal-match on the `buildModalConfigured` signature caught the added parameter —
+  the guard doing its job; updated to the new four-parameter shape and extended to assert the per-member
+  `listId` scoping, so it now polices B80 rather than merely tolerating it. Full baseline otherwise clean
+  (72/73 tier-A assertions, all harnesses no regressions); the only baseline FAILs were the expected
+  area-ahead-of-repo drift on the five files this session changed, cleared by the close-time manifest write.
+  **Not addressed, with reasons carried to the backlog:** B70 (Wardens of Ultramar attach) turned out to be
+  a parser/data turn entangled with B73 — the unit's `leader_ability_name` is null (the "Heroes of Ultramar"
+  ability wasn't captured as a leader ability by the parser) while its `leader_eligible_units` list is
+  populated and itself carries an out-of-faction entry ("VANGUARD VETERAN SQUAD WHITE SCARS"), which is the
+  B73 over-broad-eligibility defect. Neither belongs in an engine turn. B69's "(see left)" is verbatim GW
+  source text in `units.json`; changing it to match the app's stacked layout diverges from the rulebook
+  wording, which is a product call for Ryan (see the next-session prompt's decision note), not a build
+  decision. No engine or data change to those tickets this session.
+
+- **D259** — B69 corrected and generalized (S169, scoping/record only — no code, no `index.html` change).
+  Ryan flagged that his prior instruction on B69 had never reached the record: the fix is to **remove** the
+  "(see left)" cue from Guilliman's *Author of the Codex* (not rewrite it to "(see below)", which the S152
+  ticket text and the S169 handoff/next-session prompt had both carried) and to render the granted abilities
+  directly beneath the selector so the association is visible. Correction accepted and recorded.
+  Investigating the fix generalized it: the same "select N [X] abilities" shape, with a "(see left)"/
+  "(see above)" cue pointing to a boxed pool printed elsewhere on the card, appears on six units across four
+  factions — Guilliman, Grimaldus, Mortarion, Abaddon, Magnus, Ulrik — all rendering the pool as unlinked
+  sibling ability rows. The selector→pool association is not in our data (`abilities.json` is name+description
+  only; the source's left/right-column ability typing that encodes it was collapsed by the parser at B4/D155),
+  so it cannot be derived engine-side; for Guilliman the pool is the trailing three abilities but that is not
+  a general rule. A blanket cue-strip is also unsafe — the 28 "(see below)" cues (Nurgle's Gift across the
+  Death Guard roster, Blessings of Khorne) reference content inside the same description block and are
+  correct. Conclusion: B69 done right is a data turn (re-capture the six selector→pool maps from source
+  column-typing via a parser fix, asserted) followed by an engine turn (render each pool nested under its
+  selector, resolve the "(see left)/(see above)" cue, leave "(see below)" alone) — deeper than the ticket's
+  original S sizing, re-sized to M. No fragile Guilliman-specific engine hardcode was shipped; per "a banked
+  well-scoped item beats a partial change," B69 was re-scoped rather than half-built. Open scope choice left
+  to Ryan: all six at once (recommended) or Guilliman-only as a stopgap. B69 stays open; open count unchanged
+  at 12.

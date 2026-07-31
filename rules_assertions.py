@@ -2194,8 +2194,8 @@ def b7b_combined_popup(S):
         return False, 'buildModalCombined not defined in index.html'
     if 'function buildStatTable(mg, overrides, flags, auraFlags)' not in txt:
         return False, 'buildStatTable signature does not include auraFlags parameter'
-    if 'function buildModalConfigured(raw, entry, auraFlags)' not in txt:
-        return False, 'buildModalConfigured signature does not include auraFlags parameter'
+    if 'function buildModalConfigured(raw, entry, auraFlags, idScope)' not in txt:
+        return False, 'buildModalConfigured signature does not include auraFlags/idScope parameters'
 
     m = re.search(r'function buildModalCombined\(([^)]*)\)\s*\{(.*?)\n  \}', txt, re.S)
     if not m:
@@ -2203,6 +2203,11 @@ def b7b_combined_popup(S):
     body = m.group(2)
     if 'buildModalConfigured' not in body:
         return False, 'buildModalCombined does not call buildModalConfigured'
+    # B80 (S169): each member panel must be given a distinct idScope so their
+    # collapsible-section IDs do not collide (a shared ID made the bodyguard's
+    # chevron toggle the leader's section). Both calls carry a listId-derived scope.
+    if 'leader.listId' not in body or 'bodyguard.listId' not in body:
+        return False, 'buildModalCombined does not pass per-member listId idScope (B80)'
     if 'combined-member-divider' not in body:
         return False, 'buildModalCombined does not insert combined-member-divider between panels'
 

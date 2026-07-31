@@ -3,7 +3,15 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **14 open** as of S168: B69, B70, B72, B73, B75, B76, B77, P2, P4,
+not here, it isn't open. **12 open** as of S169: B69, B70, B73, B75, B76, B77, P2, P4, E23, B67b, E12, B17. B72 and B80
+shipped S169 (D258, engine-only): `index.html` v6.11 → v6.12. B72 — the Outrider Squad's Invader ATV
+(the only `non_consuming` optional model group in the data) was offered only at size 6 because
+`loOptMax` ran the headroom clamp on it; headroom is 0 at the 3-model bracket. Fixed to exempt
+`non_consuming` groups, matching the exemption `loGroupCounts`/`loOptHeadroom` already carry. B80 —
+the combined attached-unit popup rendered `buildModalConfigured` twice with hardcoded section IDs, so
+the bodyguard's chevron toggled the leader's section; fixed with a per-member `idScope`. `b72_check.js`
+added (21 checks) and guarded; `rules_assertions.py`'s B7b render assertion updated to the new
+signature and extended to police the scoping. **14 open** as of S168: B69, B70, B72, B73, B75, B76, B77, P2, P4,
 B80, E23, B67b, E12, B17. B81 shipped S168 (D257, tooling-only): `pipeline_manifest.py` gained
 `--freshness-check`, verifying only the decision log and the latest handoff against the manifest as
 the last command of session close, converting D251's ordering rule into an automated check rather
@@ -74,12 +82,32 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
-### B69 — Roboute Guilliman popup: "Author of the Codex" mislabel + orphaned ability grouping — **NEW, Ryan-reported; S**
-Roboute's popup text for "Author of the Codex" says "(see left)" — should say "(see below)". The
-three abilities that follow it (Primarch of the XIII, Master of Battle, Supreme Strategist) are not
-clearly tied to that section; either fold them under the "Author of the Codex" header or add a
-distinct header above the three identifying them as its grants. Likely a data/text issue in source
-or a rendering gap in the popup, not yet diagnosed.
+### B69 — "Select N abilities" datasheet pools render with no link to their selector — **Ryan-reported S152; corrected + generalized S169 (D259); was S, now M**
+**Corrected intent (Ryan, S169):** remove the "(see left)" cue from Roboute Guilliman's *Author of the
+Codex* entirely (not rewrite it to "(see below)"), and render the abilities it grants directly beneath
+the *Author of the Codex* rule, visually grouped, so the user associates them with it.
+
+**Generalized S169.** This is not a Guilliman one-off. The same shape — a short "select N [X] abilities"
+ability whose "(see left)"/"(see above)" cue points to a boxed pool printed elsewhere on the datasheet —
+appears on **six units across four factions**: Roboute Guilliman (*Author of the Codex* → Primarch of
+the XIII (Aura), Master of Battle, Supreme Strategist), Chaplain Grimaldus (*Temple Relics*), Mortarion
+(*Lord of the Death Guard*), Abaddon the Despoiler (*The Warmaster*), Magnus the Red (*Unearthly Power*),
+Ulrik the Slayer (*Oathbound*, "(see above)"). All show the same defect: the pool abilities render as
+plain sibling rows in the flat ability list with nothing tying them to their selector.
+
+**Why it is not a quick engine strip.** The association is absent from our data — `abilities.json` is
+name+description only, `units.json` ability entries are bare names. The source carried the pool via its
+left/right-column ability typing ("левая колонка"), which the parser collapsed (B4/D155). For Guilliman
+the pool is the trailing three abilities, but that ordering is not a rule that holds for the other five.
+Also, a blanket cue-strip is unsafe: the 28 "(see below)" cues (Nurgle's Gift on 30+ Death Guard units,
+Blessings of Khorne) sit on long descriptions whose referenced content is *inside the same text block* —
+those cues are correct and must be left untouched.
+
+**Correct build shape (dev-manager call, pending Ryan's scope choice):** a **data turn** — re-capture each
+selector's ability pool from the source column-typing (parser fix, never hand-edit `units.json`), backed
+by an assertion listing the six selector→pool maps — then an **engine turn** that renders each pool nested
+under its selector and drops the resolved "(see left)/(see above)" cue while leaving "(see below)" alone.
+Open decision for Ryan: fix all six at once (recommended) or Guilliman-only as a stopgap. Not started.
 
 ### B70 — Wardens of Ultramar cannot be attached to a unit — **NEW, Ryan-reported; S**
 The detachment enhancement/unit "Wardens of Ultramar" cannot currently be attached to any unit in the
@@ -87,10 +115,6 @@ app. Ryan points to the "Heroes of Ultramar" ability as the source of the eligib
 Leader restriction that should apply. Needs the eligibility rule traced from that ability's rules text
 into whatever governs attachment, likely a Leader-restriction gap similar to prior Leader-eligibility
 bugs.
-
-### B72 — Outrider Squad: ATV gated on wrong squad size — **NEW, Ryan-reported; S**
-The app only offers the Attack Bike (ATV) option when 6 Outriders are selected; it should be available
-regardless of squad size, including at 3. The ATV option is independent of unit size per the rules.
 
 ### B73 — Ultramarine Leader abilities list units outside their actual 40k eligibility — **NEW, Ryan-reported; M; likely spans multiple leaders**
 Uriel Ventris's Leader ability text lists eligible units (Deathwatch, Crusaders, Kill Teams, etc.) that
@@ -261,17 +285,6 @@ the bigger lever and hasn't been tried yet.**
 RAG-expanded one.
 
 
-### B80 — Combined attached-unit popup: bodyguard's expand arrow opens the leader's rules/abilities — **NEW, Ryan-reported; S; renumbered from B61 in S159 (D247) — B61 is taken by the shipped Plague Legions ticket (D208) and is referenced by assertions B61-1..4**
-Reported by Ryan against the configured-unit popup for an attached (leader + bodyguard) pairing.
-Confirmed on two separate pairs — Ultramarines Intercessors with an attached Lieutenant, and Chaos
-Daemons Bloodletters with an attached Bloodmaster — so this looks generic to any attached unit, not
-faction- or unit-specific. Symptom: in the combined popup, the expand arrow on the **bodyguard**
-unit's rules-and-abilities section opens the **leader's** content instead of the bodyguard's own.
-Likely a shared-key or index mix-up in the popup's expand-toggle wiring for the two stacked
-sections — same popup B53 (CLOSED S96, D162) reordered leader-above-bodyguard in. Needs an
-engine-only turn against `index.html`'s combined-popup renderer; not yet scoped or reproduced by
-Claude directly.
-
 ### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); M**
 
 Found by re-deriving E21's survey from source instead of trusting D203's list. `HEADHUNTER TASK FORCE`
@@ -365,6 +378,9 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+- **B72** — Outrider Squad ATV gated on wrong squad size — CLOSED S169 (D258); engine-only; `loOptMax` now exempts `non_consuming` optional groups from the headroom clamp so the Invader ATV is offered at every legal size; `index.html` v6.12
+- **B80** — Combined popup: bodyguard's expand arrow opened the leader's section — CLOSED S169 (D258); engine-only; per-member `idScope` on `buildModalConfigured` so stacked panels no longer share section IDs; `b72_check.js` added; `index.html` v6.12
 
 Full history for every one of these lives in `BACKLOG_ARCHIVE.md`, in the same order.
 **`BACKLOG_ARCHIVE.md` is intentionally repo-only, not project-area resident (D217) — nothing in

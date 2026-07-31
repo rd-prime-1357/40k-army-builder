@@ -284,3 +284,11 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   occurrence; filed B81 (S167)
 - **D257** — B81 shipped: `pipeline_manifest.py --freshness-check`, a close-time gate that re-hashes
   the decision log and latest handoff against the manifest, run last after `--write` (S168)
+- **D258** — B72 and B80 shipped (engine-only): B72 — `loOptMax` now exempts `non_consuming` optional
+  groups from the headroom clamp, so the Outrider Squad's Invader ATV is offered at every legal size,
+  not only 6; B80 — combined-popup section IDs scoped per member via a new `idScope`, so the bodyguard's
+  chevron no longer toggles the leader's section; `b72_check.js` added; `index.html` v6.12 (S169)
+- **D259** — B69 corrected (Ryan: remove the "(see left)" cue and nest granted abilities under their
+  selector, not rewrite to "(see below)") and generalized: same select-N-from-pool shape on six units
+  across four factions; the selector→pool link is absent from our data, so it's a data turn (parser
+  re-capture, asserted) + an engine turn, re-sized S→M; no hardcode shipped, B69 re-scoped not built (S169)
