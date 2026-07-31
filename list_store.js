@@ -25,6 +25,10 @@
  *        in two Dark Angels detachments (D199). A v2 record upgrades to v3
  *        with `enhancement: null` on every entry, which is the only reading
  *        that adds no information, since v2 had no way to express one.
+ *        `force_disposition` was added inside v3 as a purely additive field
+ *        (E25), the same way warlord_entry_id was added inside v1: a record
+ *        without it reads as "no Force Disposition chosen", which is the
+ *        same thing an older record meant, so it needed no bump.
  * ======================================================================== */
 
 (function (root) {
@@ -119,6 +123,7 @@
       points_target:   meta.points_target != null ? meta.points_target : null,
       primary_faction: meta.primary_faction || null,
       warlord_entry_id: meta.warlord_entry_id != null ? meta.warlord_entry_id : null,
+      force_disposition: meta.force_disposition != null ? meta.force_disposition : null,
       detachments:     normaliseDetachmentKeys(meta.detachments),
       created:         meta.created || now,
       modified:        now,
@@ -184,6 +189,7 @@
     return {
       armyList: armyList, warnings: warnings, maxEntryId: maxEntryId,
       warlordEntryId: record.warlord_entry_id != null ? record.warlord_entry_id : null,
+      forceDisposition: record.force_disposition != null ? record.force_disposition : null,
       detachments: detachments
     };
   }

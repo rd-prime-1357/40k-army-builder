@@ -131,37 +131,6 @@ empty `keywords` list with `allied_group: "Scintillating Legions"` standing in. 
 keyword has nothing to match against. Parser fix (never hand-edit output). Note `allied_group` must be
 **retained** — it is B61's shipped mechanism feeding E22b's gate, not a placeholder to be replaced.
 
-### E25 — Force Disposition selection: one required per army list — **NEW S162 (D251); ENGINE; M**
-11th Edition ties each detachment to exactly one Force Disposition (verified: 169/169 records in
-`detachments.json` carry exactly one of the five values; `detachment_parser.py` hard-errors on a missing
-or second disposition, so a future 1-to-many MFM print fails loudly, not silently; `e1a_dp_and_disposition`
-pins it). The data side is done — this ticket is engine-only. The app currently shows the disposition in
-the detachment picker but has no army-level selection, so a "complete" list ships without the required
-declaration.
-
-Spec (product behaviour per Ryan, S162):
-1. **Available set** = deduplicated `force_disposition` values across the list's selected detachments.
-   Engine reads the field list-tolerantly (`[].concat(...)`) so the design stays open to 1-to-many
-   without a schema change; the data file stays scalar until a real 1-to-many case exists.
-2. **Auto-select** when the set has exactly one member — covering both a single detachment and two
-   detachments sharing a disposition — mirroring the mandatory-warlord pattern. When the set has more
-   than one member, the user must pick one.
-3. **Per-list state**: additive `force_disposition` field inside the list_store v1 envelope (precedent:
-   `warlord_entry_id` was added inside v1 purely additively). Older saved lists load as unselected and
-   the auto-select rule runs.
-4. **Invalidation**: on any detachment change, keep the selection if still in the available set;
-   otherwise clear and re-derive (auto-select if the new set is a singleton).
-5. **Missing selection** = incomplete list, same flag-and-warn mechanism as a missing warlord (spec
-   §6.4 / D0 — surface the violation, don't hard-block). Zero detachments selected → no picker.
-6. **UI**: selection control in the Army List subheader area near the warlord picker (exact placement is
-   a build-session call); once selected (or auto-selected) it displays in the selection panel and the
-   army list output gains a Force Disposition line.
-7. **Harness**: new `e25_check.js` pinning derivation, auto-select, invalidation and the output line.
-
-Sequenced as the next engine-only session after the Thousand Sons arc closes (turn B data, then the TS
-tooling turn), i.e. target S165. `faction_pack_transform.py` needs no change — packs supply prose; the
-MFM files supply name/DP/disposition/unique/enhancements.
-
 ### P2 — `loadout_parser.py` custody — **NEW S58; PROCESS; softened by D123 (S59)**
 The durable fix — commit the parser to the GitHub repo as canonical, mirror to project knowledge — is still
 Ryan's call. But the pipeline is now self-defending regardless of where the parser lives: a stale or wrong copy
@@ -410,6 +379,7 @@ appending to it, and hand the updated file back for Ryan to commit.
 - **B79** — Detachment tag exclusivity — CLOSED S160 (D248); premise was wrong, not a gap: `index.html`'s `uniqueTagConflicts()`/`canAddDetachment()` already read `unique_tag` straight off `detachments.json` and refuse a second same-tag detachment, shipped generically (tested against Blood Angels' GRACE tag) before Thousand Sons existed. Death Guard's `ENGINES`/`FLYBLOWN` and CSM's `NIGHTMARE` tags were already enforced the same way. Confirmed live for Thousand Sons the moment turn C banked `detachments.json`: `SERVANTS OF CHANGE` and `WARPMELD PACT` both carry `unique_tag: "MUTANT"` and the engine already refuses selecting both
 - **E24** — Thousand Sons allied unlock: gate the six Scintillating Legions carriers — CLOSED S161 (D250); turn A tagged the six carrier records in `units.json` with `allied_group: "Scintillating Legions"`, TS-priced (Pink Horrors 115, Blue Horrors 90, not the CD 150/125); `Changehost of Deceit`'s unlock + warlord-ban flipped `enforced: true` in `detachment_effects.json`; `e21a_allied_targets`'s expected-unenforced list trimmed to the one remaining Chaos Space Marines gap (Shadow Legion / HERETIC ASTARTES)
 - **B78** — Thousand Sons Battleline grant needs two `detachment_effects.json` rows — CLOSED S161 (D250); both rows shipped once turn A landed a Tzaangor unit: `Servants of Change` and `Warpmeld Pact` each target only `Tzaangors` (unit_id `000001034`), the sole TS datasheet carrying the TZAANGORS keyword — Tzaangor Shaman and both Tzaangor Enlightened datasheets carry their own distinct keywords and are correctly not elevated. `e21a_coverage`'s `known_gap` allowlist removed (no longer needed); `e21b_check.js`'s pinned battleline-table count updated 5 → 7
+- **E25** — Force Disposition selection: one required per army list — CLOSED S165 (D254); ENGINE. All seven spec points shipped: deduplicated list-tolerant derivation (`[].concat(...)`), auto-select on a singleton set, additive `force_disposition` field inside the unbumped schema (mirrors `warlord_entry_id`), invalidation on detachment change, missing-selection flag-and-warn (found no existing missing-warlord precedent to mirror — built on the real `det-list-warning` pattern instead), a `fdisp-picker` control next to the warlord picker, and the Army List output line (`det-list-info` when resolved, `det-list-warning` when not). New `e25_check.js`, 25/25 checks pass, added to `baseline.sh` and `pipeline_manifest.py`
 
 - **H3** — `pipeline_manifest.py` custody — CLOSED S126 (D198); `repo_check.py` confirms the script is present and byte-identical in the public repo
 - **H4** — Ryan's per-session repo refresh becoming routine — CLOSED S126 (D198); repo_check.py found the bulk upload had happened and 67/67 shared files matched

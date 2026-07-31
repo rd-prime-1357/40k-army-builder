@@ -9760,11 +9760,44 @@ from `THOUSAND_SONS_BUILD_SCOPE.md` §1's prose. `TS-2` (S160/D248) already asse
 carry `text_source: none`, which is the CSM-3 equivalent already in place — a fresh assertion there
 would be redundant, since §6's original plan text (predicting three prose-less detachments) is the
 part that went stale, not the coverage. `allied_group`/Scintillating Legions carriers were already
-generalised into `ALLIED_CARRIER_GROUPS` at D250; nothing else in §8 called for a new check.
+## D254 — E25 shipped: Force Disposition selection (S165)
 
-Full assertion suite passes with `TS-3` added: 110 total (up from 109), 73 tier-A / 37 tier-B; 72/73
-tier-A pass before manifest reissue (P3 fails on its own two guarded files — this decision log and
-`rules_assertions.py` — until the manifest below picks up their new hashes). Manifest reissued last
-per D251's ordering rule. This closes `THOUSAND_SONS_BUILD_SCOPE.md`'s build — turns A, B, C, and
-tooling all shipped (S161/D250, S163/D252, S160/D248, this entry).
+**Engine-only turn** (no `units.json`, `unit_loadouts.json`, or `detachments.json` changes).
+
+Built all seven of E25's numbered points against the real `detachments.json` catalogue. Available
+set is deduplicated per `availableForceDispositions(keys)`, reading `force_disposition` through
+`[].concat(...)` so a future 1-to-many MFM print needs no engine change — verified directly: a
+synthetic array-valued record contributes every value it carries and still dedupes against a scalar
+record sharing one. Auto-select and invalidation mirror `recomputeWarlord()`'s shape exactly: a
+singleton available set auto-selects, a still-valid pick survives a detachment change untouched, and
+a pick that falls outside the new set is cleared and immediately re-derived (auto-select again if the
+new set is a singleton, cleared to nothing if not). Zero detachments selected yields no picker at all
+(spec's explicit carve-out) — the derivation, not a separate branch, guarantees this: an empty key set
+always yields an empty available set.
+
+Persistence: `force_disposition` added as a purely additive field inside the schema's CURRENT version
+(3), the same way `warlord_entry_id` was added inside v1 — no bump, since a record without it reads as
+"no Force Disposition chosen," which is what an older record already meant. Landed identically in both
+`list_store.js` and the copy inlined in `index.html`; `e1b_check.js`'s byte-identity drift guard passes.
+
+UI: a `fdisp-picker` control was added next to `warlord-picker` in the Army List subheader, styled
+identically (build-session placement call, per the ticket's own note that exact placement is a "how
+it gets built" question). Missing-selection flag-and-warn: the ticket's spec called this "the same
+mechanism as a missing warlord," but there is no missing-warlord warning anywhere in the app today —
+the warlord picker only ever shows "— none selected —," never a flagged warning. The actual
+established flag-and-warn surface in this codebase is `det-list-warning` (over-budget DP, unique-tag
+clashes, enhancement problems), so the missing-Force-Disposition warning was built on that real
+pattern instead. A resolved selection renders as a neutral `det-list-info` line naming the
+disposition; the two are mutually exclusive and both live in the Army List's Detachments section
+(`renderSelectedDetachmentsHtml`), satisfying "the army list output gains a Force Disposition line."
+
+New `e25_check.js`: 25 checks — derivation (including the array-tolerance case), auto-select, keep-if-
+valid, clear-and-re-derive, the zero-detachments no-output case, the info-line and warning-line cases
+(mutually exclusive), and the persistence round-trip including a pre-E25 record with no
+`force_disposition` field at all reading as "none chosen" rather than crashing. All 25 pass. Added as
+a new baseline gate and to `pipeline_manifest.py`'s `GUARDED` list.
+
+`index.html` bumped 6.9 → 6.10. Full baseline: 22/22 gates pass (3 tier-B skipped, sources not
+loaded — correct for an engine-only session), including every pre-existing harness with no
+regressions. Manifest reissued last per D251's ordering rule.
 

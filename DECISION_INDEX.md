@@ -277,3 +277,4 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D251** — Force Disposition selection designed and filed as E25 (data already retained 169/169; engine-only work); S161 handoff manifest-ordering drift reconciled (S162)
 - **D252** — Thousand Sons turn B shipped: loadout defaults banked (34 new entries, additive-only); TS Defiler wargear gap fixed (same class as D236's CSM finding); E14-2's stale count corrected 65/45 -> 75/54 (S163)
 - **D253** — Thousand Sons tooling turn shipped: TS-3 roster census (34 units) added to `rules_assertions.py`, mirroring CSM-1; closes the Thousand Sons build (S164)
+- **D254** — E25 shipped: Force Disposition selection — derivation, auto-select, invalidation, persistence, and the Army List output line; `e25_check.js` added (S165)

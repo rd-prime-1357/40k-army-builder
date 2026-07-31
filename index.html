@@ -424,6 +424,34 @@
       text-overflow: ellipsis;
     }
 
+    /* E25: Force Disposition pick list — same subheader bar, mirrors warlord-picker */
+    .fdisp-picker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      color: var(--c-999999);
+      min-width: 0;
+    }
+    .fdisp-label {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: var(--c-777777);
+      white-space: nowrap;
+    }
+    .fdisp-select {
+      background: var(--c-1e1e1e);
+      border: 1px solid var(--c-333333);
+      color: var(--c-dddddd);
+      font-size: 0.7rem;
+      padding: 0.15rem 0.35rem;
+      border-radius: 3px;
+      max-width: 220px;
+    }
+    .fdisp-select:disabled { color: var(--c-999999); opacity: 0.85; }
+
     .panel-body {
       flex: 1;
       overflow-y: auto;
@@ -1168,6 +1196,16 @@
       line-height: 1.35;
     }
 
+    /* E25: neutral (non-alarming) counterpart to det-list-warning, for the
+       Force Disposition summary line once a selection exists. */
+    .det-list-info {
+      font-size: 0.7rem;
+      color: var(--c-999999);
+      padding: 0.15rem 0.45rem;
+      margin: 0.2rem 0 0.5rem;
+      line-height: 1.35;
+    }
+
     .detail-pts-row {
       display: flex;
       align-items: baseline;
@@ -1718,6 +1756,7 @@
       <div class="panel-subheader-title">Army List</div>
       <div class="panel-subheader-detail" id="list-unit-count"></div>
       <div class="warlord-picker" id="warlord-picker"></div>
+      <div class="fdisp-picker" id="fdisp-picker"></div>
     </div>
     <div class="panel-body" id="list-items" style="padding-bottom:0;">
       <div class="empty-state">No units added yet.<br>Click any unit in the roster to add it.</div>
@@ -1783,6 +1822,10 @@
  *        in two Dark Angels detachments (D199). A v2 record upgrades to v3
  *        with `enhancement: null` on every entry, which is the only reading
  *        that adds no information, since v2 had no way to express one.
+ *        `force_disposition` was added inside v3 as a purely additive field
+ *        (E25), the same way warlord_entry_id was added inside v1: a record
+ *        without it reads as "no Force Disposition chosen", which is the
+ *        same thing an older record meant, so it needed no bump.
  * ======================================================================== */
 
 (function (root) {
@@ -1877,6 +1920,7 @@
       points_target:   meta.points_target != null ? meta.points_target : null,
       primary_faction: meta.primary_faction || null,
       warlord_entry_id: meta.warlord_entry_id != null ? meta.warlord_entry_id : null,
+      force_disposition: meta.force_disposition != null ? meta.force_disposition : null,
       detachments:     normaliseDetachmentKeys(meta.detachments),
       created:         meta.created || now,
       modified:        now,
@@ -1942,6 +1986,7 @@
     return {
       armyList: armyList, warnings: warnings, maxEntryId: maxEntryId,
       warlordEntryId: record.warlord_entry_id != null ? record.warlord_entry_id : null,
+      forceDisposition: record.force_disposition != null ? record.force_disposition : null,
       detachments: detachments
     };
   }
@@ -2175,7 +2220,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.9';
+  const VERSION = '6.10';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2368,6 +2413,7 @@
   let selectedListId  = null;
   let nextId          = 1;
   let warlordEntryId  = null;   // E9b: listId of the chosen Warlord, or null
+  let forceDispositionValue = null;   // E25: chosen Force Disposition string, or null
 
   // E1b: the list's chosen detachments, held as KEYS into detachmentDefs
   // ("<source faction>|<MFM printed name>"). Keys, not indices or names:
@@ -4255,10 +4301,12 @@
   function renderAll() {
     refreshPoints();
     recomputeWarlord();
+    recomputeForceDisposition();
     renderBanner();
     renderRoster();
     renderList();
     renderWarlordPicker();
+    renderForceDispositionPicker();
     renderDetail();
     scheduleSave();
   }
@@ -4342,6 +4390,64 @@
     // A must-be entry can't be overridden by picking something else while it's
     // still in the list — recomputeWarlord() re-forces it right after anyway.
     warlordEntryId = listId;
+    renderAll();
+  }
+
+  // ── E25: Force Disposition selection ─────────────────────────────────────
+  // 11th Edition ties each detachment to exactly one Force Disposition. The
+  // data side is scalar (`detachments.json`'s `force_disposition` field) but
+  // read list-tolerantly here via [].concat(...) so a future 1-to-many MFM
+  // print needs no engine change — only the field would need to start
+  // carrying an array, which concat already handles either way.
+  function availableForceDispositions(keys) {
+    const seen = {}, out = [];
+    for (const key of (keys || [])) {
+      const d = detachmentDefs[key];
+      if (!d) continue;
+      const vals = [].concat(d.force_disposition || []);
+      for (const v of vals) {
+        if (!v || Object.prototype.hasOwnProperty.call(seen, v)) continue;
+        seen[v] = true;
+        out.push(v);
+      }
+    }
+    return out;
+  }
+
+  // Mirrors recomputeWarlord()'s shape: auto-select on a singleton set, keep
+  // a still-valid selection, clear and re-derive otherwise.
+  function recomputeForceDisposition() {
+    const available = availableForceDispositions(selectedDetachments);
+    if (available.length === 1) {
+      forceDispositionValue = available[0];
+    } else if (forceDispositionValue != null && available.indexOf(forceDispositionValue) < 0) {
+      forceDispositionValue = null;
+    }
+  }
+
+  function renderForceDispositionPicker() {
+    const el = document.getElementById('fdisp-picker');
+    if (!el) return;
+    const available = availableForceDispositions(selectedDetachments);
+    // No detachments selected -> nothing to declare -> no picker (E25 spec point 5).
+    if (available.length === 0) { el.innerHTML = ''; return; }
+
+    const label = v => String(v).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    const forcedPick = available.length === 1;
+    const options = available.map(v =>
+      `<option value="${escAttr(v)}"${v === forceDispositionValue ? ' selected' : ''}>${escHtml(label(v))}</option>`
+    ).join('');
+
+    el.innerHTML = `
+      <span class="fdisp-label">Force Disposition</span>
+      <select class="fdisp-select" onchange="setForceDisposition(this.value)"${forcedPick ? ' disabled title="Only one option available across your selected detachments"' : ''}>
+        ${forcedPick ? '' : `<option value=""${forceDispositionValue == null ? ' selected' : ''}>— none selected —</option>`}
+        ${options}
+      </select>`;
+  }
+
+  function setForceDisposition(v) {
+    forceDispositionValue = v === '' ? null : v;
     renderAll();
   }
 
@@ -4499,6 +4605,17 @@
         const names = c.keys.map(k => (detachmentDefs[k] ? detachmentDefs[k].name : k)).join(', ');
         warn += `<div class="det-list-warning">Unique-tag clash on ${escHtml(c.tag)}: ${escHtml(names)}.</div>`;
       }
+    }
+    // E25: at least one detachment is selected, so at least one Force
+    // Disposition is available. Either it auto-resolved / was picked (info
+    // line), or more than one option exists and nothing has been chosen yet
+    // (flag-and-warn — same det-list-warning surface used above, since no
+    // missing-warlord precedent for this exists elsewhere in the app).
+    if (forceDispositionValue != null) {
+      const label = String(forceDispositionValue).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+      warn += `<div class="det-list-info">Force Disposition: ${escHtml(label)}</div>`;
+    } else {
+      warn += `<div class="det-list-warning">Force Disposition not selected — required for a complete army list.</div>`;
     }
 
     let rows = '';
@@ -7124,6 +7241,7 @@
     setFaction(fac);
     armyList = []; selectedListId = null; nextId = 1; hasGhosts = false;
     warlordEntryId = null;
+    forceDispositionValue = null;
     selectedDetachments = [];   // E1b: a new list starts with nothing selected
     currentListId   = ListStorage.newListId();
     currentListMeta = { name: name, points_target: target, primary_faction: fac.name, created: Date.now() };
@@ -7161,6 +7279,7 @@
       armyList  = out.armyList;
       nextId    = (out.maxEntryId || 0) + 1;
       warlordEntryId = out.warlordEntryId;
+      forceDispositionValue = out.forceDisposition;
       selectedDetachments = out.detachments;
 
       // Recompute points for resolved entries (reference model — never frozen);
@@ -7366,6 +7485,7 @@
       primary_faction: currentListMeta ? currentListMeta.primary_faction : (currentFaction ? currentFaction.name : null),
       created:         currentListMeta ? currentListMeta.created : Date.now(),
       warlord_entry_id: warlordEntryId,
+      force_disposition: forceDispositionValue,
       detachments:      selectedDetachments
     };
   }
