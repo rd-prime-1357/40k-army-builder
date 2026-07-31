@@ -9945,3 +9945,51 @@ after this fix, before the final baseline run.
   well-scoped item beats a partial change," B69 was re-scoped rather than half-built. Open scope choice left
   to Ryan: all six at once (recommended) or Guilliman-only as a stopgap. B69 stays open; open count unchanged
   at 12.
+
+
+- **D260** — B70/B73 audit complete (S170, audit-only — no code, no data, no `index.html` change). Both
+  tickets trace to one root mechanism in `mfm_points_parser.py`'s `leader_eligible_units` backfill, verified
+  by rerunning the real pipeline in isolation (not by reading code alone — the first read was wrong and the
+  live regeneration caught it).
+  **Mechanism.** `wahapedia_transform.py` leaves `Leader Eligible Units` blank for any datasheet without a
+  Core-typed ability literally named "Leader" (confirmed: Wardens of Ultramar, id `000004188`, has zero rows
+  in `Datasheets_leader.csv` and no such ability — the fresh `Unit_Stats.csv` shows both its model groups
+  blank on that column). `mfm_points_parser.py` then backfills any *blank* cell from the MFM text's own
+  per-unit list — but the MFM carries two distinct headers, `LEADER` and `SUPPORT`, and the backfill does not
+  distinguish them; it copies whichever one it finds. Wardens' MFM block is headed `SUPPORT`, not `LEADER`.
+  The backfill also over-reads by one line: Wardens' MFM list block runs into the next line, which is the
+  following faction's section header ("WHITE SCARS"), silently concatenated onto the last list entry with no
+  delimiter — this is the literal origin of the "VANGUARD VETERAN SQUAD WHITE SCARS" entry the S169 handoff
+  flagged; it is not a real unit name, it is two unrelated tokens glued together by a missing block-boundary
+  check.
+  **B70 — closed as not-a-bug; a real feature request underneath it.** Wardens of Ultramar has no Leader
+  ability in either source (Wahapedia or the current MFM) — its actual ability, `HEROES OF ULTRAMAR`, is a
+  distinct "this unit joins another unit and increases its Starting Strength" mechanic, not the Leader-attach
+  mechanic, and the engine has never had code for it. The engine's refusal to let it attach as a Leader is
+  therefore correct, not a bug — B70 as filed ("cannot be attached") describes intended behavior. What Ryan
+  actually wants is very likely the join mechanic itself, which does not exist yet and is not a quick fix —
+  see decision needed, next-session prompt.
+  **B73 — confirmed real, root cause identified, fix scope needs Ryan.** Checked every LEADER-typed Epic Hero
+  currently built (Uriel Ventris, Chief Librarian Tigurius, Marneus Calgar, Captain Titus, Adrax Agatone,
+  Vulkan He'stan, Kor'sarro Khan, Pedro Kantor, Darnath Lysander, Kayvaan Shrike, Caanok Var, Iron Father
+  Feirros, Tor Garadon — 13 characters) against the current MFM's own `LEADER` list for that same character.
+  Every one shows `units.json`'s `leader_eligible_units` carrying extra cross-chapter entries the MFM list
+  does not have — consistently the same handful (Crusader Squad, Deathwatch Veterans, Decimus Kill Team,
+  Fortis Kill Team, Inner Circle Companions, Sword Brethren Squad, and for Terminator-capable characters also
+  Deathwatch Terminator Squad / Deathwing Knights / Deathwing Terminator Squad). This is not scattered noise
+  on one datasheet; it is a uniform pattern across 13 independent characters, which is why the audit treats it
+  as systemic rather than a Uriel-specific defect. Root cause: `leader_eligible_units` is populated primarily
+  from Wahapedia's `Datasheets_leader.csv` (a 10th-edition-sourced file, per its own URLs), and the MFM
+  backfill only ever fills a *blank* cell — it never cross-checks or overrides a Wahapedia-derived cell that
+  is already populated, even when the MFM's own current-edition `LEADER` list for that exact character
+  disagrees. `wahapedia_transform.py`'s own code comment explicitly defends the broad list as intentional
+  ("the generic Captain datasheet... legitimately spans chapter bodyguards") — but that rationale is about
+  *shared* generic datasheets (Captain, Chaplain, Librarian, Ancient, Apothecary, Lieutenant), not named Epic
+  Heroes with their own datasheet id; Uriel's 19-row list is keyed to his own id in `Datasheets_leader.csv`,
+  not inherited from a generic Captain. Whether Wahapedia's broader per-character list or the MFM's narrower
+  one is the correct legality source is a genuine rules-legality call with roster-wide blast radius (every
+  Leader-typed unit across every SM-family chapter, not just Ultramarines), and reverses a design decision
+  already recorded in the pipeline code — it is not decided in this entry. See decision needed, next-session
+  prompt.
+  **Not shipped.** No parser, engine, or data change this session — the audit found real mechanism but the
+  correct fix depends on Ryan's call on source-of-truth. B70 and B73 stay open. Open count unchanged at 12.

@@ -292,3 +292,6 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   selector, not rewrite to "(see below)") and generalized: same select-N-from-pool shape on six units
   across four factions; the selector→pool link is absent from our data, so it's a data turn (parser
   re-capture, asserted) + an engine turn, re-sized S→M; no hardcode shipped, B69 re-scoped not built (S169)
+- **D260** — B70/B73 audit complete: root cause is `mfm_points_parser.py`'s LEADER/SUPPORT-blind backfill;
+  B70 not-a-bug (Wardens has no Leader ability in any source), B73 confirmed systemic across 13 characters;
+  source-of-truth decision needed from Ryan; no code/data shipped (S170)

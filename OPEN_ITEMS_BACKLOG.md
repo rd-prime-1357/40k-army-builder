@@ -3,7 +3,16 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **12 open** as of S169: B69, B70, B73, B75, B76, B77, P2, P4, E23, B67b, E12, B17. B72 and B80
+not here, it isn't open. **12 open** as of S170 (unchanged from S169): B69, B70, B73, B75, B76,
+B77, P2, P4, E23, B67b, E12, B17. B70/B73 audited S170 (D260, audit-only, no code/data shipped):
+one root mechanism found in `mfm_points_parser.py`'s Leader-list backfill (blind to the MFM's
+own LEADER vs. SUPPORT distinction, plus a one-line block-boundary over-read). B70 looks like
+not-a-bug — Wardens of Ultramar has no Leader ability anywhere in source; its real ability is an
+unbuilt "join" mechanic, not Leader-attach. B73 confirmed systemic across all 13 built LEADER-
+typed Epic Heroes, same cross-chapter pattern on every one; whether Wahapedia's broader
+per-character list or the MFM's narrower current list should govern is a roster-wide
+rules-legality call, left to Ryan. Neither ticket closed; both need a scope decision before any
+build. **12 open** as of S169: B69, B70, B73, B75, B76, B77, P2, P4, E23, B67b, E12, B17. B72 and B80
 shipped S169 (D258, engine-only): `index.html` v6.11 → v6.12. B72 — the Outrider Squad's Invader ATV
 (the only `non_consuming` optional model group in the data) was offered only at size 6 because
 `loOptMax` ran the headroom clamp on it; headroom is 0 at the 3-model bracket. Fixed to exempt
@@ -109,20 +118,38 @@ by an assertion listing the six selector→pool maps — then an **engine turn**
 under its selector and drops the resolved "(see left)/(see above)" cue while leaving "(see below)" alone.
 Open decision for Ryan: fix all six at once (recommended) or Guilliman-only as a stopgap. Not started.
 
-### B70 — Wardens of Ultramar cannot be attached to a unit — **NEW, Ryan-reported; S**
-The detachment enhancement/unit "Wardens of Ultramar" cannot currently be attached to any unit in the
-app. Ryan points to the "Heroes of Ultramar" ability as the source of the eligible-unit list and to a
-Leader restriction that should apply. Needs the eligibility rule traced from that ability's rules text
-into whatever governs attachment, likely a Leader-restriction gap similar to prior Leader-eligibility
-bugs.
+### B70 — Wardens of Ultramar cannot be attached to a unit — **AUDITED S170 (D260); likely not-a-bug, real ask is a new "join" mechanic; awaiting Ryan**
+Audited against the live pipeline (rerun in isolation, not read off the source code). Wardens has zero
+rows in `Datasheets_leader.csv` and no Core-typed "Leader" ability — `leader_ability_name` is correctly
+null in both sources. Its real ability, `HEROES OF ULTRAMAR`, is a distinct "this unit joins another unit,
+increasing its Starting Strength" mechanic, not the Leader-attach mechanic, and the engine has no code for
+it. The engine's refusal to attach it as a Leader is therefore correct as filed. The populated
+`leader_eligible_units` list Ryan was seeing (including the bogus "VANGUARD VETERAN SQUAD WHITE SCARS"
+entry) is explained by D260: `mfm_points_parser.py` backfills any blank Leader-list cell from the MFM
+text without checking whether the MFM block was headed `LEADER` or `SUPPORT` — Wardens' block is `SUPPORT`
+— and over-reads one line past the block's end, concatenating the next faction's header ("WHITE SCARS")
+onto the last entry with no delimiter. Two real, fixable parser bugs, but neither one makes Wardens
+attachable — attaching it requires building the join mechanic from scratch, which is new scope, not a bug
+fix. Decision needed from Ryan: build the join mechanic (M/L-sized new feature) or close as not-a-bug and
+park it. Not started.
 
-### B73 — Ultramarine Leader abilities list units outside their actual 40k eligibility — **NEW, Ryan-reported; M; likely spans multiple leaders**
-Uriel Ventris's Leader ability text lists eligible units (Deathwatch, Crusaders, Kill Teams, etc.) that
-are not valid attachments in a 40k Matched Play list — likely a case where the source ability text
-covers eligibility across multiple game modes/contexts and the app is surfacing all of it rather than
-filtering to what's legal in this app's scope. Ryan suspects this is not unique to Uriel and other
-Ultramarine (and possibly other) Leaders carry the same over-broad list. Needs a source-level audit of
-Leader eligibility text against actual Matched Play legality before scoping a fix.
+### B73 — Ultramarine Leader abilities list units outside their actual 40k eligibility — **AUDITED S170 (D260); confirmed systemic, root cause found; source-of-truth decision needed from Ryan**
+Audited against the current MFM's own per-character `LEADER` lists, not just Uriel. Checked all 13
+currently-built LEADER-typed Epic Heroes (Uriel Ventris, Chief Librarian Tigurius, Marneus Calgar, Captain
+Titus, Adrax Agatone, Vulkan He'stan, Kor'sarro Khan, Pedro Kantor, Darnath Lysander, Kayvaan Shrike,
+Caanok Var, Iron Father Feirros, Tor Garadon). Every one shows the same pattern: `units.json`'s
+`leader_eligible_units` carries a consistent set of cross-chapter entries (Crusader Squad, Deathwatch
+Veterans, Decimus Kill Team, Fortis Kill Team, Inner Circle Companions, Sword Brethren Squad, plus
+Deathwatch/Dark Angels Terminator units for Terminator-capable characters) that the MFM's own `LEADER`
+list for that same character does not include. This is systemic, not a Uriel-specific parser slip.
+Root cause: `leader_eligible_units` is populated primarily from Wahapedia's `Datasheets_leader.csv` (a
+10th-edition-sourced file), and `mfm_points_parser.py`'s MFM backfill only fills a cell the transform left
+*blank* — it never cross-checks or narrows a Wahapedia-derived cell against the MFM's own current-edition
+list, even when they disagree. This is not a quick parser fix: which source should govern Leader
+eligibility (older, per-character, broader Wahapedia data vs. current, narrower MFM lists) is a rules-
+legality call with roster-wide blast radius — every Leader-typed unit in every SM-family chapter, not just
+Ultramarines — and it reverses a design choice the pipeline's own code comments defend on purpose. Decision
+needed from Ryan before any build. Not started. See D260 for full audit detail.
 
 
 ### B75 — Faction pack Rules Updates pages: column resolution fails, text interleaves — **NEW S159 (D244); M**
