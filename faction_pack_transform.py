@@ -46,7 +46,15 @@ import sys
 try:
     import pdfplumber
 except ImportError:
-    sys.exit("pdfplumber is required:  pip install pdfplumber --break-system-packages")
+    sys.exit(
+        "pdfplumber is required. Install it with:\n"
+        "    Windows:        py -m pip install pdfplumber\n"
+        "    macOS / Linux:  python3 -m pip install pdfplumber\n"
+        "(If pip reports an externally-managed environment, add "
+        "--break-system-packages.)\n"
+        "Use `-m pip` rather than a bare `pip` so the install lands in the "
+        "same Python that runs this script."
+    )
 
 
 # A word is treated as crossing the page's centre line if it straddles the

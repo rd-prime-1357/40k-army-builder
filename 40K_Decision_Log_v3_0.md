@@ -10017,3 +10017,41 @@ after this fix, before the final baseline run.
   finding, not a product or rules-legality call — so it is closed on my own authority per the standing
   decision-authority rule; noted here for the record rather than surfaced as a question. Open count
   drops to 11 (B69, B70, B73, B75, B76, P2, P4, E23, B67b, E12, B17).
+
+- **D262** — Faction pack converter sized against all 11 packs; two defects in its own flagging (S172,
+  tooling-only). Ryan ran `faction_pack_transform.py` across every available faction pack — 11 PDFs,
+  635 pages. **B75 is roughly ten times its original estimate: 64 flagged pages of 635 (~10%)**, ranging
+  3–16 per pack, with Black Templars at 3 of its 5 pages. B75's original text put it at "roughly one
+  Rules Updates page per pack", generalised from a two-pack sample. Hand-correction, floated in D244 as
+  the cheap alternative, is therefore dead: 64 pages of manual work that would permanently break the
+  determinism the pipeline depends on. Clustering words into columns by x-position per row band is the
+  remaining route.
+  **B75's diagnosis was also wrong about which pages fail.** It claimed the converter "resolves every
+  datasheet and detachment page correctly" and that flagged pages are the Rules Updates page. Verified
+  false against the converted output: Thousand Sons p1 is the cover/contents and **p5 is the Hexwarp
+  Thrallband detachment page**, both flagged. Some detachment pages resolve, some do not. B75 corrected
+  in place rather than closed, since the underlying defect is unchanged.
+  Two new defects in the converter's own anomaly reporting, both filed:
+  **B84** — the KNOWN LIMITATION note ends by naming the Rules Updates page as the affected page type.
+  False per above, and worse than silence: it sends a reader to the wrong place. The page numbers the
+  note already prints are the useful part.
+  **B85** — `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real
+  keyword ("Skarbrand Legiones Daemonica"). Chaos Daemons reports ~34 "faction keywords", Space Marines
+  ~33 — about one per datasheet. Not cosmetic: these false positives sit directly beside the KNOWN
+  LIMITATION notes and train a reader to skim past them, which defeats the loud-failure design that
+  justified stopping the build in D244.
+  **B86** — Chaos Daemons p13 has no extractable text (image-only); needs an eye to confirm whether it
+  carries rules, and OCR if so.
+  Also banked: the converter's dependency-missing message gave a Linux-only `--break-system-packages`
+  flag, which blocked Ryan on Windows. Now platform-specific and recommends the `-m pip` form so the
+  install lands in the Python that runs the script.
+  **Scale note for future scoping:** these packs are far larger than the two-pack sample implied — Space
+  Marines 219 pages, Chaos Daemons 151, carrying full datasheets. Faction packs are a primary data
+  source, not a supplement.
+  **Process failure worth recording.** This session (S159's conversation, resumed) opened against
+  `SESSION_HANDOFF_158.md` because that was the newest handoff in the project area, while the repo was
+  at 171 — twelve sessions ahead. Every conclusion drawn about the Thousand Sons build was stale on
+  arrival: D250 had already shipped turn A, D252 turn B, D253 closed the build, D248 corrected a
+  detachment count this conversation got wrong, and D261 closed B77 as already-resolved. **The project
+  area is not a reliable indicator of current state; the repo is.** A session that has been idle should
+  clone the repo and compare its newest handoff number before trusting anything read from the mount.

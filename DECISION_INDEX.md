@@ -298,3 +298,10 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D261** — B77 audited and closed as already-resolved: the six Scintillating Legions carriers already
   carry the faction keyword in `units.json` and it already renders in the UI; ticket's S159 diagnosis was
   stale, not something this session fixed; closed on standing authority, no code/data shipped (S171)
+- **D262** — Faction pack converter sized against all 11 packs (635 pages): B75 is 64 flagged pages,
+  ~10x its estimate, and its claim that only Rules Updates pages fail is false (detachment pages fail
+  too); filed B84 (note names wrong page type), B85 (faction-keyword detector reports ~1 false
+  positive per datasheet, drowning the real notes), B86 (image-only page needs OCR); converter's
+  install message fixed for Windows; recorded that this conversation opened against a 12-session-stale
+  project area (S172)
+

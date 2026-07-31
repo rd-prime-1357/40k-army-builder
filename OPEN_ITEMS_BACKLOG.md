@@ -96,6 +96,25 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
+### B84 — Converter's KNOWN LIMITATION note names the wrong page type — **NEW S172 (D262); XS**
+The note ends "In these packs that is the Rules Updates page." False: Thousand Sons p1 is the
+cover/contents and p5 is the Hexwarp Thrallband **detachment** page, both flagged. The claim was
+generalised from a two-pack sample and sends a reader looking in the wrong place — worse than no
+guidance. Drop the sentence; the page numbers the note already prints are the useful part.
+
+### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); S**
+`FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:
+"Skarbrand Legiones Daemonica", "Kairos Fateweaver Legiones Daemonica". Chaos Daemons reports ~34
+"faction keywords", Space Marines ~33 — roughly one per datasheet.
+Worse than cosmetic: the false positives sit directly beside the KNOWN LIMITATION notes and train the
+reader to skim past them, undermining the loud-failure design that justified stopping the build in D244.
+Anchor the match to the keyword label, stop at the line boundary, and only report when the distinct set
+is genuinely small.
+
+### B86 — Chaos Daemons faction pack p13 has no extractable text — **NEW S172 (D262); XS; may be nothing**
+Image-only page; the converter flags it. Needs an eye to confirm whether it carries rules. If it does,
+OCR is required, which is a larger question than this ticket.
+
 ### B69 — "Select N abilities" datasheet pools render with no link to their selector — **Ryan-reported S152; corrected + generalized S169 (D259); was S, now M**
 **Corrected intent (Ryan, S169):** remove the "(see left)" cue from Roboute Guilliman's *Author of the
 Codex* entirely (not rewrite it to "(see below)"), and render the abilities it grants directly beneath
@@ -157,9 +176,11 @@ Ultramarines — and it reverses a design choice the pipeline's own code comment
 needed from Ryan before any build. Not started. See D260 for full audit detail.
 
 
-### B75 — Faction pack Rules Updates pages: column resolution fails, text interleaves — **NEW S159 (D244); M**
-`faction_pack_transform.py` resolves every datasheet and detachment page correctly (stat tables intact,
-verified on Thousand Sons and Death Guard packs) but cannot resolve the portrait **Rules Updates** pages,
+### B75 — Faction pack pages that cannot be resolved into columns — **S159 (D244); resized + diagnosis corrected S172 (D262); L**
+**Corrected S172 (D262): the original diagnosis below was wrong on both scale and scope.**
+`faction_pack_transform.py` resolves *most* datasheet and detachment pages (stat tables intact) but
+**not all** — Thousand Sons p1 (cover) and p5 (Hexwarp Thrallband, a **detachment** page) both fail. The
+original claim that only the portrait Rules Updates pages fail is false. It cannot resolve pages that
 which mix a full-width title and intro with columns starting at different heights. Those pages extract
 full-width and the two columns interleave mid-sentence: "Each time a PLAGUE LEGIONS unit from your
 **this PSYKER) and roll one D6**". Threshold tuning is exhausted — five values swept, none fixed Death
@@ -170,6 +191,12 @@ pages carry the keyword changes.
 Recommended fix: cluster words into columns by x-position per row band, which handles ragged column
 starts. Cheaper alternative Ryan may prefer: hand-correct the ~1 page per pack, at the cost of breaking
 determinism. Awaiting Ryan's flag-count report across the full pack set to size the work.
+
+**Sized S172 (D262) from a full 11-pack run: 64 flagged pages of 635 (~10%).** Range 3–16 per pack;
+Black Templars is 3 of its 5. The original estimate — roughly one page per pack — came from a two-pack
+sample. **Hand-correction is therefore not viable**: 64 pages of manual work that permanently breaks
+determinism. Cluster words into columns by x-position per row band. Do B84 and B85 in the same pass so
+the flags stay trustworthy.
 
 ### B76 — Rolling documents carry frozen version numbers in their filenames — **NEW S159 (D246); S; clarity not safety**
 Five docs carry `_vN_M` labels that have never incremented: the decision log has 29 commits under
