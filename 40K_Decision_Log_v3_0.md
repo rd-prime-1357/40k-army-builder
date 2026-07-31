@@ -10055,3 +10055,32 @@ after this fix, before the final baseline run.
   detachment count this conversation got wrong, and D261 closed B77 as already-resolved. **The project
   area is not a reliable indicator of current state; the repo is.** A session that has been idle should
   clone the repo and compare its newest handoff number before trusting anything read from the mount.
+
+- **D263** — B84 shipped; B75/B85 found to be blocked on real PDF access, not on judgment (S173,
+  tooling-only). Session opened by cloning the repo and confirming the project area was current
+  (both at handoff 172, no repeat of the S172 staleness incident), then reconciling the manifest gap
+  S172 left: `pipeline_manifest.py` had not been reissued after S172's decision-log/backlog/`
+  faction_pack_transform.py` changes, and its guarded set had never been extended to include
+  `SESSION_HANDOFF_172.md`. Both fixed (`--write` then `--freshness-check`, clean). `repo_check`
+  still shows 4 files differing from the repo — `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_172.md`,
+  `pipeline_manifest.py`/`.json` — all expected push-lag from S172's un-pushed close and this
+  session's own edits, same pattern already documented as normal in the S171 handoff.
+  **B84 shipped.** The KNOWN LIMITATION note ended "In these packs that is the Rules Updates page,"
+  which D262 already showed is false (Thousand Sons p5 is a detachment page). Sentence dropped; the
+  note now stops at the page numbers it already prints. Pure string edit, verified by code inspection
+  and a synthetic `_find_anomalies` run — no PDF needed for this one.
+  **B75 and B85 not attempted blind.** Checked first whether the raw faction-pack PDFs are reachable
+  from this environment: they are not. The private source repo (`rd-prime-1357-data-sources`) holds
+  only two already-converted `.md` outputs (Dark Angels, Space Marines); the PDFs themselves exist
+  only on Ryan's machine. B75's column-clustering rewrite and B85's regex root cause both require
+  testing against the actual flagged pages to get right — and D262 already records B75's diagnosis
+  being wrong twice from insufficient verification. A synthetic reproduction of B85's reported bleed
+  pattern ("Skarbrand FACTION KEYWORDS: Legiones Daemonica" on one line) did **not** reproduce it —
+  the regex correctly captured only "Legiones Daemonica" in that shape — confirming the real cause
+  isn't what the ticket text suggested and isn't safe to guess at. Rather than ship an unverified fix,
+  added a stdout-only diagnostic to `_find_anomalies()`: each faction-keyword match now prints 30
+  characters of raw context immediately before it, so Ryan's next real converter run produces the
+  actual bleed pattern instead of speculation. Does not touch committed `.md` output, so it carries
+  no determinism risk. Both tickets stay open.
+  `pipeline_manifest.py`: `SESSION_HANDOFF_172.md` added to the guarded set (the gap found at open).
+  Open count drops to 13 (B69, B70, B73, B75, B76, B85, B86, P2, P4, E23, B67b, E12, B17).
