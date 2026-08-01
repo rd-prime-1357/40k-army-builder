@@ -380,3 +380,20 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   Ryan-facing resolved by existing precedent, not escalated. Still blocked on a data turn (not run this
   session) to confirm exact wording/cap across all six armies. No ticket shipped; E23 re-scoped in
   place. Open count unchanged at 11.
+- **D273** — E23 data-turn: `HEADHUNTER TASK FORCE` source facts confirmed across all six armies (S182,
+  data-only — no engine, no data-file, no `index.html` change; baseline 29/29 with GW sources loaded).
+  **All four facts confirmed; D209/D272's "most Vehicles" corrected to a precise predicate.** (1) Grant
+  wording identical across all six because it is one Space Marines detachment — verbatim only in the SM
+  Faction Pack and Wahapedia `Detachment_abilities.csv` (`faction_id=SM`), byte-identical `rule_text`
+  in all six `detachments.json` records. (2) Tank Ace = Adeptus Astartes Vehicle *excluding
+  Fortifications, Drop Pods, Walkers and units that can Fly* — a keyword/type predicate computable from
+  built `keyword_names`+`unit_type`, not a name list. (3) "Up to three" cap identical in all six. (4)
+  Keys `<Army>|HEADHUNTER TASK FORCE`, `dp:2`, PRIORITY ASSETS, all six. **Per-army eligible pool
+  resolved from source: SM 16, BT 16, Blood Angels 17 (adds Baal Predator), DA 16, DW 16, SW 16 — Blood
+  Angels is the only one that is not 16.** Generic AA block: 28 Vehicle-type → 16 eligible, 12 carved
+  out (5 Walkers, 6 Fly, Drop Pod). No eligible unit is already Character/Epic Hero in any pool.
+  **Build-turn notes:** base the test on the Vehicle *keyword* (so the Fortification clause catches
+  Hammerfall Bunker, its only Adeptus Astartes case); encode the carve-out as a per-entry exclusion
+  predicate, not a per-detachment name list; add an assertion that no non-Adeptus-Astartes vehicle can
+  enter these pools (the faction qualifier is satisfied by pool construction today, not a keyword
+  check). E23's data dependency cleared; backlog text updated. Open count unchanged at 11.

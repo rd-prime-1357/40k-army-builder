@@ -3,8 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **11 open** as of S181 (unchanged from S180): B69, B70, B75, B85, B86, P2,
-P4, E23, B67b, E12, B17. E23 scoped S181 (D272, analysis-only): mechanism decided (fifth
+not here, it isn't open. **11 open** as of S182 (unchanged from S181): B69, B70, B75, B85, B86, P2,
+P4, E23, B67b, E12, B17. E23 data turn done S182 (D273, data-only): all four source facts confirmed
+across all six armies — wording identical (one shared SM detachment), carve-out is a precise
+`Fly`/`Walker`/`Drop Pod`/`Fortification` exclusion predicate (not "most Vehicles"), "up to three" cap
+holds, six keys confirmed; per-army eligible pools resolved (Blood Angels 17, the other five 16). E23
+no longer blocked — build turn next. E23 scoped S181 (D272, analysis-only): mechanism decided (fifth
 `detachment_effects.json` kind for the detachment-scoped facts + a purely-additive `list_store.js`
 pick array for player selections, no version bump), revalidation decided by `recomputeWarlord()`
 precedent (continuous silent drop, no Muster-phase gate). Corrected an inherited miscount — the
@@ -363,7 +367,7 @@ the bigger lever and hasn't been tried yet.**
 RAG-expanded one.
 
 
-### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); scoped S181 (D272); M**
+### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); scoped S181 (D272); data confirmed S182 (D273); build turn next; M**
 
 Found by re-deriving E21's survey from source instead of trusting D203's list. `HEADHUNTER TASK FORCE`
 exists in **six built armies** — Space Marines, Black Templars, Blood Angels, Dark Angels, Deathwatch,
@@ -418,10 +422,32 @@ three call sites need an effective per-entry type (raw `unit_type`, or `'Charact
 overlay, never touch the raw record" shape, but at per-entry rather than per-detachment granularity,
 since no existing function does that today.
 
-**Still blocked on a data turn** (not run S181 — analysis-only, sources not loaded): confirm the exact
-keyword-grant wording per D209's own standard (source-first) across all six armies — the "most
-Vehicles" carve-out's exact membership and whether wording (including the "up to three" cap) is
-identical across all six is unconfirmed, not assumed.
+**Data turn done — all four facts confirmed from source (S182, D273); no longer blocked.** (1) Grant
+wording is **identical across all six** because it is a single Space Marines detachment, not six copies:
+verbatim only in the SM Faction Pack v1.0 and Wahapedia `Detachment_abilities.csv` (`faction_id=SM`),
+which agree word-for-word; `detachments.json` `rule_text` is byte-identical in all six records (SHA-256
+`cadd53c18131`). (2) The carve-out is **not "most Vehicles" — it is a precise predicate**: Adeptus
+Astartes Vehicle *excluding Fortifications, Drop Pods, Walkers and units that can Fly*, all computable
+from built `keyword_names` (`Fly`/`Walker`/`Drop Pod`) plus `unit_type` (`Fortification`). (3) The
+**"up to three" cap holds in all six**. (4) Keys confirmed: `<Army>|HEADHUNTER TASK FORCE` for Space
+Marines / Black Templars / Blood Angels / Dark Angels / Deathwatch / Space Wolves, each `dp:2`,
+`PRIORITY ASSETS`.
+
+**Per-army eligible pool (resolved from source, ground truth for the build's assertion):** generic
+Adeptus Astartes block is 28 Vehicle-type units → **16 eligible** (Firestrike Servo-turrets, both
+Gladiators×3, Impulsor, the three Land Raiders, both Predators, Razorback, both Repulsors, Rhino,
+Vindicator, Whirlwind), 12 carved out (5 Walker Dreadnoughts, 6 flyers, Drop Pod). Resolved per army:
+**SM 16, Black Templars 16, Blood Angels 17 (adds Baal Predator), Dark Angels 16, Deathwatch 16, Space
+Wolves 16 — Blood Angels is the only army that is not 16.** No eligible unit is already a
+Character/Epic Hero in any pool, so the grant is never a no-op.
+
+**Build-turn design notes (dev-manager calls):** (a) base eligibility on the Vehicle **keyword**, not
+`unit_type: Vehicle`, so the "excluding Fortifications" clause does real work — it catches Hammerfall
+Bunker (Vehicle keyword, `unit_type: Fortification`), the only Adeptus Astartes case; (b) author the
+carve-out as a **per-entry exclusion predicate** on the effect row, not a per-detachment name list, and
+evaluate it on each list entry's own keywords; (c) the "Adeptus Astartes" qualifier is satisfied by
+pool construction today, not a keyword test — add an assertion that no non-Adeptus-Astartes vehicle can
+enter these pools and silently become Tank Ace-eligible.
 
 
 ### B67b — Optional: purge `Unit_Weapons.csv` / `wh40k_core_rules.md` from git history — **NEW S145 (D225); Ryan action; low priority, not time-sensitive**
