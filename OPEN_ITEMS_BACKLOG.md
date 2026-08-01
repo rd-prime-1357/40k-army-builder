@@ -3,7 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **11 open** as of S179 (down from 12 at S178): B69, B70, B75, B85, B86, P2,
+not here, it isn't open. **11 open** as of S181 (unchanged from S180): B69, B70, B75, B85, B86, P2,
+P4, E23, B67b, E12, B17. E23 scoped S181 (D272, analysis-only): mechanism decided (fifth
+`detachment_effects.json` kind for the detachment-scoped facts + a purely-additive `list_store.js`
+pick array for player selections, no version bump), revalidation decided by `recomputeWarlord()`
+precedent (continuous silent drop, no Muster-phase gate). Corrected an inherited miscount — the
+schema has four effect kinds today, not the "sixth" a prior document claimed; Tank Ace would be the
+fifth. Still blocked on a data turn to confirm exact wording/cap across all six armies. No ticket
+closed — scoping only. **11 open** as of S179 (down from 12 at S178): B69, B70, B75, B85, B86, P2,
 P4, E23, B67b, E12, B17. E27 shipped S179 (D270, UI-only): `renderDetail`'s attach-panel heading/hint
 and `leaderSectionHtml`'s modal heading now read `leaderAbilityName` instead of a hardcoded "Leader"
 string; two other candidate sites (list-panel row, JSON export) checked and found to need no change.
@@ -356,7 +363,7 @@ the bigger lever and hasn't been tried yet.**
 RAG-expanded one.
 
 
-### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); M**
+### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); scoped S181 (D272); M**
 
 Found by re-deriving E21's survey from source instead of trusting D203's list. `HEADHUNTER TASK FORCE`
 exists in **six built armies** — Space Marines, Black Templars, Blood Angels, Dark Angels, Deathwatch,
@@ -374,16 +381,47 @@ rather than permitting something illegal, so this does not outrank the enforceme
 sequenced behind E21b/c/d and E22b. It is still a real rule the app does not know about, on six built
 armies.
 
-**Why it is not folded into `detachment_effects.json` as-is.** It is a **fifth effect kind** — a
-muster-time keyword grant with a per-list count limit and a player choice of which units receive it.
-That is player state, not a static table row: the selection has to be stored on the list, survive
-save/load, and be re-validated when the detachment is deselected. It also lands on two pieces of
-shipped code at once (E4's enhancement eligibility and E9's Warlord eligibility). Scope it properly
-before touching the schema.
+**Scoped S181 (D272). It is a fifth effect kind, not the sixth an earlier prompt miscounted** —
+`detachment_effects.json` carries exactly four kinds today (`battleline`, `forbid`, `unlock`,
+`warlord`); nothing shipped a fifth between D209 (S134) and now.
 
-**First step is a scoping turn**, in D199's and D203's mould: confirm the Tank Ace keyword definition
-against source for all six copies, decide where the selection lives in the list record, and decide
-whether the grant is modelled as a sixth effect kind or as its own mechanism.
+**The real complexity: E4 and E9 test Character status two different ways, and neither has a
+per-list-entry hook.** E9's `isCharacter` (`eligibleWarlordEntries()`) is computed once per unique
+`unit_name` and shared by every copy of that unit in the list. E4 (`enhancementTypeEligible`, three
+call sites: index.html ~3194, ~3375, ~3689) reads the raw `unit_type` field copied onto the list entry
+at six construction sites, never through `effectiveUnitType()` (D204's overlay function, which exists
+only for the blanket battleline grant and isn't consulted by any enhancement code path). Tank Ace's
+grant is neither a per-name nor a per-detachment blanket — it's up to three **player-picked
+instances** — so this cannot be done as a pure data change or by extending either existing mechanism
+as-is. Checked for overlap risk: none of the 28 Vehicle-type units in the generic Adeptus Astartes
+block are already `unit_type: Character`, so no reconciliation case exists there.
+
+**Mechanism decided (dev-manager call, reversible):** hybrid, not a pure effect-kind row. (1) A new
+declarative `detachment_effects.json` kind carries the detachment-scoped static facts — eligible
+unit_types/exceptions and the count cap (3) — the same shape `unlock`'s numeric `points_cap` already
+uses. (2) The player's actual picks are new, purely-additive `list_store.js` state — an array of
+`listId`s, capped at the detachment's grant — added the same way `warlord_entry_id` (v1) and
+`force_disposition` (v3) were: absence reads as "none elevated," exactly what an older record already
+meant, so **no schema version bump**.
+
+**Storage/reset behaviour decided by existing precedent, not escalated to Ryan.** Continuously
+re-validated, the same shape as `recomputeWarlord()`: any picked `listId` that stops being eligible
+(leaves the list, its detachment is deselected, the cap is exceeded) is silently dropped on every
+recompute — no confirmation dialog. Checked for a modelled "Muster" phase to gate against: none exists
+— `index.html` mentions "Muster" only in rules-citation comments — so picks stay editable continuously,
+identical to Warlord and Enhancement selection today.
+
+**Engine touch points for the build turn:** `eligibleWarlordEntries()` needs an OR against the new
+per-entry pick array alongside `x.unit.isCharacter`; `canAssignEnhancement`/`enhancementTypeEligible`'s
+three call sites need an effective per-entry type (raw `unit_type`, or `'Character'` when the entry's
+`listId` is a live pick) in place of the raw field — mirroring `effectiveUnitType()`'s "compute an
+overlay, never touch the raw record" shape, but at per-entry rather than per-detachment granularity,
+since no existing function does that today.
+
+**Still blocked on a data turn** (not run S181 — analysis-only, sources not loaded): confirm the exact
+keyword-grant wording per D209's own standard (source-first) across all six armies — the "most
+Vehicles" carve-out's exact membership and whether wording (including the "up to three" cap) is
+identical across all six is unconfirmed, not assumed.
 
 
 ### B67b — Optional: purge `Unit_Weapons.csv` / `wh40k_core_rules.md` from git history — **NEW S145 (D225); Ryan action; low priority, not time-sensitive**

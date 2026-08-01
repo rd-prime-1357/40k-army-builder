@@ -1,60 +1,82 @@
-# Next-session prompt — Session 181
+# Next-session prompt — Session 182
 
-**Assigned: analysis-only — E23 scoping turn, `HEADHUNTER TASK FORCE` Tank Ace Character keyword
-grant.** No engine or data change this session; the point is to land on a scoped build plan Ryan
-signs off on, or to identify what's still blocking one.
+**Assigned: data-only — E23 confirmation turn, `HEADHUNTER TASK FORCE` source text across six armies.**
+No engine change, no `index.html` change. The point is to confirm exact wording/cap and bank the
+config-level facts a build turn will need; not to build the mechanism itself.
+
+## Correction from S181, check before trusting anything inherited
+
+**Thousand Sons is already fully built, not "in active progress."** `units.json` carries 362 units
+(the THOUSAND_SONS_BUILD_SCOPE.md target — 328 + 34 TS), `detachments.json` carries 169 detachments
+(160 + 9 TS), and `repro_check.py`/`detachment_parser.py`/`rules_assertions.py` (`TS-1`/`TS-2`/`TS-3`)
+are all fully wired for TS. This was verified from source at S181 open, not carried forward — do not
+re-open Thousand Sons build work without first checking whether whatever prompted the "in progress"
+belief still holds. If genuinely nothing is left on TS, the next faction in the priority order with no
+build started at all is **Emperor's Children** (no `EC`/`Emperor's Children` entries anywhere in
+`repro_check.py`'s `FACTIONS`/`WEB_PASSES` or `detachment_parser.py`'s army tables) — that would need
+its own `EMPERORS_CHILDREN_BUILD_SCOPE.md` scoping pass before a build, on the CSM/TS model, in a
+session after this one.
 
 ## Open at session start
 
-Read `SESSION_HANDOFF_180.md` first, then `40K_Decision_Log.md` D271 and D209 (E23's original filing).
-Do not trust any session/version/decision number from memory — re-derive from source.
+Read `SESSION_HANDOFF_181.md` first, then `40K_Decision_Log.md` D272 (E23's scoping) and D209 (E23's
+original filing, embedded inside the D209 entry — not its own heading). Do not trust any
+session/version/decision number from memory — re-derive from source.
 
-Run the full baseline: `./baseline.sh --fetch`. Expect a clean pass — S180 closed with the
-`pipeline_manifest.py` GUARDED gap fixed and `--freshness-check` green. If either fails, reconcile
-before starting; do not work around a failing gate.
+Run the full baseline: `./baseline.sh --fetch --data-turn`. This is a data turn — it must load GW
+sources (token first, `gw_sources.zip` fallback) and will FAIL rather than silently run tier-A-only if
+neither is available. Expect the fetch-verify pass and a clean tier-all baseline if sources load.
 
 ## The ticket
 
-`OPEN_ITEMS_BACKLOG.md` §E23 (filed S134/D209): `HEADHUNTER TASK FORCE` exists in six built armies
-(Space Marines, Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves) and grants the
-Vehicle keyword Tank Ace to most Adeptus Astartes Vehicles, then in the Muster Armies step lets the
-player select up to three Tank Ace units to gain the Character keyword — making them Enhancement- and
-Warlord-eligible. `index.html` currently gates both on `unit_type === 'Character'` and refuses
-everything else — an over-restriction (refuses something legal), not a D0 violation, on up to three
-vehicles per list.
+`OPEN_ITEMS_BACKLOG.md` §E23, scoped S181 (D272). The mechanism is already decided: a new declarative
+`detachment_effects.json` effect kind (fifth kind — schema has four today; the wording "sixth" in an
+earlier document was wrong and corrected S181) for the detachment-scoped facts, plus a purely-additive
+`list_store.js` pick-array field for the player's selections (no version bump). This session is
+**data-only**: confirm the facts that new effect-kind row needs, do not build the engine or write the
+row yet — that is a separate, later turn per turn-typing.
 
-Needs, before a build turn can start:
-1. **Data turn** (`--data-turn`) to confirm the exact keyword-grant text across all six armies from
-   GW sources — don't assume the six armies' wording is identical without checking each.
-2. **A decision on where the per-list Tank Ace selection lives** in the list record — player state,
-   must survive save/load. This is a "how it works" question if the storage shape has any user-facing
-   implication (e.g. does the selection reset on faction change, can it be changed after Muster); flag
-   for Ryan if genuinely ambiguous, otherwise decide and proceed.
-3. **A decision on mechanism** — a sixth `detachment_effects.json` effect kind vs. its own standalone
-   mechanism. This touches E4's enhancement eligibility and E9's Warlord eligibility, so the choice
-   has to compose cleanly with both, not just work in isolation.
+Confirm from GW source, per army, for all six (Space Marines, Black Templars, Blood Angels, Dark
+Angels, Deathwatch, Space Wolves):
+1. **Exact `HEADHUNTER TASK FORCE` grant wording** in each army's own faction pack / MFM text — do not
+   assume identical wording across all six without checking each copy individually, the same standard
+   D209 used when it first found this.
+2. **The exact Tank Ace-eligible unit definition** — "most Adeptus Astartes Vehicles" implies a
+   carve-out; confirm its exact membership (which Vehicle-type units, if any, are excluded) per army.
+   The 28 Vehicle-type units in the generic Adeptus Astartes block are listed in D272 for reference —
+   check against source, don't assume that list is the carve-out-free set.
+3. **The count cap** — confirm "up to three" holds in all six copies rather than assuming uniformity.
+4. **The detachment name/key** in each of the six armies' `detachments.json` records, to confirm the
+   six keys this effect will need to be filed against.
 
-Land on a scoped plan (data needs, storage shape, mechanism choice) this session. If the data turn or
-any sub-decision surfaces something that changes E23's shape materially, that's a normal scoping
-finding — record it and adjust, the same as D268 corrected D260's B73/E26 diagnosis in-session.
+Record findings in decision-log form (source-cited, army-by-army) — this session's job is the record,
+not the schema row itself. If wording turns out to vary meaningfully between armies, that is a normal
+scoping finding for this turn to surface, the same as D268 corrected D260's B73/E26 diagnosis in-session.
 
 ## After this
 
-Once E23 is scoped (and, in a later session, built), or if this session finds a hard blocker:
+Once E23's data turn is banked:
+- **E23 build turn** — write the fifth effect-kind row(s) into `detachment_effects.json`, add the
+  `list_store.js` pick-array field, and wire `eligibleWarlordEntries()` /
+  `canAssignEnhancement`/`enhancementTypeEligible`'s three call sites per D272's engine-touch-point
+  list. Engine-only or data+engine depending on how the turn-typing shakes out — decide at that
+  session's open, not now.
 - **B69** (select-N ability pools) — needs a data + engine arc, M-sized.
 - **B70** (Wardens of Ultramar join mechanic) — decided S175 (D266: build the join/Starting-Strength
   mechanic), still needs its own scoping turn before a build.
 - **B75/B85** — blocked on real PDF access from Ryan.
-- Remaining faction builds per the priority order (Thousand Sons in progress; see
-  `THOUSAND_SONS_BUILD_SCOPE.md`).
+- **Emperor's Children** — next unstarted faction in the priority order once Thousand Sons's completion
+  is confirmed for real at this session's open; needs a build-scope document before a build, same as
+  CSM and Thousand Sons got.
 
 ## Close protocol
 
-Produce the four documents: `SESSION_HANDOFF_181.md`, overwrite `NEXT_SESSION_PROMPT.md`, append the
-decision log + `DECISION_INDEX.md`, update `OPEN_ITEMS_BACKLOG.md` if E23's ticket text needs
-updating with the scoped plan. Every changed and net-new file carries a SHA-256 (first 12) in the
-handoff Files section. `python3 pipeline_manifest.py --write` then `--freshness-check` at the very
-end, after all text is finalized — reissue if anything touches the decision log or the handoff after
-the write. Repo is public and flat — no GW-derived material committed; state the exclusions when
-listing files for the repo. Remember to append `SESSION_HANDOFF_181.md` itself to `GUARDED` in
-`pipeline_manifest.py` this same session, the omission D271 just fixed.
+Produce the four documents: `SESSION_HANDOFF_182.md`, overwrite `NEXT_SESSION_PROMPT.md`, append the
+decision log + `DECISION_INDEX.md`, update `OPEN_ITEMS_BACKLOG.md` if E23's ticket text needs updating
+with confirmed source facts. Every changed and net-new file carries a SHA-256 (first 12) in the handoff
+Files section. `python3 pipeline_manifest.py --write` then `--freshness-check` at the very end, after
+all text is finalized — reissue if anything touches the decision log or the handoff after the write.
+Repo is public and flat — no GW-derived material committed; state the exclusions when listing files for
+the repo (this session's own source-confirmation notes, if they quote faction-pack/MFM text at length,
+may themselves need exclusion — check before listing). Remember to append `SESSION_HANDOFF_182.md`
+itself to `GUARDED` in `pipeline_manifest.py` this same session, per D271's design.

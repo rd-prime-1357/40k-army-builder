@@ -365,3 +365,18 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   auto-discovery — it can find files but never notice one missing, trading away real detection.
   Backfilled `BACKLOG_ARCHIVE.md` full entries for B73 (S176) and E26 (S178), previously missing.
   Open count unchanged at 11 (no ticket).
+- **D272** — E23 scoped from source (S181, analysis-only). Corrected the S181 prompt's "sixth effect
+  kind" claim — the schema has four kinds in use today (`battleline`, `forbid`, `unlock`, `warlord`);
+  Headhunter Task Force's grant would be the fifth, not sixth. Key finding: E9's `isCharacter` is
+  computed once per unique unit name (shared across every copy), and E4 reads the raw `unit_type`
+  field directly at six construction sites, never through `effectiveUnitType()`; Tank Ace's up-to-three
+  player-picked-instance grant fits neither shape, so this needs new per-entry logic in both, not a
+  pure data change. No overlap risk found — no Vehicle-type unit in the generic Adeptus Astartes block
+  is already `unit_type: Character`. **Mechanism decided:** a new declarative effect kind for the
+  detachment-scoped facts (eligible set, count cap), plus a purely-additive `list_store.js` array field
+  for the player's picks (no version bump, same pattern as `warlord_entry_id`/`force_disposition`).
+  **Revalidation decided:** continuous silent drop, identical to `recomputeWarlord()`; no Muster phase
+  exists in the app to gate against. Both sub-questions the S181 prompt flagged as possibly
+  Ryan-facing resolved by existing precedent, not escalated. Still blocked on a data turn (not run this
+  session) to confirm exact wording/cap across all six armies. No ticket shipped; E23 re-scoped in
+  place. Open count unchanged at 11.
