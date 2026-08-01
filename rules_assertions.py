@@ -449,6 +449,60 @@ def manifest_gate(S):
     return mod.check(S.dir)
 
 
+def b73_attach_eligibility(S):
+    """B73 (D266): the MFM is the current-edition source of truth for attach eligibility.
+    Every unit the MFM prints a LEADER or SUPPORT block for has its ability name and
+    eligible list sourced from the MFM (LEADER -> "Leader", SUPPORT -> "Support"); the
+    generic Wahapedia 10th-edition Leader mislabel is gone. Four invariants hold together:
+    (1) every leader_eligible_units entry resolves to a real unit_name in units.json —
+        the executable guard against the D260 over-read that glued a chapter divider
+        (".. VANGUARD VETERAN SQUAD WHITE SCARS") onto the last real unit;
+    (2) the only leader_ability_name values in play are Leader and Support;
+    (3) the units the current edition moved to the Support ability carry "Support", not
+        the stale Wahapedia "Leader" — checked on Ancient / Apothecary / Lieutenant;
+    (4) Wardens of Ultramar, whose bespoke Heroes-of-Ultramar join conflicts with its MFM
+        Support block (6 vs 3), is carved out — empty list, no ability — pending B70.
+    Leader and Support are one attach mechanic at the data layer (core rules 19.01 /
+    24.22 / 24.34) and the engine attaches off the list regardless of ability name; the
+    name is recorded so the one-leader-one-support stacking rule can read it later."""
+    units = S.units()
+    def _n(s):
+        s = (s or '').upper().replace('\u2019', "'").replace('\u2013', '-')
+        return re.sub(r'\s+', ' ', s).strip()
+    names, by_id = set(), {}
+    for blk in units:
+        for u in blk['units']:
+            names.add(_n(u['unit_name']))
+            by_id[u['unit_id']] = u
+    orphans, abil_values = [], set()
+    for blk in units:
+        for u in blk['units']:
+            for mg in u.get('model_groups', []):
+                if mg.get('leader_ability_name'):
+                    abil_values.add(mg['leader_ability_name'])
+                for e in mg.get('leader_eligible_units', []) or []:
+                    if _n(e) not in names:
+                        orphans.append((u['unit_name'], e))
+    if orphans:
+        return False, f'{len(orphans)} leader_eligible entries match no unit_name (e.g. {orphans[:3]})'
+    stray = sorted(abil_values - {'Leader', 'Support'})
+    if stray:
+        return False, f'unexpected leader_ability_name value(s): {stray}'
+    for did, nm in (('000002775', 'Ancient'), ('000002773', 'Apothecary'), ('000001346', 'Lieutenant')):
+        u = by_id.get(did)
+        if not u:
+            return False, f'{nm} ({did}) missing from units.json'
+        if any(mg.get('leader_ability_name') != 'Support' for mg in u['model_groups']):
+            return False, f'{nm} ({did}) is not "Support" — the stale Wahapedia Leader mislabel is back'
+    w = by_id.get('000004188')
+    if w:
+        for mg in w['model_groups']:
+            if mg.get('leader_ability_name') or (mg.get('leader_eligible_units') or []):
+                return False, 'Wardens of Ultramar (000004188) not carved out — carries attach data (B70)'
+    return True, ('attach eligibility MFM-sourced: no orphan entries, only Leader/Support, '
+                  'Ancient/Apothecary/Lieutenant are Support, Wardens carved out')
+
+
 ASSERTIONS = [
 
     # ── P1. Parser freshness gate, machine-enforced (D118/D123). Prose could not hold
@@ -1611,6 +1665,18 @@ ASSERTIONS = [
      '(THOUSAND_SONS_BUILD_SCOPE.md §1).',
      'units.json Thousand Sons army block; THOUSAND_SONS_BUILD_SCOPE.md §1',
      lambda S: ts_roster_count(S)),
+
+    # ── B73 (D266): MFM is source of truth for attach eligibility; Leader and Support
+    # captured as distinct ability names into the one eligible-list field; the D260
+    # over-read and the stale-Wahapedia-Leader mislabel are both policed here.
+    ('B73',
+     'Attach eligibility (Leader Eligible Units + Leader Ability Name) is MFM-sourced: '
+     'every eligible entry resolves to a real unit_name (no D260 glued-divider token), the '
+     'only ability values are Leader and Support, the units the current edition moved to '
+     'Support (Ancient/Apothecary/Lieutenant) carry "Support" not the stale Wahapedia '
+     '"Leader", and Wardens of Ultramar is carved out pending B70 (MFM/datasheet conflict).',
+     'units.json (D266); MFM LEADER/SUPPORT blocks; core rules 19.01/24.22/24.34',
+     b73_attach_eligibility),
 
 ]
 

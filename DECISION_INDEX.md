@@ -321,3 +321,14 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   override logic, not a one-line change; also surfaces that Wardens' `SUPPORT` list is currently
   mislabeled as leader data, which the B73 fix and B70's build both touch (S175)
 
+- **D267** (S176, data-only) — B73 shipped. MFM made source of truth for attach eligibility. Two
+  corrections against source before building: Support is the same attach mechanic as Leader (core
+  rules 19.01/24.22/24.34), not B70's join mechanic; and the engine gates attachment on the eligible
+  list alone (index.html 4676), never the ability name — so both lists stay in one field, distinction
+  recorded in `leader_ability_name`, reversing the S175 "separate field" plan (confirmed with Ryan).
+  `mfm_points_parser.py` rewritten (LEADER + SUPPORT captured one line each, MFM replaces stale
+  Wahapedia, unresolved entries dropped, D260 over-read fixed); `units.json` regenerated, diff clean
+  (43 units, only leader_eligible_units/leader_ability_name/leader_footer). Ancient/Apothecary/
+  Lieutenant → Support; Epic Heroes narrowed to MFM lists; Wardens carved out (MFM 6 vs datasheet 3
+  — Heroes of Ultramar, B70). Assertion B73 added (111 total). Stipulations → E26 (stacking
+  enforcement + exceptions) and E27 (popup/output wording). Open 12 → 13.

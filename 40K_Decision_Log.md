@@ -10149,3 +10149,56 @@ after this fix, before the final baseline run.
   partially-wrong prior diagnosis. **Ryan also flagged that MFM updates will need providing at some
   point** — noted for future data turns, no action needed now. B70 and B73 stay open, now scoped by
   Ryan's decision rather than blocked on it. Open count unchanged at 12.
+- **D267** — B73 shipped (S176, data-only). MFM made the source of truth for attach eligibility; two
+  prior-session assumptions corrected against source before building; the Wardens MFM/datasheet
+  conflict surfaced and carved out. Ryan's calls this session: (1) MFM is authoritative — flag any
+  conflict with the faction packs; (2) Option 1 for the data shape — one attach-eligibility list plus
+  an accurate `leader_ability_name`, not two lists; with three stipulations logged as follow-on
+  engine/UI tickets. **Correction 1 — Support is not a separate mechanic.** S175's framing (and the
+  next-prompt built on it) treated `SUPPORT` blocks as the join/Starting-Strength mechanic B70 covers,
+  to be pulled out of leader data. Ryan supplied the core rules (19.01 / 24.22 / 24.34): Leader and
+  Support are the *same* attach-and-form-an-attached-unit machinery, differing only in that a bodyguard
+  may hold one Leader **and** one Support at once. So a `SUPPORT` block is an attach-eligibility list,
+  exactly like a `LEADER` block. **Correction 2 — the engine is ability-blind.** `index.html` gates
+  attachment solely on the eligible list being non-empty (line 4676, `isLeader = leaderEligible.length
+  > 0`); it never reads `leader_ability_name` (only truthiness-checked at 6552, never compared to the
+  literal "Leader"). Pulling `SUPPORT` lists out of the attach field — as the S175 plan directed —
+  would therefore have silently broken attachment for every Support unit (Ancient, Apothecary,
+  Lieutenant and variants) roster-wide. Both lists stay in the one `leader_eligible_units` field,
+  MFM-sourced; the Leader/Support distinction is recorded in `leader_ability_name` for the future
+  stacking rule. This reversed the "separate field / SUPPORT out of leader data" part of the S175 plan,
+  confirmed with Ryan before regenerating. **What shipped:** `mfm_points_parser.py` rewritten —
+  captures both `LEADER` and `SUPPORT` blocks as one line each (which removes the D260 over-read that
+  glued the following chapter divider, e.g. "WHITE SCARS", onto the last unit); the MFM block *replaces*
+  the stale 10th-edition Wahapedia ability name and eligible list wherever the MFM has one, Wahapedia
+  kept only where the MFM has neither; every list entry must resolve to a real datasheet in the file's
+  own stats block or it is dropped and flagged (the executable guard that keeps the glued token and any
+  cross-faction straggler out); footer cleared when a unit is overridden to Support (stale Leader prose
+  doesn't apply). `units.json` regenerated through the full documented pipeline. Diff-guard clean: 43
+  units changed, only three fields touched — `leader_eligible_units` (32), `leader_ability_name` (14),
+  `leader_footer` (13) — no unit added/dropped, merged lookups byte-identical. The 14 ability flips are
+  all Leader→Support (Ancient/Apothecary/Lieutenant family, Bladeguard Ancient, Cato Sicarius,
+  Sanguinary Priest, Castellan, Master of Executions, Masters of the Maelstrom); Epic Heroes narrow to
+  their MFM lists (Calgar 23→13, Kor'sarro Khan 13→6, Uriel Ventris 13→6, etc. — the cross-chapter
+  10th-ed extras D260 flagged); a few broaden where the MFM is wider (Watch Master 2→3). The generic
+  `LEADER` datasheets (Captain/Chaplain/variants) end unchanged in practice — the MFM's extra entries
+  (Assault Squad, Command Squad, Vanguard Veteran Squad, etc.) are all Firstborn units not in the
+  current build, so they resolve to nothing and drop, exactly as the transform's own `if att in
+  selected` filter already did; the one real generic narrowing is Adeptus Astartes Librarian (14→12),
+  covered by "MFM is source of truth." Assertion **B73** added to `rules_assertions.py` (111 total,
+  tier A): every eligible entry resolves to a real unit_name, only Leader/Support values exist, the
+  three Support datasheets carry "Support", Wardens is carved out. **Wardens of Ultramar
+  (000004188) — MFM/datasheet conflict, carved out (flagged per Ryan's rule).** Its datasheet ability
+  is "Heroes of Ultramar" (join one of three named units — Assault Intercessor Squad, Bladeguard
+  Veteran Squad, Intercessor Squad — and raise Starting Strength), which is B70's bespoke mechanic, not
+  the Support attach ability. But the MFM tags Wardens `SUPPORT` with six units (the three plus Assault
+  Squad, Sternguard Veteran Squad, Vanguard Veteran Squad). MFM-as-source-of-truth would pick six;
+  the printed ability says three. Rather than ship either side, Wardens is carved out of B73 (empty
+  list, no ability — which also removes the old glued 6-unit backfill) and left for B70 to reconcile.
+  This is the first identified MFM-vs-pack conflict; the carve-out list in the parser is keyed by
+  datasheet id and named for future conflicts. **Stipulations logged as new tickets:** E26 (engine —
+  enforce one-Leader-one-Support stacking, with special-rule exceptions allowing more; builds on the
+  existing D157 co-leader cap-of-2 + `permitsCoLeader` machinery) and E27 (UI — state Leader vs Support
+  correctly in the attach popups and any exported output; the popup heading currently hardcodes
+  "Leader" at index.html 6568). Both are engine/UI turns, separate from this data turn. B73 → shipped;
+  open count 12 → 13.

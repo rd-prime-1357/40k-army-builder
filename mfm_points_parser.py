@@ -133,7 +133,7 @@ def is_unit_header(line):
     t = line.strip()
     if not t or t.startswith(("•", "-", "*")):
         return False
-    if t.upper() in ("SUPPORT",):
+    if t.upper() in ("SUPPORT", "LEADER"):
         return False
     if SKIP_HEADERS.match(t):
         return False
@@ -165,11 +165,17 @@ def parse_mfm(path):
 
     units = OrderedDict()
     cur = None
-    collecting_support = False
     allied_group = None
 
     def new_unit(name):
-        u = {"name": name, "tiers": [], "support_lines": [], "mode": "single", "wargear": []}
+        # leader_lines / support_lines each hold at most one raw list line — the
+        # single comma-separated unit list printed immediately under the LEADER or
+        # SUPPORT header. They are captured to separate fields because the two
+        # headers name two different abilities (core rules 19.01: Leader 24.22 /
+        # Support 24.34); both are attach-eligibility lists, so which one a unit
+        # carries is recorded as its ability downstream.
+        u = {"name": name, "tiers": [], "leader_lines": "", "support_lines": "",
+             "mode": "single", "wargear": []}
         if allied_group:
             u["allied_group"] = allied_group
         return u
@@ -200,17 +206,22 @@ def parse_mfm(path):
             i += 1
             continue
 
-        if collecting_support:
-            if is_real_unit_header(i) or is_tier(line) or COST_RE.match(line) or line.upper() == "SUPPORT":
-                collecting_support = False
-            else:
-                cur["support_lines"].append(line)
-                i += 1
-                continue
-
-        if line.upper() == "SUPPORT" and cur:
-            collecting_support = True
-            i += 1; continue
+        if line.upper() in ("LEADER", "SUPPORT") and cur:
+            # An attach-eligibility list is exactly the ONE non-blank line printed
+            # under the header — a comma-separated unit list that never wraps
+            # (verified across every priority-faction MFM file). Capturing exactly
+            # that one line is what stops the old multi-line loop from swallowing the
+            # following chapter/section divider onto the last unit name — the literal
+            # origin of D260's glued "VANGUARD VETERAN SQUAD WHITE SCARS". LEADER and
+            # SUPPORT go to their own fields; no unit carries both.
+            header = line.upper()
+            j = i + 1
+            while j < len(lines) and not lines[j].strip():
+                j += 1
+            listline = lines[j].strip() if j < len(lines) else ""
+            cur["leader_lines" if header == "LEADER" else "support_lines"] = listline
+            i = j + 1
+            continue
 
         if TIER_SINGLE.search(line):
             if cur:
@@ -279,7 +290,6 @@ def parse_mfm(path):
         if is_real_unit_header(i):
             cur = new_unit(line)
             units[norm(line)] = cur
-            collecting_support = False
             i += 1; continue
 
         i += 1
@@ -688,7 +698,7 @@ def main():
     if not units:
         sys.exit("No units parsed from MFM file.")
 
-    flags = {"no_costs": [], "mfm_no_datasheet": [], "datasheet_no_mfm": [], "support_filled": [],
+    flags = {"no_costs": [], "mfm_no_datasheet": [], "datasheet_no_mfm": [],
               "out_of_scope_dropped": [], "composition_conflicts": [], "escort_groups": [],
               "escort_conflicts": []}
     for info in units.values():
@@ -709,8 +719,11 @@ def main():
         try:
             ai = stats_header.index("Army Name"); ui = stats_header.index("Unit Name")
             lei = stats_header.index("Leader Eligible Units")
+            lan = stats_header.index("Leader Ability Name")
+            lft = stats_header.index("Leader Footer")
+            di = stats_header.index("Datasheet ID")
         except ValueError:
-            ai = ui = lei = None
+            ai = ui = lei = lan = lft = di = None
         if ai is not None:
             for r in stats_rows[1:]:
                 if len(r) > ui:
@@ -807,21 +820,84 @@ def main():
             w.writerow(header)
             w.writerows(point_rows)
 
-    # patch Leader Eligible Units into Unit_Stats (verbatim SUPPORT list)
-    if stats_rows is not None and lei is not None:
-        support_by_norm = {}
-        for nkey, info in units.items():
-            sup = " ".join(info["support_lines"]).strip()
-            if sup:
-                support_by_norm[nkey] = re.sub(r"\s*,\s*", ", ", sup)
+    # B73 (D266): the MFM is the current-edition source of truth for attach
+    # eligibility. Wahapedia's Datasheets_leader.csv is a 10th-edition file that both
+    # (a) carries cross-chapter bodyguards the current MFM has trimmed and (b) still
+    # tags units as "Leader" that the current edition has moved to the Support ability
+    # (Ancient, Apothecary, Lieutenant). So wherever the MFM prints a LEADER or SUPPORT
+    # block for a unit, that block REPLACES the transform's Wahapedia-derived ability
+    # name and eligible list for that unit; where the MFM prints neither, the transform's
+    # values stand ("Wahapedia only where the MFM has no block"). LEADER and SUPPORT are
+    # both attach abilities (core rules 19.01 / 24.22 / 24.34) and the engine attaches
+    # off the eligible list regardless of ability name, so both lists live in the one
+    # Leader Eligible Units column; the header is recorded in Leader Ability Name so the
+    # Leader/Support distinction is available to the (future) one-leader-one-support
+    # stacking rule. This is a REPLACE, not the old blank-only backfill.
+    if stats_rows is not None and lei is not None and lan is not None:
+        # Units whose MFM SUPPORT block conflicts with a bespoke datasheet "join and
+        # increase Starting Strength" ability (not the Support attach ability) are
+        # carved out and left for their own build, per Ryan's MFM-vs-pack conflict
+        # rule. Wardens of Ultramar (Heroes of Ultramar; MFM lists 6, datasheet lists
+        # 3) is the one identified case — see B70.
+        ATTACH_CARVE_OUT_IDS = {"000004188"}  # Wardens of Ultramar
+
+        # normed datasheet name -> display name, from this file's own stats block, so
+        # MFM list entries resolve to the exact unit_name the engine matches against.
+        # An entry that resolves to no datasheet is dropped and flagged — this is what
+        # keeps a mis-parsed token (the old glued "VANGUARD VETERAN SQUAD WHITE SCARS")
+        # out of the data instead of silently shipping it as a unit.
+        display_by_norm = {}
         for r in stats_rows[1:]:
-            if len(r) > max(ui, lei):
-                key = norm(r[ui])
-                # Non-destructive: transform is authoritative for leader lists from
-                # Datasheets_leader.csv; only backfill cells the transform left blank.
-                if key in support_by_norm and not (r[lei] or "").strip():
-                    r[lei] = support_by_norm[key]
-                    flags["support_filled"].append(r[ui])
+            if len(r) > ui and r[ui].strip():
+                display_by_norm.setdefault(norm(r[ui]), r[ui].strip())
+
+        def resolve_list(raw_line, unit_name):
+            names, unresolved = [], []
+            for tok in raw_line.split(","):
+                tok = tok.strip()
+                if not tok:
+                    continue
+                disp = display_by_norm.get(norm(tok))
+                if disp is None:
+                    unresolved.append(tok)
+                elif disp not in names:
+                    names.append(disp)
+            if unresolved:
+                flags.setdefault("attach_unresolved", []).append((unit_name, unresolved))
+            return " | ".join(sorted(names))
+
+        # Build the MFM override per unit: (ability, eligible-list). No unit carries
+        # both a LEADER and a SUPPORT block (verified across every priority-faction
+        # MFM); if one ever does, flag it rather than pick silently.
+        override_by_norm = {}
+        for nkey, info in units.items():
+            has_leader = bool(info.get("leader_lines", "").strip())
+            has_support = bool(info.get("support_lines", "").strip())
+            if has_leader and has_support:
+                flags.setdefault("attach_both_headers", []).append(info["name"])
+                continue
+            if has_leader:
+                override_by_norm[nkey] = ("Leader", resolve_list(info["leader_lines"], info["name"]))
+            elif has_support:
+                override_by_norm[nkey] = ("Support", resolve_list(info["support_lines"], info["name"]))
+
+        for r in stats_rows[1:]:
+            if len(r) <= max(ui, lei, lan, lft, di):
+                continue
+            if di is not None and r[di] in ATTACH_CARVE_OUT_IDS:
+                flags.setdefault("attach_carved_out", []).append(r[ui])
+                continue
+            key = norm(r[ui])
+            if key not in override_by_norm:
+                continue
+            ability, elig = override_by_norm[key]
+            r[lan] = ability
+            r[lei] = elig
+            # A Support unit must not carry Wahapedia's Leader-attachment footer prose;
+            # the MFM gives no footer, so clear it. Leader overrides keep the footer.
+            if ability == "Support":
+                r[lft] = ""
+            flags.setdefault("attach_patched", []).append((r[ui], ability))
         with open(args.stats, "w", encoding="utf-8-sig", newline="") as f:
             w = csv.writer(f, lineterminator="\r\n")
             w.writerows(stats_rows)
@@ -830,8 +906,11 @@ def main():
     rep = os.path.join(args.out_dir, "points_validation_report.md")
     with open(rep, "w", encoding="utf-8") as f:
         f.write("# MFM Points — Validation Report\n\n")
+        patched = flags.get("attach_patched", [])
         f.write(f"- Units parsed with costs: {len(point_rows)}\n")
-        f.write(f"- Leader Eligible Units patched: {len(flags['support_filled'])}\n\n")
+        f.write(f"- Attach eligibility overridden from MFM (B73): {len(patched)} "
+                f"({sum(1 for _, a in patched if a == 'Leader')} Leader, "
+                f"{sum(1 for _, a in patched if a == 'Support')} Support)\n\n")
         for key, title in [
             ("no_costs", "MFM entries with no parsable cost"),
             ("mfm_no_datasheet", "MFM units with NO matching datasheet (check name/scope)"),
@@ -841,6 +920,25 @@ def main():
             items = flags[key]
             f.write(f"## {title} — {len(items)}\n")
             for it in sorted(items):
+                f.write(f"- {it}\n")
+            f.write("\n")
+        unresolved = flags.get("attach_unresolved", [])
+        f.write(f"## MFM attach-list entries with NO matching datasheet (dropped) — {len(unresolved)}\n")
+        f.write("A list entry that resolves to no datasheet in this file's stats block is dropped, "
+                "not shipped. This is the guard that keeps a mis-parsed section divider out of the "
+                "eligible list (B73 / D260 over-read).\n\n")
+        for name, toks in sorted(unresolved):
+            f.write(f"- {name}: {', '.join(toks)}\n")
+        f.write("\n")
+        carved = flags.get("attach_carved_out", [])
+        f.write(f"## Attach eligibility carved out (MFM/datasheet conflict, left for own build) — {len(carved)}\n")
+        for it in sorted(carved):
+            f.write(f"- {it}\n")
+        f.write("\n")
+        both = flags.get("attach_both_headers", [])
+        if both:
+            f.write(f"## Units with BOTH a LEADER and SUPPORT block (unexpected — flagged) — {len(both)}\n")
+            for it in sorted(both):
                 f.write(f"- {it}\n")
             f.write("\n")
         comp = flags.get("composition_conflicts", [])
@@ -873,7 +971,8 @@ def main():
         f.write("\n")
 
     print(f"Done. {len(point_rows)} unit point rows -> {out_points}")
-    print(f"  leader lists patched: {len(flags['support_filled'])} | see points_validation_report.md")
+    print(f"  attach eligibility overridden from MFM: {len(flags.get('attach_patched', []))} "
+          f"| see points_validation_report.md")
 
 
 if __name__ == "__main__":

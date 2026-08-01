@@ -3,7 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **12 open** as of S175 (unchanged from S174): B69, B70, B73, B75, B85,
+not here, it isn't open. **13 open** as of S176 (up from 12 at S175): B69, B70, B75, B85, B86, P2,
+P4, E23, B67b, E12, B17, E26, E27. B73 shipped S176 (D267, data-only) — MFM made source of truth for
+attach eligibility; two S175 assumptions corrected against source before building (Support is the
+same attach mechanic as Leader; the engine gates on the eligible list, not the ability name). Ryan's
+three stipulations became new engine/UI tickets E26 (one-Leader-one-Support stacking + exceptions)
+and E27 (popup/output Leader-vs-Support wording). Wardens of Ultramar carved out of B73 as the first
+MFM/datasheet conflict (MFM 6 vs printed 3), handed to B70. **12 open** as of S175 (unchanged from S174):
+B69, B70, B73, B75, B85,
 B86, P2, P4, E23, B67b, E12, B17. B70/B73 decided by Ryan S175 (D266) — no longer blocked on a
 product call, but re-deriving B73's mechanism from source found the fix bigger than S170's audit
 assumed (the parser has no `LEADER`-block handling at all today); both need a scoping/build turn,
@@ -169,35 +176,34 @@ not the Leader-attach mechanic, and the engine has no code for it. The engine's 
 as a Leader is therefore correct as filed — not a bug. Ryan confirmed S175: build the join mechanic.
 New scope, sizing TBD (D260 estimated M/L; not resized yet). Needs a scoping turn before build — an
 analysis turn, not mechanical, since it sets how "join and increase Starting Strength" works
-generally, not just for Wardens. B73's rebuild (below) will also change how Wardens' own MFM `SUPPORT`
-list is captured, so sequence B73's parser work before finalizing B70's data needs. Not started.
+generally, not just for Wardens. **Updated S176 (D267):** B73 shipped and carved Wardens out —
+`leader_eligible_units` is now empty and `leader_ability_name` null (the old glued 6-unit `SUPPORT`
+backfill is gone). B73 also surfaced a conflict B70 must reconcile: the MFM tags Wardens `SUPPORT`
+with **six** units (Assault Intercessor Squad, Assault Squad, Bladeguard Veteran Squad, Intercessor
+Squad, Sternguard Veteran Squad, Vanguard Veteran Squad), but the printed `HEROES OF ULTRAMAR`
+ability lists only **three** (Assault Intercessor Squad, Bladeguard Veteran Squad, Intercessor
+Squad). MFM-as-source-of-truth vs. the datasheet text is the first identified MFM/pack conflict —
+B70 decides which list governs the join. Not started.
 
-### B73 — Ultramarine Leader abilities list units outside their actual 40k eligibility — **DECIDED S175 (D266): MFM authoritative wherever both exist; re-scoped bigger after re-deriving from source**
-Audited S170 (D260) against the current MFM's own per-character `LEADER` lists, not just Uriel. All 13
-currently-built LEADER-typed Epic Heroes (Uriel Ventris, Chief Librarian Tigurius, Marneus Calgar, Captain
-Titus, Adrax Agatone, Vulkan He'stan, Kor'sarro Khan, Pedro Kantor, Darnath Lysander, Kayvaan Shrike,
-Caanok Var, Iron Father Feirros, Tor Garadon) show the same pattern: `units.json`'s
-`leader_eligible_units` carries a consistent set of cross-chapter entries (Crusader Squad, Deathwatch
-Veterans, Decimus Kill Team, Fortis Kill Team, Inner Circle Companions, Sword Brethren Squad, plus
-Deathwatch/Dark Angels Terminator units for Terminator-capable characters) the MFM's own `LEADER` list
-for that character does not include. Root cause as understood at S170: `leader_eligible_units` comes
-primarily from Wahapedia's `Datasheets_leader.csv` (10th-edition-sourced), and the MFM backfill only
-fills a blank cell, never narrows a populated one.
-**Ryan decided S175: MFM governs wherever both exist, Wahapedia only where the MFM has no `LEADER`
-block for that character.** Re-deriving `mfm_points_parser.py` against the real source
-(`MFM_Space_Marines_v1_0.txt`, the file the documented pipeline command actually names) before building
-found the fix is bigger than D260's mechanism suggested: the parser has **no code path for `LEADER` at
-all** — its only collection trigger is the literal string `SUPPORT`. It isn't choosing the wrong list
-between LEADER and SUPPORT; it never reads `LEADER` blocks in the first place. 34 `LEADER` headers and
-16 `SUPPORT` headers exist in that one file. Building this now needs: a second collection path for
-`LEADER` blocks written to their own field (never merged with `SUPPORT` content, which means something
-different — see B70); an override rule that applies to named Epic Heroes with their own datasheet id
-but leaves the generic shared datasheets (Captain, Chaplain, Librarian, Ancient, Apothecary, Lieutenant)
-on existing behavior, since D260 already found the broad list is intentional there and the audit never
-tested that case; reprocessing plus diff-guard; and a new assertion. This is a data turn, not a
-same-session patch — needs its own scoping/build session. Ryan also flagged that MFM source updates
-will need providing at some point in the future (noted, no action needed now). Not started. See D260
-and D266 for full detail.
+### E26 — Enforce one-Leader-one-Support stacking (with special-rule exceptions) — **NEW S176 (D267); engine; Ryan stipulations 1+2**
+Core rules 19.01/24.22/24.34: a bodyguard unit may hold **one Leader and one Support** at once, and
+some datasheet/detachment rules allow more. The engine today is ability-blind — it caps total
+attachers at 2 via `canAttachLeader` (D157) with a pairwise `permitsCoLeader` permit, but does not
+distinguish a Leader attacher from a Support attacher, so it neither guarantees the one-of-each shape
+nor knows where a special rule should widen it. B73 (D267) shipped the data half: `leader_ability_name`
+now correctly reads "Leader" or "Support" per unit. This ticket is the engine half — teach the attach
+gate to read that name and enforce the Leader/Support stacking rule, with a mechanism for datasheet/
+detachment exceptions. Builds on the existing D157 cap-of-2 + `permitsCoLeader` machinery rather than
+replacing it. Engine turn, separate from any data work. Not started.
+
+### E27 — State Leader vs Support correctly in popups and exported output — **NEW S176 (D267); UI; Ryan stipulation 3**
+After B73 (D267), Support units carry `leader_ability_name: "Support"`, but the attach popup
+(`leaderSectionHtml`, index.html ~6549) hardcodes the heading "Leader" (line 6568) and generic
+"This model can be attached to the following units" body text. A Support unit therefore renders under
+a "Leader" heading. This ticket makes the popup — and any exported/printed list output — say "Leader"
+or "Support" per the unit's actual ability, and word the stacking rule (one Leader + one Support)
+correctly. UI turn in `index.html`; depends only on the data B73 already ships. Not started.
+
 
 
 ### B75 — Faction pack pages that cannot be resolved into columns — **S159 (D244); resized + diagnosis corrected S172 (D262); L**
@@ -451,6 +457,7 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B73** — Ultramarine (and roster-wide) Leader abilities listed units outside their actual eligibility — **DECIDED S175 (D266); SHIPPED S176 (D267); DATA.** MFM made source of truth for attach eligibility. `mfm_points_parser.py` rewritten to capture `LEADER` and `SUPPORT` blocks (one line each — fixes the D260 over-read), replace the stale 10th-ed Wahapedia ability/list wherever the MFM has a block, drop any entry that resolves to no datasheet, and clear the footer on Support overrides. `units.json` regenerated through the full pipeline; diff-guard clean (43 units, only `leader_eligible_units`/`leader_ability_name`/`leader_footer`). Ancient/Apothecary/Lieutenant → Support; Epic Heroes narrowed to MFM lists; Wardens carved out (MFM/datasheet conflict → B70). Assertion `B73` added (111 total). Corrected two S175 assumptions before building: Support is the same attach mechanic as Leader (not B70's join mechanic), and the engine gates on the list not the ability name — so both lists live in one field with the distinction in `leader_ability_name`, reversing the S175 "separate field" plan (confirmed with Ryan). Ryan's stipulations became E26 (stacking enforcement) and E27 (popup/output wording).
 - **B76** — Rolling documents carried frozen version numbers in their filenames — **NEW S159 (D246); SHIPPED S174 (D265); TOOLING, clarity not safety.** Renamed all five (`40K_Decision_Log.md`, `40K_Data_Pipeline_Process.md`, `40K_Functional_Spec.md`, `40K_Architecture_Overview.md`, `40K_Data_Dictionary.md`) — content unchanged. `pipeline_manifest.py`, `repo_check.py`, `DECISION_INDEX.md`, and the P4 backlog entry updated to the new names; every historical decision-log entry, closed-backlog history, and session handoff left untouched, per the ticket's own scoping note. Delivered for Ryan to push, with the five old-named files to be deleted from the repo once the new ones land.
 - **B84** — Converter's KNOWN LIMITATION note names the wrong page type — **NEW S172 (D262); SHIPPED S173 (D263); TOOLING.** The note ended "In these packs that is the Rules Updates page," which is false (Thousand Sons p1 is cover/contents, p5 is the Hexwarp Thrallband detachment page). Sentence dropped; the note now stops at the page numbers it already prints. Pure string edit in `faction_pack_transform.py`, verified by code inspection and a synthetic `_find_anomalies` run — no PDF needed for this one.
 - **B77** — `SCINTILLATING LEGIONS` keyword absent from our data — **NEW S159 (D245); CLOSED S171 (D261),

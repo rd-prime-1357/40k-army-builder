@@ -26,7 +26,7 @@
             "W": 5,
             "LD": 6,
             "OC": 3,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Aggressor Squad",
               "Eradicator Squad",
@@ -69,7 +69,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to one of the above units even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the <span class=\"kwb\">LEADER</span> units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Surgical Precision",
               "Vivispectrum"
@@ -7568,7 +7568,7 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Bladeguard Veteran Squad"
             ],
@@ -7613,7 +7613,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to the above unit even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the <span class=\"kwb\">LEADER</span> units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Astartes Banner",
               "Deeds of Heroism"
@@ -9365,7 +9365,7 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Reiver Squad"
             ],
@@ -9405,7 +9405,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to a unit it can lead even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Tactical Precision",
               "Deadly Terror"
@@ -9511,7 +9511,7 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
@@ -9564,7 +9564,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to a unit it can lead even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Tactical Precision",
               "Target Priority"
@@ -12155,7 +12155,6 @@
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
               "Assault Intercessor Squad",
-              "Crusader Squad",
               "Deathwatch Veterans",
               "Decimus Kill Team",
               "Desolation Squad",
@@ -12166,7 +12165,6 @@
               "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
@@ -12513,7 +12511,7 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Incursor Squad",
               "Infiltrator Squad",
@@ -12556,7 +12554,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to a unit it can lead even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Tactical Precision",
               "Strategic Dispersal"
@@ -12943,7 +12941,7 @@
             "W": 5,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Deathwatch Terminator Squad",
               "Deathwing Knights",
@@ -12992,7 +12990,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to one of the above units even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the <span class=\"kwb\">LEADER</span> units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Astartes Banner",
               "Keep the Banner High"
@@ -15998,7 +15996,7 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Crusader Squad",
@@ -16056,7 +16054,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to one of the above units even if one CAPTAIN, CHAPTER MASTER or LIEUTENANT model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Narthecium",
               "Gene-seed Recovery"
@@ -16174,7 +16172,7 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Crusader Squad",
@@ -16232,7 +16230,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "You can attach this model to one of the above units even if one CAPTAIN, CHAPTER MASTER or LIEUTENANT model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.",
+            "leader_footer": null,
             "unit_ability_names": [
               "Astartes Banner",
               "Unbreakable Duty"
@@ -16877,16 +16875,9 @@
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
               "Company Heroes",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
-              "Tactical Squad",
-              "Victrix Honour Guard"
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -17150,16 +17141,10 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
               "Desolation Squad",
               "Devastator Squad",
-              "Fortis Kill Team",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
@@ -17316,21 +17301,11 @@
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
               "Company Heroes",
-              "Crusader Squad",
-              "Deathwatch Terminator Squad",
-              "Deathwatch Veterans",
-              "Deathwing Knights",
-              "Deathwing Terminator Squad",
-              "Decimus Kill Team",
               "Eradicator Squad",
-              "Fortis Kill Team",
               "Heavy Intercessor Squad",
-              "Indomitor Kill Team",
               "Infernus Squad",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Tactical Squad",
               "Terminator Assault Squad",
               "Terminator Squad",
@@ -17445,7 +17420,7 @@
             "W": 5,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Victrix Honour Guard"
             ],
@@ -17454,7 +17429,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to the above unit even if a Marneus Calgar unit has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Knight Champion of Macragge",
               "Honour or Death"
@@ -17746,16 +17721,10 @@
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
               "Company Heroes",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Hellblaster Squad",
               "Infernus Squad",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Victrix Honour Guard",
               "Wardens of Ultramar"
             ],
@@ -17890,14 +17859,7 @@
             "LD": 6,
             "OC": 1,
             "leader_ability_name": null,
-            "leader_eligible_units": [
-              "ASSAULT INTERCESSOR SQUAD",
-              "ASSAULT SQUAD",
-              "BLADEGUARD VETERAN SQUAD",
-              "INTERCESSOR SQUAD",
-              "STERNGUARD VETERAN SQUAD",
-              "VANGUARD VETERAN SQUAD WHITE SCARS"
-            ],
+            "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
             "leader_restrictions": null,
@@ -17953,14 +17915,7 @@
             "LD": 6,
             "OC": 1,
             "leader_ability_name": null,
-            "leader_eligible_units": [
-              "ASSAULT INTERCESSOR SQUAD",
-              "ASSAULT SQUAD",
-              "BLADEGUARD VETERAN SQUAD",
-              "INTERCESSOR SQUAD",
-              "STERNGUARD VETERAN SQUAD",
-              "VANGUARD VETERAN SQUAD WHITE SCARS"
-            ],
+            "leader_eligible_units": [],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
             "leader_restrictions": null,
@@ -18198,8 +18153,7 @@
             "leader_eligible_units": [
               "Aggressor Squad",
               "Eradicator Squad",
-              "Heavy Intercessor Squad",
-              "Indomitor Kill Team"
+              "Heavy Intercessor Squad"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -18347,9 +18301,6 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad",
-              "Deathwing Knights",
-              "Deathwing Terminator Squad",
               "Terminator Assault Squad",
               "Terminator Squad"
             ],
@@ -18485,7 +18436,6 @@
             "leader_eligible_units": [
               "Assault Intercessors With Jump Packs",
               "Sanguinary Guard",
-              "Talonstrike Kill Team",
               "Vanguard Veteran Squad With Jump Packs"
             ],
             "co_leader_eligible_with": [],
@@ -18965,22 +18915,16 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
               "Desolation Squad",
               "Devastator Squad",
-              "Fortis Kill Team",
               "Hellblaster Squad",
               "Infernus Squad",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Tactical Squad"
             ],
             "co_leader_eligible_with": [
@@ -19024,7 +18968,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to one of the above units, even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Sanguinary Priest",
               "Blood Chalice"
@@ -20916,17 +20860,10 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Company Heroes",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Infernus Squad",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
-              "Tactical Squad",
-              "Victrix Honour Guard"
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -21563,16 +21500,11 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Hellblaster Squad",
               "Infernus Squad",
               "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
@@ -21690,7 +21622,6 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad",
               "Deathwing Knights",
               "Deathwing Terminator Squad",
               "Terminator Assault Squad",
@@ -21810,18 +21741,11 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
-              "Crusader Squad",
-              "Death Company Marines",
-              "Death Company Marines with Bolt Rifles",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Hellblaster Squad",
               "Infernus Squad",
               "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
@@ -21951,16 +21875,11 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Hellblaster Squad",
               "Infernus Squad",
               "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
@@ -23539,15 +23458,10 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Infernus Squad",
               "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
               "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
@@ -29516,6 +29430,7 @@
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
               "Deathwatch Veterans",
+              "Decimus Kill Team",
               "Fortis Kill Team"
             ],
             "co_leader_eligible_with": [],
@@ -29627,6 +29542,7 @@
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
               "Deathwatch Veterans",
+              "Decimus Kill Team",
               "Fortis Kill Team"
             ],
             "co_leader_eligible_with": [],
@@ -30996,17 +30912,10 @@
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
               "Company Heroes",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Infernus Squad",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
-              "Tactical Squad",
-              "Victrix Honour Guard"
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -31121,8 +31030,7 @@
               "Assault Intercessor Squad",
               "Company Heroes",
               "Infernus Squad",
-              "Tactical Squad",
-              "Victrix Honour Guard"
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -31262,9 +31170,6 @@
             "OC": 1,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Deathwatch Terminator Squad",
-              "Deathwing Knights",
-              "Deathwing Terminator Squad",
               "Terminator Assault Squad",
               "Terminator Squad"
             ],
@@ -31363,8 +31268,7 @@
             "leader_eligible_units": [
               "Aggressor Squad",
               "Eradicator Squad",
-              "Heavy Intercessor Squad",
-              "Indomitor Kill Team"
+              "Heavy Intercessor Squad"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -31477,8 +31381,6 @@
             "leader_eligible_units": [
               "Bladeguard Veteran Squad",
               "Company Heroes",
-              "Deathwatch Veterans",
-              "Inner Circle Companions",
               "Sternguard Veteran Squad",
               "Tactical Squad"
             ],
@@ -31601,7 +31503,6 @@
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
               "Assault Intercessors With Jump Packs",
-              "Talonstrike Kill Team",
               "Vanguard Veteran Squad With Jump Packs"
             ],
             "co_leader_eligible_with": [],
@@ -31846,16 +31747,9 @@
               "Assault Intercessor Squad",
               "Bladeguard Veteran Squad",
               "Company Heroes",
-              "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Sword Brethren Squad",
-              "Tactical Squad",
-              "Victrix Honour Guard"
+              "Tactical Squad"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -31968,8 +31862,7 @@
             "OC": 2,
             "leader_ability_name": "Leader",
             "leader_eligible_units": [
-              "Outrider Squad",
-              "Ravenwing Black Knights"
+              "Outrider Squad"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -33593,8 +33486,6 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Crusader Squad",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Infernus Squad",
               "Intercessor Squad",
               "Sword Brethren Squad"
@@ -33659,8 +33550,6 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Crusader Squad",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Infernus Squad",
               "Intercessor Squad",
               "Sword Brethren Squad"
@@ -33818,15 +33707,11 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Infernus Squad",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
               "Sword Brethren Squad"
@@ -33867,7 +33752,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to one of the units on the left even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Vehement Aggression",
               "Prioritised Eradication"
@@ -34034,8 +33919,6 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Crusader Squad",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Intercessor Squad",
               "Sword Brethren Squad"
             ],
@@ -34167,10 +34050,6 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
               "Sword Brethren Squad"
@@ -34304,11 +34183,7 @@
             "leader_eligible_units": [
               "Assault Intercessor Squad",
               "Crusader Squad",
-              "Deathwatch Veterans",
-              "Decimus Kill Team",
-              "Fortis Kill Team",
               "Infernus Squad",
-              "Inner Circle Companions",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
               "Sword Brethren Squad"
@@ -35215,7 +35090,7 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Crusader Squad",
               "Sword Brethren Squad"
@@ -35262,7 +35137,7 @@
             ],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to one of the above units even if one Captain, Chapter Master, Execrator or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Vengeful Exhortation",
               "Martial Honour"
@@ -55505,7 +55380,7 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": "Leader",
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
               "Chosen",
               "Legionaries",
@@ -55515,7 +55390,7 @@
             "co_leader_eligible_with": [],
             "co_leader_any": false,
             "leader_restrictions": null,
-            "leader_footer": "<i>You can attach this model to one of the above units even if one other Character model has already been attached to it (a unit cannot have two <span class=\"kwb\">MASTERS</span> <span class=\"kwb2\">OF</span> <span class=\"kwb\">EXECUTIONS</span> attached to it). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths.</i>",
+            "leader_footer": null,
             "unit_ability_names": [
               "Warp-sighted Butcher",
               "Trophy Taker"
@@ -60114,11 +59989,11 @@
             "W": 4,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": null,
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
-              "CHOSEN",
-              "LEGIONARIES",
-              "RED CORSAIRS RAIDERS"
+              "Chosen",
+              "Legionaries",
+              "Red Corsairs Raiders"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -60171,11 +60046,11 @@
             "W": 3,
             "LD": 6,
             "OC": 1,
-            "leader_ability_name": null,
+            "leader_ability_name": "Support",
             "leader_eligible_units": [
-              "CHOSEN",
-              "LEGIONARIES",
-              "RED CORSAIRS RAIDERS"
+              "Chosen",
+              "Legionaries",
+              "Red Corsairs Raiders"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
