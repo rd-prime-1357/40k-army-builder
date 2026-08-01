@@ -355,3 +355,13 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   by design — datasheet ability box is always literally "Leader" (129/131 model groups); the
   Leader/Support split comes from the MFM's own block headers, a different document. Assertion E27
   added (structural shape only). `index.html` v6.13 → v6.14. Open 12 → 11.
+- **D271** — GUARDED-list close-out fix; not a ticket (S180, tooling-only). `pipeline_manifest.py`'s
+  `GUARDED` list had fallen 3 handoffs behind (`177`-`179` never appended, silently unguarded).
+  Re-added the three; also added `unguarded_handoffs()`, folded into `check()` and `check_overlay()`
+  (checked against the full fetched repo tree, not local dir — local housekeeping deletes old
+  handoffs, so only the repo copy reliably still has them) so a forgotten append now fails the very
+  next baseline instead of going silent for sessions. Verified against the real fetched repo that this
+  would have caught S177-179 immediately. Rejected switching `GUARDED` to `latest_handoff()`-style
+  auto-discovery — it can find files but never notice one missing, trading away real detection.
+  Backfilled `BACKLOG_ARCHIVE.md` full entries for B73 (S176) and E26 (S178), previously missing.
+  Open count unchanged at 11 (no ticket).

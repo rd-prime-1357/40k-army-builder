@@ -2332,6 +2332,72 @@ renamed files and the five updated live files were delivered for Ryan to upload,
 old-named files to be deleted from the repo once the new ones land.
 
 
+## B73 — Leader eligibility over-broad from stale Wahapedia data, MFM not authoritative — SHIPPED S176 (D267)
+
+Filed S152 (Ryan, appended directly to the backlog). Diagnosed at D260 (S170, audit-only): every
+LEADER-typed Epic Hero currently built (13 characters — Uriel Ventris, Tigurius, Calgar, Titus, Adrax
+Agatone, Vulkan He'stan, Kor'sarro Khan, Pedro Kantor, Darnath Lysander, Kayvaan Shrike, Caanok Var,
+Iron Father Feirros, Tor Garadon) carried cross-chapter entries in `leader_eligible_units` the MFM's
+own current-edition list for that same character does not have — traced to `wahapedia_transform.py`
+populating the field primarily from the 10th-edition-sourced `Datasheets_leader.csv`, with the MFM
+backfill only ever filling an already-blank cell, never overriding one Wahapedia had already populated.
+Re-derived from the actual source text at D266 (S175, audit-only) rather than trusting D260's own prose:
+the parser had no `LEADER` collection path at all, only `SUPPORT` — 34 `LEADER` blocks and 16 `SUPPORT`
+blocks sat unread in `MFM_Space_Marines_v1_0.txt`, meaning D260's "backfill copies whichever it finds"
+description didn't match the code as it stood. Ryan's call (D266): the MFM is the later source, use it
+wherever both exist.
+
+**Shipped S176, data-only (D267).** `mfm_points_parser.py` rewritten to capture both `LEADER` and
+`SUPPORT` blocks as one line each; the MFM block replaces the stale Wahapedia ability name and eligible
+list wherever the MFM has one, Wahapedia kept only where the MFM has neither; every list entry validated
+against the file's own datasheet stats block or dropped and flagged; footer cleared when a unit is
+overridden to Support. `units.json` regenerated through the full documented pipeline — diff-guard clean,
+43 units changed across exactly three fields (`leader_eligible_units` 32, `leader_ability_name` 14,
+`leader_footer` 13), no unit added or dropped. 14 ability flips, all Leader→Support (Ancient/Apothecary/
+Lieutenant family, Bladeguard Ancient, Cato Sicarius, Sanguinary Priest, Castellan, Master of Executions,
+Masters of the Maelstrom). Epic Heroes narrowed to their MFM lists (Calgar 23→13, Kor'sarro Khan 13→6,
+Uriel Ventris 13→6, etc. — the cross-chapter 10th-ed extras D260 flagged); a few broadened where the MFM
+is wider (Watch Master 2→3); generic `LEADER` datasheets (Captain/Chaplain/variants) ended unchanged in
+practice. Assertion **B73** added (111 total, tier A). **Wardens of Ultramar (000004188) carved out** as
+the first identified MFM-vs-datasheet conflict — its printed ability (Heroes of Ultramar, a distinct
+join-and-raise-Starting-Strength mechanic, three named units) disagrees with the MFM's `SUPPORT` tag
+(six units) — left for B70 to reconcile, not shipped either way. Two stipulations logged as new tickets:
+E26 (engine — enforce one-Leader-one-Support stacking) and E27 (UI — state Leader vs Support correctly
+in popups/exports). Open count 12 → 13 (B73 shipped, E26/E27 added).
+
+
+## E26 — Co-leader/Support attachment engine did not enforce one-Leader-one-Support stacking — SHIPPED S178 (D269)
+
+Filed S176 (D267 stipulation) as a follow-on to B73: with Support units now correctly typed, the attach
+engine needed to actually enforce 19.01's one-Leader-one-Support bodyguard rule rather than the
+ability-blind gate it had. Re-scoped at D268 (S177, analysis-only) after finding the live engine
+(`permitsCoLeader`, index.html line 4271) returned false for every bare Support against every
+Leader — Master of Executions and the whole SM Support family could attach only as a sole leader, never
+co-attach — the real defect, and engine-only, not data. D268 established the layered enforcement model:
+the base rule (one Leader slot + one Support slot, two total, the existing D157/D158 cap) is the
+ceiling; datasheets decide which specific pairings are legal within it, in three shapes — a named list
+(`co_leader_eligible_with`: Lieutenant → Captain/Chapter-Master-rank, Cato → Calgar only), a generic flag
+(`co_leader_any`: the six DG Plague characters, meaning "second Leader"), and a leader-rule
+cross-reference (Huron Blackheart → Masters of the Maelstrom, the sole such case across all 16 built
+factions).
+
+**Shipped S178, engine-only (D269).** `permitsCoLeader` rewritten to enforce four requirements: (R1) a
+bare CHARACTER Support (empty `coLeaderWith`, no `coLeaderAny`) pairs with any single Leader by the base
+rule — fixes the core defect; (R2) the DG `co_leader_any` second-Leader path kept — two Leaders allowed
+only if at least one carries the flag, never same datasheet; (R3) a Leader's `leader_eligible_units`
+naming a non-CHARACTER Support reads as a co-attach grant — Huron → Masters of the Maelstrom, which has
+no self-grant, so only Huron can share a bodyguard with it; (R4) same-type cap — two Supports always
+illegal, two Leaders without a `co_leader_any` lift also illegal, actively overriding the stale
+cross-listing where Apothecary's `co_leader_eligible_with` names Lieutenant. The `isCharacter` flag
+distinguishes R1 (bare CHARACTER Support → any Leader) from R3 (bare non-CHARACTER Support → only via
+Leader cross-reference). Named `co_leader_eligible_with` lists preserved as the datasheet combination
+restriction. `leaderAbilityName` added to the `allUnits` view object, read from `mg.leader_ability_name`.
+Assertion **E26** added: 9 structural shape checks plus 10 legality cases tested with symmetry
+(Captain+Lieutenant legal, Lieutenant+Librarian illegal, Lieutenant+Apothecary illegal, Cato+Captain
+illegal, Cato+Calgar legal, MoE+Captain legal, Huron+MotM legal, MotM+Captain illegal, two DG Plague
+characters legal, same datasheet always illegal). `index.html` v6.12 → v6.13; 75/75 tier-A assertions
+pass (112 total). Open 13 → 12 (E26 shipped).
+
 
 ## E27 — State Leader vs Support correctly in popups and exported output — SHIPPED S179 (D270)
 

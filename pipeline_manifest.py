@@ -68,11 +68,31 @@ It re-hashes only the decision log and the highest-numbered
 `--write` just banked. A mismatch means one of those two files was touched
 after the write — reissue the manifest and check again before delivering.
 It does not replace `--write`; it verifies `--write` was truly last.
+
+HANDOFF COVERAGE CHECK (S180)
+------------------------------
+`--freshness-check` catches a stale hash on the *latest* handoff, but S177-179
+showed a different failure: three handoffs in a row were written and simply never
+appended to GUARDED at all, so the plain `pipeline_manifest.py` gate — the one
+baseline.sh runs every session — had nothing to check them against and stayed
+green while they went completely unguarded for three sessions. The plain `check()`
+run now also flags any `SESSION_HANDOFF_N.md` present on disk that GUARDED doesn't
+list, so a forgotten append fails the very next session's baseline instead of
+sitting silent until someone happens to run --freshness-check and reads the result.
+
+Chose this over replacing the static per-filename list with discovery (e.g.
+`latest_handoff`'s pattern applied to the whole set): GUARDED's `build()`
+deliberately raises on a *missing* guarded file — that is the mechanism that
+catches a handoff lost from the repo. Auto-discovering "whatever handoffs are
+present" would guard files correctly but could never notice one going missing,
+trading a real failure mode for the one this fixes. The static list stays; this
+check makes forgetting to update it loud instead of silent.
 """
 
 import argparse, hashlib, json, os, re, sys
 
 MANIFEST = 'pipeline_manifest.json'
+_HANDOFF_RE = re.compile(r'^SESSION_HANDOFF_(\d+)\.md$')
 
 NOTE = ('SHA-256 of every guarded pipeline file. Regenerated at session close '
         '(python3 pipeline_manifest.py --write). manifest_check verifies it at baseline; '
@@ -205,6 +225,8 @@ GUARDED = [
     'SESSION_HANDOFF_172.md',
     'SESSION_HANDOFF_173.md', 'SESSION_HANDOFF_174.md',
     'SESSION_HANDOFF_175.md', 'SESSION_HANDOFF_176.md',
+    'SESSION_HANDOFF_177.md', 'SESSION_HANDOFF_178.md', 'SESSION_HANDOFF_179.md',
+    'SESSION_HANDOFF_180.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):
@@ -226,6 +248,20 @@ def sha256(path):
         for chunk in iter(lambda: f.read(1 << 20), b''):
             h.update(chunk)
     return h.hexdigest()
+
+
+def unguarded_handoffs(d):
+    """SESSION_HANDOFF_N.md files present in d that GUARDED does not list at all —
+    not a stale JSON entry (that's `unguarded` inside check()), a handoff GUARDED
+    itself has never heard of. This is the S177-179 failure: three handoffs were
+    written and never appended to GUARDED, so the plain gate had nothing to check
+    them against and stayed green while they went completely unguarded. Folded into
+    check() so the very next session's baseline catches a forgotten append
+    immediately, instead of relying on --freshness-check (which only looks at the
+    single latest handoff) to eventually notice."""
+    present = {f for f in os.listdir(d) if _HANDOFF_RE.match(f)}
+    guarded = {f for f in GUARDED if _HANDOFF_RE.match(f)}
+    return sorted(present - guarded)
 
 
 def build(d):
@@ -275,6 +311,7 @@ def check(d):
     unguarded = [f for f in GUARDED
                  if f not in recorded and os.path.exists(os.path.join(d, f))]
     stale_entries = [f for f in recorded if f not in GUARDED]
+    orphan_handoffs = unguarded_handoffs(d)
 
     problems = []
     if absent:
@@ -287,6 +324,9 @@ def check(d):
     if stale_entries:
         problems.append(f'{len(stale_entries)} manifest entry/entries are no longer in the '
                         f'guarded set: ' + ', '.join(sorted(stale_entries)))
+    if orphan_handoffs:
+        problems.append(f'{len(orphan_handoffs)} session handoff(s) present but not in GUARDED — '
+                        f'add to pipeline_manifest.py: ' + ', '.join(orphan_handoffs))
 
     if problems:
         return False, '; '.join(problems)
@@ -325,6 +365,13 @@ def check_overlay(fetched_dir, local_dir):
         elif f in recorded and sha256(fp) != recorded[f]:
             mismatch.append(f)
 
+    # Checked against fetched_dir (the whole unpacked repo), not local_dir: a handoff
+    # GUARDED forgot to list is routinely deleted from the project area (expected
+    # housekeeping) long before anyone would notice it locally. The repo fetch always
+    # has the full history, so this is the only point in the pipeline where an S177-179
+    # style gap is guaranteed to still be visible regardless of what's resident locally.
+    orphan_handoffs = unguarded_handoffs(fetched_dir)
+
     problems = []
     if absent:
         problems.append(f'{len(absent)} file(s) needed for overlay are absent from the fetch: '
@@ -332,6 +379,9 @@ def check_overlay(fetched_dir, local_dir):
     if mismatch:
         problems.append(f'{len(mismatch)} file(s) needed for overlay do not match the manifest: '
                          + ', '.join(sorted(mismatch)))
+    if orphan_handoffs:
+        problems.append(f'{len(orphan_handoffs)} session handoff(s) in the repo but not in '
+                        f'GUARDED — add to pipeline_manifest.py: ' + ', '.join(orphan_handoffs))
 
     if problems:
         return False, '; '.join(problems), overlay_targets
@@ -340,7 +390,6 @@ def check_overlay(fetched_dir, local_dir):
 
 
 DECISION_LOG = '40K_Decision_Log.md'
-_HANDOFF_RE = re.compile(r'^SESSION_HANDOFF_(\d+)\.md$')
 
 
 def latest_handoff(d):
