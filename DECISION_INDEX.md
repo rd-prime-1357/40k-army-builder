@@ -348,3 +348,10 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   Leader cross-reference for non-CHARACTER Support — Huron→MotM only (R3); same-type cap (R4).
   `leaderAbilityName` added to allUnits view. Assertion E26 added (10 cases + symmetry, 9 shape
   fragments). `index.html` v6.12 → v6.13. Open 13 → 12.
+- **D270** — E27 shipped (S179, UI-only). `renderDetail` attach-panel heading/hint and
+  `leaderSectionHtml`'s modal heading now read `leaderAbilityName`/`leader_ability_name` instead of a
+  hardcoded "Leader" string. List-panel row and JSON export checked and found to need no change (no
+  role word present at either). Rules-section dedup filter left keyed on the literal string 'Leader'
+  by design — datasheet ability box is always literally "Leader" (129/131 model groups); the
+  Leader/Support split comes from the MFM's own block headers, a different document. Assertion E27
+  added (structural shape only). `index.html` v6.13 → v6.14. Open 12 → 11.

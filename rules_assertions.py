@@ -654,6 +654,45 @@ def e26_co_attach_stacking(S):
                   f'{len(cases)} D268 legality cases pass with symmetry')
 
 
+def e27_leader_support_wording(S):
+    """E27: attach-panel and datasheet-modal headings follow the unit's actual
+    ability name (Leader/Support, carried on the view object since E26) instead
+    of a hardcoded "Leader" string. Structural-shape check only — no legality
+    logic changed, so no behavioural cases (unlike E26)."""
+    txt = S.index_html()
+
+    # ── renderDetail's attach section ──
+    m = re.search(r"const abilityWord = unit\.leaderAbilityName === 'Support' \? 'Support' : 'Leader';"
+                  r"\s*\n\s*html \+= `<div class=\"detail-section-label\">\$\{abilityWord\} Assignment</div>", txt)
+    if not m:
+        return False, 'renderDetail attach-section heading not wired to unit.leaderAbilityName'
+
+    if 'Add an eligible bodyguard unit first to attach this ${abilityWord.toLowerCase()}:' not in txt:
+        return False, 'renderDetail attach-section hint text not wired to abilityWord'
+
+    # The old hardcoded heading must actually be gone, not just shadowed by the new one.
+    if re.search(r'<div class="detail-section-label">Leader Assignment</div>', txt):
+        return False, 'hardcoded "Leader Assignment" string still present in renderDetail'
+
+    # ── leaderSectionHtml's modal heading ──
+    fn = re.search(r'function leaderSectionHtml\(raw, sidPrefix\)\s*\{(.*?)\n  \}', txt, re.S)
+    if not fn:
+        return False, 'leaderSectionHtml not found in index.html'
+    body = fn.group(1)
+
+    if 'abilityName: mg.leader_ability_name' not in body:
+        return False, 'leaderSectionHtml entries do not capture leader_ability_name'
+    if 'const headingWord' not in body or 'entries[0].abilityName' not in body:
+        return False, 'leaderSectionHtml headingWord not derived from per-entry abilityName'
+    if '<span>${headingWord}</span>' not in body:
+        return False, 'leaderSectionHtml modal heading span not wired to headingWord'
+    if '<span>Leader</span>' in body:
+        return False, 'hardcoded "<span>Leader</span>" still present in leaderSectionHtml'
+
+    return True, ('attach-panel heading/hint and modal heading both read leaderAbilityName; '
+                  'no hardcoded "Leader" string remains at either site')
+
+
 ASSERTIONS = [
 
     # ── P1. Parser freshness gate, machine-enforced (D118/D123). Prose could not hold
@@ -1842,6 +1881,17 @@ ASSERTIONS = [
      'characters legal, same datasheet illegal) all pass with symmetry.',
      'index.html permitsCoLeader; units.json; core rules 19.01/24.22/24.34; D268',
      e26_co_attach_stacking),
+
+    # ── E27: attach-panel heading/hint and the datasheet-modal "Leader" section
+    # heading both follow the unit's actual ability name (Leader/Support) instead
+    # of a hardcoded "Leader" string. Wording-only — no permitsCoLeader change.
+    ('E27',
+     'renderDetail\'s attach section heading and hint, and leaderSectionHtml\'s modal '
+     'section heading, are both derived from leaderAbilityName / leader_ability_name '
+     'rather than a hardcoded "Leader" string; the old hardcoded strings are confirmed '
+     'gone, not merely shadowed.',
+     'index.html renderDetail, leaderSectionHtml; leader_ability_name (E26/D268)',
+     e27_leader_support_wording),
 
 ]
 

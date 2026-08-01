@@ -2220,7 +2220,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.13';
+  const VERSION = '6.14';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -4771,13 +4771,16 @@
         const label = `${bg.unit_name}${god}${s ? ' · ' + s.size + ' model' + (s.size===1?'':'s') : ''}`;
         bgOptions  += `<option value="${bg.listId}" ${entry.attachedToListId === bg.listId ? 'selected' : ''}>${label}</option>`;
       }
-      html += `<div class="detail-section-label">Leader Assignment</div>
+      // E27: label follows the unit's actual ability name (Leader/Support, per
+      // the D268 stacking model, E26) rather than a hardcoded "Leader".
+      const abilityWord = unit.leaderAbilityName === 'Support' ? 'Support' : 'Leader';
+      html += `<div class="detail-section-label">${abilityWord} Assignment</div>
         <select class="leader-assign-select" ${!hasEligible ? 'disabled' : ''}
                 onchange="editLeaderTarget(${entry.listId},this.value)">
           ${bgOptions}
         </select>`;
       if (!hasEligible) {
-        html += `<div class="leader-hint">Add an eligible bodyguard unit first: ${unit.leaderEligible.join(', ')}</div>`;
+        html += `<div class="leader-hint">Add an eligible bodyguard unit first to attach this ${abilityWord.toLowerCase()}: ${unit.leaderEligible.join(', ')}</div>`;
       }
     }
 
@@ -6588,7 +6591,7 @@
       if (!mg.leader_ability_name) continue;
       const elig = mg.leader_eligible_units || [];
       if (!elig.length) continue;
-      entries.push({ group: mg.model_group, eligible: elig, footer: mg.leader_footer || '' });
+      entries.push({ group: mg.model_group, eligible: elig, footer: mg.leader_footer || '', abilityName: mg.leader_ability_name });
     }
     if (!entries.length) return '';
     const showGroupLabel = entries.length > 1;
@@ -6598,10 +6601,19 @@
       const label = showGroupLabel ? `<div class="stat-group-label">${e.group}</div>` : '';
       body += `${label}<div class="ability-row"><div class="ability-desc">This model can be attached to the following ${word}: ${e.eligible.join(', ')}.${e.footer ? ' ' + e.footer : ''}</div></div>`;
     }
+    // E27: heading follows the MFM role classification (Leader/Support) carried
+    // per model group since E26, rather than a hardcoded "Leader" — a model
+    // group's ability box is always literally printed "Leader" on the datasheet
+    // (unaffected, see the Rules section filter below), but this section is our
+    // own paraphrased summary, not verbatim card text, so it can safely reflect
+    // the role. All model groups on a unit share one ability name (verified,
+    // S179); mixed values fall back to "Leader" defensively.
+    const headingWord = entries.every(e => e.abilityName === entries[0].abilityName)
+      ? entries[0].abilityName : 'Leader';
     const sid = sidPrefix + '-leader';
     return `<div class="modal-section">
       <div class="modal-section-header" onclick="toggleSection('${sid}')">
-        <span class="modal-section-heading"><span>Leader</span></span><span class="modal-section-chevron">▶</span>
+        <span class="modal-section-heading"><span>${headingWord}</span></span><span class="modal-section-chevron">▶</span>
       </div>
       <div class="modal-section-content" id="${sid}">${body}</div>
     </div>`;

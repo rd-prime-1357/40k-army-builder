@@ -3,7 +3,11 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **12 open** as of S178 (down from 13 at S177): B69, B70, B75, B85, B86, P2,
+not here, it isn't open. **11 open** as of S179 (down from 12 at S178): B69, B70, B75, B85, B86, P2,
+P4, E23, B67b, E12, B17. E27 shipped S179 (D270, UI-only): `renderDetail`'s attach-panel heading/hint
+and `leaderSectionHtml`'s modal heading now read `leaderAbilityName` instead of a hardcoded "Leader"
+string; two other candidate sites (list-panel row, JSON export) checked and found to need no change.
+`index.html` v6.13 → v6.14. **12 open** as of S178 (down from 13 at S177): B69, B70, B75, B85, B86, P2,
 P4, E23, B67b, E12, B17, E27. E26 shipped S178 (D269, engine-only): `permitsCoLeader` rewritten to
 enforce one-Leader-one-Support stacking with the four D268 requirements (bare CHARACTER Support pairs
 with any Leader; DG `co_leader_any` second-Leader path; Huron→MotM cross-reference; same-type cap).
@@ -194,16 +198,6 @@ Squad, Sternguard Veteran Squad, Vanguard Veteran Squad), but the printed `HEROE
 ability lists only **three** (Assault Intercessor Squad, Bladeguard Veteran Squad, Intercessor
 Squad). MFM-as-source-of-truth vs. the datasheet text is the first identified MFM/pack conflict —
 B70 decides which list governs the join. Not started.
-
-### E27 — State Leader vs Support correctly in popups and exported output — **NEW S176 (D267); UI; Ryan stipulation 3**
-After B73 (D267), Support units carry `leader_ability_name: "Support"`, but the attach popup
-(`leaderSectionHtml`, index.html ~6549) hardcodes the heading "Leader" (line 6568) and generic
-"This model can be attached to the following units" body text. A Support unit therefore renders under
-a "Leader" heading. This ticket makes the popup — and any exported/printed list output — say "Leader"
-or "Support" per the unit's actual ability, and word the stacking rule (one Leader + one Support)
-correctly. UI turn in `index.html`; depends only on the data B73 already ships. Not started.
-
-
 
 ### B75 — Faction pack pages that cannot be resolved into columns — **S159 (D244); resized + diagnosis corrected S172 (D262); L**
 **Corrected S172 (D262): the original diagnosis below was wrong on both scale and scope.**
@@ -456,6 +450,7 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **E27** — State Leader vs Support correctly in popups and exported output — **SHIPPED S179 (D270); UI.** `renderDetail`'s attach-panel section heading and hint, and `leaderSectionHtml`'s datasheet-modal heading, both now read `leaderAbilityName`/`leader_ability_name` instead of a hardcoded "Leader" string. Investigated and ruled out during the build: the two other "likely sites" the ticket named — the list-panel attached-unit row and the JSON save/export schema — neither actually hardcodes the word "Leader" anywhere, so nothing changed at either. Also confirmed the Rules-section dedup filter (checks the literal string `'Leader'` against `rule_names`) had to stay untouched: the datasheet's own ability box is always literally printed "Leader" (129 of 129 checked instances) regardless of `leader_ability_name`'s Leader/Support classification — that classification comes from the MFM's own LEADER/SUPPORT block headers, a different source document, not the datasheet card. Assertion E27 added (structural shape only, no legality change). `index.html` v6.13 → v6.14.
 - **E26** — Enforce one-Leader-one-Support stacking — **SHIPPED S178 (D269); ENGINE.** `permitsCoLeader` rewritten with four D268 requirements: (R1) bare CHARACTER Support pairs with any Leader by the base rule; (R2) DG `co_leader_any` second-Leader path kept; (R3) Leader cross-reference (Huron→MotM, sole instance across 16 factions); (R4) same-type cap refuses two Supports or two non-`co_leader_any` Leaders, actively overriding the stale Apothecary→Lieutenant cross-listing. `leaderAbilityName` added to the allUnits view object. Named `co_leader_eligible_with` lists preserved as the datasheet combination restriction. Assertion E26 added (10 legality cases with symmetry, plus 9 structural shape fragments). `index.html` v6.12 → v6.13.
 - **B73** — Ultramarine (and roster-wide) Leader abilities listed units outside their actual eligibility — **DECIDED S175 (D266); SHIPPED S176 (D267); DATA.** MFM made source of truth for attach eligibility. `mfm_points_parser.py` rewritten to capture `LEADER` and `SUPPORT` blocks (one line each — fixes the D260 over-read), replace the stale 10th-ed Wahapedia ability/list wherever the MFM has a block, drop any entry that resolves to no datasheet, and clear the footer on Support overrides. `units.json` regenerated through the full pipeline; diff-guard clean (43 units, only `leader_eligible_units`/`leader_ability_name`/`leader_footer`). Ancient/Apothecary/Lieutenant → Support; Epic Heroes narrowed to MFM lists; Wardens carved out (MFM/datasheet conflict → B70). Assertion `B73` added (111 total). Corrected two S175 assumptions before building: Support is the same attach mechanic as Leader (not B70's join mechanic), and the engine gates on the list not the ability name — so both lists live in one field with the distinction in `leader_ability_name`, reversing the S175 "separate field" plan (confirmed with Ryan). Ryan's stipulations became E26 (stacking enforcement) and E27 (popup/output wording).
 - **B76** — Rolling documents carried frozen version numbers in their filenames — **NEW S159 (D246); SHIPPED S174 (D265); TOOLING, clarity not safety.** Renamed all five (`40K_Decision_Log.md`, `40K_Data_Pipeline_Process.md`, `40K_Functional_Spec.md`, `40K_Architecture_Overview.md`, `40K_Data_Dictionary.md`) — content unchanged. `pipeline_manifest.py`, `repo_check.py`, `DECISION_INDEX.md`, and the P4 backlog entry updated to the new names; every historical decision-log entry, closed-backlog history, and session handoff left untouched, per the ticket's own scoping note. Delivered for Ryan to push, with the five old-named files to be deleted from the repo once the new ones land.

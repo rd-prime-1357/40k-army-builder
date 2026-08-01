@@ -2332,3 +2332,40 @@ renamed files and the five updated live files were delivered for Ryan to upload,
 old-named files to be deleted from the repo once the new ones land.
 
 
+
+## E27 — State Leader vs Support correctly in popups and exported output — SHIPPED S179 (D270)
+
+**NEW S176 (D267); UI; Ryan stipulation 3.** After B73 (D267), Support units carry
+`leader_ability_name: "Support"`, but the attach popup (`leaderSectionHtml`) hardcoded the heading
+"Leader" regardless, and `renderDetail`'s attach-panel section carried the same hardcoded heading and
+a generic hint. A Support unit therefore rendered under a "Leader" heading throughout the UI.
+
+**Shipped S179 (D270), UI-only.** `renderDetail`'s attach-panel section heading and hint, and
+`leaderSectionHtml`'s datasheet-modal section heading, both now derive from `leaderAbilityName` /
+`leader_ability_name` (Leader or Support) instead of a hardcoded string. All model groups on a given
+unit were confirmed (S179) to share one ability name — no unit mixes Leader and Support across model
+groups — so the heading logic needs no per-group split; a defensive fallback to "Leader" remains for
+the hypothetical mixed case.
+
+Two of the ticket's three named sites needed no change, checked directly rather than assumed:
+the list-panel attached-unit row prints `${leader.unit_name} (${entry.unit_name})` with no role word
+at all, and the JSON save/export schema (`serializeEntries`/`buildRecord`) carries no role field
+either — `attached_to` is a listId reference only. Neither site hardcodes "Leader" anywhere.
+
+**Also confirmed and deliberately left untouched:** the Rules-section dedup filter in both modal
+builders checks the literal string `'Leader'` against each model group's `rule_names` array, to avoid
+double-printing the ability once under the dedicated Leader/Support section and again under the
+generic Rules list. That filter must stay keyed on the literal string, not on `leader_ability_name` —
+verified against every model group carrying a non-null `leader_ability_name` (131 model groups): the
+datasheet's own printed ability box is *always* literally "Leader" (129 of 131; the remaining 2, both
+Masters of the Maelstrom model groups, carry a bespoke named ability with neither word), and the
+literal string "Support" appears zero times in any `rule_names` array anywhere in the built data. The
+Leader/Support classification in `leader_ability_name` is sourced from the Munitorum Field Manual's
+own LEADER/SUPPORT block headers (`mfm_points_parser.py`), a different official GW document from the
+datasheet card — a real, official distinction, just not one printed on the card itself. Filtering the
+Rules section by `leader_ability_name` instead of the literal string would have broken every
+Support-classified unit except MotM, causing its ability to print twice.
+
+Assertion E27 added — structural shape only (no legality logic changed): confirms both the
+attach-panel heading/hint and the modal heading read the ability-name field, and that the old
+hardcoded strings are actually gone rather than merely shadowed. `index.html` v6.13 → v6.14.
