@@ -3,7 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **13 open** as of S176 (up from 12 at S175): B69, B70, B75, B85, B86, P2,
+not here, it isn't open. **13 open** as of S177 (unchanged from S176): B69, B70, B75, B85, B86, P2,
+P4, E23, B67b, E12, B17, E26, E27. S177 (D268, analysis-only) re-scoped E26 from source — no ship,
+no data change: the CSM "data gap" the S176 handoff implied does not exist (MoE correctly typed Support
+per D192+D267's MFM-wins rule, footer cleared by B73), so E26 is now **engine-only, no data dependency**;
+the deferred D144 CSM `co_leader_any` population resolves as unnecessary. E26 count unchanged (re-scoped
+in place). **13 open** as of S176 (up from 12 at S175): B69, B70, B75, B85, B86, P2,
 P4, E23, B67b, E12, B17, E26, E27. B73 shipped S176 (D267, data-only) — MFM made source of truth for
 attach eligibility; two S175 assumptions corrected against source before building (Support is the
 same attach mechanic as Leader; the engine gates on the eligible list, not the ability name). Ryan's
@@ -185,16 +190,31 @@ ability lists only **three** (Assault Intercessor Squad, Bladeguard Veteran Squa
 Squad). MFM-as-source-of-truth vs. the datasheet text is the first identified MFM/pack conflict —
 B70 decides which list governs the join. Not started.
 
-### E26 — Enforce one-Leader-one-Support stacking (with special-rule exceptions) — **NEW S176 (D267); engine; Ryan stipulations 1+2**
-Core rules 19.01/24.22/24.34: a bodyguard unit may hold **one Leader and one Support** at once, and
-some datasheet/detachment rules allow more. The engine today is ability-blind — it caps total
-attachers at 2 via `canAttachLeader` (D157) with a pairwise `permitsCoLeader` permit, but does not
-distinguish a Leader attacher from a Support attacher, so it neither guarantees the one-of-each shape
-nor knows where a special rule should widen it. B73 (D267) shipped the data half: `leader_ability_name`
-now correctly reads "Leader" or "Support" per unit. This ticket is the engine half — teach the attach
-gate to read that name and enforce the Leader/Support stacking rule, with a mechanism for datasheet/
-detachment exceptions. Builds on the existing D157 cap-of-2 + `permitsCoLeader` machinery rather than
-replacing it. Engine turn, separate from any data work. Not started.
+### E26 — Enforce one-Leader-one-Support stacking (with special-rule exceptions) — **NEW S176 (D267); RE-SCOPED S177 (D268); engine-only, no data dependency; Ryan stipulations 1+2**
+Core rules 19.01/24.22/24.34: a bodyguard holds **one Leader and one Support** at once, and some
+datasheets allow more. B73 (D267) shipped the data half — `leader_ability_name` reads "Leader" or
+"Support" per unit. **S177 (D268) re-scoped this ticket from source and confirmed it is engine-only:
+the CSM "data gap" the S176 handoff implied does not exist — MoE is correctly typed Support with a
+cleared footer, and no built CSM unit needs a data change.** The real defect is that `permitsCoLeader`
+(index.html 4271) returns false for a bare Support (empty `coLeaderWith`, `coLeaderAny` false) against
+every Leader, so Support units can attach only as a sole leader, never co-attach. The engine work,
+building on the existing D157 cap-of-2 + `permitsCoLeader` machinery rather than replacing it:
+1. **Support pairs with any single Leader** by the base rule — a Support-typed unit fills the Support
+   slot and co-attaches with any one Leader even with an empty `coLeaderWith` and no `coLeaderAny`
+   (fixes the bare-Support false).
+2. **Keep the DG `co_leader_any` second-Leader path** — a Leader with `co_leader_any` can be a second
+   Leader (the six DG Plague characters), still never two of the same datasheet.
+3. **Read a Leader's `leader_eligible_units` naming an attach-capable character as a co-attach permit**
+   — Huron Blackheart → Masters of the Maelstrom, the sole such cross-reference across all 16 built
+   factions (verified S177). No new field, no data change; MotM's own sheet carries no self-grant, so
+   Huron is the only Leader it can share a unit with.
+4. **Same-type cap** — two Supports (or two Leaders without a `co_leader_any` lift) cannot stack, even
+   when the legacy 10th-ed `co_leader_eligible_with` lists cross-reference each other (e.g. Apothecary's
+   list names Lieutenant). This is the one place the base rule must actively override a stale name-list
+   overlap.
+Named `co_leader_eligible_with` lists stay live — they are the datasheet combination restriction
+(Lieutenant → Captain/Chapter-Master-rank; Cato → Calgar), **not** dead data. All four requirements
+expressed as `rules_assertions.py` checks. Engine turn, no data or tooling work. Not started.
 
 ### E27 — State Leader vs Support correctly in popups and exported output — **NEW S176 (D267); UI; Ryan stipulation 3**
 After B73 (D267), Support units carry `leader_ability_name: "Support"`, but the attach popup

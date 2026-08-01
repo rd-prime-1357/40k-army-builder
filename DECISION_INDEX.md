@@ -332,3 +332,14 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   Lieutenant → Support; Epic Heroes narrowed to MFM lists; Wardens carved out (MFM 6 vs datasheet 3
   — Heroes of Ultramar, B70). Assertion B73 added (111 total). Stipulations → E26 (stacking
   enforcement + exceptions) and E27 (popup/output wording). Open 12 → 13.
+
+- **D268** — E26 re-scoped from source (S177, analysis-only). CSM "data gap" investigated to source and
+  found not to exist: the live engine's `permitsCoLeader` (index.html 4271) returns false for a bare
+  Support against every Leader — that is the real defect, and it is engine, not data. MoE type is
+  governed by D192+D267 (MFM wins → Support), not a new call; its footer was correctly cleared by B73;
+  the only two CSM co-attach footers are MoE and the unbuilt Exalted Champion, so no CSM data change
+  exists and the deferred D144 CSM `co_leader_any` population resolves as unnecessary. Three of my own
+  proposals corrected against source (discard name lists; add MotM to Huron; set `co_leader_any` on
+  MoE — all wrong). E26 re-scoped **engine-only, no data dependency**: Support pairs with any Leader;
+  keep DG second-Leader path; read a Leader's `leader_eligible_units` naming a character as a permit
+  (Huron→MotM, sole cross-reference in 16 factions); same-type cap blocks two Supports. Open 13 → 13.

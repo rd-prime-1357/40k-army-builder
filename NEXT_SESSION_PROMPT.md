@@ -1,89 +1,87 @@
-# Next-session prompt — Session 177
+# Next-session prompt — Session 178
 
-**Assigned: development-manager's call.** B73 shipped S176 (D267). The two follow-on tickets it
-created — E26 (engine: Leader/Support stacking) and E27 (UI: popup/output wording) — are the natural
-next steps, but both are engine/UI turns and must not mix with data or with each other's turn type.
-B70 (Wardens join mechanic) is now unblocked and holds a real MFM-vs-datasheet conflict to resolve.
-B75/B85 still wait on Ryan providing real faction-pack output. P4 (project-area eviction) still open.
-**13 open items.**
+**Assigned: E26 — enforce one-Leader-one-Support stacking, engine-only (D268 re-scope).** This is an
+**engine turn** in `index.html` + `rules_assertions.py`. It is **analysis-typed** — a wrong judgment
+ships an illegal-list-reachable bug against D0 — so flag model/effort at open and let Ryan switch before
+you write engine code. No data or tooling work; do not mix turn types. **13 open items.**
 
 ## Open at session start
 
-Read `SESSION_HANDOFF_176.md` first, then D267 in `40K_Decision_Log.md`. Do not trust any
-session/version/decision number from memory; the handoff chain is the only authority.
+Read `SESSION_HANDOFF_177.md` first, then **D268** in `40K_Decision_Log.md` (the E26 re-scope), then
+D267 (B73, the data half). Do not trust any session/version/decision number from memory; the handoff
+chain and the decision log are the only authorities. **S177 corrected three assumptions against source
+mid-session — re-derive from source, do not build from remembered framing.**
 
 **Verify you are not opening against a stale project area** — clone the repo and compare its newest
-`SESSION_HANDOFF_*.md` against the project area before trusting the mount. S175 and S176 both found
-`40K_Decision_Log.md` missing from the mount entirely (content fine, verified via clone). If that's
-still happening, ask Ryan for a file-list screenshot rather than re-diagnosing.
+`SESSION_HANDOFF_*.md` against the project area before trusting the mount. Prior sessions found
+`40K_Decision_Log.md` missing from the mount entirely (content fine, verified via clone). If that
+recurs, ask Ryan for a file-list screenshot rather than re-diagnosing. Ryan deletes old handoffs as
+routine housekeeping — their absence is expected, not data loss.
 
-Run the full baseline: `./baseline.sh --fetch` (add `--data-turn` only if the session builds against
-the MFM parser again — E26/E27 do not; they are engine/UI). Expect **111** rules assertions,
-including the new `B73`.
+Run the full baseline: `./baseline.sh --fetch`. **E26 is engine-only — `--data-turn` is not needed**
+(no MFM/source parsing; the CSM data is already correct, verified S177). Expect **111** rules
+assertions including `B73`, and **29/29** gates if you do load sources. Reconcile any failing gate
+before starting — never work around it.
 
-## E26 - enforce one-Leader-one-Support stacking, with exceptions (engine turn; analysis-typed, flag model/effort)
+## E26 — the build
 
-Ryan's stipulations 1+2 (D267). Core rules 19.01/24.22/24.34: a bodyguard may hold one Leader **and**
-one Support at once, and some datasheet/detachment rules widen that. The data half is done - B73 set
-`leader_ability_name` to "Leader"/"Support" correctly. This turn teaches the attach gate to read that
-name and enforce the rule. Start from what already exists: `canAttachLeader` (index.html) caps total
-attachers at 2 (D157) with a pairwise `permitsCoLeader` permit, but it is ability-blind. Decide how the
-Leader/Support distinction folds into that cap and how special-rule exceptions are expressed -
-this is a rules-legality design call (a wrong judgment ships an illegal-list-reachable bug, against
-D0), so it needs a scoping pass before code. Add/extend a `*_check.js` gate and update the
-`canAttachLeader` assertion in `rules_assertions.py`.
+S177 (D268) re-derived the whole thing from source. The CSM "data gap" the older prompt implied **does
+not exist** — Master of Executions is correctly typed Support with a cleared footer, and no built CSM
+unit needs a data change. The real defect is engine: `permitsCoLeader` (index.html 4271) returns false
+for a bare Support (empty `coLeaderWith`, `coLeaderAny` false) against every Leader, so Support units
+can attach only as a sole leader, never co-attach.
 
-## E27 - state Leader vs Support correctly in popups and exported output (engine/UI turn)
+Build on the existing D157 cap-of-2 + `permitsCoLeader` machinery — extend, don't replace. Four
+requirements, each landing as an executable assertion in `rules_assertions.py`:
 
-Ryan's stipulation 3 (D267). `leaderSectionHtml` (index.html ~6549) hardcodes the heading "Leader"
-(line 6568) and generic body text, so a Support unit renders under a "Leader" heading. Make the
-heading and body read the unit's actual `leader_ability_name`, and word the stacking rule correctly.
-Depends only on data B73 already ships. Smaller than E26; could pair as the UI follow-on once E26's
-enforcement lands, but keep them separate turns (engine logic vs. display) if E26 grows.
+1. **Support pairs with any single Leader** by the base rule. A Support-typed unit fills the Support
+   slot and co-attaches with any one Leader even with an empty `coLeaderWith` and no `coLeaderAny`.
+   This is the core fix. Read `leader_ability_name` off the unit view object — note it is **not**
+   currently on `allUnits` (index.html ~2290 builds the view object without it), so adding it to the
+   view object is part of the work.
+2. **Keep the DG `co_leader_any` second-Leader path.** A Leader with `co_leader_any` (the six DG Plague
+   characters) can be a second Leader, never two of the same datasheet.
+3. **Leader-rule cross-reference as a co-attach permit.** When a Leader's own `leader_eligible_units`
+   names an attach-capable character, that is the co-attach grant — **Huron Blackheart → Masters of the
+   Maelstrom**, the *only* such cross-reference across all 16 built factions (verified S177). MotM's own
+   sheet carries no self-grant, so Huron is the sole Leader it can share a unit with.
+4. **Same-type cap.** Two Supports, or two Leaders without a `co_leader_any` lift, cannot stack — even
+   when the legacy 10th-ed `co_leader_eligible_with` lists cross-reference each other (Apothecary's list
+   names Lieutenant). This is the one place the base rule must actively override a stale name-list
+   overlap.
 
-## B70 - Wardens join mechanic, now unblocked, holds a conflict to resolve (engine; analysis-typed)
+**Do not discard the named `co_leader_eligible_with` lists** — they are the datasheet combination
+restriction (Lieutenant → Captain/Chapter-Master rank; Cato → Calgar), not dead data. Ryan's principle:
+the base rule sets the ceiling; the unit rules govern which combinations are legal within it.
 
-Ryan approved building the "join and increase Starting Strength" mechanic (D266). B73 (D267) carved
-Wardens out - its `leader_eligible_units` is now empty. Before building, resolve the MFM-vs-datasheet
-conflict B73 surfaced: the MFM tags Wardens `SUPPORT` with **six** units; the printed `HEROES OF
-ULTRAMAR` ability lists **three** (Assault Intercessor Squad, Bladeguard Veteran Squad, Intercessor
-Squad). Ryan's standing rule is MFM-as-source-of-truth, but he asked to be told of pack conflicts -
-this is one, and which list governs the join is a product/legality call for him. Batch it into the
-scoping turn rather than blocking. New mechanic category, precedent applies beyond Wardens.
+### Legality cases to assert (all from built data)
 
-## Waiting on Ryan for data, not a product call
+- Captain + Lieutenant — **legal** (Leader + Support).
+- Lieutenant + Librarian — **illegal** (Librarian not in Lieutenant's Captain-rank list).
+- Lieutenant + Apothecary — **illegal** (two Supports).
+- Cato Sicarius + any Leader but Marneus Calgar — **illegal**.
+- Master of Executions + any one Leader — **legal** (bare Support, base rule).
+- Huron Blackheart + Masters of the Maelstrom — **legal** (Huron's leader rule names MotM).
+- Masters of the Maelstrom + any other Leader — **illegal** (no self-grant; only Huron).
+- Two DG Plague characters (different datasheets) — **legal** (≤2, `co_leader_any`).
+- Two of the same datasheet — **always illegal**.
 
-**B75 + B85 - faction pack column resolution and keyword-detector noise.** Unchanged: need a local
-run of `faction_pack_transform.py` (current version, B85-CONTEXT diagnostic) against 2-3 packs, at
-minimum Thousand Sons - console output or the actual pages for p1/p5.
+Publish the index at a bumped version and state the version in the report.
 
-## Candidates that don't need Ryan first
+## After E26
 
-- **E23** - Tank Ace Character grant. M-sized, needs a scoping turn (analysis-typed).
-- **B86** - Chaos Daemons pack p13 image-only. Blocked on the same PDF-access gap as B75/B85.
-- **P4** - Project-area capacity. Ryan reported 80% at S175. The M2 setup (token,
-  `source_manifest.json`) is in place but M1/M2 eviction hasn't run - the area still holds the
-  repo-resident set plus GW source files. Worth deciding whether to run the eviction now.
+- **E27 (UI)** — the popup/output Leader-vs-Support wording (heading hardcodes "Leader" at index.html
+  6568). Separate UI turn; do not fold into E26.
+- **B70 (Wardens of Ultramar)** — still open, still needs Ryan's MFM-vs-datasheet reconcile (MFM tags
+  it SUPPORT with six units; printed ability "Heroes of Ultramar" names three and is a bespoke Starting
+  Strength mechanic). A product/rules call, not a build.
+- B75/B85 wait on Ryan providing real faction-pack output. P4 (project-area eviction, area ~80% full)
+  still open.
 
-## Standing reminders
+## Close protocol
 
-- Turn typing is absolute: engine, data and tooling never mix in one session. E26 (engine), E27
-  (engine/UI), B70 (engine) and any data work each need their own session.
-- Fix parsers, never hand-edit `units.json` / `unit_loadouts.json`.
-- Facts not expressed as executable checks do not hold - legality-critical claims go in
-  `rules_assertions.py`; harness-testable engine logic goes in a `*_check.js` gate.
-- GW-derived material never enters the public repo. That includes faction pack PDFs and their
-  converted `.md` files.
-- No further extraction of code out of `index.html` without a positive reason.
-- Session close ends with `pipeline_manifest.py --write` then `pipeline_manifest.py
-  --freshness-check`, in that order, as the literal last two commands. Add the new handoff to
-  `GUARDED` in the same turn it's written.
-- Diagnoses from prior sessions are re-derived from source before building on them - S176 is a fresh
-  example: two S175 assumptions (Support = a separate mechanic; separate fields) were wrong and were
-  caught only by reading the rules and the engine before regenerating.
-- **Ryan cannot download from the project Files panel.** Any file needed in the repo that lives only
-  there must be re-delivered by Claude.
-- The decision log's entry format is bullet items (`- **D267** -`), not `## D` headings.
-- Parallel conversations have **no merge protocol.**
-- This environment has no access to raw faction-pack PDFs and likely never will. Any future
-  faction-pack tooling work needs Ryan to run the script locally and share real output.
+Produce the four documents: `SESSION_HANDOFF_178.md`, overwrite `NEXT_SESSION_PROMPT.md`, append the
+decision log + `DECISION_INDEX.md`, update `OPEN_ITEMS_BACKLOG.md` (move E26 to Closed/Shipped on ship).
+Every changed and net-new file carries a SHA-256 (first 12) in the handoff Files section. Reissue
+`pipeline_manifest.json` at close if any guarded file changed. Repo is public and flat — no GW-derived
+material committed; state the exclusions when listing files for the repo.
