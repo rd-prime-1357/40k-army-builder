@@ -343,3 +343,8 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   MoE — all wrong). E26 re-scoped **engine-only, no data dependency**: Support pairs with any Leader;
   keep DG second-Leader path; read a Leader's `leader_eligible_units` naming a character as a permit
   (Huron→MotM, sole cross-reference in 16 factions); same-type cap blocks two Supports. Open 13 → 13.
+- **D269** — E26 shipped (S178, engine-only). `permitsCoLeader` rewritten with four D268 requirements:
+  bare CHARACTER Support pairs with any Leader (R1); DG `co_leader_any` second-Leader path kept (R2);
+  Leader cross-reference for non-CHARACTER Support — Huron→MotM only (R3); same-type cap (R4).
+  `leaderAbilityName` added to allUnits view. Assertion E26 added (10 cases + symmetry, 9 shape
+  fragments). `index.html` v6.12 → v6.13. Open 13 → 12.

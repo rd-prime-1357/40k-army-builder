@@ -2220,7 +2220,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.12';
+  const VERSION = '6.13';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2300,6 +2300,9 @@
       // D144: generic "any other Leader, not a duplicate" flag. Absent on every unit
       // until B38b ships DG data — defaults false, same as coLeaderWith defaults to [].
       const coLeaderAny    = !!(mg && mg.co_leader_any);
+      // E26: the ability name ("Leader" or "Support") drives the one-leader-one-support
+      // stacking rule. Null when the unit has no leader ability (non-leader units).
+      const leaderAbilityName = (mg && mg.leader_ability_name) || null;
       // B35: the roster badge is the smallest legal cost of the unit, so it carries the
       // cost of the default loadout's priced wargear too — otherwise a Terminator Assault
       // Squad advertises 155 and lands in the list at 180.
@@ -2322,6 +2325,7 @@
         leaderEligible,
         coLeaderWith,
         coLeaderAny,
+        leaderAbilityName,
         minPts: baseMin == null ? null : baseMin + gearMin,
         isCharacter,
         mustBeWarlord:    !!unit.must_be_warlord,
@@ -4266,13 +4270,45 @@
     renderDetail();
   }
 
-  // D144: symmetric-pairwise permits(A, B) — never two of the same datasheet, and
-  // either side's named list or generic "any" flag covers the other.
+  // E26 (D268): one-leader-one-support stacking. The base rule (core rules 19.01 /
+  // 24.22 / 24.34) allows one Leader slot + one Support slot, cap of 2 total (the
+  // cap is enforced by canAttachLeader's >= 2 guard, not here). This function
+  // answers: "can unitA and unitB share a bodyguard?"
+  //
+  // Four requirements (all from D268):
+  // R1. A CHARACTER Support with an empty coLeaderWith pairs with any Leader (base rule).
+  // R2. A Leader with coLeaderAny (DG Plague characters) can be a second Leader, never
+  //     two of the same datasheet.
+  // R3. When a Leader's leaderEligible names another attach-capable character, that is a
+  //     co-attach grant (Huron → MotM, the only such cross-reference in all built factions).
+  // R4. Two Supports, or two Leaders without a coLeaderAny lift, cannot stack.
   function permitsCoLeader(unitA, unitB) {
     if (unitA.unit_name === unitB.unit_name) return false;
-    return unitA.coLeaderWith.includes(unitB.unit_name) ||
-           unitB.coLeaderWith.includes(unitA.unit_name) ||
-           unitA.coLeaderAny || unitB.coLeaderAny;
+
+    const aIsSupport = unitA.leaderAbilityName === 'Support';
+    const bIsSupport = unitB.leaderAbilityName === 'Support';
+    const aIsLeader  = unitA.leaderAbilityName === 'Leader';
+    const bIsLeader  = unitB.leaderAbilityName === 'Leader';
+
+    // R4: two Supports never stack.
+    if (aIsSupport && bIsSupport) return false;
+
+    // R2 + R4: two Leaders — only if at least one has coLeaderAny.
+    if (aIsLeader && bIsLeader) return unitA.coLeaderAny || unitB.coLeaderAny;
+
+    // One Leader + one Support. Identify which is which.
+    const leader  = aIsLeader ? unitA : bIsLeader ? unitB : null;
+    const support = aIsSupport ? unitA : bIsSupport ? unitB : null;
+    if (!leader || !support) return false;
+
+    // Support with a named list: the list IS the restriction (Lieutenant → Captain-rank).
+    if (support.coLeaderWith.length > 0) return support.coLeaderWith.includes(leader.unit_name);
+
+    // R1: bare CHARACTER Support (empty list) pairs with any Leader by the base rule.
+    if (support.isCharacter) return true;
+
+    // R3: non-CHARACTER Support (MotM) — only via Leader cross-reference.
+    return leader.leaderEligible.includes(support.unit_name);
   }
 
   // D144: full-set validation, order-independent. An incoming leader may attach to

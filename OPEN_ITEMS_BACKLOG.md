@@ -3,7 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **13 open** as of S177 (unchanged from S176): B69, B70, B75, B85, B86, P2,
+not here, it isn't open. **12 open** as of S178 (down from 13 at S177): B69, B70, B75, B85, B86, P2,
+P4, E23, B67b, E12, B17, E27. E26 shipped S178 (D269, engine-only): `permitsCoLeader` rewritten to
+enforce one-Leader-one-Support stacking with the four D268 requirements (bare CHARACTER Support pairs
+with any Leader; DG `co_leader_any` second-Leader path; Huron→MotM cross-reference; same-type cap).
+`leaderAbilityName` added to the allUnits view object. Assertion E26 added (75/75 tier-A, 112 total).
+`index.html` v6.12 → v6.13. **13 open** as of S177 (unchanged from S176): B69, B70, B75, B85, B86, P2,
 P4, E23, B67b, E12, B17, E26, E27. S177 (D268, analysis-only) re-scoped E26 from source — no ship,
 no data change: the CSM "data gap" the S176 handoff implied does not exist (MoE correctly typed Support
 per D192+D267's MFM-wins rule, footer cleared by B73), so E26 is now **engine-only, no data dependency**;
@@ -189,32 +194,6 @@ Squad, Sternguard Veteran Squad, Vanguard Veteran Squad), but the printed `HEROE
 ability lists only **three** (Assault Intercessor Squad, Bladeguard Veteran Squad, Intercessor
 Squad). MFM-as-source-of-truth vs. the datasheet text is the first identified MFM/pack conflict —
 B70 decides which list governs the join. Not started.
-
-### E26 — Enforce one-Leader-one-Support stacking (with special-rule exceptions) — **NEW S176 (D267); RE-SCOPED S177 (D268); engine-only, no data dependency; Ryan stipulations 1+2**
-Core rules 19.01/24.22/24.34: a bodyguard holds **one Leader and one Support** at once, and some
-datasheets allow more. B73 (D267) shipped the data half — `leader_ability_name` reads "Leader" or
-"Support" per unit. **S177 (D268) re-scoped this ticket from source and confirmed it is engine-only:
-the CSM "data gap" the S176 handoff implied does not exist — MoE is correctly typed Support with a
-cleared footer, and no built CSM unit needs a data change.** The real defect is that `permitsCoLeader`
-(index.html 4271) returns false for a bare Support (empty `coLeaderWith`, `coLeaderAny` false) against
-every Leader, so Support units can attach only as a sole leader, never co-attach. The engine work,
-building on the existing D157 cap-of-2 + `permitsCoLeader` machinery rather than replacing it:
-1. **Support pairs with any single Leader** by the base rule — a Support-typed unit fills the Support
-   slot and co-attaches with any one Leader even with an empty `coLeaderWith` and no `coLeaderAny`
-   (fixes the bare-Support false).
-2. **Keep the DG `co_leader_any` second-Leader path** — a Leader with `co_leader_any` can be a second
-   Leader (the six DG Plague characters), still never two of the same datasheet.
-3. **Read a Leader's `leader_eligible_units` naming an attach-capable character as a co-attach permit**
-   — Huron Blackheart → Masters of the Maelstrom, the sole such cross-reference across all 16 built
-   factions (verified S177). No new field, no data change; MotM's own sheet carries no self-grant, so
-   Huron is the only Leader it can share a unit with.
-4. **Same-type cap** — two Supports (or two Leaders without a `co_leader_any` lift) cannot stack, even
-   when the legacy 10th-ed `co_leader_eligible_with` lists cross-reference each other (e.g. Apothecary's
-   list names Lieutenant). This is the one place the base rule must actively override a stale name-list
-   overlap.
-Named `co_leader_eligible_with` lists stay live — they are the datasheet combination restriction
-(Lieutenant → Captain/Chapter-Master-rank; Cato → Calgar), **not** dead data. All four requirements
-expressed as `rules_assertions.py` checks. Engine turn, no data or tooling work. Not started.
 
 ### E27 — State Leader vs Support correctly in popups and exported output — **NEW S176 (D267); UI; Ryan stipulation 3**
 After B73 (D267), Support units carry `leader_ability_name: "Support"`, but the attach popup
@@ -477,6 +456,7 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **E26** — Enforce one-Leader-one-Support stacking — **SHIPPED S178 (D269); ENGINE.** `permitsCoLeader` rewritten with four D268 requirements: (R1) bare CHARACTER Support pairs with any Leader by the base rule; (R2) DG `co_leader_any` second-Leader path kept; (R3) Leader cross-reference (Huron→MotM, sole instance across 16 factions); (R4) same-type cap refuses two Supports or two non-`co_leader_any` Leaders, actively overriding the stale Apothecary→Lieutenant cross-listing. `leaderAbilityName` added to the allUnits view object. Named `co_leader_eligible_with` lists preserved as the datasheet combination restriction. Assertion E26 added (10 legality cases with symmetry, plus 9 structural shape fragments). `index.html` v6.12 → v6.13.
 - **B73** — Ultramarine (and roster-wide) Leader abilities listed units outside their actual eligibility — **DECIDED S175 (D266); SHIPPED S176 (D267); DATA.** MFM made source of truth for attach eligibility. `mfm_points_parser.py` rewritten to capture `LEADER` and `SUPPORT` blocks (one line each — fixes the D260 over-read), replace the stale 10th-ed Wahapedia ability/list wherever the MFM has a block, drop any entry that resolves to no datasheet, and clear the footer on Support overrides. `units.json` regenerated through the full pipeline; diff-guard clean (43 units, only `leader_eligible_units`/`leader_ability_name`/`leader_footer`). Ancient/Apothecary/Lieutenant → Support; Epic Heroes narrowed to MFM lists; Wardens carved out (MFM/datasheet conflict → B70). Assertion `B73` added (111 total). Corrected two S175 assumptions before building: Support is the same attach mechanic as Leader (not B70's join mechanic), and the engine gates on the list not the ability name — so both lists live in one field with the distinction in `leader_ability_name`, reversing the S175 "separate field" plan (confirmed with Ryan). Ryan's stipulations became E26 (stacking enforcement) and E27 (popup/output wording).
 - **B76** — Rolling documents carried frozen version numbers in their filenames — **NEW S159 (D246); SHIPPED S174 (D265); TOOLING, clarity not safety.** Renamed all five (`40K_Decision_Log.md`, `40K_Data_Pipeline_Process.md`, `40K_Functional_Spec.md`, `40K_Architecture_Overview.md`, `40K_Data_Dictionary.md`) — content unchanged. `pipeline_manifest.py`, `repo_check.py`, `DECISION_INDEX.md`, and the P4 backlog entry updated to the new names; every historical decision-log entry, closed-backlog history, and session handoff left untouched, per the ticket's own scoping note. Delivered for Ryan to push, with the five old-named files to be deleted from the repo once the new ones land.
 - **B84** — Converter's KNOWN LIMITATION note names the wrong page type — **NEW S172 (D262); SHIPPED S173 (D263); TOOLING.** The note ended "In these packs that is the Rules Updates page," which is false (Thousand Sons p1 is cover/contents, p5 is the Hexwarp Thrallband detachment page). Sentence dropped; the note now stops at the page numbers it already prints. Pure string edit in `faction_pack_transform.py`, verified by code inspection and a synthetic `_find_anomalies` run — no PDF needed for this one.

@@ -503,6 +503,157 @@ def b73_attach_eligibility(S):
                   'Ancient/Apothecary/Lieutenant are Support, Wardens carved out')
 
 
+def e26_co_attach_stacking(S):
+    """E26 (D268): one-leader-one-support stacking rule. Two-part check:
+
+    Part A — source shape. permitsCoLeader in index.html has the four-requirement
+    structure: leaderAbilityName role checks, same-type refusal, isCharacter base-
+    rule path, leaderEligible cross-reference path, and coLeaderWith named-list path.
+    The allUnits view object carries leaderAbilityName.
+
+    Part B — behavioural. Models permitsCoLeader in Python using the actual unit data
+    from units.json and tests nine D268 legality cases covering every requirement."""
+    # ── Part A: structural checks on index.html ──
+    txt = S.index_html()
+
+    m = re.search(r'function permitsCoLeader\(unitA, unitB\)\s*\{(.*?)\n  \}', txt, re.S)
+    if not m:
+        return False, 'permitsCoLeader not found in index.html'
+    body = m.group(1)
+
+    shape_checks = [
+        ("unitA.leaderAbilityName === 'Support'",  'leaderAbilityName Support check missing'),
+        ("unitA.leaderAbilityName === 'Leader'",    'leaderAbilityName Leader check missing'),
+        ('if (aIsSupport && bIsSupport) return false', 'R4 two-Support refusal missing'),
+        ('if (aIsLeader && bIsLeader)',              'R2/R4 two-Leader branch missing'),
+        ('unitA.coLeaderAny || unitB.coLeaderAny',  'R2 coLeaderAny check missing'),
+        ('support.coLeaderWith.length > 0',          'named-list branch missing'),
+        ('support.coLeaderWith.includes(leader.unit_name)', 'named-list restriction missing'),
+        ('if (support.isCharacter) return true',     'R1 bare CHARACTER Support base-rule missing'),
+        ('leader.leaderEligible.includes(support.unit_name)', 'R3 cross-reference missing'),
+    ]
+    for frag, msg in shape_checks:
+        if frag not in body:
+            return False, f'permitsCoLeader shape: {msg} ({frag!r})'
+
+    # Confirm leaderAbilityName is on the allUnits view object.
+    if 'leaderAbilityName' not in txt.split('function setActiveUnits')[1].split('function ')[0]:
+        return False, 'leaderAbilityName not wired into the allUnits view object'
+
+    # ── Part B: behavioural — model the engine in Python ──
+    units = S.units()
+    # Build a lookup keyed by (army, unit_name) -> view-equivalent dict
+    by_name = {}  # unit_name -> list of (army, view)
+    for blk in units:
+        army = blk['army']
+        for u in blk['units']:
+            mg = u.get('model_groups', [{}])[0]
+            kws = mg.get('keyword_names', [])
+            view = {
+                'unit_name': u['unit_name'],
+                'leaderAbilityName': mg.get('leader_ability_name') or None,
+                'coLeaderWith': mg.get('co_leader_eligible_with', []) or [],
+                'coLeaderAny': bool(mg.get('co_leader_any', False)),
+                'isCharacter': any(k.lower() == 'character' for k in kws),
+                'leaderEligible': mg.get('leader_eligible_units', []) or [],
+                'army': army,
+            }
+            by_name.setdefault(u['unit_name'], []).append((army, view))
+
+    def lookup(name, army=None):
+        entries = by_name.get(name, [])
+        if not entries:
+            return None
+        if army:
+            for a, v in entries:
+                if a == army:
+                    return v
+        return entries[0][1]
+
+    def py_permits(a, b):
+        """Python model of the engine's permitsCoLeader."""
+        if a['unit_name'] == b['unit_name']:
+            return False
+        a_sup = a['leaderAbilityName'] == 'Support'
+        b_sup = b['leaderAbilityName'] == 'Support'
+        a_ldr = a['leaderAbilityName'] == 'Leader'
+        b_ldr = b['leaderAbilityName'] == 'Leader'
+        if a_sup and b_sup:
+            return False
+        if a_ldr and b_ldr:
+            return a['coLeaderAny'] or b['coLeaderAny']
+        leader = a if a_ldr else (b if b_ldr else None)
+        support = a if a_sup else (b if b_sup else None)
+        if not leader or not support:
+            return False
+        if len(support['coLeaderWith']) > 0:
+            return leader['unit_name'] in support['coLeaderWith']
+        if support['isCharacter']:
+            return True
+        return support['unit_name'] in leader['leaderEligible']
+
+    # The nine D268 legality cases.
+    sm = 'Adeptus Astartes'
+    csm = 'Chaos Space Marines'
+    dg = 'Death Guard'
+    um = 'Ultramarines'
+
+    captain   = lookup('Captain', sm)
+    lieutenant = lookup('Lieutenant', sm)
+    librarian = lookup('Librarian', sm)
+    apothecary = lookup('Apothecary', sm)
+    cato      = lookup('Cato Sicarius', um)
+    calgar    = lookup('Marneus Calgar in Armour of Antilochus', um)
+    moe       = lookup('Master Of Executions', csm)
+    huron     = lookup('Huron Blackheart', csm)
+    motm      = lookup('Masters of the Maelstrom', csm)
+    bringer   = lookup('Noxious Blightbringer', dg)
+    foul      = lookup('Foul Blightspawn', dg)
+
+    missing = []
+    for nm, obj in [('Captain', captain), ('Lieutenant', lieutenant),
+                    ('Librarian', librarian), ('Apothecary', apothecary),
+                    ('Cato Sicarius', cato), ('Marneus Calgar', calgar),
+                    ('Master Of Executions', moe), ('Huron Blackheart', huron),
+                    ('Masters of the Maelstrom', motm),
+                    ('Noxious Blightbringer', bringer), ('Foul Blightspawn', foul)]:
+        if obj is None:
+            missing.append(nm)
+    if missing:
+        return False, f'unit(s) not found in units.json: {missing}'
+
+    cases = [
+        # (unitA, unitB, expected, label)
+        (captain, lieutenant,  True,  'Captain + Lieutenant — Leader+Support'),
+        (lieutenant, librarian, False, 'Lieutenant + Librarian — Librarian not in list'),
+        (lieutenant, apothecary, False, 'Lieutenant + Apothecary — two Supports'),
+        (cato, captain,        False, 'Cato + Captain — Captain not in Cato\'s list'),
+        (cato, calgar,         True,  'Cato + Calgar — Calgar is in Cato\'s list'),
+        (moe, captain,         True,  'MoE + Captain — bare CHARACTER Support base rule'),
+        (huron, motm,          True,  'Huron + MotM — Leader cross-reference'),
+        (motm, captain,        False, 'MotM + Captain — non-CHARACTER, no cross-ref'),
+        (bringer, foul,        True,  'Noxious Blightbringer + Foul Blightspawn — DG coLeaderAny'),
+        (bringer, bringer,     False, 'same datasheet — always illegal'),
+    ]
+
+    failures = []
+    for a, b, expected, label in cases:
+        got = py_permits(a, b)
+        if got != expected:
+            failures.append(f'{label}: expected {expected}, got {got}')
+        # Symmetry: permitsCoLeader(A,B) must equal permitsCoLeader(B,A) for all non-same cases.
+        if a['unit_name'] != b['unit_name']:
+            rev = py_permits(b, a)
+            if rev != got:
+                failures.append(f'{label} (symmetry): A,B={got} but B,A={rev}')
+
+    if failures:
+        return False, '; '.join(failures)
+
+    return True, (f'permitsCoLeader shape verified (9 structural fragments); '
+                  f'{len(cases)} D268 legality cases pass with symmetry')
+
+
 ASSERTIONS = [
 
     # ── P1. Parser freshness gate, machine-enforced (D118/D123). Prose could not hold
@@ -1677,6 +1828,20 @@ ASSERTIONS = [
      '"Leader", and Wardens of Ultramar is carved out pending B70 (MFM/datasheet conflict).',
      'units.json (D266); MFM LEADER/SUPPORT blocks; core rules 19.01/24.22/24.34',
      b73_attach_eligibility),
+
+    # ── E26 (D268): one-leader-one-support stacking. permitsCoLeader enforces the
+    # layered model: base rule (one Leader + one Support), named-list restriction on
+    # Supports, coLeaderAny second-Leader path, isCharacter base-rule path for bare
+    # Supports, leaderEligible cross-reference for non-CHARACTER Supports.
+    ('E26',
+     'permitsCoLeader implements the D268 stacking rule: structural shape has all '
+     'four requirement fragments (R1–R4), leaderAbilityName is on the view object, '
+     'and 10 legality cases (Captain+Lieutenant legal, Lieutenant+Librarian illegal, '
+     'Lieutenant+Apothecary illegal, Cato+Captain illegal, Cato+Calgar legal, '
+     'MoE+Captain legal, Huron+MotM legal, MotM+Captain illegal, two DG Plague '
+     'characters legal, same datasheet illegal) all pass with symmetry.',
+     'index.html permitsCoLeader; units.json; core rules 19.01/24.22/24.34; D268',
+     e26_co_attach_stacking),
 
 ]
 
