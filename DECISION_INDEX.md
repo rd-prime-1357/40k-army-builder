@@ -397,3 +397,16 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   predicate, not a per-detachment name list; add an assertion that no non-Adeptus-Astartes vehicle can
   enter these pools (the faction qualifier is satisfied by pool construction today, not a keyword
   check). E23's data dependency cleared; backlog text updated. Open count unchanged at 11.
+- **D274** — MFM v1.1 intake (S183, doc-only; `index.html` stays v6.14; baseline 29/29). 15 v1.1
+  captures banked in the private repo (all built armies + Emperor's Children + four extra); SM repo
+  copy text-identical to the reviewed sample; chapters confirmed inside the SM page. **Current parser
+  cannot read the v1.1 layout** — 0 costs, 25 unit names missed on SM v1.1 vs 179/179 on v1_0.
+  Intake policy set: GW version number in filenames (underscore; rename of the dot-named uploads is a
+  Ryan action), keep every version, capture only bumped built factions + next build, per-faction MFM
+  version recorded in `source_manifest.json`, one parser with per-file format sniff, refresh arc
+  ahead of E23 (D273 pool counts re-verified post-adoption). Tickets opened: B87 (parser tooling),
+  B88 (reconciliation), B89 (adoption). Open count 11 → 14.
+- **D275** — MFM filename convention: dot separator, spaces allowed (S183, Ryan call). Filenames
+  use dots for the GW version (`v1.1`) and natural spacing (`Chaos Daemons`), matching Ryan's local
+  naming. Parser and manifest accept as-uploaded — no rename step. Old v1_0 files keep their
+  underscore names. Open count unchanged at 14.

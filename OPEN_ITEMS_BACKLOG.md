@@ -3,7 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **11 open** as of S182 (unchanged from S181): B69, B70, B75, B85, B86, P2,
+not here, it isn't open. **14 open** as of S183 (up from 11 at S182): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+B17, B87, B88, B89. MFM v1.1 intake S183 (D274, doc-only): GW published a points update; 15 v1.1
+captures banked in the private repo (all built armies + Emperor's Children + four extra), custody
+checked. The current parser reads zero costs from the new layout, so a refresh arc is opened — B87
+(parser v1.1 layout, tooling) → B88 (reconciliation reports) → B89 (per-faction adoption) — and
+sequenced ahead of the E23 build turn, whose D273 pool counts get re-verified after adoption. Intake
+policy (GW-version filenames, keep all versions, targeted capture, manifest-recorded per-faction
+versions, format-sniff parser) recorded in D274. **11 open** as of S182 (unchanged from S181): B69, B70, B75, B85, B86, P2,
 P4, E23, B67b, E12, B17. E23 data turn done S182 (D273, data-only): all four source facts confirmed
 across all six armies — wording identical (one shared SM detachment), carve-out is a precise
 `Fly`/`Walker`/`Drop Pod`/`Fortification` exclusion predicate (not "most Vehicles"), "up to three" cap
@@ -145,6 +152,34 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### B87 — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); tooling; M**
+GW's v1.1 pages use a new layout the current parser reads as zero costs (SM v1.1: 154/179 names
+found, 0 costed). Deltas: no bullet prefix on cost lines; "▼" markers after unit names and model
+counts; inline change annotations ("(-10)", "▲ (+10)", "UPDATED" lines) to strip — final value only;
+blank line between LEADER/SUPPORT and the attach list; new section headers (UNITS / DETACHMENTS /
+ENHANCEMENTS / WARGEAR OPTIONS). Build one parser with a per-file format sniff (the layout is
+self-identifying) and per-layout readers; v1_0 files must still parse to identical output through the
+sniff path. Parse the v1.1 DETACHMENTS block (DP, force disposition, enhancement costs) into a
+structured form for B88. Add the 15 renamed v1_1 files to `source_manifest.json`. Acceptance: all 15
+banked v1.1 files parse with full cost coverage; v1_0 parse output unchanged; annotations stripped;
+baseline stays green. Filenames accepted as-uploaded per D275 (dots, spaces) — no rename step.
+
+### B88 — MFM v1.1 reconciliation reports — **NEW S183 (D274); tooling/analysis; M; depends B87**
+Generalize `mfm_reconcile.py` (built for the SM old-vs-new pass) across every built faction: one
+delta report per faction — points changes, units added/removed from the MFM, attach-list changes,
+Leader/Support flips, wargear cost changes, and detachment deltas (DP, force disposition, enhancement
+costs, unique tags). Each faction compares its newest capture against the version the app was built
+from, per `source_manifest.json`. Output is B89's work order: every delta classified as
+adopt-mechanically vs investigate-first.
+
+### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); data; L; depends B88; spans sessions**
+Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and
+merge, key-level diff against the committed output — expected diffs are points values only, any
+structural diff investigated before acceptance. Assertions pinning points values are reconciled
+against the new source, never loosened. `source_manifest.json` updated per faction as it migrates.
+Standard priority order. E23's D273 per-army pool counts re-verified after the six Astartes armies
+migrate. The v1_0 layout reader retires when the last faction leaves it.
 
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:
