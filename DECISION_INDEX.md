@@ -410,3 +410,11 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   use dots for the GW version (`v1.1`) and natural spacing (`Chaos Daemons`), matching Ryan's local
   naming. Parser and manifest accept as-uploaded — no rename step. Old v1_0 files keep their
   underscore names. Open count unchanged at 14.
+- **D276** — SM-family chapter rosters are two tiers, not one union (S184, Ryan-flagged, refines
+  D42). Six vanilla chapters (no dedicated MFM) correctly union generic + chapter entries. Five
+  dedicated-MFM chapters (Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves) are
+  complete self-contained rosters and must never union with generic — confirmed against
+  `MFM_Black_Templars_v1.1.txt` (76 units, no union). Current `resolveUnits()` unions unconditionally,
+  leaking 90 illegal units into Black Templars alone (all Librarians, 11 other-chapter characters) —
+  a live D0 violation across all five. B90 opened: engine `roster_mode` flag, five-chapter rebuild
+  from own MFM files, new exclusivity assertion. Open count 14 → 15.

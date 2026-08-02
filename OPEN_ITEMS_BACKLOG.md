@@ -3,7 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **14 open** as of S183 (up from 11 at S182): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+not here, it isn't open. **15 open** as of S184 (up from 14 at S183): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+B17, B87, B88, B89, B90. SM-family chapter roster bug found and scoped S184 (D276, Ryan-flagged):
+`resolveUnits()` unions the generic Adeptus Astartes pool into all `is_subfaction` chapters without
+distinguishing vanilla (correct) from dedicated-MFM (wrong) chapters — five chapters currently leak
+illegal units (BT alone: 90, including every Librarian and 11 other-chapter characters). B90 opened
+ahead of all further faction work; priority order otherwise unchanged. **14 open** as of S183 (up from 11 at S182): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
 B17, B87, B88, B89. MFM v1.1 intake S183 (D274, doc-only): GW published a points update; 15 v1.1
 captures banked in the private repo (all built armies + Emperor's Children + four extra), custody
 checked. The current parser reads zero costs from the new layout, so a refresh arc is opened — B87
@@ -152,6 +157,37 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### B90 — SM-family chapter rosters: fix the union-vs-complete bug — **NEW S184 (D276); Ryan-flagged; engine+data; L; spans sessions; blocks further faction work**
+`resolveUnits()` in `index.html` unions the full generic Adeptus Astartes pool into every
+`is_subfaction` chapter, with no distinction between the six vanilla chapters (no dedicated MFM,
+union is correct) and the five dedicated-MFM chapters — Black Templars, Blood Angels, Dark Angels,
+Deathwatch, Space Wolves — whose own MFM file is a complete, self-contained roster that should never
+be unioned with generic. Confirmed directly against `MFM_Black_Templars_v1.1.txt`: 76 units total,
+including generic units BT can still field at BT's own prices, with no reference back to
+`MFM_Space_Marines.txt`. Current behaviour leaks 90 generic units into BT alone that its own MFM
+excludes — every Librarian variant (Black Templars take no Psykers) and 11 other-chapter named
+characters (Tigurius, Vulkan He'stan, Shrike, Kor'sarro Khan, and others). A live D0 violation: these
+are currently selectable in list building. The other four dedicated-MFM chapters are assumed to
+share the same complete-file shape by construction but each gets confirmed against its own MFM
+during the rebuild, not assumed from the BT case.
+
+**Scope, three turns, strictly separated per turn-typing:**
+1. **Engine turn:** add a `roster_mode` (or equivalent) flag per chapter distinguishing `'complete'`
+   (the five) from `'union'` (the six vanilla + generic); `resolveUnits()` branches on it instead of
+   unioning unconditionally.
+2. **Data turn:** rebuild the five Tier-2 chapters in `units.json` directly from their own MFM files
+   (Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves) rather than as override
+   deltas against generic; re-verify `unit_loadouts.json` and `wargear_points.json` entries for any
+   unit whose leader/support attach list or wargear changes shape once sourced natively.
+3. **Assertion turn:** pin the fix — no Tier-2 chapter roster contains a unit absent from its own
+   MFM file; existing chapter-exclusivity assertions (D221/D222 pattern) extended to cover roster
+   membership, not just detachment restrictions.
+
+Acceptance: all five Tier-2 chapters' rosters match their MFM files exactly (unit-for-unit); the six
+vanilla chapters and generic Space Marines unchanged; baseline stays green; new assertion in the
+tier-A set. D276 has full source verification detail for Black Templars; the other four are checked
+fresh at rebuild time.
 
 ### B87 — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); tooling; M**
 GW's v1.1 pages use a new layout the current parser reads as zero costs (SM v1.1: 154/179 names

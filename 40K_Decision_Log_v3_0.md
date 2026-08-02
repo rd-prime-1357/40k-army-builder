@@ -240,6 +240,53 @@ This is stored in a dedicated `bundled_swaps` array on the unit, **separate from
 
 ---
 
+## D276 — SM-Family Chapter Rosters: Two Tiers, Not One Union (corrects a live legality gap)
+**Decision:** D42 is refined, not reversed. Within the Space Marine family there are two structurally
+different chapter types, and the engine must treat them differently:
+
+**Tier 1 — vanilla chapters** (Ultramarines, Iron Hands, Salamanders, Imperial Fists, Raven Guard,
+White Scars): no dedicated MFM file. Their units live inside `MFM_Space_Marines.txt` itself. D42's
+base-plus-override model is correct for these six as originally written — union the generic
+Adeptus Astartes roster with the chapter's own printed entries, override wins on shared units.
+
+**Tier 2 — dedicated-MFM chapters** (Black Templars, Blood Angels, Dark Angels, Deathwatch, Space
+Wolves): each has its own complete MFM file. Confirmed directly against `MFM_Black_Templars_v1.1.txt`:
+76 units total, including generic Astartes units it can still field (Gladiators, Land Raider
+Crusader, Repulsor, Terminator Squad, etc.) at BT's own prices, alongside BT-only entries (Crusader
+Squad, Sword Brethren Squad, named characters). The file is self-contained — it is never read
+against `MFM_Space_Marines.txt`. **These five rosters must be built as exactly what their own MFM
+lists — no union, no fallback to the generic Adeptus Astartes block.** The other four dedicated-MFM
+chapters are assumed to follow the same complete-file shape by construction (each ships its own MFM);
+this is confirmed per-chapter, not assumed, during the B90 rebuild rather than trusted from this
+analysis alone.
+
+**What was wrong:** `resolveUnits()` in `index.html` (D171/D172 override-map work) unions the full
+generic Adeptus Astartes pool into *every* `is_subfaction` chapter without distinguishing the two
+tiers. For the five Tier-2 chapters this leaks units their own MFM deliberately excludes — for
+Black Templars alone, 90 generic units, including every Librarian variant (Black Templars field no
+Psykers) and eleven named characters belonging to other chapters (Tigurius, Vulkan He'stan, Shrike,
+Kor'sarro Khan, etc.). This is a direct D0 violation: illegal units are currently reachable in list
+building for all five Tier-2 chapters.
+
+**Root cause:** the taxonomy's `is_subfaction` flag and the prose gloss in `faction_taxonomy.json`
+("chapters union the generic codex at selection time") treated all eleven non-generic chapters as
+one case. D42's own text already distinguished Black Templars' "distinct datasheet IDs...not
+overrides" from the six vanilla chapters, but that distinction was never carried into a roster-
+membership flag — only into a points-override mechanism, which is a different question from which
+units are legal at all.
+
+**Fix required (B90, opened this decision):** an engine flag separating the two tiers (`roster_mode:
+'complete'` for the five, `'union'` for the six and the generic army), a data rebuild of the five
+Tier-2 chapters directly from their own MFM files rather than as deltas against generic, and a new
+assertion pinning that no Tier-2 chapter's roster contains a unit absent from its own MFM.
+
+**Rationale:** D0 requires illegal states to be unreachable, not flagged. The union model was a
+reasonable read of the source before the dedicated MFM files were checked directly against it;
+verifying Black Templars against its own file proved the two-tier structure. Fixing before further
+faction work prevents the same wrong pattern from being copied into any future dedicated-MFM build.
+
+---
+
 ## D43 — Cross-Faction / Allied Points Sourcing (Pattern Catalog)
 **Decision:** Two structurally distinct sourcing relationships, handled by two mechanisms. **Pattern 1 — parent base + child extension (SM chapters):** handled by D42 (base + derived override). **Pattern 2 — allied borrowing (Genestealer Cults borrowing Astra Militarum/Tyranids; Imperial↔Chaos Knights; Drukhari/Aeldari Harlequins):** the borrowed unit belongs to its home faction, is a distinct datasheet, and carries its **home faction's points sourced from that faction's MFM**, added via a separate "add ally" path with its own per-entry `faction_ref` (already locked). A faction_id filter alone does **not** equal a faction's own codex roster (GC `faction_id` returns 139 datasheets = 24 GSC codex + ~100 allied Guard + 14 Tyranid); scope a faction's *own* units to its codex source, treat the rest as allied inclusions. The build must ingest allied factions' data so their points are available to look up.
 
