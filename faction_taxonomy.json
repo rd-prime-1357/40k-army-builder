@@ -1,5 +1,5 @@
 {
-  "_comment": "Two-step army selector taxonomy. Step 1 = group, step 2 = faction. For the Adeptus Astartes group, data_army maps to the 'army' field in units.json; 'Space Marines' is the generic codex (no chapter filter) and the chapters union the generic codex at selection time. built=false factions are shown disabled until their data is built.",
+  "_comment": "Two-step army selector taxonomy. Step 1 = group, step 2 = faction. For the Adeptus Astartes group, data_army maps to the 'army' field in units.json; 'Space Marines' is the generic codex (no chapter filter). SM-family chapters come in two tiers (D276/B90): 'union'-mode chapters (Ultramarines, Iron Hands, Salamanders, Imperial Fists, Raven Guard, White Scars) have no dedicated MFM and union the generic codex with their own entries at selection time, chapter version winning on unit_name; 'complete'-mode chapters (Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves) ship a full self-contained MFM and their own units.json block IS their entire legal roster — no generic union, no point-override map. roster_mode is the behavioral flag resolveUnits() reads; only the exact string 'complete' takes the complete path, anything else takes union. NOTE (B90 turn 1): the five 'complete'-destined chapters are flagged 'union' for now because their units.json blocks are still delta-shaped; they flip to 'complete' in the B90 data turn together with their MFM-complete rebuild, so the flag never claims a roster shape the data doesn't yet hold. built=false factions are shown disabled until their data is built.",
   "groups": [
     {
       "group": "Adeptus Astartes",
@@ -8,72 +8,84 @@
           "name": "Space Marines",
           "data_army": "Adeptus Astartes",
           "is_subfaction": false,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Black Templars",
           "data_army": "Black Templars",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Blood Angels",
           "data_army": "Blood Angels",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Dark Angels",
           "data_army": "Dark Angels",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Deathwatch",
           "data_army": "Deathwatch",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Imperial Fists",
           "data_army": "Imperial Fists",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Iron Hands",
           "data_army": "Iron Hands",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Raven Guard",
           "data_army": "Raven Guard",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Salamanders",
           "data_army": "Salamanders",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Space Wolves",
           "data_army": "Space Wolves",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "Ultramarines",
           "data_army": "Ultramarines",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         },
         {
           "name": "White Scars",
           "data_army": "White Scars",
           "is_subfaction": true,
+          "roster_mode": "union",
           "built": true
         }
       ]

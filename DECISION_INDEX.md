@@ -418,3 +418,13 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   leaking 90 illegal units into Black Templars alone (all Librarians, 11 other-chapter characters) —
   a live D0 violation across all five. B90 opened: engine `roster_mode` flag, five-chapter rebuild
   from own MFM files, new exclusivity assertion. Open count 14 → 15.
+- **D277** — B90 turn 1 shipped: `resolveUnits()` two-tier mechanism + `roster_mode` taxonomy flag
+  (S185, engine turn). All eleven SM-family chapters flagged `'union'` this turn; the five Tier-2
+  chapters flip to `'complete'` in the B90 data turn, not now — because their `units.json` blocks are
+  source-verified **deltas** (BT 18, BA 15, DA 16, DW 10, SW 21), not baked unions, so flagging them
+  `'complete'` now would strip the generic units they legitimately field. Live behavior unchanged
+  (still union-leaked, unregressed) until the data turn. Mechanism proven via `b90_check.js` fixture;
+  presence pinned by `rules_assertions.py` B90-1. Also flagged two decision-log integrity gaps (guard
+  points at stale `40K_Decision_Log.md`; live `_v3_0` unguarded and diverged) → opened B91. Corrects
+  the S185 prompt's data-shape assumption; build-sequencing refinement of D276, no legality change.
+  Open count 15 → 16.

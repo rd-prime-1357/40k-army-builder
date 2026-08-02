@@ -730,6 +730,28 @@ ASSERTIONS = [
      'pipeline_manifest.json (D123)',
      lambda S: manifest_gate(S)),
 
+    # ── B90. Two-tier chapter roster mode (D276). resolveUnits() now branches on a
+    # per-faction roster_mode; an is_subfaction chapter with no explicit mode would
+    # silently take the union path — the wrong default for a 'complete'-mode chapter,
+    # and exactly the silent-default D0 hazard B90 exists to close. This pins the data
+    # contract: every subfaction carries an explicit roster_mode of 'union' or
+    # 'complete'. (Which of the five are 'complete' flips in the B90 data turn; this
+    # assertion only forbids a missing or unrecognized value, in either turn.)
+    ('B90-1',
+     "Every is_subfaction:true faction in faction_taxonomy.json declares an explicit "
+     "roster_mode of 'union' or 'complete'. resolveUnits() reads this flag; a missing or "
+     "unrecognized value would silently fall to the union path (D276/B90 turn 1).",
+     'faction_taxonomy.json roster_mode; index.html resolveUnits (D276)',
+     lambda S: (
+         all(fx.get('roster_mode') in ('union', 'complete')
+             for g in S.taxonomy()['groups'] for fx in g['factions']
+             if fx.get('is_subfaction')),
+         ('subfactions lacking explicit roster_mode: ' + ', '.join(sorted(
+             fx.get('name', '?')
+             for g in S.taxonomy()['groups'] for fx in g['factions']
+             if fx.get('is_subfaction') and fx.get('roster_mode') not in ('union', 'complete')))
+          ) or 'all subfactions carry explicit roster_mode (union|complete)')),
+
     # ── B46. The Reiver's grav-chute has rules text and the app cannot show it. The text
     # is NOT missing from the data — it is in Datasheets_abilities.csv as a Wargear row.
     # units.json only carries DEFAULT-issue wargear abilities, and the popup reads units.json.

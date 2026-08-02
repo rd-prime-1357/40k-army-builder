@@ -157,6 +157,7 @@ GUARDED = [
     'e25_check.js',
     'b71_check.js',
     'b72_check.js',
+    'b90_check.js',
     'harness.js',
     'sweep.js',
     'baseline.sh',
@@ -231,6 +232,7 @@ GUARDED = [
     'SESSION_HANDOFF_182.md',
     'SESSION_HANDOFF_183.md',
     'SESSION_HANDOFF_184.md',
+    'SESSION_HANDOFF_185.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

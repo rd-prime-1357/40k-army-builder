@@ -10131,3 +10131,50 @@ after this fix, before the final baseline run.
   no determinism risk. Both tickets stay open.
   `pipeline_manifest.py`: `SESSION_HANDOFF_172.md` added to the guarded set (the gap found at open).
   Open count drops to 13 (B69, B70, B73, B75, B76, B85, B86, P2, P4, E23, B67b, E12, B17).
+
+---
+
+## D277 — B90 turn 1 shipped: roster_mode mechanism; five stay 'union' this turn, not 'complete' (corrects the S185 prompt's data-shape assumption)
+**Decision:** The B90 engine turn shipped the two-tier `resolveUnits()` mechanism and the `roster_mode`
+taxonomy flag, but flags **all eleven** SM-family chapters `'union'` for now — including the five
+Tier-2 chapters D276 destines for `'complete'`. The five flip to `'complete'` in the B90 **data**
+turn, together with their MFM-complete `units.json` rebuild, not before.
+
+**Why the deviation from the S185 prompt (which said flag the five `'complete'` this turn):** the
+prompt assumed each Tier-2 chapter's `units.json` block was a baked full/union roster, so that
+returning "its own block only" would still yield the union-leaked (superset) roster it predicted.
+Checked against source this session — the blocks are **deltas**, not baked unions: Black Templars
+18 units, Blood Angels 15, Dark Angels 16, Deathwatch 10, Space Wolves 21, with the generic Adeptus
+Astartes block (82) unioned in at runtime. Had the five been flagged `'complete'` now, complete-mode
+(chapter block only) would have resolved them to those 18/15/16/10/21-unit deltas — **missing** the
+generic units they legitimately field (Gladiators, Repulsor, Land Raider Crusader, etc.). That is a
+different, newly-introduced bug (legal units become unreachable) shipped live between the engine and
+data turns, and it would have made the prompt's own "still union-leaked" expectation false.
+
+**Consequence of the chosen sequencing:** this turn changes no chapter's live behavior — all eleven
+still union, so the five remain union-leaked exactly as today (the D0 gap D276 identified persists,
+unregressed, until the data turn closes it). Engine and data changes stay unmixed across turns; the
+flag never claims a roster shape the data doesn't hold. The mechanism is proven now via a fixture
+harness (`b90_check.js`) rather than a real `'complete'` chapter.
+
+**Rationale:** D0 requires illegal states unreachable, but a partial fix that makes *legal* units
+unreachable is not progress — it trades one D0 violation for another and splits a coupled change
+across a session boundary, defeating clean bisection. A banked, well-scoped mechanism with unchanged
+live behavior is the correct turn-1 outcome; the actual roster fix is atomic with the data rebuild.
+This is a build-sequencing refinement of D276's three-turn plan, made under the development-manager
+authority, not a change to any legality interpretation — D276's ruling on what each tier's legal
+roster IS stands unchanged.
+
+**Integrity anomalies found this turn (flagged, not fixed — opened as B91):** (1) two decision-log
+files exist in the repo — `40K_Decision_Log.md` (unversioned, the one `pipeline_manifest.py` GUARDS
+and `DECISION_LOG` names) and `40K_Decision_Log_v3_0.md` (versioned, the one S184/S185 treat as live
+and the one this D277 is appended to). They have **diverged**: the guarded unversioned copy contains
+**zero** occurrences of D276; the live versioned copy has D276+. So the live log is unguarded and the
+guarded log is stale — a silent-divergence hazard of exactly the kind the manifest exists to prevent,
+sitting in the manifest's own blind spot (it verifies the hash of the stale file, which matches). (2)
+Several other project docs also ship as unversioned + versioned pairs of identical size
+(`40K_Architecture_Overview` / `_v0_5`, `40K_Data_Dictionary` / `_v2_0`, `40K_Data_Pipeline_Process`
+/ `_v0_6`, `40K_Functional_Spec` / `_v0_7`). (3) D276 itself sits at line ~243 (topically beside the
+D42 it refines), not in session order — pre-existing, non-urgent. Resolving which file is canonical,
+repointing the guard, and removing the stale copy involves deletion + a naming precedent and is
+Ryan's call; tracked as B91.

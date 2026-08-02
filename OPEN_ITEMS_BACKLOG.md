@@ -3,7 +3,13 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **15 open** as of S184 (up from 14 at S183): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+not here, it isn't open. **16 open** as of S185 (up from 15 at S184): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+B17, B87, B88, B89, B90, B91. B90 turn 1 of 3 (engine) shipped S185 (D277): `resolveUnits()` two-tier
+mechanism + `roster_mode` flag landed, all eleven chapters flagged `'union'` for now (live behavior
+unchanged, still union-leaked); the five Tier-2 chapters flip to `'complete'` in the B90 data turn,
+because their `units.json` blocks are source-verified deltas, not baked unions. B91 opened S185 (D277):
+decision-log integrity gap — the guarded `40K_Decision_Log.md` is stale (no D276), the live `_v3_0` is
+unguarded and diverged. **15 open** as of S184 (up from 14 at S183): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
 B17, B87, B88, B89, B90. SM-family chapter roster bug found and scoped S184 (D276, Ryan-flagged):
 `resolveUnits()` unions the generic Adeptus Astartes pool into all `is_subfaction` chapters without
 distinguishing vanilla (correct) from dedicated-MFM (wrong) chapters — five chapters currently leak
@@ -188,6 +194,40 @@ Acceptance: all five Tier-2 chapters' rosters match their MFM files exactly (uni
 vanilla chapters and generic Space Marines unchanged; baseline stays green; new assertion in the
 tier-A set. D276 has full source verification detail for Black Templars; the other four are checked
 fresh at rebuild time.
+
+**PROGRESS — turn 1 of 3 shipped S185 (D277).** The engine mechanism is in: `resolveUnits()` branches
+on `roster_mode`, `'complete'` returns the chapter's own block only (structurally isolated from the
+generic pool and the point-override map — proven by `b90_check.js`), everything else takes the
+unchanged union path. `roster_mode` added to all twelve Adeptus Astartes taxonomy records; presence
+pinned by `rules_assertions.py` B90-1 (tier A). index.html v6.14 → v6.15.
+**Correction to the turn plan:** turn 1 flags **all eleven** chapters `'union'`, not the five
+`'complete'`. Their `units.json` blocks are source-verified deltas (BT 18, BA 15, DA 16, DW 10, SW 21),
+not baked unions, so `'complete'` now would strip the generic units they legitimately field. The five
+flip to `'complete'` in **turn 2 (data)**, atomically with the MFM-complete rebuild — so the flag flip
+moves from turn 1 into turn 2. Turn 2 must also update `resolved_pool()` in `rules_assertions.py` (the
+Python mirror of `resolveUnits()`, still union-only) to add complete-mode, or the mirror silently
+diverges from the engine. Turn 3 (assertion) unchanged. Live behavior after turn 1: still union-leaked,
+unregressed — the D0 gap persists exactly as before until turn 2.
+
+### B91 — Decision-log & versioned-doc canonical reconciliation — **NEW S185 (D277); Ryan-decision + tooling/doc; M**
+Two decision-log files live in the repo and have diverged. `pipeline_manifest.py` guards
+`40K_Decision_Log.md` (unversioned) and names it in `DECISION_LOG`, but S184/S185 append to and read
+`40K_Decision_Log_v3_0.md` (versioned) as the live log. Verified this session: the guarded unversioned
+copy contains **zero** occurrences of D276; the live versioned copy has D276+. So the log actually
+being written is unguarded, and the guarded one is stale — a silent-divergence hazard sitting in the
+manifest's blind spot (it verifies the stale file's hash, which matches, and can't see stale content).
+This is the opposite of the "rolling docs drop version numbers" convention (which would make the
+unversioned name canonical), so the fix is a genuine choice, not mechanical.
+Secondary: several other docs ship as identical-size unversioned + versioned pairs
+(`40K_Architecture_Overview` / `_v0_5`, `40K_Data_Dictionary` / `_v2_0`, `40K_Data_Pipeline_Process`
+/ `_v0_6`, `40K_Functional_Spec` / `_v0_7`) — likely stale snapshots, each to be confirmed before
+removal. Tertiary: D276 sits mid-file (line ~243, beside D42) rather than in session order; low
+priority.
+**Needs Ryan** (deletion + naming precedent): pick the canonical decision-log file, repoint `GUARDED`
+and `DECISION_LOG`, remove the stale copy, then do the same triage for the doc pairs. Do not delete
+anything without a file-card check first. Recommended as the near-term priority — it undermines the
+integrity guarantee the manifest is supposed to provide, and every session that appends to the live
+log widens the gap.
 
 ### B87 — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); tooling; M**
 GW's v1.1 pages use a new layout the current parser reads as zero costs (SM v1.1: 154/179 names
