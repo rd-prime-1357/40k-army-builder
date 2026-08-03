@@ -24,7 +24,7 @@
   "units_repro_check.py": "0380d5eeb48456bef98dffae08f2dd31ed50783746289730c7bee54f55b1a4d3",
   "detachments_repro_check.py": "94bb9f2f223853f75b6788bf6cbff0f4eb1ad19c845189b0cc3545dcf35f927b",
   "integrity_check.py": "7084a604f0b15a2fd8440c9b61660edbad6d1d16ce7277a989f5ab3e924e83a1",
-  "pipeline_manifest.py": "d1c706803436ffe4fc5fafbb958cd70ff15bbfd165a7e540655314b7297e3e09",
+  "pipeline_manifest.py": "cd9a3432e0c4a0fc6618a6f6b987b7e3bdd7bca0dc51f73072ba12592d40caab",
   "pts_check.js": "d1ca62181a6f511214391323e80107cf2acee834b40784409b3eedd902e7d263",
   "stat_check.js": "c240c643896de60d212f62d220722d58994b4afd9a5dc3440d1ae81d45a502ab",
   "bundle_check.js": "40e08552f38aa9dfdbe7c1106b7d0e3ff9623ed6e0a47eb5a85d24e43faa3154",
@@ -61,7 +61,7 @@
   "weapon_abilities.json": "dc542c0843c436c960ce603e5ae9e60b43d1052ba12ede343a4e22c9d7abf2b8",
   "bundled_swaps.json": "5ae2f29238ca14cc9c223770c4480448bcaf061d49c69d615a5e92bb72dfd882",
   "core_glossary.json": "317af60c4e2e21fd3ab178354faa376f943aa9a1d485d553b6ba395650449f58",
-  "faction_taxonomy.json": "d2bf67766308b15d9f2c038fcc7711f4783596bb5a3a37181662471c13e3c4c4",
+  "faction_taxonomy.json": "cdf229023b11908fcb9251cdc5261cdb3e70431069a54183f5cded6a6d804eb0",
   "keywords.json": "74f7d7d75e0f8042f925dc73f8d32dce51110f6a04039fee8f5afa6f6b41f6f5",
   "B18c_repro_fixture.json": "f5eafa5b92e8d642ff8910e99657a23c0ef7cad7f0aef664d9546c5f40de453f",
   "B18d_fixture.json": "a38740dfef6bfe8c41fc980518a49096bd1d3f719b367f56af1131cd3fdcd3ff",
@@ -72,12 +72,12 @@
   "40K_Functional_Spec.md": "1d57cabc2d8cf8757403476f462d8a16be3c17311a98afd96426e40051d21b49",
   "BACKLOG_ARCHIVE.md": "85bfdc17352be753e1911eb9270c98cb25be858b398a6029fa20ba5ddeb4321b",
   "CSM_BUILD_SCOPE.md": "53c4828c1853e57741fb028b97efc31a1ba880a06e2495933541599fade3733d",
-  "DECISION_INDEX.md": "31df7c696de336fd53fbb4353df8f89aa0e39a2bfacaf0ca26a6ac6956f18b48",
+  "DECISION_INDEX.md": "2e5b30a5468b0d135471c13b483080e7084315604469fb2f3e43023c500e86d2",
   "E1_DETACHMENT_SCOPE.md": "bd46666245f734b2f5b24a4230df0144a9881b1eaaae9d70c23621fd3b796e5a",
   "MFM_Chapter_Pass.md": "6150462d2814d919bb8e54154ce56209beec7c78937d3ac4508c1f315f2089b4",
   "MFM_FW_Reconciliation.md": "6c783bdd3336f80191572a36192535e654d703afef4d8c7c565b2666415fd3db",
   "MFM_Standalone_Pass.md": "fd81918dd611a39aed3e8bcac93392b9457343afc2e1341ecfdd9be2cd40b35e",
-  "OPEN_ITEMS_BACKLOG.md": "5b55ba48d5b8a14316d75768abc9d2d86b9fdb05e8474b874ae4be586d89f566",
+  "OPEN_ITEMS_BACKLOG.md": "395d39225104572996e78360619c89dd03c19a17464dae8d92dc03977bd49006",
   "OUTPUT_FORMAT_SPEC_for_project_instructions.md": "2567a8e0d502bf71fedf735b7a5cc202fa1e9fee7ac0ed69531df111a2e9f474",
   "P4_ARCHITECTURE_SCOPE.md": "e94b0d6c402fd66d843d757450106b44cf9f2cfb7ad550f0101720eb460a5c9a",
   "PROCESS_IMPROVEMENT_PLAN.md": "c8fa79972a8b33ec52668e5b1d95be2ccfd7dbb4c0a3acc3f0853f92c7d99a8a",
@@ -141,6 +141,7 @@
   "SESSION_HANDOFF_182.md": "aa573eca25ccde9e5d437d08a2d84d958823c42172e68361f7e3598770618cef",
   "SESSION_HANDOFF_183.md": "af56237c74645919ce7c483d10de3a4d6849dc39c9fe6ea1e1cd0416cb8c8dfd",
   "SESSION_HANDOFF_184.md": "def0406e42fc302ebf6570da8e6ed234fa2c074f7b0773d0398953c2c065e2ba",
-  "SESSION_HANDOFF_185.md": "dcaf34250d6d278dda9c62cdc6ffc343dcef162bffaedb3620a90ef766834114"
+  "SESSION_HANDOFF_185.md": "dcaf34250d6d278dda9c62cdc6ffc343dcef162bffaedb3620a90ef766834114",
+  "SESSION_HANDOFF_186.md": "19cd1aee8afc5780bd71c5be527216a50fb531c228b9d461f11a3f2f65e9e40f"
  }
 }

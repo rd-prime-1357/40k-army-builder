@@ -10178,3 +10178,106 @@ Several other project docs also ship as unversioned + versioned pairs of identic
 D42 it refines), not in session order — pre-existing, non-urgent. Resolving which file is canonical,
 repointing the guard, and removing the stale copy involves deletion + a naming precedent and is
 Ryan's call; tracked as B91.
+
+---
+
+## D278 — S186 open reconciliation: faction_taxonomy.json canonical-serialisation drift (baseline was red)
+**Decision:** `faction_taxonomy.json` is re-serialised into the exact byte-form its own
+pipeline emits — `json.dump(obj, ensure_ascii=False, indent=2)` with **no trailing
+newline** — restoring `units_repro_check.py` to green. Content is unchanged; only a
+single stray trailing-newline byte is removed (5643 → 5642 bytes, JSON identical).
+
+**What was wrong:** the S186 data-turn baseline opened red — `units_repro_check` and the
+manifest-fed `rules_assertions` both failed on `faction_taxonomy.json: differs (5642 vs
+5643 bytes)`. The committed file equalled the pipeline's re-serialised output **plus one
+trailing `\n`**. Its four sibling merge-passthrough lookups (`abilities.json`,
+`rules.json`, `keywords.json`, `weapon_abilities.json`) all end at `]` with no trailing
+newline, so the newline was an anomaly on this one file, not a convention.
+
+**Root cause:** S185 (engine turn) hand-edited `faction_taxonomy.json` to add `roster_mode`
+and rewrite its comment, and the editor left a trailing newline. That turn ran tier-A-only
+(no GW sources loaded), so the repro gates that compare against the serialiser output were
+**skipped** — the drift shipped uncaught and only surfaced now that a data turn loads
+sources and runs those gates. Per protocol the failing gate was reconciled before any
+assigned work began.
+
+**Lesson pinned:** edits to any merge-passthrough JSON (`faction_taxonomy.json` and the
+four lookups) must be written through the canonical serialiser, never hand-saved, or they
+drift from what the pipeline reproduces. This is the same class as "fix parsers, never
+hand-edit output" applied to passthrough inputs.
+
+**Rationale:** mechanical, reversible, content-neutral reconciliation of a red baseline —
+development-manager housekeeping, no legality or product judgement. No ticket: opened and
+closed within this turn.
+
+---
+
+## D279 — B90 turn 2 (Tier-2 complete-roster rebuild) deferred: scope is a pipeline build, and two source-of-truth questions block a correct target
+**Decision:** The B90 turn-2 rebuild is **not** executed this session. The faction_taxonomy
+`roster_mode` flip, the `resolved_pool()` mirror update, and the loadout/wargear re-verify
+all wait on the rebuild, so none of them ship either. Live behaviour is unchanged — the
+five Tier-2 chapters remain `'union'` and union-leaked exactly as after S185 (the D276 D0
+gap persists, unregressed). Reason: the turn is deeper than a mechanical data edit and its
+target is presently ill-defined against source. Stopping cleanly with the reconciliation
+banked beats half-building a legality-critical roster.
+
+**Finding 1 — no existing pipeline path builds a complete per-chapter roster.** Today each
+Tier-2 chapter block in `units.json` is a *delta* of chapter-specific datasheets only
+(BT 18, BA 15, DA 16, DW 10, SW 21), produced by `wahapedia_transform.py --faction SM`
+plus a points-only `--scope-to-army --append`; the generic 82-unit Adeptus Astartes block
+is unioned in at runtime. Building each chapter as its MFM's full self-contained roster
+(so `'complete'` mode returns it directly) requires a **new build path** that reads the
+chapter MFM's own curated unit list, pulls each datasheet's stats from the Wahapedia SM
+dump, prices from the chapter MFM, and emits a complete chapter block — for ~90–119 units
+per chapter, byte-reproducible, with correct loadouts, wargear, abilities and attach-lists.
+This is parser/merge architecture work with direct D0 stakes (overcount → illegal units
+reachable; undercount → legal units unreachable), not a data edit.
+
+**Source model confirmed (supports D276's legality ruling):** each chapter MFM *is* a
+genuinely curated self-contained roster. Black Templars lists **0** Librarian entries
+(confirming D276's "BT fields no Psykers"); the other four each carry Librarians. Chapter
+rosters genuinely differ unit-for-unit (BT has Grimaldus / Emperor's Champion / Sword
+Brethren; Blood Angels has Dante / Mephiston / Death Company). Each file also contains a
+large shared generic-Astartes section whose leader attach-lists name other chapters' units
+(Deathwing Knights, Inner Circle Companions, Deathwatch Veterans) — those names are prose
+carried across all chapter files and are moot where the referenced unit is absent from the
+file; the fieldable roster is exactly what the file lists.
+
+**Finding 2 (blocking) — MFM edition / points currency.** The pipeline (`source_manifest.json`,
+`units_repro_check.py`) pins the **v1_0** MFM files, but a newer **v1.1** of every SM-family
+file (and of CSM, DG, TS, EC, WE, Grey Knights, Drukhari, Chaos Knights) sits in the source
+area, unadopted. Rosters are **identical** across v1_0 and v1.1 for all five chapters; the
+delta is **points** — v1.1 reprices units (e.g. Chaplain Grimaldus 110→100, Emperor's
+Champion 100→90) and annotates the change with ▲▼ markers. So the tool currently ships
+**stale points**. A rebuild bakes in whichever edition's points, and adopting v1.1 is a
+faction-wide source refresh with a manifest re-hash and a points-legality precedent. This
+must be decided before the rebuild, or the freshly-rebuilt rosters ship known-stale points
+and get re-priced immediately after. Tracked as **B92**.
+
+**Finding 3 (blocking the target) — D276's roster count contradicts source.** D276 (and the
+S186 prompt) state Black Templars = **76 units**, confirmed against `MFM_Black_Templars_v1.1.txt`.
+Direct source count this session is **90** (18 chapter-specific + 72 curated-generic), the
+same in v1_0 and v1.1. The acceptance criterion "BT is 76" therefore cannot be met as
+written; the correct rebuild target is the **verified source roster** (BT ≈90; BA/DA/DW/SW
+counted the same way at rebuild time). D276's "76" figure is superseded by source and should
+be corrected; before an assertion pins any count, the target must be confirmed from source,
+not from the stale figure.
+
+**Decisions needed from Ryan (batched, both blocking a correct rebuild):**
+1. **Points edition:** stay on v1_0 for the Tier-2 rebuild (status-quo, no new precedent,
+   accepts known-stale points for now) and handle v1.1 adoption separately (B92); **or**
+   adopt v1.1 first (faction-wide refresh) so the rebuild bakes current points. Recommend
+   deciding B92 first if current points matter for the shipped Tier-2 rosters, since
+   rebuilding twice is wasteful.
+2. **Roster target:** confirm the rebuild targets the full verified source roster (≈90 for
+   BT), correcting D276's "76", and that Legends/Forge-World datasheets present in the MFM
+   (e.g. Astraeus, Thunderhawk) count as legal matched-play roster members (they are in the
+   file, so by D276's own "exactly what the MFM lists" rule they are in — confirm the
+   precedent before it is pinned).
+
+**Rationale:** D0 requires the Tier-2 fix, but a correct fix needs a target the source
+actually supports and a settled points edition; building against D276's contradicted count
+under time pressure risks enshrining a wrong roster as an executable assertion — the worst
+failure mode. Sequencing is development-manager authority; the two open questions are
+points-legality precedent and are Ryan's. B90 stays open; turn 2 resumes once both are
+settled.

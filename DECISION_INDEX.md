@@ -428,3 +428,19 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   points at stale `40K_Decision_Log.md`; live `_v3_0` unguarded and diverged) → opened B91. Corrects
   the S185 prompt's data-shape assumption; build-sequencing refinement of D276, no legality change.
   Open count 15 → 16.
+- **D278** — S186 open reconciliation: `faction_taxonomy.json` re-serialised to canonical
+  no-trailing-newline form, restoring `units_repro_check` to green (S186, data turn). S185's
+  engine-turn hand-edit left a stray trailing newline; that turn ran tier-A-only and skipped
+  the repro gates, so it shipped uncaught until this data turn loaded sources. Content
+  unchanged (5643→5642 bytes). Lesson: merge-passthrough JSON must go through the serialiser,
+  never hand-saved. No ticket (opened+closed same turn). Open count unchanged at 16.
+- **D279** — B90 turn 2 deferred: the Tier-2 complete-roster rebuild is a pipeline build
+  (no existing path emits a full per-chapter roster; today they are deltas + runtime union),
+  and its target is blocked on two source questions (S186, data turn). Source confirms D276's
+  legality model (BT lists 0 Librarians; chapter rosters genuinely differ), but (a) the
+  pipeline pins **v1_0** MFMs while unadopted **v1.1** files carry corrected points — the tool
+  ships stale points; adopting v1.1 is a faction-wide refresh → opened **B92**; and (b) direct
+  source count is **BT=90**, not the **76** D276/the prompt state — the acceptance figure is
+  contradicted by source and must be corrected before any assertion pins it. Both decisions are
+  points-legality precedent → Ryan. Reconciliation (D278) banked; B90 stays open. Open count
+  16 → 17 (B92 added).

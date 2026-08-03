@@ -3,7 +3,13 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **16 open** as of S185 (up from 15 at S184): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+not here, it isn't open. **17 open** as of S186 (up from 16 at S185): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+B17, B87, B88, B89, B90, B91, B92. S186 (data turn) banked only an open-reconciliation — `faction_taxonomy.json`
+re-serialised to canonical form to clear a red baseline (D278, S185's engine-turn hand-edit left a stray
+trailing newline). B90 turn 2 was deferred (D279): source shows it is a pipeline build with a target
+contradicted by D276 (source BT=90, not 76) and blocked on the v1_0/v1.1 points-edition question →
+**B92 opened** (MFM v1.1 adoption / points currency). Both are Ryan decisions. B90 stays open.
+**16 open** as of S185 (up from 15 at S184): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
 B17, B87, B88, B89, B90, B91. B90 turn 1 of 3 (engine) shipped S185 (D277): `resolveUnits()` two-tier
 mechanism + `roster_mode` flag landed, all eleven chapters flagged `'union'` for now (live behavior
 unchanged, still union-leaked); the five Tier-2 chapters flip to `'complete'` in the B90 data turn,
@@ -208,6 +214,31 @@ moves from turn 1 into turn 2. Turn 2 must also update `resolved_pool()` in `rul
 Python mirror of `resolveUnits()`, still union-only) to add complete-mode, or the mirror silently
 diverges from the engine. Turn 3 (assertion) unchanged. Live behavior after turn 1: still union-leaked,
 unregressed — the D0 gap persists exactly as before until turn 2.
+
+**TURN 2 DEFERRED — S186 (D279); BLOCKED on two Ryan decisions.** Turn 2 was scoped as a mechanical
+data rebuild; source check this session shows it is a pipeline build with an ill-defined target, so it
+was not attempted (no half-build). Two blockers, both points-legality precedent (Ryan): (1) **points
+edition** — the pipeline pins v1_0 MFMs, but unadopted v1.1 files carry corrected points (rosters are
+identical across versions; only points differ), so the tool ships stale points; a rebuild bakes in one
+edition's points and adopting v1.1 is a faction-wide refresh → **B92**. (2) **roster target** — direct
+source count is BT=**90** (18 chapter-specific + 72 curated-generic), not the **76** D276/the prompt
+state; the acceptance figure is contradicted by source and must be corrected before an assertion pins
+it. Source *does* confirm D276's legality model (BT lists 0 Librarians; chapter rosters genuinely
+differ). Also noted: no existing pipeline path emits a complete per-chapter roster — turn 2 needs a new
+build path, not a data edit. Turn 2 resumes once both decisions are settled; turn 3 (assertion) follows.
+
+### B92 — MFM v1.1 edition adoption / points currency — **NEW S186 (D279); Ryan-decision + data; M; blocks a correct B90 turn 2**
+The pipeline pins **v1_0** MFM files (`source_manifest.json`, `units_repro_check.py`), but a newer
+**v1.1** of every SM-family file — and of Chaos Space Marines, Death Guard, Thousand Sons, Emperor's
+Children, World Eaters, Grey Knights, Drukhari, Chaos Knights — sits unadopted in the source area.
+Rosters are identical v1_0↔v1.1 for the five Tier-2 chapters (verified S186); the delta is **points**:
+v1.1 reprices units (e.g. Chaplain Grimaldus 110→100, Emperor's Champion 100→90) and annotates each
+change with ▲▼ markers (the markers themselves are disregarded per the MFM points rule; the final value
+is used). Consequence: the tool currently ships stale points for every faction with a v1.1 present.
+Decision: adopt v1.1 across the board (manifest re-hash, repro re-bank, points-legality precedent) or
+stay v1_0 until a deliberate edition bump. Interacts with B90 turn 2 — if the Tier-2 rebuild should ship
+current points, decide this first so the rebuild is not re-priced immediately after. Scope of the
+faction-wide adoption to be sized once the direction is set.
 
 ### B91 — Decision-log & versioned-doc canonical reconciliation — **NEW S185 (D277); Ryan-decision + tooling/doc; M**
 Two decision-log files live in the repo and have diverged. `pipeline_manifest.py` guards
