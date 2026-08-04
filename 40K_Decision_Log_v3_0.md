@@ -10349,3 +10349,51 @@ engine simply doesn't consume it yet.
 **Rationale:** development-manager sequencing call (reversible) to use an otherwise-idle session on
 the one unblocked, fully-scoped backlog item rather than sit on B90/B91's Ryan-blockers. No
 legality precedent set — nothing is enforced yet, so live behaviour is unchanged.
+
+## D281 — Two tickets opened from Ryan-reported gaps: E28 (Detachment UI placement) and B93 (Enhancement/Upgrade eligibility) (S188)
+
+**Turn type: doc-only.** No engine, data, parser, or assertion change. Baseline unaffected — still
+30/30 at open (`--fetch --data-turn`), S187's hashes verified: `detachment_effects.json`,
+`rules_assertions.py`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `pipeline_manifest.py` all
+matched. `pipeline_manifest.json` did not match the S187-stated hash (`889415b3f838` claimed vs
+`8c9fedd205e7` found); regenerating with `--write` against the current guarded files reproduced
+the on-disk file byte-for-byte, so the manifest itself is internally correct — the S187 handoff's
+recorded hash for that one file reads as a transcription slip in the document, not a data problem.
+Noted here rather than chased further; no guarded file was actually wrong.
+
+**E28 opened** — Ryan asked whether selected Detachments (and Force Disposition) should move from
+their current always-visible block in the centre Army List panel to the right "Unit Options"-style
+panel, configured on click, matching the unit mechanic. Checked against the original UI decision
+(D192 item 5, `E1_DETACHMENT_SCOPE.md` §5): the shipped layout already diverges from that plan too
+— D192 specified an info-control-per-row opening rule text/enhancements/stratagems as collapsible
+detail, not an always-on top-of-list widget; E25 (D251/D254) added Force Disposition as a standalone
+control instead of routing through that path. Recommendation given to Ryan directly: move it, keep
+DP/points visible in the centre-list rows (unchanged), and attach Force Disposition to a
+"Detachments" group-level view rather than to each individual row, since it is one value governing
+the whole selection, not a per-detachment property. Not designed in detail — right panel currently
+switches on numeric `listId`; string-keyed detachment rows need new selection state. Sized M,
+comparable to E1c's original build.
+
+**B93 opened** — Ryan reported that every Enhancement's description opens with its qualification
+requirement (a keyword, unit type, or specific unit), and Enhancements are Character-only unless
+stated otherwise. Checked `enhancementTypeEligible()` against `detachments.json` (607 enhancement
+records) before logging: the Character-default is right, but the engine does not read the
+qualification text at all. Two gaps, not one — (1) `is_upgrade: true` records get **zero** type
+check (`isUpgrade ? true : …`), live and reachable today, e.g. Fulguris Task Force's *Bellicose
+Weapon Spirits* names "SPEEDER unit only" but assigns to any unit; (2) regular Enhancements narrow
+past "any Character" to a specific keyword/sub-type/named unit — Anvil Siege Force's *Indomitable
+Fury* ("GRAVIS model only"), Death Guard's *Cornucophagus* ("Lord of Poxes only") — and the blanket
+Character check currently over-admits all of these army-wide.
+
+**Correction to the reported pattern, found by sampling rather than trusting the claim as stated:**
+the qualification clause is not reliably the first sentence — sampled records show it typically
+follows one sentence of flavour text (`Bellicose Weapon Spirits`, `Blackwing Shroud`, `Bombast
+Omnivox`), and two records currently carry no usable qualification at all: `Thousand Sons |
+RUBRICAE PHALANX | Stave Abominus` has an empty `description`, and `Chaos Daemons | SHADOW LEGION |
+Leaping Shadows`'s description is just the enhancement's own name with no rule text. A first-
+sentence parsing heuristic would misfire on real records today; any build needs a source pass
+across all 607 first. Not scoped for build this session — sized L, spans sessions, same shape as
+the B70/B73 and B90 clusters.
+
+**Rationale:** logging Ryan's two reports as scoped tickets is a doc-only action; no legality or
+UI precedent is set by opening them. Open count 17 → 19 (E28, B93 added).

@@ -453,3 +453,13 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   kind. `rules_assertions.py` 114/114 → 116/116. All rows `enforced: false` — E23's engine turn
   (list_store.js pick state, index.html eligibility hooks) not attempted, ticket stays open.
   `index.html` unchanged (v6.15). Open count unchanged at 17.
+- **D281** — Two tickets opened from Ryan-reported gaps (S188, doc-only): **E28** — move selected
+  Detachments/Force Disposition from the always-on centre-list widget to a right-panel
+  click-to-configure view, matching the unit mechanic (recommended with one adjustment: Force
+  Disposition attaches to the Detachments group, not each row, since it's one value for the whole
+  selection). **B93** — `enhancementTypeEligible()` checks Character-vs-not only, never the
+  Enhancement's own qualification text; Upgrades get zero type check today (live gap), regular
+  Enhancements over-admit past their named keyword/unit. Sampling found the qualification clause
+  isn't reliably the description's first sentence as reported, and two records (Thousand Sons'
+  Stave Abominus, Chaos Daemons' Leaping Shadows) have no usable qualification text yet — a source
+  pass across all 607 records is needed before either is built. Open count 17 → 19.

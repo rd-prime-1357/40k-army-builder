@@ -3,7 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **17 open** as of S187 (unchanged from S186): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+not here, it isn't open. **19 open** as of S188 (up from 17 at S187): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+B17, B87, B88, B89, B90, B91, B92, E28, B93. Two tickets logged from Ryan reports (D281, doc-only,
+no build): E28 (Detachment selection UI placement — right panel, click-to-configure) and B93
+(Enhancement/Upgrade eligibility doesn't read the Enhancement's own qualification text; two records
+found with no usable qualification text yet). Neither B90 blocker (D279) nor B91 was answered.
+**17 open** as of S187 (unchanged from S186): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
 B17, B87, B88, B89, B90, B91, B92. Neither B90 blocker (D279) nor B91 was answered, so both stayed
 untouched; E23 was the only unblocked, fully-scoped item — its data turn shipped (D280):
 `detachment_effects.json`'s fifth kind (`tank_ace`) and six rows, re-verified from source (caught
@@ -175,6 +180,76 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### E28 — Detachment selection: move from centre-list widget to right-panel configuration (Force Disposition included) — **NEW S188 (D281); Ryan-raised; engine/UI; M**
+Ryan's question: selected Detachments and Force Disposition currently render as an always-visible
+block inside the centre "Army List" panel (`renderSelectedDetachmentsHtml`, the `fdisp-picker`
+element), rather than through the click-to-configure pattern used for every unit (left panel picks
+it, centre lists it, right "Unit Options" panel configures it once clicked). He asked whether
+Detachments should follow that same pattern, with Force Disposition "listed and selected under the
+Detachments."
+
+Checked against the original UI decision before answering (D192 item 5, `E1_DETACHMENT_SCOPE.md`
+§5): the plan was left-panel picker (unchanged), centre-list rows (unchanged), and **an info
+control per row opening rule text/enhancements/stratagems as collapsible detail** — closer to a
+click-to-expand pattern than what shipped. E25 (Force Disposition, D251/D254) added its own
+always-on selector at the top of the centre list instead of using that info-control path, which is
+why today's layout doesn't match either the original plan or the unit mechanic.
+
+**Recommendation given to Ryan: yes, move it, with one adjustment.** Keep detachment rows in the
+centre list — name and DP cost need to stay visible without a click, which is the one thing the
+current widget gets right. Clicking a detachment row switches the right panel to a "Detachment
+Options" view, the same way `selectListEntry` does for units; that view is where Force Disposition,
+rule text, and enhancement browsing live. The one departure from "listed and selected under the
+Detachments" as literally stated: Force Disposition is a single value governing the whole
+detachment *selection*, not a per-row property (two detachments can be selected at once; one Force
+Disposition applies to both) — so the selector should attach to a "Detachments" group-level
+header/state, not repeat under each individual row, or it will read as belonging to whichever
+detachment happens to be clicked. Everything else in Ryan's framing holds.
+
+**Mechanism note, not yet designed in detail:** the right panel currently switches on a numeric
+`listId` (`selectListEntry`); detachment rows are keyed by string (`army|name`), so this needs new
+selection state distinguishing "a unit is selected" from "the Detachments group is selected," plus
+a render branch in the right-panel path. Comparable in size to E1c's original build. A scoping
+session should confirm whether per-unit enhancement assignment (unaffected by this move) needs any
+UI adjustment once Detachments get their own detail view.
+
+### B93 — Enhancement/Upgrade eligibility: engine checks Character-vs-not, not the Enhancement's own qualification requirement — **NEW S188 (D281); Ryan-flagged; engine+data; L; spans sessions; live D0 gap**
+Ryan's report: every Enhancement's description begins with the specific unit/keyword requirement to
+take it (e.g. a Phobos-armoured Character, "any Adeptus Astartes Character," "any Adeptus Astartes
+Vehicle"), and by rule an Enhancement can only be taken by a Character unless stated otherwise.
+`enhancementTypeEligible()` (`index.html`) does not read that requirement at all — it hard-codes
+two cases: `is_upgrade === true` → eligible for **any** unit type with no further check,
+`is_upgrade === false` → eligible only if `unit_type === 'Character'`. Checked against
+`detachments.json` (607 enhancement records) before logging: the type-vs-Character split is right
+as a default, but the specific qualification is real, present in the data, and unenforced in both
+directions —
+
+1. **Upgrades (`is_upgrade: true`) currently have zero type restriction.** Example: Fulguris Task
+   Force's *Bellicose Weapon Spirits* names "SPEEDER unit only" in its own text, but the engine's
+   `isUpgrade ? true : …` allows it on any unit in the army. This is the wider of the two gaps — it
+   is live and reachable today, not gated behind unbuilt work.
+2. **Regular Enhancements narrow past "any Character."** Several name a specific keyword,
+   sub-type, or even a single named unit rather than "any Character" — Anvil Siege Force's
+   *Indomitable Fury* ("GRAVIS model only"), Death Guard's *Cornucophagus* ("Lord of Poxes only"),
+   Space Wolves' *Iron Resolve* ("ADEPTUS ASTARTES TERMINATOR model only"). The blanket Character
+   check currently over-admits all of these to any Character in the army, not just the named one.
+
+**Correction to the reported pattern, checked before scoping further:** the qualification clause is
+not reliably the first sentence of `description`. Sampled records show it typically follows one
+sentence of flavour text (`Bellicose Weapon Spirits`, `Blackwing Shroud`, `Bombast Omnivox` all
+follow this shape), and two records currently carry no usable qualification text at all:
+`Thousand Sons | RUBRICAE PHALANX | Stave Abominus` has an **empty** `description`, and
+`Chaos Daemons | SHADOW LEGION | Leaping Shadows`'s description is just the enhancement's own name
+repeated, with no rule text. A first-sentence parsing heuristic would misfire on real records today
+— a source pass across all 607 is needed before either gap is built.
+
+**Not scoped for build.** This needs an analysis turn across the full record set before a
+mechanism is chosen — likely a new structured field (qualification keyword/unit-type/unit-name,
+captured at the pipeline stage the description text already goes through) plus an `index.html`
+change to `enhancementTypeEligible()`/`canAssignEnhancement()` to consume it. Sized L, spans
+sessions, same shape as the B70/B73 and B90 clusters. Priority relative to the current faction-build
+queue is a sequencing call, not made here.
 
 ### B90 — SM-family chapter rosters: fix the union-vs-complete bug — **NEW S184 (D276); Ryan-flagged; engine+data; L; spans sessions; blocks further faction work**
 `resolveUnits()` in `index.html` unions the full generic Adeptus Astartes pool into every
