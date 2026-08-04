@@ -3,7 +3,13 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **17 open** as of S186 (up from 16 at S185): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+not here, it isn't open. **17 open** as of S187 (unchanged from S186): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+B17, B87, B88, B89, B90, B91, B92. Neither B90 blocker (D279) nor B91 was answered, so both stayed
+untouched; E23 was the only unblocked, fully-scoped item — its data turn shipped (D280):
+`detachment_effects.json`'s fifth kind (`tank_ace`) and six rows, re-verified from source (caught
+and fixed a real army-resolution bug in the process), two new assertions. Ticket stays open; the
+engine turn (list_store.js state, index.html eligibility hooks) is separate work, not attempted.
+**17 open** as of S186 (up from 16 at S185): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
 B17, B87, B88, B89, B90, B91, B92. S186 (data turn) banked only an open-reconciliation — `faction_taxonomy.json`
 re-serialised to canonical form to clear a red baseline (D278, S185's engine-turn hand-edit left a stray
 trailing newline). B90 turn 2 was deferred (D279): source shows it is a pipeline build with a target
@@ -509,7 +515,15 @@ the bigger lever and hasn't been tried yet.**
 RAG-expanded one.
 
 
-### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); scoped S181 (D272); data confirmed S182 (D273); build turn next; M**
+### E23 — `HEADHUNTER TASK FORCE`: the Tank Ace Character keyword grant — **NEW S134 (D209); scoped S181 (D272); data confirmed S182 (D273); data authored S187 (D280); engine build turn next; M**
+
+**Data turn done S187 (D280).** `detachment_effects.json` carries all six rows (`tank_ace` kind,
+`enforced: false`), re-verified from source rather than trusted from D273 — a real bug caught in
+the process (the generic key's `army` field pointed at the unresolvable label `Space Marines`
+instead of its true seven owning armies; fixed with a new `_owning_armies()` helper, general
+enough to cover any future shared generic-key row). Two new assertions (`E23-1` coverage, `E23-2`
+pool counts) pin the six pools at 16/16/17/16/16/16 and the Hammerfall Bunker Fortification
+carve-out. What remains is the engine turn below — untouched this session.
 
 Found by re-deriving E21's survey from source instead of trusting D203's list. `HEADHUNTER TASK FORCE`
 exists in **six built armies** — Space Marines, Black Templars, Blood Angels, Dark Angels, Deathwatch,

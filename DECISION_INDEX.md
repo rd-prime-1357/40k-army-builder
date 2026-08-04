@@ -444,3 +444,12 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   contradicted by source and must be corrected before any assertion pins it. Both decisions are
   points-legality precedent → Ryan. Reconciliation (D278) banked; B90 stays open. Open count
   16 → 17 (B92 added).
+- **D280** — E23 data turn: `detachment_effects.json` gains a fifth kind (`tank_ace`) and six
+  rows for the HEADHUNTER TASK FORCE Tank Ace grant (S187, data-only). D273's facts re-derived
+  from source, not trusted; caught and fixed a real bug first (the generic key's `army` field
+  was set to the unresolvable label `Space Marines` instead of its true seven owning armies —
+  `Adeptus Astartes` + six vanilla chapters — via a new `_owning_armies()` helper). Two new
+  assertions (`E23-1` coverage, `E23-2` pool counts), `E21a-3`/`E21a-4` extended for the new
+  kind. `rules_assertions.py` 114/114 → 116/116. All rows `enforced: false` — E23's engine turn
+  (list_store.js pick state, index.html eligibility hooks) not attempted, ticket stays open.
+  `index.html` unchanged (v6.15). Open count unchanged at 17.

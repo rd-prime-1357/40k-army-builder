@@ -10281,3 +10281,71 @@ under time pressure risks enshrining a wrong roster as an executable assertion �
 failure mode. Sequencing is development-manager authority; the two open questions are
 points-legality precedent and are Ryan's. B90 stays open; turn 2 resumes once both are
 settled.
+
+---
+
+## D280 — E23 data turn: HEADHUNTER TASK FORCE Tank Ace grant authored into `detachment_effects.json`, re-verified from source, unenforced pending an engine turn (S187)
+
+**Turn type: data-only.** `detachment_effects.json` gains a fifth effect kind (`tank_ace`) and
+six new rows, one per detachment key that carries the grant (`Space Marines`, `Black Templars`,
+`Blood Angels`, `Dark Angels`, `Deathwatch`, `Space Wolves` | `HEADHUNTER TASK FORCE`). Two new
+assertions (`E23-1`, `E23-2`), plus `E21a-3`/`E21a-4`'s (`e21a_schema_valid`/`e21a_allied_targets`)
+existing checks extended to cover the new kind. `rules_assertions.py` **114/114 → 116/116**.
+`index.html` untouched, still **v6.15**. No parser, no converter, no pipeline-derived file
+touched — `detachment_effects.json` is hand-authored input, same class as D209.
+
+**Picked up because neither B90 blocker (D279) nor B91 was answered this session; E23 was the
+only fully-scoped, unblocked open item** (data confirmed S182/D273, mechanism decided S181/D272,
+"build turn next"). Re-derived the D273 facts from source rather than trusting the prior
+session's numbers, per standing practice — found them correct, with one real gap the
+re-derivation caught before it shipped (below).
+
+**What was authored.** Each row: `target.base_keyword: "Vehicle"`, `except_keywords: ["Fly",
+"Walker", "Drop Pod"]`, `except_unit_types: ["Fortification"]`, `cap: 3`, `enforced: false`. Three
+new `_meta.target_shapes` entries document `base_keyword`/`except_keywords`/`except_unit_types`,
+distinct from the existing bare `keyword` shape (that one names a pool the app **cannot** yet
+express as data; this one is a fully computable predicate simply not wired to the engine yet — the
+two are not the same kind of gap and now read differently in the schema).
+
+**Bug caught by the assertions themselves before it shipped: the generic key's army field is not
+a resolvable pool name.** The first draft set all six rows' `army` field to the label matching
+each key's prefix, including `"Space Marines"` for the shared generic key — but no `units.json`
+block or `detachments.json` armies-index entry is named `Space Marines`; the generic pool is
+`Adeptus Astartes`, and `detachments.json`'s own `armies` index shows the `Space Marines|
+HEADHUNTER TASK FORCE` key is actually owned by **seven** armies (`Adeptus Astartes` plus the six
+vanilla chapters with no dedicated MFM: Imperial Fists, Iron Hands, Raven Guard, Salamanders,
+Ultramarines, White Scars) — `Space Marines` is a `source_faction` display label carried onto the
+key, not an army. `e21a_schema_valid` and the new `e23_tank_ace_pool_counts` both failed loudly
+(0 eligible where 16 were expected) rather than silently passing on an empty pool. Fixed with a
+new `_owning_armies()` helper that resolves the real owner(s) from `detachments.json`'s `armies`
+index rather than the key's string prefix — a strict generalisation of the existing single-owner
+case, verified to produce identical results for every other row. Re-confirmed from source that
+none of the six vanilla chapters carries any `unit_type: Vehicle` unit of its own, so the pool is
+identically 16 for all seven owners of the generic key — D273's "SM 16" figure holds, just for the
+right reason.
+
+**Re-verification against source (D273's facts, checked again, not trusted):** rule text
+byte-identical across all six keys (`sha256:12 cadd53c18131`, matches D273). Generic Adeptus
+Astartes pool: 28 `unit_type: Vehicle` units, 12 excluded (6 `Fly`, 5 `Walker`, 1 Drop Pod) = 16
+eligible, confirmed by name. Blood Angels adds Baal Predator (no excluding keyword) = 17; its own
+Death Company Dreadnought is `Walker`-excluded. Dark Angels/Deathwatch/Space Wolves' own vehicles
+are all `Fly` or `Walker` and add nothing past the generic 16. Black Templars' seven
+chapter-priced entries are point-override duplicates of generic names, not new units — 16 stands.
+Hammerfall Bunker (`unit_type: Fortification`, carries the `Vehicle` keyword) is confirmed excluded
+by the `except_unit_types` clause specifically — pinned as its own assertion line since the
+`except_keywords` clause alone would miss it.
+
+**`E23-1` (coverage)** scans all 169 built detachments' `rule_text`/`restrictions` for the grant
+pattern ("select up to N ... Character keyword") and requires an exact match to the six rows —
+same discipline as `E21a-5`, so a detachment added later with the same grant fails the baseline
+instead of shipping unrowed.
+
+**Ticket not closed.** E23's build turn (the `list_store.js` pick-array state, the
+`eligibleWarlordEntries()`/`enhancementTypeEligible()` per-entry hooks at three `index.html` call
+sites) is separate engine work per turn-typing and is not attempted this session. `enforced: false`
+on all six rows accurately states that gap — the data is fully specified and source-verified, the
+engine simply doesn't consume it yet.
+
+**Rationale:** development-manager sequencing call (reversible) to use an otherwise-idle session on
+the one unblocked, fully-scoped backlog item rather than sit on B90/B91's Ryan-blockers. No
+legality precedent set — nothing is enforced yet, so live behaviour is unchanged.

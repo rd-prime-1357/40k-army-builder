@@ -1915,6 +1915,30 @@ ASSERTIONS = [
      'index.html renderDetail, leaderSectionHtml; leader_ability_name (E26/D268)',
      e27_leader_support_wording),
 
+    # ── E23: HEADHUNTER TASK FORCE Tank Ace grant — data turn (S187, D273 re-verified).
+    # Coverage + pool-size facts pinned as executable checks ahead of the engine build
+    # turn that wires eligibleWarlordEntries/enhancementTypeEligible to consume them.
+    ('E23-1',
+     'Every built detachment whose own text grants the Character keyword to a '
+     'player-picked subset of a named pool ("select up to N ... to gain the Character '
+     'keyword") has a tank_ace row in detachment_effects.json, and no tank_ace row '
+     'exists for a detachment whose text does not carry that pattern. Re-derived by '
+     'scanning all 169 built records rather than trusting the six-army list D273 found, '
+     'so a future detachment with the same grant is caught rather than silently unrowed.',
+     'detachments.json rule_text scan vs detachment_effects.json tank_ace rows (E23, D273)',
+     lambda S: e23_tank_ace_coverage(S)),
+
+    ('E23-2',
+     'Each of the six tank_ace rows\' predicate (base_keyword Vehicle, minus '
+     'except_keywords Fly/Walker/Drop Pod and except_unit_types Fortification) resolves '
+     'against that army\'s current resolved_pool() to the exact counts D273 confirmed '
+     'from source: Space Marines 16, Black Templars 16, Blood Angels 17 (Baal Predator), '
+     'Dark Angels 16, Deathwatch 16, Space Wolves 16 — and Hammerfall Bunker (Vehicle '
+     'keyword, unit_type Fortification) is confirmed excluded by the except_unit_types '
+     'clause, not just the keyword clause.',
+     'detachment_effects.json tank_ace target vs units.json keyword_names/unit_type (E23, D273)',
+     lambda S: e23_tank_ace_pool_counts(S)),
+
 ]
 
 
@@ -1927,6 +1951,20 @@ def _de_effects(S):
         for eff in rec['effects']:
             out.append((key, rec, eff))
     return out
+
+
+def _owning_armies(S, key):
+    """The real resolvable army/armies that can select this detachment, per
+    detachments.json's own armies index -- not assumed from the key's army-part
+    string. Most keys own exactly one army (key prefix == that army). One key,
+    'Space Marines|HEADHUNTER TASK FORCE', is a generic Adeptus Astartes detachment
+    shared by the six vanilla chapters too (Imperial Fists, Iron Hands, Raven Guard,
+    Salamanders, Ultramarines, White Scars) plus 'Adeptus Astartes' itself -- 'Space
+    Marines' is a source-label on the key, not a units.json army block name, so
+    resolved_pool() must be called per real owner, not on the label."""
+    armies_idx = S.detachments()['armies']
+    owners = sorted(a for a, keys in armies_idx.items() if key in keys)
+    return owners or [key.split('|', 1)[0]]
 
 
 def e21a_keys_resolve(S):
@@ -1965,7 +2003,7 @@ def e21a_unit_names_resolve(S):
 
 
 def e21a_schema_valid(S):
-    kinds = {'battleline', 'forbid', 'unlock', 'warlord'}
+    kinds = {'battleline', 'forbid', 'unlock', 'warlord', 'tank_ace'}
     modes = {'cannot_be', 'must_be_if_present'}
     caps = ['1000', '2000', '3000']
     bad = []
@@ -1988,11 +2026,26 @@ def e21a_schema_valid(S):
                     bad.append(f'{key} [unlock]: points_cap values not strictly increasing: {vals}')
         army = rec['army']
         if army not in pools:
-            pools[army] = S.resolved_pool(army)
+            owners = _owning_armies(S, key)
+            merged = {}
+            for a in owners:
+                merged.update(S.resolved_pool(a))
+            pools[army] = merged
         types = {u['unit_type'] for u in pools[army].values()}
         for t in eff.get('target', {}).get('unit_types', []):
             if t not in types:
                 bad.append(f'{key} [{k}]: unit_type {t!r} does not exist in {army}')
+        if k == 'tank_ace':
+            tgt = eff.get('target', {})
+            if not isinstance(tgt.get('base_keyword'), str) or not tgt['base_keyword']:
+                bad.append(f'{key} [tank_ace]: target.base_keyword must be a non-empty string')
+            if not isinstance(tgt.get('except_keywords', []), list):
+                bad.append(f'{key} [tank_ace]: target.except_keywords must be a list')
+            for t in tgt.get('except_unit_types', []):
+                if t not in types:
+                    bad.append(f'{key} [tank_ace]: except_unit_types value {t!r} does not exist in {army}')
+            if not isinstance(eff.get('cap'), int) or eff.get('cap') < 1:
+                bad.append(f'{key} [tank_ace]: cap must be a positive integer, got {eff.get("cap")!r}')
     if bad:
         return False, '; '.join(bad)
     return True, f'{len(_de_effects(S))} effects across {len(S.detachment_effects()["effects"])} detachments all schema-valid'
@@ -2019,14 +2072,24 @@ def e21a_allied_targets(S):
             unenforced.append(key + '/' + eff['kind'])
             if not eff.get('unenforced_reason'):
                 bad.append(f'{key} [{eff["kind"]}]: enforced: false with no unenforced_reason')
-    expect = ['Chaos Daemons|SHADOW LEGION/unlock']
+    expect = sorted([
+        'Chaos Daemons|SHADOW LEGION/unlock',
+        'Space Marines|HEADHUNTER TASK FORCE/tank_ace',
+        'Black Templars|HEADHUNTER TASK FORCE/tank_ace',
+        'Blood Angels|HEADHUNTER TASK FORCE/tank_ace',
+        'Dark Angels|HEADHUNTER TASK FORCE/tank_ace',
+        'Deathwatch|HEADHUNTER TASK FORCE/tank_ace',
+        'Space Wolves|HEADHUNTER TASK FORCE/tank_ace',
+    ])
     if sorted(unenforced) != expect:
         bad.append(f'unenforced inventory is {sorted(unenforced)}, expected {expect}')
     if bad:
         return False, '; '.join(bad)
-    return True, ('allied targets resolve; exactly one documented unenforced effect remains '
-                  '(Shadow Legion / HERETIC ASTARTES, awaiting Chaos Space Marines build) — '
-                  'Changehost of Deceit flipped to enforced at Thousand Sons turn A (D248/E24)')
+    return True, ('allied targets resolve; seven documented unenforced effects remain '
+                  '(Shadow Legion / HERETIC ASTARTES, awaiting Chaos Space Marines build; six '
+                  'HEADHUNTER TASK FORCE / tank_ace rows, pool fully specified, awaiting the E23 '
+                  'engine build turn) — Changehost of Deceit flipped to enforced at Thousand Sons '
+                  'turn A (D248/E24)')
 
 
 def csm_roster_count(S):
@@ -2115,6 +2178,78 @@ def e21a_coverage(S):
             if bl.search(' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions')))
             or ul.search(' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))))
     return True, f'{n} built detachments carry a Battleline-grant or unlock clause; all have rows'
+
+
+_TANK_ACE_GRANT_RE = re.compile(
+    r'select up to (?:one|two|three|four|five|\d+).{0,80}Character keyword', re.I | re.S)
+
+
+def e23_tank_ace_coverage(S):
+    det = S.detachments()['detachments']
+    have = {key for key, rec, eff in _de_effects(S) if eff.get('kind') == 'tank_ace'}
+    missing, extra = [], []
+    for key, r in det.items():
+        text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
+        if _TANK_ACE_GRANT_RE.search(text) and key not in have:
+            missing.append(key)
+    for key in have:
+        r = det.get(key, {})
+        text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
+        if not _TANK_ACE_GRANT_RE.search(text):
+            extra.append(key)
+    if missing or extra:
+        parts = []
+        if missing:
+            parts.append('missing rows for: ' + '; '.join(sorted(missing)))
+        if extra:
+            parts.append('rows with no matching grant text: ' + '; '.join(sorted(extra)))
+        return False, '; '.join(parts)
+    return True, f'{len(have)} built detachments carry the Character-keyword grant pattern; all have tank_ace rows'
+
+
+def _tank_ace_eligible(unit, tgt):
+    kws = set()
+    for mg in unit.get('model_groups', []):
+        for k in (mg.get('keyword_names') or []):
+            kws.add(k)
+    if tgt['base_keyword'] not in kws:
+        return False
+    if kws & set(tgt.get('except_keywords', [])):
+        return False
+    if unit.get('unit_type') in set(tgt.get('except_unit_types', [])):
+        return False
+    return True
+
+
+def e23_tank_ace_pool_counts(S):
+    expected = {
+        'Space Marines': 16, 'Black Templars': 16, 'Blood Angels': 17,
+        'Dark Angels': 16, 'Deathwatch': 16, 'Space Wolves': 16,
+    }
+    bad = []
+    for key, rec, eff in _de_effects(S):
+        if eff.get('kind') != 'tank_ace':
+            continue
+        label = rec['army']
+        exp = expected.get(label)
+        if exp is None:
+            bad.append(f'{key}: no expected count on file for {label!r}')
+            continue
+        owners = _owning_armies(S, key)
+        for owner in owners:
+            pool = S.resolved_pool(owner)
+            eligible = [name for name, u in pool.items() if _tank_ace_eligible(u, eff['target'])]
+            n = len(eligible)
+            if n != exp:
+                bad.append(f'{key} (owner {owner}): {n} eligible, expected {exp} ({sorted(eligible)})')
+            hb = pool.get('Hammerfall Bunker')
+            if hb is not None and _tank_ace_eligible(hb, eff['target']):
+                bad.append(f'{key} (owner {owner}): Hammerfall Bunker wrongly eligible (Fortification carve-out not applied)')
+    if bad:
+        return False, '; '.join(bad)
+    return True, ('all six tank_ace rows resolve correctly across every owning army (seven for '
+                  'the shared generic Adeptus Astartes key), matching D273\'s source-verified '
+                  'counts (16/16/17/16/16/16); Hammerfall Bunker correctly excluded by unit_type')
 
 
 def e21a_belakor_warlord_covered(S):

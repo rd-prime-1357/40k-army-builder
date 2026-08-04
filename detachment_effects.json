@@ -10,24 +10,29 @@
       "D208",
       "D209"
     ],
-    "key_format": "Army|DETACHMENT_NAME_RAW \u2014 the same key detachments.json uses.",
+    "key_format": "Army|DETACHMENT_NAME_RAW — the same key detachments.json uses.",
     "effect_kinds": {
-      "battleline": "Named units gain the BATTLELINE keyword while this detachment is selected. Changes the unit limit and the display group; does not overwrite unit_type on the record (D204 ruling 2 \u2014 effectiveUnitType()).",
+      "battleline": "Named units gain the BATTLELINE keyword while this detachment is selected. Changes the unit limit and the display group; does not overwrite unit_type on the record (D204 ruling 2 — effectiveUnitType()).",
       "forbid": "Named units, and/or every unit of the named unit_types, cannot be included while this detachment is selected. except_units are exempt.",
       "unlock": "Units outside the army's own faction may be included, bounded by points_cap.",
-      "warlord": "Detachment-scoped Warlord constraint. mode is 'cannot_be' or 'must_be_if_present'. Distinct from the per-unit must_be_warlord / cannot_be_warlord fields on units.json, which are unconditional and army-wide."
+      "warlord": "Detachment-scoped Warlord constraint. mode is 'cannot_be' or 'must_be_if_present'. Distinct from the per-unit must_be_warlord / cannot_be_warlord fields on units.json, which are unconditional and army-wide.",
+      "tank_ace": "Detachment-wide grant naming an eligible Vehicle pool from which the player picks up to cap units in the Muster Armies step to gain the Character keyword (Enhancement + Warlord eligibility). Pool is base_keyword minus except_keywords/except_unit_types on target; picks are the player's own state, not named here (E23, D209 four-kind list superseded)."
     },
     "target_shapes": {
       "units": "Explicit unit_name list. Must resolve in that army's resolved pool (own block plus the generic Adeptus Astartes block for chapter subfactions).",
       "unit_types": "unit_type values. Preferred over naming every member, so a unit added later is caught rather than silently missed.",
       "except_units": "Exemptions from a unit_types match.",
       "allied_group": "Matches the allied_group field B61 put on units.json records.",
-      "keyword": "A faction keyword naming a unit set that the app cannot yet name as data. Only ever appears with enforced: false."
+      "keyword": "A faction keyword naming a unit set that the app cannot yet name as data. Only ever appears with enforced: false.",
+      "base_keyword": "A single keyword every pool member must carry, matched against the union of a unit's model_groups[*].keyword_names. Distinct from the bare 'keyword' shape: base_keyword pairs with except_keywords/except_unit_types to fully specify a computable pool, not an unrepresentable one.",
+      "except_keywords": "Keywords that exclude a unit from a base_keyword match if the unit carries any of them.",
+      "except_unit_types": "unit_type values that exclude a unit from a base_keyword match even if no except_keywords hit — the Fortification/Vehicle-keyword case (Hammerfall Bunker) that except_keywords alone cannot catch.",
+      "cap": "Top-level integer on the effect (sibling of target), not nested under points_cap: a count limit on player picks, distinct from unlock's points-based sub-cap."
     },
-    "points_cap": "Keyed by the army points total for the battle size \u2014 1000 Incursion, 2000 Strike Force, 3000 Onslaught. Matches how the engine reads POINTS_CAP. Onslaught is carried even though the app does not yet offer it, so a future session adding it needs no re-derivation.",
+    "points_cap": "Keyed by the army points total for the battle size — 1000 Incursion, 2000 Strike Force, 3000 Onslaught. Matches how the engine reads POINTS_CAP. Onslaught is carried even though the app does not yet offer it, so a future session adding it needs no re-derivation.",
     "enforced": "Whether every piece of data this effect needs already exists in the app, so the engine can enforce it once wired. It is NOT a claim that the engine enforces it today. enforced: false is load-bearing (D203): a known gap recorded in data and counted by an assertion, rather than made invisible by omission.",
     "not_in_this_file": {
-      "chapter_exclusivity": "25 built detachments carry it. resolveUnits() composes a chapter army as the generic pool plus that chapter's own units, so no foreign-chapter unit is ever reachable \u2014 D0 satisfied by construction. Policed by a structural assertion in E21b, not by a row here (D203).",
+      "chapter_exclusivity": "25 built detachments carry it. resolveUnits() composes a chapter army as the generic pool plus that chapter's own units, so no foreign-chapter unit is ever reachable — D0 satisfied by construction. Policed by a structural assertion in E21b, not by a row here (D203).",
       "belakor_warlord": "Chaos Daemons | SHADOW LEGION requires Be'Lakor to be the Warlord if he is included. Be'Lakor's units.json record already carries must_be_warlord: true from his Supreme Commander ability, which is unconditional and therefore strictly stronger than the detachment's conditional version. A row here would be a second source for one rule that could drift out of step with the first. Omitted deliberately and policed by assertion E21a-6 (D209)."
     }
   },
@@ -96,7 +101,7 @@
             "3000": 1500
           },
           "enforced": true,
-          "source": "B61 tagged the six Death Guard Plague Legions units with allied_group. Without this detachment selected they must not be offered at all \u2014 that is the live D0 violation D204 found, and E22b closes it."
+          "source": "B61 tagged the six Death Guard Plague Legions units with allied_group. Without this detachment selected they must not be offered at all — that is the live D0 violation D204 found, and E22b closes it."
         },
         {
           "kind": "warlord",
@@ -105,7 +110,7 @@
             "allied_group": "Plague Legions"
           },
           "enforced": true,
-          "source": "No PLAGUE LEGIONS model can be the Warlord. Detachment-scoped, so it cannot live as cannot_be_warlord on the unit records \u2014 those six units are legal Warlords in a Chaos Daemons army, where they are native rather than allied."
+          "source": "No PLAGUE LEGIONS model can be the Warlord. Detachment-scoped, so it cannot live as cannot_be_warlord on the unit records — those six units are legal Warlords in a Chaos Daemons army, where they are native rather than allied."
         }
       ]
     },
@@ -158,7 +163,7 @@
           },
           "enforced": false,
           "unenforced_reason": "The unlocked set is an explicit list of Chaos Space Marines datasheets, and Chaos Space Marines is not built yet. Nothing is currently reachable through this effect, so the gap costs no legality today; it becomes enforceable the session CSM lands. Recorded rather than omitted so it is countable (D203).",
-          "source": "D204 ruling 3 \u2014 MFM_Chaos_Daemons_v1_0.txt carries no HERETIC ASTARTES section; the set is named inside the detachment's own rule text."
+          "source": "D204 ruling 3 — MFM_Chaos_Daemons_v1_0.txt carries no HERETIC ASTARTES section; the set is named inside the detachment's own rule text."
         }
       ]
     },
@@ -202,7 +207,7 @@
             ]
           },
           "enforced": true,
-          "source": "Detachment rule: 'Friendly TZAANGORS units have BATTLELINE.' Tzaangors (unit_id 000001034) is the sole Thousand Sons unit carrying the TZAANGORS keyword \u2014 Tzaangor Shaman and the two Tzaangor Enlightened datasheets carry their own distinct keywords, not TZAANGORS, and are not targeted (D204 ruling 2 pattern: elevation follows the exact keyword named, not the unit name substring)."
+          "source": "Detachment rule: 'Friendly TZAANGORS units have BATTLELINE.' Tzaangors (unit_id 000001034) is the sole Thousand Sons unit carrying the TZAANGORS keyword — Tzaangor Shaman and the two Tzaangor Enlightened datasheets carry their own distinct keywords, not TZAANGORS, and are not targeted (D204 ruling 2 pattern: elevation follows the exact keyword named, not the unit name substring)."
         }
       ]
     },
@@ -218,7 +223,151 @@
             ]
           },
           "enforced": true,
-          "source": "Detachment rule KEYWORDS clause: 'Tzaangors units from your army have the BATTLELINE keyword.' Same TZAANGORS-keyword scoping as Servants of Change above \u2014 Tzaangors (unit_id 000001034) only."
+          "source": "Detachment rule KEYWORDS clause: 'Tzaangors units from your army have the BATTLELINE keyword.' Same TZAANGORS-keyword scoping as Servants of Change above — Tzaangors (unit_id 000001034) only."
+        }
+      ]
+    },
+    "Space Marines|HEADHUNTER TASK FORCE": {
+      "army": "Space Marines",
+      "detachment": "Headhunter Task Force",
+      "effects": [
+        {
+          "kind": "tank_ace",
+          "target": {
+            "base_keyword": "Vehicle",
+            "except_keywords": [
+              "Fly",
+              "Walker",
+              "Drop Pod"
+            ],
+            "except_unit_types": [
+              "Fortification"
+            ]
+          },
+          "cap": 3,
+          "enforced": false,
+          "unenforced_reason": "Pool and cap are fully specified and source-verified (D273, re-verified S187 against resolved_pool()); the engine has no per-entry pick mechanism yet (no per-list-entry hook in eligibleWarlordEntries/enhancementTypeEligible, E23 build-turn scope). Recorded so the gap is counted rather than invisible (D203), same convention as Shadow Legion's HERETIC ASTARTES row. Wiring is a separate engine turn.",
+          "source": "Space Marines Faction Pack v1.0 HEADHUNTER TASK FORCE + Wahapedia Detachment_abilities.csv (faction_id=SM); rule_text byte-identical across all six armies (sha256:12 cadd53c18131, verified S182/D273 and re-verified S187). KEYWORDS clause: 'Adeptus Astartes Vehicle units from your army (excluding Fortifications, Drop Pods, Walkers and units that can Fly) have the Tank Ace keyword. In the Muster Armies step, you can select up to three Tank Ace units from your army to gain the Character keyword.'"
+        }
+      ]
+    },
+    "Black Templars|HEADHUNTER TASK FORCE": {
+      "army": "Black Templars",
+      "detachment": "Headhunter Task Force",
+      "effects": [
+        {
+          "kind": "tank_ace",
+          "target": {
+            "base_keyword": "Vehicle",
+            "except_keywords": [
+              "Fly",
+              "Walker",
+              "Drop Pod"
+            ],
+            "except_unit_types": [
+              "Fortification"
+            ]
+          },
+          "cap": 3,
+          "enforced": false,
+          "unenforced_reason": "Pool and cap are fully specified and source-verified (D273, re-verified S187 against resolved_pool()); the engine has no per-entry pick mechanism yet (no per-list-entry hook in eligibleWarlordEntries/enhancementTypeEligible, E23 build-turn scope). Recorded so the gap is counted rather than invisible (D203), same convention as Shadow Legion's HERETIC ASTARTES row. Wiring is a separate engine turn.",
+          "source": "Space Marines Faction Pack v1.0 HEADHUNTER TASK FORCE + Wahapedia Detachment_abilities.csv (faction_id=SM); rule_text byte-identical across all six armies (sha256:12 cadd53c18131, verified S182/D273 and re-verified S187). KEYWORDS clause: 'Adeptus Astartes Vehicle units from your army (excluding Fortifications, Drop Pods, Walkers and units that can Fly) have the Tank Ace keyword. In the Muster Armies step, you can select up to three Tank Ace units from your army to gain the Character keyword.'"
+        }
+      ]
+    },
+    "Blood Angels|HEADHUNTER TASK FORCE": {
+      "army": "Blood Angels",
+      "detachment": "Headhunter Task Force",
+      "effects": [
+        {
+          "kind": "tank_ace",
+          "target": {
+            "base_keyword": "Vehicle",
+            "except_keywords": [
+              "Fly",
+              "Walker",
+              "Drop Pod"
+            ],
+            "except_unit_types": [
+              "Fortification"
+            ]
+          },
+          "cap": 3,
+          "enforced": false,
+          "unenforced_reason": "Pool and cap are fully specified and source-verified (D273, re-verified S187 against resolved_pool()); the engine has no per-entry pick mechanism yet (no per-list-entry hook in eligibleWarlordEntries/enhancementTypeEligible, E23 build-turn scope). Recorded so the gap is counted rather than invisible (D203), same convention as Shadow Legion's HERETIC ASTARTES row. Wiring is a separate engine turn.",
+          "source": "Space Marines Faction Pack v1.0 HEADHUNTER TASK FORCE + Wahapedia Detachment_abilities.csv (faction_id=SM); rule_text byte-identical across all six armies (sha256:12 cadd53c18131, verified S182/D273 and re-verified S187). KEYWORDS clause: 'Adeptus Astartes Vehicle units from your army (excluding Fortifications, Drop Pods, Walkers and units that can Fly) have the Tank Ace keyword. In the Muster Armies step, you can select up to three Tank Ace units from your army to gain the Character keyword.'"
+        }
+      ]
+    },
+    "Dark Angels|HEADHUNTER TASK FORCE": {
+      "army": "Dark Angels",
+      "detachment": "Headhunter Task Force",
+      "effects": [
+        {
+          "kind": "tank_ace",
+          "target": {
+            "base_keyword": "Vehicle",
+            "except_keywords": [
+              "Fly",
+              "Walker",
+              "Drop Pod"
+            ],
+            "except_unit_types": [
+              "Fortification"
+            ]
+          },
+          "cap": 3,
+          "enforced": false,
+          "unenforced_reason": "Pool and cap are fully specified and source-verified (D273, re-verified S187 against resolved_pool()); the engine has no per-entry pick mechanism yet (no per-list-entry hook in eligibleWarlordEntries/enhancementTypeEligible, E23 build-turn scope). Recorded so the gap is counted rather than invisible (D203), same convention as Shadow Legion's HERETIC ASTARTES row. Wiring is a separate engine turn.",
+          "source": "Space Marines Faction Pack v1.0 HEADHUNTER TASK FORCE + Wahapedia Detachment_abilities.csv (faction_id=SM); rule_text byte-identical across all six armies (sha256:12 cadd53c18131, verified S182/D273 and re-verified S187). KEYWORDS clause: 'Adeptus Astartes Vehicle units from your army (excluding Fortifications, Drop Pods, Walkers and units that can Fly) have the Tank Ace keyword. In the Muster Armies step, you can select up to three Tank Ace units from your army to gain the Character keyword.'"
+        }
+      ]
+    },
+    "Deathwatch|HEADHUNTER TASK FORCE": {
+      "army": "Deathwatch",
+      "detachment": "Headhunter Task Force",
+      "effects": [
+        {
+          "kind": "tank_ace",
+          "target": {
+            "base_keyword": "Vehicle",
+            "except_keywords": [
+              "Fly",
+              "Walker",
+              "Drop Pod"
+            ],
+            "except_unit_types": [
+              "Fortification"
+            ]
+          },
+          "cap": 3,
+          "enforced": false,
+          "unenforced_reason": "Pool and cap are fully specified and source-verified (D273, re-verified S187 against resolved_pool()); the engine has no per-entry pick mechanism yet (no per-list-entry hook in eligibleWarlordEntries/enhancementTypeEligible, E23 build-turn scope). Recorded so the gap is counted rather than invisible (D203), same convention as Shadow Legion's HERETIC ASTARTES row. Wiring is a separate engine turn.",
+          "source": "Space Marines Faction Pack v1.0 HEADHUNTER TASK FORCE + Wahapedia Detachment_abilities.csv (faction_id=SM); rule_text byte-identical across all six armies (sha256:12 cadd53c18131, verified S182/D273 and re-verified S187). KEYWORDS clause: 'Adeptus Astartes Vehicle units from your army (excluding Fortifications, Drop Pods, Walkers and units that can Fly) have the Tank Ace keyword. In the Muster Armies step, you can select up to three Tank Ace units from your army to gain the Character keyword.'"
+        }
+      ]
+    },
+    "Space Wolves|HEADHUNTER TASK FORCE": {
+      "army": "Space Wolves",
+      "detachment": "Headhunter Task Force",
+      "effects": [
+        {
+          "kind": "tank_ace",
+          "target": {
+            "base_keyword": "Vehicle",
+            "except_keywords": [
+              "Fly",
+              "Walker",
+              "Drop Pod"
+            ],
+            "except_unit_types": [
+              "Fortification"
+            ]
+          },
+          "cap": 3,
+          "enforced": false,
+          "unenforced_reason": "Pool and cap are fully specified and source-verified (D273, re-verified S187 against resolved_pool()); the engine has no per-entry pick mechanism yet (no per-list-entry hook in eligibleWarlordEntries/enhancementTypeEligible, E23 build-turn scope). Recorded so the gap is counted rather than invisible (D203), same convention as Shadow Legion's HERETIC ASTARTES row. Wiring is a separate engine turn.",
+          "source": "Space Marines Faction Pack v1.0 HEADHUNTER TASK FORCE + Wahapedia Detachment_abilities.csv (faction_id=SM); rule_text byte-identical across all six armies (sha256:12 cadd53c18131, verified S182/D273 and re-verified S187). KEYWORDS clause: 'Adeptus Astartes Vehicle units from your army (excluding Fortifications, Drop Pods, Walkers and units that can Fly) have the Tank Ace keyword. In the Muster Armies step, you can select up to three Tank Ace units from your army to gain the Character keyword.'"
         }
       ]
     }
