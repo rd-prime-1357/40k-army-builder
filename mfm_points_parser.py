@@ -18,7 +18,9 @@ future all-faction MFM dump, because both reduce to the same structure:
     SUPPORT                         (character only: verbatim attach-eligible list)
     <comma-separated unit list>
 
-Outputs Unit_Points.csv (Size_1..3, Points_b-t for brackets 1-3 x tiers 1-3) and,
+Outputs Unit_Points.csv (Size_1..3, Points_b-t for brackets 1-3 x tiers 1-3, plus an
+optional Points_b-4 per bracket for units with a captured esc4 4th+ tier -- blank on
+every other unit) and,
 when given the transformer's Unit_Stats.csv, patches its "Leader Eligible Units"
 column with the verbatim SUPPORT lists. Names are matched to the datasheet set;
 mismatches in either direction are flagged.
@@ -522,9 +524,26 @@ def to_points_row(army, unit_name, info):
             pts.append(eff[t].get(size, "") if size is not None else "")
     # schema column order is Points_1-1,2-1,3-1, 1-2,2-2,3-2, 1-3,2-3,3-3
     # eff index t already iterates tier; inner b iterates bracket -> matches col order
+
+    # B94 pipeline-emit. The esc4 4th+ tier ("YOUR 4TH + UNIT COSTS") is captured
+    # into info["_esc4_fourth_plus"] by the "esc4" branch above (a size->cost dict,
+    # same shape as every other tier), but until now was never written into the row
+    # -- it stopped at the in-memory parse and never reached Unit_Points.csv or
+    # units.json. Emit it as three more Points_b-4 cells, one per bracket, mirroring
+    # the existing Points_b-t column shape and the same trailing-blank-per-bracket
+    # convention as the size cells and every other tier. Empty cell -- not a repeated
+    # third_plus value -- on every unit without a captured 4th tier: convert_to_json.py
+    # reads a genuinely absent cell as None and omits the JSON key entirely, which is
+    # what the engine's fourth_plus fallback depends on (D286 / S193 copyTierPts).
+    fourth = info.get("_esc4_fourth_plus")
+    pts4 = []
+    for b in range(3):
+        size = sizes[b] if b < len(sizes) else None
+        pts4.append(fourth.get(size, "") if (fourth is not None and size is not None) else "")
+
     # B61: trailing Allied_Group column, empty for every unit except the ones tagged
     # while parsing inside a recognised allied-group section (see ALLIED_GROUP_HEADERS).
-    return [army, unit_name] + size_cells + pts + [info.get("allied_group", "")]
+    return [army, unit_name] + size_cells + pts + pts4 + [info.get("allied_group", "")]
 
 def read_stats_unitnames(path):
     """Return ordered list of (army, unit) and the raw rows for patching."""
@@ -916,6 +935,7 @@ def main():
               "Points_1-1","Points_2-1","Points_3-1",
               "Points_1-2","Points_2-2","Points_3-2",
               "Points_1-3","Points_2-3","Points_3-3",
+              "Points_1-4","Points_2-4","Points_3-4",
               "Allied_Group"]
     out_points = os.path.join(args.out_dir, "Unit_Points.csv")
     append_mode = args.append and os.path.exists(out_points)

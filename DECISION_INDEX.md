@@ -512,3 +512,15 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   the row, so B94's next step is a tooling turn to carry it through, then the data turn (folds into
   B89), then a data-side assertion. Baseline defect found: `b87`/`b88` crash without `--data-turn` —
   ticketed **B96**. Open count 16 → 17 (B96 opened; B94 stays open).
+- **D287** — B94 pipeline-emit shipped: `mfm_points_parser.py` now writes the captured esc4 4th+ tier
+  into three new `Points_b-4` CSV columns (unconditional, blank on non-esc4 units); `convert_to_json.py`
+  carries it into `points.sizes[*].fourth_plus`, gated behind an opt-in `--emit-fourth-plus` flag
+  (default off) so every existing call site — including `units_repro_check.py`'s real-source run —
+  stays byte-identical to committed `units.json`. First unconditional design broke `units_repro_check`
+  (Rubric Marines diverged from committed data because real sources now carry the 4th tier); the opt-in
+  gate resolved it. Verified via isolated synthetic CSV, real-source parser output, and a full-CLI
+  Thousand Sons build diffed flag-off vs flag-on (only Rubric Marines + Chaos Rhino change, correctly).
+  `b87_check.js` extended with a 4th fact pinning the row-level carry-through. **B96 folded in and
+  closed**: `b87`/`b88` moved into `baseline.sh`'s sources-loaded conditional, `SKIP` cleanly now
+  instead of crashing. Session also reconciled a stale manifest (Ryan's out-of-band B97/B98/B99 backlog
+  edit between S193 and S194) before starting. Open count 20 → 19 (B96 closed).

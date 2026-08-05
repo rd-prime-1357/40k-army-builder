@@ -204,16 +204,24 @@ PYEOF
 fi
 
 # ── tiered gates ────────────────────────────────────────────────────────────
+# B96: b87_check/b88_check drive mfm_points_parser.py/detachment_parser.py against
+# the raw GW MFM sources, exactly like the three repro rebuilds below — they belong
+# in this same sources-loaded conditional, not the always-run block, so a
+# sources-absent open reads them as SKIP instead of a crash misread as FAIL.
 if [ "$SOURCES_OK" -eq 1 ]; then
   gate repro_check          python3 repro_check.py
   gate units_repro_check    python3 units_repro_check.py
   gate detachments_repro    python3 detachments_repro_check.py
   gate rules_assertions     python3 rules_assertions.py --tier all
+  gate b87_check            node b87_check.js
+  gate b88_check            node b88_check.js
 else
   skip_gate repro_check
   skip_gate units_repro_check
   skip_gate detachments_repro
   gate rules_assertions     python3 rules_assertions.py --tier a
+  skip_gate b87_check
+  skip_gate b88_check
   if [ "$DATA_TURN" -eq 1 ]; then
     echo "FAIL data-turn-gate          sources not loaded — a data turn must not start tier-A-only"
     FAILS=$((FAILS+1)); TOTAL=$((TOTAL+1))
@@ -233,8 +241,6 @@ gate b56g_check           node b56g_check.js index.html unit_loadouts.json
 gate b58_check            node b58_check.js index.html unit_loadouts.json
 gate b72_check            node b72_check.js index.html unit_loadouts.json
 gate b90_check            node b90_check.js index.html
-gate b87_check            node b87_check.js
-gate b88_check            node b88_check.js
 gate e1b_check            node e1b_check.js index.html detachments.json list_store.js
 gate e1c_check            node e1c_check.js index.html detachments.json
 gate e4b_check            node e4b_check.js index.html detachments.json

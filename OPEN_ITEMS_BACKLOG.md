@@ -419,7 +419,7 @@ the code cannot currently tell apart). Turn 2 must carve these out of that exclu
 chapters. B90 turn 2 is now fully unblocked on decisions; it still runs after B88/B89 per D274's
 sequencing.
 
-### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; ENGINE TURN SHIPPED S193 (D286); product+engine+data; M; data turn folds into B89**
+### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; ENGINE TURN SHIPPED S193 (D286); PIPELINE-EMIT TURN SHIPPED S194 (D287); product+engine+data; M; data turn folds into B89**
 
 **Engine turn shipped S193 (D286).** Added an optional `fourth_plus` tier to `points.sizes[*]` and
 routed all three points sites (`ptsForEntry`, `addUnitFromRoster`, size-selector) through one shared
@@ -429,35 +429,27 @@ routed all three points sites (`ptsForEntry`, `addUnitFromRoster`, size-selector
 Python mirror `Sources.copy_tier_pts` + assertion `B94-1` pin the ladder single-source and hold JS↔
 Python in lockstep (118 assertions). `index.html` v6.16.
 
-**Remaining turns (still open):**
-1. **Tooling** — the parser captures the 4th tier as `_esc4_fourth_plus` on the in-memory `info`, but
-   `to_points_row` does **not** emit it into the CSV row, so it never reaches `units.json`. Teach the
-   points pipeline (`to_points_row` in `mfm_points_parser.py`, plus `convert_to_json.py`/`merge_factions.py`
-   as the row shape requires) to carry `_esc4_fourth_plus` through into `points.sizes[*].fourth_plus`,
-   verified against synthetic/parser output without regenerating committed `units.json`.
-2. **Data** — regenerate the 34 affected units so their rows carry the real `fourth_plus` value,
-   diff-guarded (only those 34 units' points move, `fourth_plus` added, all else byte-identical).
-   Folds into B89's adoption arc per D283 so the units migrate once.
-3. **Assertion (data-side)** — pin that the 34 units carry the correct `fourth_plus` (distinct from
-   `third_plus`), re-derived from the MFM source, once the data lands.
+**Pipeline-emit turn shipped S194 (D287).** `mfm_points_parser.py`'s `to_points_row` now emits the
+captured `_esc4_fourth_plus` tier into three new `Points_1-4`/`Points_2-4`/`Points_3-4` CSV columns
+(unconditional — populated on the 34 esc4 units, blank everywhere else, same convention as every other
+`Points_b-t` column). `convert_to_json.py` carries this into `points.sizes[*].fourth_plus`, but only
+when called with a new opt-in `--emit-fourth-plus` flag (default off) — every existing call site,
+including `units_repro_check.py`'s real-source run, stays byte-identical to committed `units.json`.
+Verified three ways without touching committed data: an isolated synthetic-CSV round trip, the real
+parser against `MFM_Thousand_Sons_v1.1.txt` (Rubric Marines' row carries 110/200, Castellan's stays
+blank), and a full-CLI Thousand Sons build diffed flag-off vs flag-on (only Rubric Marines + Chaos Rhino
+change, correctly). `b87_check.js` extended with a 4th fact pinning the row-level carry-through.
+
+**Remaining turn (still open):**
+1. **Data** — regenerate the 34 affected units by running the pipeline with `--emit-fourth-plus`, so
+   their rows carry the real `fourth_plus` value, diff-guarded (only those 34 units' points move,
+   `fourth_plus` added, all else byte-identical). Folds into B89's adoption arc per D283 so the units
+   migrate once. Followed by a data-side assertion pinning the 34 units' correct `fourth_plus` value,
+   re-derived from the MFM source.
 
 **Scope of the shape (v1.1):** 34 units across the 15 files — Rhino, Razorback, Drop Pod, Impulsor
 (loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom (Drukhari), plus Rubric Marines.
 Rare in v1_0 (only Rubric Marines + Brotherhood Terminator Squad), widespread in v1.1.
-
-### B96 — `b87_check`/`b88_check` crash instead of SKIP when GW sources are absent — **NEW S193 (D286); tooling; XS**
-
-Both harnesses invoke the parsers (`mfm_points_parser.py`, `detachment_parser.py`) directly against
-the raw GW MFM source files, but they sit in `baseline.sh`'s **always-run** gate block rather than the
-tier-B (sources-required) block. So a legitimate engine-only session that opens with `--fetch` (no
-`--data-turn`, hence no GW sources fetched) gets two `FileNotFoundError` crashes whose one-line
-summaries read identically to real gate failures — which, under the session protocol, would block work
-until reconciled. Found S193 opening B94's engine turn; re-running with `--data-turn` (which fetches
-the sources) opened green, so it did not block, but the false-failure hazard is live for any future
-engine- or tooling-only open. **Fix:** move both gates into the `if [ "$SOURCES_OK" -eq 1 ]` block so
-they `SKIP` cleanly when sources are absent, exactly as the three repro checks already do. Cheap;
-worth folding into the next tooling turn (e.g. alongside B94's pipeline-emit turn — two tooling items
-in one tooling session is turn-consistent).
 
 ### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); data; L; depends B88; spans sessions**
 Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and
@@ -842,6 +834,14 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+- **B96** — `b87_check`/`b88_check` crashed instead of SKIP when GW sources are absent — **NEW S193
+  (D286); CLOSED S194 (D287); TOOLING.** Both harnesses invoke the parsers directly against raw GW MFM
+  source files but sat in `baseline.sh`'s always-run block rather than the sources-required block, so a
+  legitimate sources-absent open got two `FileNotFoundError` crashes indistinguishable from real
+  failures. Folded into B94's S194 tooling session (two tooling items, one tooling turn — turn-
+  consistent). Fix: moved both gates into the `if [ "$SOURCES_OK" -eq 1 ]` block alongside the three
+  repro checks; they now `SKIP` cleanly when sources are absent.
 
 - **B95** — `faction_taxonomy.json`'s `built` flag disagrees with `units.json` for CSM and Thousand Sons — **NEW S191 (D284); CLOSED S192 (D285); DATA + TOOLING.** Both factions were fully built by every measure every other built faction is (CSM 58/58 units + 17 detachments + CSM-1/2/3 passing; Thousand Sons 34/34 units + 9 detachments + TS-1/2/3 passing, `Thousand_Sons_web.txt` now present resolving the old loadout-defaults blocker) — the `built: false` flag was simply stale. But checking `index.html`'s consumers of the flag before flipping it found a bigger gap: neither faction's taxonomy entry carried a `data_army` key, which `resolveUnits`/`resolveDetachments` require — missing it means a silent fallback to the generic Adeptus Astartes pool (units) or an empty list (detachments), not a clean failure. Both `built: true` and the correct `data_army` added together. New assertion `B95-1` pins the contract (every built, non-subfaction faction carries a valid `data_army`) so the same silent-fallback shape can't recur on a future faction. 117 assertions (was 116).
 - **B88** — MFM v1.1 reconciliation reports + detachment-layout parsing — **NEW S183 (D274); CLOSED S191 (D284); TOOLING/ANALYSIS.** Extended `detachment_parser.py` with the same sniff-and-normalize pattern B87 used for the points file: v1.1 splits `NAME<n>DP`/bulleted-enhancement lines across two physical lines (name, then a bare `<n>DP` or `<n> pts` line) and drops the same `UPDATED`/`FORCE DISPOSITION(S) CHANGED` notes as noise — normalization rejoins the DETACHMENTS...LEGENDS/EOF slice back into the exact v1_0 shape so the existing reader runs unmodified. Two DETACHMENTS-only quirks not present in the points file, both verified against source: a bare `▲` marker with no parenthesised delta on a DP line (Thousand Sons' Hexwarp Thrallband, 2DP→3DP) and a `UNIQUE TAG REMOVED` note (World Eaters — missed on a first pass keyed only off the Space Marines file, caught once World Eaters was actually parsed, then confirmed complete by an exhaustive all-caps-line sweep of all 15 files' DETACHMENTS blocks). v1_0 output proven byte-identical on all 10 files in `ARMY_TO_MFM`; all 15 v1.1 files now parse their DETACHMENTS block cleanly (0 before). Net-new `b88_check.js` pins all of it; `rules_assertions.py`'s P4 source census updated for the new report filename. Generalized `mfm_reconcile.py` from the old one-off SM-vs-`mfm_sm.txt` pass into a real per-faction tool: for the 10 built-army MFM file pairs, diffs points, roster, wargear, attach lists (including Leader/Support flips), and detachment fields/enhancements between v1_0 (what the app is built from) and v1.1 (the newest capture), classifying every delta adopt-mechanically vs investigate-first. Caught and fixed a real bug in the first draft before shipping: force-disposition and unique-tag changes on an otherwise-matched detachment were being counted as adopt-mechanically — they're a rules-shape property, not a value, so they were moved to investigate-first. Final: 189 adopt-mechanically, 71 investigate-first across the 10 factions; report banked as `MFM_v1_1_Reconciliation.md`. Output is B89's work order. **B95 opened**, incidental: `faction_taxonomy.json` marks Chaos Space Marines and Thousand Sons `built: false` though `units.json` holds real data for both — found while scoping this report to "built" factions.

@@ -23,6 +23,13 @@
  *     value the shipped tool was overcharging (110/200) before B87. The un-
  *     representable 4th+ tier is captured, not dropped.
  *
+ *  4. B94 pipeline-emit. The captured 4th+ tier reaches the row: to_points_row's
+ *     output for an esc4 unit carries Points_1-4/2-4/3-4 matching info's
+ *     _esc4_fourth_plus dict, and a non-esc4 unit's row carries three blank cells in
+ *     those same slots (not a repeated third_plus value). This is parser-only —
+ *     it does not touch committed units.json, which stays 3-tier until B94's
+ *     separate data turn.
+ *
  * Usage:  node b87_check.js
  * Exit 0 if every fact holds, 1 otherwise.
  */
@@ -124,10 +131,38 @@ print(json.dumps({'castellan': castellan, 'lancer': lancer}))
   }
 }
 
+// ---- Fact 4: B94 pipeline-emit — the esc4 4th+ tier reaches the row ----------
+{
+  const code = `
+import json, sys
+sys.path.insert(0, '.')
+import mfm_points_parser as m
+u = m.parse_mfm('MFM_Thousand_Sons_v1.1.txt')
+info = u[m.norm('RUBRIC MARINES')]
+row = m.to_points_row('Thousand Sons', 'Rubric Marines', info)
+u2 = m.parse_mfm('MFM_Black_Templars_v1_0.txt')
+info2 = u2[m.norm('CASTELLAN')]
+row2 = m.to_points_row('Black Templars', 'CASTELLAN', info2)
+print(json.dumps({'rubric': row, 'esc4_dict': info.get('_esc4_fourth_plus'),
+                   'castellan': row2}))
+`;
+  const res = py(code);
+  // header: [army, unit, size_1,size_2,size_3, pts(9) idx5-13, pts4(3) idx14-16, allied idx17]
+  const r = res.rubric;
+  const fourth = res.esc4_dict; // {"5": 110, "10": 200}
+  if (!(r[14] === fourth['5'] && r[15] === fourth['10'] && r[16] === '')) {
+    failures.push(`fact4: Rubric Marines esc4 row did not carry the captured 4th tier — ${JSON.stringify(r)}`);
+  }
+  const c2 = res.castellan;
+  if (!(c2[14] === '' && c2[15] === '' && c2[16] === '')) {
+    failures.push(`fact4: Castellan (non-esc4) row carries a non-blank 4th-tier cell — ${JSON.stringify(c2)}`);
+  }
+}
+
 if (failures.length) {
   console.log('b87_check FAIL:');
   for (const f of failures) console.log('  ' + f);
   process.exit(1);
 }
-console.log('all B87 checks pass (v1.1 full costing; v1_0 stable; Rubric Marines 1st-to-3rd fix)');
+console.log('all B87 checks pass (v1.1 full costing; v1_0 stable; Rubric Marines 1st-to-3rd fix; B94 4th-tier row carry-through)');
 process.exit(0);

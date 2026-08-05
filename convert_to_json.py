@@ -319,10 +319,20 @@ def build_weapon_abilities(rows):
 # Build units.json
 # ---------------------------------------------------------------------------
 
-def build_units(data):
+def build_units(data, emit_fourth_plus=False):
     """
     Join all unit-related tabs on Army Name + Unit Name + Model Group
     and produce the nested structure defined in D26.
+
+    emit_fourth_plus (B94 pipeline-emit, tooling turn S194): opt-in, default False.
+    mfm_points_parser.py now always writes Points_{slot}-4 when it captures an esc4
+    4th+ tier, but this function only reads that cell into a "fourth_plus" JSON key
+    when the caller explicitly asks for it. Default False keeps every existing call
+    site -- including units_repro_check.py's unflagged real-source run -- byte-
+    identical to the currently-committed 3-tier units.json, so the repro gates stay
+    green and the pipeline change is provably inert until B94's data turn passes
+    True on purpose. The capability is fully wired end-to-end (see the CLI flag in
+    main()); it is simply not exercised by default.
     """
 
     stats_rows      = data["unit_stats"]
@@ -559,12 +569,27 @@ def build_units(data):
                     size_value = size_slots[idx]
                     if size_value is None:
                         continue  # trailing blank size slot — skip
-                    size_entries.append({
+                    size_entry = {
                         "size":          size_value,
                         "first_unit":    to_int(points_row.get(f"Points_{slot}-1")),
                         "second_unit":   to_int(points_row.get(f"Points_{slot}-2")),
                         "third_plus":    to_int(points_row.get(f"Points_{slot}-3")),
-                    })
+                    }
+                    # B94 pipeline-emit. Points_{slot}-4 is only populated by
+                    # mfm_points_parser.py on the 34 esc4 units (a captured "4TH +"
+                    # tier); every other unit's cell is blank, and to_int returns None
+                    # for a blank cell. Gated on emit_fourth_plus (see docstring) so
+                    # this function's default call stays inert; when the caller does
+                    # opt in, the key is added only when the value is genuinely
+                    # present -- no key at all, not a null or a repeated third_plus,
+                    # on units with no 4th break -- because the engine's copyTierPts
+                    # fallback (S193/D286) reads absence of the key, not a sentinel
+                    # value, to fall back to third_plus.
+                    if emit_fourth_plus:
+                        fourth_plus = to_int(points_row.get(f"Points_{slot}-4"))
+                        if fourth_plus is not None:
+                            size_entry["fourth_plus"] = fourth_plus
+                    size_entries.append(size_entry)
 
                 points = {
                     "sizes": size_entries,
@@ -671,6 +696,11 @@ def main():
                         help="Folder containing the nine source CSVs.")
     parser.add_argument("--output-dir", default=OUTPUT_DIR,
                         help="Folder to write the JSON outputs into.")
+    parser.add_argument("--emit-fourth-plus", action="store_true", default=False,
+        help="B94: opt-in, off by default. Carry a captured esc4 4th+ tier through "
+             "into points.sizes[*].fourth_plus. Every existing call site (including "
+             "units_repro_check.py) omits this flag and stays byte-identical to the "
+             "committed 3-tier units.json; the B94 data turn passes it explicitly.")
     parser.add_argument("--bundles", default=None,
                         help="Path to bundled_swaps.json. Defaults to "
                              "bundled_swaps.json in the input folder.")
@@ -732,7 +762,7 @@ def main():
 
     # Build units.json
     print("Building units.json...")
-    units = build_units(data)
+    units = build_units(data, emit_fourth_plus=args.emit_fourth_plus)
     units_path = os.path.join(output_dir, "units.json")
     with open(units_path, "w", encoding="utf-8") as f:
         json.dump(units, f, indent=2, ensure_ascii=False)

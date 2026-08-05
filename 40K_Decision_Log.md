@@ -10826,3 +10826,71 @@ through one helper adds the capability with zero behavior change on current data
 single-source, and pins it against drift, while leaving the data migration to the turn that can do it
 once alongside B89. B94's engine turn is shipped; its data and assertion turns remain open. Open
 count 16 → 17 (B96 opened; B94 stays open pending its data + assertion turns).
+
+## D287 — B94 pipeline-emit shipped: the captured esc4 4th+ tier now reaches Unit_Points.csv and, opt-in, points.sizes[*].fourth_plus; B96 (baseline tiering) folded in and closed (S194)
+
+**Turn type: tooling-only.** Session opened on a failing baseline: `pipeline_manifest.json` was stale
+against `OPEN_ITEMS_BACKLOG.md`. Traced before touching anything — cloned the public repo, hashed
+`OPEN_ITEMS_BACKLOG.md` at the commit matching the manifest's pinned hash versus the current commit,
+confirmed a single additive commit (`b9ad46b`, Ryan, +53/-1 lines, only that file) had added B97/B98/B99
+between S193 and S194 outside a session. Mount and repo agreed with each other, disagreed only with the
+stale manifest entry. Regenerated the manifest (`--write`) to reconcile; both previously-failing gates
+(`rules_assertions`, `pipeline_manifest`) went green. Also confirmed `40K_Decision_Log.md`'s two-session
+absence from the `/mnt/project` mount is mount staleness, not a real gap — present, current, and hash-
+matching in the repo; `baseline.sh --fetch` pulls it in as an overlay file regardless.
+
+**Read the real consumer contracts before designing**, per the S194 prompt. `to_points_row`'s row is a
+fixed-width positional list (`[army, unit] + 3 size cells + 9 Points_b-t cells + [allied_group]`);
+`convert_to_json.py` reads `Unit_Points.csv` via `csv.DictReader` (name-keyed, order-independent) and
+builds each size entry's `first_unit`/`second_unit`/`third_plus` from `Points_{slot}-1/2/3`.
+`merge_factions.py` never touches the points schema at all — it concatenates already-built per-army
+JSON blocks, so no change was needed there.
+
+**Parser side (`mfm_points_parser.py`): three new columns, unconditional.** Added `Points_1-4`,
+`Points_2-4`, `Points_3-4` to the CSV header, placed after the existing `Points_b-t` block and before
+the trailing `Allied_Group` column — same bracket-tier naming convention, same trailing-blank-per-
+bracket convention as every other tier. `to_points_row` now emits these from
+`info["_esc4_fourth_plus"]` (a size→cost dict, same shape as any other tier) when present, and three
+blank cells when it isn't. Because `convert_to_json.py` reads the CSV by column name, this addition is
+positionally safe regardless of where in the row it sits.
+
+**JSON side (`convert_to_json.py`): carry-through wired but opt-in, not unconditional.** First
+implementation made `build_units` unconditionally add a `fourth_plus` key whenever the CSV cell was
+populated. `units_repro_check` then failed — 000003583/000001020 (Rubric Marines) diverged from the
+committed `units.json`, because the *real* GW sources do carry a 4th tier for those units now that the
+parser captures it, so the full from-source pipeline no longer reproduced the currently-committed
+3-tier data byte-for-byte. This directly violated the prompt's inertness requirement. **Fix:** added
+`emit_fourth_plus` as a parameter to `build_units` (default `False`) and a matching `--emit-fourth-plus`
+CLI flag on `convert_to_json.py` (default off). Every existing call site, including
+`units_repro_check.py`'s unflagged real-source run, is unaffected and stays byte-identical to committed
+`units.json`; the capability is fully wired end-to-end and the B94 data turn will pass the flag on
+purpose when it's ready to commit the schema change. Re-ran `units_repro_check`: green.
+
+**Verification, without regenerating committed `units.json`:**
+- Isolated synthetic CSV → JSON test: an esc4 row carries `fourth_plus`; a non-esc4 row carries no key
+  at all (not a null, not a repeated `third_plus`).
+- Real-source test against `MFM_Thousand_Sons_v1.1.txt`: `to_points_row` on Rubric Marines emits
+  `Points_1-4=110, Points_2-4=200, Points_3-4=""`, matching the captured `_esc4_fourth_plus` dict
+  exactly; Castellan (v1_0, non-esc4) emits three blank cells.
+- Full-CLI integration test: ran the real Thousand Sons build (transform → points → convert) twice, once
+  without `--emit-fourth-plus` and once with, diffed the two `units.json` outputs. Exactly two unit_ids
+  changed — Rubric Marines and Chaos Rhino, Thousand Sons' two esc4 units — each gaining a correctly-
+  valued `fourth_plus` on the affected size brackets and nothing else.
+- `b87_check.js` extended with a fourth fact pinning the row-level carry-through (Rubric Marines'
+  esc4 row carries the captured tier; Castellan's non-esc4 row carries three blank cells) so a future
+  regression in either the capture or the emission fails the baseline.
+
+**B96 folded in and closed.** Moved `b87_check`/`b88_check` from `baseline.sh`'s always-run block into
+the `SOURCES_OK` conditional, matching the three repro checks — they now `SKIP` cleanly on a
+sources-absent open instead of crashing in a way that reads identically to a real failure. Verified by
+inspection of the tiering logic; both gates still run and pass under `--data-turn`.
+
+**Rationale:** the opt-in gate is the only design that satisfies both halves of the turn's brief at
+once — "teach the pipeline to carry the value through" and "the pipeline change must be provably inert
+until the data turn runs it." Gating at the JSON-emission boundary (rather than, say, not writing the
+CSV columns at all) keeps the parser's capture unconditional and fully testable now, while deferring
+the one step that actually changes committed output to the turn explicitly scoped to do it. Full
+baseline green under `--fetch --data-turn` (32/32) after the manifest regeneration described above.
+
+Backlog: B96 closes (folded into this session). B94 stays open — pipeline-emit turn shipped; the data
+turn (folding into B89 per D283) and the data-side assertion remain. Open count 20 → 19.
