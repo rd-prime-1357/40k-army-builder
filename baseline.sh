@@ -233,6 +233,7 @@ gate b56g_check           node b56g_check.js index.html unit_loadouts.json
 gate b58_check            node b58_check.js index.html unit_loadouts.json
 gate b72_check            node b72_check.js index.html unit_loadouts.json
 gate b90_check            node b90_check.js index.html
+gate b87_check            node b87_check.js
 gate e1b_check            node e1b_check.js index.html detachments.json list_store.js
 gate e1c_check            node e1c_check.js index.html detachments.json
 gate e4b_check            node e4b_check.js index.html detachments.json

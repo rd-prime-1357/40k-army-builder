@@ -45,7 +45,14 @@ POINT_NAME_OVERRIDES = {
 
 ARMY_DEFAULT = "Adeptus Astartes"
 
-COST_RE = re.compile(r"^[•\-\*]\s*(\d+)\s*models?\s*(\d+)\s*pts", re.I)
+# B87. The leading bullet is optional: v1_0 cost/composition/add-on lines carry a
+# "• " prefix, v1.1 lines drop it entirely (the only per-line difference on an
+# already-normalized v1.1 cost line -- see normalize_v1_1). Making the bullet optional,
+# rather than stripping it in normalization, keeps a single reader for both layouts and
+# means a v1_0 file's output is provably unchanged: the same lines match the same way,
+# the "•" is simply consumed as before when present. All three line-shape readers share
+# the optional-bullet prefix `[•\-\*]?\s*`.
+COST_RE = re.compile(r"^[•\-\*]?\s*(\d+)\s*models?\s*(\d+)\s*pts", re.I)
 # B56b. A composition-shaped bracket line names roles instead of a bare model count:
 #     • 1 Sword Brother, 4 Neophytes, 5 Initiates150 pts
 # One or more "<count> <label>" groups, comma-separated, with the cost jammed onto the
@@ -53,7 +60,7 @@ COST_RE = re.compile(r"^[•\-\*]\s*(\d+)\s*models?\s*(\d+)\s*pts", re.I)
 # cost boundary is unambiguous even with no separating space. Bracket size = sum of the
 # counts (matches how Size_1..3 are read elsewhere). Tried only after COST_RE misses.
 COMPOSITION_RE = re.compile(
-    r"^[•\-\*]\s*(\d+\s+[^,\d]+(?:,\s*\d+\s+[^,\d]+)*)(\d+)\s*pts\s*$", re.I
+    r"^[•\-\*]?\s*(\d+\s+[^,\d]+(?:,\s*\d+\s+[^,\d]+)*)(\d+)\s*pts\s*$", re.I
 )
 COMPOSITION_COUNT_RE = re.compile(r"(\d+)\s+[^,\d]+")
 # B56g. Split a composition string into its individual (count, label) groups so the
@@ -69,7 +76,7 @@ GROUP_SPLIT_RE = re.compile(r"(\d+)\s+([^,\d]+)")
 # 1) is not the unit's size -- it counts copies of the add-on itself. Previously
 # unmatched by any line-shape and silently dropped (a defect predating and separate
 # from B58). Tried only after COST_RE and COMPOSITION_RE both miss.
-ADDON_RE = re.compile(r"^[•\-\*]\s*\+\s*(\d+)\s+([^\d]+?)(\d+)\s*pts\s*$", re.I)
+ADDON_RE = re.compile(r"^[•\-\*]?\s*\+\s*(\d+)\s+([^\d]+?)(\d+)\s*pts\s*$", re.I)
 
 def _parse_groups(text):
     groups = []
@@ -89,6 +96,20 @@ TIER_3 = re.compile(r"3rd", re.I)
 # so neither collides with TIER_12.
 TIER_1ST = re.compile(r"1st unit", re.I)
 TIER_2PLUS = re.compile(r"2nd\s*\+", re.I)
+# B87. A second escalation scheme, present in both v1_0 (rare: Rubric Marines,
+# Brotherhood Terminator Squad) and v1.1 (widespread on dedicated transports plus
+# Rubric Marines): "YOUR 1ST TO 3RD UNITS COST" / "YOUR 4TH + UNIT COSTS". The copy
+# break is at the 4th copy, one later than the 1st-to-2nd/3rd+ scheme. TIER_1TO3
+# requires "1st to 3rd" (absent from "1st to 2nd"); TIER_4PLUS requires "4th +"/"4th+"
+# (absent everywhere else), so neither collides with the existing tier matchers.
+# Before B87 the parser had no reader for this shape: its two tier lines both matched
+# nothing, the unit fell through to `single` mode, and the LAST line seen (the pricier
+# 4th+ bracket) became the unit's only price -- overcharging every 1st-3rd copy. Live
+# example: Rubric Marines shipped at the 4th+ price. Fixing the reader here does not
+# itself re-price anything (that is a separate data turn); it makes the parser capture
+# both tiers so the downstream schema decision has correct input.
+TIER_1TO3 = re.compile(r"1st to 3rd", re.I)
+TIER_4PLUS = re.compile(r"4th\s*\+", re.I)
 SKIP_HEADERS = re.compile(r"^(your |munitorum|points value|wargear|enhancement)", re.I)
 # B35 / D107. A unit's WARGEAR OPTIONS block prices individual items:
 #     WARGEAR OPTIONS
@@ -143,9 +164,78 @@ def is_unit_header(line):
     upper_ratio = sum(c.isupper() for c in letters) / len(letters)
     return upper_ratio > 0.9
 
+# B87. v1.1 layout support.
+#
+# GW's MFM v1.1 files use a new page layout. Rather than fork the parser, a single
+# reader handles both editions: a per-file sniff detects v1.1, and if so a
+# normalization pass rewrites each v1.1-specific quirk into the exact v1_0 line shape
+# the existing readers already parse. A v1_0 file is never touched by normalization
+# (the sniff returns False), so its output is provably identical to before B87.
+#
+# The quirks normalization removes or rewrites, all v1.1-exclusive:
+#   - the leading "UNITS" section header (v1_0 files open straight on a unit name)
+#   - standalone change-marker lines: "▲", "▼", "▲▼", "▼▲"
+#   - "UPDATED" and the annotation lines that follow it ("REQUISITION THRESHOLDS
+#     REMOVED", "FORCE DISPOSITION(S) CHANGED") -- editorial notes, not data
+#   - inline cost annotations INSIDE a cost line: "4 models▼ (-10) 100 pts" and
+#     "1 model▲ (+10) 255 pts" -> "4 models 100 pts" / "1 model 255 pts". Only the
+#     FINAL printed value is the current cost (MFM_Instructions.txt: the +/- is the
+#     delta since the previous MFM and is disregarded for list building). The marker
+#     and its parenthesised delta are removed; the trailing number is left exactly as
+#     printed. This never alters a cost value -- it only deletes the annotation.
+#
+# The blank line v1.1 inserts before a LEADER/SUPPORT attach list needs no handling:
+# the existing attach-list reader already skips blank lines.
+
+# Self-identifying: these markers appear only in v1.1 files. A v1_0 file contains none
+# of them, so a single hit is sufficient and safe.
+_V11_MARKERS = ("\u25b2", "\u25bc")  # ▲ ▼
+_V11_STANDALONE_MARKERS = {"\u25b2", "\u25bc", "\u25b2\u25bc", "\u25bc\u25b2"}
+_V11_UPDATED_NOTES = {"UPDATED", "REQUISITION THRESHOLDS REMOVED",
+                      "FORCE DISPOSITION(S) CHANGED"}
+# Inline annotation inside a cost line: a marker optionally followed by a "(±N)" delta,
+# sitting between the "models" token and the final "pts" value. Removed wholesale.
+_V11_INLINE_ANNOT = re.compile(r"\s*[\u25b2\u25bc]+\s*(?:\([+\-]\d+\)\s*)?")
+
+def sniff_is_v1_1(lines):
+    """True iff the file uses the v1.1 layout. Keyed on the ▲/▼ change markers, which
+    are absent from every v1_0 file. Checked over the whole file, not just the head, so
+    a file whose first units happen to be unchanged still identifies correctly."""
+    for ln in lines:
+        if any(mk in ln for mk in _V11_MARKERS):
+            return True
+    return False
+
+def normalize_v1_1(lines):
+    """Rewrite v1.1-specific lines into the v1_0 shape the existing readers parse.
+    Cost VALUES are never changed -- only v1.1-exclusive annotations/markers/headers
+    are stripped. Returns a new list; the caller has already confirmed v1.1 via sniff."""
+    out = []
+    for ln in lines:
+        stripped = ln.strip()
+        # Drop the leading section header and the standalone change markers outright.
+        if stripped == "UNITS":
+            continue
+        if stripped in _V11_STANDALONE_MARKERS:
+            continue
+        if stripped in _V11_UPDATED_NOTES:
+            continue
+        # Strip an inline annotation from a cost line, leaving the final value intact:
+        #   "4 models▼ (-10) 100 pts" -> "4 models 100 pts"
+        if any(mk in ln for mk in _V11_MARKERS):
+            ln = _V11_INLINE_ANNOT.sub(" ", ln)
+        out.append(ln)
+    return out
+
+
 def parse_mfm(path):
     with open(path, encoding="utf-8-sig") as f:
         lines = [ln.rstrip("\n").rstrip("\r") for ln in f]
+
+    # B87: v1.1 files are normalized into the v1_0 line shape before parsing; v1_0
+    # files pass through untouched (sniff returns False), so their output is unchanged.
+    if sniff_is_v1_1(lines):
+        lines = normalize_v1_1(lines)
 
     def next_meaningful(idx):
         j = idx + 1
@@ -155,7 +245,8 @@ def parse_mfm(path):
 
     def is_tier(s):
         return bool(TIER_SINGLE.search(s) or TIER_12.search(s) or TIER_3.search(s)
-                    or TIER_1ST.search(s) or TIER_2PLUS.search(s))
+                    or TIER_1ST.search(s) or TIER_2PLUS.search(s)
+                    or TIER_1TO3.search(s) or TIER_4PLUS.search(s))
 
     def is_real_unit_header(idx):
         # A unit name is an all-caps line immediately followed (next meaningful
@@ -236,6 +327,17 @@ def parse_mfm(path):
                 cur["mode"] = "split"; cur["tiers"].append({})
             i += 1; continue
         if TIER_2PLUS.search(line):
+            if cur:
+                cur["tiers"].append({})
+            i += 1; continue
+        # B87: "1st to 3rd" is checked before TIER_3 ("3rd") because it contains that
+        # substring; "4th +" has no overlap with any other tier line. Both open a new
+        # tier dict exactly like the other schemes. Mode "esc4" is read in to_points_row.
+        if TIER_1TO3.search(line):
+            if cur:
+                cur["mode"] = "esc4"; cur["tiers"].append({})
+            i += 1; continue
+        if TIER_4PLUS.search(line):
             if cur:
                 cur["tiers"].append({})
             i += 1; continue
@@ -386,7 +488,20 @@ def to_points_row(army, unit_name, info):
     size_cells = [sizes[i] if i < len(sizes) else "" for i in range(3)]
 
     # normalize tier list to 3 copy-tiers
-    if info["mode"] == "esc1" and len(tiers) >= 2:
+    if info["mode"] == "esc4" and len(tiers) >= 2:
+        # B87. "1st to 3rd" / "4th +": copies 1, 2 and 3 all price at t1; the 4th
+        # copy onward prices at t2. The current 3-copy-tier schema (copy-1, copy-2,
+        # copy-3+) has no slot for a break at the 4th copy -- copy-3+ IS the last
+        # tier and it belongs to the 1st-to-3rd band, so t1 is the correct value for
+        # every schema tier. Emit t1 across all three (correct for copies 1-3) rather
+        # than letting the pricier 4th+ line win, which is exactly the pre-B87 bug
+        # (single-mode fallthrough kept the last line = t2). The un-representable 4th+
+        # tier is attached for reporting so the deferred schema turn can see it; it is
+        # NOT dropped silently. Whether to add a real 4th tier is a separate decision.
+        t1 = tiers[0]; t4 = tiers[1]
+        eff = [t1, t1, t1]
+        info["_esc4_fourth_plus"] = t4
+    elif info["mode"] == "esc1" and len(tiers) >= 2:
         # "1st unit" / "2nd + unit": first copy = t1; every copy from the 2nd
         # on (incl. 3rd+) = t2, so copy-tier-3 mirrors copy-tier-2.
         t1 = tiers[0]; t2 = tiers[1]
@@ -486,6 +601,25 @@ FACTION_BY_MFM = {
     'MFM_World_Eaters_v1_0.txt': 'WE',
     'MFM_Chaos_Daemons_v1_0.txt': 'CD',
     'MFM_Drukhari_v1_0.txt': 'DRU',
+    # B87: v1.1 files, filenames accepted as-uploaded per D275 (note the space, not an
+    # underscore, in the Chaos Daemons file). Chaos Knights v1.1 is present in the
+    # source set but is not yet a priority faction; mapped here so a wargear run that
+    # includes it resolves rather than flagging an unknown-faction file.
+    'MFM_Space_Marines_v1.1.txt': 'SM',
+    'MFM_Black_Templars_v1.1.txt': 'SM',
+    'MFM_Blood_Angels_v1.1.txt': 'SM',
+    'MFM_Dark_Angels_v1.1.txt': 'SM',
+    'MFM_Death_Watch_v1.1.txt': 'SM',
+    'MFM_Space_Wolves_v1.1.txt': 'SM',
+    'MFM_Grey_Knights_v1.1.txt': 'GK',
+    'MFM_Chaos_Space_Marines_v1.1.txt': 'CSM',
+    'MFM_Death_Guard_v1.1.txt': 'DG',
+    'MFM_Thousand_Sons_v1.1.txt': 'TS',
+    'MFM_Emperors_Children_v1.1.txt': 'EC',
+    'MFM_World_Eaters_v1.1.txt': 'WE',
+    'MFM_Chaos Daemons_v1.1.txt': 'CD',
+    'MFM_Drukhari_v1.1.txt': 'DRU',
+    'MFM_Chaos_Knights_v1.1.txt': 'CK',
 }
 
 def _datasheet_index(datasheets_csv):

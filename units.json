@@ -58485,15 +58485,15 @@
           "sizes": [
             {
               "size": 5,
-              "first_unit": 110,
-              "second_unit": 110,
-              "third_plus": 110
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
             },
             {
               "size": 10,
-              "first_unit": 200,
-              "second_unit": 200,
-              "third_plus": 200
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
             }
           ]
         },
@@ -61550,15 +61550,15 @@
           "sizes": [
             {
               "size": 5,
-              "first_unit": 110,
-              "second_unit": 110,
-              "third_plus": 110
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
             },
             {
               "size": 10,
-              "first_unit": 200,
-              "second_unit": 200,
-              "third_plus": 200
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 190
             }
           ]
         },

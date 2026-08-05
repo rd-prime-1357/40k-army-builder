@@ -475,3 +475,10 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   native-rebuild plan. B92 closed as a duplicate of D274's already-decided MFM-edition policy;
   B87→B88→B89 is the real execution path, now confirmed unblocked. Open count 19 → 17
   (B91, B92 closed).
+- **D283** — B87 shipped: `mfm_points_parser.py` reads the MFM v1.1 layout via a per-file sniff +
+  normalization pass (all 15 v1.1 files cost fully, v1_0 output unchanged except two corrected units).
+  A shipped Rubric Marines overcharge (CSM + TS, 110/200 → correct 100/190 for the 1st-to-3rd copies)
+  found and fixed in-flight; the `1st-to-3rd/4th+` tier shape now has a reader, the 4th+ tier captured
+  for B94. B90's Legends/Forge-World roster question answered (yes — a chapter's own MFM prices them
+  legal). v1.1 detachment parsing rescoped to B88. Net-new `b87_check.js`. B87 closed, B94 opened,
+  open count unchanged at 17.

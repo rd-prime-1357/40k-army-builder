@@ -3,7 +3,17 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **17 open** as of S189 (down from 19 at S188): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+not here, it isn't open. **17 open** as of S190 (unchanged count from S189): B69, B70, B75, B85,
+B86, P2, P4, E23, B67b, E12, B17, B88, B89, B90, E28, B93, B94. B87 closed (D283, tooling turn):
+mfm_points_parser.py now reads the MFM v1.1 layout via a per-file sniff + normalization pass, all 15
+v1.1 files cost fully (179/179 for SM, 0 before), v1_0 output byte-identical except the two units B87
+corrected. B94 added (D283): the deferred copy-4 tier-schema decision for the 34 units using the
+1st-to-3rd/4th+ shape in v1.1 — a "how it behaves" product/schema call plus its engine+data work.
+B90's last sub-question answered this session (D283): Legends/Forge-World datasheets a chapter's own
+current MFM prices ARE legal roster members — B90 turn 2 now fully unblocked (runs after B88/B89 per
+D274 sequencing). One shipped points bug fixed in-flight this turn: Rubric Marines (CSM + TS) was
+overcharging every 1st-3rd copy at the 4th+ price (110/200); corrected to 100/190.
+**17 open** as of S189 (down from 19 at S188): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
 B17, B87, B88, B89, B90, E28, B93. B91 and B92 closed (D282, tooling/doc turn): the two decision-log
 files merged into one canonical `40K_Decision_Log.md` (byte-diffed first, every D-number 0–281
 confirmed present exactly once); B90's roster mechanism confirmed against `MFM_Black_Templars_v1.1.txt`
@@ -324,29 +334,48 @@ built as exactly what its own MFM lists, with no reference to the generic pool. 
 S189:** roster target is the source-verified count (~90 for BT, not 76) and MFM edition should never
 lock to one version — both already match D274's intake policy and this turn's rebuild target.
 **Still open:** whether Legends/Forge-World datasheets present in a chapter's MFM (Astraeus,
-Thunderhawk for BT) count as legal matched-play roster members — not yet confirmed by Ryan. Turn 2
-resumes once that's answered and B87→B88→B89 (the MFM edition arc, now unblocked — see Closed/Shipped)
-clears ahead of it, per D274's own sequencing.
+Thunderhawk for BT) count as legal matched-play roster members — **ANSWERED S190 (D283): yes.**
+Legends/Forge-World datasheets that a chapter's own current MFM prices ARE legal roster members for
+that chapter, sourced from the current MFM (never locked to one edition). Verified against source:
+Astraeus and Thunderhawk Gunship are priced identically to ordinary units in all five Tier-2 chapter
+MFMs, with no distinguishing marker. Note for the turn-2 build: both are currently excluded app-wide
+by `wahapedia_transform.py`'s `source_is_excluded` (their Wahapedia source is tagged "…(Forge
+World)", which the exclusion bundles with genuine Legends content — two different source categories
+the code cannot currently tell apart). Turn 2 must carve these out of that exclusion for the five
+chapters. B90 turn 2 is now fully unblocked on decisions; it still runs after B88/B89 per D274's
+sequencing.
 
-### B87 — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); tooling; M; UNBLOCKED S189 (D282) — next unblocked item**
-GW's v1.1 pages use a new layout the current parser reads as zero costs (SM v1.1: 154/179 names
-found, 0 costed). Deltas: no bullet prefix on cost lines; "▼" markers after unit names and model
-counts; inline change annotations ("(-10)", "▲ (+10)", "UPDATED" lines) to strip — final value only;
-blank line between LEADER/SUPPORT and the attach list; new section headers (UNITS / DETACHMENTS /
-ENHANCEMENTS / WARGEAR OPTIONS). Build one parser with a per-file format sniff (the layout is
-self-identifying) and per-layout readers; v1_0 files must still parse to identical output through the
-sniff path. Parse the v1.1 DETACHMENTS block (DP, force disposition, enhancement costs) into a
-structured form for B88. Add the 15 renamed v1_1 files to `source_manifest.json`. Acceptance: all 15
-banked v1.1 files parse with full cost coverage; v1_0 parse output unchanged; annotations stripped;
-baseline stays green. Filenames accepted as-uploaded per D275 (dots, spaces) — no rename step.
+### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); product+engine+data; M; blocks clean B89 adoption of the affected units**
+The MFM tier shape `YOUR 1ST TO 3RD UNITS COST` / `YOUR 4TH + UNIT COSTS` breaks the copy price at
+the 4th copy. The shipped points schema (`units.json` `points.sizes[*]` with `first_unit` /
+`second_unit` / `third_plus`) has only three copy-tiers and assumes the break at copy 3, so it cannot
+represent a 4th-copy break — `third_plus` falls inside the 1st-to-3rd band. B87 made the parser read
+both tiers and, for now, emit the 1st-to-3rd price across all three schema tiers (correct for copies
+1–3) while attaching the un-representable 4th+ tier as `_esc4_fourth_plus` for this ticket to consume;
+it is captured, not dropped. **Scope of the shape (v1.1):** 34 units across the 15 files — Rhino,
+Razorback, Drop Pod, Impulsor (loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom
+(Drukhari), plus Rubric Marines. Rare in v1_0 (only Rubric Marines + Brotherhood Terminator Squad),
+widespread in v1.1. **Product/schema call (Ryan):** add a real 4th copy-tier to the points schema and
+the engine's points lookup (`index.html` `resolveUnits`/points render, `rules_assertions.py`'s Python
+mirror), or document a fold rule if the instance-limit model makes a 4th copy unreachable in practice.
+Recommendation: add the real tier — a wrong points value is D0-class, and 34 units is not an edge case.
+**Turns:** engine (schema + lookup + mirror), then data (regenerate affected units, diff-guard),
+then assertion. Sequence with B89's adoption arc so the affected units migrate once, correctly.
 
-### B88 — MFM v1.1 reconciliation reports — **NEW S183 (D274); tooling/analysis; M; depends B87**
+### B88 — MFM v1.1 reconciliation reports + detachment-layout parsing — **NEW S183 (D274); tooling/analysis; M; depends B87 (done); v1.1 detachment-layout rescoped in from B87 at S190 (D283)**
 Generalize `mfm_reconcile.py` (built for the SM old-vs-new pass) across every built faction: one
 delta report per faction — points changes, units added/removed from the MFM, attach-list changes,
 Leader/Support flips, wargear cost changes, and detachment deltas (DP, force disposition, enhancement
 costs, unique tags). Each faction compares its newest capture against the version the app was built
 from, per `source_manifest.json`. Output is B89's work order: every delta classified as
-adopt-mechanically vs investigate-first.
+adopt-mechanically vs investigate-first. **S190 rescope (D283):** B87 originally carried a clause to
+"parse the v1.1 DETACHMENTS block for B88." That work belongs here, not in `mfm_points_parser.py` —
+detachment blocks are already parsed by a *separate* parser (`detachment_parser.py`, via `MFM_DP_RE`
+/ `MFM_ENH_RE`), and adding a second detachment reader to the points parser would duplicate it. Both
+of `detachment_parser.py`'s MFM regexes assume the v1_0 layout (jammed `<NAME><n>DP`, bulleted
+`• <name><cost> pts`); v1.1 puts DP on its own line and drops the enhancement bullet with the cost on
+a separate line. So B88 must extend `detachment_parser.py` with v1.1-layout support (mirroring B87's
+sniff-and-normalize approach) before it can produce detachment deltas.
 
 ### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); data; L; depends B88; spans sessions**
 Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and
@@ -731,6 +760,8 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+- **B87** — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); CLOSED S190 (D283); TOOLING (+ one coupled 2-value data correction).** Added a per-file v1.1 sniff (keyed on the ▲/▼ change markers, absent from every v1_0 file) and a normalization pass that rewrites each v1.1-exclusive quirk into the exact v1_0 line shape the existing readers already parse: drops the leading `UNITS` header, the standalone `▲`/`▼`/`▲▼` markers, and the `UPDATED`/`REQUISITION THRESHOLDS REMOVED`/`FORCE DISPOSITION(S) CHANGED` notes; strips the inline `▼ (-10)` / `▲ (+10)` cost annotations leaving the final printed value intact. Cost lines made bullet-optional so one reader serves both editions. Result: all 15 v1.1 files cost fully (SM 179/179; 0 before), every v1_0 file byte-identical **except** the two units B87 corrected. **In-flight bug found and fixed:** the tier shape `1ST TO 3RD / 4TH+` had no reader — the parser fell through to single-mode and kept the pricier 4th+ line, so Rubric Marines (CSM 000003583, TS 000001020) shipped every 1st-3rd copy at 110/200 instead of the correct 100/190. B87 added a reader for the shape (`esc4` mode) that emits the 1st-to-3rd price across the 3-tier schema and captures the un-representable 4th+ tier for B94; the two Rubric Marines values were regenerated through the real pipeline (units_repro_check green). The v1.1 DETACHMENTS-parsing clause was rescoped out to B88 (detachments have their own parser). 15 v1.1 files registered in `source_manifest.json`. Net-new `b87_check.js` pins all three facts. **B94 opened** for the deferred copy-4 schema decision.
 
 - **B91** — Decision-log & versioned-doc canonical reconciliation — **NEW S185 (D277); CLOSED S189 (D282); TOOLING/DOC.** The unversioned name was already canonical (decided at D265/S174); sessions had drifted back to a resurrected `40K_Decision_Log_v3_0.md` without anyone noticing, since the manifest only checks that its guarded target hasn't changed, not that it's the one being written to. Byte-diffed both files before merging: agreed everywhere except D264–D275 (guarded-only) and D276–D281 (versioned-only, D276 additionally misplaced beside D42). Merged into one `40K_Decision_Log.md`, every D-number 0–281 present exactly once, D276 relocated to its correct position. The four sibling version-suffixed doc pairs confirmed byte-identical to their renamed counterparts by direct fetch, not size — safe to delete outright. Five old-named files need deleting from the repo by Ryan.
 - **B92** — MFM v1.1 edition adoption / points currency — **NEW S186 (D279); CLOSED S189 (D282), duplicate.** Already decided at D274/S183 (keep every version, adopt per-faction as versions bump); B87/B88/B89 are the tickets that execute it, opened the same session and still open. B92 restated the same question without being checked against the earlier decision; Ryan reconfirmed the same direction independently this session. B87 is the actual next unblocked step.
