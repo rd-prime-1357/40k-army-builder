@@ -10768,3 +10768,61 @@ this exact silent-fallback shape is free to recur the next time a faction's `bui
 from the boolean alone, was never just a doc correction — the data was one field short of what the
 app needed to serve either faction correctly. Fixing the field without the assertion would leave
 the same hazard live for every future faction flip. Open count 17 → 16 (B95 closed).
+
+## D286 — B94 engine turn shipped: the real 4th copy-tier landed in the schema, the engine lookup, and the Python mirror; a baseline-tiering defect found and ticketed as B96 (S193)
+
+**Turn type: engine-only.** No data regenerated — `units.json` untouched. No coupled data
+correction was needed or taken: unlike B87/S190 (where a shipped live overcharge forced the
+pipeline's hand), B94's schema addition starts from a clean baseline and the engine falls back
+gracefully on the current 3-tier data, so there was no forcing reason to mix a data turn in.
+`index.html` v6.15 → **v6.16**.
+
+**What shipped.** The MFM shape `YOUR 1ST TO 3RD UNITS COST` / `YOUR 4TH + UNIT COSTS` breaks a
+unit's copy price again at the 4th copy — 34 units (dedicated transports plus Rubric Marines). The
+committed points schema (`points.sizes[*]` with `first_unit`/`second_unit`/`third_plus`) has no slot
+for it, so every 4th+ copy of those units silently prices at `third_plus`. B94 adds an **optional
+`fourth_plus` tier** to each size row and routes every points site through **one shared helper,
+`copyTierPts`**: copies 1–3 price at first/second/third_plus; the 4th copy onward prices at
+`fourth_plus` when the row carries it, falling back to `third_plus` when it does not. The three
+former inline ladders (`ptsForEntry`, `addUnitFromRoster`, the size-selector render) now all call the
+helper, so the ladder — a D0-class points rule — lives in exactly one place and can no longer drift
+across sites. The helper sits in the `ptsForEntry`→`refreshPoints` window so it travels with the
+`ptsForEntry` slice `e10_check` extracts, which is why no harness needed editing.
+
+**Design call: optional-with-fallback, not required.** A required `fourth_plus` would break every
+committed row (none carry it) or force a data regeneration this turn — forbidden by turn-typing.
+More to the point, the MFM only prints a 4th+ line when the price actually breaks again, so the vast
+majority of units genuinely have no 4th tier; an optional field with a `third_plus` fallback mirrors
+the rules exactly and keeps `units.json` from carrying hundreds of redundant `fourth_plus ==
+third_plus` rows. Consequence: on the current data the change is **byte-identical** to pre-B94 —
+verified by executing the real JS helper against Rubric Marines' committed row (4th copy still 100,
+unchanged). Nothing re-prices until the separate data turn lands `fourth_plus` on the 34 units.
+
+**Mirror + assertion (B90's discipline).** Added `Sources.copy_tier_pts` to `rules_assertions.py` as
+the Python mirror of `copyTierPts`, and assertion **B94-1**, which pins three things: the engine
+ladder is single-source (`copyTierPts` defined once, no inline ladder survives, `fourth_plus` read in
+exactly one place); the JS and Python ladders agree on both branches (synthetic rows with and without
+`fourth_plus`); and any committed `fourth_plus` row is well-formed (numeric, and never present without
+`third_plus`). It auto-classifies tier A and passes. 118 assertions now (was 117).
+
+**Parser reality checked before designing.** Read `mfm_points_parser.py` directly rather than trust
+the ticket prose: `to_points_row` attaches the 4th+ tier to the in-memory parse `info` only — it is
+**not** emitted into the CSV row — so `_esc4_fourth_plus` never reaches `units.json` today. The next
+step for B94 is therefore a **tooling** turn teaching the points pipeline to carry `_esc4_fourth_plus`
+through into `points.sizes[*].fourth_plus`, before the data turn (which folds into B89's adoption arc
+per D283 so the 34 units migrate once) and the later data-side assertion pinning their values.
+
+**Baseline-tiering defect found, ticketed B96.** Opening with `--fetch` alone (no `--data-turn`)
+crashed `b87_check` and `b88_check`: both invoke the parsers against the raw GW MFM source files, but
+they sit in `baseline.sh`'s always-run block rather than the tier-B (sources-required) block, so a
+legitimate engine-only open without `--data-turn` gets two false failures that read identically to
+real ones. Re-running as the S193 prompt specifies (`--fetch --data-turn`) opened fully green, 32/32,
+and the session proceeded from there. The fix — move both gates into the sources-loaded block so they
+`SKIP` cleanly when sources are absent — is tooling, so it is ticketed (B96) rather than done here.
+
+**Rationale:** an accurate 4th-copy price is required to build a legal list, so the schema must be
+able to hold it — the recommendation Ryan confirmed at D285. Landing it as an optional field routed
+through one helper adds the capability with zero behavior change on current data, keeps the rule
+single-source, and pins it against drift, while leaving the data migration to the turn that can do it
+once alongside B89. B94's engine turn is shipped; its data and assertion turns remain open. Open
+count 16 → 17 (B96 opened; B94 stays open pending its data + assertion turns).

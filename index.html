@@ -2220,7 +2220,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.15';
+  const VERSION = '6.16';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3665,15 +3665,32 @@
     const sizeEntry = unit.sizes[entry.sizeIdx];
     if (!sizeEntry) return null;
     const priorCopies = armyList.filter(e => e.unit_name === entry.unit_name && e.listId < entry.listId).length;
-    let base;
-    if (priorCopies === 0)      base = sizeEntry.first_unit;
-    else if (priorCopies === 1) base = sizeEntry.second_unit;
-    else                        base = sizeEntry.third_plus;
+    const base = copyTierPts(sizeEntry, priorCopies);
     if (base == null) return null;
     // E4b: 25.04 "increase those units' points values accordingly" — the
     // enhancement is priced onto the carrying entry, so it flows through the
     // army total, the points cap and points_cache with no separate path.
     return base + wargearCostForEntry(entry, unit) + enhancementPointsForEntry(entry);
+  }
+
+  // B94/D286: the copy-tier points ladder, in ONE place. `prior` is the 0-indexed
+  // count of copies of this unit already in the list, so prior 0 is the 1st copy.
+  // Copies 1-3 price at first/second/third_plus. The MFM "YOUR 1ST TO 3RD UNITS COST"
+  // / "YOUR 4TH + UNIT COSTS" shape (34 units — dedicated transports plus Rubric
+  // Marines) breaks the price again at the 4th copy: those size rows carry a
+  // fourth_plus tier, and the 4th copy onward prices at it. Every other unit has no
+  // fourth_plus, so the 4th+ copy falls back to third_plus — which is byte-identical
+  // to the pre-B94 behavior until the fourth_plus values are regenerated into
+  // units.json in the separate data turn. Kept in this window (between ptsForEntry
+  // and refreshPoints) so it loads with ptsForEntry wherever that function is sliced
+  // out for testing. Its Python mirror is Sources.copy_tier_pts in rules_assertions.py;
+  // assertion B94-1 pins the two together (same discipline as B90's resolved_pool).
+  function copyTierPts(sizeEntry, prior) {
+    if (!sizeEntry) return null;
+    if (prior === 0) return sizeEntry.first_unit;
+    if (prior === 1) return sizeEntry.second_unit;
+    if (prior === 2) return sizeEntry.third_plus;
+    return sizeEntry.fourth_plus != null ? sizeEntry.fourth_plus : sizeEntry.third_plus;
   }
 
   // Entry cost is derived from the configuration, so it is recomputed on every render
@@ -3976,12 +3993,7 @@
     }
 
     const sizeEntry = unit.sizes[0];
-    let pts = null;
-    if (sizeEntry) {
-      if      (copyCount === 0) pts = sizeEntry.first_unit;
-      else if (copyCount === 1) pts = sizeEntry.second_unit;
-      else                      pts = sizeEntry.third_plus;
-    }
+    const pts = copyTierPts(sizeEntry, copyCount);
 
     // E21c/E22b: forbid / allied-unlock / points-sub-cap gate, on top of the
     // unit-count limit above. Refused with a reason, never silently.
@@ -4754,7 +4766,7 @@
         const s    = sizes[i];
         const isCh = entry.sizeIdx === i;
         const copyIdx = armyList.filter(e => e.unit_name === entry.unit_name && e.listId < entry.listId).length;
-        const pts = copyIdx === 0 ? s.first_unit : copyIdx === 1 ? s.second_unit : s.third_plus;
+        const pts = copyTierPts(s, copyIdx);
         html += `<div class="size-option${isCh ? ' chosen' : ''}" onclick="editSizeIdx(${entry.listId},${i})">
           <span class="size-option-label">${s.size} model${s.size===1?'':'s'}</span>
           <span class="size-option-pts">${pts !== null ? pts + ' pts' : '—'}</span>

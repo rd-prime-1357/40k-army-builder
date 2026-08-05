@@ -1,57 +1,61 @@
-# NEXT SESSION PROMPT — Session 193
+# NEXT SESSION PROMPT — Session 194
 
-## Turn type: engine-only. No exceptions.
+## Turn type: tooling-only. No exceptions.
 
-Read `SESSION_HANDOFF_192.md` first, then this prompt. Read **D285** in `40K_Decision_Log.md` in
-full before starting — it carries B95's close and B94's decision, and this session's work is B94's
-engine turn.
+Read `SESSION_HANDOFF_193.md` first, then this prompt. Read **D286** in `40K_Decision_Log.md` in
+full before starting — it carries B94's engine turn (the schema/lookup/mirror that shipped S193) and
+opens B96. This session is B94's **pipeline-emit tooling turn**, the direct dependency that unblocks
+B94's later data turn.
 
 ## Session open
-1. Baseline: `./baseline.sh --fetch --data-turn`.
-2. Verify the S192 hashes in the handoff's Files section at open.
-3. Confirm Ryan has pushed S192's changes.
-4. Check whether Ryan confirmed `40K_Decision_Log.md`'s presence/absence in the `/mnt/project`
-   mount (flagged in S192, unresolved) — if he reports it present, treat S192's mount-vs-repo
-   finding as a one-session mount staleness, not a live gap.
-5. If Ryan spot-checked CSM/Thousand Sons in the running app per S192's action item, note the
-   result; if not, a quick visual check that both factions resolve their real rosters (not the
-   generic Adeptus Astartes pool) is worth doing before building on top of B95's fix.
+1. Baseline: `./baseline.sh --fetch --data-turn`. (Use `--data-turn` — this turn reads GW sources,
+   and it also sidesteps the B96 false-failure until B96 is fixed.)
+2. Verify the S193 hashes in the handoff's Files section at open.
+3. Confirm Ryan has pushed S193's changes (`repo_check` / `fetch-verify` will flag drift otherwise).
+4. `40K_Decision_Log.md` mount question (open since S192): still absent from the `/mnt/project` mount
+   but present and current in the repo at close of S193. If Ryan reports it present now, treat the
+   earlier finding as resolved mount staleness; if still absent, it is a real project-area gap worth
+   a file-list screenshot, since this prompt and the next depend on reading it at open.
 
-## This session's work — B94 engine turn (Ryan decided S192/D285: add the real 4th copy-tier)
+## This session's work — B94 pipeline-emit (tooling)
 
-**Engine only — schema, `resolveUnits`/points lookup in `index.html`, and the `resolved_pool`/points
-mirror in `rules_assertions.py`. Do NOT touch `units.json` or regenerate any data this session.**
+**Tooling only — the parsers and the JSON build path. Do NOT regenerate committed `units.json` this
+session (that is B94's data turn, and it folds into B89 so the 34 units migrate once).**
 
-Full scope from D283/B94's backlog entry:
-- The MFM tier shape `YOUR 1ST TO 3RD UNITS COST` / `YOUR 4TH + UNIT COSTS` needs a real 4th
-  copy-tier in the points schema (`units.json` `points.sizes[*]` currently has only `first_unit` /
-  `second_unit` / `third_plus`).
-- B87 already captures the un-representable 4th+ tier as `_esc4_fourth_plus` on the 34 affected
-  units' parsed output (not yet regenerated into committed `units.json` — that's the data turn,
-  separate and later).
-- This turn: design and land the schema's 4th tier, wire `index.html`'s points-lookup path to use
-  it when a unit's copy count reaches 4, and update `rules_assertions.py`'s Python mirror of the
-  same lookup so the two never diverge (same discipline as B90's `resolved_pool()` mirror).
-- Do not regenerate `units.json` this session — the schema and lookup must be correct and pass their
-  own harness/assertion checks against synthetic or the currently-committed (3-tier) data first. The
-  data turn (regenerating the 34 affected units through the real pipeline) and the assertion turn
-  (pinning the new tier's presence) are separate, later turns per D283, sequenced with B89's
-  adoption arc so the affected units migrate once.
-- 34 units affected across 15 v1.1 files: Rhino, Razorback, Drop Pod, Impulsor, Chaos Rhino, Raider,
-  Venom, Rubric Marines.
+The engine (S193/D286) now honours an optional `points.sizes[*].fourth_plus` tier via `copyTierPts`,
+but no data can reach it yet: `mfm_points_parser.py`'s `to_points_row` attaches the 4th tier as
+`_esc4_fourth_plus` to the in-memory parse `info` only — it is **not** written into the CSV row, so
+it never survives to `units.json`. This turn:
+- Read `to_points_row` and the CSV column contract it emits (`Size_1..3` + `Points_b-t` +
+  `Allied_Group`) **directly** before designing — the row shape is fixed-column, so carrying a 4th
+  tier means either new columns or a documented side-channel; pick the mechanism that convert/merge
+  can read without ambiguity, and check `convert_to_json.py`/`merge_factions.py`'s reader for the
+  existing tiers before adding to it.
+- Teach the pipeline to carry `_esc4_fourth_plus` through into `points.sizes[*].fourth_plus` on the
+  affected rows, and to emit **no** `fourth_plus` key on rows that don't have a 4th break (the engine
+  fallback depends on absence, not on a `fourth_plus == third_plus` sentinel).
+- Verify against synthetic input and the parser's own output that the 34 esc4 units would now carry a
+  correct `fourth_plus` and every other unit carries none — **without** regenerating the committed
+  `units.json`. The reproduction gates must still pass against the currently-committed 3-tier data
+  (i.e. the pipeline change must be provably inert until the data turn runs it).
+- `b87_check.js` already pins the parser's `_esc4_fourth_plus` capture; extend it (or add the check)
+  to pin that the row/JSON now carries `fourth_plus` through to the built structure.
+
+**Fold in B96 (also tooling, XS):** move `b87_check`/`b88_check` from `baseline.sh`'s always-run block
+into the `if [ "$SOURCES_OK" -eq 1 ]` block so they `SKIP` cleanly when sources are absent, matching
+the three repro checks. Two tooling items in one tooling session is turn-consistent; keep them as
+separate, clearly-labelled edits for clean bisection.
 
 ## Standing reminders
-- Turn-typing strict: engine only this session. If the engine change turns out to need a coupled
-  data correction the way B87 did, stop and scope it as its own turn rather than mixing — B87's
-  exception was justified by a shipped live bug forcing the pipeline's hand; B94's schema addition
-  starts from a clean baseline and has no equivalent forcing reason to mix.
+- Turn-typing strict: tooling only. If the pipeline change turns out to need a coupled data
+  correction the way B87 did, stop and scope the data as its own turn — there is no shipped-live-bug
+  forcing reason here (the engine falls back gracefully), so the B87 exception does not apply.
 - Fix parsers/schema, never hand-edit output.
-- Source-first: two real findings this session (S192) — the missing `40K_Decision_Log.md` in the
-  mount, resolved by cloning the repo rather than assuming; and the missing `data_army` field found
-  by reading `index.html`'s actual consumers of the flag before flipping it, not from the ticket's
-  own framing — were both caught by checking, not assuming. Same discipline applies to the schema
-  design: read `mfm_points_parser.py`'s `esc4` output shape directly before designing the 4th tier,
-  don't design from the ticket's prose description alone.
+- Source-first: read `to_points_row`'s real column contract and convert/merge's real reader before
+  designing the carry-through — the S192/S193 findings both came from reading the actual consumer,
+  not the ticket's framing.
+- Do not regenerate `units.json`. The data turn (folding into B89) and the data-side assertion are
+  later turns per D283/D286.
 - Close by producing the four documents, regenerating the manifest with `--write`, and running
   `pipeline_manifest.py --freshness-check` as the **last** command — after every other edit,
   including edits to the handoff itself (leave the handoff's own row in its Files table as

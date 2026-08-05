@@ -501,3 +501,14 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   `built: true` and `data_army` added together; new assertion B95-1 pins the contract for future
   faction flips (117 assertions, was 116). B94 answered by Ryan (add the real 4th copy-tier),
   queued as S193's engine turn. Open count 17 → 16 (B95 closed).
+- **D286** — B94 engine turn shipped: the real 4th copy-tier landed. MFM `1ST TO 3RD` / `4TH +`
+  breaks a unit's copy price at the 4th copy (34 units); the 3-tier schema couldn't hold it, so their
+  4th+ copy silently priced at `third_plus`. Added an optional `fourth_plus` tier and routed all three
+  points sites (`ptsForEntry`, `addUnitFromRoster`, size-selector) through one shared `copyTierPts`
+  helper (≥4th copy → `fourth_plus`, fallback `third_plus`). Byte-identical on current data (no row
+  carries `fourth_plus` yet); nothing re-prices until the data turn. Python mirror `copy_tier_pts` +
+  assertion `B94-1` pin the ladder single-source and the JS↔Python agreement (118 assertions, was
+  117). `index.html` v6.15 → v6.16. Parser check found `to_points_row` never emits the 4th tier into
+  the row, so B94's next step is a tooling turn to carry it through, then the data turn (folds into
+  B89), then a data-side assertion. Baseline defect found: `b87`/`b88` crash without `--data-turn` —
+  ticketed **B96**. Open count 16 → 17 (B96 opened; B94 stays open).

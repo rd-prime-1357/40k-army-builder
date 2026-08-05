@@ -137,6 +137,24 @@ class Sources:
                 pool[u['unit_name']] = u
         return pool
 
+    def copy_tier_pts(self, size_row, prior_copies):
+        """The base points for the (prior_copies+1)-th copy of a unit at a given size
+        bracket. Mirror of index.html copyTierPts (B94/D286): prior 0/1/2 -> first_unit/
+        second_unit/third_plus; prior >= 3 (the 4th copy onward) -> fourth_plus when the
+        row carries it (the MFM '1st to 3rd' / '4th +' shape), else falling back to
+        third_plus. The two must stay in lockstep — assertion B94-1 pins them together.
+        """
+        if not size_row:
+            return None
+        if prior_copies == 0:
+            return size_row.get('first_unit')
+        if prior_copies == 1:
+            return size_row.get('second_unit')
+        if prior_copies == 2:
+            return size_row.get('third_plus')
+        fp = size_row.get('fourth_plus')
+        return fp if fp is not None else size_row.get('third_plus')
+
     def mfm_detachment_rows(self):
         """Re-derive the detachment catalogue straight from the MFM faction files.
 
@@ -451,6 +469,75 @@ def b95_1_gate(S):
     if bad:
         return False, 'built factions with missing/mismatched data_army: ' + ', '.join(sorted(bad))
     return True, 'all built, non-subfaction factions carry a valid data_army'
+
+
+def b94_1_gate(S):
+    """D286: the 4th copy-tier lives in exactly one engine place and its Python mirror
+    agrees with it. Three things, all tier-A (index.html + committed units.json only):
+
+    (1) index.html resolves the copy-tier price through the single shared copyTierPts
+        helper — defined once, called by every points site — rather than three inline
+        ladders free to drift. The 4th+ branch reads fourth_plus with a third_plus
+        fallback, and no unguarded inline ladder survives.
+    (2) The Python mirror (Sources.copy_tier_pts) reproduces the ladder including the
+        4th-copy break and the fallback, checked against synthetic rows with and without
+        a fourth_plus tier. This is the anti-drift pin (B90's resolved_pool discipline):
+        if either side changes the ladder without the other, this fails.
+    (3) Well-formedness of the schema addition in committed units.json: any size row that
+        carries fourth_plus also carries third_plus (a 4th tier with no 3rd is malformed),
+        and when present it is a number. Vacuously true this engine turn — no committed
+        row carries fourth_plus yet; the data turn adds it to the 34 esc4 units — but it
+        holds from that turn on without edit.
+    """
+    html = S.index_html()
+
+    # (1) single-source engine ladder
+    if html.count('function copyTierPts(') != 1:
+        return False, 'copyTierPts is not defined exactly once in index.html'
+    helper_at = html.find('function copyTierPts(')
+    helper_body = html[helper_at:helper_at + 600]
+    if 'fourth_plus' not in helper_body or 'third_plus' not in helper_body:
+        return False, 'copyTierPts does not read fourth_plus with a third_plus fallback'
+    # the ladder must not survive inline anywhere (drift hazard the helper closes)
+    import re
+    inline = re.search(r'===\s*1\)\s*(base|pts)\s*=\s*\w+\.second_unit', html)
+    if inline:
+        return False, 'an inline copy-tier ladder still survives alongside copyTierPts'
+    # fourth_plus appears only inside the helper, nowhere else as a lookup
+    if html.count('.fourth_plus') != helper_body.count('.fourth_plus'):
+        return False, 'fourth_plus is read outside copyTierPts — ladder not single-source'
+
+    # (2) Python mirror agrees with the ladder, both branches
+    with_fp = {'size': 5, 'first_unit': 10, 'second_unit': 20, 'third_plus': 30, 'fourth_plus': 40}
+    no_fp   = {'size': 5, 'first_unit': 10, 'second_unit': 20, 'third_plus': 30}
+    want_with = [10, 20, 30, 40, 40]   # prior 0,1,2,3,4 — 4th+ takes fourth_plus
+    want_no   = [10, 20, 30, 30, 30]   # prior 0,1,2,3,4 — 4th+ falls back to third_plus
+    got_with = [S.copy_tier_pts(with_fp, p) for p in range(5)]
+    got_no   = [S.copy_tier_pts(no_fp, p)   for p in range(5)]
+    if got_with != want_with:
+        return False, f'mirror disagrees on a fourth_plus row: {got_with} != {want_with}'
+    if got_no != want_no:
+        return False, f'mirror disagrees on the fallback (no fourth_plus): {got_no} != {want_no}'
+    if S.copy_tier_pts(None, 0) is not None:
+        return False, 'mirror should return None for a missing size row'
+
+    # (3) committed-data well-formedness of the optional 4th tier
+    bad = []
+    fp_count = 0
+    for blk in S.units():
+        for u in blk['units']:
+            for row in (u.get('points') or {}).get('sizes', []):
+                if 'fourth_plus' in row:
+                    fp_count += 1
+                    if row.get('third_plus') is None:
+                        bad.append((u['unit_id'], 'fourth_plus without third_plus'))
+                    elif not isinstance(row['fourth_plus'], (int, float)):
+                        bad.append((u['unit_id'], f'fourth_plus not numeric: {row["fourth_plus"]!r}'))
+    if bad:
+        return False, 'malformed fourth_plus rows: ' + ', '.join(f'{i} ({w})' for i, w in bad[:5])
+
+    return True, (f'copyTierPts single-source in index.html; Python mirror agrees on both '
+                  f'branches; {fp_count} committed rows carry a well-formed fourth_plus')
 
 
 def manifest_gate(S):
@@ -787,6 +874,24 @@ ASSERTIONS = [
      'faction_taxonomy.json data_army vs units.json army blocks; index.html resolveUnits/'
      'resolveDetachments (D285)',
      lambda S: b95_1_gate(S)),
+
+    # ── B94-1. The 4th copy-tier (D286). The MFM shape 'YOUR 1ST TO 3RD UNITS COST' /
+    # 'YOUR 4TH + UNIT COSTS' breaks a unit's copy price again at the 4th copy — 34
+    # units, all currently priced only through the 3-tier schema (first/second/third_plus)
+    # that has no slot for it, so their 4th+ copy silently prices at third_plus. B94 adds
+    # an optional fourth_plus tier and routes every points site through one helper,
+    # copyTierPts, that reads it (fallback third_plus). This pins the engine ladder to a
+    # single source and holds its Python mirror (Sources.copy_tier_pts) in lockstep with
+    # it — the same anti-drift discipline as B90's resolved_pool mirror — plus the
+    # well-formedness of the fourth_plus field once the data turn lands it.
+    ('B94-1',
+     "index.html resolves copy-tier points through one shared copyTierPts helper (no "
+     "inline ladder survives) that prices the 4th+ copy at an optional fourth_plus tier, "
+     "falling back to third_plus; Sources.copy_tier_pts mirrors it exactly on both "
+     "branches; and any committed fourth_plus row is well-formed (D286).",
+     'index.html copyTierPts; rules_assertions.py Sources.copy_tier_pts; units.json '
+     'points.sizes[*].fourth_plus (D286)',
+     lambda S: b94_1_gate(S)),
 
     # ── B46. The Reiver's grav-chute has rules text and the app cannot show it. The text
     # is NOT missing from the data — it is in Datasheets_abilities.csv as a Wargear row.

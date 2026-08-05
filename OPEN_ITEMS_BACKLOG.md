@@ -3,7 +3,15 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **16 open** as of S192 (down from 17 at S191): B69, B70, B75, B85, B86,
+not here, it isn't open. **17 open** as of S193 (up from 16 at S192): B69, B70, B75, B85, B86,
+P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94, B96. B94's **engine turn shipped** (D286,
+engine-only): added an optional `fourth_plus` copy-tier and routed all three points sites through
+one shared `copyTierPts` helper (≥4th copy → `fourth_plus`, fallback `third_plus`); byte-identical
+on current data; Python mirror + assertion `B94-1` pin it single-source (118 assertions, was 117);
+`index.html` v6.16. B94 **stays open** — its data turn (fold into B89) and data-side assertion turn
+remain. B96 opened (D286): `b87_check`/`b88_check` sit in `baseline.sh`'s always-run block but need
+GW sources, so they crash rather than SKIP on an engine-only open without `--data-turn`.
+**16 open** as of S192 (down from 17 at S191): B69, B70, B75, B85, B86,
 P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94. B95 closed (D285, data+tooling turn):
 `faction_taxonomy.json`'s `built` flag was stale for CSM/Thousand Sons and both were missing
 `data_army` entirely — both gaps closed together, new assertion `B95-1` added. B94 also decided
@@ -359,28 +367,45 @@ the code cannot currently tell apart). Turn 2 must carve these out of that exclu
 chapters. B90 turn 2 is now fully unblocked on decisions; it still runs after B88/B89 per D274's
 sequencing.
 
-### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; product+engine+data; M; blocks clean B89 adoption of the affected units**
+### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; ENGINE TURN SHIPPED S193 (D286); product+engine+data; M; data turn folds into B89**
 
-**Ryan decided S192 (D285): add the real 4th copy-tier.** Accurate points on a unit's 4th+ copy is
-required to build a legal list — matches the D283 recommendation. Engine turn (schema + `resolveUnits`/
-points lookup in `index.html` + the `resolved_pool`/points mirror in `rules_assertions.py`) queued for
-S193, engine-only per strict turn-typing. Data and assertion turns follow, sequenced with B89's
-adoption arc so the 34 affected units migrate once.
-The MFM tier shape `YOUR 1ST TO 3RD UNITS COST` / `YOUR 4TH + UNIT COSTS` breaks the copy price at
-the 4th copy. The shipped points schema (`units.json` `points.sizes[*]` with `first_unit` /
-`second_unit` / `third_plus`) has only three copy-tiers and assumes the break at copy 3, so it cannot
-represent a 4th-copy break — `third_plus` falls inside the 1st-to-3rd band. B87 made the parser read
-both tiers and, for now, emit the 1st-to-3rd price across all three schema tiers (correct for copies
-1–3) while attaching the un-representable 4th+ tier as `_esc4_fourth_plus` for this ticket to consume;
-it is captured, not dropped. **Scope of the shape (v1.1):** 34 units across the 15 files — Rhino,
-Razorback, Drop Pod, Impulsor (loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom
-(Drukhari), plus Rubric Marines. Rare in v1_0 (only Rubric Marines + Brotherhood Terminator Squad),
-widespread in v1.1. **Product/schema call (Ryan):** add a real 4th copy-tier to the points schema and
-the engine's points lookup (`index.html` `resolveUnits`/points render, `rules_assertions.py`'s Python
-mirror), or document a fold rule if the instance-limit model makes a 4th copy unreachable in practice.
-Recommendation: add the real tier — a wrong points value is D0-class, and 34 units is not an edge case.
-**Turns:** engine (schema + lookup + mirror), then data (regenerate affected units, diff-guard),
-then assertion. Sequence with B89's adoption arc so the affected units migrate once, correctly.
+**Engine turn shipped S193 (D286).** Added an optional `fourth_plus` tier to `points.sizes[*]` and
+routed all three points sites (`ptsForEntry`, `addUnitFromRoster`, size-selector) through one shared
+`copyTierPts(sizeEntry, prior)` helper: copies 1–3 → first/second/third_plus; the 4th copy onward →
+`fourth_plus` when present, falling back to `third_plus` when absent. Byte-identical on the current
+3-tier data (no committed row carries `fourth_plus` yet) — verified by executing the real JS helper.
+Python mirror `Sources.copy_tier_pts` + assertion `B94-1` pin the ladder single-source and hold JS↔
+Python in lockstep (118 assertions). `index.html` v6.16.
+
+**Remaining turns (still open):**
+1. **Tooling** — the parser captures the 4th tier as `_esc4_fourth_plus` on the in-memory `info`, but
+   `to_points_row` does **not** emit it into the CSV row, so it never reaches `units.json`. Teach the
+   points pipeline (`to_points_row` in `mfm_points_parser.py`, plus `convert_to_json.py`/`merge_factions.py`
+   as the row shape requires) to carry `_esc4_fourth_plus` through into `points.sizes[*].fourth_plus`,
+   verified against synthetic/parser output without regenerating committed `units.json`.
+2. **Data** — regenerate the 34 affected units so their rows carry the real `fourth_plus` value,
+   diff-guarded (only those 34 units' points move, `fourth_plus` added, all else byte-identical).
+   Folds into B89's adoption arc per D283 so the units migrate once.
+3. **Assertion (data-side)** — pin that the 34 units carry the correct `fourth_plus` (distinct from
+   `third_plus`), re-derived from the MFM source, once the data lands.
+
+**Scope of the shape (v1.1):** 34 units across the 15 files — Rhino, Razorback, Drop Pod, Impulsor
+(loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom (Drukhari), plus Rubric Marines.
+Rare in v1_0 (only Rubric Marines + Brotherhood Terminator Squad), widespread in v1.1.
+
+### B96 — `b87_check`/`b88_check` crash instead of SKIP when GW sources are absent — **NEW S193 (D286); tooling; XS**
+
+Both harnesses invoke the parsers (`mfm_points_parser.py`, `detachment_parser.py`) directly against
+the raw GW MFM source files, but they sit in `baseline.sh`'s **always-run** gate block rather than the
+tier-B (sources-required) block. So a legitimate engine-only session that opens with `--fetch` (no
+`--data-turn`, hence no GW sources fetched) gets two `FileNotFoundError` crashes whose one-line
+summaries read identically to real gate failures — which, under the session protocol, would block work
+until reconciled. Found S193 opening B94's engine turn; re-running with `--data-turn` (which fetches
+the sources) opened green, so it did not block, but the false-failure hazard is live for any future
+engine- or tooling-only open. **Fix:** move both gates into the `if [ "$SOURCES_OK" -eq 1 ]` block so
+they `SKIP` cleanly when sources are absent, exactly as the three repro checks already do. Cheap;
+worth folding into the next tooling turn (e.g. alongside B94's pipeline-emit turn — two tooling items
+in one tooling session is turn-consistent).
 
 ### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); data; L; depends B88; spans sessions**
 Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and

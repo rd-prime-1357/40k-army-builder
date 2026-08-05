@@ -1,7 +1,7 @@
 {
  "_note": "SHA-256 of every guarded pipeline file. Regenerated at session close (python3 pipeline_manifest.py --write). manifest_check verifies it at baseline; a mismatch names the file that arrived as the wrong copy.",
  "files": {
-  "index.html": "d503c258109e138162b0c324b55112e542067ceed983012eade681f9d6e75e83",
+  "index.html": "665f7fcfc52c801310f4965f1c1b63e076a14135b220ffed50df6e67034ae652",
   "list_store.js": "5d7890b695f5a95eaf6cdb9cdb6ce2fcc27b51647c8e3ed52ad8d161b858b4a0",
   "units.json": "e2da8329f64b7d10ab976e452b1ce8156ca240ac265b3a43e4d9fa557c8a0026",
   "unit_loadouts.json": "8dc0535560315d500ca9ff120554fed97a779c2fddf7fecd7a2c27026fe73139",
@@ -19,12 +19,12 @@
   "mfm_reconcile.py": "b13fee40b95143a6491284d5da6ffad7c193190f81809c7105851f0e8ce4f313",
   "add_loadout_groups.py": "4b660b59fe9e2fcbaaeade11af93ab2f2e3c3984ee17161107a966e35cdebc58",
   "detachment_parser.py": "1715a49b1500418bc2bb7ad9875de157262adb11ed2b7603486e182add743452",
-  "rules_assertions.py": "bc9cfab09a4cdf9ec87fdc79272ea9c35163a23c67bc09a3b5aa20acd0132a2a",
+  "rules_assertions.py": "ecc1596fcbe78aa1287d2bd685dd756bc8929457c1de5a49b04dd54ac32ac787",
   "repro_check.py": "709f3d11f7c2f341b319784d9d8f4b91770aae72ac6d5546e112a4b6d1ea6d9e",
   "units_repro_check.py": "0380d5eeb48456bef98dffae08f2dd31ed50783746289730c7bee54f55b1a4d3",
   "detachments_repro_check.py": "94bb9f2f223853f75b6788bf6cbff0f4eb1ad19c845189b0cc3545dcf35f927b",
   "integrity_check.py": "7084a604f0b15a2fd8440c9b61660edbad6d1d16ce7277a989f5ab3e924e83a1",
-  "pipeline_manifest.py": "c943edd628e077b673b1abb6282b92e6960670abb4d16a82eadf3d3b6de253eb",
+  "pipeline_manifest.py": "b78b1bbf6f50faaa61c1b280ba44ce4207bda31f5798f485fef34440c6ee1e16",
   "pts_check.js": "d1ca62181a6f511214391323e80107cf2acee834b40784409b3eedd902e7d263",
   "stat_check.js": "c240c643896de60d212f62d220722d58994b4afd9a5dc3440d1ae81d45a502ab",
   "bundle_check.js": "40e08552f38aa9dfdbe7c1106b7d0e3ff9623ed6e0a47eb5a85d24e43faa3154",
@@ -70,17 +70,17 @@
   "40K_Architecture_Overview.md": "197c79eaac21e9653c029f33a3d75484f71ac69fa25f84c47c0f6a90bbd47092",
   "40K_Data_Dictionary.md": "4b7844dab056c9693d364ff6d4f2986c4183c5d399bd808f4fcee2490e9957ae",
   "40K_Data_Pipeline_Process.md": "940b9269a7a33b60315e432b90d4122fa52ed869bd2d5959c7a7c4145a36e50a",
-  "40K_Decision_Log.md": "c3a96c54b1ae75872d0076b47feed4532e3e0f99169518fb157bc55c95a9d8f0",
+  "40K_Decision_Log.md": "8ba459a7f1a81d551ad11a80d1cf10c562ed73eb5d70434d03cab1e34da98ea3",
   "40K_Functional_Spec.md": "1d57cabc2d8cf8757403476f462d8a16be3c17311a98afd96426e40051d21b49",
   "BACKLOG_ARCHIVE.md": "b1b87709438d55646cb03fd1d3e1d0225f402b28623d25bcdc0dba87b5576298",
   "CSM_BUILD_SCOPE.md": "53c4828c1853e57741fb028b97efc31a1ba880a06e2495933541599fade3733d",
-  "DECISION_INDEX.md": "c146f86a045a3e84ad01a7983e5e2cbf1cc5a38b821d50085b1e378d8bf2234d",
+  "DECISION_INDEX.md": "e4be5c69b94f93ec0625b2892e80ca60ad64d18713714b320793028ca15166ba",
   "E1_DETACHMENT_SCOPE.md": "bd46666245f734b2f5b24a4230df0144a9881b1eaaae9d70c23621fd3b796e5a",
   "MFM_Chapter_Pass.md": "6150462d2814d919bb8e54154ce56209beec7c78937d3ac4508c1f315f2089b4",
   "MFM_FW_Reconciliation.md": "6c783bdd3336f80191572a36192535e654d703afef4d8c7c565b2666415fd3db",
   "MFM_Standalone_Pass.md": "fd81918dd611a39aed3e8bcac93392b9457343afc2e1341ecfdd9be2cd40b35e",
   "MFM_v1_1_Reconciliation.md": "5ebd959dd5b3ab30a06c7cf22199016fa8506cd4987b281ce796a01ee7566f45",
-  "OPEN_ITEMS_BACKLOG.md": "91573bbbb3c33858d9df16796f65321361b00732a5396633d1a77210a5f2e92f",
+  "OPEN_ITEMS_BACKLOG.md": "48260ae07d09c8baad9099b2800acede77ce7198be19974a0c0c1cf53697166d",
   "OUTPUT_FORMAT_SPEC_for_project_instructions.md": "2567a8e0d502bf71fedf735b7a5cc202fa1e9fee7ac0ed69531df111a2e9f474",
   "P4_ARCHITECTURE_SCOPE.md": "e94b0d6c402fd66d843d757450106b44cf9f2cfb7ad550f0101720eb460a5c9a",
   "PROCESS_IMPROVEMENT_PLAN.md": "c8fa79972a8b33ec52668e5b1d95be2ccfd7dbb4c0a3acc3f0853f92c7d99a8a",
@@ -151,6 +151,7 @@
   "SESSION_HANDOFF_189.md": "da11edf72a19f80acc2958d91ceec0d690aff51daddc805c5b5c4b098b3e3acc",
   "SESSION_HANDOFF_190.md": "8a8dbcbba5cad8076f637212cbd49c4434018e41e3866d3c3b6916cf683bee99",
   "SESSION_HANDOFF_191.md": "17cd7267a062baff96645a10a6b519d258734cffdbc41a6a5f865111902567d6",
-  "SESSION_HANDOFF_192.md": "ad9f222b3ed31145375888727fdb59e4dd033c4b5027d4d1b57425f03016d91f"
+  "SESSION_HANDOFF_192.md": "ad9f222b3ed31145375888727fdb59e4dd033c4b5027d4d1b57425f03016d91f",
+  "SESSION_HANDOFF_193.md": "e54bb4c2497c66bf00a1a7a6cd08532fb194ca88c81bcb62d0b1e623d48f5817"
  }
 }
