@@ -10257,3 +10257,386 @@ after this fix, before the final baseline run.
   GW version and spaces where the faction name has them. The parser and `source_manifest.json` accept
   filenames as-uploaded — no rename step between capture and intake. The v1_0 files keep their
   existing underscored names (no retroactive rename). Open count unchanged at 14.
+
+---
+
+## D276 — SM-Family Chapter Rosters: Two Tiers, Not One Union (corrects a live legality gap)
+**Decision:** D42 is refined, not reversed. Within the Space Marine family there are two structurally
+different chapter types, and the engine must treat them differently:
+
+**Tier 1 — vanilla chapters** (Ultramarines, Iron Hands, Salamanders, Imperial Fists, Raven Guard,
+White Scars): no dedicated MFM file. Their units live inside `MFM_Space_Marines.txt` itself. D42's
+base-plus-override model is correct for these six as originally written — union the generic
+Adeptus Astartes roster with the chapter's own printed entries, override wins on shared units.
+
+**Tier 2 — dedicated-MFM chapters** (Black Templars, Blood Angels, Dark Angels, Deathwatch, Space
+Wolves): each has its own complete MFM file. Confirmed directly against `MFM_Black_Templars_v1.1.txt`:
+76 units total, including generic Astartes units it can still field (Gladiators, Land Raider
+Crusader, Repulsor, Terminator Squad, etc.) at BT's own prices, alongside BT-only entries (Crusader
+Squad, Sword Brethren Squad, named characters). The file is self-contained — it is never read
+against `MFM_Space_Marines.txt`. **These five rosters must be built as exactly what their own MFM
+lists — no union, no fallback to the generic Adeptus Astartes block.** The other four dedicated-MFM
+chapters are assumed to follow the same complete-file shape by construction (each ships its own MFM);
+this is confirmed per-chapter, not assumed, during the B90 rebuild rather than trusted from this
+analysis alone.
+
+**What was wrong:** `resolveUnits()` in `index.html` (D171/D172 override-map work) unions the full
+generic Adeptus Astartes pool into *every* `is_subfaction` chapter without distinguishing the two
+tiers. For the five Tier-2 chapters this leaks units their own MFM deliberately excludes — for
+Black Templars alone, 90 generic units, including every Librarian variant (Black Templars field no
+Psykers) and eleven named characters belonging to other chapters (Tigurius, Vulkan He'stan, Shrike,
+Kor'sarro Khan, etc.). This is a direct D0 violation: illegal units are currently reachable in list
+building for all five Tier-2 chapters.
+
+**Root cause:** the taxonomy's `is_subfaction` flag and the prose gloss in `faction_taxonomy.json`
+("chapters union the generic codex at selection time") treated all eleven non-generic chapters as
+one case. D42's own text already distinguished Black Templars' "distinct datasheet IDs...not
+overrides" from the six vanilla chapters, but that distinction was never carried into a roster-
+membership flag — only into a points-override mechanism, which is a different question from which
+units are legal at all.
+
+**Fix required (B90, opened this decision):** an engine flag separating the two tiers (`roster_mode:
+'complete'` for the five, `'union'` for the six and the generic army), a data rebuild of the five
+Tier-2 chapters directly from their own MFM files rather than as deltas against generic, and a new
+assertion pinning that no Tier-2 chapter's roster contains a unit absent from its own MFM.
+
+**Rationale:** D0 requires illegal states to be unreachable, not flagged. The union model was a
+reasonable read of the source before the dedicated MFM files were checked directly against it;
+verifying Black Templars against its own file proved the two-tier structure. Fixing before further
+faction work prevents the same wrong pattern from being copied into any future dedicated-MFM build.
+
+---
+
+## D277 — B90 turn 1 shipped: roster_mode mechanism; five stay 'union' this turn, not 'complete' (corrects the S185 prompt's data-shape assumption)
+**Decision:** The B90 engine turn shipped the two-tier `resolveUnits()` mechanism and the `roster_mode`
+taxonomy flag, but flags **all eleven** SM-family chapters `'union'` for now — including the five
+Tier-2 chapters D276 destines for `'complete'`. The five flip to `'complete'` in the B90 **data**
+turn, together with their MFM-complete `units.json` rebuild, not before.
+
+**Why the deviation from the S185 prompt (which said flag the five `'complete'` this turn):** the
+prompt assumed each Tier-2 chapter's `units.json` block was a baked full/union roster, so that
+returning "its own block only" would still yield the union-leaked (superset) roster it predicted.
+Checked against source this session — the blocks are **deltas**, not baked unions: Black Templars
+18 units, Blood Angels 15, Dark Angels 16, Deathwatch 10, Space Wolves 21, with the generic Adeptus
+Astartes block (82) unioned in at runtime. Had the five been flagged `'complete'` now, complete-mode
+(chapter block only) would have resolved them to those 18/15/16/10/21-unit deltas — **missing** the
+generic units they legitimately field (Gladiators, Repulsor, Land Raider Crusader, etc.). That is a
+different, newly-introduced bug (legal units become unreachable) shipped live between the engine and
+data turns, and it would have made the prompt's own "still union-leaked" expectation false.
+
+**Consequence of the chosen sequencing:** this turn changes no chapter's live behavior — all eleven
+still union, so the five remain union-leaked exactly as today (the D0 gap D276 identified persists,
+unregressed, until the data turn closes it). Engine and data changes stay unmixed across turns; the
+flag never claims a roster shape the data doesn't hold. The mechanism is proven now via a fixture
+harness (`b90_check.js`) rather than a real `'complete'` chapter.
+
+**Rationale:** D0 requires illegal states unreachable, but a partial fix that makes *legal* units
+unreachable is not progress — it trades one D0 violation for another and splits a coupled change
+across a session boundary, defeating clean bisection. A banked, well-scoped mechanism with unchanged
+live behavior is the correct turn-1 outcome; the actual roster fix is atomic with the data rebuild.
+This is a build-sequencing refinement of D276's three-turn plan, made under the development-manager
+authority, not a change to any legality interpretation — D276's ruling on what each tier's legal
+roster IS stands unchanged.
+
+**Integrity anomalies found this turn (flagged, not fixed — opened as B91):** (1) two decision-log
+files exist in the repo — `40K_Decision_Log.md` (unversioned, the one `pipeline_manifest.py` GUARDS
+and `DECISION_LOG` names) and `40K_Decision_Log_v3_0.md` (versioned, the one S184/S185 treat as live
+and the one this D277 is appended to). They have **diverged**: the guarded unversioned copy contains
+**zero** occurrences of D276; the live versioned copy has D276+. So the live log is unguarded and the
+guarded log is stale — a silent-divergence hazard of exactly the kind the manifest exists to prevent,
+sitting in the manifest's own blind spot (it verifies the hash of the stale file, which matches). (2)
+Several other project docs also ship as unversioned + versioned pairs of identical size
+(`40K_Architecture_Overview` / `_v0_5`, `40K_Data_Dictionary` / `_v2_0`, `40K_Data_Pipeline_Process`
+/ `_v0_6`, `40K_Functional_Spec` / `_v0_7`). (3) D276 itself sits at line ~243 (topically beside the
+D42 it refines), not in session order — pre-existing, non-urgent. Resolving which file is canonical,
+repointing the guard, and removing the stale copy involves deletion + a naming precedent and is
+Ryan's call; tracked as B91.
+
+---
+
+## D278 — S186 open reconciliation: faction_taxonomy.json canonical-serialisation drift (baseline was red)
+**Decision:** `faction_taxonomy.json` is re-serialised into the exact byte-form its own
+pipeline emits — `json.dump(obj, ensure_ascii=False, indent=2)` with **no trailing
+newline** — restoring `units_repro_check.py` to green. Content is unchanged; only a
+single stray trailing-newline byte is removed (5643 → 5642 bytes, JSON identical).
+
+**What was wrong:** the S186 data-turn baseline opened red — `units_repro_check` and the
+manifest-fed `rules_assertions` both failed on `faction_taxonomy.json: differs (5642 vs
+5643 bytes)`. The committed file equalled the pipeline's re-serialised output **plus one
+trailing `\n`**. Its four sibling merge-passthrough lookups (`abilities.json`,
+`rules.json`, `keywords.json`, `weapon_abilities.json`) all end at `]` with no trailing
+newline, so the newline was an anomaly on this one file, not a convention.
+
+**Root cause:** S185 (engine turn) hand-edited `faction_taxonomy.json` to add `roster_mode`
+and rewrite its comment, and the editor left a trailing newline. That turn ran tier-A-only
+(no GW sources loaded), so the repro gates that compare against the serialiser output were
+**skipped** — the drift shipped uncaught and only surfaced now that a data turn loads
+sources and runs those gates. Per protocol the failing gate was reconciled before any
+assigned work began.
+
+**Lesson pinned:** edits to any merge-passthrough JSON (`faction_taxonomy.json` and the
+four lookups) must be written through the canonical serialiser, never hand-saved, or they
+drift from what the pipeline reproduces. This is the same class as "fix parsers, never
+hand-edit output" applied to passthrough inputs.
+
+**Rationale:** mechanical, reversible, content-neutral reconciliation of a red baseline —
+development-manager housekeeping, no legality or product judgement. No ticket: opened and
+closed within this turn.
+
+---
+
+## D279 — B90 turn 2 (Tier-2 complete-roster rebuild) deferred: scope is a pipeline build, and two source-of-truth questions block a correct target
+**Decision:** The B90 turn-2 rebuild is **not** executed this session. The faction_taxonomy
+`roster_mode` flip, the `resolved_pool()` mirror update, and the loadout/wargear re-verify
+all wait on the rebuild, so none of them ship either. Live behaviour is unchanged — the
+five Tier-2 chapters remain `'union'` and union-leaked exactly as after S185 (the D276 D0
+gap persists, unregressed). Reason: the turn is deeper than a mechanical data edit and its
+target is presently ill-defined against source. Stopping cleanly with the reconciliation
+banked beats half-building a legality-critical roster.
+
+**Finding 1 — no existing pipeline path builds a complete per-chapter roster.** Today each
+Tier-2 chapter block in `units.json` is a *delta* of chapter-specific datasheets only
+(BT 18, BA 15, DA 16, DW 10, SW 21), produced by `wahapedia_transform.py --faction SM`
+plus a points-only `--scope-to-army --append`; the generic 82-unit Adeptus Astartes block
+is unioned in at runtime. Building each chapter as its MFM's full self-contained roster
+(so `'complete'` mode returns it directly) requires a **new build path** that reads the
+chapter MFM's own curated unit list, pulls each datasheet's stats from the Wahapedia SM
+dump, prices from the chapter MFM, and emits a complete chapter block — for ~90–119 units
+per chapter, byte-reproducible, with correct loadouts, wargear, abilities and attach-lists.
+This is parser/merge architecture work with direct D0 stakes (overcount → illegal units
+reachable; undercount → legal units unreachable), not a data edit.
+
+**Source model confirmed (supports D276's legality ruling):** each chapter MFM *is* a
+genuinely curated self-contained roster. Black Templars lists **0** Librarian entries
+(confirming D276's "BT fields no Psykers"); the other four each carry Librarians. Chapter
+rosters genuinely differ unit-for-unit (BT has Grimaldus / Emperor's Champion / Sword
+Brethren; Blood Angels has Dante / Mephiston / Death Company). Each file also contains a
+large shared generic-Astartes section whose leader attach-lists name other chapters' units
+(Deathwing Knights, Inner Circle Companions, Deathwatch Veterans) — those names are prose
+carried across all chapter files and are moot where the referenced unit is absent from the
+file; the fieldable roster is exactly what the file lists.
+
+**Finding 2 (blocking) — MFM edition / points currency.** The pipeline (`source_manifest.json`,
+`units_repro_check.py`) pins the **v1_0** MFM files, but a newer **v1.1** of every SM-family
+file (and of CSM, DG, TS, EC, WE, Grey Knights, Drukhari, Chaos Knights) sits in the source
+area, unadopted. Rosters are **identical** across v1_0 and v1.1 for all five chapters; the
+delta is **points** — v1.1 reprices units (e.g. Chaplain Grimaldus 110→100, Emperor's
+Champion 100→90) and annotates the change with ▲▼ markers. So the tool currently ships
+**stale points**. A rebuild bakes in whichever edition's points, and adopting v1.1 is a
+faction-wide source refresh with a manifest re-hash and a points-legality precedent. This
+must be decided before the rebuild, or the freshly-rebuilt rosters ship known-stale points
+and get re-priced immediately after. Tracked as **B92**.
+
+**Finding 3 (blocking the target) — D276's roster count contradicts source.** D276 (and the
+S186 prompt) state Black Templars = **76 units**, confirmed against `MFM_Black_Templars_v1.1.txt`.
+Direct source count this session is **90** (18 chapter-specific + 72 curated-generic), the
+same in v1_0 and v1.1. The acceptance criterion "BT is 76" therefore cannot be met as
+written; the correct rebuild target is the **verified source roster** (BT ≈90; BA/DA/DW/SW
+counted the same way at rebuild time). D276's "76" figure is superseded by source and should
+be corrected; before an assertion pins any count, the target must be confirmed from source,
+not from the stale figure.
+
+**Decisions needed from Ryan (batched, both blocking a correct rebuild):**
+1. **Points edition:** stay on v1_0 for the Tier-2 rebuild (status-quo, no new precedent,
+   accepts known-stale points for now) and handle v1.1 adoption separately (B92); **or**
+   adopt v1.1 first (faction-wide refresh) so the rebuild bakes current points. Recommend
+   deciding B92 first if current points matter for the shipped Tier-2 rosters, since
+   rebuilding twice is wasteful.
+2. **Roster target:** confirm the rebuild targets the full verified source roster (≈90 for
+   BT), correcting D276's "76", and that Legends/Forge-World datasheets present in the MFM
+   (e.g. Astraeus, Thunderhawk) count as legal matched-play roster members (they are in the
+   file, so by D276's own "exactly what the MFM lists" rule they are in — confirm the
+   precedent before it is pinned).
+
+**Rationale:** D0 requires the Tier-2 fix, but a correct fix needs a target the source
+actually supports and a settled points edition; building against D276's contradicted count
+under time pressure risks enshrining a wrong roster as an executable assertion — the worst
+failure mode. Sequencing is development-manager authority; the two open questions are
+points-legality precedent and are Ryan's. B90 stays open; turn 2 resumes once both are
+settled.
+
+---
+
+## D280 — E23 data turn: HEADHUNTER TASK FORCE Tank Ace grant authored into `detachment_effects.json`, re-verified from source, unenforced pending an engine turn (S187)
+
+**Turn type: data-only.** `detachment_effects.json` gains a fifth effect kind (`tank_ace`) and
+six new rows, one per detachment key that carries the grant (`Space Marines`, `Black Templars`,
+`Blood Angels`, `Dark Angels`, `Deathwatch`, `Space Wolves` | `HEADHUNTER TASK FORCE`). Two new
+assertions (`E23-1`, `E23-2`), plus `E21a-3`/`E21a-4`'s (`e21a_schema_valid`/`e21a_allied_targets`)
+existing checks extended to cover the new kind. `rules_assertions.py` **114/114 → 116/116**.
+`index.html` untouched, still **v6.15**. No parser, no converter, no pipeline-derived file
+touched — `detachment_effects.json` is hand-authored input, same class as D209.
+
+**Picked up because neither B90 blocker (D279) nor B91 was answered this session; E23 was the
+only fully-scoped, unblocked open item** (data confirmed S182/D273, mechanism decided S181/D272,
+"build turn next"). Re-derived the D273 facts from source rather than trusting the prior
+session's numbers, per standing practice — found them correct, with one real gap the
+re-derivation caught before it shipped (below).
+
+**What was authored.** Each row: `target.base_keyword: "Vehicle"`, `except_keywords: ["Fly",
+"Walker", "Drop Pod"]`, `except_unit_types: ["Fortification"]`, `cap: 3`, `enforced: false`. Three
+new `_meta.target_shapes` entries document `base_keyword`/`except_keywords`/`except_unit_types`,
+distinct from the existing bare `keyword` shape (that one names a pool the app **cannot** yet
+express as data; this one is a fully computable predicate simply not wired to the engine yet — the
+two are not the same kind of gap and now read differently in the schema).
+
+**Bug caught by the assertions themselves before it shipped: the generic key's army field is not
+a resolvable pool name.** The first draft set all six rows' `army` field to the label matching
+each key's prefix, including `"Space Marines"` for the shared generic key — but no `units.json`
+block or `detachments.json` armies-index entry is named `Space Marines`; the generic pool is
+`Adeptus Astartes`, and `detachments.json`'s own `armies` index shows the `Space Marines|
+HEADHUNTER TASK FORCE` key is actually owned by **seven** armies (`Adeptus Astartes` plus the six
+vanilla chapters with no dedicated MFM: Imperial Fists, Iron Hands, Raven Guard, Salamanders,
+Ultramarines, White Scars) — `Space Marines` is a `source_faction` display label carried onto the
+key, not an army. `e21a_schema_valid` and the new `e23_tank_ace_pool_counts` both failed loudly
+(0 eligible where 16 were expected) rather than silently passing on an empty pool. Fixed with a
+new `_owning_armies()` helper that resolves the real owner(s) from `detachments.json`'s `armies`
+index rather than the key's string prefix — a strict generalisation of the existing single-owner
+case, verified to produce identical results for every other row. Re-confirmed from source that
+none of the six vanilla chapters carries any `unit_type: Vehicle` unit of its own, so the pool is
+identically 16 for all seven owners of the generic key — D273's "SM 16" figure holds, just for the
+right reason.
+
+**Re-verification against source (D273's facts, checked again, not trusted):** rule text
+byte-identical across all six keys (`sha256:12 cadd53c18131`, matches D273). Generic Adeptus
+Astartes pool: 28 `unit_type: Vehicle` units, 12 excluded (6 `Fly`, 5 `Walker`, 1 Drop Pod) = 16
+eligible, confirmed by name. Blood Angels adds Baal Predator (no excluding keyword) = 17; its own
+Death Company Dreadnought is `Walker`-excluded. Dark Angels/Deathwatch/Space Wolves' own vehicles
+are all `Fly` or `Walker` and add nothing past the generic 16. Black Templars' seven
+chapter-priced entries are point-override duplicates of generic names, not new units — 16 stands.
+Hammerfall Bunker (`unit_type: Fortification`, carries the `Vehicle` keyword) is confirmed excluded
+by the `except_unit_types` clause specifically — pinned as its own assertion line since the
+`except_keywords` clause alone would miss it.
+
+**`E23-1` (coverage)** scans all 169 built detachments' `rule_text`/`restrictions` for the grant
+pattern ("select up to N ... Character keyword") and requires an exact match to the six rows —
+same discipline as `E21a-5`, so a detachment added later with the same grant fails the baseline
+instead of shipping unrowed.
+
+**Ticket not closed.** E23's build turn (the `list_store.js` pick-array state, the
+`eligibleWarlordEntries()`/`enhancementTypeEligible()` per-entry hooks at three `index.html` call
+sites) is separate engine work per turn-typing and is not attempted this session. `enforced: false`
+on all six rows accurately states that gap — the data is fully specified and source-verified, the
+engine simply doesn't consume it yet.
+
+**Rationale:** development-manager sequencing call (reversible) to use an otherwise-idle session on
+the one unblocked, fully-scoped backlog item rather than sit on B90/B91's Ryan-blockers. No
+legality precedent set — nothing is enforced yet, so live behaviour is unchanged.
+
+## D281 — Two tickets opened from Ryan-reported gaps: E28 (Detachment UI placement) and B93 (Enhancement/Upgrade eligibility) (S188)
+
+**Turn type: doc-only.** No engine, data, parser, or assertion change. Baseline unaffected — still
+30/30 at open (`--fetch --data-turn`), S187's hashes verified: `detachment_effects.json`,
+`rules_assertions.py`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `pipeline_manifest.py` all
+matched. `pipeline_manifest.json` did not match the S187-stated hash (`889415b3f838` claimed vs
+`8c9fedd205e7` found); regenerating with `--write` against the current guarded files reproduced
+the on-disk file byte-for-byte, so the manifest itself is internally correct — the S187 handoff's
+recorded hash for that one file reads as a transcription slip in the document, not a data problem.
+Noted here rather than chased further; no guarded file was actually wrong.
+
+**E28 opened** — Ryan asked whether selected Detachments (and Force Disposition) should move from
+their current always-visible block in the centre Army List panel to the right "Unit Options"-style
+panel, configured on click, matching the unit mechanic. Checked against the original UI decision
+(D192 item 5, `E1_DETACHMENT_SCOPE.md` §5): the shipped layout already diverges from that plan too
+— D192 specified an info-control-per-row opening rule text/enhancements/stratagems as collapsible
+detail, not an always-on top-of-list widget; E25 (D251/D254) added Force Disposition as a standalone
+control instead of routing through that path. Recommendation given to Ryan directly: move it, keep
+DP/points visible in the centre-list rows (unchanged), and attach Force Disposition to a
+"Detachments" group-level view rather than to each individual row, since it is one value governing
+the whole selection, not a per-detachment property. Not designed in detail — right panel currently
+switches on numeric `listId`; string-keyed detachment rows need new selection state. Sized M,
+comparable to E1c's original build.
+
+**B93 opened** — Ryan reported that every Enhancement's description opens with its qualification
+requirement (a keyword, unit type, or specific unit), and Enhancements are Character-only unless
+stated otherwise. Checked `enhancementTypeEligible()` against `detachments.json` (607 enhancement
+records) before logging: the Character-default is right, but the engine does not read the
+qualification text at all. Two gaps, not one — (1) `is_upgrade: true` records get **zero** type
+check (`isUpgrade ? true : …`), live and reachable today, e.g. Fulguris Task Force's *Bellicose
+Weapon Spirits* names "SPEEDER unit only" but assigns to any unit; (2) regular Enhancements narrow
+past "any Character" to a specific keyword/sub-type/named unit — Anvil Siege Force's *Indomitable
+Fury* ("GRAVIS model only"), Death Guard's *Cornucophagus* ("Lord of Poxes only") — and the blanket
+Character check currently over-admits all of these army-wide.
+
+**Correction to the reported pattern, found by sampling rather than trusting the claim as stated:**
+the qualification clause is not reliably the first sentence — sampled records show it typically
+follows one sentence of flavour text (`Bellicose Weapon Spirits`, `Blackwing Shroud`, `Bombast
+Omnivox`), and two records currently carry no usable qualification at all: `Thousand Sons |
+RUBRICAE PHALANX | Stave Abominus` has an empty `description`, and `Chaos Daemons | SHADOW LEGION |
+Leaping Shadows`'s description is just the enhancement's own name with no rule text. A first-
+sentence parsing heuristic would misfire on real records today; any build needs a source pass
+across all 607 first. Not scoped for build this session — sized L, spans sessions, same shape as
+the B70/B73 and B90 clusters.
+
+**Rationale:** logging Ryan's two reports as scoped tickets is a doc-only action; no legality or
+UI precedent is set by opening them. Open count 17 → 19 (E28, B93 added).
+
+
+---
+
+## D282 — B91 resolved: two decision-log files merged into the single canonical `40K_Decision_Log.md`; B90's roster mechanism confirmed against source; B92 folded into B87→B88→B89 (S189)
+
+**Turn type: tooling/doc.** No engine, data, parser, or assertion change.
+
+**B91 — decision-log reconciliation, closed.** `40K_Decision_Log.md` (unversioned) was already the
+intended canonical name — decided at D265/S174, when the file was renamed off its version suffix
+along with four sibling docs, and `pipeline_manifest.py`'s `GUARDED`/`DECISION_LOG` and
+`repo_check.py`'s `DOC_FILES` were updated to match at the time. What actually happened afterward:
+sessions kept appending to a `40K_Decision_Log_v3_0.md` that reappeared in the repo (root cause not
+fully traceable — most likely a stale local copy re-uploaded under the old name, the same class of
+hazard the standing constraints already name), while the correctly-named file sat untouched. The
+manifest's hash check never caught it, because it verifies the guarded file hasn't changed, not that
+it's the one being written to — exactly the blind spot B91 originally flagged.
+
+Diffed both files byte-for-byte before merging, not just checked hashes. The two agree completely
+except in two places: (1) `40K_Decision_Log_v3_0.md` alone carries D276, inserted out of session
+order next to D42 rather than appended at the end; (2) `40K_Decision_Log.md` alone carries
+D264–D275 (confirming it was the one actually maintained through that stretch), and
+`40K_Decision_Log_v3_0.md` alone carries D277–D281. No content conflicts — every decision from D0
+through D281 exists in exactly one of the two files, none duplicated, none contradicted. Merged:
+`40K_Decision_Log.md`'s D0–D275 kept as-is (verified byte-identical to the shared range), D276
+relocated to its correct chronological position after D275, D277–D281 appended after it. Verified
+programmatically: every D-number 0–281 present exactly once in the merged file.
+
+Two pre-existing quirks carried through unchanged, already documented in `DECISION_INDEX.md`'s own
+header note and not new: D158 and D159 each legitimately appear twice in the source (unrelated to
+this merge); D93/D103/D104/D113–115/D124–129 carry no title on their heading line. Not touched this
+session — out of scope for a reconciliation, not a new finding.
+
+**Also checked while reconciling: the other four version-suffixed doc pairs D265 flagged for future
+deletion never got deleted.** `40K_Architecture_Overview_v0_5.md`, `40K_Data_Dictionary_v2_0.md`,
+`40K_Data_Pipeline_Process_v0_6.md`, `40K_Functional_Spec_v0_7.md` all still sit in the repo,
+byte-identical to their renamed counterparts (confirmed by direct fetch and diff, not assumed from
+size). Safe to delete outright, no merge needed — B91's "secondary" doc-pairs triage closes as:
+delete, don't touch content.
+
+**Ryan action required, cannot be pushed by this session:** delete five files from the repo —
+`40K_Decision_Log_v3_0.md`, `40K_Architecture_Overview_v0_5.md`, `40K_Data_Dictionary_v2_0.md`,
+`40K_Data_Pipeline_Process_v0_6.md`, `40K_Functional_Spec_v0_7.md` — after uploading this session's
+replacement `40K_Decision_Log.md`. Going forward the decision log is a single guarded file again;
+the "pull the live log manually, it's unguarded" step in recent next-session prompts is retired.
+
+**B90's roster mechanism, confirmed against source, not just recalled.** Read
+`MFM_Black_Templars_v1.1.txt` directly: Black Templars' unit list has no Librarian entry anywhere —
+not "no BT-specific override," genuinely absent. A build that unions the full generic pool and
+swaps in named overrides would still pull in the generic Librarian, since there's nothing to
+override it with — that reproduces the exact D276 bug under a different description. Confirmed the
+already-scoped B90 turn 2 plan is the correct one: each Tier-2 chapter's `units.json` block gets
+built as exactly what its own MFM lists, with no reference to the generic pool at all. Ryan confirmed
+the roster-size target (source count, ~90 for BT, not the superseded 76) and the "always current MFM
+edition, never locked to one version" direction, matching D274's already-decided intake policy. Still
+open: whether Legends/Forge-World datasheets present in a chapter's MFM (Astraeus, Thunderhawk for
+BT) count as legal matched-play roster members — Ryan has not yet confirmed this specific point.
+
+**B92 closed — its question was already answered at D274, and Ryan reconfirmed the same direction
+this session.** D274 (S183) already decided: keep every MFM version archived, never delete a
+superseded file, adopt per-faction as versions bump, tracked in `source_manifest.json`. That decision
+opened B87 (parser support for the v1.1 layout), B88 (reconciliation reports), B89 (per-faction
+adoption) — all three still open, untouched since S183. B92 restated the same question independently
+at S186 without being checked against the earlier decision. No new decision needed; B92 closes as a
+duplicate, and B87 is the actual next unblocked step, now confirmed as the sequencing D274 already
+specified (refresh arc ahead of B90's rebuild).
+
+**Rationale:** all three resolutions rest on checking primary sources — the two log files diffed
+directly, the Black Templars MFM read directly, D274 read in full — rather than re-deciding from
+memory or from a ticket's summary of itself. Open count 19 → 17 (B91, B92 closed).

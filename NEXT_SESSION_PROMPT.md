@@ -1,72 +1,56 @@
-# NEXT SESSION PROMPT — Session 189
+# NEXT SESSION PROMPT — Session 190
 
 ## Turn type: decided by what's been answered when the session opens (see below).
 
-Read `SESSION_HANDOFF_188.md` first, then this prompt. Read **D281** in
-`40K_Decision_Log_v3_0.md` in full for the two tickets opened last session (E28, B93) and the
-`pipeline_manifest.json` hash note.
+Read `SESSION_HANDOFF_189.md` first, then this prompt. Read **D282** in `40K_Decision_Log.md` in
+full — the decision log is a single guarded file again as of this session; there is no separate
+unguarded live copy to pull manually anymore. If a stray `40K_Decision_Log_v3_0.md` turns up in the
+repo or the project area, that is exactly the resurrection pattern D282 diagnosed — do not write to
+it, and flag it rather than assuming it's fine.
 
 ## Session open
-1. Data-turn baseline with sources: `./baseline.sh --fetch --data-turn`. Sources are required.
-   The live decision log `40K_Decision_Log_v3_0.md` is **unguarded and repo-only** (the B91 gap):
-   a fresh mount will not have it and the fetch/overlay will **not** recover it. Pull it manually
-   from the public repo — `40K_Decision_Log.md` (the guarded one) is stale and lacks D276-D281.
-2. Verify the S188 hashes in the handoff's Files section at open.
-3. Baseline should be green at open. `repo_check` will only be clean once S188's four changed
-   files (`DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `pipeline_manifest.json`,
-   `pipeline_manifest.py`) plus the live decision log are pushed to the repo — check whether
-   that's happened; if not, treat the repo-vs-area diff as expected, not a failure to chase.
+1. Data-turn baseline with sources: `./baseline.sh --fetch --data-turn`.
+2. Verify the S189 hashes in the handoff's Files section at open.
+3. Confirm Ryan has pushed S189's changes and deleted the five old-named files
+   (`40K_Decision_Log_v3_0.md`, `40K_Architecture_Overview_v0_5.md`, `40K_Data_Dictionary_v2_0.md`,
+   `40K_Data_Pipeline_Process_v0_6.md`, `40K_Functional_Spec_v0_7.md`). If not yet done, that's
+   expected drift, not a failure — proceed, but don't write new content to any old-named file if one
+   is still present.
 
-## Four things could be true at open — check in this order
+## Two things could be true at open — check in this order
 
-**If Ryan has answered the B90 blockers (D279, both: points edition + roster target) →**
-resume B90 turn 2 (DATA turn): new complete-roster pipeline path per D279, rebuild the five
-Tier-2 chapters in `units.json`, flip `roster_mode`, update `resolved_pool()`, re-verify
-`unit_loadouts.json`/`wargear_points.json`. Do not mix with anything else this session.
+**If Ryan has answered B90's remaining sub-question (do Legends/Forge-World datasheets in a
+chapter's own MFM count as legal roster members) →** resume B90 turn 2 (DATA turn): new
+complete-roster pipeline path per D276/D282's confirmed mechanism, rebuild the five Tier-2 chapters
+in `units.json` directly from their own MFM files, flip `roster_mode` to `'complete'` for those five,
+update `resolved_pool()`, re-verify `unit_loadouts.json`/`wargear_points.json`. This is now
+unblocked on everything except that one question and B87–B89 clearing first (see below) — do not
+start it until both are true. Do not mix with anything else this session.
 
-**Else if Ryan has answered B91 →** reconcile the canonical decision log (repoint
-`GUARDED`/`DECISION_LOG`, remove the stale copy after a file-card check per standing constraints).
-Tooling/doc turn.
+**Else → B87 (MFM v1.1 parser layout support), the confirmed next unblocked item.** D274/S183's
+edition-adoption arc (B87→B88→B89) has been open and untouched since it was opened; D282 confirmed
+this session that its underlying decision was never actually in question and Ryan reconfirmed the
+same direction independently. Build one parser with a per-file format sniff (v1.1's layout is
+self-identifying — new section headers, the "▼" marker) with per-layout readers behind it; v1_0
+files must still parse to identical output through the sniff path. Full scope in the B87 backlog
+entry. **Tooling turn.** Per D274's own sequencing, this arc runs ahead of B90 turn 2's rebuild —
+even if Ryan answers the Legends/Forge-World question this session, B87 still comes first unless
+Ryan explicitly says otherwise.
 
-**Else if picking up E23's engine turn →** the only fully-scoped, unblocked build-turn item:
-wire `list_store.js`'s new per-entry pick-array state (mirroring `warlord_entry_id`/
-`force_disposition` — purely additive, no schema bump) and the three `index.html` call sites
-(`eligibleWarlordEntries()`, `enhancementTypeEligible()`'s three sites) to consume the six
-`tank_ace` rows `detachment_effects.json` carries (D280), flipping them to `enforced: true` once
-wired. **Flag this at open as an Analysis-tier turn before starting** — it changes Enhancement
-and Warlord eligibility live on six built armies, and a wrong per-entry hook is exactly the class
-of mistake that ships a bug, not a data typo. Re-derive the eligible-pool predicate and cap from
-`detachment_effects.json`'s rows and `E23-2`'s assertion rather than re-deriving from source again
-— that part is already pinned.
-
-**Else, two newly opened tickets are available for a scoping turn (not a build turn — neither is
-ready to build):**
-- **E28** (Detachment UI → right-panel, D281): needs a design/scoping pass on the new selection
-  state (distinguishing "a unit is selected" from "the Detachments group is selected") before any
-  engine work starts. Ryan already gave the product answer (move it, Force Disposition at the
-  group level, not per-row); what's missing is the mechanism, not the decision.
-- **B93** (Enhancement/Upgrade eligibility, D281): needs a source pass across all 607 enhancement
-  records in `detachments.json` to determine how reliably the qualification clause can be parsed
-  (flavour-text-then-qualifier is the common shape, but at least two records have no usable
-  qualification text at all — Thousand Sons' Stave Abominus, Chaos Daemons' Leaping Shadows) before
-  any parser or engine mechanism is chosen. **Flag as Analysis-tier before starting** — this
-  produces the eligibility-gating design for a live D0 gap (Upgrades currently have zero type
-  check), and a wrong read of the pattern across 607 records would misscope the whole build.
-
-If none of the above is available (nothing answered, E23's engine turn looks too deep for the
-session, and neither E28 nor B93 is picked up for scoping either), fall back to the next backlog
-item under the faction priority order rather than blocking.
+If neither is available, fall back to the next backlog item under the faction priority order rather
+than blocking.
 
 ## Standing reminders
 - Turn-typing strict. Fix parsers, never hand-edit output; merge-passthrough/hand-authored JSON
-  (`detachment_effects.json`, `faction_taxonomy.json`, and its four lookup siblings) goes through
-  a script/serialiser, never a manual edit — D278's lesson.
-- Source-first: re-derive legality claims from source; absence in derived data is not absence in
-  rules. S188 is a working example of why — Ryan's own report on B93 (qualification clause
-  "begins" the description) didn't hold up against a source sample, and the correction was worth
-  finding before the ticket was scoped, not after a parser was built against it.
+  (`detachment_effects.json`, `faction_taxonomy.json`, and its four lookup siblings) goes through a
+  script/serialiser, never a manual edit.
+- Source-first: S189 is a working example of why this matters even for things that feel settled —
+  B91 looked like an open naming choice and was actually a five-session-old decision that drifted;
+  B92 looked like a new question and was a duplicate of one already answered; B90's mechanism looked
+  right from a session's own prior description and turned out to need a direct source read (the
+  Black Templars MFM file itself) before it could be confirmed. In each case, checking the primary
+  source or the primary decision — not the most recent summary of it — is what caught the gap.
 - Close by producing the four documents, regenerating the manifest with `--write`, and running
   `--freshness-check` as the **last** command — after every other edit, including edits to the
-  handoff itself (S188 self-referential-hash note: the handoff's own row in its Files table can't
-  meaningfully carry a hash of itself; leave it as "(this file)" per S187's precedent rather than
-  computing one, since editing the file to add its own hash invalidates that hash).
+  handoff itself (leave the handoff's own row in its Files table as "(this file)" rather than
+  computing a hash of itself).

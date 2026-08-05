@@ -463,3 +463,15 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   isn't reliably the description's first sentence as reported, and two records (Thousand Sons'
   Stave Abominus, Chaos Daemons' Leaping Shadows) have no usable qualification text yet — a source
   pass across all 607 records is needed before either is built. Open count 17 → 19.
+- **D282** — B91 resolved: `40K_Decision_Log.md` and the stray `40K_Decision_Log_v3_0.md` merged
+  into one canonical file (byte-diffed first — D264–D275 only in the guarded copy, D276–D281 only
+  in the versioned copy, D276 relocated from its out-of-order position beside D42 to its correct
+  place after D275; every D-number 0–281 confirmed present exactly once). The four other
+  version-suffixed doc pairs from D265's incomplete rename (`40K_Architecture_Overview_v0_5.md`,
+  `40K_Data_Dictionary_v2_0.md`, `40K_Data_Pipeline_Process_v0_6.md`,
+  `40K_Functional_Spec_v0_7.md`) confirmed byte-identical to their renamed counterparts and safe to
+  delete outright. B90's roster mechanism confirmed against `MFM_Black_Templars_v1.1.txt` directly
+  (no Librarian entry at all — not an unoverridden generic unit), matching B90 turn 2's existing
+  native-rebuild plan. B92 closed as a duplicate of D274's already-decided MFM-edition policy;
+  B87→B88→B89 is the real execution path, now confirmed unblocked. Open count 19 → 17
+  (B91, B92 closed).

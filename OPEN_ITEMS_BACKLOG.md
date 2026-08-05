@@ -3,7 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **19 open** as of S188 (up from 17 at S187): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+not here, it isn't open. **17 open** as of S189 (down from 19 at S188): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+B17, B87, B88, B89, B90, E28, B93. B91 and B92 closed (D282, tooling/doc turn): the two decision-log
+files merged into one canonical `40K_Decision_Log.md` (byte-diffed first, every D-number 0–281
+confirmed present exactly once); B90's roster mechanism confirmed against `MFM_Black_Templars_v1.1.txt`
+directly; B92 closed as a duplicate of D274's already-decided MFM edition policy, with B87 now
+confirmed as the real next unblocked step. B90 still has one open sub-question (Legends/Forge-World
+datasheets counting as legal roster members).
+**19 open** as of S188 (up from 17 at S187): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
 B17, B87, B88, B89, B90, B91, B92, E28, B93. Two tickets logged from Ryan reports (D281, doc-only,
 no build): E28 (Detachment selection UI placement — right panel, click-to-configure) and B93
 (Enhancement/Upgrade eligibility doesn't read the Enhancement's own qualification text; two records
@@ -308,40 +315,20 @@ it. Source *does* confirm D276's legality model (BT lists 0 Librarians; chapter 
 differ). Also noted: no existing pipeline path emits a complete per-chapter roster — turn 2 needs a new
 build path, not a data edit. Turn 2 resumes once both decisions are settled; turn 3 (assertion) follows.
 
-### B92 — MFM v1.1 edition adoption / points currency — **NEW S186 (D279); Ryan-decision + data; M; blocks a correct B90 turn 2**
-The pipeline pins **v1_0** MFM files (`source_manifest.json`, `units_repro_check.py`), but a newer
-**v1.1** of every SM-family file — and of Chaos Space Marines, Death Guard, Thousand Sons, Emperor's
-Children, World Eaters, Grey Knights, Drukhari, Chaos Knights — sits unadopted in the source area.
-Rosters are identical v1_0↔v1.1 for the five Tier-2 chapters (verified S186); the delta is **points**:
-v1.1 reprices units (e.g. Chaplain Grimaldus 110→100, Emperor's Champion 100→90) and annotates each
-change with ▲▼ markers (the markers themselves are disregarded per the MFM points rule; the final value
-is used). Consequence: the tool currently ships stale points for every faction with a v1.1 present.
-Decision: adopt v1.1 across the board (manifest re-hash, repro re-bank, points-legality precedent) or
-stay v1_0 until a deliberate edition bump. Interacts with B90 turn 2 — if the Tier-2 rebuild should ship
-current points, decide this first so the rebuild is not re-priced immediately after. Scope of the
-faction-wide adoption to be sized once the direction is set.
+**MECHANISM CONFIRMED AGAINST SOURCE — S189 (D282).** Read `MFM_Black_Templars_v1.1.txt` directly:
+its unit list carries no Librarian entry at all — not "no BT override of the generic one," genuinely
+absent. Confirms the turn-2 plan is right and rules out a tempting shortcut: a build that unions the
+full generic pool and swaps in named overrides would still leak the generic Librarian in, since
+there's no BT-specific entry to override it with. Each Tier-2 chapter's `units.json` block must be
+built as exactly what its own MFM lists, with no reference to the generic pool. **Ryan confirmed
+S189:** roster target is the source-verified count (~90 for BT, not 76) and MFM edition should never
+lock to one version — both already match D274's intake policy and this turn's rebuild target.
+**Still open:** whether Legends/Forge-World datasheets present in a chapter's MFM (Astraeus,
+Thunderhawk for BT) count as legal matched-play roster members — not yet confirmed by Ryan. Turn 2
+resumes once that's answered and B87→B88→B89 (the MFM edition arc, now unblocked — see Closed/Shipped)
+clears ahead of it, per D274's own sequencing.
 
-### B91 — Decision-log & versioned-doc canonical reconciliation — **NEW S185 (D277); Ryan-decision + tooling/doc; M**
-Two decision-log files live in the repo and have diverged. `pipeline_manifest.py` guards
-`40K_Decision_Log.md` (unversioned) and names it in `DECISION_LOG`, but S184/S185 append to and read
-`40K_Decision_Log_v3_0.md` (versioned) as the live log. Verified this session: the guarded unversioned
-copy contains **zero** occurrences of D276; the live versioned copy has D276+. So the log actually
-being written is unguarded, and the guarded one is stale — a silent-divergence hazard sitting in the
-manifest's blind spot (it verifies the stale file's hash, which matches, and can't see stale content).
-This is the opposite of the "rolling docs drop version numbers" convention (which would make the
-unversioned name canonical), so the fix is a genuine choice, not mechanical.
-Secondary: several other docs ship as identical-size unversioned + versioned pairs
-(`40K_Architecture_Overview` / `_v0_5`, `40K_Data_Dictionary` / `_v2_0`, `40K_Data_Pipeline_Process`
-/ `_v0_6`, `40K_Functional_Spec` / `_v0_7`) — likely stale snapshots, each to be confirmed before
-removal. Tertiary: D276 sits mid-file (line ~243, beside D42) rather than in session order; low
-priority.
-**Needs Ryan** (deletion + naming precedent): pick the canonical decision-log file, repoint `GUARDED`
-and `DECISION_LOG`, remove the stale copy, then do the same triage for the doc pairs. Do not delete
-anything without a file-card check first. Recommended as the near-term priority — it undermines the
-integrity guarantee the manifest is supposed to provide, and every session that appends to the live
-log widens the gap.
-
-### B87 — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); tooling; M**
+### B87 — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); tooling; M; UNBLOCKED S189 (D282) — next unblocked item**
 GW's v1.1 pages use a new layout the current parser reads as zero costs (SM v1.1: 154/179 names
 found, 0 costed). Deltas: no bullet prefix on cost lines; "▼" markers after unit names and model
 counts; inline change annotations ("(-10)", "▲ (+10)", "UPDATED" lines) to strip — final value only;
@@ -745,6 +732,8 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B91** — Decision-log & versioned-doc canonical reconciliation — **NEW S185 (D277); CLOSED S189 (D282); TOOLING/DOC.** The unversioned name was already canonical (decided at D265/S174); sessions had drifted back to a resurrected `40K_Decision_Log_v3_0.md` without anyone noticing, since the manifest only checks that its guarded target hasn't changed, not that it's the one being written to. Byte-diffed both files before merging: agreed everywhere except D264–D275 (guarded-only) and D276–D281 (versioned-only, D276 additionally misplaced beside D42). Merged into one `40K_Decision_Log.md`, every D-number 0–281 present exactly once, D276 relocated to its correct position. The four sibling version-suffixed doc pairs confirmed byte-identical to their renamed counterparts by direct fetch, not size — safe to delete outright. Five old-named files need deleting from the repo by Ryan.
+- **B92** — MFM v1.1 edition adoption / points currency — **NEW S186 (D279); CLOSED S189 (D282), duplicate.** Already decided at D274/S183 (keep every version, adopt per-faction as versions bump); B87/B88/B89 are the tickets that execute it, opened the same session and still open. B92 restated the same question without being checked against the earlier decision; Ryan reconfirmed the same direction independently this session. B87 is the actual next unblocked step.
 - **E27** — State Leader vs Support correctly in popups and exported output — **SHIPPED S179 (D270); UI.** `renderDetail`'s attach-panel section heading and hint, and `leaderSectionHtml`'s datasheet-modal heading, both now read `leaderAbilityName`/`leader_ability_name` instead of a hardcoded "Leader" string. Investigated and ruled out during the build: the two other "likely sites" the ticket named — the list-panel attached-unit row and the JSON save/export schema — neither actually hardcodes the word "Leader" anywhere, so nothing changed at either. Also confirmed the Rules-section dedup filter (checks the literal string `'Leader'` against `rule_names`) had to stay untouched: the datasheet's own ability box is always literally printed "Leader" (129 of 129 checked instances) regardless of `leader_ability_name`'s Leader/Support classification — that classification comes from the MFM's own LEADER/SUPPORT block headers, a different source document, not the datasheet card. Assertion E27 added (structural shape only, no legality change). `index.html` v6.13 → v6.14.
 - **E26** — Enforce one-Leader-one-Support stacking — **SHIPPED S178 (D269); ENGINE.** `permitsCoLeader` rewritten with four D268 requirements: (R1) bare CHARACTER Support pairs with any Leader by the base rule; (R2) DG `co_leader_any` second-Leader path kept; (R3) Leader cross-reference (Huron→MotM, sole instance across 16 factions); (R4) same-type cap refuses two Supports or two non-`co_leader_any` Leaders, actively overriding the stale Apothecary→Lieutenant cross-listing. `leaderAbilityName` added to the allUnits view object. Named `co_leader_eligible_with` lists preserved as the datasheet combination restriction. Assertion E26 added (10 legality cases with symmetry, plus 9 structural shape fragments). `index.html` v6.12 → v6.13.
 - **B73** — Ultramarine (and roster-wide) Leader abilities listed units outside their actual eligibility — **DECIDED S175 (D266); SHIPPED S176 (D267); DATA.** MFM made source of truth for attach eligibility. `mfm_points_parser.py` rewritten to capture `LEADER` and `SUPPORT` blocks (one line each — fixes the D260 over-read), replace the stale 10th-ed Wahapedia ability/list wherever the MFM has a block, drop any entry that resolves to no datasheet, and clear the footer on Support overrides. `units.json` regenerated through the full pipeline; diff-guard clean (43 units, only `leader_eligible_units`/`leader_ability_name`/`leader_footer`). Ancient/Apothecary/Lieutenant → Support; Epic Heroes narrowed to MFM lists; Wardens carved out (MFM/datasheet conflict → B70). Assertion `B73` added (111 total). Corrected two S175 assumptions before building: Support is the same attach mechanic as Leader (not B70's join mechanic), and the engine gates on the list not the ability name — so both lists live in one field with the distinction in `leader_ability_name`, reversing the S175 "separate field" plan (confirmed with Ryan). Ryan's stipulations became E26 (stacking enforcement) and E27 (popup/output wording).

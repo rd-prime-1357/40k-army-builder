@@ -2435,3 +2435,55 @@ Support-classified unit except MotM, causing its ability to print twice.
 Assertion E27 added — structural shape only (no legality logic changed): confirms both the
 attach-panel heading/hint and the modal heading read the ability-name field, and that the old
 hardcoded strings are actually gone rather than merely shadowed. `index.html` v6.13 → v6.14.
+
+### B91 — Decision-log & versioned-doc canonical reconciliation — **NEW S185 (D277); CLOSED S189 (D282)**
+Two decision-log files live in the repo and have diverged. `pipeline_manifest.py` guards
+`40K_Decision_Log.md` (unversioned) and names it in `DECISION_LOG`, but S184/S185 append to and read
+`40K_Decision_Log_v3_0.md` (versioned) as the live log. Verified this session: the guarded unversioned
+copy contains **zero** occurrences of D276; the live versioned copy has D276+. So the log actually
+being written is unguarded, and the guarded one is stale — a silent-divergence hazard sitting in the
+manifest's blind spot (it verifies the stale file's hash, which matches, and can't see stale content).
+This is the opposite of the "rolling docs drop version numbers" convention (which would make the
+unversioned name canonical), so the fix is a genuine choice, not mechanical.
+Secondary: several other docs ship as identical-size unversioned + versioned pairs
+(`40K_Architecture_Overview` / `_v0_5`, `40K_Data_Dictionary` / `_v2_0`, `40K_Data_Pipeline_Process`
+/ `_v0_6`, `40K_Functional_Spec` / `_v0_7`) — likely stale snapshots, each to be confirmed before
+removal. Tertiary: D276 sits mid-file (line ~243, beside D42) rather than in session order; low
+priority.
+**Needs Ryan** (deletion + naming precedent): pick the canonical decision-log file, repoint `GUARDED`
+and `DECISION_LOG`, remove the stale copy, then do the same triage for the doc pairs. Do not delete
+anything without a file-card check first. Recommended as the near-term priority — it undermines the
+integrity guarantee the manifest is supposed to provide, and every session that appends to the live
+log widens the gap.
+
+**CLOSED S189 (D282).** The unversioned name was never actually in question — D265/S174 already
+picked it, renamed the file, and updated every tool reference; sessions had simply drifted back to
+writing a resurrected `_v3_0` copy without anyone noticing, since the guard only checks that its
+target hasn't changed, not that it's the one being written to. Byte-diffed both files before merging
+rather than trusting either's self-description: they agreed everywhere except D264–D275 (guarded-only)
+and D276–D281 (versioned-only, with D276 additionally misplaced beside D42). Merged into one
+`40K_Decision_Log.md` with every D-number 0–281 present exactly once, D276 relocated to its correct
+chronological position. The four sibling doc pairs were checked by direct fetch-and-diff, not size —
+all four byte-identical to their renamed counterparts, safe to delete outright. Five old-named files
+(`40K_Decision_Log_v3_0.md` plus the four siblings) need deleting from the repo by Ryan; cannot be
+pushed by the session that produces the replacement.
+
+### B92 — MFM v1.1 edition adoption / points currency — **NEW S186 (D279); CLOSED S189 (D282), duplicate**
+The pipeline pins **v1_0** MFM files (`source_manifest.json`, `units_repro_check.py`), but a newer
+**v1.1** of every SM-family file — and of Chaos Space Marines, Death Guard, Thousand Sons, Emperor's
+Children, World Eaters, Grey Knights, Drukhari, Chaos Knights — sits unadopted in the source area.
+Rosters are identical v1_0↔v1.1 for the five Tier-2 chapters (verified S186); the delta is **points**:
+v1.1 reprices units (e.g. Chaplain Grimaldus 110→100, Emperor's Champion 100→90) and annotates each
+change with ▲▼ markers (the markers themselves are disregarded per the MFM points rule; the final value
+is used). Consequence: the tool currently ships stale points for every faction with a v1.1 present.
+Decision: adopt v1.1 across the board (manifest re-hash, repro re-bank, points-legality precedent) or
+stay v1_0 until a deliberate edition bump. Interacts with B90 turn 2 — if the Tier-2 rebuild should ship
+current points, decide this first so the rebuild is not re-priced immediately after. Scope of the
+faction-wide adoption to be sized once the direction is set.
+
+**CLOSED S189 (D282), duplicate.** This question was already decided at D274/S183 — keep every MFM
+version archived, adopt per-faction as versions bump, never lock to one edition — and that decision
+opened B87/B88/B89 to execute it. B92 restated the same question three sessions later without being
+checked against the earlier decision; Ryan reconfirmed the same direction independently this session.
+No new decision was needed. B87 (parser support for the v1.1 layout) is the real next step, now
+confirmed unblocked.
