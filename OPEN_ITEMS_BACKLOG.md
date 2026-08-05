@@ -3,11 +3,20 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **17 open** as of S190 (unchanged count from S189): B69, B70, B75, B85,
-B86, P2, P4, E23, B67b, E12, B17, B88, B89, B90, E28, B93, B94. B87 closed (D283, tooling turn):
-mfm_points_parser.py now reads the MFM v1.1 layout via a per-file sniff + normalization pass, all 15
-v1.1 files cost fully (179/179 for SM, 0 before), v1_0 output byte-identical except the two units B87
-corrected. B94 added (D283): the deferred copy-4 tier-schema decision for the 34 units using the
+not here, it isn't open. **17 open** as of S191 (unchanged count from S190): B69, B70, B75, B85,
+B86, P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94, B95. B88 closed (D284, tooling/analysis
+turn): `detachment_parser.py` now reads the MFM v1.1 DETACHMENTS layout via the same sniff +
+normalization pattern B87 used for points (all 15 v1.1 files parse cleanly, 0 before; v1_0 output
+byte-identical); `mfm_reconcile.py` generalized into a real per-faction delta tool across the 10
+built-army MFM file pairs (189 adopt-mechanically, 71 investigate-first — `MFM_v1_1_Reconciliation.md`
+is B89's work order). B95 opened (D284): `faction_taxonomy.json`'s `built` flag disagrees with
+`units.json` for Chaos Space Marines and Thousand Sons.
+
+**17 open** as of S190 (unchanged count from S189): B69, B70, B75, B85, B86, P2, P4, E23, B67b, E12,
+B17, B88, B89, B90, E28, B93, B94. B87 closed (D283, tooling turn): mfm_points_parser.py now reads
+the MFM v1.1 layout via a per-file sniff + normalization pass, all 15 v1.1 files cost fully (179/179
+for SM, 0 before), v1_0 output byte-identical except the two units B87 corrected. B94 added (D283):
+the deferred copy-4 tier-schema decision for the 34 units using the
 1st-to-3rd/4th+ shape in v1.1 — a "how it behaves" product/schema call plus its engine+data work.
 B90's last sub-question answered this session (D283): Legends/Forge-World datasheets a chapter's own
 current MFM prices ARE legal roster members — B90 turn 2 now fully unblocked (runs after B88/B89 per
@@ -362,21 +371,6 @@ Recommendation: add the real tier — a wrong points value is D0-class, and 34 u
 **Turns:** engine (schema + lookup + mirror), then data (regenerate affected units, diff-guard),
 then assertion. Sequence with B89's adoption arc so the affected units migrate once, correctly.
 
-### B88 — MFM v1.1 reconciliation reports + detachment-layout parsing — **NEW S183 (D274); tooling/analysis; M; depends B87 (done); v1.1 detachment-layout rescoped in from B87 at S190 (D283)**
-Generalize `mfm_reconcile.py` (built for the SM old-vs-new pass) across every built faction: one
-delta report per faction — points changes, units added/removed from the MFM, attach-list changes,
-Leader/Support flips, wargear cost changes, and detachment deltas (DP, force disposition, enhancement
-costs, unique tags). Each faction compares its newest capture against the version the app was built
-from, per `source_manifest.json`. Output is B89's work order: every delta classified as
-adopt-mechanically vs investigate-first. **S190 rescope (D283):** B87 originally carried a clause to
-"parse the v1.1 DETACHMENTS block for B88." That work belongs here, not in `mfm_points_parser.py` —
-detachment blocks are already parsed by a *separate* parser (`detachment_parser.py`, via `MFM_DP_RE`
-/ `MFM_ENH_RE`), and adding a second detachment reader to the points parser would duplicate it. Both
-of `detachment_parser.py`'s MFM regexes assume the v1_0 layout (jammed `<NAME><n>DP`, bulleted
-`• <name><cost> pts`); v1.1 puts DP on its own line and drops the enhancement bullet with the cost on
-a separate line. So B88 must extend `detachment_parser.py` with v1.1-layout support (mirroring B87's
-sniff-and-normalize approach) before it can produce detachment deltas.
-
 ### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); data; L; depends B88; spans sessions**
 Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and
 merge, key-level diff against the committed output — expected diffs are points values only, any
@@ -384,6 +378,18 @@ structural diff investigated before acceptance. Assertions pinning points values
 against the new source, never loosened. `source_manifest.json` updated per faction as it migrates.
 Standard priority order. E23's D273 per-army pool counts re-verified after the six Astartes armies
 migrate. The v1_0 layout reader retires when the last faction leaves it.
+
+### B95 — `faction_taxonomy.json`'s `built` flag disagrees with `units.json` for CSM and Thousand Sons — **NEW S191 (D284); doc/data integrity; XS-S**
+Found incidentally while scoping B88's reconciliation report to "every built faction" — the
+operational definition had to be "has real rows in `units.json`," not the taxonomy flag, to
+include these two. `faction_taxonomy.json` marks Chaos Space Marines and Thousand Sons
+`built: false`, but `units.json` already carries real roster data for both armies (Chaos Space
+Marines' Rubric Marines are the very units B87 corrected; Thousand Sons is mid-build per
+`THOUSAND_SONS_BUILD_SCOPE.md`). Needs a decision: is the flag simply stale and should flip to
+`true` (possibly narrowed for Thousand Sons if its roster is still incomplete), or does `built`
+mean something narrower than "has unit rows" — full roster, detachments wired, UI-enabled — that
+neither has hit yet? Whichever it is, the flag and the data should agree: the app UI reads `built`
+to decide what's selectable, and B89's per-faction adoption scoping will too.
 
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:
@@ -761,6 +767,7 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B88** — MFM v1.1 reconciliation reports + detachment-layout parsing — **NEW S183 (D274); CLOSED S191 (D284); TOOLING/ANALYSIS.** Extended `detachment_parser.py` with the same sniff-and-normalize pattern B87 used for the points file: v1.1 splits `NAME<n>DP`/bulleted-enhancement lines across two physical lines (name, then a bare `<n>DP` or `<n> pts` line) and drops the same `UPDATED`/`FORCE DISPOSITION(S) CHANGED` notes as noise — normalization rejoins the DETACHMENTS...LEGENDS/EOF slice back into the exact v1_0 shape so the existing reader runs unmodified. Two DETACHMENTS-only quirks not present in the points file, both verified against source: a bare `▲` marker with no parenthesised delta on a DP line (Thousand Sons' Hexwarp Thrallband, 2DP→3DP) and a `UNIQUE TAG REMOVED` note (World Eaters — missed on a first pass keyed only off the Space Marines file, caught once World Eaters was actually parsed, then confirmed complete by an exhaustive all-caps-line sweep of all 15 files' DETACHMENTS blocks). v1_0 output proven byte-identical on all 10 files in `ARMY_TO_MFM`; all 15 v1.1 files now parse their DETACHMENTS block cleanly (0 before). Net-new `b88_check.js` pins all of it; `rules_assertions.py`'s P4 source census updated for the new report filename. Generalized `mfm_reconcile.py` from the old one-off SM-vs-`mfm_sm.txt` pass into a real per-faction tool: for the 10 built-army MFM file pairs, diffs points, roster, wargear, attach lists (including Leader/Support flips), and detachment fields/enhancements between v1_0 (what the app is built from) and v1.1 (the newest capture), classifying every delta adopt-mechanically vs investigate-first. Caught and fixed a real bug in the first draft before shipping: force-disposition and unique-tag changes on an otherwise-matched detachment were being counted as adopt-mechanically — they're a rules-shape property, not a value, so they were moved to investigate-first. Final: 189 adopt-mechanically, 71 investigate-first across the 10 factions; report banked as `MFM_v1_1_Reconciliation.md`. Output is B89's work order. **B95 opened**, incidental: `faction_taxonomy.json` marks Chaos Space Marines and Thousand Sons `built: false` though `units.json` holds real data for both — found while scoping this report to "built" factions.
 - **B87** — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); CLOSED S190 (D283); TOOLING (+ one coupled 2-value data correction).** Added a per-file v1.1 sniff (keyed on the ▲/▼ change markers, absent from every v1_0 file) and a normalization pass that rewrites each v1.1-exclusive quirk into the exact v1_0 line shape the existing readers already parse: drops the leading `UNITS` header, the standalone `▲`/`▼`/`▲▼` markers, and the `UPDATED`/`REQUISITION THRESHOLDS REMOVED`/`FORCE DISPOSITION(S) CHANGED` notes; strips the inline `▼ (-10)` / `▲ (+10)` cost annotations leaving the final printed value intact. Cost lines made bullet-optional so one reader serves both editions. Result: all 15 v1.1 files cost fully (SM 179/179; 0 before), every v1_0 file byte-identical **except** the two units B87 corrected. **In-flight bug found and fixed:** the tier shape `1ST TO 3RD / 4TH+` had no reader — the parser fell through to single-mode and kept the pricier 4th+ line, so Rubric Marines (CSM 000003583, TS 000001020) shipped every 1st-3rd copy at 110/200 instead of the correct 100/190. B87 added a reader for the shape (`esc4` mode) that emits the 1st-to-3rd price across the 3-tier schema and captures the un-representable 4th+ tier for B94; the two Rubric Marines values were regenerated through the real pipeline (units_repro_check green). The v1.1 DETACHMENTS-parsing clause was rescoped out to B88 (detachments have their own parser). 15 v1.1 files registered in `source_manifest.json`. Net-new `b87_check.js` pins all three facts. **B94 opened** for the deferred copy-4 schema decision.
 
 - **B91** — Decision-log & versioned-doc canonical reconciliation — **NEW S185 (D277); CLOSED S189 (D282); TOOLING/DOC.** The unversioned name was already canonical (decided at D265/S174); sessions had drifted back to a resurrected `40K_Decision_Log_v3_0.md` without anyone noticing, since the manifest only checks that its guarded target hasn't changed, not that it's the one being written to. Byte-diffed both files before merging: agreed everywhere except D264–D275 (guarded-only) and D276–D281 (versioned-only, D276 additionally misplaced beside D42). Merged into one `40K_Decision_Log.md`, every D-number 0–281 present exactly once, D276 relocated to its correct position. The four sibling version-suffixed doc pairs confirmed byte-identical to their renamed counterparts by direct fetch, not size — safe to delete outright. Five old-named files need deleting from the repo by Ryan.

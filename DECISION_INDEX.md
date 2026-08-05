@@ -482,3 +482,15 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   for B94. B90's Legends/Forge-World roster question answered (yes — a chapter's own MFM prices them
   legal). v1.1 detachment parsing rescoped to B88. Net-new `b87_check.js`. B87 closed, B94 opened,
   open count unchanged at 17.
+- **D284** — B88 shipped: `detachment_parser.py` reads the MFM v1.1 DETACHMENTS layout via the same
+  sniff + normalization pattern B87 used for the points file (all 15 v1.1 files parse cleanly, 0
+  before; v1_0 output byte-identical on all 10 live-army files). Two quirks handled beyond B87's
+  precedent: a bare trailing marker on a DP line with no delta (Thousand Sons' Hexwarp Thrallband,
+  2DP→3DP) and a third editorial note string (`UNIQUE TAG REMOVED`, World Eaters). Net-new
+  `b88_check.js`. `mfm_reconcile.py` generalized from the old one-off SM pass into a per-faction delta
+  tool across the 10 built-army MFM file pairs — points, roster, wargear, attach lists/Leader-Support
+  flips, and detachment deltas, each classified adopt-mechanically vs investigate-first. A
+  misclassification (force disposition/unique tag counted as adopt-mechanically) caught and fixed
+  before shipping. Final: 189 adopt / 71 investigate; report banked as `MFM_v1_1_Reconciliation.md`,
+  B89's work order. B95 opened: `faction_taxonomy.json` `built` flag disagrees with `units.json` for
+  CSM and Thousand Sons. Open count unchanged at 17 (B88 closed, B95 opened).

@@ -227,6 +227,91 @@ MFM_DP_RE = re.compile(r"^(.*?[A-Za-z\u2019'])\s*(\d)DP$")
 MFM_ENH_RE = re.compile(r"^[\u2022\-\*]\s*(.+?)\s*(\d+)\s*pts$", re.I)
 MFM_UNIQUE_RE = re.compile(r"^UNIQUE:\s*(.+)$")
 
+# B88. v1.1 layout support for the DETACHMENTS block. Same self-identifying markers
+# as B87 (mfm_points_parser.py): a v1_0 file contains none of \u25b2/\u25bc, so a
+# single hit anywhere in the file is sufficient and safe. v1.1 splits what v1_0 jams
+# onto one line ("NAME<n>DP", "\u2022 Enhancement<n> pts") across two physical lines
+# ("NAME" / "<n>DP", "Enhancement" / "<n> pts", no bullet) and drops delta annotations
+# ("UPDATED", "FORCE DISPOSITION(S) CHANGED", "UNIQUE TAG REMOVED" -- the third was
+# missed on a first pass keyed off the Space Marines file alone and only surfaced
+# once World Eaters was actually parsed; an exhaustive all-caps-short-line sweep of
+# all 15 files' DETACHMENTS blocks afterward found no further note strings) plus
+# inline change markers: bare "\u25b2"/"\u25bc"/"\u25b2\u25bc"/"\u25bc\u25b2" lines,
+# "\u25b2 (+10) 20 pts"-style annotations glued to an enhancement cost line, and
+# (Thousand Sons' HEXWARP THRALLBAND) a trailing "<n>DP \u25b2" marker with no
+# parenthesised delta on the DP line itself. Normalization rewrites the
+# DETACHMENTS...LEGENDS/EOF slice only -- never the UNITS section, which
+# mfm_points_parser.py already owns -- back into the exact v1_0 line shape, so the
+# state machine below is untouched. Cost/DP VALUES are never changed, only
+# v1.1-exclusive annotations, markers and line splits are rewritten. Verified against
+# all 15 v1.1 source files: every DP line and every enhancement-cost line is
+# immediately preceded by its name line with nothing interposed (no blank lines
+# occur inside any v1.1 DETACHMENTS block either), so a straight adjacent-pair join
+# is sufficient -- no lookahead-past-noise logic is required.
+_V11_MARKERS = ("\u25b2", "\u25bc")
+_V11_STANDALONE_MARKERS = {"\u25b2", "\u25bc", "\u25b2\u25bc", "\u25bc\u25b2"}
+_V11_UPDATED_NOTES = {"UPDATED", "REQUISITION THRESHOLDS REMOVED",
+                      "FORCE DISPOSITION(S) CHANGED", "UNIQUE TAG REMOVED"}
+_V11_DP_MARKED_RE = re.compile(r"^(\d+)DP\s*[\u25b2\u25bc]+\s*(?:\([+\-]\d+\)\s*)?$")
+_V11_DP_PLAIN_RE = re.compile(r"^\d+DP$")
+_V11_PTS_MARKED_RE = re.compile(
+    r"^(?:[\u25b2\u25bc]+\s*(?:\([+\-]\d+\)\s*)?)?(\d+\s*pts)$", re.I)
+_V11_PTS_PLAIN_RE = re.compile(r"^\d+\s*pts$", re.I)
+
+
+def sniff_is_v1_1(lines):
+    """True iff the file uses the v1.1 layout. Same test as mfm_points_parser.py
+    (B87): keyed on the \u25b2/\u25bc change markers, absent from every v1_0 file,
+    checked over the whole file so a file whose DETACHMENTS section happens to carry
+    no marker of its own still identifies correctly."""
+    for ln in lines:
+        if any(mk in ln for mk in _V11_MARKERS):
+            return True
+    return False
+
+
+def normalize_detachments_v1_1(block):
+    """Rewrite a v1.1 DETACHMENTS...LEGENDS/EOF slice (already stripped per line)
+    into the v1_0 line shape MFM_DP_RE / MFM_ENH_RE parse. Returns a new list."""
+    # Pass 1: drop pure noise; strip marker/delta annotations from DP and pts lines,
+    # leaving the final printed value untouched.
+    cleaned = []
+    for s in block:
+        if not s:
+            cleaned.append(s)
+            continue
+        if s in _V11_STANDALONE_MARKERS or s in _V11_UPDATED_NOTES:
+            continue
+        m = _V11_DP_MARKED_RE.match(s)
+        if m:
+            cleaned.append(m.group(1) + "DP")
+            continue
+        m = _V11_PTS_MARKED_RE.match(s)
+        if m:
+            cleaned.append(m.group(1))
+            continue
+        cleaned.append(s)
+
+    # Pass 2: join each name line with the DP/pts line that immediately follows it,
+    # reproducing the exact v1_0 jammed shape ("NAME2DP", "\u2022 Name30 pts").
+    out = []
+    i = 0
+    n = len(cleaned)
+    while i < n:
+        s = cleaned[i]
+        nxt = cleaned[i + 1] if i + 1 < n else None
+        if nxt is not None and _V11_DP_PLAIN_RE.match(nxt):
+            out.append(s + nxt)
+            i += 2
+            continue
+        if nxt is not None and _V11_PTS_PLAIN_RE.match(nxt):
+            out.append("\u2022 " + s + nxt)
+            i += 2
+            continue
+        out.append(s)
+        i += 1
+    return out
+
 
 def parse_mfm_detachments(path):
     """Return the ordered detachment list printed in one MFM faction file.
@@ -253,9 +338,16 @@ def parse_mfm_detachments(path):
             end = j
             break
 
+    block = lines[start + 1:end]
+    # B88. v1.1 layout support: normalize the block into the exact v1_0 line shape
+    # and let the reader below run unmodified, mirroring mfm_points_parser.py (B87).
+    # v1_0 files are untouched -- sniff returns False and block passes through as-is.
+    if sniff_is_v1_1(lines):
+        block = normalize_detachments_v1_1(block)
+
     out = []
     cur = None
-    for lineno, ln in enumerate(lines[start + 1:end], start + 2):
+    for lineno, ln in enumerate(block, start + 2):
         if not ln:
             continue
         m = MFM_DP_RE.match(ln)

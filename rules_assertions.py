@@ -3935,7 +3935,7 @@ P4_REFERENCED_SOURCES = {
     'MFM_Grey_Knights_v1_0.txt', 'MFM_Instructions.txt',
     'MFM_Space_Marines_v1_0.txt', 'MFM_Space_Wolves_v1_0.txt',
     'MFM_Thousand_Sons_v1_0.txt', 'MFM_World_Eaters_v1_0.txt',
-    'MFM_Standalone_Pass.md',
+    'MFM_Standalone_Pass.md', 'MFM_v1_1_Reconciliation.md',
     'Space_Marines_Faction_Pack_v1_0.md', 'Space_Marines_web.txt',
     '_web.txt', 'chaos_daemons_reference.md', 'mfm_sm.txt',
 }

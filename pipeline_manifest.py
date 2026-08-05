@@ -159,6 +159,7 @@ GUARDED = [
     'b72_check.js',
     'b90_check.js',
     'b87_check.js',
+    'b88_check.js',
     'harness.js',
     'sweep.js',
     'baseline.sh',
@@ -196,6 +197,7 @@ GUARDED = [
     'MFM_Chapter_Pass.md',
     'MFM_FW_Reconciliation.md',
     'MFM_Standalone_Pass.md',
+    'MFM_v1_1_Reconciliation.md',
     'OPEN_ITEMS_BACKLOG.md',
     'OUTPUT_FORMAT_SPEC_for_project_instructions.md',
     'P4_ARCHITECTURE_SCOPE.md',
@@ -239,6 +241,7 @@ GUARDED = [
     'SESSION_HANDOFF_188.md',
     'SESSION_HANDOFF_189.md',
     'SESSION_HANDOFF_190.md',
+    'SESSION_HANDOFF_191.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):
