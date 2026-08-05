@@ -3,7 +3,15 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **17 open** as of S193 (up from 16 at S192): B69, B70, B75, B85, B86,
+not here, it isn't open. **20 open** as of pre-S194 (up from 17 at S193): B69, B70, B75, B85, B86,
+P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94, B96, B97, B98, B99. B97/B98/B99 logged from
+Ryan screenshots ahead of S194 (not yet triaged into a decision-log entry): a Grand Coven rule-text
+run-on render; B98 — root cause confirmed same session after Ryan corrected an initial mis-scope — a
+two-record `unit_loadouts.json` typo ("heliforged" for "Hellforged") on both Daemon Prince of
+Tzeentch sizes breaks melee-weapon resolution, data-only fix, XS; and a confirmed engine gap — no
+enhancement anywhere modifies a bearer's displayed weapon Strength/Damage, found while checking
+Eldritch Vortex of E'Taph specifically.
+**17 open** as of S193 (up from 16 at S192): B69, B70, B75, B85, B86,
 P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94, B96. B94's **engine turn shipped** (D286,
 engine-only): added an optional `fourth_plus` copy-tier and routed all three points sites through
 one shared `copyTierPts` helper (≥4th copy → `fourth_plus`, fallback `third_plus`); byte-identical
@@ -219,6 +227,50 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### B99 — Enhancement "Eldritch Vortex of E'Taph" (+1 Strength/Damage to bearer's Psychic weapons) has no effect on displayed weapon stats — **NEW (Ryan-reported, pre-S194); engine/data; scope TBD; live D0-adjacent gap**
+Ryan-reported via screenshot (Daemon Prince of Tzeentch with Wings). Checked before logging:
+`detachments.json` confirms the enhancement's text is present and correctly captured — Thousand
+Sons | Grand Coven, 35 points, "Add 1 to the Strength and Damage characteristics of Psychic weapons
+equipped by the bearer." `detachment_effects.json`'s own `_meta` block states its five effect kinds
+(`battleline`, `forbid`, `unlock`, `warlord`, `tank_ace`) are muster-time army-construction effects
+only — none of them represent an equipped item modifying a weapon's printed characteristics.
+Searched `index.html` directly for any site that reads an enhancement and adjusts a weapon's
+strength/damage field: none found. This is not a one-off miss on this one enhancement — no
+stat-bonus-to-equipped-weapon enhancement is wired into the engine at all, so any other army with a
+similarly-shaped enhancement almost certainly shares the same gap. Needs a scoping turn: a census of
+how many built armies carry a stat-modifying enhancement, whether this becomes a new
+`detachment_effects.json` kind or its own table, and how the weapon-profile popup should read a
+live-computed value against the base printed one.
+
+### B98 — Daemon Prince of Tzeentch (both sizes): melee weapons don't render at all; a mismatched wargear label shows instead — **NEW (Ryan-reported, pre-S194); data; XS; root cause confirmed**
+Ryan-reported via screenshot (Daemon Prince of Tzeentch with Wings) and corrected my first pass at
+this ticket — the melee-weapons-as-table format is the app's normal, working pattern (Tzaangors'
+popup shows it correctly), so this was never a design question. Checked source directly: the unit
+does carry two melee weapon profiles in `units.json` — "Hellforged weapons – strike" and "Hellforged
+weapons – sweep" — but `unit_loadouts.json`'s `default_wargear` for this unit reads `"heliforged
+weapons"` (missing the second L, lower case, no "– strike"/"– sweep" suffix). That string doesn't
+match either weapon name, so nothing resolves to the MELEE WEAPONS table; instead the popup falls
+back to showing the unresolved string as a generic Other Wargear line, which is exactly the
+"Heliforged weapons ×1" line in the screenshot. Confirmed scope: exactly two records carry the typo
+— `000001036` (Daemon Prince of Tzeentch) and `000004120` (Daemon Prince of Tzeentch with Wings);
+the other four Hellforged-weapons-bearing records in `unit_loadouts.json` spell it correctly. **Fix
+is data-only**: correct both `default_wargear` entries to `"Hellforged weapons"` (or however the
+resolver expects multi-profile melee defaults to be named — check a correctly-working record, e.g.
+the non-Thousand-Sons Daemon Prince variants, for the exact convention before writing the fix) and
+re-verify against the parser, not hand-edited.
+
+### B97 — Grand Coven detachment rule text renders as a run-on wall of text — **NEW (Ryan-reported, pre-S194); engine/UI or data; scope TBD**
+Ryan-reported via screenshot. Confirmed in `detachments.json`: the `Thousand Sons|GRAND COVEN`
+`rule_text` field concatenates its three named sub-abilities directly against the surrounding
+sentence with no delimiter — "...once per battle.Imbued ManifestationAdd 6\" to the Range..." and
+"...Range characteristic...Psychic MaelstromEach time..." both run name-into-text and
+text-into-name with no space or line break. Any renderer that does not insert its own break where
+the sub-ability names sit reproduces exactly the wall-of-text look in the screenshot. Root cause
+(source text lacking separators vs. a renderer that should be inserting breaks and isn't) not yet
+diagnosed. Also not yet checked: whether other WHEN/TARGET/EFFECT- or multi-option-style rule texts
+elsewhere in the file share the same missing-separator pattern — worth a scan across all `rule_text`
+and stratagem `description` fields in the same turn rather than fixing this one row in isolation.
 
 ### E28 — Detachment selection: move from centre-list widget to right-panel configuration (Force Disposition included) — **NEW S188 (D281); Ryan-raised; engine/UI; M**
 Ryan's question: selected Detachments and Force Disposition currently render as an always-visible
