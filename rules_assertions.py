@@ -436,6 +436,23 @@ def units_repro_gate(S):
     return mod.repro(S.dir)
 
 
+def b95_1_gate(S):
+    """D285: every built:true, non-subfaction faction must name a data_army that is a
+    real units.json army block, or resolveUnits()/resolveDetachments() silently serve the
+    wrong roster (generic Adeptus Astartes) or an empty detachment list instead of failing
+    loud."""
+    army_names = {b['army'] for b in S.units()}
+    bad = [
+        fx.get('name', '?')
+        for g in S.taxonomy()['groups'] for fx in g['factions']
+        if fx.get('built') and not fx.get('is_subfaction')
+        and fx.get('data_army') not in army_names
+    ]
+    if bad:
+        return False, 'built factions with missing/mismatched data_army: ' + ', '.join(sorted(bad))
+    return True, 'all built, non-subfaction factions carry a valid data_army'
+
+
 def manifest_gate(S):
     """D123: file-integrity manifest. Any guarded pipeline file arriving as the wrong
     copy fails here and names the file — the cheap first line the repro gate backs up."""
@@ -751,6 +768,25 @@ ASSERTIONS = [
              for g in S.taxonomy()['groups'] for fx in g['factions']
              if fx.get('is_subfaction') and fx.get('roster_mode') not in ('union', 'complete')))
           ) or 'all subfactions carry explicit roster_mode (union|complete)')),
+
+    # ── B95-1. faction_taxonomy.json's built flag and data_army must agree with reality
+    # (D285). resolveUnits() falls back to unitsByArmy['Adeptus Astartes'] for any
+    # non-subfaction faction whose data_army is missing or wrong (index.html ~2291), and
+    # resolveDetachments() has no fallback at all for detachments (~2881) — so a faction
+    # marked built:true with a missing/mismatched data_army doesn't just look unfinished,
+    # it silently serves the wrong roster or an empty detachment list. Found live for CSM
+    # and Thousand Sons at D285: both had built:false with no data_army at all, though
+    # units.json/detachments.json already carried their full rosters. This pins the
+    # contract going forward: every built:true, non-subfaction faction names a data_army
+    # that is an actual units.json army key.
+    ('B95-1',
+     'Every built:true, non-subfaction faction in faction_taxonomy.json carries a data_army '
+     'naming a real units.json army block. A built faction with a missing or mismatched '
+     'data_army silently resolves to the generic Adeptus Astartes unit pool and an empty '
+     'detachment list rather than its own roster (D285).',
+     'faction_taxonomy.json data_army vs units.json army blocks; index.html resolveUnits/'
+     'resolveDetachments (D285)',
+     lambda S: b95_1_gate(S)),
 
     # ── B46. The Reiver's grav-chute has rules text and the app cannot show it. The text
     # is NOT missing from the data — it is in Datasheets_abilities.csv as a Wargear row.

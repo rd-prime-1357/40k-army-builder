@@ -138,7 +138,8 @@
         },
         {
           "name": "Chaos Space Marines",
-          "built": false
+          "built": true,
+          "data_army": "Chaos Space Marines"
         },
         {
           "name": "Death Guard",
@@ -151,7 +152,8 @@
         },
         {
           "name": "Thousand Sons",
-          "built": false
+          "built": true,
+          "data_army": "Thousand Sons"
         },
         {
           "name": "World Eaters",

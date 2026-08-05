@@ -1,50 +1,58 @@
-# NEXT SESSION PROMPT — Session 192
+# NEXT SESSION PROMPT — Session 193
 
-## Turn type: depends on what's answered at open (see below).
+## Turn type: engine-only. No exceptions.
 
-Read `SESSION_HANDOFF_191.md` first, then this prompt. Read **D284** in `40K_Decision_Log.md` in
-full before starting — it carries the B88 close (both parts) and the B95 open, and the next work
-items branch off it.
+Read `SESSION_HANDOFF_192.md` first, then this prompt. Read **D285** in `40K_Decision_Log.md` in
+full before starting — it carries B95's close and B94's decision, and this session's work is B94's
+engine turn.
 
 ## Session open
 1. Baseline: `./baseline.sh --fetch --data-turn`.
-2. Verify the S191 hashes in the handoff's Files section at open.
-3. Confirm Ryan has pushed S191's changes.
-4. If a repo-vs-mount check disagrees mid-session, re-check before treating it as a finding — S191
-   caught itself mid-push once and briefly mis-read a partially-pushed repo as stale drift.
+2. Verify the S192 hashes in the handoff's Files section at open.
+3. Confirm Ryan has pushed S192's changes.
+4. Check whether Ryan confirmed `40K_Decision_Log.md`'s presence/absence in the `/mnt/project`
+   mount (flagged in S192, unresolved) — if he reports it present, treat S192's mount-vs-repo
+   finding as a one-session mount staleness, not a live gap.
+5. If Ryan spot-checked CSM/Thousand Sons in the running app per S192's action item, note the
+   result; if not, a quick visual check that both factions resolve their real rosters (not the
+   generic Adeptus Astartes pool) is worth doing before building on top of B95's fix.
 
-## What's next — check in this order
+## This session's work — B94 engine turn (Ryan decided S192/D285: add the real 4th copy-tier)
 
-**If Ryan has answered B94 (copy-4 tier schema — real 4th tier vs fold rule) ->** engine-first (schema
-+ `resolveUnits`/points lookup in `index.html` + the `resolved_pool`/points mirror in
-`rules_assertions.py`), then data, then assertion — strictly separated, do NOT start as a mixed turn.
-If Ryan picks "add the real tier" (the recommendation), turn 1 is the engine/schema change only. Full
-scope in the B94 backlog entry.
+**Engine only — schema, `resolveUnits`/points lookup in `index.html`, and the `resolved_pool`/points
+mirror in `rules_assertions.py`. Do NOT touch `units.json` or regenerate any data this session.**
 
-**Else if Ryan has answered B95 (faction_taxonomy.json `built` flag for CSM/Thousand Sons) ->** small
-doc/data turn to reconcile the flag with reality (or document why "built" means something narrower);
-should close in one session.
-
-**Else -> B89 (MFM v1.1 adoption arc), but sequenced behind B94 by design (D283/D284): the copy-4
-shape B94 will decide touches 34 units across nearly every faction, so starting B89's per-faction
-migration before B94 resolves risks a two-pass re-migration for those units. If B94 is still
-unanswered, do not start B89 broadly.** Instead fall to the next backlog item under the faction
-priority order (standing project instructions) — check `OPEN_ITEMS_BACKLOG.md`'s Open Items section
-for the next unblocked item in priority order rather than blocking the session.
-
-`MFM_v1_1_Reconciliation.md` (S191) is B89's work order once it starts: 189 deltas classified
-adopt-mechanically, 71 investigate-first, across the 10 built-army faction files. Read it before
-scoping B89's first turn.
+Full scope from D283/B94's backlog entry:
+- The MFM tier shape `YOUR 1ST TO 3RD UNITS COST` / `YOUR 4TH + UNIT COSTS` needs a real 4th
+  copy-tier in the points schema (`units.json` `points.sizes[*]` currently has only `first_unit` /
+  `second_unit` / `third_plus`).
+- B87 already captures the un-representable 4th+ tier as `_esc4_fourth_plus` on the 34 affected
+  units' parsed output (not yet regenerated into committed `units.json` — that's the data turn,
+  separate and later).
+- This turn: design and land the schema's 4th tier, wire `index.html`'s points-lookup path to use
+  it when a unit's copy count reaches 4, and update `rules_assertions.py`'s Python mirror of the
+  same lookup so the two never diverge (same discipline as B90's `resolved_pool()` mirror).
+- Do not regenerate `units.json` this session — the schema and lookup must be correct and pass their
+  own harness/assertion checks against synthetic or the currently-committed (3-tier) data first. The
+  data turn (regenerating the 34 affected units through the real pipeline) and the assertion turn
+  (pinning the new tier's presence) are separate, later turns per D283, sequenced with B89's
+  adoption arc so the affected units migrate once.
+- 34 units affected across 15 v1.1 files: Rhino, Razorback, Drop Pod, Impulsor, Chaos Rhino, Raider,
+  Venom, Rubric Marines.
 
 ## Standing reminders
-- Turn-typing strict, no exceptions except the documented B87/S190-shape one (a tooling fix that
-  forces a coupled data correction, regenerated through the real pipeline in the same turn, never
-  shimmed).
-- Fix parsers, never hand-edit output.
-- Source-first: three real findings this session (the Hexwarp bare-marker DP line, the World Eaters
-  `UNIQUE TAG REMOVED` note, and the reconcile script's own force-disposition misclassification) were
-  all caught by testing against actual source files and actual output, not assumed from the B87
-  precedent or a first draft.
+- Turn-typing strict: engine only this session. If the engine change turns out to need a coupled
+  data correction the way B87 did, stop and scope it as its own turn rather than mixing — B87's
+  exception was justified by a shipped live bug forcing the pipeline's hand; B94's schema addition
+  starts from a clean baseline and has no equivalent forcing reason to mix.
+- Fix parsers/schema, never hand-edit output.
+- Source-first: two real findings this session (S192) — the missing `40K_Decision_Log.md` in the
+  mount, resolved by cloning the repo rather than assuming; and the missing `data_army` field found
+  by reading `index.html`'s actual consumers of the flag before flipping it, not from the ticket's
+  own framing — were both caught by checking, not assuming. Same discipline applies to the schema
+  design: read `mfm_points_parser.py`'s `esc4` output shape directly before designing the 4th tier,
+  don't design from the ticket's prose description alone.
 - Close by producing the four documents, regenerating the manifest with `--write`, and running
-  `--freshness-check` as the **last** command — after every other edit, including edits to the
-  handoff itself (leave the handoff's own row in its Files table as "(this file)").
+  `pipeline_manifest.py --freshness-check` as the **last** command — after every other edit,
+  including edits to the handoff itself (leave the handoff's own row in its Files table as
+  "(this file)").

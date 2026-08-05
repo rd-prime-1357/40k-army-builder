@@ -10727,3 +10727,44 @@ turn, and which is stale (the flag or the app's readiness) is a product call. Fi
 **Rationale:** both halves of B88 are prerequisite tooling for B89, not adoption itself — no
 `ARMY_TO_MFM` entry changed, no `detachments.json` regenerated, so nothing the app serves today is
 different after this turn. Open count unchanged at 17 (B88 closed, B95 opened).
+
+## D285 — B95 shipped: CSM and Thousand Sons `built` flag was stale, and the real gap was bigger than a boolean — `data_army` was missing entirely; new assertion B95-1 added to prevent recurrence (S192)
+
+**Turn type: data + coupled tooling/assertion.** No engine change; `index.html` untouched, still
+v6.15. The data fix and the assertion that pins it are one turn, same shape as the B87/S190
+exception: shipping the correction without the check that would have caught it leaves the same
+class of bug free to recur on the next faction.
+
+**B94 answered by Ryan first.** Confirmed: add the real 4th copy-tier to the points schema — an
+accurate points value for a unit's 4th+ copy is required to build a legal list, not optional. This
+matches the D283 recommendation. Per the S192 next-session prompt's branching, B94's engine turn
+(schema + `resolveUnits`/points lookup in `index.html` + the `resolved_pool`/points mirror in
+`rules_assertions.py`) is queued for S193 as its own engine-only turn — it cannot share a session
+with this session's data/tooling work per strict turn-typing.
+
+**B95 resolved — and the real question wasn't "is the flag stale," it was "what else is missing."**
+Checked source before touching anything: both Chaos Space Marines and Thousand Sons are fully
+built by every measure every other built faction is — CSM 58/58 units with loadouts, 17
+detachments, `CSM-1`/`CSM-2`/`CSM-3` assertions passing; Thousand Sons 34/34 units with loadouts
+(`Thousand_Sons_web.txt` now present, resolving §5's old blocker in `THOUSAND_SONS_BUILD_SCOPE.md`
+that a prior handoff's framing had carried forward as still-open), 9 detachments, `TS-1`/`TS-2`/
+`TS-3` passing. So `built: false` was simply stale for both — but reading `index.html`'s consumers
+of the flag (`resolveUnits` ~2291, `resolveDetachments` ~2881) before flipping it found a second,
+more serious problem: neither faction's `faction_taxonomy.json` entry carried a `data_army` key at
+all. `resolveUnits` silently falls back to `unitsByArmy['Adeptus Astartes']` when `data_army` is
+missing; `resolveDetachments` has no fallback and would have returned an empty detachment list.
+Flipping `built` to `true` without adding `data_army` would have made both factions selectable in
+the UI while silently serving the wrong unit pool and zero detachments — a live D0 violation
+introduced by the "fix" itself. Both gaps closed together: `built: true` and
+`data_army: "Chaos Space Marines"` / `"Thousand Sons"` added, verified against the exact army keys
+`units.json`/`detachments.json` already use.
+
+**New assertion B95-1**, mirroring B90-1's shape: every `built: true`, non-subfaction faction in
+`faction_taxonomy.json` must carry a `data_army` naming a real `units.json` army block. Without it,
+this exact silent-fallback shape is free to recur the next time a faction's `built` flag flips.
+117 rules assertions now pass (was 116).
+
+**Rationale:** the flag question, once actually checked against `index.html` rather than answered
+from the boolean alone, was never just a doc correction — the data was one field short of what the
+app needed to serve either faction correctly. Fixing the field without the assertion would leave
+the same hazard live for every future faction flip. Open count 17 → 16 (B95 closed).

@@ -494,3 +494,10 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   before shipping. Final: 189 adopt / 71 investigate; report banked as `MFM_v1_1_Reconciliation.md`,
   B89's work order. B95 opened: `faction_taxonomy.json` `built` flag disagrees with `units.json` for
   CSM and Thousand Sons. Open count unchanged at 17 (B88 closed, B95 opened).
+- **D285** — B95 shipped: `faction_taxonomy.json`'s `built` flag was stale for CSM/Thousand Sons
+  (both fully built — CSM 58/58 units + 17 detachments, TS 34/34 units + 9 detachments, all assertions
+  passing), but the real gap was bigger — neither had a `data_army` key, which `resolveUnits`/
+  `resolveDetachments` need or they silently serve the wrong pool/an empty detachment list. Both
+  `built: true` and `data_army` added together; new assertion B95-1 pins the contract for future
+  faction flips (117 assertions, was 116). B94 answered by Ryan (add the real 4th copy-tier),
+  queued as S193's engine turn. Open count 17 → 16 (B95 closed).

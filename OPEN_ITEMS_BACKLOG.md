@@ -3,7 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **17 open** as of S191 (unchanged count from S190): B69, B70, B75, B85,
+not here, it isn't open. **16 open** as of S192 (down from 17 at S191): B69, B70, B75, B85, B86,
+P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94. B95 closed (D285, data+tooling turn):
+`faction_taxonomy.json`'s `built` flag was stale for CSM/Thousand Sons and both were missing
+`data_army` entirely — both gaps closed together, new assertion `B95-1` added. B94 also decided
+this session (Ryan: add the real 4th copy-tier) — stays open, engine turn queued for S193.
+**17 open** as of S191 (unchanged count from S190): B69, B70, B75, B85,
 B86, P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94, B95. B88 closed (D284, tooling/analysis
 turn): `detachment_parser.py` now reads the MFM v1.1 DETACHMENTS layout via the same sniff +
 normalization pattern B87 used for points (all 15 v1.1 files parse cleanly, 0 before; v1_0 output
@@ -354,7 +359,13 @@ the code cannot currently tell apart). Turn 2 must carve these out of that exclu
 chapters. B90 turn 2 is now fully unblocked on decisions; it still runs after B88/B89 per D274's
 sequencing.
 
-### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); product+engine+data; M; blocks clean B89 adoption of the affected units**
+### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; product+engine+data; M; blocks clean B89 adoption of the affected units**
+
+**Ryan decided S192 (D285): add the real 4th copy-tier.** Accurate points on a unit's 4th+ copy is
+required to build a legal list — matches the D283 recommendation. Engine turn (schema + `resolveUnits`/
+points lookup in `index.html` + the `resolved_pool`/points mirror in `rules_assertions.py`) queued for
+S193, engine-only per strict turn-typing. Data and assertion turns follow, sequenced with B89's
+adoption arc so the 34 affected units migrate once.
 The MFM tier shape `YOUR 1ST TO 3RD UNITS COST` / `YOUR 4TH + UNIT COSTS` breaks the copy price at
 the 4th copy. The shipped points schema (`units.json` `points.sizes[*]` with `first_unit` /
 `second_unit` / `third_plus`) has only three copy-tiers and assumes the break at copy 3, so it cannot
@@ -378,18 +389,6 @@ structural diff investigated before acceptance. Assertions pinning points values
 against the new source, never loosened. `source_manifest.json` updated per faction as it migrates.
 Standard priority order. E23's D273 per-army pool counts re-verified after the six Astartes armies
 migrate. The v1_0 layout reader retires when the last faction leaves it.
-
-### B95 — `faction_taxonomy.json`'s `built` flag disagrees with `units.json` for CSM and Thousand Sons — **NEW S191 (D284); doc/data integrity; XS-S**
-Found incidentally while scoping B88's reconciliation report to "every built faction" — the
-operational definition had to be "has real rows in `units.json`," not the taxonomy flag, to
-include these two. `faction_taxonomy.json` marks Chaos Space Marines and Thousand Sons
-`built: false`, but `units.json` already carries real roster data for both armies (Chaos Space
-Marines' Rubric Marines are the very units B87 corrected; Thousand Sons is mid-build per
-`THOUSAND_SONS_BUILD_SCOPE.md`). Needs a decision: is the flag simply stale and should flip to
-`true` (possibly narrowed for Thousand Sons if its roster is still incomplete), or does `built`
-mean something narrower than "has unit rows" — full roster, detachments wired, UI-enabled — that
-neither has hit yet? Whichever it is, the flag and the data should agree: the app UI reads `built`
-to decide what's selectable, and B89's per-faction adoption scoping will too.
 
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:
@@ -767,6 +766,7 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B95** — `faction_taxonomy.json`'s `built` flag disagrees with `units.json` for CSM and Thousand Sons — **NEW S191 (D284); CLOSED S192 (D285); DATA + TOOLING.** Both factions were fully built by every measure every other built faction is (CSM 58/58 units + 17 detachments + CSM-1/2/3 passing; Thousand Sons 34/34 units + 9 detachments + TS-1/2/3 passing, `Thousand_Sons_web.txt` now present resolving the old loadout-defaults blocker) — the `built: false` flag was simply stale. But checking `index.html`'s consumers of the flag before flipping it found a bigger gap: neither faction's taxonomy entry carried a `data_army` key, which `resolveUnits`/`resolveDetachments` require — missing it means a silent fallback to the generic Adeptus Astartes pool (units) or an empty list (detachments), not a clean failure. Both `built: true` and the correct `data_army` added together. New assertion `B95-1` pins the contract (every built, non-subfaction faction carries a valid `data_army`) so the same silent-fallback shape can't recur on a future faction. 117 assertions (was 116).
 - **B88** — MFM v1.1 reconciliation reports + detachment-layout parsing — **NEW S183 (D274); CLOSED S191 (D284); TOOLING/ANALYSIS.** Extended `detachment_parser.py` with the same sniff-and-normalize pattern B87 used for the points file: v1.1 splits `NAME<n>DP`/bulleted-enhancement lines across two physical lines (name, then a bare `<n>DP` or `<n> pts` line) and drops the same `UPDATED`/`FORCE DISPOSITION(S) CHANGED` notes as noise — normalization rejoins the DETACHMENTS...LEGENDS/EOF slice back into the exact v1_0 shape so the existing reader runs unmodified. Two DETACHMENTS-only quirks not present in the points file, both verified against source: a bare `▲` marker with no parenthesised delta on a DP line (Thousand Sons' Hexwarp Thrallband, 2DP→3DP) and a `UNIQUE TAG REMOVED` note (World Eaters — missed on a first pass keyed only off the Space Marines file, caught once World Eaters was actually parsed, then confirmed complete by an exhaustive all-caps-line sweep of all 15 files' DETACHMENTS blocks). v1_0 output proven byte-identical on all 10 files in `ARMY_TO_MFM`; all 15 v1.1 files now parse their DETACHMENTS block cleanly (0 before). Net-new `b88_check.js` pins all of it; `rules_assertions.py`'s P4 source census updated for the new report filename. Generalized `mfm_reconcile.py` from the old one-off SM-vs-`mfm_sm.txt` pass into a real per-faction tool: for the 10 built-army MFM file pairs, diffs points, roster, wargear, attach lists (including Leader/Support flips), and detachment fields/enhancements between v1_0 (what the app is built from) and v1.1 (the newest capture), classifying every delta adopt-mechanically vs investigate-first. Caught and fixed a real bug in the first draft before shipping: force-disposition and unique-tag changes on an otherwise-matched detachment were being counted as adopt-mechanically — they're a rules-shape property, not a value, so they were moved to investigate-first. Final: 189 adopt-mechanically, 71 investigate-first across the 10 factions; report banked as `MFM_v1_1_Reconciliation.md`. Output is B89's work order. **B95 opened**, incidental: `faction_taxonomy.json` marks Chaos Space Marines and Thousand Sons `built: false` though `units.json` holds real data for both — found while scoping this report to "built" factions.
 - **B87** — `mfm_points_parser` cannot read the MFM v1.1 page layout — **NEW S183 (D274); CLOSED S190 (D283); TOOLING (+ one coupled 2-value data correction).** Added a per-file v1.1 sniff (keyed on the ▲/▼ change markers, absent from every v1_0 file) and a normalization pass that rewrites each v1.1-exclusive quirk into the exact v1_0 line shape the existing readers already parse: drops the leading `UNITS` header, the standalone `▲`/`▼`/`▲▼` markers, and the `UPDATED`/`REQUISITION THRESHOLDS REMOVED`/`FORCE DISPOSITION(S) CHANGED` notes; strips the inline `▼ (-10)` / `▲ (+10)` cost annotations leaving the final printed value intact. Cost lines made bullet-optional so one reader serves both editions. Result: all 15 v1.1 files cost fully (SM 179/179; 0 before), every v1_0 file byte-identical **except** the two units B87 corrected. **In-flight bug found and fixed:** the tier shape `1ST TO 3RD / 4TH+` had no reader — the parser fell through to single-mode and kept the pricier 4th+ line, so Rubric Marines (CSM 000003583, TS 000001020) shipped every 1st-3rd copy at 110/200 instead of the correct 100/190. B87 added a reader for the shape (`esc4` mode) that emits the 1st-to-3rd price across the 3-tier schema and captures the un-representable 4th+ tier for B94; the two Rubric Marines values were regenerated through the real pipeline (units_repro_check green). The v1.1 DETACHMENTS-parsing clause was rescoped out to B88 (detachments have their own parser). 15 v1.1 files registered in `source_manifest.json`. Net-new `b87_check.js` pins all three facts. **B94 opened** for the deferred copy-4 schema decision.
 
