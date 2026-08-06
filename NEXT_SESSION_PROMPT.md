@@ -1,53 +1,58 @@
-# NEXT SESSION PROMPT — Session 199
+# NEXT SESSION PROMPT — Session 201
 
-## Turn type: data-only, unless a genuine blocker forces a scope split. No exceptions otherwise.
+## Turn type: engine-only. No data, no tooling, no parser changes. No exceptions.
 
-Read `SESSION_HANDOFF_198.md` first, then this prompt. Session 198 shipped B89's fourth migration — the
-six-file Space Marines group (base + Black Templars, Blood Angels, Dark Angels, Deathwatch, Space
-Wolves) to MFM v1.1, as one atomic turn (confirmed the group can't split faction-by-faction — see D291).
-It also found and stopgap-fixed a genuine source-text defect: a missing comma in
-`MFM_Space_Marines_v1.1.txt`'s Marneus Calgar LEADER line.
+Read `SESSION_HANDOFF_200.md` and `GREY_KNIGHTS_BUILD_SCOPE.md` (§6 especially) first, then this
+prompt. S200 scoped Grey Knights and found the engine gap that now blocks it.
 
-## Ryan action pending — check before assuming source state
-S198 left one open item: **the private repo's `MFM_Space_Marines_v1.1.txt` needs the missing-comma fix
-pushed** (Marneus Calgar in Armour of Antilochus's LEADER line — insert a comma between "ERADICATOR
-SQUAD" and "STERNGUARD VETERAN SQUAD"). Until that lands, `mfm_points_parser.py` carries a stopgap
-(`_KNOWN_SOURCE_FIXES`) that patches the glued token at parse time and fails loudly if the source no
-longer contains the expected substring. **Confirm with Ryan whether the private-repo fix has landed
-before doing anything with this stopgap.** If it has landed: remove the `_KNOWN_SOURCE_FIXES` entry,
-re-run `units_repro_check.py`, confirm still byte-identical (the fix produces the same corrected text
-either way, so this should be a no-op swap, not a data change). If it hasn't landed: leave the stopgap
-in place, it's still doing its job.
+## This session's job: B101 — enforce "cannot take duplicates"
 
-## Remaining B89 candidates (MFM v1.1 adoption)
-- **Grey Knights** — own base MFM file, not part of the SM chapter chain (Grey Knights isn't one of the
-  five chapters chained to the base SM file). Check `MFM_Grey_Knights_v1_0.txt` vs `v1.1` for the same
-  kind of chaining question S198 just resolved for SM — Grey Knights is very likely fully self-sourced
-  like TS/DG were (no chapter-override cross-referencing), but confirm from source before assuming.
-- **Chaos Space Marines** — still not a candidate. Blocked on World Eaters and Emperor's Children
-  (neither built/migrated). Check whether either has become buildable before ruling this out again.
-- Remaining Heretic Astartes / Chaos Daemons / Drukhari factions continue after Astartes wraps, per
-  standing priority order.
+`loMaxCount` in `index.html` caps the *total* number of picks for a `max_total_all` / `up_to` option
+but nothing anywhere in the engine enforces that the picks differ. Under D0 that illegal state should
+be unreachable, not merely undocumented.
+
+**This is already live, not hypothetical.** Three shipped Chaos Space Marines units carry the
+no-duplicate rule only as a literal string sitting inside their `replacement_choices` array, where it
+also renders to the player as a fake selectable menu entry:
+
+| unit | `up_to` | real choices |
+|------|---------|--------------|
+| Raptors | 2 | 3 |
+| Legionaries | — | 9 |
+| Traitor Guardsmen Squad | 3 | 5 |
+
+Grey Knights' two Nemesis Dreadknights ("up to two of the following, but cannot take duplicates",
+3 and 4 choices) cannot be authored around it, which is why B100's units turn waits on this.
+
+Suggested shape, not binding — derive the real one from the code: a `distinct: true` flag on the
+option, enforcement on the selection path so a second pick of the same choice is not offered rather
+than offered-and-rejected, and the label strings stripped out of the `replacement_choices` arrays so
+the rule stops rendering as an option. **Note the last part is a data edit** — if stripping the
+labels turns out to require touching `unit_loadouts.json`, that is a separate data turn, not this
+one. Land the engine capability first and let the data follow; do not mix.
+
+Pin the behaviour in `rules_assertions.py` and/or a JS harness before closing — a prose-only claim
+about distinctness will go stale exactly like the ones D0 exists to prevent.
 
 ## Standing reminders
-- Turn-typing strict: data only. If today's investigation turns up a genuine chaining or new-tooling
-  need (mirroring S198's SM discovery), stop and hand off rather than mixing scope into this session —
-  but don't assume it's needed without tracing the actual mechanism first, the way S198 did for SM.
-- **Check sources directly, don't trust reconciliation-report prose or prior-session summaries at face
-  value.** S196/S197/S198 each found something the report or a hardcoded assumption got wrong — treat
-  that as the norm, not the exception, and budget time to verify rather than adopt.
-- Fix parsers/schema, never hand-edit output — except where a faction's own source file is itself
-  hand-authored (CD precedent, D290) or where a narrow, filename-and-substring-scoped stopgap for a
-  known source-text transcription defect is the right call (SM precedent, D291) — both are documented
-  exceptions, not a general license to patch around inconvenient source text.
-- Diff-guard before banking: any regenerated or hand-edited output is verified by key-level diff against
-  the prior committed file before being accepted.
-- `detachments.json` migrations (enhancement re-prices, force-disposition/unique-tag changes) stay
-  tracked separately from `units.json` per faction, per D288/D289/D290/D291's established practice — not
-  this turn's scope unless explicitly picked up. Note: the SM chain's detachments side (Black Templars'
-  new VENGEFUL HOSTS detachment, several enhancement re-prices) is still open and untouched.
-- Close by producing the four documents, regenerating the manifest with `--write` (remember to register
-  the new `SESSION_HANDOFF_199.md` in `pipeline_manifest.py`'s GUARDED list **before** running
-  `--write`), and running `pipeline_manifest.py --freshness-check` as the **last** command — after every
-  other edit, including edits to the handoff itself (leave the handoff's own row in its Files table as
-  "(this file)").
+- Turn-typing strict: engine only. If the fix turns out to need a schema change that forces data
+  regeneration, stop and hand off rather than mixing scope — a banked, well-scoped item beats a
+  partial change.
+- **Check sources directly, don't trust prior-session prose.** S196–S200 each found something a
+  report, a hardcoded assumption, or a session prompt got wrong. S200's own prompt was wrong about
+  Grey Knights being a migration candidate. Treat that as the norm.
+- Two Ryan actions are outstanding and neither is this session's to resolve: the Calgar missing-comma
+  fix in the private repo (unpushed since S198), and two sessions' worth of public-repo changes
+  (S199 and S200). `repo_check` will stay red until the latter lands — expected, not a new failure.
+
+## After this session
+B102 (`detachment_parser.py --report` `KeyError`, one line, XS) can ride with any tooling turn.
+Then B100's two data turns: Grey Knights units, then Grey Knights detachments — separate, per the
+B89 arc's convention. The units turn's first check is the open `Grey_Knights_web.txt` question in
+`GREY_KNIGHTS_BUILD_SCOPE.md` §5; resolve it from the pipeline, don't assume it either way.
+
+## Close
+Produce the four documents, register `SESSION_HANDOFF_201.md` in `pipeline_manifest.py`'s GUARDED
+list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
+command — after every other edit, including edits to the handoff itself (leave the handoff's own row
+in its Files table as "(this file)").

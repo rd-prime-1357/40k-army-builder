@@ -3,7 +3,19 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **19 open** as of S197 (unchanged from S196 — B89 advanced, did not close):
+not here, it isn't open. **22 open** as of S200 (up from 20 at S199 — new B101, B102): B99, B98,
+B97, B101, E28, B93, B90, B94, B89, B100, B102, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12,
+B17. Grey Knights scoped (D293, `GREY_KNIGHTS_BUILD_SCOPE.md`) — 25 datasheets, the smallest build
+yet, fully self-sourced, only four units needing loadout authoring. D293 also set a standing rule:
+always build from the newest MFM available, units and detachments alike. Two defects found while
+scoping, neither Grey Knights' fault: B101 (no-duplicate wargear unenforced — live D0 gap in three
+shipped CSM units) and B102 (`detachment_parser.py --report` crashes on any gap). Verification-only
+session: confirmed the Calgar comma fix has not landed (direct private-repo fetch, not the local copy)
+and Chaos Space Marines stays blocked on World Eaters/Emperor's Children. Corrected Grey Knights off
+B89's candidate list — it has zero built units at any version, so nothing to migrate — and opened B100
+to track its net-new build (needs its own scoping pass first, per the CSM/TS precedent). No data,
+parser, or engine files changed this session.
+**19 open** as of S197 (unchanged from S196 — B89 advanced, did not close):
 B99, B98, B97, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. Chaos
 Daemons migrated to MFM v1.1 (D290) — B89's third migration, first via direct hand-edit of the Gen-1
 root `Unit_Points.csv` rather than a source-file swap (6 points changes: Beasts of Nurgle,
@@ -538,9 +550,66 @@ required**: push the missing-comma fix to the private repo's `MFM_Space_Marines_
 dict entry can be removed. Detachments scope (Black Templars gains a new VENGEFUL HOSTS detachment,
 several enhancement re-prices) untouched, tracked separately per convention.
 
-Remaining priority-order Adeptus Astartes candidates for B89: Grey Knights (own base file, not part of
-the SM chain). Heretic Astartes: Chaos Space Marines (still blocked on World Eaters and Emperor's
-Children, neither migrated). Remaining priority-order factions continue in later sessions.
+**S199 (D292): checked both open fronts, neither is actionable right now.** The Calgar comma fix has
+not landed in the private repo (verified via a direct fetch, not the local copy — still glued at
+`MFM_Space_Marines_v1.1.txt` line 538); stopgap unchanged. Chaos Space Marines re-confirmed blocked:
+`units.json` has no World Eaters or Emperor's Children entries. **Grey Knights corrected off this
+list** — it was never a migration candidate. `units.json` has zero Grey Knights units at any version
+(matches the standing "GK is not a built army" note from B94/S194), so there is nothing to migrate.
+Building it is a net-new faction build (own scoping pass first, `CSM_BUILD_SCOPE.md`/
+`THOUSAND_SONS_BUILD_SCOPE.md` precedent — no such doc exists yet for GK) and does not belong under
+B89's definition. Tracked separately below as a new ticket. B89 itself has **no remaining in-scope
+candidate** until either a Grey Knights build lands or World Eaters/Emperor's Children unblocks CSM.
+
+### B100 — Build Grey Knights faction — **NEW S199 (D292); PROCESS; not yet scoped**
+Adeptus Astartes priority-order faction with zero built units at any version. Both
+`MFM_Grey_Knights_v1_0.txt` and `_v1.1.txt` are present and already mapped in `mfm_points_parser.py`'s
+`FACTION_BY_MFM`, and it was never part of the SM chapter-override chain (`add_chapter_point_overrides.py`'s
+`CHAPTERS` list holds only the five named chapters), so nothing blocks a build from a tooling
+standpoint.
+
+**SCOPED S200 (D293)** — `GREY_KNIGHTS_BUILD_SCOPE.md` written (net-new). 25 current-edition
+datasheets, not the raw 31; the smallest faction build the project has done. Fully self-sourced: no
+cross-file points append, not part of the `add_chapter_point_overrides.py` chain, so D291's
+version-mismatch hazard doesn't apply. Mirrors the Death Guard / Thousand Sons blocks in
+`units_repro_check.py` exactly. Full pipeline dry run clean (transform -> points -> convert, 25
+units, Gate of Infinity correctly routed as an army-level ability). Points coverage complete: 0
+datasheets unpriced, 0 unparsable costs, 0 bracket collisions, 0 dropped attach-list entries. Six
+exclusions verified against the MFM's own `LEGENDS` header — Draigo's absence is correct, not a bug.
+The Thunderhawk Gunship is unbuildable rather than excluded (Wahapedia's Forge World source is
+edition `0`, no datasheet exists); same silent gap applies to every built faction, recorded not
+fixed. **B94's open Grey Knights concern retires** — the `1ST TO 3RD`/`4TH +` copy-tier shape is gone
+in v1.1 (`REQUISITION THRESHOLDS REMOVED`). Loadouts need only four units authored, in two shapes:
+compound "weapon and banner" replacements plus a narthecium upgrade (no new schema — Sanguinary
+Guard's banner and Tzaangors' Herd Banner/Brayhorn are shipped precedents), and the two Nemesis
+Dreadknights' pick-two-distinct constraint, which depends on **B101**. Nine detachments, 28
+enhancements, no unique tags; v1_0 vs v1.1 differ only in three force dispositions. **Blocked on
+B101** before the units data turn can author the Dreadknights. One open question left for the build
+turn, deliberately not assumed: there is no `Grey_Knights_web.txt` and `repro_check.py` requires one
+per `WEB_PASSES` entry — Chaos Daemons is precedent for a faction in neither `WEB_PASSES` nor
+`FACTIONS`, and the loadout run was complete without one, but that needs demonstrating rather than
+assuming. Build from `_v1.1.txt` per D293.
+
+### B101 — "Cannot take duplicates" wargear rule is not enforced — **NEW S200 (D293); engine; M; live D0 gap; blocks B100's units turn**
+`loMaxCount` in `index.html` caps the *total* picks for a `max_total_all` / `up_to` option but
+nothing anywhere enforces that the picks differ. Three **already-shipped** Chaos Space Marines units
+carry the no-duplicate rule only as a literal string inside their `replacement_choices` array —
+Raptors (`up_to` 2, 3 real choices), Legionaries (9 real choices), Traitor Guardsmen Squad (`up_to`
+3, 5 real choices). Two consequences: an illegal duplicate selection is reachable today, and the rule
+text renders to the player as a fake selectable menu entry. Under D0 the illegal state should be
+unreachable. Grey Knights forces the issue — both Nemesis Dreadknights use "up to two of the
+following, but cannot take duplicates" and cannot be authored around it. Fix shape: a `distinct: true`
+flag on the option plus selection-side enforcement, and strip the label strings out of the choices
+arrays. Engine turn; do it before B100's units data turn.
+
+### B102 — `detachment_parser.py --report` crashes on any gap — **NEW S200 (D293); tooling; XS**
+Gap records are built with keys `key` / `source_faction` / `detachment` / `dp`, but the report writer
+reads `g["army"]`, so any run with `--report` that produces at least one gap dies with a `KeyError`
+after the JSON has already been written. Latent because `detachments_repro_check.py` never passes
+`--report` — but a build or scoping session does, which is how it surfaced. Eleven gaps already exist
+across built factions (Black Templars 2, Blood Angels 3, Space Wolves 2, Death Guard 2, CSM 2 — all
+1DP detachments with no rule text in either source); Grey Knights adds three. One-line fix; can ride
+with any other tooling turn.
 
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:

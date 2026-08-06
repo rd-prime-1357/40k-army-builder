@@ -11230,3 +11230,140 @@ Backlog: B89 stays open — the SM chapter group is its fourth migrated faction-
 six files atomically). Remaining priority-order Adeptus Astartes candidates for B89: Grey Knights (its
 own base, not part of this chain). Heretic Astartes: Chaos Space Marines (still blocked on World Eaters
 and Emperor's Children).
+
+## D292 — B89 blocked on all fronts this session; Grey Knights corrected off the candidate list — it needs a net-new build, not a migration (S199)
+
+### What was checked
+
+- **Private-repo comma fix status (S198's open item).** The local copy of `MFM_Space_Marines_v1.1.txt`
+  could not be trusted on its own — `baseline.sh --fetch --data-turn` reported it among the 81 files
+  "already local, not checked" rather than the 76 freshly verified. Fetched the file directly from the
+  private `rd-prime-1357-data-sources` repo via the read-only token (bypassing the local copy entirely).
+  Line 538 of the live fetch still reads `...COMPANY HEROES, ERADICATOR SQUAD STERNGUARD VETERAN
+  SQUAD, HEAVY INTERCESSOR...` — comma still missing. **Fix has not landed.** The `_KNOWN_SOURCE_FIXES`
+  stopgap in `mfm_points_parser.py` stays in place, unchanged. No data regenerated on this point.
+- **Grey Knights as a B89 candidate (S199's assigned question).** The prompt's framing assumed GK was
+  built at v1_0 and needed the same kind of chaining check S198 resolved for the SM chapters. That
+  framing is wrong: `units.json` has no Grey Knights army entry at all — zero units, any version. This
+  matches the standing note at decision-log line ~10650 ("Grey Knights is not a built army") and the
+  B94 shipped-turn note that GK's Brotherhood Terminator Squad was mis-parsed by the same copy-tier
+  shape but never shipped, for the same reason. There is nothing to migrate. `add_chapter_point_overrides.py`'s
+  `CHAPTERS` list confirms GK was never part of the SM chapter-override chain (only the five named
+  chapters are), so that part of the S198-style question doesn't even apply once a GK build exists.
+  Both `MFM_Grey_Knights_v1_0.txt` and `_v1.1.txt` are present locally and mapped in
+  `mfm_points_parser.py`'s `FACTION_BY_MFM`, so nothing blocks a future build on that front — but
+  building the faction from scratch is out of B89's scope (v1.1 adoption for already-built factions)
+  and out of this session's data-only typing. No `*_BUILD_SCOPE.md` document exists yet for Grey
+  Knights, unlike CSM/TS/DG before their builds — a scoping-only pass (analysis-typed, the same shape
+  as `CSM_BUILD_SCOPE.md`/`THOUSAND_SONS_BUILD_SCOPE.md`) is the right next step whenever GK's build is
+  picked up, not folded into a data turn.
+- **Chaos Space Marines block (re-checked per prompt instruction, not assumed).** `units.json` has no
+  World Eaters or Emperor's Children army entries. CSM stays blocked on B89 exactly as S198 left it.
+
+### Outcome
+
+No data changed this session — nothing in scope was actually migratable. B89 has no remaining
+in-scope candidate under its current definition (migrate an already-built faction to v1.1) until
+either Grey Knights gets a full net-new build or World Eaters/Emperor's Children unblocks CSM. Backlog
+corrected to remove Grey Knights from B89's candidate list and note the real next step (a GK scoping
+pass) separately, so the same wrong framing doesn't recur next session.
+
+### State at close
+
+`index.html`: untouched, v6.16. `units.json`: untouched. No parser, engine, or assertion files changed
+— this was a verification-only turn once both open questions resolved to "no action available."
+`mfm_points_parser.py`'s `_KNOWN_SOURCE_FIXES` stopgap: unchanged, still needed.
+
+
+## D293 — Standing rule set: always build from the newest MFM available, units and detachments alike; Grey Knights scoped as a net-new build (S200)
+
+### The rule
+
+Ryan's call this session, made explicit because it had never been written down: **when more than one
+MFM version of a faction's source exists, build from the newest.** This applies to units and
+detachments equally, and to new faction builds as well as migrations of existing ones.
+
+This is not a change of direction — B89's whole arc is v1.1 adoption — but it had never been stated
+as a general rule, and the per-faction migration decisions (D288/D289/D290/D291) each explicitly
+deferred the detachments side and left `detachments.json` at v1_0. For an already-built faction that
+deferral is coherent: the units and detachments migrations are separate turns and the detachments one
+simply hasn't come up yet. For a **new** faction there is nothing to defer — building detachments at
+v1_0 would mean knowingly authoring stale values on the first build. That conflict is what prompted
+the question; D293 resolves it in favour of newest-available, always.
+
+Consequence, accepted deliberately: Grey Knights becomes the first army whose `detachments.json`
+records sit at v1.1 while the other sixteen armies remain at v1_0. The alternative was three
+knowingly-wrong force dispositions on a brand-new faction, which is worse. `detachment_parser.py`'s
+`FACTION_FILES` list stays v1_0 for the existing sixteen until their own migration turns run.
+
+### Grey Knights scoping pass
+
+`GREY_KNIGHTS_BUILD_SCOPE.md` written this session (net-new), in the mould of `CSM_BUILD_SCOPE.md`
+and `THOUSAND_SONS_BUILD_SCOPE.md`. Scoping-only: no committed data, parser or engine file changed.
+Headline findings, all from command output against this session's baseline:
+
+- **25 current-edition datasheets**, not the raw 31 — the smallest faction build the project has
+  done. Six exclusions verified correct against the MFM's own `LEGENDS` section header, not just
+  against Wahapedia's classification: Kaldor Draigo, Brother-Captain Stern, Grey Knights Dreadnought,
+  Grey Knights Relic Razorback and Servitors all sit under it. Draigo's absence will look like a bug
+  and is not one.
+- **The Grey Knights Thunderhawk Gunship is a known unbuildable, not an exclusion.** GW prices it
+  inline in the main list (Matched Play legal), but Wahapedia's Forge World source is edition `0`, so
+  there is no datasheet to build from. Every Forge World source in the export except Adeptus
+  Titanicus is edition `0`, so this silent gap already exists for every built faction. Recorded, not
+  a blocker.
+- **B94's open Grey Knights concern retires.** S194 recorded that Brotherhood Terminator Squad was
+  mis-parsed by the `1ST TO 3RD` / `4TH +` copy-tier shape and never fixed because Grey Knights was
+  not built. That shape is present in v1_0 and **gone in v1.1** — the source carries an explicit
+  `REQUISITION THRESHOLDS REMOVED` note and the unit is now a plain composition-bracket unit.
+  Building from v1.1 sidesteps it entirely rather than relying on B87's `esc4` reader.
+- **Points coverage complete and self-contained.** 0 datasheets without MFM points, 0 unparsable
+  costs, 0 composition-bracket collisions, 0 dropped attach-list entries. No cross-file append (unlike
+  CSM's cult troops) and not part of the `add_chapter_point_overrides.py` chain, so D291's
+  version-mismatch hazard does not apply. Mirrors the Death Guard / Thousand Sons blocks exactly.
+- **Full pipeline dry run clean** — transform → points → convert produced 25 units, one army, with
+  Gate of Infinity correctly identified as an army-level ability.
+- **Loadouts need only four units authored**, in two shapes: compound "weapon and banner"
+  replacements plus a narthecium upgrade on the two Terminator-pattern squads (no new schema — the
+  `add`/`equipment`/`max_total` shape used by Sanguinary Guard's banner and Tzaangors' Herd
+  Banner/Brayhorn already covers it), and the two Nemesis Dreadknights' pick-two-distinct constraint.
+- Nine detachments, 28 enhancements, no unique tags. v1_0 vs v1.1 differ **only** in three force
+  dispositions (Argent Assault → Priority Assets, Immaterial Interdiction → Reconnaissance, Warpbane
+  Task Force → Take And Hold), matching the three `FORCE DISPOSITION(S) CHANGED` banners exactly.
+
+### Two defects found while scoping, neither Grey Knights' fault
+
+**B101 — "cannot take duplicates" is not enforced (live D0 gap).** `loMaxCount` in `index.html` caps
+the total number of picks for a `max_total_all` / `up_to` option but nothing enforces that the picks
+differ. Three **already-shipped** Chaos Space Marines units (Raptors `up_to` 2, Legionaries,
+Traitor Guardsmen Squad `up_to` 3) carry the no-duplicate rule only as a literal string inside their
+`replacement_choices` array — where it also renders to the player as a fake selectable option. An
+illegal duplicate selection is reachable today. Grey Knights makes this unavoidable because both
+Nemesis Dreadknights depend on it and cannot be authored around. Engine ticket, sequenced before the
+Grey Knights units build.
+
+**B102 — `detachment_parser.py --report` crashes on any gap.** Gap records are built with
+`source_faction`; the report writer reads `g["army"]`. Latent because
+`detachments_repro_check.py` never passes `--report`, but a build or scoping session does — which is
+how it surfaced. Eleven gaps already exist across built factions; Grey Knights adds three. One-line
+fix, XS, tooling.
+
+### One open question, deliberately not answered
+
+There is no `Grey_Knights_web.txt`, and `repro_check.py` requires one file per `WEB_PASSES` entry.
+Chaos Daemons is precedent for a built faction in neither `WEB_PASSES` nor `FACTIONS`. The loadout run
+produced complete results for all 25 units with no web pass, so one is probably unnecessary — but the
+web passes supply *equipped* defaults and that has not been demonstrated for Grey Knights. Left as
+the build turn's first check rather than assumed either way.
+
+### Suggested sequencing
+
+Engine turn (B101) → tooling turn (B102) → data turn (Grey Knights units) → data turn (Grey Knights
+detachments). Steps 3 and 4 stay separate despite the faction's small size: different outputs,
+different parsers, and the B89 arc has kept `units.json` and `detachments.json` apart throughout.
+
+### State at close
+
+`index.html`: untouched, v6.16. `units.json`, `detachments.json`, all parsers: untouched — scoping
+only. Baseline opened with `repo_check` red on exactly the seven files S199 produced and predicted
+(still unpushed), every other gate green.

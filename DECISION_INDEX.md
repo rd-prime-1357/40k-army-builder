@@ -587,3 +587,28 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   detachment, enhancement re-prices) untouched, tracked separately per the CD/DG/TS convention. Ryan
   action: push the missing-comma fix to the private repo's `MFM_Space_Marines_v1.1.txt`, then remove the
   stopgap dict entry from `mfm_points_parser.py`.
+
+- **D292** — B89 blocked on all fronts this session (S199). Verified via a direct fetch from the private
+  repo (not the local copy) that the Calgar comma fix has not landed; stopgap unchanged. Corrected the
+  standing framing that Grey Knights is a B89 migration candidate: `units.json` has zero GK units at any
+  version, so there is nothing to migrate — GK needs a net-new faction build (its own scoping pass, in
+  the mould of `CSM_BUILD_SCOPE.md`/`THOUSAND_SONS_BUILD_SCOPE.md`), which is out of B89's definition
+  and out of this session's data-only typing. Re-checked and confirmed Chaos Space Marines still blocked
+  on World Eaters/Emperor's Children (neither built). No data, parser, or engine files changed —
+  verification-only turn.
+
+- **D293** — Standing rule set (S200): **always build from the newest MFM available**, units and
+  detachments alike, for new builds as well as migrations. Never previously written down; the
+  per-faction migrations had each deferred the detachments side, which for a brand-new faction would
+  have meant authoring known-stale values on first build. Grey Knights becomes the first army with
+  v1.1 detachments while the other sixteen stay v1_0. Also: Grey Knights scoped as a net-new build
+  (`GREY_KNIGHTS_BUILD_SCOPE.md`, net-new). 25 current-edition datasheets (not the raw 31); the six
+  exclusions verified against the MFM's own `LEGENDS` header, so Draigo's absence is correct, not a
+  bug; the Thunderhawk is unbuildable (Wahapedia Forge World source is edition `0`) rather than
+  excluded. B94's open Grey Knights copy-tier concern retires — the `1ST TO 3RD`/`4TH +` shape is
+  gone in v1.1 (`REQUISITION THRESHOLDS REMOVED`). Points coverage complete, self-contained, no
+  chapter chain. Only four units need loadout authoring. Nine detachments; v1_0 vs v1.1 differ only
+  in three force dispositions. Two defects found, neither Grey Knights' fault: **B101** — no-duplicate
+  wargear selection is unenforced, a live D0 gap reachable in three shipped CSM units; **B102** —
+  `detachment_parser.py --report` crashes on any gap (`g["army"]` vs `source_faction`), latent because
+  no gate passes `--report`.
