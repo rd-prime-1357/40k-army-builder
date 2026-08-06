@@ -11367,3 +11367,96 @@ different parsers, and the B89 arc has kept `units.json` and `detachments.json` 
 `index.html`: untouched, v6.16. `units.json`, `detachments.json`, all parsers: untouched — scoping
 only. Baseline opened with `repo_check` red on exactly the seven files S199 produced and predicted
 (still unpushed), every other gate green.
+
+## D294 — B101 engine half shipped: `distinct` enforces "you cannot select the same option more than once" at all three enforcement points; the data half deliberately left open (S201)
+
+**Turn type: engine-only.** `index.html` v6.16 → **v6.17**. One net-new harness. No data file, no
+parser, no source touched.
+
+### The gap
+
+`loMaxCount` caps how *many* picks a `replacement_choices` option may take and says nothing about
+whether the picks *differ*. Three shipped Chaos Space Marines options carry a no-duplicate restriction
+that exists only as a literal string sitting in the choices array, and both Grey Knights Nemesis
+Dreadknights need the same rule. Under D0 the duplicate has to be unreachable, not merely
+undocumented.
+
+### The decision
+
+A per-option boolean, `distinct: true`, with the ceiling applied at **three** places rather than one.
+This is the substance of the decision, not an implementation detail: whichever of the three is left
+out becomes the hole.
+
+1. **Selection path.** `editLoadoutChoiceCount` gains a sixth argument, `perMax`, and refuses an
+   increment past it. Every pre-existing caller omits it, and an absent value means "no per-choice
+   limit" — never zero.
+2. **Renderer.** The stepper's `+` disables once that choice is taken, so the duplicate is never
+   offered rather than offered-and-rejected. The sub-note reads "pick up to N, no duplicates".
+3. **Rollup.** `loDistinctPicks` re-derives the legal picks inside *both* `loRollup` branches — the
+   fixed-1 model group and the multi-model body group. These are separate code paths and a fix to one
+   has historically not implied the other. This is what stops a list saved before the flag existed,
+   or edited in browser storage, from rolling up illegal weapons and their points; points are derived
+   from the rollup, so clamping there covers cost as well as display.
+
+A derived ceiling comes with it: a distinct option can never take more picks than it lists choices, so
+the effective group total is `min(loMaxCount(...), replacement_choices.length)` (`loChoiceGroupCap`).
+Without it a "distinct, up to 3" option offering two choices would advertise a third pick that no
+legal selection can reach.
+
+**Truncation of an over-selection follows the option's own `replacement_choices` order**, not storage
+insertion order, so the outcome is deterministic rather than dependent on the order keys happened to
+be written.
+
+### What was deliberately NOT changed
+
+**The non-distinct paths are byte-for-byte as they were.** Both rollup branches keep their original
+code and `loDistinctPicks` is reached only when the flag is set. That is a decision, not an oversight:
+the body branch's non-distinct total handling is loose (it emits every tallied pick but clamps only
+the source charge, so an over-cap tally can emit more weapons than the cap allows while *hiding* the
+over-allocation), and the fixed-1 branch clamps differently again. Tightening that would change the
+rolled-up weapons — and therefore the points — of already-saved lists across shipped factions. It
+needs its own turn and its own verification. Opened as **B103**.
+
+**One rendering behaviour did change beyond distinct options:** the `+` on any `replacement_choices`
+stepper now greys out once the group total is reached. It was previously live and silently rejected by
+the handler. No legality outcome changes; this only makes an existing hard rule visible, and it is the
+same D0 principle the ticket is about.
+
+### The data half is still open, and this is the important caveat
+
+**No shipped option carries `distinct: true`.** Landing the flag on the three Chaos Space Marines
+options means the parser must emit it, which is a tooling turn, followed by a regeneration, which is a
+data turn. Per turn-typing neither could ride here. So as of v6.17 the engine *can* express the rule
+and nothing *uses* it — the three CSM units are exactly as wrong for a player today as they were at
+v6.16.
+
+Recorded while looking at it, because it raises the priority of the data half above "cosmetic": the
+marker string is not merely displayed as a fake menu entry. Selecting it pushes it through `addRepl`
+and the unit gains a weapon literally named `Options (You Cannot Select The Same Option More Than
+Once):`. Points are unaffected — `wargearCostForRollup` looks the name up in `wargear_points.json` and
+a rules sentence never matches — but the weapon list is visibly wrong. Split out as **B101-data**.
+
+Also corrected against the data, since S200's table implied otherwise: Legionaries `cc_5` is not an
+uncapped option. It carries `per_n_models: 5, max_per_n: 1`, so its cap is 2 at ten models and 1 at
+five. All three CSM options have a working total cap; it is only the distinctness that was missing.
+
+### Verification
+
+Net-new `b101_check.js`, registered in `baseline.sh` and `pipeline_manifest.py`. It loads the real
+`loRollup` and the real `editLoadoutChoiceCount` out of `index.html` and covers all three enforcement
+points plus a non-distinct control on each. Fixtures are synthetic on purpose: with no shipped unit
+carrying the flag, an assertion written against real data would pin nothing today and would only start
+meaning something at the moment the data landed — backwards. Each of the three enforcement points was
+mutation-tested individually; neutering any one of them fails the harness on named assertions rather
+than crashing it.
+
+`rules_assertions.py` is untouched. The natural assertion — that any option whose `replacement_choices`
+contains a no-duplicate marker must carry `distinct: true` — would fail on all three CSM options today
+and belongs with the data turn that makes it true.
+
+### State at close
+
+`index.html` **v6.17**. `units.json`, `unit_loadouts.json`, `detachments.json`, all parsers,
+`rules_assertions.py`: untouched. Baseline reconciled at open at 27/30, all three failures tracing to
+the single unpushed `SESSION_HANDOFF_199.md` — confirmed by direct clone, which showed 165 files
+byte-identical and no other drift.

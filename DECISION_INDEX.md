@@ -612,3 +612,20 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   wargear selection is unenforced, a live D0 gap reachable in three shipped CSM units; **B102** —
   `detachment_parser.py --report` crashes on any gap (`g["army"]` vs `source_faction`), latent because
   no gate passes `--report`.
+- **D294** — B101 engine half shipped (S201), engine-only, `index.html` v6.16 → **v6.17**. New
+  optional boolean `distinct` on `count` options carrying `replacement_choices`, expressing "you
+  cannot select the same option more than once". Enforced at **three** places by design, since
+  whichever is omitted becomes the hole: the selection path (`editLoadoutChoiceCount` gains a sixth
+  `perMax` argument), the renderer (the `+` disables rather than being offered-and-rejected), and the
+  rollup (`loDistinctPicks`, in **both** `loRollup` branches — fixed-1 group and body group — so a
+  list saved before the flag cannot roll up illegal weapons or their points). Derived ceiling: a
+  distinct option can never take more picks than it lists choices (`loChoiceGroupCap`). Over-selection
+  truncates in `replacement_choices` order, deterministically. Non-distinct paths left byte-for-byte
+  unchanged on purpose — the body branch's loose total handling would change shipped lists' points if
+  touched, so it is **B103**, not a side effect. **The data half is still open:** no shipped option
+  carries the flag, so the three CSM units are as wrong for a player at v6.17 as at v6.16; the parser
+  must emit it (tooling) and the data be regenerated (data) — **B101-data**. Found while looking:
+  selecting the marker string does not just look wrong, it adds a weapon named after the rules
+  sentence to the unit (points unaffected). S200's table corrected — Legionaries `cc_5` is
+  `per_n_models: 5 / max_per_n: 1`, not uncapped. Net-new `b101_check.js`, synthetic fixtures by
+  design, each enforcement point mutation-tested.

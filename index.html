@@ -1603,6 +1603,8 @@
     .lo-stepper { display:flex; align-items:center; gap:0.5rem; margin:0.3rem 0 0.9rem; }
     .lo-step-btn { width:26px; height:26px; border:1px solid var(--c-3a3a3a); background:var(--c-1a1a1a); color:var(--c-e0e0e0); font-size:1rem; line-height:1; border-radius:4px; cursor:pointer; }
     .lo-step-btn:hover { border-color:var(--c-cc9900); }
+    .lo-step-btn.disabled, .lo-step-btn:disabled { opacity:0.35; cursor:default; }
+    .lo-step-btn.disabled:hover, .lo-step-btn:disabled:hover { border-color:var(--c-3a3a3a); }
     .lo-step-val { min-width:1.4rem; text-align:center; font-weight:700; font-size:0.95rem; }
     .lo-step-lbl { font-size:0.82rem; color:var(--c-cccccc); }
     .lo-step-max { color:var(--c-777777); font-size:0.72rem; }
@@ -2220,7 +2222,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.16';
+  const VERSION = '6.17';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -5574,6 +5576,51 @@
     }
     return 0;
   }
+  // ── B101: "you cannot select the same option more than once" ───────────────
+  // loMaxCount caps how MANY picks a replacement_choices option may take; it says
+  // nothing about whether the picks differ. A source that reads "up to 2 ... can each
+  // have their chainsword replaced with one of the following (you cannot select the
+  // same option more than once)" needs both: a total of 2, AND at most one of each
+  // listed option. Under D0 the duplicate must be unreachable, not flagged, so the
+  // ceiling is applied on the selection path, in the renderer, AND in the rollup —
+  // the last of those because a list saved before the flag existed (or edited in
+  // storage) must not roll up illegal weapons or their points.
+  //
+  // distinct: true is authored per option. Absent, behaviour is unchanged: a choice
+  // may be taken as many times as the group cap allows, which is right for the many
+  // shipped options whose source carries no such restriction.
+  function loDistinctCap(opt) { return (opt && opt.distinct) ? 1 : Infinity; }
+  // Ceiling on the GROUP total for a distinct option: you can never take more picks
+  // than there are things to pick from, so the counter's "allowed" and the stepper's
+  // shared cap both shrink to the number of listed choices. Without this a
+  // "distinct, up to 3" option offering 2 choices would advertise a third pick that
+  // no legal selection can reach.
+  function loChoiceGroupCap(opt, max) {
+    if (!opt || !opt.distinct || !Array.isArray(opt.replacement_choices)) return max;
+    return Math.min(max, opt.replacement_choices.length);
+  }
+  // Resolve a saved {choice -> n} tally for a DISTINCT option into the picks the rules
+  // allow: at most one of each listed choice, at most loChoiceGroupCap in total,
+  // iterated in the option's own choice order so a stale over-selection truncates the
+  // same way every time rather than following storage insertion order.
+  // Returns [[choice, n], ...] plus the total consumed.
+  //
+  // Deliberately used only on the distinct path. Both rollup branches keep their
+  // existing non-distinct code byte-for-byte: their total handling is looser than it
+  // should be (see B103), but that looseness is baked into every shipped list and its
+  // points, so tightening it is its own ticket with its own verification — not a side
+  // effect of B101.
+  function loDistinctPicks(opt, tally, cap) {
+    const listed = Array.isArray(opt.replacement_choices) ? opt.replacement_choices : [];
+    const per = loDistinctCap(opt), total = loChoiceGroupCap(opt, cap);
+    const picks = [];
+    let used = 0;
+    for (const c of listed) {
+      const want = Math.max(0, Math.min(Number(tally[c]) | 0, per, total - used));
+      if (want > 0) { picks.push([c, want]); used += want; }
+    }
+    return { picks, used };
+  }
   // ── E14: free, unconditional adds default to selected ─────────────────────
   // A pure add that grants something for free, has no gate, no shared pool and a
   // hard cap of one is a thing no player would decline, so a new entry is seeded
@@ -5962,10 +6009,16 @@
           if (o.replacement_choices) {
             const tally = (selv && typeof selv === 'object') ? selv : {};
             let used = 0;
-            for (const k of Object.keys(tally)) {
-              if (!o.replacement_choices.includes(k)) continue;
-              const want = Math.max(0, Math.min(tally[k] | 0, cap - used));
-              if (want > 0) { chargeF(k, want); used += want; }
+            if (o.distinct) {                            // B101
+              const r = loDistinctPicks(o, tally, cap);
+              for (const pk of r.picks) chargeF(pk[0], pk[1]);
+              used = r.used;
+            } else {
+              for (const k of Object.keys(tally)) {
+                if (!o.replacement_choices.includes(k)) continue;
+                const want = Math.max(0, Math.min(tally[k] | 0, cap - used));
+                if (want > 0) { chargeF(k, want); used += want; }
+              }
             }
             usedThis = used;
           } else {
@@ -6050,8 +6103,14 @@
         if (o.replacement_choices) {
           const tally = (selv && typeof selv === 'object') ? selv : {};
           let used = 0;
-          for (const k of Object.keys(tally)) { const c = Math.max(0, tally[k] | 0); if (c > 0 && o.replacement_choices.includes(k)) { emit.push({ opt: o, replacement: k, n: c }); used += c; } }
-          used = Math.min(used, cap);
+          if (o.distinct) {                              // B101
+            const r = loDistinctPicks(o, tally, cap);
+            for (const pk of r.picks) emit.push({ opt: o, replacement: pk[0], n: pk[1] });
+            used = r.used;
+          } else {
+            for (const k of Object.keys(tally)) { const c = Math.max(0, tally[k] | 0); if (c > 0 && o.replacement_choices.includes(k)) { emit.push({ opt: o, replacement: k, n: c }); used += c; } }
+            used = Math.min(used, cap);
+          }
           chargeSource(o.replaces, used);
           usedThis = used;
         } else {
@@ -6270,6 +6329,7 @@
             let mx = loMaxCount(o, size, grpCounts[g.name]);
             const poolInfo = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
             if (poolInfo) mx = Math.min(mx, Math.max(0, poolInfo.pool - poolInfo.leaderUsed));
+            mx = loChoiceGroupCap(o, mx);            // B101
             allowed += mx;
             const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
             picked += Object.keys(tally).reduce((a, k) => a + (Number(tally[k]) || 0), 0);
@@ -6316,12 +6376,20 @@
             let max = loMaxCount(o, size, grpCounts[g.name]);
             const poolInfoRC = o.pool_id ? (roll.pools && roll.pools['pool:' + o.pool_id]) : null;
             if (poolInfoRC) max = Math.min(max, Math.max(0, poolInfoRC.pool - poolInfoRC.leaderUsed));
+            max = loChoiceGroupCap(o, max);          // B101
             const tally = (entry.wargear[o.id] && typeof entry.wargear[o.id] === 'object') ? entry.wargear[o.id] : {};
-            html += `<div class="lo-substep-note">pick up to ${max}</div>`;
+            // B101: on a distinct option each listed choice tops out at one, so the
+            // stepper carries a second ceiling and its + greys out once that choice is
+            // taken. The duplicate is never offered rather than offered-and-rejected.
+            const perMax = loDistinctCap(o);
+            const sumTaken = Object.keys(tally).reduce((a, k) => a + (Number(tally[k]) || 0), 0);
+            html += `<div class="lo-substep-note">pick up to ${max}${o.distinct ? ', no duplicates' : ''}</div>`;
             for (const c of o.replacement_choices) {
               const cur = Number(tally[c] || 0);
-              html += loStepper(`editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',-1,${max})`,
-                                `editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',1,${max})`, cur, c, '', mkDetail('eye', itemDetailHtml(raw, c), `${entry.listId}|lo-eye|${o.id}|${c}`));
+              const perArg = Number.isFinite(perMax) ? `,${perMax}` : '';
+              const plusOff = cur >= perMax || sumTaken >= max;
+              html += loStepper(`editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',-1,${max}${perArg})`,
+                                `editLoadoutChoiceCount(${entry.listId},'${esc(o.id)}','${esc(c)}',1,${max}${perArg})`, cur, c, '', mkDetail('eye', itemDetailHtml(raw, c), `${entry.listId}|lo-eye|${o.id}|${c}`), plusOff);
             }
           } else if (o.type === 'count') {
             if (o.requires_weapon && !reqOkUI(o)) {
@@ -6368,21 +6436,27 @@
     if (!html) return '';
     return `<div class="detail-section-label" style="color:#666;margin-bottom:0.6rem;">Wargear Options</div>` + html;
   }
-  function loStepper(minusCall, plusCall, cur, label, sub, detail) {
+  function loStepper(minusCall, plusCall, cur, label, sub, detail, plusOff) {
     const btn = detail ? detail.btn : '', panel = detail ? detail.panel : '';
+    // B101: plusOff is optional. Omitted (every pre-existing caller) it is falsy and
+    // the button renders exactly as before.
+    const pd = plusOff ? ' disabled' : '';
     return `<div class="lo-stepper">
       <button class="lo-step-btn" onclick="${minusCall}">\u2212</button>
       <span class="lo-step-val">${cur}</span>
-      <button class="lo-step-btn" onclick="${plusCall}">+</button>
+      <button class="lo-step-btn${pd}" onclick="${plusCall}"${plusOff ? ' disabled' : ''}>+</button>
       <span class="lo-step-lbl">${label} <span class="lo-step-max">${sub}</span></span>${btn}
     </div>${panel}`;
   }
-  function editLoadoutChoiceCount(listId, optId, choice, delta, groupMax) {
+  function editLoadoutChoiceCount(listId, optId, choice, delta, groupMax, perMax) {
     const e = armyList.find(x => x.listId === listId); if (!e) return;
     let t = (e.wargear[optId] && typeof e.wargear[optId] === 'object') ? e.wargear[optId] : {};
     const sum = Object.keys(t).reduce((a, k) => a + (Number(t[k]) || 0), 0);
     const cur = Number(t[choice] || 0);
     if (delta > 0 && sum >= groupMax) return;      // group cap is a firm rule
+    // B101: so is the per-choice cap on a distinct option. perMax is omitted by every
+    // non-distinct caller, so an absent value means "no per-choice limit" — never 0.
+    if (delta > 0 && perMax != null && cur >= perMax) return;
     t = Object.assign({}, t); t[choice] = Math.max(0, cur + delta);
     if (t[choice] === 0) delete t[choice];
     e.wargear[optId] = t;

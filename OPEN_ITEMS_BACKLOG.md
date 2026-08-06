@@ -3,7 +3,21 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S200 (up from 20 at S199 — new B101, B102): B99, B98,
+not here, it isn't open. **23 open** as of S201 (up from 22 at S200 — B101's engine half shipped and
+closed, but its data half was split out as B101-data, and B103 was opened): B99, B98, B97, B101-data,
+B103, E28, B93, B90, B94, B89, B100, B102, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+Engine-only turn. `index.html` v6.16 → **v6.17**: the new `distinct` flag makes
+"you cannot select the same option more than once" enforceable, held at three places (selection path,
+renderer, and both `loRollup` branches) so no single omission becomes the hole. Net-new
+`b101_check.js`, registered in `baseline.sh` and `pipeline_manifest.py`, with each enforcement point
+mutation-tested. **The engine can now express the rule and nothing uses it** — no shipped option
+carries the flag, so the three CSM units are as wrong for a player at v6.17 as at v6.16; that is
+B101-data (parser emits the flag, then regenerate). Found while looking: selecting the marker string
+does not merely look wrong, it adds a weapon named after the rules sentence to the unit (points
+unaffected — a rules sentence never matches a priced item). S200's table corrected against the data:
+Legionaries `cc_5` is `per_n_models: 5 / max_per_n: 1`, not uncapped. B103 opened for a looser
+pre-existing defect deliberately left alone. B100 still blocked, now on B101-data rather than B101.
+**22 open** as of S200 (up from 20 at S199 — new B101, B102): B99, B98,
 B97, B101, E28, B93, B90, B94, B89, B100, B102, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12,
 B17. Grey Knights scoped (D293, `GREY_KNIGHTS_BUILD_SCOPE.md`) — 25 datasheets, the smallest build
 yet, fully self-sourced, only four units needing loadout authoring. D293 also set a standing rule:
@@ -561,7 +575,7 @@ Building it is a net-new faction build (own scoping pass first, `CSM_BUILD_SCOPE
 B89's definition. Tracked separately below as a new ticket. B89 itself has **no remaining in-scope
 candidate** until either a Grey Knights build lands or World Eaters/Emperor's Children unblocks CSM.
 
-### B100 — Build Grey Knights faction — **NEW S199 (D292); PROCESS; not yet scoped**
+### B100 — Build Grey Knights faction — **NEW S199 (D292); PROCESS; scoped S200; blocked on B101-data**
 Adeptus Astartes priority-order faction with zero built units at any version. Both
 `MFM_Grey_Knights_v1_0.txt` and `_v1.1.txt` are present and already mapped in `mfm_points_parser.py`'s
 `FACTION_BY_MFM`, and it was never part of the SM chapter-override chain (`add_chapter_point_overrides.py`'s
@@ -590,17 +604,51 @@ per `WEB_PASSES` entry — Chaos Daemons is precedent for a faction in neither `
 `FACTIONS`, and the loadout run was complete without one, but that needs demonstrating rather than
 assuming. Build from `_v1.1.txt` per D293.
 
-### B101 — "Cannot take duplicates" wargear rule is not enforced — **NEW S200 (D293); engine; M; live D0 gap; blocks B100's units turn**
-`loMaxCount` in `index.html` caps the *total* picks for a `max_total_all` / `up_to` option but
-nothing anywhere enforces that the picks differ. Three **already-shipped** Chaos Space Marines units
-carry the no-duplicate rule only as a literal string inside their `replacement_choices` array —
-Raptors (`up_to` 2, 3 real choices), Legionaries (9 real choices), Traitor Guardsmen Squad (`up_to`
-3, 5 real choices). Two consequences: an illegal duplicate selection is reachable today, and the rule
-text renders to the player as a fake selectable menu entry. Under D0 the illegal state should be
-unreachable. Grey Knights forces the issue — both Nemesis Dreadknights use "up to two of the
-following, but cannot take duplicates" and cannot be authored around it. Fix shape: a `distinct: true`
-flag on the option plus selection-side enforcement, and strip the label strings out of the choices
-arrays. Engine turn; do it before B100's units data turn.
+### B101-data — The no-duplicate rule is expressible but nothing authors it; the marker string still ships as a fake option — **NEW S201 (D294); tooling then data; S; live D0 gap; blocks B100's units turn**
+B101's engine half shipped in v6.17 (D294): `distinct: true` on a `count` option with
+`replacement_choices` is enforced on the selection path, in the renderer, and in both `loRollup`
+branches. **No shipped option carries the flag**, so nothing has changed for a player. Three Chaos
+Space Marines options still hold the restriction as a literal string sitting in the choices array:
+Raptors `cc_6` (`max_total_all`, `up_to` 2, 3 real choices, marker
+`Options (You Cannot Select The Same Option More Than Once):`), Legionaries `cc_5`
+(`per_n_models` 5 / `max_per_n` 1 — **not** uncapped, correcting S200's table — 9 real choices, marker
+`(Duplicates Are Not Allowed):`) and Traitor Guardsmen Squad `cc_1` (`max_total_all`, `up_to` 3,
+5 real choices, same marker). Verified this session as the only three occurrences across all 39
+`replacement_choices` options in `unit_loadouts.json`.
+
+Worse than cosmetic, and this is the part that sets the priority: selecting the marker pushes it
+through `addRepl`, so the unit gains a weapon literally named after the rules sentence. Points are
+unaffected — `wargearCostForRollup` looks the name up in `wargear_points.json` and a rules sentence
+never matches — but the weapon list is visibly wrong.
+
+**Two turns, in order, and they must not be merged.** (1) *Tooling:* `loadout_parser.py` recognises
+the marker wording where `_choices_from_list` currently swallows it as a choice, emits
+`distinct: true` on the option, and drops the marker from the array. Note `_choices_from_list` only
+strips a parenthesised note at the *end* of the list text, which is why a mid-sentence marker
+survives. Raptors also carries a related `UNMATCHED` parser flag on the same sentence; check whether
+one fix covers both before assuming it does. (2) *Data:* regenerate `unit_loadouts.json`, diff-guard
+at key level against the committed file, and add the assertion to `rules_assertions.py` that any
+option whose `replacement_choices` contains a no-duplicate marker carries `distinct: true` — it would
+fail today, which is exactly why it belongs with the turn that makes it true, not with the engine turn.
+Grey Knights' two Nemesis Dreadknights are authored against the flag directly and need no marker
+handling; B100's units turn is unblocked once (1) and (2) land.
+
+### B103 — Non-distinct `replacement_choices` rollup emits past its cap and hides the over-allocation — **NEW S201 (D294); engine; M; affects shipped lists' points**
+Found while landing B101 and deliberately left alone there. In `loRollup`'s multi-model body branch, a
+`replacement_choices` option pushes **every** tallied pick into `emit` and only then clamps the total
+for the source charge (`used = Math.min(used, cap)`). Two consequences: more replacement weapons can
+be emitted than the cap allows, and because the *source* charge is the clamped figure, the
+per-source-weapon check never sees the overrun, so `overAllocated` does not fire — the list looks
+clean while being wrong. The fixed-1 branch clamps differently again (it bounds each pick against the
+remaining cap as it goes), so the two branches disagree on the same shape.
+
+Not fixed inside B101 on purpose: the emitted weapons feed `wargearCostForRollup`, so tightening this
+changes the **points** of already-saved lists across shipped factions. That needs its own turn, its
+own before/after census of which shipped units can actually reach an over-cap tally, and a decision on
+whether the correct behaviour is to clamp silently or to clamp *and* fire `overAllocated`. My reading
+is that a saved list that exceeds a cap should be corrected silently (D0 — the state was never legal,
+so there is nothing to warn about) and that `overAllocated` should stay reserved for genuine
+same-source contention, but that is a product call and belongs to Ryan, not to the fix.
 
 ### B102 — `detachment_parser.py --report` crashes on any gap — **NEW S200 (D293); tooling; XS**
 Gap records are built with keys `key` / `source_faction` / `detachment` / `dp`, but the report writer
@@ -986,6 +1034,21 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+- **B101 (engine half)** — "Cannot take duplicates" wargear rule was not enforced — **NEW S200
+  (D293); engine half CLOSED S201 (D294); ENGINE.** `loMaxCount` capped the total picks for a
+  `replacement_choices` option but nothing anywhere enforced that the picks differ, so an illegal
+  duplicate was reachable in three shipped Chaos Space Marines units and both Grey Knights Nemesis
+  Dreadknights could not be authored at all. Fixed by a per-option `distinct` boolean held at three
+  independent enforcement points — the selection path (`editLoadoutChoiceCount` gains a `perMax`
+  argument), the renderer (the `+` disables rather than being offered-and-rejected), and the rollup
+  (`loDistinctPicks`, in **both** `loRollup` branches, so a list saved before the flag cannot roll up
+  illegal weapons or their points). Derived ceiling `loChoiceGroupCap`: a distinct option can never
+  take more picks than it lists choices. Over-selection truncates in `replacement_choices` order, so
+  it is deterministic. `index.html` v6.17; net-new `b101_check.js` with synthetic fixtures by design
+  (nothing shipped carries the flag yet, so real-data assertions would pin nothing) and each
+  enforcement point mutation-tested. **The authoring half is not closed** — it needs a parser change
+  then a regeneration and is tracked separately as B101-data, which is what B100 now waits on.
 
 - **B96** — `b87_check`/`b88_check` crashed instead of SKIP when GW sources are absent — **NEW S193
   (D286); CLOSED S194 (D287); TOOLING.** Both harnesses invoke the parsers directly against raw GW MFM

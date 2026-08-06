@@ -465,3 +465,36 @@ still flagged `WEAPON_NOT_FOUND`. The parser deliberately does not consult the a
 things ("1 thunder hammer and 1 relic shield") is split on `" and "` / commas the way the choice-list side
 already was, and written as one compound pick (`Thunder hammer + Relic Shield`). The whole phrase is left
 alone when it is itself a known weapon ("Slaughter and Carnage").
+
+## Session 201 addition (v6.17) — `distinct` on `replacement_choices` options (B101, D294)
+
+- **`distinct`** (bool, optional, on `count` options that carry `replacement_choices`): the source
+  restricts the player to **at most one of each listed choice** — the "(you cannot select the same
+  option more than once)" / "(duplicates are not allowed)" wording. Absent, the field is false and
+  behaviour is exactly as before: a choice may be repeated up to whatever `loMaxCount` allows, which
+  is correct for the many options whose source carries no such restriction.
+
+**What it does and does not change.** `distinct` constrains only the *distribution* of picks. The
+*total* number of picks is still whatever `loMaxCount` returns from `per_n_models`/`max_per_n`,
+`max_total`, or `max_total_all` + `up_to`. The two ceilings are independent and both bind. One derived
+consequence: a distinct option can never take more picks than it lists choices, so the effective group
+total is `min(loMaxCount(...), replacement_choices.length)` — `loChoiceGroupCap` in the engine.
+
+**Where it is enforced.** Three places, deliberately, because D0 requires the illegal state to be
+unreachable rather than flagged and any one of the three left out becomes the hole:
+
+1. **Selection path** — `editLoadoutChoiceCount` takes a sixth argument `perMax` and refuses an
+   increment past it. Omitted by non-distinct callers, where absent means "no per-choice limit".
+2. **Renderer** — the stepper's `+` is disabled once a choice is taken (and, now, once the group total
+   is reached, which was previously live-but-rejected for every `replacement_choices` option). The
+   sub-note reads "pick up to N, no duplicates".
+3. **Rollup** — `loDistinctPicks` re-derives the legal picks in both `loRollup` branches (fixed-1 group
+   and multi-model body group), so a list saved before the flag existed, or edited in storage, cannot
+   roll up illegal weapons or their points. Truncation of an over-selection follows the option's own
+   `replacement_choices` order, not storage insertion order, so it is deterministic.
+
+**Not yet authored anywhere.** No shipped option carries `distinct: true` as of v6.17. The three live
+Chaos Space Marines cases (Raptors `cc_6`, Legionaries `cc_5`, Traitor Guardsmen Squad `cc_1`) and the
+two Grey Knights Nemesis Dreadknights all still need the parser to emit the flag and the data to be
+regenerated. Until then those three options continue to carry the restriction as a literal string
+sitting in `replacement_choices`, where it renders as a fake selectable entry — see B101-data.
