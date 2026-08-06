@@ -564,3 +564,26 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   artifact, verified unchanged (`TAKE AND HOLD` in both versions). `source_manifest.json` hash updated for
   `Unit_Points.csv` — Ryan action required to push the matching edit to the private
   `rd-prime-1357-data-sources` repo, since Claude's token there is read-only.
+
+- **D291** — B89 fourth migration shipped: the six-file Space Marines group (base + Black Templars,
+  Blood Angels, Dark Angels, Deathwatch, Space Wolves) moved to MFM v1.1 as one atomic turn (S198).
+  Chaining question resolved: `add_chapter_point_overrides.py` compares each chapter's shared-unit
+  prices against the *current* generic base price on every build, so a version-mismatched base/chapter
+  pairing corrupts every affected chapter's overrides — the group cannot split faction-by-faction like
+  CD/DG/TS did. No new tooling needed: `mfm_points_parser.py`'s v1.1 filenames were already mapped
+  (B87/D275), the P4 source census regex doesn't see dot-versioned filenames; only edit was
+  synchronizing the hardcoded v1_0 filenames to v1.1 in `units_repro_check.py` and
+  `add_chapter_point_overrides.py`. Also found and stopgap-fixed a genuine source-text defect: a missing
+  comma in `MFM_Space_Marines_v1.1.txt`'s Marneus Calgar LEADER line glued two real unit names into one
+  unresolvable token, silently dropping both from his legal attach list. Fixed via a narrow, filename-
+  and-substring-scoped `_KNOWN_SOURCE_FIXES` patch in `mfm_points_parser.py` that fails loudly if the
+  source changes underneath it — not a general glue-heuristic. Scanned all six SM-family files'
+  validation reports for the same defect pattern; confirmed isolated to this one instance. 47 units
+  changed (14 Adeptus Astartes, 8 Ultramarines, 9 Dark Angels, 7 Space Wolves, 1 White Scars, 8 Black
+  Templars): `points` on all 47, `chapter_point_overrides` on 2, `model_groups` on 1 (Uriel Ventris's
+  legitimate new Victrix Honour Guard attach eligibility). Diff-guarded against all ten other armies and
+  all four merged lookups. One pinned `rules_assertions.py` value reconciled (`b56a_bt_negative_control`:
+  Impulsor AA/BT distinctness check, 80/85 -> 70/75). `detachments.json` scope (new VENGEFUL HOSTS
+  detachment, enhancement re-prices) untouched, tracked separately per the CD/DG/TS convention. Ryan
+  action: push the missing-comma fix to the private repo's `MFM_Space_Marines_v1.1.txt`, then remove the
+  stopgap dict entry from `mfm_points_parser.py`.

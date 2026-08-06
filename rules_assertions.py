@@ -2896,7 +2896,10 @@ def b56a_bt_negative_control(S):
     ok_count = len(bt_units) == 18 and len(non_null) == 18
     aa_cost = (aa_impulsor or {}).get('sizes', [{}])[0].get('first_unit')
     bt_cost = (bt_impulsor or {}).get('sizes', [{}])[0].get('first_unit')
-    ok_distinct = aa_cost == 80 and bt_cost == 85
+    # B89/S198 (D291): v1.1 SM-chain migration moved both by -10 (80->70, 85->75);
+    # the distinctness this control checks (BT's own datasheet != the generic Astartes
+    # one) is unchanged, only the absolute values are.
+    ok_distinct = aa_cost == 70 and bt_cost == 75
     ok = ok_count and ok_distinct
     return ok, (f'BT {len(bt_units)} units, {len(non_null)} priced; '
                 f'Impulsor AA={aa_cost} BT={bt_cost}')

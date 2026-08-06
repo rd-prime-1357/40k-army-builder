@@ -511,7 +511,36 @@ misattributed to SCINTILLATING LEGION instead of SHADOW LEGION (flagged for whoe
 `detachments.json`), and a PLAGUE LEGION force-disposition banner that checked out as unchanged
 (`TAKE AND HOLD` both versions) — not a missed item. CD's own investigate-first item (LORDS OF THE WARP
 force disposition, PURGE THE FOE→TAKE AND HOLD) stays tracked for the detachments migration, out of
-scope here. Remaining priority-order factions continue in later sessions.
+scope here.
+
+**The six-file Space Marines group (base + Black Templars, Blood Angels, Dark Angels, Deathwatch,
+Space Wolves) migrated together S198 (D291)**, fourth of the arc and the first multi-file atomic
+migration: `add_chapter_point_overrides.py` compares each chapter's shared-unit prices against the
+*current* generic base price on every build, so this group cannot split faction-by-faction like
+CD/DG/TS — confirmed from source, not new tooling, just a synchronized filename swap across
+`units_repro_check.py` and `add_chapter_point_overrides.py` (see D291). 47 units changed (14 Adeptus
+Astartes, 8 Ultramarines, 9 Dark Angels, 7 Space Wolves, 1 White Scars, 8 Black Templars): `points` on
+all 47, `chapter_point_overrides` on 2 (Inceptor Squad newly gains four chapter overrides; Vanguard
+Veteran Squad With Jump Packs' existing Blood Angels override re-prices), `model_groups` on 1 (Uriel
+Ventris legitimately gains Victrix Honour Guard as an attach option in v1.1). All ten other armies and
+all four merged lookups byte-identical. One pinned `rules_assertions.py` value reconciled
+(`b56a_bt_negative_control`, Impulsor AA/BT 80/85 -> 70/75).
+
+**Found and stopgap-fixed a genuine source-text defect** (not a reconciliation-report error this
+time — a raw MFM transcription defect): `MFM_Space_Marines_v1.1.txt`'s Marneus Calgar LEADER line is
+missing a comma between "ERADICATOR SQUAD" and "STERNGUARD VETERAN SQUAD", gluing them into one
+unresolvable token and silently dropping both legal units from his attach list. Scanned all six
+SM-family files' validation reports for the same pattern (a dropped attach-list token that splits
+cleanly into two-or-three known unit names) — isolated to this one instance, not systemic. Fixed via a
+narrow, filename-and-substring-scoped correction table in `mfm_points_parser.py`
+(`_KNOWN_SOURCE_FIXES`) that fails loudly if the source text changes underneath it. **Ryan action
+required**: push the missing-comma fix to the private repo's `MFM_Space_Marines_v1.1.txt`, then this
+dict entry can be removed. Detachments scope (Black Templars gains a new VENGEFUL HOSTS detachment,
+several enhancement re-prices) untouched, tracked separately per convention.
+
+Remaining priority-order Adeptus Astartes candidates for B89: Grey Knights (own base file, not part of
+the SM chain). Heretic Astartes: Chaos Space Marines (still blocked on World Eaters and Emperor's
+Children, neither migrated). Remaining priority-order factions continue in later sessions.
 
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:

@@ -676,9 +676,9 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": 75,
-              "second_unit": 75,
-              "third_plus": 75
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
             }
           ]
         },
@@ -2083,9 +2083,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 85,
-              "second_unit": 85,
-              "third_plus": 85
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 95
             }
           ]
         },
@@ -3002,9 +3002,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 70,
-              "second_unit": 70,
-              "third_plus": 70
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
             }
           ]
         },
@@ -4094,9 +4094,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 130,
-              "second_unit": 130,
-              "third_plus": 140
+              "first_unit": 140,
+              "second_unit": 140,
+              "third_plus": 150
             }
           ]
         },
@@ -5078,19 +5078,61 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": 120,
-              "second_unit": 120,
-              "third_plus": 135
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 140
             },
             {
               "size": 6,
-              "first_unit": 240,
-              "second_unit": 240,
-              "third_plus": 255
+              "first_unit": 250,
+              "second_unit": 250,
+              "third_plus": 265
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_point_overrides": {
+          "Space Wolves": {
+            "sizes": [
+              {
+                "size": 3,
+                "first_unit": 125,
+                "second_unit": 125,
+                "third_plus": 140
+              }
+            ]
+          },
+          "Black Templars": {
+            "sizes": [
+              {
+                "size": 3,
+                "first_unit": 125,
+                "second_unit": 125,
+                "third_plus": 140
+              }
+            ]
+          },
+          "Dark Angels": {
+            "sizes": [
+              {
+                "size": 3,
+                "first_unit": 125,
+                "second_unit": 125,
+                "third_plus": 140
+              }
+            ]
+          },
+          "Deathwatch": {
+            "sizes": [
+              {
+                "size": 3,
+                "first_unit": 125,
+                "second_unit": 125,
+                "third_plus": 140
+              }
+            ]
+          }
+        }
       },
       {
         "unit_id": "000000126",
@@ -5210,9 +5252,9 @@
             },
             {
               "size": 10,
-              "first_unit": 170,
-              "second_unit": 170,
-              "third_plus": 170
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 180
             }
           ]
         },
@@ -5549,9 +5591,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 95,
-              "second_unit": 95,
-              "third_plus": 95
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
             }
           ]
         },
@@ -6330,15 +6372,15 @@
           "sizes": [
             {
               "size": 5,
-              "first_unit": 100,
-              "second_unit": 100,
-              "third_plus": 110
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 115
             },
             {
               "size": 10,
-              "first_unit": 200,
-              "second_unit": 200,
-              "third_plus": 210
+              "first_unit": 210,
+              "second_unit": 210,
+              "third_plus": 220
             }
           ]
         },
@@ -6348,15 +6390,15 @@
             "sizes": [
               {
                 "size": 5,
-                "first_unit": 105,
-                "second_unit": 105,
-                "third_plus": 115
+                "first_unit": 110,
+                "second_unit": 110,
+                "third_plus": 120
               },
               {
                 "size": 10,
-                "first_unit": 210,
-                "second_unit": 210,
-                "third_plus": 220
+                "first_unit": 220,
+                "second_unit": 220,
+                "third_plus": 230
               }
             ]
           }
@@ -11098,15 +11140,15 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": 90,
-              "second_unit": 90,
-              "third_plus": 100
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 90
             },
             {
               "size": 6,
-              "first_unit": 180,
-              "second_unit": 180,
-              "third_plus": 190
+              "first_unit": 165,
+              "second_unit": 165,
+              "third_plus": 175
             }
           ]
         },
@@ -12120,9 +12162,9 @@
             },
             {
               "size": 10,
-              "first_unit": 190,
-              "second_unit": 190,
-              "third_plus": 190
+              "first_unit": 200,
+              "second_unit": 200,
+              "third_plus": 200
             }
           ]
         },
@@ -12282,9 +12324,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 60,
-              "second_unit": 60,
-              "third_plus": 60
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 80
             }
           ]
         },
@@ -12909,9 +12951,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 80,
-              "second_unit": 80,
-              "third_plus": 80
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
             }
           ]
         },
@@ -15444,9 +15486,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 240,
-              "second_unit": 240,
-              "third_plus": 260
+              "first_unit": 255,
+              "second_unit": 255,
+              "third_plus": 275
             }
           ]
         },
@@ -15621,9 +15663,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 75,
-              "second_unit": 75,
-              "third_plus": 75
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
             }
           ]
         },
@@ -16877,7 +16919,8 @@
               "Company Heroes",
               "Intercessor Squad",
               "Sternguard Veteran Squad",
-              "Tactical Squad"
+              "Tactical Squad",
+              "Victrix Honour Guard"
             ],
             "co_leader_eligible_with": [],
             "co_leader_any": false,
@@ -16970,9 +17013,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 95,
-              "second_unit": 95,
-              "third_plus": 95
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 105
             }
           ]
         },
@@ -17105,9 +17148,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 340,
-              "second_unit": 340,
-              "third_plus": 340
+              "first_unit": 355,
+              "second_unit": 355,
+              "third_plus": 355
             }
           ]
         },
@@ -17263,9 +17306,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 95,
-              "second_unit": 95,
-              "third_plus": 95
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
             }
           ]
         },
@@ -17388,9 +17431,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 140,
-              "second_unit": 140,
-              "third_plus": 140
+              "first_unit": 155,
+              "second_unit": 155,
+              "third_plus": 155
             }
           ]
         },
@@ -17538,9 +17581,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 95,
-              "second_unit": 95,
-              "third_plus": 95
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 105
             }
           ]
         },
@@ -17683,9 +17726,9 @@
             },
             {
               "size": 6,
-              "first_unit": 220,
-              "second_unit": 240,
-              "third_plus": 240
+              "first_unit": 230,
+              "second_unit": 250,
+              "third_plus": 250
             }
           ]
         },
@@ -17825,9 +17868,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 90,
-              "second_unit": 90,
-              "third_plus": 90
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
             }
           ]
         },
@@ -18110,9 +18153,9 @@
           "sizes": [
             {
               "size": 6,
-              "first_unit": 110,
-              "second_unit": 110,
-              "third_plus": 110
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 120
             }
           ]
         },
@@ -22492,7 +22535,7 @@
             {
               "size": 5,
               "first_unit": 240,
-              "second_unit": 260,
+              "second_unit": 240,
               "third_plus": 260
             }
           ]
@@ -22623,9 +22666,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 80,
-              "second_unit": 80,
-              "third_plus": 80
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
             }
           ]
         },
@@ -22792,9 +22835,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 195,
-              "second_unit": 195,
-              "third_plus": 195
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 180
             }
           ]
         },
@@ -23096,13 +23139,13 @@
               "size": 3,
               "first_unit": 75,
               "second_unit": 75,
-              "third_plus": 85
+              "third_plus": 75
             },
             {
               "size": 6,
               "first_unit": 150,
               "second_unit": 150,
-              "third_plus": 160
+              "third_plus": 150
             }
           ]
         },
@@ -23271,9 +23314,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 120,
-              "second_unit": 120,
-              "third_plus": 130
+              "first_unit": 130,
+              "second_unit": 130,
+              "third_plus": 140
             }
           ]
         },
@@ -23422,9 +23465,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 105,
-              "second_unit": 105,
-              "third_plus": 105
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 95
             }
           ]
         },
@@ -23696,9 +23739,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 285,
-              "second_unit": 285,
-              "third_plus": 285
+              "first_unit": 265,
+              "second_unit": 265,
+              "third_plus": 265
             }
           ]
         },
@@ -23915,9 +23958,9 @@
           "sizes": [
             {
               "size": 3,
-              "first_unit": 115,
-              "second_unit": 115,
-              "third_plus": 125
+              "first_unit": 105,
+              "second_unit": 105,
+              "third_plus": 115
             }
           ]
         },
@@ -24047,9 +24090,9 @@
             },
             {
               "size": 6,
-              "first_unit": 170,
-              "second_unit": 170,
-              "third_plus": 180
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 170
             }
           ]
         },
@@ -24198,9 +24241,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 110,
-              "second_unit": 110,
-              "third_plus": 110
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
             }
           ]
         },
@@ -24311,9 +24354,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 100,
-              "second_unit": 100,
-              "third_plus": 100
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
             }
           ]
         },
@@ -24466,9 +24509,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 85,
-              "second_unit": 85,
-              "third_plus": 85
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
             }
           ]
         },
@@ -25337,9 +25380,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 55,
-              "second_unit": 55,
-              "third_plus": 55
+              "first_unit": 50,
+              "second_unit": 50,
+              "third_plus": 50
             }
           ]
         },
@@ -25711,9 +25754,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 105,
-              "second_unit": 105,
-              "third_plus": 105
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 95
             }
           ]
         },
@@ -25898,14 +25941,14 @@
             {
               "size": 5,
               "first_unit": 150,
-              "second_unit": 160,
-              "third_plus": 160
+              "second_unit": 150,
+              "third_plus": 165
             },
             {
               "size": 10,
               "first_unit": 300,
-              "second_unit": 310,
-              "third_plus": 310
+              "second_unit": 300,
+              "third_plus": 315
             }
           ]
         },
@@ -27753,15 +27796,15 @@
           "sizes": [
             {
               "size": 6,
-              "first_unit": 95,
-              "second_unit": 95,
-              "third_plus": 105
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
             },
             {
               "size": 12,
-              "first_unit": 190,
-              "second_unit": 190,
-              "third_plus": 200
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 180
             }
           ]
         },
@@ -31975,9 +32018,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 100,
-              "second_unit": 100,
-              "third_plus": 100
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
             }
           ]
         },
@@ -32275,9 +32318,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 85,
-              "second_unit": 85,
-              "third_plus": 85
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
             }
           ]
         },
@@ -33204,9 +33247,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 245,
-              "second_unit": 245,
-              "third_plus": 265
+              "first_unit": 255,
+              "second_unit": 255,
+              "third_plus": 275
             }
           ]
         },
@@ -33675,9 +33718,9 @@
           "sizes": [
             {
               "size": 4,
-              "first_unit": 110,
-              "second_unit": 110,
-              "third_plus": 110
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
             }
           ]
         },
@@ -34013,9 +34056,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 120,
-              "second_unit": 120,
-              "third_plus": 120
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
             }
           ]
         },
@@ -34147,9 +34190,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 100,
-              "second_unit": 100,
-              "third_plus": 100
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
             }
           ]
         },
@@ -34303,7 +34346,7 @@
             {
               "size": 1,
               "first_unit": 80,
-              "second_unit": 90,
+              "second_unit": 80,
               "third_plus": 90
             }
           ]
@@ -35058,9 +35101,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 60,
-              "second_unit": 60,
-              "third_plus": 60
+              "first_unit": 50,
+              "second_unit": 50,
+              "third_plus": 50
             }
           ]
         },
@@ -35209,9 +35252,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 45,
-              "second_unit": 45,
-              "third_plus": 45
+              "first_unit": 40,
+              "second_unit": 40,
+              "third_plus": 40
             }
           ]
         },

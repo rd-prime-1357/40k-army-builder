@@ -63,7 +63,7 @@ REQUIRED = [
     'add_bodyguard_stat_flags.py', 'add_chapter_point_overrides.py',
     'units.json', 'unit_loadouts.json',
     'bundled_swaps.json', 'faction_taxonomy.json',
-    'MFM_Space_Marines_v1_0.txt',
+    'MFM_Space_Marines_v1.1.txt',
     # B94/B89 (S195, D288): Thousand Sons migrated to its v1.1 source. v1_0 stays
     # REQUIRED too — CSM's cult-troop cross-legion pricing (CSM_CULT_TROOP_POINTS
     # below) still prices Rubric Marines' CSM-army datasheet off TS's v1_0 file
@@ -78,9 +78,14 @@ REQUIRED = [
     # purely additive on top of the base SM run (D167/D168) and sit inside the fixed
     # point from here on — this is exactly the kind of input that goes stale silently
     # if it is outside the gate (D107).
-    'MFM_Space_Wolves_v1_0.txt', 'MFM_Blood_Angels_v1_0.txt',
-    'MFM_Black_Templars_v1_0.txt', 'MFM_Dark_Angels_v1_0.txt',
-    'MFM_Death_Watch_v1_0.txt',
+    # B89/S198 (D291): migrated to v1.1 together with the base SM file — the chapter
+    # override mechanism (add_chapter_point_overrides.py) compares each chapter's
+    # shared-unit prices against the current generic Adeptus Astartes price, so base
+    # and all five chapters must move as one atomic group or the comparison is
+    # version-mismatched. See D291 for the full chaining analysis.
+    'MFM_Space_Wolves_v1.1.txt', 'MFM_Blood_Angels_v1.1.txt',
+    'MFM_Black_Templars_v1.1.txt', 'MFM_Dark_Angels_v1.1.txt',
+    'MFM_Death_Watch_v1.1.txt',
     # D229 / S147 turn A: CSM's own MFM. Prices 54 of CSM's 58 current-edition
     # datasheets; the four cult-troop units (Khorne Berzerkers, Rubric Marines,
     # Plague Marines, Noise Marines) are priced in their god-legion's own MFM and
@@ -140,12 +145,13 @@ def _scope_stats_csv(src_path, out_path, include_ids):
         w.writerows(kept)
 
 # B56a: chapter file -> the Army Name its own Unit_Stats.csv rows carry.
+# B89/S198 (D291): v1.1.
 CHAPTER_POINTS = [
-    ('MFM_Space_Wolves_v1_0.txt', 'Space Wolves'),
-    ('MFM_Blood_Angels_v1_0.txt', 'Blood Angels'),
-    ('MFM_Black_Templars_v1_0.txt', 'Black Templars'),
-    ('MFM_Dark_Angels_v1_0.txt', 'Dark Angels'),
-    ('MFM_Death_Watch_v1_0.txt', 'Deathwatch'),
+    ('MFM_Space_Wolves_v1.1.txt', 'Space Wolves'),
+    ('MFM_Blood_Angels_v1.1.txt', 'Blood Angels'),
+    ('MFM_Black_Templars_v1.1.txt', 'Black Templars'),
+    ('MFM_Dark_Angels_v1.1.txt', 'Dark Angels'),
+    ('MFM_Death_Watch_v1.1.txt', 'Deathwatch'),
 ]
 
 
@@ -173,7 +179,7 @@ def repro(dir_):
         if rc != 0:
             return False, 'wahapedia_transform.py (SM) failed:\n' + out[-600:]
         rc, out = _run([sys.executable, 'mfm_points_parser.py',
-                        '--mfm', 'MFM_Space_Marines_v1_0.txt',
+                        '--mfm', 'MFM_Space_Marines_v1.1.txt',
                         '--out-dir', sm_dir, '--stats', os.path.join(sm_dir, 'Unit_Stats.csv')],
                         cwd=dir_)
         if rc != 0:

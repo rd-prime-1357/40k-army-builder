@@ -230,9 +230,39 @@ def normalize_v1_1(lines):
     return out
 
 
+# B89/S198 (D291): a literal missing comma in the raw v1.1 source text, not a parsing-
+# algorithm gap -- the splitter already handles every correctly-comma-separated LEADER/
+# SUPPORT line correctly. MFM_Space_Marines_v1.1.txt's Marneus Calgar in Armour of
+# Antilochus LEADER line reads "...ERADICATOR SQUAD STERNGUARD VETERAN SQUAD..." with
+# no separating comma, so the glued token resolves to no datasheet and both real,
+# current units are silently dropped from his attach list. Checked: this is the only
+# such glued token across all six SM-family v1.1 files (every other unresolved MFM
+# attach-list entry is a genuine old-edition unit name with no current datasheet, not a
+# glue). Scoped to the exact substring, filename-keyed, so it can only ever match this
+# one known spot -- and fails loudly if the source text changes underneath it, rather
+# than silently doing nothing. This is a stopgap; the private source repo should carry
+# the real fix (Ryan action, flagged in the session handoff) and this entry removed once
+# that lands.
+_KNOWN_SOURCE_FIXES = {
+    "MFM_Space_Marines_v1.1.txt": [
+        ("ERADICATOR SQUAD STERNGUARD VETERAN SQUAD",
+         "ERADICATOR SQUAD, STERNGUARD VETERAN SQUAD"),
+    ],
+}
+
+
 def parse_mfm(path):
     with open(path, encoding="utf-8-sig") as f:
-        lines = [ln.rstrip("\n").rstrip("\r") for ln in f]
+        text = f.read()
+    fname = os.path.basename(path)
+    for find, replace in _KNOWN_SOURCE_FIXES.get(fname, []):
+        if find not in text:
+            raise SystemExit(
+                f"_KNOWN_SOURCE_FIXES entry for {fname} not found in source text "
+                f"(source may have changed -- re-verify before removing or updating "
+                f"this fix): {find!r}")
+        text = text.replace(find, replace, 1)
+    lines = [ln.rstrip("\n").rstrip("\r") for ln in text.splitlines()]
 
     # B87: v1.1 files are normalized into the v1_0 line shape before parsing; v1_0
     # files pass through untouched (sniff returns False), so their output is unchanged.

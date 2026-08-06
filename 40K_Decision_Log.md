@@ -11137,3 +11137,96 @@ mechanism rather than a source-file swap); remaining priority-order factions con
 B94 untouched this turn — none of CD's six changed units are esc4-shaped, so no `fourth_plus` scope here.
 A new architecture note is on record (not a ticket): whether CD should eventually get a real Gen-2
 `mfm_points_parser.py` path is an open future tooling question, not decided this session.
+
+---
+
+## D291 — B89's fourth migration shipped: the six-file Space Marines group (base + 5 chapters) moved to MFM v1.1 as one atomic turn, plus a source-text defect found and stopgap-fixed (S198)
+
+### The chaining question, resolved
+
+S198 opened with an open question from S197: can the SM chapter files migrate to v1.1 one at a time
+(like CD/DG/TS did), or does the six-file group (base + Black Templars, Blood Angels, Dark Angels,
+Deathwatch, Space Wolves) have to move together. Traced the actual mechanism rather than guessing:
+`add_chapter_point_overrides.py` (B56c/D171) recomputes each chapter's shared-unit prices against the
+*current* generic Adeptus Astartes price on every build, re-parsing all five chapter MFM files itself
+(a separate hardcoded file list from `units_repro_check.py`'s own). If base and any chapter sit at
+different MFM versions when this comparison runs, the comparison is version-mismatched — every shared
+unit whose v1.1 price changed would spuriously gain (or lose) a chapter override, corrupting
+`chapter_point_overrides` for every not-yet-migrated chapter. Confirmed this is not a "needs new
+tooling" problem: `mfm_points_parser.py`'s `FACTION_BY_MFM` dict already has all six v1.1 filenames
+mapped (done ahead of time, B87/D275), and `rules_assertions.py`'s P4 source census regex only matches
+underscore-style filenames, so it doesn't see dot-versioned ones and needed no update either (same
+reason TS/DG's v1.1 filenames never needed adding to that census). The only real edit was swapping the
+hardcoded v1_0 filenames to v1.1 in two places — `units_repro_check.py` (SM `--mfm` arg, `CHAPTER_POINTS`
+list, `REQUIRED` list) and `add_chapter_point_overrides.py` (`CHAPTERS` list) — the same class of edit
+TS/DG's migrations already made, just synchronized across all six files at once instead of one.
+
+**Conclusion: the six-file group cannot split faction-by-faction. It migrates as one atomic turn.**
+
+### A genuine source-text defect found and stopgap-fixed
+
+Running the updated pipeline surfaced 47 changed units — 46 were plain points changes (14 Adeptus
+Astartes, 8 Ultramarines, 9 Dark Angels, 7 Space Wolves, 1 White Scars, 8 Black Templars) plus one
+legitimate new attach-eligibility gain (Uriel Ventris picks up Victrix Honour Guard as a bodyguard
+option in v1.1, confirmed comma-separated and correct in the raw text). One entry didn't fit: Marneus
+Calgar in Armour of Antilochus's `model_groups` also differed, silently losing Eradicator Squad and
+Sternguard Veteran Squad from his leader-eligible list. Traced to the raw source:
+`MFM_Space_Marines_v1.1.txt`'s LEADER line for Calgar reads `...ERADICATOR SQUAD STERNGUARD VETERAN
+SQUAD...` — no comma between the two unit names. `mfm_points_parser.py` correctly treats the glued
+token as unresolvable and drops it (by design, per B73/D260 — this is the guard doing its job on bad
+input, not a parsing bug); both squads are genuinely legal units the v1_0 file lists comma-separated
+correctly, so this is a transcription defect in the v1.1 source text, not a rules change or a parser
+gap. Wrote a detector (does a dropped attach-list token split cleanly into two-or-three known current
+unit names with no separator) and ran it against all six SM-family files' validation reports — this is
+the only instance found; not systemic.
+
+**Decision (dev-manager call, not escalated — this is a data-quality finding, not a rules-ambiguity
+call): stopgap-fixed in `mfm_points_parser.py` via a new `_KNOWN_SOURCE_FIXES` dict** — a literal,
+filename-scoped, exact-substring find/replace applied to the raw text before parsing, that raises
+loudly if the expected substring isn't found (so it can't silently do nothing if the source text
+changes underneath it). This is not a general glue-detection heuristic — that would be new parsing
+logic, out of scope for a data-only turn and untested against future files. It is a narrow, documented,
+reversible patch for one known defect. **Flagged for Ryan: the private source repo should carry the
+real fix (insert the missing comma in `MFM_Space_Marines_v1.1.txt`), and this dict entry should be
+removed once that lands** — see session handoff.
+
+### Verification
+
+- All six raw MFM files hash-verified against `source_manifest.json` before use (via `baseline.sh
+  --fetch --data-turn`, clean open, 32/32).
+- Full pipeline run via `units_repro_check.py`'s own `repro()` (modified in a temp-preserving wrapper
+  to inspect the rebuilt output before the normal cleanup deletes it).
+- Diff-guard: exactly 47 unit_ids changed, all six confined to the SM-family armies (Adeptus Astartes,
+  Ultramarines, Dark Angels, Space Wolves, White Scars, Black Templars); all ten non-SM armies and all
+  four merged lookups (`abilities.json`, `rules.json`, `keywords.json`, `weapon_abilities.json`) plus
+  `faction_taxonomy.json` confirmed byte-identical.
+- Fields touched across the 47: `points` (47), `chapter_point_overrides` (2 — Inceptor Squad newly
+  gains four chapter overrides at v1.1's changed base price; Vanguard Veteran Squad With Jump Packs'
+  existing Blood Angels override re-prices from 105/210 to 110/220, matching the source directly),
+  `model_groups` (1 — Uriel Ventris's legitimate Victrix Honour Guard gain, confirmed above).
+- `rules_assertions.py`: one pinned-value assertion needed reconciliation —
+  `b56a_bt_negative_control` pinned the Impulsor's Adeptus-Astartes-vs-Black-Templars distinctness
+  check to 80/85 (the v1_0 values); updated to 70/75, the new v1.1 values (both units moved -10; the
+  distinctness the control actually checks — BT's datasheet is not the generic one — is unchanged).
+  No other pinned assertion referenced any of the 47 changed unit_ids with a hardcoded points value.
+  118/118 after reconciliation (117/118 before, correctly failing on the stale pin).
+- `units_repro_check.py` now reproduces the promoted `units.json` byte-for-byte with the six v1.1
+  filenames as its fixed point.
+- `detachments_repro_check.py` and `detachment_parser.py` untouched — DP/enhancement/force-disposition
+  changes for the six files (Black Templars gains a new VENGEFUL HOSTS detachment in v1.1, several
+  enhancement re-prices seen in the raw diff) stay tracked separately under `detachments.json`, same
+  convention as CD/DG/TS, not this turn's scope.
+
+### State at close
+
+`index.html`: untouched, v6.16. `units.json`: regenerated, 47 units changed as above, all else
+byte-identical. `units_repro_check.py`: SM base + 5 chapter filenames now v1.1.
+`add_chapter_point_overrides.py`: `CHAPTERS` list now v1.1. `mfm_points_parser.py`: new
+`_KNOWN_SOURCE_FIXES` stopgap for the one known Calgar glued-token defect. `rules_assertions.py`:
+`b56a_bt_negative_control` reconciled to 70/75, 118/118. `pipeline_manifest.py`: regenerated at close
+with `--write` after registering `SESSION_HANDOFF_198.md`.
+
+Backlog: B89 stays open — the SM chapter group is its fourth migrated faction-group (and the largest:
+six files atomically). Remaining priority-order Adeptus Astartes candidates for B89: Grey Knights (its
+own base, not part of this chain). Heretic Astartes: Chaos Space Marines (still blocked on World Eaters
+and Emperor's Children).

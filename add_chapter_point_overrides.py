@@ -56,11 +56,14 @@ import os
 import sys
 
 CHAPTERS = [
-    ("MFM_Space_Wolves_v1_0.txt", "Space Wolves"),
-    ("MFM_Blood_Angels_v1_0.txt", "Blood Angels"),
-    ("MFM_Black_Templars_v1_0.txt", "Black Templars"),
-    ("MFM_Dark_Angels_v1_0.txt", "Dark Angels"),
-    ("MFM_Death_Watch_v1_0.txt", "Deathwatch"),
+    # B89/S198 (D291): v1.1 — moved together with the base SM file. See D291: this
+    # script's comparison baseline is the current generic Adeptus Astartes price, so
+    # a chapter file here must always match whatever version the base build used.
+    ("MFM_Space_Wolves_v1.1.txt", "Space Wolves"),
+    ("MFM_Blood_Angels_v1.1.txt", "Blood Angels"),
+    ("MFM_Black_Templars_v1.1.txt", "Black Templars"),
+    ("MFM_Dark_Angels_v1.1.txt", "Dark Angels"),
+    ("MFM_Death_Watch_v1.1.txt", "Deathwatch"),
 ]
 GENERIC_ARMY = "Adeptus Astartes"
 
