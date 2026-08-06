@@ -11031,3 +11031,109 @@ Backlog: B94 stays open — two factions (Thousand Sons, Death Guard) of its all
 `fourth_plus`; the remaining priority-order factions' esc4 units and B94's own data-side assertion are
 still open. B89 stays open — Death Guard is its second migrated faction; remaining priority-order
 factions continue in later sessions.
+
+## D290 — B89 third migration shipped: Chaos Daemons regenerated to MFM v1.1 by direct hand-edit of the Gen-1 root `Unit_Points.csv` — first migration to use this mechanism, decided and recorded this session (S197)
+
+**Turn type: data-only.** Baseline opened green (32/32, `--fetch --data-turn`); repo_check confirmed
+S196's push, matching the project area exactly. Verified S196's hashes via `pipeline_manifest.json`
+(the authoritative source), not by hand-copying the handoff table.
+
+**Mechanism question resolved (the S197 prompt's open question).** Chaos Daemons is Gen-1 hand-built
+data (D8, D132): its nine root CSVs live at the project root and are read directly by
+`convert_to_json.py` with no `wahapedia_transform.py` or `mfm_points_parser.py` step, ever. Investigated
+whether this makes a v1.1 points update a hand-edit-of-source case or a needs-new-tooling case, per the
+prompt's own framing:
+- Confirmed from D132, D216, and `40K_Architecture_Overview.md` that CD's root CSVs are treated
+  everywhere as hand-authored source, never as generated output — D216's B62-1 assertion gates their
+  presence and schema exactly the way a source file is guarded, not regenerated.
+- Confirmed the temp-dir `Unit_Points.csv` that `mfm_points_parser.py` produces for other factions
+  (e.g. D208's Allied_Group column) is a **different file that happens to share a name** with CD's root
+  file (S133's own note, D208 entry) — no precedent there for editing CD's actual file.
+- Checked whether `mfm_points_parser.py` could run against CD directly instead: `FACTION_BY_MFM` already
+  maps both `MFM_Chaos_Daemons_v1_0.txt` and `MFM_Chaos Daemons_v1.1.txt` to `'CD'`, and
+  `convert_to_json.py` reads `Unit_Points.csv` by column name (order-independent), so the schema gap
+  (CD's root file predates the B61 `Allied_Group` and B94 `Points_*-4` columns) would not by itself block
+  it. But this exact invocation — `mfm_points_parser.py` driven by CD's own `Unit_Stats.csv` as the
+  `--stats` match input — has never been run or validated once against Gen-1 data, and CD's roster has
+  known Gen-1-specific quirks (the D216 FALSE-string bug, the D208 allied-carrier tagging already baked
+  into the root CSVs by hand). Standing this up and proving it correct against all 53 units is new,
+  unvalidated tooling work, not a data-turn task.
+- **Decision: hand-edit is the correct, precedented mechanism for CD's points values**, exactly as the
+  file has always been maintained. The `mfm_points_parser.py`-against-CD path is a legitimate future
+  Gen-2 investigation (the architecture doc's own long-standing "Pending: re-derive Gen-2" note) but is
+  tooling scope, not decided or attempted this session.
+
+**Both `MFM_Chaos Daemons_v1.1.txt` and `MFM_Chaos_Daemons_v1_0.txt` hash-verified directly against
+`source_manifest.json`** before use. Diffed the two files directly (not trusting
+`MFM_v1_1_Reconciliation.md` blind, per the prompt's own caution and S196's precedent of the report
+being wrong once already).
+
+**Found the reconciliation report wrong on Chaos Daemons, in two ways:**
+1. The 3 enhancement re-prices (Inescapable Eye 10→15, Infernal Puppeteer 25→20, Neverblade 20→25) are
+   attributed to the **SCINTILLATING LEGION** detachment in the report. The raw source shows they
+   actually belong to **SHADOW LEGION** — a different CD detachment. Point deltas are correct; the
+   detachment name is wrong. Out of scope for this units-only turn (`detachments.json`, migrated
+   separately under B89 per D288/D289's own precedent) — flagged here and in the backlog for whoever
+   picks up CD's detachment migration, so the correction travels with the ticket rather than getting
+   re-discovered.
+2. A `FORCE DISPOSITION(S) CHANGED` banner appears in the raw v1.1 text adjacent to PLAGUE LEGION, not
+   listed in the report (which names only LORDS OF THE WARP as CD's investigate-first item). Checked
+   directly: PLAGUE LEGION's disposition text reads `TAKE AND HOLD` in **both** `_v1_0.txt` and `_v1.1.txt`
+   — unchanged. This is a text-extraction artifact (the banner sits at the tail of LORDS OF THE WARP's
+   own enhancement block in the raw layout, ahead of the next detachment's heading), not a second real
+   disposition change. No new investigate-first item; confirmed and closed out by direct source check
+   rather than left as an open question.
+
+**6 unit points changes confirmed against raw source, all adopt-mechanically, matching the report's
+values exactly** (only the enhancement item above was wrong): Beasts of Nurgle 70→75 (1 model only, 2
+models unchanged at 140), Bloodcrushers (6 models 1st/2nd-unit 180→190, 3 models 3rd+ 105→115, 6 models
+3rd+ 190→210, 3 models 1st/2nd-unit unchanged at 95), Fluxmaster 80→70, Kairos Fateweaver 295→305, Lord
+of Change (1st/2nd-unit 300→320, 3rd+ 315→340), Shalaxi Helbane 340→315. Every value traced to GW's own
+▲/▼ markers in the raw v1.1 text before editing anything.
+
+**Cross-book pricing note, not a defect.** CD's own MFM now prices Beasts of Nurgle at 75, but Death
+Guard's `MFM_Death_Guard_v1.1.txt` (already migrated, D289) still lists the same allied unit at 70,
+unchanged. Checked directly — this is a real divergence in GW's own source between the two books, not a
+building mistake. B89's established practice (D288, D289) already builds each faction strictly from its
+own MFM file with no cross-book normalization, so Death Guard's Beasts of Nurgle correctly stays at 70
+until/unless Death Guard's own book is ever corrected. No action needed; noted for the record since a
+future session diffing CD against DG might otherwise mistake this for a bug.
+
+**Edit and diff-guard.** Hand-edited exactly the 6 rows above in the root `Unit_Points.csv`
+(file-level diff confirmed only those 6 lines changed, nothing else touched). Ran the full documented
+pipeline exactly as `units_repro_check.py` runs it — SM/DG/TS/CSM via their normal chains, **CD via
+`convert_to_json.py` run directly against the project root**, then `merge_factions.py` and the three
+post-processors — and diffed the result against the previously committed `units.json`. Result: unit_id
+set unchanged (270 units, 16 blocks); **exactly 6 units differ, all Chaos Daemons, every change confined
+to the `points` field**, matching the 6 confirmed values exactly. All four merged lookups
+(`abilities.json`, `rules.json`, `keywords.json`, `weapon_abilities.json`) and `faction_taxonomy.json`
+byte-identical. Promoted the regenerated file to committed `units.json`; `units_repro_check.py` now
+reproduces it byte-for-byte from the edited source with **no code change to the script** — unlike TS/DG,
+CD has no source-file-swap branch to update, since the pipeline always reads the one root file, now
+edited in place.
+
+**`rules_assertions.py` checked for pinned Chaos Daemons points values** on all six changed units —
+none exist (the two allied-carrier references, Beasts of Nurgle under Death Guard's Plague Legions and
+Kairos Fateweaver/Lord of Change under Thousand Sons' Scintillating Legions, pin unit *names* for
+carrier-set membership, never a specific points number — confirmed both duplicate entries already carry
+their own faction's independently-correct price, e.g. Thousand Sons' Kairos Fateweaver already reads 305
+from its own S195 migration). 118/118 passes unmodified.
+
+**`source_manifest.json` updated** — `Unit_Points.csv`'s hash changed (`56c4bd70fd9b` → `db693cfce455`,
+first 12) to reflect the edit, per the manifest's own instruction to regenerate the same turn that
+updates any source file. **This is a genuine custody gap needing Ryan's action**: `Unit_Points.csv` is
+one of the nine CD root CSVs tracked in `source_manifest.json` as GW-derived (private-repo-sourced,
+never the public repo); the edited copy exists only in this session's working area. I have read-only
+access to `rd-prime-1357-data-sources` and cannot push there myself — Ryan needs to update
+`Unit_Points.csv` in the private repo to match the six new values (listed above) so a future
+`--fetch --data-turn` open verifies clean rather than hash-mismatching against the new manifest entry.
+
+Full baseline green after `pipeline_manifest.py --write` (156 guarded files, includes the changed
+`units.json` and this handoff, `SESSION_HANDOFF_197.md`, registered in GUARDED per the standing
+convention). 118/118 assertions; `units_repro_check`/`repro_check`/`detachments_repro` all pass.
+
+Backlog: B89 stays open — Chaos Daemons is its third migrated faction (and its first via the hand-edit
+mechanism rather than a source-file swap); remaining priority-order factions continue in later sessions.
+B94 untouched this turn — none of CD's six changed units are esc4-shaped, so no `fourth_plus` scope here.
+A new architecture note is on record (not a ticket): whether CD should eventually get a real Gen-2
+`mfm_points_parser.py` path is an open future tooling question, not decided this session.

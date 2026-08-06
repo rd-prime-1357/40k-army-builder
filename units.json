@@ -37058,13 +37058,13 @@
               "size": 3,
               "first_unit": 95,
               "second_unit": 95,
-              "third_plus": 105
+              "third_plus": 115
             },
             {
               "size": 6,
-              "first_unit": 180,
-              "second_unit": 180,
-              "third_plus": 190
+              "first_unit": 190,
+              "second_unit": 190,
+              "third_plus": 210
             }
           ]
         },
@@ -37483,9 +37483,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 295,
-              "second_unit": 295,
-              "third_plus": 295
+              "first_unit": 305,
+              "second_unit": 305,
+              "third_plus": 305
             }
           ]
         },
@@ -37667,9 +37667,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 300,
-              "second_unit": 300,
-              "third_plus": 315
+              "first_unit": 320,
+              "second_unit": 320,
+              "third_plus": 340
             }
           ]
         },
@@ -38066,9 +38066,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 80,
-              "second_unit": 80,
-              "third_plus": 80
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
             }
           ]
         },
@@ -40175,9 +40175,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 70,
-              "second_unit": 70,
-              "third_plus": 70
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75
             },
             {
               "size": 2,
@@ -40564,9 +40564,9 @@
           "sizes": [
             {
               "size": 1,
-              "first_unit": 340,
-              "second_unit": 340,
-              "third_plus": 340
+              "first_unit": 315,
+              "second_unit": 315,
+              "third_plus": 315
             }
           ]
         },

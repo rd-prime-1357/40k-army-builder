@@ -3,7 +3,7 @@
  "files": {
   "index.html": "665f7fcfc52c801310f4965f1c1b63e076a14135b220ffed50df6e67034ae652",
   "list_store.js": "5d7890b695f5a95eaf6cdb9cdb6ce2fcc27b51647c8e3ed52ad8d161b858b4a0",
-  "units.json": "3dd1e3d96188c1b86acfc9f9d629d65450ee247511d277df849474166b82f31a",
+  "units.json": "b5b6cd4f77500d70e031666d2fbbd9bfa8930487d5ead48568732ffcf3a344b6",
   "unit_loadouts.json": "8dc0535560315d500ca9ff120554fed97a779c2fddf7fecd7a2c27026fe73139",
   "wargear_points.json": "e1409b4666d9bdf1a165553c092aedf251de3baf19e9d2a8d9f3f83d1492d005",
   "datasheet_wargear_abilities.json": "7aac883769f1d069722d1b0edb6ba87703b5559aa99464aa1047758044c638fa",
@@ -24,7 +24,7 @@
   "units_repro_check.py": "473dc9a38c55185e82cebd55b3556dba970e2c92e85f5e58fcdd353362d98681",
   "detachments_repro_check.py": "94bb9f2f223853f75b6788bf6cbff0f4eb1ad19c845189b0cc3545dcf35f927b",
   "integrity_check.py": "7084a604f0b15a2fd8440c9b61660edbad6d1d16ce7277a989f5ab3e924e83a1",
-  "pipeline_manifest.py": "f17acc69a2f42dbc8a21f8b388cda0de60879d81c59d9044393b48ee657ca6ae",
+  "pipeline_manifest.py": "af471127b5d2361e434e61b94c280808110387be466048681c8f58ac27d5a84a",
   "pts_check.js": "d1ca62181a6f511214391323e80107cf2acee834b40784409b3eedd902e7d263",
   "stat_check.js": "c240c643896de60d212f62d220722d58994b4afd9a5dc3440d1ae81d45a502ab",
   "bundle_check.js": "40e08552f38aa9dfdbe7c1106b7d0e3ff9623ed6e0a47eb5a85d24e43faa3154",
@@ -70,17 +70,17 @@
   "40K_Architecture_Overview.md": "197c79eaac21e9653c029f33a3d75484f71ac69fa25f84c47c0f6a90bbd47092",
   "40K_Data_Dictionary.md": "4b7844dab056c9693d364ff6d4f2986c4183c5d399bd808f4fcee2490e9957ae",
   "40K_Data_Pipeline_Process.md": "940b9269a7a33b60315e432b90d4122fa52ed869bd2d5959c7a7c4145a36e50a",
-  "40K_Decision_Log.md": "542c44575f5853c1c65c9a112afb852cffad68fbf5eac2b1b0a37c4f12ca6865",
+  "40K_Decision_Log.md": "14a2395ead4b49c5576495845c673feac51ca7c371d7e77b38895b1dc23ded18",
   "40K_Functional_Spec.md": "1d57cabc2d8cf8757403476f462d8a16be3c17311a98afd96426e40051d21b49",
   "BACKLOG_ARCHIVE.md": "b1b87709438d55646cb03fd1d3e1d0225f402b28623d25bcdc0dba87b5576298",
   "CSM_BUILD_SCOPE.md": "53c4828c1853e57741fb028b97efc31a1ba880a06e2495933541599fade3733d",
-  "DECISION_INDEX.md": "07dcc1cd40a073a959ce577397b267ef026ecb04f964e5b0d0c828421f256b37",
+  "DECISION_INDEX.md": "0fb475514b86d0a5a92d4861eb48d6490c4498846a90d2b1a81fa8ba10dbd3d1",
   "E1_DETACHMENT_SCOPE.md": "bd46666245f734b2f5b24a4230df0144a9881b1eaaae9d70c23621fd3b796e5a",
   "MFM_Chapter_Pass.md": "6150462d2814d919bb8e54154ce56209beec7c78937d3ac4508c1f315f2089b4",
   "MFM_FW_Reconciliation.md": "6c783bdd3336f80191572a36192535e654d703afef4d8c7c565b2666415fd3db",
   "MFM_Standalone_Pass.md": "fd81918dd611a39aed3e8bcac93392b9457343afc2e1341ecfdd9be2cd40b35e",
   "MFM_v1_1_Reconciliation.md": "5ebd959dd5b3ab30a06c7cf22199016fa8506cd4987b281ce796a01ee7566f45",
-  "OPEN_ITEMS_BACKLOG.md": "c3f72f4faf7967472dc10f083ba970e46db11b9d49484b08e648ecd03a5bcc1b",
+  "OPEN_ITEMS_BACKLOG.md": "04d6129b58562efeb86b049fcc0b7d648fac68561ead0fe8e887b6da4cb5c866",
   "OUTPUT_FORMAT_SPEC_for_project_instructions.md": "2567a8e0d502bf71fedf735b7a5cc202fa1e9fee7ac0ed69531df111a2e9f474",
   "P4_ARCHITECTURE_SCOPE.md": "e94b0d6c402fd66d843d757450106b44cf9f2cfb7ad550f0101720eb460a5c9a",
   "PROCESS_IMPROVEMENT_PLAN.md": "c8fa79972a8b33ec52668e5b1d95be2ccfd7dbb4c0a3acc3f0853f92c7d99a8a",
@@ -155,6 +155,7 @@
   "SESSION_HANDOFF_193.md": "e54bb4c2497c66bf00a1a7a6cd08532fb194ca88c81bcb62d0b1e623d48f5817",
   "SESSION_HANDOFF_194.md": "c251dfc2330893b85a8cd49d7996c56a43a102e1a3b92bc9c54453c1e0b4d687",
   "SESSION_HANDOFF_195.md": "e9fb908b6d9f59f943ebdf6f3e507cf5d37351d33001e0e3905692822f690c3e",
-  "SESSION_HANDOFF_196.md": "b80d11995e37849ccea07a595980f78043ad0520d39cbe738e7b2b91d4f6be7e"
+  "SESSION_HANDOFF_196.md": "b80d11995e37849ccea07a595980f78043ad0520d39cbe738e7b2b91d4f6be7e",
+  "SESSION_HANDOFF_197.md": "2ced3cb7fc78f9ba77dd30dd03ce258fa158bb34f4570c507259d6973df47d99"
  }
 }

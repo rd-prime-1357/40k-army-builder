@@ -3,7 +3,16 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **19 open** as of S196 (unchanged from S195 — B94 and B89 both advanced
+not here, it isn't open. **19 open** as of S197 (unchanged from S196 — B89 advanced, did not close):
+B99, B98, B97, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. Chaos
+Daemons migrated to MFM v1.1 (D290) — B89's third migration, first via direct hand-edit of the Gen-1
+root `Unit_Points.csv` rather than a source-file swap (6 points changes: Beasts of Nurgle,
+Bloodcrushers, Fluxmaster, Kairos Fateweaver, Lord of Change, Shalaxi Helbane). B94 untouched — none of
+CD's six changed units are esc4-shaped. Ticket stays open for the remaining priority-order factions.
+`source_manifest.json` needs Ryan to push the matching `Unit_Points.csv` edit to the private
+`rd-prime-1357-data-sources` repo (Claude's token there is read-only) — not itself a new backlog item,
+but noted as a required action carried forward.
+**19 open** as of S196 (unchanged from S195 — B94 and B89 both advanced
 but neither closed): B99, B98, B97, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23,
 B67b, E12, B17. Death Guard migrated to MFM v1.1 (D289) — B94's second faction (Chaos Rhino now
 carries `fourth_plus`) and B89's second migration (5 points changes). Both tickets stay open for the
@@ -482,8 +491,27 @@ assertions needed reconciling — none exist for this faction. `source_manifest.
 (both source files already correctly hashed). **Left open for Thousand Sons**, tracked in the
 reconciliation report, not new tickets: a Defiler wargear removal (`wargear_points.json`, Hades
 lascannon/Heavy reaper autocannon) and 3 detachment force-disposition/unique-tag changes
-(`detachments.json`) — both outside a units-only data turn's scope. Remaining priority-order factions
-(Death Guard next, then the rest) continue in later sessions.
+(`detachments.json`) — both outside a units-only data turn's scope. **Death Guard migrated S196
+(D289)**, second of the arc: 5 points changes (Plague Marines, Chaos Rhino [also gains `fourth_plus`
+under B94], Deathshroud Terminators, Mortarion, Defiler), all other 15 armies byte-identical.
+Reconciliation report found wrong on Defiler's wargear (repriced, not removed as the report states) —
+flagged, not corrected, since `wargear_points.json` is untouched by a units-only turn.
+
+**Chaos Daemons migrated S197 (D290)**, third of the arc and the first via a different mechanism: CD's
+Gen-1 root `Unit_Points.csv` has no source-file-swap path (no `_v1_0.txt`/`_v1.1.txt` selection —
+there is only the one hand-authored file), so this migration is a direct hand-edit of the 6 changed
+values, decided this session as the correct precedented mechanism (see D290 for the full reasoning; a
+`mfm_points_parser.py`-against-CD path exists in principle but is unvalidated new tooling, deferred).
+6 units changed (Beasts of Nurgle, Bloodcrushers, Fluxmaster, Kairos Fateweaver, Lord of Change,
+Shalaxi Helbane), all confined to `points`, all other 15 armies and all four merged lookups
+byte-identical. `source_manifest.json`'s `Unit_Points.csv` hash updated to match — **Ryan action
+required**: push the same edit to the private `rd-prime-1357-data-sources` repo, since Claude's token
+there is read-only. Reconciliation report found wrong twice for CD: 3 enhancement re-prices
+misattributed to SCINTILLATING LEGION instead of SHADOW LEGION (flagged for whoever migrates CD's
+`detachments.json`), and a PLAGUE LEGION force-disposition banner that checked out as unchanged
+(`TAKE AND HOLD` both versions) — not a missed item. CD's own investigate-first item (LORDS OF THE WARP
+force disposition, PURGE THE FOE→TAKE AND HOLD) stays tracked for the detachments migration, out of
+scope here. Remaining priority-order factions continue in later sessions.
 
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:
