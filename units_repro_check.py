@@ -8,8 +8,10 @@ to the committed units.json:
   1. Space Marines: wahapedia_transform.py (--faction SM) -> mfm_points_parser.py ->
      convert_to_json.py, all in one working dir (out == in, matching the documented
      single-army-name command).
-  2. Death Guard: wahapedia_transform.py (--faction DG) -> mfm_points_parser.py ->
-     convert_to_json.py, in its own working dir.
+  2. Death Guard: wahapedia_transform.py (--faction DG) -> mfm_points_parser.py
+     (against MFM_Death_Guard_v1.1.txt, B94/B89's second MFM v1.1 migration, S196/D289)
+     -> convert_to_json.py --emit-fourth-plus, in its own working dir. Fully self-sourced
+     (41/41, no cross-file append, no chapter points).
   3. Thousand Sons: wahapedia_transform.py (--faction TS) -> mfm_points_parser.py
      (against MFM_Thousand_Sons_v1.1.txt, B94/B89's first MFM v1.1 migration, S195/D288)
      -> convert_to_json.py --emit-fourth-plus, in its own working dir. Fully self-sourced
@@ -61,12 +63,17 @@ REQUIRED = [
     'add_bodyguard_stat_flags.py', 'add_chapter_point_overrides.py',
     'units.json', 'unit_loadouts.json',
     'bundled_swaps.json', 'faction_taxonomy.json',
-    'MFM_Space_Marines_v1_0.txt', 'MFM_Death_Guard_v1_0.txt',
+    'MFM_Space_Marines_v1_0.txt',
     # B94/B89 (S195, D288): Thousand Sons migrated to its v1.1 source. v1_0 stays
     # REQUIRED too — CSM's cult-troop cross-legion pricing (CSM_CULT_TROOP_POINTS
     # below) still prices Rubric Marines' CSM-army datasheet off TS's v1_0 file
     # until CSM's own B89 turn migrates it.
     'MFM_Thousand_Sons_v1.1.txt',
+    # B94/B89 (S196, D289): Death Guard migrated to its v1.1 source. v1_0 stays
+    # REQUIRED too — CSM's cult-troop cross-legion pricing (CSM_CULT_TROOP_POINTS
+    # below) still prices Plague Marines' CSM-army datasheet off DG's v1_0 file
+    # until CSM's own B89 turn migrates it.
+    'MFM_Death_Guard_v1.1.txt',
     # B56a: the five Space Marines chapter point files. Correctly-scoped, they are
     # purely additive on top of the base SM run (D167/D168) and sit inside the fixed
     # point from here on — this is exactly the kind of input that goes stale silently
@@ -197,7 +204,7 @@ def repro(dir_):
         if rc != 0:
             return False, 'wahapedia_transform.py (DG) failed:\n' + out[-600:]
         rc, out = _run([sys.executable, 'mfm_points_parser.py',
-                        '--mfm', 'MFM_Death_Guard_v1_0.txt',
+                        '--mfm', 'MFM_Death_Guard_v1.1.txt',
                         '--out-dir', dg_dir, '--stats', os.path.join(dg_dir, 'Unit_Stats.csv')],
                         cwd=dir_)
         if rc != 0:
@@ -206,7 +213,8 @@ def repro(dir_):
         os.makedirs(dg_json)
         rc, out = _run([sys.executable, 'convert_to_json.py',
                         '--input-dir', dg_dir, '--output-dir', dg_json,
-                        '--bundles', os.path.join(dir_, 'bundled_swaps.json')], cwd=dir_)
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json'),
+                        '--emit-fourth-plus'], cwd=dir_)
         if rc != 0:
             return False, 'convert_to_json.py (DG) failed:\n' + out[-600:]
 

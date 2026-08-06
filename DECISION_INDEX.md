@@ -536,3 +536,17 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   `units_repro_check.py` updated to build TS from v1.1 going forward; `_v1_0.txt` stays required
   for CSM's cross-legion cult-troop pricing. 4 TS investigate-first items (Defiler wargear,
   detachment force-disposition) left untouched, already tracked, out of scope for units.json.
+- **D289** (S196): B94 data turn shipped — second migration of B89's MFM v1.1 adoption arc. Death
+  Guard regenerated from `MFM_Death_Guard_v1.1.txt` with `--emit-fourth-plus`. Real per-faction
+  pipeline run (transform → points → convert → merge → post-processors), diffed against committed
+  `units.json`: exactly 5 units differ, all confined to `points` — matching
+  `MFM_v1_1_Reconciliation.md`'s adopt-mechanically list exactly (Plague Marines, Deathshroud
+  Terminators, Mortarion, Defiler re-priced; Chaos Rhino gains `fourth_plus`, B94's second faction).
+  All other 15 armies byte-identical. Found the reconciliation report's Death Guard wargear note
+  wrong — Defiler's Heavy reaper autocannon/Hades lascannon are repriced, not removed; flagged for
+  whoever next touches `wargear_points.json`. `rules_assertions.py` carries no Death Guard points-value
+  pins, needed no reconciliation. `source_manifest.json` needed no change (both source files already
+  correctly hashed). `units_repro_check.py` updated to build Death Guard from v1.1 going forward;
+  `_v1_0.txt` stays required for CSM's cross-legion cult-troop pricing. Death Guard's 2
+  investigate-first items (Defiler wargear repricing, CONTAGION ENGINES detachment) left untouched,
+  tracked, out of scope for units.json.

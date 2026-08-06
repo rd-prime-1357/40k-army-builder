@@ -3,11 +3,11 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **19 open** as of S195 (unchanged from S194 — B94 and B89 both advanced
+not here, it isn't open. **19 open** as of S196 (unchanged from S195 — B94 and B89 both advanced
 but neither closed): B99, B98, B97, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23,
-B67b, E12, B17. Thousand Sons migrated to MFM v1.1 (D288) — B94's first faction (Rubric Marines,
-Chaos Rhino now carry `fourth_plus`) and B89's first migration (12 points changes). Both tickets
-stay open for the remaining priority-order factions.
+B67b, E12, B17. Death Guard migrated to MFM v1.1 (D289) — B94's second faction (Chaos Rhino now
+carries `fourth_plus`) and B89's second migration (5 points changes). Both tickets stay open for the
+remaining priority-order factions.
 **20 open** as of pre-S194 (up from 17 at S193): B69, B70, B75, B85, B86,
 P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94, B96, B97, B98, B99. B97/B98/B99 logged from
 Ryan screenshots ahead of S194 (not yet triaged into a decision-log entry): a Grand Coven rule-text
@@ -424,13 +424,17 @@ the code cannot currently tell apart). Turn 2 must carve these out of that exclu
 chapters. B90 turn 2 is now fully unblocked on decisions; it still runs after B88/B89 per D274's
 sequencing.
 
-### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; ENGINE TURN SHIPPED S193 (D286); PIPELINE-EMIT TURN SHIPPED S194 (D287); DATA TURN 1/N SHIPPED S195 (D288); product+engine+data; M; data turn folds into B89**
+### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; ENGINE TURN SHIPPED S193 (D286); PIPELINE-EMIT TURN SHIPPED S194 (D287); DATA TURN 1/N SHIPPED S195 (D288); DATA TURN 2/N SHIPPED S196 (D289); product+engine+data; M; data turn folds into B89**
+
+**Data turn, second faction, shipped S196 (D289).** Death Guard regenerated from `_v1.1.txt` with
+`--emit-fourth-plus`: Chaos Rhino (1 of the scope's 34 units) now carries a real `fourth_plus` value in
+committed `units.json` (75/85). 31 units across the remaining priority-order factions still need their
+own migration turn before this ticket's data half closes; the data-side assertion (below) still needs
+writing once more factions have landed.
 
 **Data turn, first faction, shipped S195 (D288).** Thousand Sons regenerated from `_v1.1.txt` with
 `--emit-fourth-plus`: Rubric Marines and Chaos Rhino (2 of the scope's 34 units) now carry real
-`fourth_plus` values in committed `units.json` (110/200 and 90 respectively). 32 units across the
-remaining priority-order factions still need their own migration turn before this ticket's data half
-closes; the data-side assertion (below) still needs writing once more factions have landed.
+`fourth_plus` values in committed `units.json` (110/200 and 90 respectively).
 
 **Engine turn shipped S193 (D286).** Added an optional `fourth_plus` tier to `points.sizes[*]` and
 routed all three points sites (`ptsForEntry`, `addUnitFromRoster`, size-selector) through one shared
