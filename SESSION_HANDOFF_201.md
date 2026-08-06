@@ -84,20 +84,25 @@ parser, no source, no `rules_assertions.py` change.
    updated. `SESSION_HANDOFF_201.md` and `b101_check.js` registered in `pipeline_manifest.py`'s
    GUARDED list.
 
-10. **The manifest could NOT be regenerated, and this is the session's real blocker.**
+10. **The manifest was blocked at first, then cleared — with one discrepancy worth recording.**
     `pipeline_manifest.py --write` refuses while any guarded file is absent, and
-    `SESSION_HANDOFF_199.md` is absent from every location reachable from a session: not in the
-    public repo (direct clone), not on the `/mnt/project` mount. It is not merely unpushed — it may
-    be gone. The manifest banked a hash for it at S199 close
-    (`4feb6caeb93e1433b86d9e60f41209aad1dca0c6275af82d2ad434f57034f32d`), so the file did exist then;
-    it was never pushed, and routine project-area housekeeping deletes handoffs. Consequently
-    `--write` did not run and `--freshness-check` was not run either — both are carried to S202. The
-    Files table below therefore carries hashes computed directly this session rather than read back
-    from a regenerated manifest, which is the redundancy the protocol asks for and works without it.
+    `SESSION_HANDOFF_199.md` was absent from the public repo and from the `/mnt/project` mount. It was
+    never pushed at S199's close. Ryan recovered it from the S199 conversation's file panel and
+    supplied it, and the manifest regenerated cleanly at **162 guarded files**.
 
-    **The mount is not authoritative for presence**, so this is not yet a conclusion. A file-list
-    screenshot is needed before anyone treats `SESSION_HANDOFF_199.md` as lost, and nothing should be
-    removed from GUARDED on the strength of the mount alone.
+    **The recovered copy does not hash-match what S199 banked.** The manifest recorded
+    `4feb6caeb93e…`; the recovered file is `17e21c73b96c…`. The file is otherwise sound — 7050 bytes,
+    UTF-8, no BOM, LF endings, no trailing whitespace, no truncation, content complete and coherent
+    end to end. The most likely cause is the Google Drive round-trip the download passed through. I
+    cannot say which bytes differ, because no reference copy of the original survives anywhere
+    reachable — that is the whole problem. The recovered version is now the banked version, and the
+    copy Ryan pushes to the repo must be this same file or the mismatch simply moves.
+
+11. **Corrected a stale claim inherited from S200 and repeated at the start of this session.** S200's
+    handoff said S199's seven files plus S200's eight were unpushed, and I restated that. Checking the
+    repo against its own manifest showed 159 of 160 guarded files present and hash-correct — both
+    sessions had been pushed, and `SESSION_HANDOFF_199.md` was the single omission. The prose had gone
+    stale and I should have verified it at open rather than carrying it forward.
 
 ## The caveat that matters most
 
@@ -119,43 +124,37 @@ as **B101-data**, and it is what B100 now waits on — not B101.
 
 ## State
 
-- Baseline: 27/30 at open and at close, the three failures being `rules_assertions`,
-  `pipeline_manifest` and `repo_check`, all on the unpushed `SESSION_HANDOFF_199.md` plus (at close)
-  this session's own not-yet-pushed changes. `b101_check` runs green inside `baseline.sh`.
+- Baseline: 27/30 at open, all three failures tracing to the absent `SESSION_HANDOFF_199.md`. Clean
+  at close apart from `repo_check`, which stays red until this session's files are pushed — expected.
+  `b101_check` runs green inside `baseline.sh`.
 - `index.html`: **v6.17**.
 - `units.json`, `unit_loadouts.json`, `detachments.json`, all parsers, `rules_assertions.py`:
   untouched.
 - `OPEN_ITEMS_BACKLOG.md`: **23 open** (up from 22 — B101's engine half closed, B101-data and B103
   opened).
-- `pipeline_manifest.json`: **not** regenerated — `--write` refused on the absent
-  `SESSION_HANDOFF_199.md`. `b101_check.js` and `SESSION_HANDOFF_201.md` are registered in
-  `pipeline_manifest.py`'s GUARDED list and will be banked by the first successful `--write`.
-- `repo_check` will show drift until pushed: S199's seven files, S200's eight, and this session's
-  seven.
+- `pipeline_manifest.json`: regenerated at close, **162 guarded files** (`b101_check.js` and
+  `SESSION_HANDOFF_201.md` added). `SESSION_HANDOFF_199.md`'s banked hash is now the recovered
+  copy's, not S199's original — see item 10.
+- `repo_check` will show drift until pushed: **this session's files only**, plus
+  `SESSION_HANDOFF_199.md`. S199's and S200's outputs are already in the repo, verified against the
+  repo's own manifest this session.
 
 ## Ryan action required
 
 1. **Push the Calgar missing-comma fix** to the private repo's `MFM_Space_Marines_v1.1.txt` —
    outstanding since S198. Not re-checked this session (no sources loaded; engine turn).
-2. Push S199's, S200's and this session's public-repo changes — three sessions' worth now pending.
-   `SESSION_HANDOFF_199.md` in particular is the single cause of all three failing gates, so pushing
-   it clears the baseline.
-3. **A file-list screenshot of the project area is needed**, specifically to answer whether
-   `SESSION_HANDOFF_199.md` is present. The mount shows it absent, but the mount is not authoritative
-   for presence — it deduplicates by filename and goes stale. Nothing should be removed from GUARDED,
-   and no one should treat the file as lost, until that is settled.
+2. **Push `SESSION_HANDOFF_199.md` to the repo** — the exact copy supplied to this session, not a
+   second download, so that the bytes match the hash now banked in the manifest. It is the only file
+   missing from S199 and S200; everything else from both is already there.
+3. Push this session's files (listed below). Nothing else is outstanding.
+4. `SESSION_HANDOFF_199.md` does **not** go in the project area — handoffs live in the repo, and
+   `baseline.sh --fetch` overlays it from there at the next session open. That mechanism is what
+   failed here, and only because the file was missing from the repo.
 
 ## Decisions waiting on Ryan
 
-**One that blocks S202's close: what to do about `SESSION_HANDOFF_199.md`.** If it is genuinely gone,
-the manifest can never be regenerated while it stays in GUARDED, and every session from here closes
-with a stale manifest. Removing it from GUARDED would unblock the pipeline at the cost of a permanent
-hole in the record — the guarded-handoff design exists precisely to make that hole visible, so
-patching over it is a call about the integrity of the record, not a development decision, and I am not
-making it. I have not recommended removing anything; the first step is the screenshot. If the file
-does still exist in the project area, it just needs re-uploading and everything clears.
-
-And one that is not blocking: **B103's product question** — when a saved list exceeds a wargear cap,
+None blocking — the `SESSION_HANDOFF_199.md` question resolved inside the session. One
+non-blocking item: **B103's product question** — when a saved list exceeds a wargear cap,
 should the app correct it silently or correct it and show a warning? My recommendation is silently:
 under D0 the state was never legal, so there is nothing to warn about, and `overAllocated` stays
 reserved for genuine same-source contention. Recorded in the ticket; the B103 turn can proceed on that
@@ -163,8 +162,8 @@ reading unless overruled.
 
 ## Files (SHA-256, first 12)
 
-Computed directly this session with `sha256sum`, **not** read back from a regenerated manifest —
-`--write` was blocked (see item 10). Verify these at S202 open.
+Verify these at S202 open. `SESSION_HANDOFF_199.md` is not listed — it is S199's file, recovered and
+re-banked this session at `17e21c73b96c`, and must be pushed as the same copy supplied here.
 
 | file | sha256:12 | note |
 |------|-----------|------|
@@ -176,9 +175,9 @@ Computed directly this session with `sha256sum`, **not** read back from a regene
 | `40K_Decision_Log.md` | b9ef489be3af | D294 appended |
 | `DECISION_INDEX.md` | cc8c81589508 | D294 index entry |
 | `OPEN_ITEMS_BACKLOG.md` | 677195229e1b | B101 engine half closed; B101-data, B103 opened; 23 open |
-| `NEXT_SESSION_PROMPT.md` | c9b9d480dc70 | (unguarded by design) S202 |
-| `SESSION_HANDOFF_201.md` | (this file) | net-new; **not** banked — `--write` blocked |
-| `pipeline_manifest.json` | unchanged | `--write` refused; regeneration carried to S202 |
+| `NEXT_SESSION_PROMPT.md` | c72c1084dee8 | (unguarded by design) S202 |
+| `SESSION_HANDOFF_201.md` | (this file) | net-new; hash banked in the manifest by `--write` |
+| `pipeline_manifest.json` | (not self-guarded) | `--write`, 162 guarded files |
 
 ## Backlog
 

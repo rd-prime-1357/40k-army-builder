@@ -39,19 +39,20 @@ in a temp dir and stop there. The regeneration is turn 2 and is a data turn.
 One line. Gap records carry `source_faction`; the report writer reads `g["army"]`. Latent because no
 gate passes `--report`. Eleven gaps already exist across built factions.
 
-## Before anything else: the manifest is stale and cannot be regenerated
+## One thing to verify at open
 
-`pipeline_manifest.py --write` refused at S201's close because `SESSION_HANDOFF_199.md` is absent from
-the public repo **and** from the `/mnt/project` mount. It is not merely unpushed. The manifest banked
-a hash for it at S199 close, so it existed then. Until it comes back — or Ryan decides it will not —
-`--write` cannot run and `pipeline_manifest.json` stays at its S200 contents, so `pipeline_manifest`,
-`rules_assertions` and `repo_check` will all be red at open for that reason on top of the ordinary
-unpushed drift.
+S201 could not regenerate the manifest until late: `SESSION_HANDOFF_199.md` had never been pushed at
+S199's close, so it was absent from the repo *and* from the project area, and `--write` refuses while
+any guarded file is missing. Ryan recovered it from the S199 conversation and it is now banked — but
+**the recovered copy does not hash-match what S199 originally banked** (`17e21c73b96c…`, was
+`4feb6caeb93e…`). The file is complete and sound; the difference is almost certainly a Drive
+round-trip. The banked hash is now the recovered copy's. If `repo_check` or the manifest flags that
+file at open, check that the copy in the repo is the same one S201 banked before treating it as new
+drift.
 
-Do not remove anything from GUARDED to make the red go away. That is Ryan's call and it is about the
-integrity of the record, not the pipeline. Ask for a file-list screenshot first; the mount is not
-authoritative for presence. Verify S201's file hashes from its handoff table by hand at open, since
-the manifest cannot do it for you this time.
+Also correct a habit that bit S200 and S201: both carried forward a prose claim about which files were
+unpushed, and both were wrong. Checking the repo against its own manifest takes one command and
+settles it. Do that instead of restating the prior handoff.
 
 ## Standing reminders
 - `./baseline.sh --fetch --data-turn` to get GW sources loaded — a parser change cannot be proved
@@ -60,11 +61,9 @@ the manifest cannot do it for you this time.
 - **Check sources directly, don't trust prior-session prose.** Every session since S196 has found
   something a report, a hardcoded assumption or a session prompt got wrong — including S201, which
   corrected S200's own table. Treat it as the norm.
-- Three Ryan actions are outstanding and none is this session's to resolve: the Calgar missing-comma
-  fix in the private repo (unpushed since S198), and three sessions' worth of public-repo changes
-  (S199, S200, S201). `repo_check`, `pipeline_manifest` and `rules_assertions` all stay red on
-  `SESSION_HANDOFF_199.md` alone until that lands — expected, not a new failure. Confirm by clone
-  rather than assuming.
+- One Ryan action is outstanding and it is not this session's to resolve: the Calgar missing-comma fix
+  in the private repo, unpushed since S198. S201's own files and `SESSION_HANDOFF_199.md` were handed
+  over for pushing at S201's close; confirm by clone rather than assuming either way.
 
 ## After this session
 B101-data turn 2 (data): regenerate `unit_loadouts.json`, diff-guard at key level against the
