@@ -10961,3 +10961,73 @@ Backlog: B94 stays open — one faction (Thousand Sons) of its 34-unit, all-fact
 `fourth_plus`; the remaining priority-order factions' esc4 units and B94's own data-side assertion are
 still open. B89 stays open — Thousand Sons is its first migrated faction; remaining priority-order
 factions continue in later sessions.
+
+## D289 — B94 data turn shipped, second migration of B89's MFM v1.1 adoption arc: Death Guard regenerated from `_v1.1.txt` with `--emit-fourth-plus` (S196)
+
+**Turn type: data-only.** Baseline opened green (32/32, `--fetch --data-turn`); `repo_check` confirmed
+S195's push, matching the project area exactly. Verified S195's hashes via `pipeline_manifest.json` (the
+authoritative source), not by hand-copying the handoff table.
+
+**Death Guard**, per the S196 prompt's own recommendation — same simple shape as Thousand Sons: fully
+self-sourced, no chapter points, no cross-file cult-troop append inside its own build.
+
+**Both `MFM_Death_Guard_v1.1.txt` and `_v1_0.txt` hash-verified directly against `source_manifest.json`**
+before use (not assumed from the baseline's own source-fetch pass). Diffed the two MFM text files
+directly first — confirmed v1.1 carries real re-pricing, not just layout changes. Every `▲`/`▼` marker in
+the v1.1 source was traced to a specific unit before running the pipeline, to catch anything the
+pre-computed reconciliation report might have missed (the prompt's own caution, following B94's habit of
+not assuming absence).
+
+**One discrepancy found against `MFM_v1_1_Reconciliation.md`'s Death Guard section**: the report lists
+Defiler's Hades lascannon and Heavy reaper autocannon wargear options as "removed" under v1.1. The raw
+source shows both options still present on Defiler, each simply repriced 10→15 pts. This is a
+`wargear_points.json` matter, out of scope for a units-only data turn either way, but the report's
+characterization is wrong and should not be trusted verbatim when that file is eventually touched —
+flagged in the backlog rather than corrected here (not this turn's file).
+
+**Full `units_repro_check.py` chain run** (transform → points → convert → merge → `add_loadout_groups` →
+`add_co_leader` → `add_bodyguard_stat_flags` → `add_chapter_point_overrides`), swapping only Death
+Guard's MFM source (`_v1.1.txt`) and adding `--emit-fourth-plus`, mirroring S195's approach exactly.
+
+**Confirmed all 15 non-Death-Guard armies came out byte-identical** to committed `units.json`.
+
+**Exactly 5 Death Guard units differ, all confined to `points`**, matching
+`MFM_v1_1_Reconciliation.md`'s pre-existing "adopt-mechanically" list for Death Guard exactly:
+- PLAGUE MARINES: 10-model tier 190 → 180
+- CHAOS RHINO: single tier 85 → esc4 (1st-to-3rd 75, `fourth_plus` 85) — B94's second faction
+- DEATHSHROUD TERMINATORS: 6-model tier 320/330 → 305/315
+- MORTARION: 400 → 390
+- DEFILER: 290/320 → 300/340
+
+No diff fell outside the points block; no other Death Guard unit changed.
+
+**`rules_assertions.py` checked for pinned Death Guard point values** on all five changed units — none
+of the structural/loadout assertions referencing these unit IDs (Plague Marines' per-5 wargear-swap
+checks, the allied-carrier tagging) pin a specific points number, so nothing needed reconciling. 118/118
+still passes unmodified (confirmed both against the prior committed file and, via temporary swap, against
+the regenerated one — only the expected repro/manifest-drift assertions moved).
+
+**`source_manifest.json` required no change** — both `_v1.1.txt` and `_v1_0.txt` were already present and
+correctly hashed; this migration doesn't add or retire a source file (`_v1_0.txt` stays required, since
+CSM's cult-troop cross-legion pricing still reads Plague Marines' CSM-army datasheet price from it until
+CSM's own B89 turn).
+
+**Left as known, already-tracked scope, not touched this turn:** Death Guard's 2 investigate-first items
+from `MFM_v1_1_Reconciliation.md` — the Defiler wargear repricing above (`wargear_points.json`) and 1
+detachment force-disposition change, CONTAGION ENGINES (`detachments.json`). Both out of scope for a
+units-only data turn.
+
+**`units_repro_check.py` updated** (a change to the check, not the pipeline, per the prompt's own
+scoping): added `MFM_Death_Guard_v1.1.txt` to `REQUIRED`, swapped Death Guard's build block to it with
+`--emit-fourth-plus`, updated the docstring. `_v1_0.txt` stays required for CSM's cult-troop
+cross-reference. Re-ran: green, byte-identical to the now-regenerated committed `units.json`.
+
+`units.json` regenerated and committed — full 16-army merged output from the real pipeline.
+
+Full baseline green after `pipeline_manifest.py --write` (154 guarded files, includes the changed
+`units.json` and `units_repro_check.py`).
+
+Backlog: B94 stays open — two factions (Thousand Sons, Death Guard) of its all-faction target now carry
+`fourth_plus`; the remaining priority-order factions' esc4 units and B94's own data-side assertion are
+still open. B89 stays open — Death Guard is its second migrated faction; remaining priority-order
+factions continue in later sessions.
