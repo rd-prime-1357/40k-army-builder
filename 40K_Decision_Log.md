@@ -10894,3 +10894,70 @@ baseline green under `--fetch --data-turn` (32/32) after the manifest regenerati
 
 Backlog: B96 closes (folded into this session). B94 stays open — pipeline-emit turn shipped; the data
 turn (folding into B89 per D283) and the data-side assertion remain. Open count 20 → 19.
+
+## D288 — B94 data turn shipped, first migration of B89's MFM v1.1 adoption arc: Thousand Sons regenerated from `_v1.1.txt` with `--emit-fourth-plus` (S195)
+
+**Turn type: data-only.** Baseline opened green (32/32, `--fetch --data-turn`); repo_check confirmed
+S194's push. Verified S194's hashes via `pipeline_manifest.json` (the authoritative source), not by
+hand-copying the handoff table.
+
+**Chose Thousand Sons over Death Guard**, per the S195 prompt's own recommendation: fully self-sourced
+(no chapter points, no cross-file cult-troop append) and S194 had already hand-verified its two esc4
+units against the real v1.1 source, so this turn extends that verification into a committed change
+rather than starting cold.
+
+**Both `MFM_Thousand_Sons_v1.1.txt` and `_v1_0.txt` hash-verified directly against
+`source_manifest.json`** before use (not assumed from the baseline's own source-fetch pass). Diffed the
+two MFM text files directly first — confirmed v1.1 carries real re-pricing for this faction, not just
+layout changes, before running anything.
+
+**First pipeline run (transform → points → convert only, no post-processors) surfaced a false structural
+diff**: every unit's `model_groups` differed by the presence/absence of an empty `bodyguard_stat_flags:
+[]` key. Traced to a missing step, not a real regression — `add_bodyguard_stat_flags.py` (B7b, D157/D159)
+runs on the *merged* `units.json` after `merge_factions.py`, not inside the per-faction build. Rebuilt
+using the full `units_repro_check.py` chain (transform → points → convert → merge → `add_loadout_groups`
+→ `add_co_leader` → `add_bodyguard_stat_flags` → `add_chapter_point_overrides`), swapping only Thousand
+Sons' MFM source and adding `--emit-fourth-plus`, everything else unchanged. Confirmed all 15 non-TS
+armies came out byte-identical to committed `units.json` — the post-processors are cross-faction (leader/
+co-leader eligibility, bodyguard flags) but nothing outside Thousand Sons' own data changed as a result
+of this swap.
+
+**Result: exactly 12 Thousand Sons units differ, all confined to the `points` block.** 11 are real
+points changes; cross-checked every one against `MFM_v1_1_Reconciliation.md`'s pre-existing
+"adopt-mechanically" list for Thousand Sons and they match exactly (Chaos Predator Annihilator/
+Destructor, Chaos Rhino, Defiler, Kairos Fateweaver, Lord of Change, Scarab Occult Terminators, Sekhetar
+Robots, Sorcerer, Tzaangor Enlightened, Tzaangor Shaman). The 12th is Rubric Marines, gaining
+`fourth_plus` (110/200) — this is B94's own target, not a v1.1 re-price, and wasn't in the old report's
+list because that report predates the copy-4 schema. Chaos Rhino carries both: a real re-price (90→80/90
+base) *and* gains `fourth_plus` (90) — its `mode single→esc4` note in the reconciliation report was the
+tell. No diff fell outside the points block; no structural regression.
+
+**`rules_assertions.py` checked for pinned Thousand Sons point values needing reconciliation** (per B89's
+own instruction) — none exist. The suite pins Thousand Sons by roster count (34), detachment count (9),
+allied-carrier tagging, and Defiler's five-datasheet-id distinctness, never a specific points number, so
+nothing needed updating. 118/118 still passes unmodified.
+
+**`source_manifest.json` required no change.** Both `_v1.1.txt` and `_v1_0.txt` were already present and
+correctly hashed in the manifest (this migration doesn't add or retire a source file — `_v1_0.txt` stays
+required, since CSM's cult-troop cross-legion pricing still reads Rubric Marines' CSM-army datasheet
+price from it until CSM's own B89 turn).
+
+**Left as known, already-tracked scope, not touched this turn:** Thousand Sons' 4 investigate-first items
+from `MFM_v1_1_Reconciliation.md` — a Defiler wargear removal (Hades lascannon, Heavy reaper autocannon,
+which lives in `wargear_points.json`, a file this turn's pipeline run never touches) and 3 detachment
+force-disposition/unique-tag changes (which live in `detachments.json`, migrated under B89 separately
+from units.json). Both are out of scope for a units-only data turn and already flagged in the
+reconciliation report; not re-opened as new tickets.
+
+**`units_repro_check.py` updated** (a change to the check, not the pipeline, per the prompt's own
+scoping): added `MFM_Thousand_Sons_v1.1.txt` to `REQUIRED` (kept `_v1_0.txt` too, for the CSM
+cross-reference above), swapped Thousand Sons' build block to the v1.1 file with `--emit-fourth-plus`,
+updated the docstring. Re-ran: green, byte-identical to the now-regenerated committed `units.json`.
+
+Full baseline green after `pipeline_manifest.py --write` (153 guarded files, includes the changed
+`units.json` and `units_repro_check.py`).
+
+Backlog: B94 stays open — one faction (Thousand Sons) of its 34-unit, all-faction target now carries
+`fourth_plus`; the remaining priority-order factions' esc4 units and B94's own data-side assertion are
+still open. B89 stays open — Thousand Sons is its first migrated faction; remaining priority-order
+factions continue in later sessions.

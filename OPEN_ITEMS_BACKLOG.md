@@ -3,7 +3,12 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **20 open** as of pre-S194 (up from 17 at S193): B69, B70, B75, B85, B86,
+not here, it isn't open. **19 open** as of S195 (unchanged from S194 — B94 and B89 both advanced
+but neither closed): B99, B98, B97, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23,
+B67b, E12, B17. Thousand Sons migrated to MFM v1.1 (D288) — B94's first faction (Rubric Marines,
+Chaos Rhino now carry `fourth_plus`) and B89's first migration (12 points changes). Both tickets
+stay open for the remaining priority-order factions.
+**20 open** as of pre-S194 (up from 17 at S193): B69, B70, B75, B85, B86,
 P2, P4, E23, B67b, E12, B17, B89, B90, E28, B93, B94, B96, B97, B98, B99. B97/B98/B99 logged from
 Ryan screenshots ahead of S194 (not yet triaged into a decision-log entry): a Grand Coven rule-text
 run-on render; B98 — root cause confirmed same session after Ryan corrected an initial mis-scope — a
@@ -419,7 +424,13 @@ the code cannot currently tell apart). Turn 2 must carve these out of that exclu
 chapters. B90 turn 2 is now fully unblocked on decisions; it still runs after B88/B89 per D274's
 sequencing.
 
-### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; ENGINE TURN SHIPPED S193 (D286); PIPELINE-EMIT TURN SHIPPED S194 (D287); product+engine+data; M; data turn folds into B89**
+### B94 — copy-4 tier schema: represent "1st-to-3rd / 4th+" pricing — **NEW S190 (D283); DECIDED S192 (D285): add the real tier; ENGINE TURN SHIPPED S193 (D286); PIPELINE-EMIT TURN SHIPPED S194 (D287); DATA TURN 1/N SHIPPED S195 (D288); product+engine+data; M; data turn folds into B89**
+
+**Data turn, first faction, shipped S195 (D288).** Thousand Sons regenerated from `_v1.1.txt` with
+`--emit-fourth-plus`: Rubric Marines and Chaos Rhino (2 of the scope's 34 units) now carry real
+`fourth_plus` values in committed `units.json` (110/200 and 90 respectively). 32 units across the
+remaining priority-order factions still need their own migration turn before this ticket's data half
+closes; the data-side assertion (below) still needs writing once more factions have landed.
 
 **Engine turn shipped S193 (D286).** Added an optional `fourth_plus` tier to `points.sizes[*]` and
 routed all three points sites (`ptsForEntry`, `addUnitFromRoster`, size-selector) through one shared
@@ -451,13 +462,24 @@ change, correctly). `b87_check.js` extended with a 4th fact pinning the row-leve
 (loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom (Drukhari), plus Rubric Marines.
 Rare in v1_0 (only Rubric Marines + Brotherhood Terminator Squad), widespread in v1.1.
 
-### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); data; L; depends B88; spans sessions**
+### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); FIRST FACTION SHIPPED S195 (D288); data; L; depends B88; spans sessions**
 Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and
 merge, key-level diff against the committed output — expected diffs are points values only, any
 structural diff investigated before acceptance. Assertions pinning points values are reconciled
 against the new source, never loosened. `source_manifest.json` updated per faction as it migrates.
 Standard priority order. E23's D273 per-army pool counts re-verified after the six Astartes armies
 migrate. The v1_0 layout reader retires when the last faction leaves it.
+
+**Thousand Sons migrated S195 (D288)**, first of the arc — chosen over Death Guard per the S195
+prompt's own recommendation (fully self-sourced, no chapter points). 12 units' points changed
+(11 real re-prices, matching `MFM_v1_1_Reconciliation.md`'s adopt-mechanically list exactly, plus
+Rubric Marines' `fourth_plus` under B94); all other 15 armies byte-identical. No points-value
+assertions needed reconciling — none exist for this faction. `source_manifest.json` needed no change
+(both source files already correctly hashed). **Left open for Thousand Sons**, tracked in the
+reconciliation report, not new tickets: a Defiler wargear removal (`wargear_points.json`, Hades
+lascannon/Heavy reaper autocannon) and 3 detachment force-disposition/unique-tag changes
+(`detachments.json`) — both outside a units-only data turn's scope. Remaining priority-order factions
+(Death Guard next, then the rest) continue in later sessions.
 
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:

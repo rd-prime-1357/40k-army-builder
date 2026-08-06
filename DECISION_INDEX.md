@@ -524,3 +524,15 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   closed**: `b87`/`b88` moved into `baseline.sh`'s sources-loaded conditional, `SKIP` cleanly now
   instead of crashing. Session also reconciled a stale manifest (Ryan's out-of-band B97/B98/B99 backlog
   edit between S193 and S194) before starting. Open count 20 → 19 (B96 closed).
+- **D288** (S195): B94 data turn shipped — first migration of B89's MFM v1.1 adoption arc. Thousand
+  Sons regenerated from `MFM_Thousand_Sons_v1.1.txt` with `--emit-fourth-plus`. Real per-faction
+  pipeline run (transform → points → convert → merge → post-processors), diffed against committed
+  `units.json`: exactly 12 units differ, all confined to `points` — 11 real re-prices matching
+  `MFM_v1_1_Reconciliation.md`'s adopt-mechanically list exactly, plus Rubric Marines gaining
+  `fourth_plus`. All other 15 armies byte-identical. A first-pass false structural diff (missing
+  `bodyguard_stat_flags` key) traced to omitting the merge-time post-processors, not a real
+  regression. `rules_assertions.py` carries no TS points-value pins, needed no reconciliation.
+  `source_manifest.json` needed no change (both source files already correctly hashed).
+  `units_repro_check.py` updated to build TS from v1.1 going forward; `_v1_0.txt` stays required
+  for CSM's cross-legion cult-troop pricing. 4 TS investigate-first items (Defiler wargear,
+  detachment force-disposition) left untouched, already tracked, out of scope for units.json.
