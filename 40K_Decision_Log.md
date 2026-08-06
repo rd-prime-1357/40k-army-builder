@@ -11460,3 +11460,67 @@ and belongs with the data turn that makes it true.
 `rules_assertions.py`: untouched. Baseline reconciled at open at 27/30, all three failures tracing to
 the single unpushed `SESSION_HANDOFF_199.md` — confirmed by direct clone, which showed 165 files
 byte-identical and no other drift.
+
+## D295 — B101-data turn 1 shipped: `loadout_parser.py` recognises the no-duplicate marker and emits `distinct: true`; regeneration deferred to turn 2 (S202)
+
+### Root cause
+
+All three marker occurrences (Raptors `cc_6`, Legionaries `cc_5`, Traitor Guardsmen Squad `cc_1`)
+trace to the same gap, confirmed against `Datasheets_options.csv` rather than assumed: none of the
+ten `_choices_from_list` call sites' regexes account for GW inserting the restriction between "one of
+the following" and the list itself — either as "...following options (you cannot select the same
+option more than once): <list>" (Raptors) or "...following (duplicates are not allowed): <list>"
+(Legionaries, Traitor Guardsmen). `[:\s]+` only eats the single space after "following", so the
+marker rides into the captured list text, and the existing trailing-parenthetical strip in
+`_choices_from_list` doesn't catch it because it anchors to the END of the text, not the start.
+
+### The fix
+
+`_choices_from_list` now recognises a narrow, explicit set of known marker phrases at the START of
+the text (not "any leading parenthetical," so an unrecognised leading rules note still surfaces as
+UNMATCHED rather than being silently swallowed), strips it, and returns `(choices, distinct)` instead
+of a bare list. All ten call sites were updated: the four building single-pick option types
+(`choice`/`add`/`add_choice`) discard the flag — a one-pick list can't duplicate against itself
+regardless of GW's phrasing — and the six building `count_choice`/`any_count_choice`/`count`(via
+`classify_n_model_swap`) carry it onto the option dict as `distinct: true` when present. A second site
+needed the same fix inside `build_loadout`: the count/count_choice `entry` dict is rebuilt fresh from
+`op` rather than copied, and the rebuild wasn't copying `distinct` either — caught only by checking the
+proof output field-by-field rather than trusting the classifier-level fix alone.
+
+### Checked, not assumed: the two turns don't merge
+
+Raptors carries a second `_parser_flags` entry beyond the marker's `WEAPON_NOT_FOUND`: an `UNMATCHED`
+on "If this unit contains 10 models, up to 2 additional Raptors can each have their Astartes chainsword
+replaced with one of the following options...". Read directly against `Datasheets_options.csv`: this is
+a DIFFERENT sentence (a separate CSV row) with its own unmatched shape — no classifier currently handles
+"If this unit contains N models, up to M additional <model>s can..." at all — not the same defect as the
+marker bug, and not touched this session. Legionaries carries two more `UNMATCHED` entries of its own
+("One Legionary's boltgun can be replaced with 1 heavy melee weapon" / "...1 balefire tome"), also
+unrelated: `classify_n_model_swap` requires a digit (`\d+`) for the model count and "One" (spelled out)
+doesn't match. All three of these residual flags are pre-existing gaps, independent of B101-data, and
+are left for their own tickets rather than folded in here.
+
+### Verification
+
+Proven in a temp dir per the session prompt's instruction — `unit_loadouts.json` was NOT regenerated
+this session. Ran the real `loadout_parser.py` + full seven-pass `equipped_parser.py` chain (the same
+shape `repro_check.py` uses) against the patched parser and diffed the result at the key level against
+the committed file: exactly the three target units changed, nothing else. Each diff removes the fake
+marker choice entry, removes its associated `WEAPON_NOT_FOUND` flag, and adds `distinct: true` — no
+other field moved on any of the 305 parsed units.
+
+### B102 also shipped this session (tooling, unrelated ticket riding along per S194 precedent)
+
+`detachment_parser.py --report` raised `KeyError: 'army'` — gap records carry `source_faction`, not
+`army`, and the report writer's format line was reading the wrong key. One-line fix. Latent because no
+baseline gate exercises `--report`. Proven directly: ran `detachment_parser.py --root . --report ...`
+against real sources, confirmed all 11 known gaps render correctly, and confirmed `detachments.json`'s
+own output is byte-identical to committed — only the report writer changed.
+
+### State at close
+
+`loadout_parser.py` and `detachment_parser.py` changed; no other pipeline file touched.
+`unit_loadouts.json`, `detachments.json`, `units.json`, `index.html`, `rules_assertions.py`: untouched.
+`repro_check` is expected to fail until B101-data turn 2 (data) regenerates `unit_loadouts.json` and
+adds the corresponding `rules_assertions.py` assertion — that is not a baseline regression, it is the
+turn-typing boundary working as intended.

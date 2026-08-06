@@ -629,3 +629,16 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   sentence to the unit (points unaffected). S200's table corrected — Legionaries `cc_5` is
   `per_n_models: 5 / max_per_n: 1`, not uncapped. Net-new `b101_check.js`, synthetic fixtures by
   design, each enforcement point mutation-tested.
+- **D295** — B101-data turn 1 shipped (S202), tooling-only. `_choices_from_list` in
+  `loadout_parser.py` now recognises the no-duplicate marker at the START of a captured list
+  (GW inserts it between "one of the following" and the list; the old trailing-only parenthetical
+  strip missed it) and returns `(choices, distinct)`. All ten call sites updated — six carry
+  `distinct: true` onto `count_choice`/`any_count_choice`/`count` options; four single-pick types
+  discard it. A second fix was needed in `build_loadout`, which rebuilds the `entry` dict from `op`
+  and wasn't copying `distinct` through. Checked, not assumed: Raptors' and Legionaries' additional
+  `UNMATCHED` flags are separate, unrelated parser gaps (a distinct-model-count sentence shape and a
+  spelled-out "One" that doesn't match `\d+`), not the same defect — left untouched. Proven in a temp
+  dir (no `unit_loadouts.json` regeneration this session): key-level diff against committed shows
+  exactly the three target units changed, nothing else. B102 rode along (tooling, unrelated):
+  `detachment_parser.py --report`'s `KeyError: 'army'` fixed to read `source_faction`; proven against
+  real sources, all 11 known gaps render, `detachments.json` output unaffected.

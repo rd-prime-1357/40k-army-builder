@@ -596,42 +596,48 @@ fixed. **B94's open Grey Knights concern retires** — the `1ST TO 3RD`/`4TH +` 
 in v1.1 (`REQUISITION THRESHOLDS REMOVED`). Loadouts need only four units authored, in two shapes:
 compound "weapon and banner" replacements plus a narthecium upgrade (no new schema — Sanguinary
 Guard's banner and Tzaangors' Herd Banner/Brayhorn are shipped precedents), and the two Nemesis
-Dreadknights' pick-two-distinct constraint, which depends on **B101**. Nine detachments, 28
-enhancements, no unique tags; v1_0 vs v1.1 differ only in three force dispositions. **Blocked on
-B101** before the units data turn can author the Dreadknights. One open question left for the build
+Dreadknights' pick-two-distinct constraint, which depends on **B101-data turn 2** (turn 1 shipped
+S202/D295). Nine detachments, 28 enhancements, no unique tags; v1_0 vs v1.1 differ only in three force
+dispositions. **Blocked on B101-data turn 2** before the units data turn can author the Dreadknights. One open question left for the build
 turn, deliberately not assumed: there is no `Grey_Knights_web.txt` and `repro_check.py` requires one
 per `WEB_PASSES` entry — Chaos Daemons is precedent for a faction in neither `WEB_PASSES` nor
 `FACTIONS`, and the loadout run was complete without one, but that needs demonstrating rather than
 assuming. Build from `_v1.1.txt` per D293.
 
-### B101-data — The no-duplicate rule is expressible but nothing authors it; the marker string still ships as a fake option — **NEW S201 (D294); tooling then data; S; live D0 gap; blocks B100's units turn**
+### B101-data — The no-duplicate rule is expressible but nothing authors it; the marker string still ships as a fake option — **NEW S201 (D294); TURN 1 (TOOLING) SHIPPED S202 (D295); tooling then data; S; live D0 gap; blocks B100's units turn on turn 2**
 B101's engine half shipped in v6.17 (D294): `distinct: true` on a `count` option with
 `replacement_choices` is enforced on the selection path, in the renderer, and in both `loRollup`
-branches. **No shipped option carries the flag**, so nothing has changed for a player. Three Chaos
-Space Marines options still hold the restriction as a literal string sitting in the choices array:
-Raptors `cc_6` (`max_total_all`, `up_to` 2, 3 real choices, marker
-`Options (You Cannot Select The Same Option More Than Once):`), Legionaries `cc_5`
-(`per_n_models` 5 / `max_per_n` 1 — **not** uncapped, correcting S200's table — 9 real choices, marker
-`(Duplicates Are Not Allowed):`) and Traitor Guardsmen Squad `cc_1` (`max_total_all`, `up_to` 3,
-5 real choices, same marker). Verified this session as the only three occurrences across all 39
-`replacement_choices` options in `unit_loadouts.json`.
+branches. Three Chaos Space Marines options held the restriction as a literal string sitting in the
+choices array: Raptors `cc_6`, Legionaries `cc_5` (`per_n_models` 5 / `max_per_n` 1 — **not** uncapped,
+correcting S200's table), and Traitor Guardsmen Squad `cc_1`.
 
-Worse than cosmetic, and this is the part that sets the priority: selecting the marker pushes it
-through `addRepl`, so the unit gains a weapon literally named after the rules sentence. Points are
-unaffected — `wargearCostForRollup` looks the name up in `wargear_points.json` and a rules sentence
-never matches — but the weapon list is visibly wrong.
+**Turn 1 (tooling) shipped S202 (D295).** `_choices_from_list` recognises the marker at the START of
+the captured list text (GW inserts it between "one of the following" and the list itself; the
+existing strip only anchored to the end) and returns `(choices, distinct)`. All ten call sites
+updated — six carry `distinct: true` through onto the option; four single-pick types discard it since
+a one-pick list can't self-duplicate. A second copy-through was needed in `build_loadout`, which
+rebuilds the `entry` dict from `op` and wasn't carrying `distinct` either — found by checking the
+proof output field-by-field, not by trusting the classifier fix alone.
 
-**Two turns, in order, and they must not be merged.** (1) *Tooling:* `loadout_parser.py` recognises
-the marker wording where `_choices_from_list` currently swallows it as a choice, emits
-`distinct: true` on the option, and drops the marker from the array. Note `_choices_from_list` only
-strips a parenthesised note at the *end* of the list text, which is why a mid-sentence marker
-survives. Raptors also carries a related `UNMATCHED` parser flag on the same sentence; check whether
-one fix covers both before assuming it does. (2) *Data:* regenerate `unit_loadouts.json`, diff-guard
-at key level against the committed file, and add the assertion to `rules_assertions.py` that any
-option whose `replacement_choices` contains a no-duplicate marker carries `distinct: true` — it would
-fail today, which is exactly why it belongs with the turn that makes it true, not with the engine turn.
-Grey Knights' two Nemesis Dreadknights are authored against the flag directly and need no marker
-handling; B100's units turn is unblocked once (1) and (2) land.
+**Checked, not assumed — the two turns don't merge and one fix does not cover both:** Raptors' extra
+`UNMATCHED` flag is a different CSV row entirely ("If this unit contains 10 models, up to 2 additional
+Raptors..."), with its own unmatched sentence shape, unrelated to the marker. Legionaries' two extra
+`UNMATCHED` flags ("One Legionary's boltgun can be replaced with...") fail because `classify_n_model_swap`
+requires a digit and "One" is spelled out — also unrelated. All three left as open, separate gaps, not
+folded into this ticket.
+
+Proven in a temp dir, no regeneration this session: ran the real parser plus the full seven-pass
+`equipped_parser.py` chain and diffed at key level against the committed file — exactly the three
+target units changed, nothing else moved across the other 302 parsed units.
+
+**Turn 2 (data), still open:** regenerate `unit_loadouts.json`, diff-guard at key level against the
+committed file, and add the `rules_assertions.py` assertion that any option whose
+`replacement_choices` contains a no-duplicate marker carries `distinct: true` — it would still fail
+today since the marker no longer exists in the source text to test against post-parse; the assertion
+needs to instead check that the three known units carry the flag, or an equivalent structural check —
+worth a moment's thought at the start of that turn rather than assumed. Grey Knights' two Nemesis
+Dreadknights are authored against the flag directly and need no marker handling; B100's units turn is
+unblocked once turn 2 lands.
 
 ### B103 — Non-distinct `replacement_choices` rollup emits past its cap and hides the over-allocation — **NEW S201 (D294); engine; M; affects shipped lists' points**
 Found while landing B101 and deliberately left alone there. In `loRollup`'s multi-model body branch, a
@@ -649,15 +655,6 @@ whether the correct behaviour is to clamp silently or to clamp *and* fire `overA
 is that a saved list that exceeds a cap should be corrected silently (D0 — the state was never legal,
 so there is nothing to warn about) and that `overAllocated` should stay reserved for genuine
 same-source contention, but that is a product call and belongs to Ryan, not to the fix.
-
-### B102 — `detachment_parser.py --report` crashes on any gap — **NEW S200 (D293); tooling; XS**
-Gap records are built with keys `key` / `source_faction` / `detachment` / `dp`, but the report writer
-reads `g["army"]`, so any run with `--report` that produces at least one gap dies with a `KeyError`
-after the JSON has already been written. Latent because `detachments_repro_check.py` never passes
-`--report` — but a build or scoping session does, which is how it surfaced. Eleven gaps already exist
-across built factions (Black Templars 2, Blood Angels 3, Space Wolves 2, Death Guard 2, CSM 2 — all
-1DP detachments with no rule text in either source); Grey Knights adds three. One-line fix; can ride
-with any other tooling turn.
 
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:
@@ -1034,6 +1031,14 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+- **B102** — `detachment_parser.py --report` crashes on any gap — **NEW S200 (D293); CLOSED S202
+  (D295); TOOLING.** Gap records are built with keys `key` / `source_faction` / `detachment` / `dp`,
+  but the report writer read `g["army"]`, so any run with `--report` that produced at least one gap
+  died with a `KeyError` after the JSON had already been written. Latent because
+  `detachments_repro_check.py` never passes `--report`. One-line fix (`g["source_faction"]`); proven
+  directly against real sources — all 11 known gaps across built factions now render correctly, and
+  `detachments.json`'s own output confirmed byte-identical, so only the report writer changed.
 
 - **B101 (engine half)** — "Cannot take duplicates" wargear rule was not enforced — **NEW S200
   (D293); engine half CLOSED S201 (D294); ENGINE.** `loMaxCount` capped the total picks for a

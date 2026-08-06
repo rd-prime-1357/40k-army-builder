@@ -1318,7 +1318,7 @@ def build(root, out_path, report_path=None):
             f.write("dispositions: %s\n" % disp_counts)
             f.write("gaps (%d):\n" % len(gaps))
             for g in gaps:
-                f.write("  %-18s %s (%dDP)\n" % (g["army"], g["detachment"], g["dp"]))
+                f.write("  %-18s %s (%dDP)\n" % (g["source_faction"], g["detachment"], g["dp"]))
     return doc
 
 

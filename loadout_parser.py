@@ -187,11 +187,38 @@ def parse_comp_row(text):
 def _strip_footnote(s):
     return re.sub(r'[\*\u2020\u2021]+', '', s or '')
 
+# B101-data (D294): GW sometimes inserts a no-duplicate restriction between
+# 'one of the following' and the list itself -- 'one of the following options
+# (you cannot select the same option more than once): <list>' (Raptors) or
+# 'one of the following (duplicates are not allowed): <list>' (Legionaries,
+# Traitor Guardsmen). None of the ten call-site regexes account for the extra
+# 'options' word or the parenthetical, so '[:\s]+' only eats the single space
+# after 'following' and the marker rides into the captured list text. It
+# doesn't get cleaned up downstream because the existing parenthetical strip
+# below only anchors to the END of the text, and the marker sits at the START.
+# Matched narrowly against known GW phrasing, not "any leading parenthetical",
+# so a genuine leading rules note (none seen in the data) would still flag
+# UNMATCHED rather than being silently swallowed.
+_DISTINCT_MARKER_RE = re.compile(
+    r'^\s*(?:options\s+)?\(\s*(?:you cannot select the same option more than once'
+    r'|duplicates are not allowed)\s*\)\s*:?\s*',
+    re.I)
+
 def _choices_from_list(text, sep=r'\s+(?=\d+\s)'):
     """Split a 'one of the following' list into choices. An item written
     'X and 1 Y' is a compound pick (two weapons at once) and is kept as one
-    choice, rendered 'X + Y' -- not split into two bogus single choices."""
+    choice, rendered 'X + Y' -- not split into two bogus single choices.
+    Returns (choices, distinct): distinct is True when a recognised
+    no-duplicate marker preceded the list; callers building a count-type
+    option should carry that through as 'distinct': True. Callers building a
+    single-pick option (choice/single/add/add_choice) can discard it -- a
+    one-pick list can't duplicate against itself regardless."""
     text = _strip_footnote(text)
+    distinct = False
+    dm = _DISTINCT_MARKER_RE.match(text)
+    if dm:
+        distinct = True
+        text = text[dm.end():]
     # drop a trailing rules note in parentheses, e.g.
     # '... 1 cyclone missile launcher (this model's storm bolter cannot be replaced)'
     text = re.sub(r'\s*\([^)]*\)\s*$', '', text)
@@ -215,7 +242,7 @@ def _choices_from_list(text, sep=r'\s+(?=\d+\s)'):
             out.append(' + '.join(qty_name(w) for w in item.split(' + ')))
         else:
             out.append(qty_name(item))
-    return out
+    return out, distinct
 
 def classify_sgl_choice(text, unit_name):
     """'The <group>'s <weapon> can be replaced with one of the following: <list>'"""
@@ -227,7 +254,7 @@ def classify_sgl_choice(text, unit_name):
     model = m.group('model').strip()
     replaces = qty_name(m.group('repl'))
     choices_raw = m.group('list').strip()
-    choices = _choices_from_list(choices_raw)
+    choices, _distinct = _choices_from_list(choices_raw)
     if not choices:
         return None
     return [{'_type': 'choice', '_scope_hint': model, 'replaces': replaces, 'choices': choices}]
@@ -298,12 +325,14 @@ def classify_per_n(text, unit_name):
     if m2:
         scope_hint = m2.group('model').strip()
         replaces = qty_name(m2.group('repl'))
-        choices = _choices_from_list(m2.group('list'))
+        choices, distinct = _choices_from_list(m2.group('list'))
         if choices:
-            return [{'_type': 'count_choice', '_scope_hint': scope_hint,
-                     'replaces': replaces, 'replaces_raw': m2.group('repl').strip(),
-                     'replacement_choices': choices,
-                     'per_n_models': per_n, 'max_per_n': 1}]
+            op = {'_type': 'count_choice', '_scope_hint': scope_hint,
+                  'replaces': replaces, 'replaces_raw': m2.group('repl').strip(),
+                  'replacement_choices': choices,
+                  'per_n_models': per_n, 'max_per_n': 1}
+            if distinct: op['distinct'] = True
+            return [op]
     # active: '[up to N] <model> can replace its <weapon> with one of the following: <list>'
     m2a = re.match(
         r"(?:up to \d+\s+)?(?:\d+\s+)?(?P<model>.+?) can replace (?:its|their) (?P<repl>.+?) with (?:one|1) of the following[:\s]+(?P<list>.+)",
@@ -311,12 +340,14 @@ def classify_per_n(text, unit_name):
     if m2a:
         scope_hint = m2a.group('model').strip()
         replaces = qty_name(m2a.group('repl'))
-        choices = _choices_from_list(m2a.group('list'))
+        choices, distinct = _choices_from_list(m2a.group('list'))
         if choices:
-            return [{'_type': 'count_choice', '_scope_hint': scope_hint,
-                     'replaces': replaces, 'replaces_raw': m2a.group('repl').strip(),
-                     'replacement_choices': choices,
-                     'per_n_models': per_n, 'max_per_n': 1}]
+            op = {'_type': 'count_choice', '_scope_hint': scope_hint,
+                  'replaces': replaces, 'replaces_raw': m2a.group('repl').strip(),
+                  'replacement_choices': choices,
+                  'per_n_models': per_n, 'max_per_n': 1}
+            if distinct: op['distinct'] = True
+            return [op]
     # B26 — passive-possessive: '[up to N] <model>s can each have their <weapon(s)>
     # replaced with <single | one of the following: list>'. The source may be a
     # compound ('boltgun and power weapon'); build_loadout splits it. 'up to N'/'N'
@@ -331,12 +362,14 @@ def classify_per_n(text, unit_name):
         max_pn = int(m2b.group('upto') or m2b.group('cnt') or 1)
         repl_raw = m2b.group('repl').strip()
         if m2b.group('list'):
-            choices = _choices_from_list(m2b.group('list'))
+            choices, distinct = _choices_from_list(m2b.group('list'))
             if choices:
-                return [{'_type': 'count_choice', '_scope_hint': scope_hint,
-                         'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
-                         'replacement_choices': choices,
-                         'per_n_models': per_n, 'max_per_n': max_pn}]
+                op = {'_type': 'count_choice', '_scope_hint': scope_hint,
+                      'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+                      'replacement_choices': choices,
+                      'per_n_models': per_n, 'max_per_n': max_pn}
+                if distinct: op['distinct'] = True
+                return [op]
         elif m2b.group('rep'):
             rep_raw = m2b.group('rep').strip()
             return [{'_type': 'count', '_scope_hint': scope_hint,
@@ -414,12 +447,13 @@ def classify_any_number(text, unit_name):
     # cap across count options (B18b).
     generic = (scope_hint == 'body' and up_to is None)
     if m.group('list'):
-        choices = _choices_from_list(m.group('list'))
+        choices, distinct = _choices_from_list(m.group('list'))
         if choices:
             op = {'_type': 'any_count_choice', '_scope_hint': scope_hint,
                   'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
                   'up_to': up_to, 'replacement_choices': choices}
             if generic: op['_all_groups'] = True
+            if distinct: op['distinct'] = True
             return [op]
     elif m.group('rep'):
         rep_raw = m.group('rep').strip()
@@ -452,7 +486,7 @@ def classify_active_swap(text, unit_name):
         return None
     replaces = qty_name(m.group('repl'))
     if m.group('list'):
-        choices = _choices_from_list(m.group('list'))
+        choices, _distinct = _choices_from_list(m.group('list'))
         if not choices:
             return None
         return [{'_type': 'choice', '_scope_hint': model, 'replaces': replaces, 'choices': choices}]
@@ -530,7 +564,7 @@ def classify_conditional_add_choice(text, unit_name):
         text, re.I)
     if not m:
         return None
-    choices = _choices_from_list(m.group('list'))
+    choices, _distinct = _choices_from_list(m.group('list'))
     if not choices:
         return None
     req = m.group('req').strip()
@@ -638,7 +672,7 @@ def classify_this_model_choice(text, unit_name):
         r"This model's (?P<repl>.+?) can be replaced with (?:one|1) of the following[:\s]+(?P<list>.+)",
         text, re.I)
     if m:
-        choices = _choices_from_list(m.group('list'))
+        choices, _distinct = _choices_from_list(m.group('list'))
         if choices:
             return [{'_type': 'choice', '_scope_hint': 'single',
                      'replaces': qty_name(m.group('repl')), 'choices': choices}]
@@ -658,7 +692,7 @@ def classify_this_model_add_choice(text, unit_name):
         r"This (?:model|unit) can be equipped with (?:one|1) of the following[:\s]+(?P<list>.+)",
         text, re.I)
     if m:
-        choices = _choices_from_list(m.group('list'))
+        choices, _distinct = _choices_from_list(m.group('list'))
         if choices:
             return [{'_type': 'add_choice', '_scope_hint': 'single',
                      'choices': choices}]
@@ -693,12 +727,14 @@ def classify_n_model_swap(text, unit_name):
         scope = m.group('model').strip()
     replaces = qty_name(repl_raw)
     if m.group('list'):
-        choices = _choices_from_list(m.group('list'))
+        choices, distinct = _choices_from_list(m.group('list'))
         if choices:
-            return [{'_type': 'count_choice', '_scope_hint': scope,
-                     'replaces': replaces, 'replaces_raw': repl_raw,
-                     'replacement_choices': choices,
-                     'max_total': n, '_special_slot': True}]
+            op = {'_type': 'count_choice', '_scope_hint': scope,
+                  'replaces': replaces, 'replaces_raw': repl_raw,
+                  'replacement_choices': choices,
+                  'max_total': n, '_special_slot': True}
+            if distinct: op['distinct'] = True
+            return [op]
     elif m.group('rep'):
         rep_raw = m.group('rep').strip()
         return [{'_type': 'count', '_scope_hint': scope,
@@ -1040,6 +1076,7 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                         choices_out.append(_norm_parts(c.split(' + '), 'count_choice', collect=True))
                     entry = {'id': new_id('cc'), 'scope': scope, 'group': grp_label,
                              'type': 'count', 'replaces': repl, 'replacement_choices': choices_out}
+                    if op.get('distinct'): entry['distinct'] = True
                 else:
                     rep = _norm_parts(split_compound_replacement(op.get('replacement_raw', op['replacement'])), 'count.rep', collect=True)
                     entry = {'id': new_id('cnt'), 'scope': scope, 'group': grp_label,
