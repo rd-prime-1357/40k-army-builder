@@ -3,7 +3,21 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S210 (up from 23 at S209 — B111 opened, nothing
+not here, it isn't open. **24 open** as of S211 (unchanged from S210 — nothing closed, nothing
+new opened; B89 gained confirmed evidence, not a new ticket): B111, B110, B109, B108, B99, B98,
+B97, B103, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+Data-only turn (Emperor's Children detachments, D305). `EC` registered in `detachment_parser.py`'s
+three maps, built from v1.1 per D293. `detachments.json` +10 EC detachments (179 total, 17
+armies), diff-guarded 0 changed/removed elsewhere, byte-identical repro. `detachment_effects.json`
++1 entry (Carnival of Excess's Legions of Excess unlock + Warlord restriction), diff-guarded 0
+changed/removed elsewhere. `faction_taxonomy.json`: EC's `built` flag flipped to `true`,
+`data_army` added — Emperor's Children is now fully built (units + detachments both complete).
+**B89 gained confirmed evidence, not closed**: direct parse-and-diff found Chaos Space Marines,
+Death Guard, and Thousand Sons' detachments are still sourced from v1_0 MFM text, with real
+already-shipped errors (a DP-cost bug, an enhancement-price bug, six disposition mismatches) — see
+B89's body below for detail. Recommended as B89's next data turn, not opened as a new ticket.
+
+**24 open** as of S210 (up from 23 at S209 — B111 opened, nothing
 closed; B110 corrected in place, not closed): B111, B110, B109, B108, B99, B98, B97, B103, E28,
 B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. Data-only turn
 (Emperor's Children units, D304). `units.json` +23 EC units, `unit_loadouts.json` +23 EC entries
@@ -721,6 +735,22 @@ Building it is a net-new faction build (own scoping pass first, `CSM_BUILD_SCOPE
 `THOUSAND_SONS_BUILD_SCOPE.md` precedent — no such doc exists yet for GK) and does not belong under
 B89's definition. Tracked separately below as a new ticket. B89 itself has **no remaining in-scope
 candidate** until either a Grey Knights build lands or World Eaters/Emperor's Children unblocks CSM.
+
+**S211: confirmed and quantified the detachments-side gap this ticket already flagged for TS/DG/CD.**
+Registering Emperor's Children in `detachment_parser.py` surfaced that `ARMY_TO_MFM` still points
+Chaos Space Marines, Death Guard, and Thousand Sons at their v1_0 MFM files for detachments, even
+though all three factions' `units.json` migrated to v1.1 under this ticket. Direct parse-and-diff of
+each registered v1_0 file against its v1.1 counterpart confirms real, already-shipped errors, not just
+the disposition drift this ticket already expected: Thousand Sons' Hexwarp Thrallband is priced 2 DP
+(should be 3), Chaos Space Marines' Soulforged Warpack enhancement Tempting Addendum is priced 25 pts
+(should be 40), plus six force-disposition mismatches across the three factions (TS: Ritual of
+Regeneration, Sekhetar Cohort, Warpforged Cabal; CSM: Murdertalon Raiders, Soulforged Warpack; DG:
+Contagion Engines). Chaos Daemons has no v1.1 detachment file to compare against, so its already-noted
+LORDS OF THE WARP item stays unverified by this pass. Not fixed this session — three different
+factions' committed `detachments.json`/`detachment_effects.json` data, out of scope for an
+Emperor's-Children-only data turn. **Recommended as the next data turn under this ticket**, now that
+Emperor's Children's own detachments (D305) are the one item that was blocking a clean sequencing
+choice.
 
 ### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon

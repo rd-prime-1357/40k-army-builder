@@ -370,6 +370,34 @@
           "source": "Space Marines Faction Pack v1.0 HEADHUNTER TASK FORCE + Wahapedia Detachment_abilities.csv (faction_id=SM); rule_text byte-identical across all six armies (sha256:12 cadd53c18131, verified S182/D273 and re-verified S187). KEYWORDS clause: 'Adeptus Astartes Vehicle units from your army (excluding Fortifications, Drop Pods, Walkers and units that can Fly) have the Tank Ace keyword. In the Muster Armies step, you can select up to three Tank Ace units from your army to gain the Character keyword.'"
         }
       ]
+    },
+    "Emperor's Children|CARNIVAL OF EXCESS": {
+      "army": "Emperor's Children",
+      "detachment": "Carnival of Excess",
+      "effects": [
+        {
+          "kind": "unlock",
+          "target": {
+            "allied_group": "Legions of Excess"
+          },
+          "points_cap": {
+            "1000": 500,
+            "2000": 1000,
+            "3000": 1500
+          },
+          "enforced": true,
+          "source": "Detachment rule 'Daemonic Empowerment', LEGIONS OF EXCESS clause: 'You can include Legions of Excess units in your army, even though they do not have the EMPEROR'S CHILDREN Faction keyword.' Points caps 500/1000/1500 by battle size, same shape and same values as Death Guard's Plague Legions (Tallyband Summoners) and Thousand Sons' Scintillating Legions (Changehost of Deceit). D304 tagged the five Legions of Excess carrier units with allied_group; without this detachment selected they must not be offered at all."
+        },
+        {
+          "kind": "warlord",
+          "mode": "cannot_be",
+          "target": {
+            "allied_group": "Legions of Excess"
+          },
+          "enforced": true,
+          "source": "Same ability text (Daemonic Empowerment): 'No LEGIONS OF EXCESS models from your army can be your WARLORD.'"
+        }
+      ]
     }
   }
 }

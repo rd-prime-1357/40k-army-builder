@@ -148,7 +148,8 @@
         },
         {
           "name": "Emperor's Children",
-          "built": false
+          "built": true,
+          "data_army": "Emperor's Children"
         },
         {
           "name": "Thousand Sons",

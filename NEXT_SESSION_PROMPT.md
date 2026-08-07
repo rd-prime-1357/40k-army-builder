@@ -1,67 +1,66 @@
-# NEXT SESSION PROMPT — Session 211
+# NEXT SESSION PROMPT — Session 212
 
-## Recommended turn type: data-only (Emperor's Children detachments)
+## Recommended turn type: data-only (B89 — CSM/DG/TS detachment v1.1 fix) or engine-only (B109)
 
-Read `SESSION_HANDOFF_210.md` first. S210 shipped Emperor's Children's 23 units
-(21 auto-parsed + 2 hand-authored, `unit_loadouts.json` byte-identical repro) and closed
-out every scoped loadout gap with zero engine changes needed. Detachments are the
-remaining piece before Emperor's Children can be marked `built: true`.
+Read `SESSION_HANDOFF_211.md` first. S211 shipped Emperor's Children's 10 detachments and closed
+the faction out entirely — 23/23 units, 10/10 detachments, `faction_taxonomy.json` flipped to
+`built: true`. Two candidates are ready with no scoping needed; pick per your own sequencing
+judgment (dev-manager call, not something to bring back to Ryan).
 
-## Primary task: build Emperor's Children detachments
+## Candidate 1: B89 — fix CSM/Death Guard/Thousand Sons detachment sourcing
 
-Per `EMPEROR_S_CHILDREN_BUILD_SCOPE.md` §7 and its suggested sequencing (§9 step 2):
+S211 found (not fixed) that `detachment_parser.py`'s `ARMY_TO_MFM` still points these three
+factions at their v1_0 MFM files for detachments, despite their units already being on v1.1.
+Confirmed real, already-shipped bugs — not just disposition drift:
 
-1. Register `EC` in `detachment_parser.py`'s three maps (`FACTION_FILES`,
-   `MFM_SOURCE_NAME`, `ARMY_TO_WAHA_FACTION`), mirroring the Grey Knights/Thousand Sons
-   pattern.
-2. Build from `MFM_Emperors_Children_v1.1.txt` (D293). 10 detachments, DP costs 1–3, zero
-   unique tags (confirmed by direct text search at S209, re-verify rather than trust).
-3. Verify the four force-disposition changes land correctly: Carnival of Excess
-   (Priority Assets→Disruption), Coterie of the Conceited (Purge the Foe→Priority
-   Assets), Frenzied Host (Disruption→Reconnaissance), Spectacle of Slaughter (Purge the
-   Foe→Disruption).
-4. Diff-guard against committed `detachments.json`/`detachment_effects.json`: expect
-   exactly Emperor's Children's block added, 0 changed/removed elsewhere.
-5. Once detachments are clean, update `faction_taxonomy.json`: flip Emperor's Children's
-   `built` flag to `true` and set `data_army: "Emperor's Children"` — this is the point
-   at which the flag flip is actually correct (units + detachments both complete), unlike
-   the Grey Knights B110 situation flagged below.
+1. Re-point `ARMY_TO_MFM`'s three entries at the v1.1 filenames (`MFM_Chaos_Space_Marines_v1.1
+   .txt`, `MFM_Death_Guard_v1.1.txt`, `MFM_Thousand_Sons_v1.1.txt`), mirroring how Emperor's
+   Children is now registered.
+2. Re-run `detachment_parser.py`, diff-guard against committed `detachments.json` — expect DP,
+   disposition, and enhancement-price changes on exactly these known items: Thousand Sons'
+   Hexwarp Thrallband (2→3 DP), three TS disposition changes, Chaos Space Marines' Murdertalon
+   Raiders + Soulforged Warpack (disposition + Tempting Addendum 25→40 pts), Death Guard's
+   Contagion Engines disposition. Anything beyond this known list is a surprise — investigate
+   before accepting, don't assume the S211 diff was exhaustive.
+3. Check whether any of the three factions' `detachment_effects.json` entries reference a
+   detachment whose disposition or DP changed — none should, since effects don't encode
+   disposition/DP, but confirm rather than assume.
+4. `faction_taxonomy.json`: no change needed, these three factions are already `built: true`.
+5. This is existing-faction data correction, not a new-faction build — no scope doc needed.
+
+## Candidate 2: B109 — "My Army Lists" page label fix
+
+XS, engine-only, `index.html`'s `renderMyLists()`. Still not touched after four sessions
+running. One-line label change: "Target ####" → "#### Points". Doesn't block or get blocked by
+anything else open.
 
 ## Also open, at your discretion
 
-- **B110 (correction, not yet resolved)** — Grey Knights' `faction_taxonomy.json` flag
-  is `built: false`, and per S210's finding it must **stay** false until Grey Knights has
-  its own detachments (`detachments.json` currently has zero Grey Knights entries).
-  Ryan's S210 answer on sequencing (Grey Knights detachments vs. Emperor's Children
-  detachments first) determines whether this rides alongside this session or is deferred
-  again — check the handoff/decision log for Ryan's response before assuming either way.
-- **B109** (XS, engine-only) — `index.html`'s `renderMyLists()`, one-line label change.
-  Still not touched (three sessions running now); could ride as a standalone engine-only
-  turn, doesn't block or get blocked by anything else open.
-- **B111** (new, tooling/engine) — `mfm_points_parser.py`'s `WARGEAR_RE` regex only
-  matches `WARGEAR OPTIONS` lines with a leading bullet character, which every v1.1 MFM
-  file dropped. This has silently kept the entire project's wargear pricing pass sourced
-  from v1_0 text since the v1.1 migration — currently harmless everywhere except EC's
-  Defiler (10 pts shipped, should be 15 pts per v1.1). Fixing the regex is a clean,
-  narrowly-scoped tooling turn; re-running the wargear pass afterward would need
-  diff-guarding across every already-shipped faction, not just EC, in case any other
-  v1.1-only price change is hiding behind the same gap — check for that rather than
-  assuming EC's Defiler is the only casualty.
+- **B110** — Grey Knights' `faction_taxonomy.json` flag stays `built: false` until it has
+  detachments (`detachments.json` currently has zero Grey Knights entries). S211 proceeded on
+  standard faction priority order (World Eaters next in the Heretic Astartes sequence) absent
+  Ryan's input — check the handoff/decision log for any response before assuming either way.
+- **World Eaters** — next faction in standard priority order after Emperor's Children, once B89
+  and/or B109 are sequenced. Needs its own scoping pass first (`CSM_BUILD_SCOPE.md` pattern).
+- **B111** — `mfm_points_parser.py`'s `WARGEAR_RE` regex doesn't match v1.1's bullet-less
+  `WARGEAR OPTIONS` lines. Tooling turn; re-running the wargear pass afterward needs
+  diff-guarding across every already-shipped faction, not just EC's Defiler.
 
 ## Standing reminders
 
-- `./baseline.sh --fetch --data-turn` at open — data turn, sources must load or the gate
-  fails by design.
-- All 34 gates should be green at S210 close except `repo_check` (B108, Ryan action) —
-  confirm before starting new work.
-- Re-derive from source, don't trust prior-session prose — S210 found the real build
-  needed far less manual authoring than S209's scope doc estimated by doing exactly this.
-- Turn typing: this is data-only. Do not touch `index.html`, `loadout_parser.py`,
-  `equipped_parser.py`, or `mfm_points_parser.py` this session even if B109 or B111 look
-  tempting to fold in — register each as its own turn instead.
+- `./baseline.sh --fetch --data-turn` at open if doing B89 (data turn); plain `./baseline.sh
+  --fetch` is sufficient for B109 (engine-only, no GW sources needed).
+- All 34 gates should be green at S211 close except `repo_check` (B108, Ryan action) — confirm
+  before starting new work.
+- Re-derive from source, don't trust prior-session prose — S211 caught the TS/CSM/DG v1_0
+  sourcing bug by checking `sniff_is_v1_1()` directly rather than assuming the existing
+  `ARMY_TO_MFM` registrations were already correct.
+- Turn typing: B89 is data-only (detachments.json/detachment_effects.json/detachment_parser.py's
+  registration dict only — no other engine file). B109 is engine-only (index.html only). Do not
+  combine them in one session even though both are small.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_211.md` in `pipeline_manifest.py`'s
+Produce the four documents, register `SESSION_HANDOFF_212.md` in `pipeline_manifest.py`'s
 GUARDED list **before** running `--write`, and run `pipeline_manifest.py
 --freshness-check` as the **last** command.

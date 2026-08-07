@@ -12281,3 +12281,64 @@ Detachments and `faction_taxonomy.json` deliberately untouched this session — 
 units data turn) and the fact that Emperor's Children's own detachments are still unbuilt. Emperor's
 Children's taxonomy flag stays `built: false` until both units and detachments are complete, per the
 same reasoning as the B110 correction above.
+
+### D305 — Emperor's Children detachments shipped (S211), data-only
+
+`EC` registered in `detachment_parser.py`'s three maps (`ARMY_TO_MFM`, `MFM_SOURCE_NAME`,
+`ARMY_TO_WAHA_FACTION`), pointed at `MFM_Emperors_Children_v1.1.txt` per D293 — deliberately not
+mirroring the Thousand Sons/Chaos Space Marines/Death Guard precedent, which (see finding below)
+turned out to still point at v1_0 files. Parsed cleanly: 10 detachments, DP costs 1-3, zero unique
+tags — matching the S209 scope doc's prediction exactly. All four force-disposition changes the scope
+doc flagged landed correctly on first build: Carnival of Excess (Priority Assets to Disruption),
+Coterie of the Conceited (Purge the Foe to Priority Assets), Frenzied Host (Disruption to
+Reconnaissance), Spectacle of Slaughter (Purge the Foe to Disruption). Diff-guarded against the
+committed `detachments.json`: exactly Emperor's Children's block added (10 detachments, 179 total
+distinct detachments unchanged elsewhere across 17 armies), 0 changed/removed elsewhere.
+`detachments_repro_check.py` passes byte-identical.
+
+Carnival of Excess's rule text carries a muster-time army-construction effect — the Legions of Excess
+allied-group unlock (points-capped 500/1000/1500 by battle size, matching Death Guard's Plague
+Legions and Thousand Sons' Scintillating Legions exactly) plus a "no Legions of Excess model can be
+your Warlord" restriction. Scanned all 10 EC detachments' rule text directly for this and other
+effect-relevant shapes (battleline grants, forbid clauses, tank_ace); only Carnival of Excess
+qualifies. Authored one new hand-authored entry in `detachment_effects.json`
+(`Emperor's Children|CARNIVAL OF EXCESS`), same `unlock` + `warlord: cannot_be` two-effect shape as
+Thousand Sons' Changehost of Deceit entry. Appended at the end of the file, preserving the existing
+file's insertion-order convention (not alphabetically re-sorted) so the diff is a pure addition.
+Diff-guarded: exactly one key added, 0 changed/removed elsewhere.
+
+`faction_taxonomy.json`'s Emperor's Children entry flipped `built: false` to `built: true` and given
+`data_army: "Emperor's Children"`, matching the shape every other built Chaos faction's entry already
+has. This is the point at which the flag flip is correct — both units (D304) and detachments (this
+entry) are complete, unlike the Grey Knights B110 situation, which remains open and unresolved this
+session.
+
+**Finding, not fixed this session: `detachment_parser.py`'s `ARMY_TO_MFM` map sources Chaos Space
+Marines, Death Guard, and Thousand Sons' detachments from their v1_0 MFM files, not v1.1, even though
+each faction's `units.json` was already migrated to v1.1.** Confirmed by direct parse-and-diff of the
+registered v1_0 file against the corresponding v1.1 file for each of the three factions (the fourth,
+Chaos Daemons, has no v1.1 detachment file to compare against). Real, already-shipped discrepancies
+found:
+- Thousand Sons — Hexwarp Thrallband's DP cost is wrong: shipped at 2 DP, v1.1 says 3 DP.
+- Thousand Sons — three force-disposition mismatches: Ritual of Regeneration (shipped Purge the Foe,
+  should be Take and Hold), Sekhetar Cohort (shipped Priority Assets, should be Disruption), Warpforged
+  Cabal (shipped Disruption, should be Priority Assets).
+- Chaos Space Marines — two mismatches: Murdertalon Raiders' disposition (shipped Purge the Foe,
+  should be Reconnaissance), and Soulforged Warpack's disposition (shipped Purge the Foe, should be
+  Take and Hold) plus its Tempting Addendum enhancement price (shipped 25 pts, should be 40 pts).
+- Death Guard — one mismatch: Contagion Engines' disposition (shipped Purge the Foe, should be
+  Reconnaissance).
+
+This is not a new class of bug — `MFM_v1_1_Reconciliation.md` (B89's own work order, written at the
+time of the original v1.1 migration pass) already flagged detachment force-disposition and DP changes
+as "investigate-first" for every faction it covered, including these three. B89 has remained open
+since; this session's direct comparison confirms its detachment-side work was never completed for the
+three Heretic Astartes factions already shipped, and surfaces one genuine cost bug (Hexwarp
+Thrallband) alongside the disposition drift. Not fixed this session: these are three different
+factions' already-committed data, and mixing that work into an Emperor's Children-scoped turn would
+violate turn typing. Recommending it as the next data turn under B89 once Emperor's Children closes;
+noted in the backlog update below rather than treated as a new ticket, since B89 already covers it.
+
+No engine file (`index.html`, `loadout_parser.py`, `equipped_parser.py`, `mfm_points_parser.py`)
+touched this session. Emperor's Children is now fully built — units (D304) and detachments (this
+entry) both complete, diff-guard clean throughout.

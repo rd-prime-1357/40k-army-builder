@@ -65,6 +65,7 @@ ARMY_TO_MFM = OrderedDict([
     ("Death Guard",      "MFM_Death_Guard_v1_0.txt"),
     ("Chaos Space Marines", "MFM_Chaos_Space_Marines_v1_0.txt"),
     ("Thousand Sons",   "MFM_Thousand_Sons_v1_0.txt"),
+    ("Emperor's Children", "MFM_Emperors_Children_v1.1.txt"),
 ])
 
 # Human-readable name of the MFM source list, for the source_faction field.
@@ -79,6 +80,7 @@ MFM_SOURCE_NAME = {
     "MFM_Death_Guard_v1_0.txt":    "Death Guard",
     "MFM_Chaos_Space_Marines_v1_0.txt": "Chaos Space Marines",
     "MFM_Thousand_Sons_v1_0.txt": "Thousand Sons",
+    "MFM_Emperors_Children_v1.1.txt": "Emperor's Children",
 }
 
 # Wahapedia faction_id supplying tier-2 prose for each app army. The 10th Edition
@@ -89,7 +91,7 @@ ARMY_TO_WAHA_FACTION = {
     "Iron Hands": "SM", "Raven Guard": "SM", "Salamanders": "SM",
     "Space Wolves": "SM", "Ultramarines": "SM", "White Scars": "SM",
     "Chaos Daemons": "CD", "Death Guard": "DG", "Chaos Space Marines": "CSM",
-    "Thousand Sons": "TS",
+    "Thousand Sons": "TS", "Emperor's Children": "EC",
 }
 
 FORCE_DISPOSITIONS = (

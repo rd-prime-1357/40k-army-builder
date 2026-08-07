@@ -787,3 +787,25 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   than executed; Grey Knights' taxonomy flag stays `false` until its detachments ship.
   Detachments and `faction_taxonomy.json` deliberately untouched this session — Emperor's
   Children's own detachments are next.
+- **D305** — Emperor's Children detachments shipped (S211), data-only. `EC` registered in
+  `detachment_parser.py`'s three maps, pointed at v1.1 per D293 (not the flawed TS/CSM/DG
+  v1_0 precedent — see finding below). 10 detachments, DP 1-3, zero unique tags, all four
+  scoped force-disposition changes landed correctly. Diff-guarded against committed
+  `detachments.json`: exactly EC's block added, 0 changed/removed elsewhere, byte-identical
+  repro. Carnival of Excess carries a Legions of Excess allied-group unlock (500/1000/1500
+  pts cap by battle size) plus a "cannot be Warlord" restriction, same shape as Thousand
+  Sons' Changehost of Deceit; scanned all 10 EC detachments directly, only this one
+  qualifies. One new `detachment_effects.json` entry authored
+  (`Emperor's Children|CARNIVAL OF EXCESS`), appended at file end preserving insertion
+  order, diff-guarded clean. `faction_taxonomy.json`: EC's `built` flag flipped to `true`,
+  `data_army: "Emperor's Children"` added — units and detachments both complete now.
+  **Finding, not fixed this session**: `ARMY_TO_MFM` sources Chaos Space Marines, Death
+  Guard, and Thousand Sons' detachments from v1_0 MFM files, not v1.1, despite those
+  factions' units already being on v1.1. Direct parse-and-diff confirms real, already-shipped
+  bugs: Thousand Sons' Hexwarp Thrallband is priced 2 DP (should be 3 DP); six force-
+  disposition mismatches across the three factions (2 TS, 2 CSM, 1 DG, plus a third TS one);
+  Chaos Space Marines' Soulforged Warpack enhancement Tempting Addendum priced 25 pts
+  (should be 40 pts). Not new — `MFM_v1_1_Reconciliation.md` (B89's own work order) already
+  flagged these as "investigate-first" at the time of the original migration; B89 has stayed
+  open since, and its detachment-side work for these three factions was never finished.
+  Recommending it as the next data turn under B89, not opened as a new ticket.
