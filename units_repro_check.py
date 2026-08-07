@@ -21,7 +21,19 @@ to the committed units.json:
      header, the same generic ALLIED_GROUP_HEADERS mechanism Death Guard's Plague
      Legions tag uses (D208) — confirmed unchanged under v1.1's layout, no TS-specific
      tagging code needed here.
-  4. Chaos Daemons: convert_to_json.py run DIRECTLY against the project root's own
+  4. Grey Knights: wahapedia_transform.py (--faction GK) -> mfm_points_parser.py (against
+     MFM_Grey_Knights_v1.1.txt, per D293's standing rule to always build from the newest
+     MFM) -> convert_to_json.py --emit-fourth-plus, in its own working dir. Fully
+     self-sourced (25/25, no cross-file append, no chapter points) — mirrors the Death
+     Guard and Thousand Sons blocks exactly (GREY_KNIGHTS_BUILD_SCOPE.md §3/§4). No
+     dedicated faction composition-paste file needed: confirmed this session (not
+     assumed) that the six multi-group units (Strike Squad, Brotherhood Terminator
+     Squad, Purifier Squad, Paladin Squad, Interceptor Squad, Purgation Squad) gap-fill
+     completely and correctly from Datasheets.csv alone in equipped_parser.py's final
+     --datasheets pass, since each one's groups carry identical default gear per the
+     datasheet's own "Every model is equipped with" wording — not a parser gap, so
+     repro_check.py's WEB_PASSES list does not need a Grey Knights entry either.
+  5. Chaos Daemons: convert_to_json.py run DIRECTLY against the project root's own
      Unit_Stats.csv / Unit_Points.csv / Unit_Wargear_Options.csv / Unit_Other_Options.csv /
      Unit_Weapons.csv / Unit_Abilities.csv / Keywords.csv / Rules.csv / Weapon_Abilities.csv.
      CD is Gen-1 hand-built data in Wahapedia-shaped CSVs; it is NEVER routed through
@@ -30,8 +42,8 @@ to the committed units.json:
      roster (see D132). Running wahapedia_transform.py --faction CD anywhere near this
      input directory would silently overwrite these same CSV filenames with the wrong
      source; this check never does that.
-  5. merge_factions.py across the four outputs.
-  6. cmp the merged result against the committed units.json.
+  6. merge_factions.py across the five outputs.
+  7. cmp the merged result against the committed units.json.
 
 All work happens in a temp dir; nothing in the project directory is touched.
 
@@ -74,6 +86,9 @@ REQUIRED = [
     # below) still prices Plague Marines' CSM-army datasheet off DG's v1_0 file
     # until CSM's own B89 turn migrates it.
     'MFM_Death_Guard_v1.1.txt',
+    # B100 (S204): Grey Knights, built directly from v1.1 per D293 — the first faction
+    # with no v1_0 migration debt, since it is the first one built after D293 was set.
+    'MFM_Grey_Knights_v1.1.txt',
     # B56a: the five Space Marines chapter point files. Correctly-scoped, they are
     # purely additive on top of the base SM run (D167/D168) and sit inside the fixed
     # point from here on — this is exactly the kind of input that goes stale silently
@@ -250,6 +265,33 @@ def repro(dir_):
         if rc != 0:
             return False, 'convert_to_json.py (TS) failed:\n' + out[-600:]
 
+        # --- Grey Knights: transform -> mfm points -> convert. Fully self-sourced,
+        # 25/25 (GREY_KNIGHTS_BUILD_SCOPE.md §3) — no chapter points, no cross-file
+        # append. Built straight from v1.1 (D293); mirrors the Death Guard/Thousand
+        # Sons blocks exactly. ---
+        gk_dir = os.path.join(tmp, 'gk')
+        os.makedirs(gk_dir)
+        rc, out = _run([sys.executable, 'wahapedia_transform.py',
+                        '--wahapedia-dir', dir_, '--seed-dir', dir_,
+                        '--out-dir', gk_dir, '--faction', 'GK',
+                        '--army-name', 'Grey Knights'], cwd=dir_)
+        if rc != 0:
+            return False, 'wahapedia_transform.py (GK) failed:\n' + out[-600:]
+        rc, out = _run([sys.executable, 'mfm_points_parser.py',
+                        '--mfm', 'MFM_Grey_Knights_v1.1.txt',
+                        '--out-dir', gk_dir, '--stats', os.path.join(gk_dir, 'Unit_Stats.csv')],
+                        cwd=dir_)
+        if rc != 0:
+            return False, 'mfm_points_parser.py (GK) failed:\n' + out[-600:]
+        gk_json = os.path.join(tmp, 'gk_json')
+        os.makedirs(gk_json)
+        rc, out = _run([sys.executable, 'convert_to_json.py',
+                        '--input-dir', gk_dir, '--output-dir', gk_json,
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json'),
+                        '--emit-fourth-plus'], cwd=dir_)
+        if rc != 0:
+            return False, 'convert_to_json.py (GK) failed:\n' + out[-600:]
+
         # --- Chaos Space Marines: transform -> mfm points (self, 54 of 58) -> D240
         # cult-troop cross-file append (the remaining 4, one at a time, each isolated
         # to its own single-row stats scope) -> convert. Unit_Stats.csv is left
@@ -303,7 +345,7 @@ def repro(dir_):
         os.makedirs(deploy)
         rc, out = _run([sys.executable, 'merge_factions.py',
                         '--in', sm_dir, '--in', cd_json, '--in', dg_json, '--in', csm_json,
-                        '--in', ts_json,
+                        '--in', ts_json, '--in', gk_json,
                         '--taxonomy', 'faction_taxonomy.json',
                         '--out-dir', deploy], cwd=dir_)
         if rc != 0:

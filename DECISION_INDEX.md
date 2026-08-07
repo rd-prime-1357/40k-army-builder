@@ -642,3 +642,32 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   exactly the three target units changed, nothing else. B102 rode along (tooling, unrelated):
   `detachment_parser.py --report`'s `KeyError: 'army'` fixed to read `source_faction`; proven against
   real sources, all 11 known gaps render, `detachments.json` output unaffected.
+- **D296** — B101-data turn 2 shipped (S203), data-only. `unit_loadouts.json` regenerated via the real
+  pipeline in a scratch dir, diff-guarded at key level: exactly the three predicted units changed
+  (`000000958`, `000002570`, `000002590`), nothing else across 305 parsed units. Added `rules_assertions.py`
+  **B101-DATA**: scans `Datasheets_options.csv` for the no-duplicate marker across ALL rows (not pinning
+  the three IDs), checks every currently-built, successfully-classified hit carries `distinct: true`.
+  Scoping check found one more marked datasheet in-scope (Nemesis Claw `000003876`, CSM) but its row is
+  `UNMATCHED` — marker text never reaches output, excluded correctly. Negative-controlled against the
+  pre-regen file fetched from the repo: fails and names the three units; passes against the regenerated
+  file. 119 assertions, all pass. Baseline-open housekeeping: `SESSION_HANDOFF_202.md` had been left off
+  `pipeline_manifest.py`'s `GUARDED` list at S202 close (the S180 failure mode) — appended. `repro_check.py`
+  was genuinely absent from the project file area — recovered from the repo clone, hash verified against
+  the manifest. B101-data closed outright, both turns shipped.
+- **D297** — B100 units half shipped (S204), data-only. `units.json` regenerated with Grey Knights (25
+  units), diff-guarded at key level: exactly 25 added, nothing else moved. Four merged lookups came
+  along in the same fixed point; `datasheet_wargear_abilities.json` regenerated separately (+2).
+  Demonstrated (not assumed) Grey Knights needs no dedicated `_web.txt` file — its six multi-group
+  units gap-fill completely from the final `--datasheets` pass alone. Loadouts half NOT shipped:
+  attempting it surfaced **B104**, a real pre-existing bug in `equipped_parser.py`'s `scoped_name2id`
+  ambiguous-candidate fallback that silently corrupts 8 unrelated already-shipped generic-vehicle
+  units (Land Raider and variants, Rhino, Razorback, Stormhawk/Stormtalon/Stormraven) whenever a
+  same-named-vehicle faction is appended after them in `units.json`. Reverted the `FACTIONS` addition
+  to `repro_check.py`; `unit_loadouts.json` untouched, byte-identical to S203. Also opened **B105**
+  (a passive single-model swap sentence shape no classifier matches) and **B106** (B101's `distinct`
+  support doesn't cover a fixed-1-group pure-addition "up to N distinct" shape) — both found authoring
+  Grey Knights' four flagged units, both left as residual `UNMATCHED` flags per the Raptors/Legionaries
+  precedent once the loadouts turn actually runs. Baseline-open housekeeping: `40K_Decision_Log.md`'s
+  own D296 entry had gone missing (index and backlog referenced it correctly, but the full prose entry
+  was never written despite S203's handoff claiming it was) — reconstructed from the handoff, manifest
+  regenerated.

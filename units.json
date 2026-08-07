@@ -67016,5 +67016,4902 @@
         "allied_group": "Scintillating Legions"
       }
     ]
+  },
+  {
+    "army": "Grey Knights",
+    "units": [
+      {
+        "unit_id": "000000374",
+        "unit_name": "Grand Master Voldus",
+        "unit_type": "Epic Hero",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Sanctuary (Psychic)": "While this model is leading a unit, each time an attack targets that unit, subtract 1 from the Hit roll.",
+          "Hammer Aflame (Psychic)": "Each time this model’s unit is selected to fight, you can select one enemy unit within Engagement Range of this model’s unit and roll one D6: on a 2-3, that enemy unit suffers 1 mortal wound; on a 4-5, that enemy unit suffers D3 mortal wounds; on a 6, that enemy unit suffers D3+3 mortal wounds."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 7,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Brotherhood Terminator Squad",
+              "Paladin Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Sanctuary (Psychic)",
+              "Hammer Aflame (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Character",
+              "Epic Hero",
+              "Grand Master Voldus",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Searing Purity",
+            "range": "12\"",
+            "A": "D3+1",
+            "BS": "2",
+            "WS": null,
+            "S": 12,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Malleus Argyrum",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 10,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 125
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000375",
+        "unit_name": "Grand Master",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Warrior Strategist": "Once per battle round, one model from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP.",
+          "Might of Titan (Psychic)": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does, until the end of the phase, add 3 to the Attacks and Strength characteristics of melee weapons equipped by this model."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 7,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Brotherhood Terminator Squad",
+              "Paladin Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Warrior Strategist",
+              "Might of Titan (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Character",
+              "Grand Master",
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Incinerator",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psilencer",
+            "range": "24\"",
+            "A": "6",
+            "BS": "2",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psycannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "2",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Incinerator",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Psilencer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Psycannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 95
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000376",
+        "unit_name": "Brother-captain",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Hammerhand (Psychic)": "While this model is leading a unit, melee weapons equipped by models in that unit have the [LETHAL HITS] ability.",
+          "Eye of Judgement (Psychic)": "Each time this model makes an attack, you can re-roll the Wound roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 6,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Brotherhood Terminator Squad",
+              "Paladin Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Hammerhand (Psychic)",
+              "Eye of Judgement (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Brother-Captain",
+              "Character",
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Incinerator",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psilencer",
+            "range": "24\"",
+            "A": "6",
+            "BS": "2",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psycannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "2",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Incinerator",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Psilencer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Psycannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 95,
+              "second_unit": 95,
+              "third_plus": 95
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000379",
+        "unit_name": "Brotherhood Champion",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Clarion of Haste (Psychic)": "While this model is leading a unit, that unit is eligible to declare a charge in a turn in which it Advanced.",
+          "Inspiring Exemplar": "Each time this model destroys an enemy CHARACTER model in the Fight phase, you gain 1CP and until the end of the battle, add 1 to the Attacks characteristic of its Nemesis force weapon."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Purgation Squad",
+              "Strike Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Clarion of Haste (Psychic)",
+              "Inspiring Exemplar"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Brotherhood Champion",
+              "Character",
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000380",
+        "unit_name": "Castellan Crowe",
+        "unit_type": "Epic Hero",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Champion of the Order of Purifiers (Psychic)": "While this model is leading a unit, add 1 to the Attacks characteristic of Purifying Flame weapons equipped by models in that unit.",
+          "Foresight (Psychic)": "Each time this model makes an attack that targets a CHARACTER unit, you can re-roll the Hit roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Purifier Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Champion of the Order of Purifiers (Psychic)",
+              "Foresight (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Castellan Crowe",
+              "Character",
+              "Epic Hero",
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Purifying Flame",
+            "range": "18\"",
+            "A": "3",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Ignores Cover",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Black Blade of Antwyr",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Precision"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000381",
+        "unit_name": "Strike Squad",
+        "unit_type": "Battleline",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Sanctifying Ritual (Psychic)": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Sanctifying Ritual (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Scouts 6\"",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Battleline",
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Strike Squad"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Incinerator",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psilencer",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psycannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 115,
+              "second_unit": 115,
+              "third_plus": 115
+            },
+            {
+              "size": 10,
+              "first_unit": 230,
+              "second_unit": 230,
+              "third_plus": 230
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000382",
+        "unit_name": "Brotherhood Terminator Squad",
+        "unit_type": "Battleline",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Force Edge (Psychic)": "Each time a model in this unit makes a melee attack that targets a unit (excluding MONSTERS and VEHICLES ), improve the Armour Penetration characteristic of that attack by 1."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 3,
+            "LD": 6,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Force Edge (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Battleline",
+              "Brotherhood Terminator Squad",
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Ancient’s Banner",
+              "Apothecary’s Narthecium"
+            ],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Incinerator",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psilencer",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psycannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Incinerator",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Psilencer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Psycannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Apothecary’s narthecium",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 4,
+              "first_unit": 140,
+              "second_unit": 140,
+              "third_plus": 140
+            },
+            {
+              "size": 5,
+              "first_unit": 175,
+              "second_unit": 175,
+              "third_plus": 175
+            },
+            {
+              "size": 8,
+              "first_unit": 300,
+              "second_unit": 300,
+              "third_plus": 300
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000383",
+        "unit_name": "Purifier Squad",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Sanctity of Purpose": "Each time a model in this unit makes an attack, re-roll a Wound roll of 1. If the target is within range of an objective marker, you can re-roll the Wound roll instead."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Sanctity of Purpose"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Purifier Squad"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Incinerator",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psilencer",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psycannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Purifying Flame",
+            "range": "18\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Ignores Cover",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 130,
+              "second_unit": 130,
+              "third_plus": 140
+            },
+            {
+              "size": 10,
+              "first_unit": 260,
+              "second_unit": 260,
+              "third_plus": 270
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000384",
+        "unit_name": "Paladin Squad",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Attuned Onslaught (Psychic)": "Each time this unit makes a Charge move, until the end of the turn, add 1 to the Damage characteristic of melee weapons equipped by PALADIN SQUAD models in this unit."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 3,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Attuned Onslaught (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Paladin Squad",
+              "Psyker",
+              "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Ancient’s Banner",
+              "Apothecary's Narthecium"
+            ],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Incinerator",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psilencer",
+            "range": "24\"",
+            "A": "6",
+            "BS": "2",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psycannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "2",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Incinerator",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Psilencer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Psycannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Apothecary’s narthecium",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 4,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 185
+            },
+            {
+              "size": 5,
+              "first_unit": 215,
+              "second_unit": 215,
+              "third_plus": 230
+            },
+            {
+              "size": 8,
+              "first_unit": 360,
+              "second_unit": 360,
+              "third_plus": 375
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000387",
+        "unit_name": "Interceptor Squad",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Personal Teleporters": "In your Shooting phase, after this unit has shot, if it is not within Engagement Range of one or more enemy units, it can make a Normal move of up to 6\". If it does, until the end of the turn, this unit is not eligible to declare a charge."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 4,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Personal Teleporters"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Fly",
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Interceptor Squad",
+              "Psyker"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Incinerator",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psilencer",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psycannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 135
+            },
+            {
+              "size": 10,
+              "first_unit": 250,
+              "second_unit": 250,
+              "third_plus": 260
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000388",
+        "unit_name": "Purgation Squad",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Righteous Persecution": "In your Shooting phase, after this unit has shot, select one enemy unit (excluding MONSTERS and VEHICLES ) hit by one or more of those attacks: until the start of your next turn, that enemy unit is pinned. While a unit is pinned, subtract 2 from that unit’s Move characteristic and subtract 2 from Charge rolls made for it."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Righteous Persecution"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Purgation Squad"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Incinerator",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psilencer",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Precision",
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Psycannon",
+            "range": "24\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 120
+            },
+            {
+              "size": 10,
+              "first_unit": 220,
+              "second_unit": 220,
+              "third_plus": 230
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000389",
+        "unit_name": "Nemesis Dreadknight",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Indomitable Spirit (Psychic)": "This model is eligible to shoot and declare a charge in a turn in which it Advanced or Fell Back."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 8,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 13,
+            "LD": 6,
+            "OC": 4,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Indomitable Spirit (Psychic)"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Deep Strike",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Imperium",
+              "Nemesis Dreadknight",
+              "Psyker",
+              "Vehicle",
+              "Walker"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Gatling psilencer",
+            "range": "24\"",
+            "A": "12",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy incinerator",
+            "range": "18\"",
+            "A": "2D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy psycannon",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Dreadfists",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis daemon greathammer",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 14,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis greatsword – strike",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 10,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis greatsword – sweep",
+            "range": "Melee",
+            "A": "10",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Dreadfists",
+            "replacement_weapon_name": "Nemesis daemon greathammer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Dreadfists",
+            "replacement_weapon_name": "Nemesis greatsword",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 195,
+              "second_unit": 195,
+              "third_plus": 210
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000391",
+        "unit_name": "Land Raider",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn.",
+          "Transport": "This model has a transport capacity of 12 Grey Knights Infantry models. Each Terminator model takes up the space of 2 models."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "10\"",
+            "T": 12,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 16,
+            "LD": 6,
+            "OC": 5,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Assault Ramp",
+              "Transport"
+            ],
+            "rule_names": [
+              "Deadly Demise D6"
+            ],
+            "keyword_names": [
+              "Imperium",
+              "Land Raider",
+              "Smoke",
+              "Transport",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Godhammer lascannon",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hunter-killer missile",
+            "range": "48\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 14,
+            "AP": -3,
+            "D": "D6",
+            "weapon_ability_names": [
+              "One Shot"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Multi-melta",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Sustained Hits 1",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "4",
+            "S": 8,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Hunter-killer missile",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Multi-melta",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Storm bolter",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 220,
+              "second_unit": 220,
+              "third_plus": 240
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000392",
+        "unit_name": "Land Raider Crusader",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn.",
+          "Transport": "This model has a transport capacity of 16 Grey Knights Infantry models. Each Terminator model takes up the space of 2 models."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 12,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 16,
+            "LD": 6,
+            "OC": 5,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Assault Ramp",
+              "Transport"
+            ],
+            "rule_names": [
+              "Deadly Demise D6"
+            ],
+            "keyword_names": [
+              "Crusader",
+              "Grenades",
+              "Imperium",
+              "Land Raider",
+              "Smoke",
+              "Transport",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hunter-killer missile",
+            "range": "48\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 14,
+            "AP": -3,
+            "D": "D6",
+            "weapon_ability_names": [
+              "One Shot"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hurricane bolter",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 6",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Multi-melta",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin assault cannon",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "4",
+            "S": 8,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Hunter-killer missile",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Multi-melta",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Storm bolter",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 220,
+              "second_unit": 220,
+              "third_plus": 240
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000393",
+        "unit_name": "Land Raider Redeemer",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Assault Ramp": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn.",
+          "Transport": "This model has a transport capacity of 14 Grey Knights Infantry models. Each Terminator model takes up the space of 2 models."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 12,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 16,
+            "LD": 6,
+            "OC": 5,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Assault Ramp",
+              "Transport"
+            ],
+            "rule_names": [
+              "Deadly Demise D6"
+            ],
+            "keyword_names": [
+              "Grenades",
+              "Imperium",
+              "Land Raider",
+              "Redeemer",
+              "Smoke",
+              "Transport",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Flamestorm cannon",
+            "range": "12\"",
+            "A": "D6+3",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hunter-killer missile",
+            "range": "48\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 14,
+            "AP": -3,
+            "D": "D6",
+            "weapon_ability_names": [
+              "One Shot"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Multi-melta",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin assault cannon",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "4",
+            "S": 8,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Hunter-killer missile",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Multi-melta",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Storm bolter",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 250,
+              "second_unit": 250,
+              "third_plus": 270
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000395",
+        "unit_name": "Razorback",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Fire Focus": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly model that disembarked from this TRANSPORT this turn makes an attack that targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1. The same enemy unit can only be affected by this ability once per turn.",
+          "Transport": "This model has a transport capacity of 6 Grey Knights Infantry models. It cannot transport Terminator models."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 9,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": 6,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Fire Focus",
+              "Transport"
+            ],
+            "rule_names": [
+              "Deadly Demise D3"
+            ],
+            "keyword_names": [
+              "Dedicated Transport",
+              "Imperium",
+              "Razorback",
+              "Smoke",
+              "Transport",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hunter-killer missile",
+            "range": "48\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 14,
+            "AP": -3,
+            "D": "D6",
+            "weapon_ability_names": [
+              "One Shot"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Sustained Hits 1",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Hunter-killer missile",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Storm bolter",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Twin heavy bolter",
+            "replacement_weapon_name": "Twin lascannon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75,
+              "fourth_plus": 85
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000396",
+        "unit_name": "Rhino",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Truesilver Aegis (Aura)": "While a friendly Grey Knights unit is wholly within 6\" of this unit, models in that unit have the Feel No Pain 6+ ability against mortal wounds.",
+          "Transport": "This model has a transport capacity of 12 Grey Knights Infantry models. It cannot transport Terminator models."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 9,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": 6,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Truesilver Aegis (Aura)",
+              "Transport"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Firing Deck 2"
+            ],
+            "keyword_names": [
+              "Dedicated Transport",
+              "Imperium",
+              "Rhino",
+              "Smoke",
+              "Transport",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hunter-killer missile",
+            "range": "48\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 14,
+            "AP": -3,
+            "D": "D6",
+            "weapon_ability_names": [
+              "One Shot"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured tracks",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Hunter-killer missile",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "additional storm bolter",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70,
+              "fourth_plus": 80
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000398",
+        "unit_name": "Stormraven Gunship",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Armoured Resilience": "Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack.",
+          "Transport": "This model has a transport capacity of 12 Grey Knights Infantry models and 1 Grey Knights Venerable Dreadnought model. Each Terminator model takes up the space of 2 models."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "20+\"",
+            "T": 10,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 14,
+            "LD": 6,
+            "OC": 0,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Armoured Resilience",
+              "Transport"
+            ],
+            "rule_names": [
+              "Deadly Demise D6",
+              "Hover"
+            ],
+            "keyword_names": [
+              "Aircraft",
+              "Fly",
+              "Imperium",
+              "Stormraven Gunship",
+              "Transport",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hurricane bolter",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 6",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Stormstrike missile launcher",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -3,
+            "D": "D6+2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin assault cannon",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Sustained Hits 1",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy plasma cannon – standard",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Blast",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy plasma cannon – supercharge",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Blast",
+              "Hazardous",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin multi-melta",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Typhoon missile launcher – frag",
+            "range": "48\"",
+            "A": "2D6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Typhoon missile launcher – krak",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured hull",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "4",
+            "S": 8,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "This model can be equipped with 2 hurricane bolters.",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Twin assault cannon",
+            "replacement_weapon_name": "twin heavy plasma cannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Twin assault cannon",
+            "replacement_weapon_name": "Twin lascannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "typhoon missile launcher",
+            "replacement_weapon_name": "Twin heavy bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "typhoon missile launcher",
+            "replacement_weapon_name": "Twin multi-melta",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 280,
+              "second_unit": 300,
+              "third_plus": 300
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000399",
+        "unit_name": "Brotherhood Techmarine",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Techmarine": "While this model is within 3\" of one or more friendly Grey Knights Vehicle units, this model has the Lone Operative ability.",
+          "Blessing of the Omnissiah": "In your Command phase, you can select one friendly Grey Knights Vehicle model within 3\" of this model. That model regains up to D3 lost wounds and, until the start of your next Command phase, each time that VEHICLE model makes an attack, add 1 to the Hit roll. Each model can only be selected for this ability once per turn.",
+          "Guardians of the Machine": "Each time an enemy unit ends a charge move within Engagement Range of one or more Grey Knights Vehicle units from your army and within 6\" of this model’s unit, you can target this model’s unit with the Heroic Intervention Stratagem for 0CP, and can do so even if you have already targeted a different unit with that Stratagem this phase."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Purgation Squad",
+              "Purifier Squad",
+              "Strike Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Techmarine",
+              "Blessing of the Omnissiah",
+              "Guardians of the Machine"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Brotherhood Techmarine",
+              "Character",
+              "Grenades",
+              "Imperium",
+              "Infantry",
+              "Psyker"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Forge bolter",
+            "range": "24\"",
+            "A": "3",
+            "BS": "2",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Grav-pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Vehicle 2+",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Omnissian power axe",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Servo-arms",
+            "range": "Melee",
+            "A": "1",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Extra Attacks"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000400",
+        "unit_name": "Venerable Dreadnought",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Guidance of the Ancients (Psychic)": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, each time a Grey Knights model from your army makes an attack that targets that unit, add 1 to the Hit roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 9,
+            "SV": 2,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 8,
+            "LD": 6,
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Guidance of the Ancients (Psychic)"
+            ],
+            "rule_names": [
+              "Deadly Demise 1",
+              "Deep Strike",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Character",
+              "Imperium",
+              "Psyker",
+              "Smoke",
+              "Vehicle",
+              "Venerable Dreadnought",
+              "Walker"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Assault cannon",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy flamer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy plasma cannon – standard",
+            "range": "36\"",
+            "A": "D3",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy plasma cannon – supercharge",
+            "range": "36\"",
+            "A": "D3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Blast",
+              "Hazardous"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Dreadnought combat weapon",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 12,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Assault cannon",
+            "replacement_weapon_name": "heavy plasma cannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Assault cannon",
+            "replacement_weapon_name": "Twin lascannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Storm bolter",
+            "replacement_weapon_name": "Heavy flamer",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 130,
+              "second_unit": 130,
+              "third_plus": 140
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001360",
+        "unit_name": "Grand Master In Nemesis Dreadknight",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Surge of Wrath (Psychic)": "Each time this model makes a melee attack that targets a MONSTER or VEHICLE unit, you can re-roll the Hit roll, you can re-roll the Wound roll and you can re-roll the Damage roll.",
+          "Warrior Strategist": "Once per battle round, one model from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 8,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 13,
+            "LD": 6,
+            "OC": 4,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Surge of Wrath (Psychic)",
+              "Warrior Strategist"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Deep Strike",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Character",
+              "Grand Master in Nemesis Dreadknight",
+              "Imperium",
+              "Psyker",
+              "Vehicle",
+              "Walker"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Fragstorm grenade launcher",
+            "range": "18\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Gatling psilencer",
+            "range": "24\"",
+            "A": "12",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Psychic",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy incinerator",
+            "range": "18\"",
+            "A": "2D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy psycannon",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Sublimator",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 4",
+              "Psychic",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Dreadfists",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis daemon greathammer",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 14,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis flail",
+            "range": "Melee",
+            "A": "10",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis greatsword – strike",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 10,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis greatsword – sweep",
+            "range": "Melee",
+            "A": "10",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis mace",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Anti-Character 2+",
+              "Precision",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Dreadfists",
+            "replacement_weapon_name": "Nemesis daemon greathammer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Dreadfists",
+            "replacement_weapon_name": "Nemesis flail",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Dreadfists",
+            "replacement_weapon_name": "Nemesis greatsword 1 Nemesis mace",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Fragstorm grenade launcher",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 200,
+              "second_unit": 200,
+              "third_plus": 215
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001361",
+        "unit_name": "Brotherhood Librarian",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Sanctic Hood": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against Psychic Attacks.",
+          "Haloed in Soulfire (Psychic)": "While this model is leading a unit, that unit can only be selected as the target of a ranged attack if the attacking model is within 18\"."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Brotherhood Terminator Squad",
+              "Paladin Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Sanctic Hood",
+              "Haloed in Soulfire (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Brotherhood Librarian",
+              "Character",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Vortex of Doom",
+            "range": "18\"",
+            "A": "D6+3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Blast",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Nemesis force weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Storm bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 90,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001362",
+        "unit_name": "Brotherhood Chaplain",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Gate of Infinity": "If your Army Faction is GREY KNIGHTS , at the end of your opponent’s Fight phase, you can select a number of units (see below) from your army that are on the battlefield (excluding units that are within Engagement Range of one or more enemy units), provided every model in those units has this ability. The maximum number of units you can select depends on the battle size, as follows: BATTLE SIZE NUMBER OF UNITS Incursion Up to 2 units Strike Force Up to 3 units Onslaught Up to 4 units Once you have made your selections, remove those units from the battlefield and place them into Strategic Reserves.",
+          "Zealous Path": "While this model is leading a unit, you can re-roll Charge rolls made for that unit.",
+          "Litanies of Sanctity": "Once per battle, at the start of any phase, you can select one friendly Grey Knights unit that is Battle-shocked and within 12\" of this model. That unit is no longer Battle-shocked."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 5,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Brotherhood Terminator Squad",
+              "Paladin Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Zealous Path",
+              "Litanies of Sanctity"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Gate of Infinity"
+            ],
+            "keyword_names": [
+              "Brotherhood Chaplain",
+              "Character",
+              "Imperium",
+              "Infantry",
+              "Psyker",
+              "Terminator"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Storm bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Crozius arcanum",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001363",
+        "unit_name": "Stormhawk Interceptor",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Interceptor": "Each time this model makes a ranged attack that targets a unit that can FLY , add 1 to the Hit roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "20+\"",
+            "T": 9,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": 6,
+            "OC": 0,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Interceptor"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Hover"
+            ],
+            "keyword_names": [
+              "Aircraft",
+              "Fly",
+              "Imperium",
+              "Smoke",
+              "Stormhawk Interceptor",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Icarus stormcannon",
+            "range": "48\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Fly 2+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Las-talon",
+            "range": "36\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 10,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Skyhammer missile launcher",
+            "range": "48\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Anti-Fly 2+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin assault cannon",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Sustained Hits 1",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Typhoon missile launcher – frag",
+            "range": "48\"",
+            "A": "2D6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Typhoon missile launcher – krak",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured hull",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Las-talon",
+            "replacement_weapon_name": "Icarus stormcannon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Skyhammer missile launcher",
+            "replacement_weapon_name": "Twin heavy bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Skyhammer missile launcher",
+            "replacement_weapon_name": "typhoon missile launcher",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 160
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000001364",
+        "unit_name": "Stormtalon Gunship",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Strafing Run": "Each time this model makes a ranged attack that targets a unit that cannot FLY , add 1 to the Hit roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "20+\"",
+            "T": 9,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": 6,
+            "OC": 0,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Strafing Run"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Hover"
+            ],
+            "keyword_names": [
+              "Aircraft",
+              "Fly",
+              "Imperium",
+              "Stormtalon Gunship",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Grey Knights"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Skyhammer missile launcher",
+            "range": "48\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Anti-Fly 2+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin assault cannon",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Sustained Hits 1",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Typhoon missile launcher – frag",
+            "range": "48\"",
+            "A": "2D6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Typhoon missile launcher – krak",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Armoured hull",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Skyhammer missile launcher",
+            "replacement_weapon_name": "Twin heavy bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Skyhammer missile launcher",
+            "replacement_weapon_name": "Twin lascannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Skyhammer missile launcher",
+            "replacement_weapon_name": "typhoon missile launcher",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 170
+            }
+          ]
+        },
+        "abilities": []
+      }
+    ]
   }
 ]

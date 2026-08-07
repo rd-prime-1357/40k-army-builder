@@ -11524,3 +11524,177 @@ own output is byte-identical to committed — only the report writer changed.
 `repro_check` is expected to fail until B101-data turn 2 (data) regenerates `unit_loadouts.json` and
 adds the corresponding `rules_assertions.py` assertion — that is not a baseline regression, it is the
 turn-typing boundary working as intended.
+
+## D296 — B101-data turn 2 shipped (S203), data-only: `unit_loadouts.json` regenerated, B101-DATA assertion added, B101-data closed outright
+
+### Baseline reconciled at open, two pre-existing gaps found and fixed
+
+`SESSION_HANDOFF_202.md` had never been appended to `pipeline_manifest.py`'s `GUARDED` list at S202
+close — the S180-documented failure mode (a written handoff left unguarded because the append was
+forgotten). Checked, not assumed: all of S202's own file hashes matched what its handoff table claimed,
+so this was purely the GUARDED-list omission, not a sync problem. Appended it. Separately,
+`repro_check.py` was genuinely absent from the project file area — confirmed against a fresh clone of
+the public repo, not assumed from mount staleness — and recovered from that clone; its hash matched
+`pipeline_manifest.json` exactly, confirming the recovered copy was correct.
+
+### The regeneration
+
+Ran the real pipeline — `loadout_parser.py` seeded with S202's four hand-authored entries, then the
+seven-pass `equipped_parser.py` chain (SM, DG, BT, DA, SW, CSM, TS, then the datasheets pass) — in a
+scratch directory, the same shape `repro_check.py` itself uses. Diff-guarded the result at key level
+against the committed file before banking: keyset identical, exactly the three units S202 predicted
+changed — `000000958` (Raptors), `000002570` (Legionaries), `000002590` (Traitor Guardsmen Squad) —
+nothing else moved across the other 302 parsed units. Confirmed field-by-field on all three: the fake
+marker-text choice entry removed, its `WEAPON_NOT_FOUND` flag removed, `distinct: true` added. Did not
+assume S202's proof still held byte-for-byte — re-ran from current source rather than trusting the
+prior session's temp-dir result. `repro_check.py` now passes.
+
+### The new assertion (B101-DATA)
+
+The prompt posed two shapes: pin the three known unit IDs, or scan structurally against source. Chose
+the structural scan, after verifying it would actually generalize safely rather than assuming either
+shape was fine. Scanned every row of `Datasheets_options.csv` for both marker phrasings (not just the
+three named units): eleven datasheets carry the marker in source; of those, only four sit in currently
+built factions (SM/DG/CSM/TS) — the three known units, plus Nemesis Claw (`000003876`, Chaos Space
+Marines). Checked Nemesis Claw directly: its marker row is `UNMATCHED` in the committed output — the
+marker text never reaches `replacement_choices` at all, a different pre-existing parser gap unrelated
+to B101-data, and correctly excluded by the assertion's own logic (it only inspects options that carry
+`replacement_choices`). The remaining seven marked datasheets belong to factions not yet built (Leagues
+of Votann, Adeptus Arbites) — confirmed absent from `units.json`, correctly out of scope.
+Negative-controlled: ran the new assertion against the still-unregenerated `unit_loadouts.json` pulled
+from the public repo (the pre-S203 state) — it failed and named exactly the three units. Ran it against
+the regenerated file — it passes. Chose the structural shape over pinning IDs because a future faction
+build (Grey Knights next, then the rest of Adeptus Astartes) will plausibly hit this same GW phrasing
+on a datasheet nobody has looked at yet; a pinned-IDs assertion would stay green while silently missing
+it.
+
+### B103's residual `UNMATCHED` flags — confirmed still present, left alone per the prompt
+
+Raptors' 10-model-bonus sentence and Legionaries' two spelled-out "One Legionary's..." lines are
+unaffected by this session's regeneration, as expected. Not part of B101-data.
+
+### State at close
+
+`unit_loadouts.json`: regenerated, three units changed (data). `rules_assertions.py`: one new
+assertion (B101-DATA) registered; 119 total, all passing. `pipeline_manifest.py`:
+`SESSION_HANDOFF_202.md` and `SESSION_HANDOFF_203.md` both appended to `GUARDED` — mechanical
+bookkeeping, not a logic change. `repro_check.py`: recovered into the project area from the public
+repo, hash-verified against the manifest. `index.html`, `loadout_parser.py`, `equipped_parser.py`,
+`detachment_parser.py`: untouched this session. B101-data closed outright, both turns done; B100
+(Grey Knights) no longer blocked.
+
+## D297 — B100 units half shipped (S204), data-only: Grey Knights added to units.json; loadouts half split out and blocked on three new tickets (B104/B105/B106)
+
+### Baseline reconciled at open: D296's own decision-log entry had gone missing
+
+`40K_Decision_Log.md`'s hash didn't match `pipeline_manifest.json`, even though `DECISION_INDEX.md`
+and `OPEN_ITEMS_BACKLOG.md` both correctly referenced D296 and matched their own manifest hashes.
+Confirmed against a fresh clone of the public repo (identical to the stale local copy, not a
+mount-staleness issue): the full D296 prose entry had never actually been written to the log, despite
+`SESSION_HANDOFF_203.md` claiming it had. Reconstructed the entry from the handoff's own content,
+verified line-for-line against `SESSION_HANDOFF_203.md` and `DECISION_INDEX.md`'s summary, and
+regenerated the manifest. `rules_assertions` and `pipeline_manifest` gates were clean before any of
+this session's own work began.
+
+### Units half: registered Grey Knights in `units_repro_check.py`, regenerated and diff-guarded `units.json`
+
+Mirrored the Thousand Sons block exactly per the session prompt. Ran the real transform -> points ->
+convert chain against `MFM_Grey_Knights_v1.1.txt`: 25 datasheets, 140 weapon rows, 50 wargear-option
+rows, 31 point rows, 0 unparsable costs, 0 bracket collisions — matched `GREY_KNIGHTS_BUILD_SCOPE.md`
+exactly, re-verified this session rather than cited from the doc. Diff-guarded the merged result at
+key level: exactly 25 units added, nothing else moved. The four merged lookups (`abilities.json`,
+`rules.json`, `keywords.json`, `weapon_abilities.json`) came along in the same fixed-point run;
+`abilities.json` gained 27 entries, `weapon_abilities.json` gained 2, `rules.json`/`keywords.json`
+were unchanged (Grey Knights' 6 rules and 18 keywords already existed). Separately regenerated
+`datasheet_wargear_abilities.json` via `ds_wargear_abilities_parser.py` (a deterministic derivation
+from `Datasheets_abilities.csv` + `units.json`, not touched by the units.json build itself) after
+`rules_assertions`' B15-9 caught its staleness against the new roster — diff-guarded: exactly 2
+datasheets added (the two units carrying Ancient's Banner / Apothecary's Narthecium text), nothing
+else moved.
+
+### Web-pass question resolved by direct demonstration, not assumption
+
+The session prompt's own open question (§1): does Grey Knights need a dedicated `_web.txt` composition
+file, or does the final `--datasheets` pass alone cover it? Ran the real `equipped_parser.py`
+datasheets-only pass (`--composition /dev/null --datasheets Datasheets.csv`) against Grey Knights'
+loadouts: all 6 multi-group units (Strike Squad, Brotherhood Terminator Squad, Purifier Squad,
+Paladin Squad, Interceptor Squad, Purgation Squad) gap-filled completely and correctly, 0 unmatched
+groups, 0 wargear-routing errors. Confirmed against `Datasheets.csv`'s own prose that this is not a
+parser gap: each unit's datasheet literally reads "Every model is equipped with..." — the flat,
+identical per-group weapon copy the parser produces by default is the textually correct answer, not
+a fallback. No `Grey_Knights_web.txt` is needed; `repro_check.py`'s `WEB_PASSES` list is unchanged.
+
+### Loadouts half: found real gaps in all four flagged units, none data-only fixable, split into three tickets
+
+Investigated each of the four flagged units against the actual classifier regexes in
+`loadout_parser.py` and the actual rollup code in `index.html`, rather than trusting
+`GREY_KNIGHTS_BUILD_SCOPE.md` §5's suggested "add + equipment + max_total" shape at face value.
+
+**Brotherhood Terminator Squad / Paladin Squad's compound banner option** was already correctly
+structured by the parser (`count` type, `replaces: Storm bolter`, `replacement_choices` with
+compound entries) — the only defect was "Ancient's Banner" not resolving against the wargear
+allowlist, producing a bad-casing fallback and dropping `equipment_parts`. Traced this to a genuine
+quote-normalisation mismatch between `convert_to_json.py` (which preserves the CSV source's literal
+apostrophe verbatim, including an inconsistency between the two datasheets' own source rows — one
+curly, one straight) and `loadout_parser.py`'s `clean()` step (which normalises to straight before
+matching) — a real tooling bug, not something a data-only edit to `weapon_abilities.json` can fix,
+since that file is itself a pipeline output, not a hand-maintained allowlist (confirmed by diff:
+hand-editing it produced content the real `convert_to_json.py` run would immediately overwrite).
+Left unfixed, flagged as part of B105's scope note.
+
+**The narthecium sentence** (both units) uses passive phrasing ("N model can have its X replaced with
+Y") that no existing classifier matches — confirmed by reading every classifier in `CLASSIFIERS` in
+turn, not assumed. Opened as **B105**.
+
+**Both Dreadknights' "up to two of the following, but cannot take duplicates" line** turned out to be
+a materially bigger gap than scoped: traced `loRollup`'s actual fixed-1-group branch in `index.html`
+and found the shipped B101 `distinct` support only covers options with a real `replaces` weapon —
+this line has none (it's a pure addition, not a swap), and the `add`+`pool_id` mechanism's cap
+computation (largest single member's `max_total`, not a sum) can't express "up to 2 total, but at
+most 1 of each" either. Confirmed against `b101_check.js`'s own fixtures that the swap case is the
+only one ever tested. Opened as **B106**, engine-scoped, not just tooling.
+
+All four sentences left as residual `_parser_flags: UNMATCHED` entries in the (unregenerated)
+`unit_loadouts.json` — but since `unit_loadouts.json` itself was not regenerated this session (see
+below), these residuals don't exist in the committed file yet; they will appear once B104 is fixed
+and Grey Knights' loadouts turn actually runs.
+
+### B104 found and the loadouts regeneration deliberately withheld
+
+Attempting to actually regenerate `unit_loadouts.json` with `GK` added to `repro_check.py`'s
+`FACTIONS` surfaced a corruption in 8 unrelated, already-shipped units — Land Raider and its variants,
+Rhino, Razorback, Stormhawk Interceptor, Stormtalon Gunship, Stormraven Gunship — confirmed by
+diff-guard, then root-caused by direct tracing (not assumed) to `equipped_parser.py`'s
+`scoped_name2id`: an ambiguous, insertion-order-dependent fallback that silently reattributes a
+generic vehicle's composition text to whichever candidate was declared last in `units.json`, once no
+pass's own scope matches any real candidate. Grey Knights legitimately fields its own instances of
+these same generic vehicle names (a real, correct roster fact, not a data error — confirmed against
+the shipped 25-unit list), and being appended last steals the fallback slot from Black Templars'
+(previously correct, by the same accidental mechanism) Land Raider Crusader and the Adeptus-Astartes-
+generic entries for the other seven. This is a genuine pre-existing fragility Grey Knights exposes,
+not introduces — the "last declared wins" resolution was never a deliberate, safe answer to real
+ambiguity. Reverted `repro_check.py`'s `FACTIONS` addition; `unit_loadouts.json` is completely
+untouched this session, still byte-identical to what S203 shipped. Opened as **B104**, filed as
+blocking, since it would corrupt data on any future data turn that adds a same-named-vehicle faction,
+not just this one.
+
+### Why split rather than block the whole session
+
+`units.json`'s regeneration is fully correct, self-contained, and independently verified — it does
+not depend on B104 at all (`units_repro_check.py` passes clean). Per the standing principle that a
+banked, well-scoped item beats a partial change, shipping the units half now and explicitly
+sequencing B104 -> B105 -> B106 before the loadouts half is a "how it gets built" sequencing call
+within standing development authority, not a product question — proceeding on it rather than asking.
+
+### State at close
+
+`units.json`, `abilities.json`, `weapon_abilities.json`, `datasheet_wargear_abilities.json`: all
+regenerated and diff-guarded this session, all clean. `units_repro_check.py`: Grey Knights block
+added, mirrors Thousand Sons exactly; passes. `repro_check.py`: `FACTIONS` list left unchanged
+(`GK` not added — reverted after the B104 discovery); its regeneration gate is **deliberately red**,
+tracing to exactly B104, not a new or different failure. `unit_loadouts.json`: completely untouched,
+byte-identical to S203's shipped state. `index.html`, `loadout_parser.py`, `equipped_parser.py`,
+`detachment_parser.py`: untouched. `rules_assertions.py`: untouched (119/119, all passing once the
+manifest is current). Wording in `units_repro_check.py`'s own docstring was adjusted once, mid-session,
+after it accidentally tripped the P4 source census by literally naming a nonexistent file in a
+negative sentence — reworded to describe the same fact without the literal filename string.

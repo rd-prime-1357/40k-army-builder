@@ -146,5 +146,17 @@
   {
     "weapon_ability_name": "Herd Banner",
     "weapon_ability_description": "While the bearer’s unit is within range of one or more objective markers you control, improve the Leadership characteristic of models in the bearer’s unit by 1."
+  },
+  {
+    "weapon_ability_name": "Ancient’s Banner",
+    "weapon_ability_description": "Add 1 to the Objective Control characteristic of models in the bearer’s unit."
+  },
+  {
+    "weapon_ability_name": "Apothecary's Narthecium",
+    "weapon_ability_description": "In your Command phase, if the bearer is not destroyed, you can return 1 destroyed model (excluding CHARACTERS ) to the bearer’s unit."
+  },
+  {
+    "weapon_ability_name": "Apothecary’s Narthecium",
+    "weapon_ability_description": "In your Command phase, if the bearer is not destroyed, you can return 1 destroyed model (excluding CHARACTERS ) to the bearer’s unit."
   }
 ]
