@@ -552,6 +552,31 @@ def classify_one_model_swap(text, unit_name):
         op['requires_weapon'] = req
     return [op]
 
+def classify_one_model_passive_swap(text, unit_name):
+    """Indefinite single-model swap, passive voice, named model group:
+       'One <model> can have its <weapon> replaced with 1 Y'
+       '1 <model> can have its <weapon> replaced with 1 Y'
+    Sibling to classify_one_model_swap (active voice, bare generic 'model' subject)
+    and to classify_per_n's B26 passive-possessive branch (identical 'can have its
+    … replaced with' phrasing, but wrapped there in a 'For every N models' prefix).
+    Here the sentence stands alone with a named group ('Terminator', 'Paladin'), so
+    it is capped at exactly one model via max_total:1 (B105)."""
+    m = re.match(
+        r"(?:One|1)\s+(?P<model>.+?) can (?:each )?have (?:its|their)\s+"
+        r"(?P<repl>.+?) replaced with (?P<rep>\d+\s+\S.*?)(?:\.|$)",
+        text, re.I)
+    if not m:
+        return None
+    model = m.group('model').strip()
+    if re.fullmatch(r'models?', model, re.I):
+        return None  # bare 'model' is classify_one_model_swap's shape
+    repl_raw = m.group('repl').strip()
+    rep_raw = m.group('rep').strip()
+    return [{'_type': 'count', '_scope_hint': model,
+             'replaces': qty_name(repl_raw), 'replaces_raw': repl_raw,
+             'replacement': qty_name(rep_raw), 'replacement_raw': rep_raw,
+             'max_total': 1}]
+
 def classify_conditional_add_choice(text, unit_name):
     """'One model equipped with a <weapon> can be equipped with one of the following: …'
     An exclusive one-model equipment choice gated on the bearer still carrying <weapon>.
@@ -757,6 +782,7 @@ CLASSIFIERS = [
     classify_active_swap,
     classify_size_gated_swap,
     classify_one_model_swap,
+    classify_one_model_passive_swap,
     classify_conditional_add_choice,
     classify_negated_gate_add,
     classify_bearer_add,
@@ -1289,7 +1315,15 @@ def main():
             for row in json.load(open(wa_path)):
                 nm = row.get('weapon_ability_name') if isinstance(row, dict) else None
                 if nm:
-                    equipment_items[base_name(nm)] = nm
+                    # B107 (S206): weapon_abilities.json carries the CSV source's literal
+                    # apostrophe/dash verbatim, and two datasheets can disagree on curly vs
+                    # straight for the same item name (e.g. Grey Knights' Ancient's Banner /
+                    # Apothecary's Narthecium). All option text is matched post-clean() (curly
+                    # normalised to straight), so an allowlist key built from the raw JSON
+                    # value can silently miss — run nm through the same clean() normalisation
+                    # before keying, so every quote/dash variant of an item collapses onto one
+                    # key regardless of which source row's punctuation survived into the JSON.
+                    equipment_items[base_name(clean(nm))] = clean(nm)
         except Exception:
             pass
 

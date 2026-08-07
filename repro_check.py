@@ -32,16 +32,12 @@ HAND_AUTHORED = ['000001157', '000001044', '000004131', '000002712']
 # non_consuming + a literal MFM price_per_model, neither derivable from Wahapedia
 # source (Datasheets_options.csv doesn't know MFM pricing or "does not consume the
 # bracket") — same class of problem as 000004131 (D175).
-# B100 (S204): Grey Knights is NOT yet added here. Scoping confirmed it needs FACTIONS
-# only, no WEB_PASSES entry (its six multi-group units gap-fill completely and correctly
-# from the final --datasheets pass alone). But adding 'GK' was reverted this session —
-# see B104: registering Grey Knights in units.json exposed a real, pre-existing
-# cross-faction bug in equipped_parser.py's scoped_name2id ambiguous-candidate fallback
-# that silently corrupts 8 unrelated, already-shipped vehicles (Land Raider and variants,
-# Rhino, Razorback, Stormhawk/Stormtalon/Stormraven) the moment a same-named-vehicle
-# faction is appended after them. Add 'GK' back only once B104 is fixed and reverified.
+# B100 (S206): Grey Knights added to FACTIONS. Needs no WEB_PASSES entry — its
+# multi-group units gap-fill completely and correctly from the final --datasheets
+# pass alone. B104 (S205) fixed the cross-faction scoped_name2id bug that blocked
+# this; reverified clean against the fixed parser before this session's regen.
 WEB_PASSES = ['Space_Marines', 'Death_Guard', 'Black_Templars', 'Dark_Angels', 'Space_Wolves', 'Chaos_Space_Marines', 'Thousand_Sons']
-FACTIONS = ['SM', 'DG', 'CSM', 'TS']
+FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK']
 
 
 def _run(cmd, cwd):

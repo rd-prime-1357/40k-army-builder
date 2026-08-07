@@ -680,3 +680,23 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   (`Space Marines`) didn't match the block name (`Adeptus Astartes`). Synthetic B104 assertion added to
   `rules_assertions.py`. `unit_loadouts.json` regenerated (without GK in FACTIONS) to capture the 7 AA
   improvements; repro_check byte-identical.
+- **D299** — Manifest gap resolved (S206). `SESSION_HANDOFF_203.md` confirmed genuinely
+  unrecoverable (re-verified via fresh clone; git history holds no trace) — removed from
+  `pipeline_manifest.py`'s `GUARDED` list rather than left permanently red; its substance already
+  lives in D296. A second, related gap found: `Thousand_Sons_web.txt` was never added to the private
+  source repo's census, only ever living in the project mount — pulled a working copy to unblock this
+  session, but the private-repo token is read-only, so pushing it and regenerating
+  `source_manifest.json` is a Ryan action. P4 source census re-run per its own instruction, catching up
+  on S205's B104 change (5 filenames added to `P4_REFERENCED_SOURCES`, no functional change).
+- **D300** — Grey Knights loadouts half shipped (S206). B105 (new classifier for the passive
+  single-model swap sentence) and B107 (new — a quote-normalisation mismatch between
+  `weapon_abilities.json`'s raw punctuation and `loadout_parser.py`'s cleaned option text, found while
+  verifying B105's target units; the backlog's claim that this path needed no code change was checked
+  against source and found wrong). `GK` added to `repro_check.py`'s `FACTIONS`; `unit_loadouts.json`
+  regenerated (25 GK units added, 0 changed elsewhere; repro_check byte-identical).
+  `wargear_points.json` regenerated using the canonical `FACTION_BY_MFM` file order (4 GK units added,
+  0 changed elsewhere; a naive alphabetical order was tried first and discarded — it silently shifted
+  provenance on 2 unrelated entries, the same trap D236 documented for CSM). `E14-2`'s pinned census
+  updated 75/54 → 90/61, verified by faction breakdown. B100 substantially closed; B106 (Dreadknights'
+  distinct-addition engine gap) remains open, untouched, correctly the only residual flag left on Grey
+  Knights.

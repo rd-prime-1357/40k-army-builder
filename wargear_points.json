@@ -47,6 +47,42 @@
    }
   }
  },
+ "000000382": {
+  "items": {
+   "psycannon": {
+    "cost": 5,
+    "display": "Psycannon",
+    "source": "MFM_Grey_Knights_v1_0.txt:40"
+   }
+  }
+ },
+ "000000383": {
+  "items": {
+   "psycannon": {
+    "cost": 5,
+    "display": "Psycannon",
+    "source": "MFM_Grey_Knights_v1_0.txt:128"
+   }
+  }
+ },
+ "000000384": {
+  "items": {
+   "psycannon": {
+    "cost": 5,
+    "display": "Psycannon",
+    "source": "MFM_Grey_Knights_v1_0.txt:110"
+   }
+  }
+ },
+ "000000388": {
+  "items": {
+   "psycannon": {
+    "cost": 5,
+    "display": "Psycannon",
+    "source": "MFM_Grey_Knights_v1_0.txt:119"
+   }
+  }
+ },
  "000000967": {
   "items": {
    "ectoplasma cannon": {

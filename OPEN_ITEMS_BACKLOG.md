@@ -3,7 +3,20 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S205 (down from 24 at S204 — B104 closed): B105, B106,
+not here, it isn't open. **22 open** as of S206 (down from 23 at S205 — B105 closed; B107 opened
+and closed same session, never counted as open): B106, B99, B98, B97, B103, E28, B93, B90, B94, B89,
+B100, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. Tooling+data turn. B105 (passive
+single-model swap classifier) and B107 (new — wargear-allowlist quote-normalisation fix, found
+verifying B105's target units) both shipped. `GK` added to `repro_check.py`'s `FACTIONS`;
+`unit_loadouts.json` regenerated (25 GK units added, 0 changed elsewhere; repro_check byte-identical).
+`wargear_points.json` regenerated using the canonical `FACTION_BY_MFM` file order (4 GK units added, 0
+changed elsewhere — a naive alphabetical order was tried first and discarded, same provenance-drift
+trap D236 documented for CSM). `E14-2` census updated 75/54 → 90/61. B100 substantially closed; B106
+(Dreadknights, engine-scoped) remains open, untouched, correctly the only residual flag left on Grey
+Knights. Also this session: resolved a manifest gap (`SESSION_HANDOFF_203.md` confirmed genuinely
+unrecoverable, removed from `GUARDED`) and found a second, related gap (`Thousand_Sons_web.txt` never
+added to the private source repo's census — Ryan action needed, token is read-only).
+**23 open** as of S205 (down from 24 at S204 — B104 closed): B105, B106,
 B99, B98, B97, B103, E28, B93, B90, B94, B89, B100, B85, B86, B69, B70, B75, P2, P4, E23, B67b,
 E12, B17. Tooling-only turn (B104). `equipped_parser.py`'s `scoped_name2id` rewritten with scope-alias
 + parent-army fallback + propagation. Fixes the insertion-order-dependent `cands[-1]` fallback (D298).
@@ -293,22 +306,6 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
-
-### B105 — `loadout_parser.py` doesn't classify a passive single-model swap sentence ("N `<model>` can have its X replaced with Y") — **NEW S204; TOOLING; XS**
-Found authoring Grey Knights' Brotherhood Terminator Squad / Paladin Squad (B100). The sentence "1
-Terminator can have its storm bolter replaced with 1 Apothecary's narthecium." doesn't match any
-existing classifier: `classify_one_model_swap` requires the active-voice "can replace its X with Y"
-construction, `classify_per_n` and its passive-possessive variant require a "For every N models..."
-lead-in this sentence lacks, and `classify_sgl_single`/`classify_this_model_choice` require the
-weapon (not the model) as grammatical subject ("The X's Y can be replaced with..."). Needs a new
-classifier for this construction, mirroring `classify_one_model_swap`'s shape but for the passive
-"can have its X replaced with Y" form. Confirmed the wargear-item side is not the blocker — "1
-Terminator's storm bolter can be replaced with one of the following: incinerator + Ancient's Banner /
-..." (a different sentence, on the same two units) is already correctly classified by the existing
-`count`/`replacement_choices` machinery once the item is present in the ability census (regenerated
-via `ds_wargear_abilities_parser.py` this session); only the standalone narthecium sentence needs new
-regex. Left as a residual `UNMATCHED` flag on both units in the meantime, same precedent as Raptors'/
-Legionaries' pre-B101 residuals.
 
 ### B106 — B101's `distinct` engine support doesn't cover a fixed-1-group pure-addition "up to N, no duplicates" option — **NEW S204; ENGINE; S; blocks Nemesis Dreadknight / Grand Master in Nemesis Dreadknight's ranged-weapon options**
 Found authoring Grey Knights' two Dreadknights (B100). Both carry "This model can be equipped with
@@ -636,7 +633,7 @@ Building it is a net-new faction build (own scoping pass first, `CSM_BUILD_SCOPE
 B89's definition. Tracked separately below as a new ticket. B89 itself has **no remaining in-scope
 candidate** until either a Grey Knights build lands or World Eaters/Emperor's Children unblocks CSM.
 
-### B100 — Build Grey Knights faction — **NEW S199 (D292); PROCESS; scoped S200; units half shipped S204; loadouts half blocked on B104/B105/B106**
+### B100 — Build Grey Knights faction — **NEW S199 (D292); PROCESS; scoped S200; units half shipped S204; loadouts half shipped S206 except B106 (Dreadknights, engine-scoped, tracked separately)**
 Adeptus Astartes priority-order faction with zero built units at any version. Both
 `MFM_Grey_Knights_v1_0.txt` and `_v1.1.txt` are present and already mapped in `mfm_points_parser.py`'s
 `FACTION_BY_MFM`, and it was never part of the SM chapter-override chain (`add_chapter_point_overrides.py`'s
@@ -1092,6 +1089,26 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+- **B105** — `loadout_parser.py` doesn't classify a passive single-model swap sentence ("N `<model>`
+  can have its X replaced with Y") — **NEW S204 (D297); CLOSED S206 (D300); TOOLING.** Added
+  `classify_one_model_passive_swap`, mirroring `classify_one_model_swap`'s active-voice shape but for
+  the passive "can have its X replaced with Y" form with a named model group. Regression-checked
+  against the full options corpus before regenerating: 13 sentences match, all previously unclassified,
+  only 2 (Brotherhood Terminator Squad, Paladin Squad) belong to a currently-built unit. The backlog's
+  own claim that the sibling "compound weapon + banner" sentence needed no code change once B104
+  shipped was checked against source and found wrong — see B107.
+- **B107** — `weapon_abilities.json`'s raw punctuation vs. `loadout_parser.py`'s cleaned option text:
+  quote-normalisation mismatch drops equipment resolution — **NEW S206; CLOSED S206 (D300); TOOLING;
+  found and fixed same session.** `equipment_items` (the wargear allowlist) was built directly from
+  `weapon_abilities.json`'s raw JSON values, never passed through the same curly-to-straight
+  normalisation `clean()` applies to option text before matching. Two Grey Knights datasheets disagree
+  on curly vs. straight apostrophe for the same item names; "Ancient's Banner" only had a curly-quote
+  entry, so it silently failed to resolve, fell back to a bad-cased placeholder, and dropped
+  `equipment_parts` — while "Apothecary's Narthecium" happened to resolve, by coincidence, because
+  `weapon_abilities.json` holds duplicate entries for it in both punctuation styles. Fixed by running
+  `nm` through `clean()` before keying the allowlist. Diff-guarded: touches only Grey Knights' two
+  affected units, zero change elsewhere.
 
 - **B104** — `equipped_parser.py`'s `scoped_name2id` ambiguous-candidate fallback silently corrupts
   unrelated units — **NEW S204 (D297); CLOSED S205 (D298).** Fixed with scope-alias + parent-army

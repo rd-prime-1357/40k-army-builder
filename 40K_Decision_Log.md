@@ -11814,3 +11814,120 @@ project area (confirmed via a fresh clone, not assumed) — apparently never pus
 S204's own baseline `fetch-verify` failure. `--write` cannot complete until Ryan either locates and
 pushes S203's content or removes its GUARDED entry; the session's Files table carries manually
 computed SHA-256 hashes in the interim, flagged as such rather than presented as manifest-verified.
+
+## D299 — Manifest gap resolved: `SESSION_HANDOFF_203.md` GUARDED entry removed; P4 source census re-run (S206)
+
+**`SESSION_HANDOFF_203.md` confirmed genuinely unrecoverable, not a housekeeping gap.** S205 found it
+absent from both a fresh clone and the project area and left the choice to Ryan: locate and push it,
+or remove its GUARDED entry. Re-verified independently at S206 open rather than trusted from S205's
+prose — cloned the public repo fresh again and confirmed both the file and any trace of it in git
+history are absent (`git log --all -- SESSION_HANDOFF_203.md` returns nothing). Its substance was
+already reconstructed into this log as D296 by S204, verified line-for-line against the handoff before
+the file itself was lost, so nothing is actually lost except the raw file. This is a process/tooling
+call, not a product decision, so proceeded on it: removed `SESSION_HANDOFF_203.md` from
+`pipeline_manifest.py`'s `GUARDED` list with a dated note explaining why, rather than leaving the gate
+permanently red.
+
+**A second, related gap found in the same reconciliation pass.** `Thousand_Sons_web.txt` — required by
+`repro_check.py`'s `WEB_PASSES` — is absent from `source_manifest.json`'s tracked file list, meaning it
+has only ever lived in the project mount and was never pushed to the private
+`rd-prime-1357-data-sources` repo. This is the same failure pattern that lost the S203 handoff: a file
+the project depends on, sitting only in a location that isn't authoritative and gets swept by routine
+housekeeping. Pulled a working copy from the project area to unblock this session (hash recorded
+below). **Cannot fix permanently — the private-repo token is read-only.** Ryan action needed: push
+`Thousand_Sons_web.txt` to the private repo and regenerate `source_manifest.json`.
+
+**P4 source census re-run**, per its own instruction, after S205's B104 fix went unaccounted for.
+`rules_assertions.py`'s `p4_source_census` flagged 5 filenames the static scan now finds that weren't
+in `P4_REFERENCED_SOURCES`: `Dark_Angels_web.txt` / `Space_Wolves_web.txt` (real, already-required
+files, named literally for the first time in `equipped_parser.py`'s B104 docstring, previously only
+covered by the generic `_web.txt` stub) and `ArmyA_web.txt` / `ArmyB_web.txt` / `AliasForA_web.txt`
+(synthetic fixture literals inside B104's own assertion body, never real files). Added all five to the
+tracked set. No functional change — these were always either required or never real; only the census
+bookkeeping was stale.
+
+### State at close
+`pipeline_manifest.py`: `SESSION_HANDOFF_203.md` removed from `GUARDED` (with note); manifest
+regenerated and `--freshness-check` passes. `rules_assertions.py`: P4 census updated, no assertion
+count change (still 120 — this is data inside `p4_source_census`, not a new assertion).
+`Thousand_Sons_web.txt`: present locally this session (sha256:12 `44f751b55246`), not yet in the
+private repo. Everything else: untouched.
+
+## D300 — Grey Knights loadouts half shipped: B105 (passive single-model swap classifier), B107 (new —
+wargear-allowlist quote-normalisation fix), `wargear_points.json` regenerated, GK added to
+`repro_check.py`'s `FACTIONS`; B100 substantially closed, B106 remains open (S206)
+
+### B105 — passive single-model swap classifier
+
+Added `classify_one_model_passive_swap` to `loadout_parser.py`, mirroring `classify_one_model_swap`'s
+shape (active voice, bare `model` subject, `max_total: 1` cap) but for the passive "N `<model>` can
+have its X replaced with Y" construction with a *named* model group — the exact gap B105 documented.
+Registered in `CLASSIFIERS` immediately after its active-voice sibling.
+
+**Regression check run before touching the pipeline, not after.** Scanned the entire options corpus
+(`Datasheets_options.csv`) for every sentence the new classifier matches: 13 hits. Checked each
+against every other classifier in `CLASSIFIERS` (new one excluded) to confirm none was previously
+matched by anything else — all 13 were previously `None` (unclassified), so the new function only adds
+coverage, never overrides an existing result. Cross-referenced all 13 against `units.json`: only the
+two target Grey Knights units (`000000382` Brotherhood Terminator Squad, `000000384` Paladin Squad) are
+currently built; the other 11 belong to units not yet in scope (Leagues of Votann, Adepta Sororitas,
+and one orphaned datasheet ID with no `units.json` entry at all) and change nothing in this session's
+output.
+
+### B107 (new) — wargear-allowlist quote-normalisation mismatch, found and fixed same session
+
+While verifying B105's target units, found the "compound weapon + Ancient's Banner" option — which
+`OPEN_ITEMS_BACKLOG.md`'s B105 entry claimed "is already correctly classified... and needs no code
+change once B104 is fixed" — still produced a `WEAPON_NOT_FOUND` flag with a bad-cased fallback
+(`Ancient'S Banner`) after a full clean regeneration. Did not trust the backlog's claim; traced the
+actual failure through `lookup_equipment`/`resolve_part`. Root cause: `loadout_parser.py` builds its
+`equipment_items` allowlist directly from `weapon_abilities.json`'s raw JSON values, without passing
+them through the same curly-to-straight quote normalisation `clean()` applies to every option sentence
+before matching. `weapon_abilities.json` itself carries the CSV source's literal punctuation verbatim,
+and two Grey Knights datasheets disagree on curly vs. straight for the same item name (confirmed by
+inspecting the raw JSON: `weapon_abilities.json` holds *two* separate entries for "Apothecary's
+Narthecium" — one curly, one straight — which is why narthecium happened to resolve by coincidence,
+but only *one* entry for "Ancient's Banner", curly-only, which is why it didn't). Fixed by running `nm`
+through `clean()` before computing both the allowlist key and its stored display value, so every
+punctuation variant of an item collapses onto one key regardless of which source row's apostrophe
+style survived into the JSON. Verified both items resolve correctly after the fix; re-ran the full
+key-level diff and confirmed the fix touches only Grey Knights' own two units — zero change to any
+other faction's entries.
+
+### GK added to `repro_check.py`'s `FACTIONS`; full regeneration, diff-guarded
+
+`unit_loadouts.json` regenerated from source (seeded with only the four `HAND_AUTHORED` entries, same
+methodology `repro_check.py` itself uses, not a full-file `--existing` carry-forward, which would have
+silently preserved the pre-fix `UNMATCHED` residuals instead of letting them re-resolve). Key-level
+diff against the previously committed file: **25 added (exactly Grey Knights' roster), 0 removed, 0
+changed** — the 7 Adeptus Astartes improvements from S205 and every other faction's entries are
+untouched. `repro_check` passes byte-identical against the promoted file.
+
+Confirmed the only two residual `_parser_flags` left across all of Grey Knights are the two
+Dreadknights' B106-blocked ranged-weapon line — exactly the gap already tracked, nothing new.
+
+### `wargear_points.json` — same class of gap D236 found for CSM in S153, same fix
+
+`E14-1` failed after the regeneration: GK now has `unit_loadouts.json` entries, so
+`build_wargear_points()` could resolve its MFM `WARGEAR OPTIONS` lines for the first time —
+`wargear_points.json` had never had the chance to include them, not a bug. Regenerated using the
+canonical `FACTION_BY_MFM` insertion order + remaining files appended (**not** a naive alphabetical
+glob — confirmed the difference matters directly: a first attempt with sorted-glob order reproduced
+identical costs but changed `source` provenance on two unrelated pre-existing entries, purely from
+processing Black Templars before Space Marines; discarded before committing, same trap D236 documented
+for CSM). Diff-guarded: **4 units added** (`000000382`/`383`/`384`/`388`, all Psycannon at 5pts,
+sourced to `MFM_Grey_Knights_v1_0.txt`), **0 removed, 0 changed**. `E14-1` passes.
+
+**`E14-2`'s pinned census updated 75/54 → 90/61.** Verified by faction breakdown before updating the
+literal, not assumed: every non-GK faction's contribution is unchanged from before this session, GK
+contributes exactly +15 options across +7 units.
+
+### State at close
+`loadout_parser.py`: B105 classifier added, B107 quote-normalisation fix in `equipment_items` loading.
+`repro_check.py`: `GK` added to `FACTIONS`; stale B104-era comment block updated. `unit_loadouts.json`:
+regenerated, 25 GK units added, 0 changed elsewhere; `repro_check` passes. `wargear_points.json`:
+regenerated, 4 GK units added, 0 changed elsewhere; `E14-1` passes. `rules_assertions.py`: `E14-2`
+literal updated 75/54 → 90/61; assertion count unchanged (still 120). `index.html`,
+`equipped_parser.py`, `detachment_parser.py`, `units.json`: untouched. B106 (Dreadknights'
+distinct-addition engine gap) remains open and untouched — correctly still the only residual flag on
+Grey Knights.

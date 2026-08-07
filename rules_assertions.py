@@ -328,7 +328,11 @@ def e14_count(S):
     # Thousand Sons turn B (S163): +10 qualifying free seeds across +9 TS units —
     # Prosperine khopesh x3, Havoc launcher x4, and one unit (Pink Horrors, 000004127)
     # carrying two (Instrument of Chaos, Daemonic Icon) -> 75/54.
-    return (len(q) == 75 and len(units) == 54), f'{len(q)} options across {len(units)} units'
+    # Grey Knights loadouts turn (S206, B100/B105/B107): +15 qualifying free seeds across
+    # +7 GK units. Verified by faction breakdown before updating the literal, not assumed:
+    # every non-GK faction's count is unchanged (54 units / same per-faction split as before),
+    # GK contributes exactly 7 units / 15 options -> 90/61.
+    return (len(q) == 90 and len(units) == 61), f'{len(q)} options across {len(units)} units'
 
 def b18_named_body(S):
     lines = [re.sub(r'<[^>]+>', ' ', r['description'])
@@ -4194,6 +4198,15 @@ P4_REFERENCED_SOURCES = {
     'MFM_Standalone_Pass.md', 'MFM_v1_1_Reconciliation.md',
     'Space_Marines_Faction_Pack_v1_0.md', 'Space_Marines_web.txt',
     '_web.txt', 'chaos_daemons_reference.md', 'mfm_sm.txt',
+    # Added S206 (D299), re-running the census per its own instruction after S205's
+    # B104 fix. Dark_Angels_web.txt / Space_Wolves_web.txt: real, already-required
+    # files (P4_REQUIRED_SOURCES) named literally for the first time in equipped_parser.py's
+    # B104 docstring, previously only covered by the generic '_web.txt' stub. ArmyA_web.txt /
+    # ArmyB_web.txt / AliasForA_web.txt: synthetic fixture literals inside the B104 assertion
+    # body (rules_assertions.py), never real files — added so the census scan, which only
+    # cuts out the census block itself, stops flagging them.
+    'Dark_Angels_web.txt', 'Space_Wolves_web.txt',
+    'ArmyA_web.txt', 'ArmyB_web.txt', 'AliasForA_web.txt',
 }
 
 P4_SCANNED = [

@@ -255,9 +255,9 @@ GUARDED = [
     'SESSION_HANDOFF_200.md',
     'SESSION_HANDOFF_201.md',
     'SESSION_HANDOFF_202.md',
-    'SESSION_HANDOFF_203.md',
     'SESSION_HANDOFF_204.md',
     'SESSION_HANDOFF_205.md',
+    'SESSION_HANDOFF_206.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):
@@ -271,6 +271,12 @@ GUARDED = [
 #     hashing them.
 #   pipeline_manifest.json — the manifest cannot guard itself (build() writes it
 #     from the state of every *other* guarded file).
+#   SESSION_HANDOFF_203.md — removed S206 (D299). Never committed to the repo and
+#     no longer present in the project area (confirmed via a fresh clone, twice,
+#     across S205 and S206); genuinely unrecoverable, not a housekeeping gap. Its
+#     substance was already reconstructed into 40K_Decision_Log.md as D296 by S204,
+#     verified line-for-line against the handoff before the file itself was lost.
+#     Removing the GUARDED entry rather than leaving the gate permanently red.
 
 
 def sha256(path):
