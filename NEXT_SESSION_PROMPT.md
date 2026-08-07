@@ -1,78 +1,64 @@
-# NEXT SESSION PROMPT — Session 209
+# NEXT SESSION PROMPT — Session 210
 
-## Recommended turn type: scoping-only (Emperor's Children)
+## Recommended turn type: data-only (Emperor's Children units)
 
-Read `SESSION_HANDOFF_208.md` first, then this prompt. S208 shipped B106-DATA — both Grey Knights
-Dreadknights' ranged-weapon options are authored, `unit_loadouts.json` and `wargear_points.json`
-regenerated and diff-guarded, new `B106-DATA` structural assertion added. **Grey Knights is fully
-complete: 25/25 units, zero residual `_parser_flags`.** B100 closed.
+Read `SESSION_HANDOFF_209.md` first, then this prompt. S209 scoped Emperor's Children
+(`EMPEROR'S_CHILDREN_BUILD_SCOPE.md`, D303) — no committed file changed. Findings: 23 datasheets,
+zero LEGENDS exclusions, **zero engine gaps** (a first — Grey Knights needed the B106 engine fix
+first; Emperor's Children needs none). Only 2 units flagged for loadout authoring, both the same
+already-solved free-item shape.
 
-## Corrected faction-priority finding — read before picking work
+## Primary task: build Emperor's Children units
 
-S206 and S207's prompts both said "move to the next Adeptus Astartes faction" after Grey Knights.
-That phrasing was stale. S208 checked `units.json` directly rather than trusting it: **all twelve
-Adeptus Astartes chapters in the standing priority order are already built** — Black Templars, Dark
-Angels, Blood Angels, Deathwatch, Grey Knights, Imperial Fists, Iron Hands, Raven Guard, Salamanders,
-Space Wolves, Ultramarines, White Scars, plus the generic Adeptus Astartes pool. Grey Knights was in
-fact the last one open, not mid-list — consistent with D293 (S200), which already described Grey
-Knights joining "sixteen pre-existing armies."
+Follow the Grey Knights/Thousand Sons precedent, per `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` §9:
 
-Of the Heretic Astartes tier: Chaos Space Marines, Thousand Sons, and Death Guard are built.
-**Emperor's Children and World Eaters are not.** Chaos Daemons is already built (shipped out of the
-tier's nominal order in an earlier session — not a gap, already done). Drukhari is not started.
+1. Register `EC` in `units_repro_check.py`'s faction list (mirroring the existing block pattern).
+2. Build `units.json` from `MFM_Emperors_Children_v1.1.txt` and the Wahapedia CSVs (23 units,
+   `--emit-fourth-plus`). Diff-guard: expect exactly 23 units added, 0 elsewhere.
+3. Author the two flagged units' loadouts — Tormentors (`000004079`) and Infractors (`000004080`),
+   both need the free "icon of excess" equip-only item added via the existing `add` + `equipment` +
+   `max_total` shape (no new schema).
+4. Author the six manually-built option groups and two compound replacements the scope doc's §6
+   lists (Lord Kakophonist, Noise Marines x2, Maulerfiend, Chaos Rhino, Defiler x2), plus one new
+   `bundled_swaps.json` entry for Chaos Terminators' combi-bolter+accursed-weapon -> paired accursed
+   weapons swap. Five ambiguous weapon-name matches (plasma pistol/gun variants, heavy missile
+   launcher krak/frag) need a manual pick during authoring -- check the unit's actual wargear list
+   against source before picking, don't assume the standard variant by default.
+5. Confirm whether an `Emperors_Children_web.txt` composition pass is needed for the final
+   `equipped_parser.py` gap-fill, or whether (as the scope doc's dry run suggests) the
+   `--datasheets Datasheets.csv` pass alone covers it -- check directly, per the Grey Knights
+   precedent, rather than assuming from the scoping session's dry run.
+6. Regenerate `wargear_points.json` via the canonical `FACTION_BY_MFM` insertion-order file list --
+   not naive alphabetical (see D236's documented trap). Expect 2 priced items, both Defiler-specific
+   (Heavy reaper autocannon 15 pts, Hades lascannon 15 pts, both from v1.1 -- confirm the +5 pt
+   increase over v1_0 lands correctly).
+7. New structural assertion for the EC build, re-derived from source per the `B101-DATA`/`B106-DATA`
+   pattern.
 
-**Emperor's Children is the correct next faction to build**, per the standing priority order
-(Heretic Astartes precedes Chaos Daemons/Drukhari, and within Heretic Astartes, Emperor's Children
-precedes World Eaters).
+Do not touch detachments this session -- that's its own data turn next (scope doc S9 step 2).
 
-## Primary task: scope Emperor's Children
+## Also open, at your discretion
 
-No `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` exists yet. Follow the CSM/Thousand Sons/Grey Knights
-precedent (`CSM_BUILD_SCOPE.md`, `THOUSAND_SONS_BUILD_SCOPE.md`, `GREY_KNIGHTS_BUILD_SCOPE.md`) —
-scoping is data-gathering and analysis, not a build. Recommended checks, all against source directly,
-not assumed from any prior document:
-
-- Current-edition datasheet count from `MFM_Emperors_Children_v1.1.txt` (build from newest per D293),
-  cross-checked against `Datasheets.csv`'s Emperor's Children rows — confirm the LEGENDS exclusions
-  the same way Grey Knights' were confirmed (against the MFM's own header, not Wahapedia's
-  classification).
-- Full pipeline dry run (transform → points → convert) for a clean read: unpriced datasheets,
-  unparsable costs, bracket collisions, dropped attach-list entries — same checklist Grey Knights used.
-- Loadout complexity census: how many units need loadouts authored, and whether any sentence shapes
-  are genuinely new (unlikely at this point in the project, but check rather than assume — Emperor's
-  Children has some Noise Marine-specific wargear that may not match existing classifiers).
-- Detachment count, enhancement count, unique tags, and whether v1_0 vs v1.1 differ materially
-  (same check Grey Knights ran).
-- Confirm nothing in `add_chapter_point_overrides.py`'s `CHAPTERS` list or any other chapter-override
-  chain affects Emperor's Children (Grey Knights needed no such check to pass; Emperor's Children,
-  being Heretic Astartes rather than Space Marine-descended, almost certainly doesn't either, but
-  confirm rather than assume).
-
-Output: a new `EMPEROR'S_CHILDREN_BUILD_SCOPE.md`, plus a decision log entry recording the findings
-and the recommended build sequencing (units half / loadouts half / detachments half, same split
-pattern as every prior faction). No committed data, parser, or engine file should change this
-session — scoping-only, per the CSM/TS/GK precedent.
-
-## Also open: B109 (small, unscoped)
-
-Ryan's change request from S208: on the "My Army Lists" page, replace the "Target ####" label with
-"#### Points". Not yet scoped against `index.html` — find the render site before touching anything.
-This is UI-copy-only, XS, no rules content. Could be picked up as a quick engine-only turn either
-before or after the Emperor's Children scoping pass, at your discretion — it doesn't block or get
-blocked by anything else currently open.
+- **B109** (XS, engine-only) -- `index.html`'s `renderMyLists()`, one-line label change
+  (`'target ' + r.points_target` -> `r.points_target + ' Points'`). Confirmed location, not yet
+  changed. Could ride as a standalone engine-only turn before or after the units build -- doesn't
+  block or get blocked by anything else open.
+- **B110** (XS, data-only) -- `faction_taxonomy.json`'s stale Grey Knights `built: false` flag. Could
+  ride with this session's units data turn, or its own tiny turn -- your call, but if folded in, keep
+  it as an explicit second diff-guarded change, not silently mixed into the EC units diff.
 
 ## Standing reminders
 
-- `./baseline.sh --fetch` at open (scoping turns don't need `--data-turn`, but sources are already
-  loaded from S208 and should still pass the sources_loaded check either way).
-- All 34 gates should be green at S208 close except `repo_check` (B108, Ryan action) — confirm before
-  starting new work.
-- Re-derive from source, don't trust prior-session prose — this prompt's own faction-priority
-  correction is itself a case in point.
-- Turn typing: scoping is its own type. Do not mix in unrelated engine, parser, or data changes.
+- `./baseline.sh --fetch --data-turn` at open -- this is a data turn, sources must load or the gate
+  fails by design.
+- All 33 gates should be green at S209 close except `repo_check` (B108, Ryan action) -- confirm
+  before starting new work.
+- Re-derive from source, don't trust prior-session prose.
+- Turn typing: this is data-only. Do not touch `index.html` or any engine logic this session even if
+  B109 looks tempting to fold in -- register it as its own turn instead if you don't take it now.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_209.md` in `pipeline_manifest.py`'s GUARDED
+Produce the four documents, register `SESSION_HANDOFF_210.md` in `pipeline_manifest.py`'s GUARDED
 list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
 command.

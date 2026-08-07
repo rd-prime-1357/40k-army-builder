@@ -12141,3 +12141,39 @@ B108 (Ryan action) remains open — public-repo removal still outstanding.
 
 Also logged this session (Ryan-reported, not yet scoped): on the "My Army Lists" page, replace the
 "Target ####" label with "#### Points" — filed as **B109**, UI copy change, XS, no rules content.
+
+### D303 — Emperor's Children scoped (S209), scoping-only
+
+No committed file changed. Baseline reconciled at open via `--fetch --data-turn`: 33 gates, sources
+loaded, 121/121 assertions, both repro checks byte-identical; `repo_check` red only on the
+pre-existing B108 finding (unchanged from S208 close). `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` written
+(net-new). Findings: 23 datasheets, zero LEGENDS exclusions (neither MFM version carries a LEGENDS
+header — first faction in the project where that's true), zero engine gaps found (a first — Grey
+Knights needed the B106 distinct-addition fix before its Dreadknights could be authored; Emperor's
+Children needs none). Full dry-run pipeline (transform → points → convert) clean: 23/23 priced, 0
+collisions, 0 dropped attach entries. Loadout parser scoped to EC alone flagged exactly 2 units
+(Tormentors, Infractors — both the same free "icon of excess" equip-only item, the same shape
+already solved by Grey Knights' Ancient's banner). One cross-faction wrinkle checked and resolved,
+not a conflict: CSM's own cult-troop Noise Marines (`000004099`) is priced from
+`MFM_Emperors_Children_v1_0.txt` per the already-shipped `CSM_CULT_TROOP_POINTS` map, while
+Emperor's Children's own Noise Marines is a separate datasheet (`000004088`) — confirmed both MFM
+versions price Noise Marines identically, so building EC from v1.1 creates no version mismatch with
+CSM's shipped cross-reference. Confirmed EC is not part of `add_chapter_point_overrides.py`'s
+`CHAPTERS` chain and needs no `add_co_leader.py` registration, same conclusions as Grey Knights and
+for the same reason (Heretic Astartes, not Space Marine-descended). Detachments: 10, no unique tags,
+four force-disposition changes between v1_0 and v1.1 (Carnival of Excess, Coterie of the Conceited,
+Frenzied Host, Spectacle of Slaughter), enhancement lists and DP costs otherwise identical between
+versions — same "build from v1.1, land the changes on first build" payoff D293 banked for Grey
+Knights. One Defiler wargear price genuinely changed between versions (10→15 pts per item on two
+options, both marked with the source's own up-arrow annotation) — not a data problem, v1.1 is simply
+newer.
+
+A finding unrelated to Emperor's Children, logged separately: `faction_taxonomy.json` still marks
+Grey Knights `built: false` under the Imperium group, even though `units.json` confirms 25/25 units
+and B100 closed at S208 — the taxonomy flag was never flipped. Filed as **B110**, XS data fix, can
+ride with any other data turn.
+
+Also this session: located B109's render site in `index.html` (`renderMyLists`, the
+`tgt = 'target ' + r.points_target` line) but did not touch it — an `index.html` edit would mix
+engine and scoping work in one turn, which turn typing prohibits. B109 remains open, now confirmed
+XS and single-line.

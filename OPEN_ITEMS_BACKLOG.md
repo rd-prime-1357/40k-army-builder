@@ -3,7 +3,16 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S208 (unchanged count from S207 — B100 closed, B109
+not here, it isn't open. **23 open** as of S209 (up from 22 at S208 — B110 opened, nothing closed):
+B110, B109, B108, B99, B98, B97, B103, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23,
+B67b, E12, B17. Scoping-only turn (Emperor's Children, D303). No committed file changed.
+`EMPEROR'S_CHILDREN_BUILD_SCOPE.md` written — 23 datasheets, zero LEGENDS exclusions, zero engine
+gaps found (a first). Loadout parser flagged 2 units, both the same already-solved free-item shape.
+Detachments: 10, no unique tags, 4 force-disposition changes v1_0→v1.1. Found and logged **B110**
+(`faction_taxonomy.json` stale Grey Knights `built` flag) and located but did not fix B109's
+`index.html` render site (would mix engine work into this scoping turn).
+
+**22 open** as of S208 (unchanged count from S207 — B100 closed, B109
 opened): B108, B99, B98, B97, B103, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23,
 B67b, E12, B17, B109. Data+parser turn (B106-DATA). Both Grey Knights Dreadknights' ranged-weapon
 options authored — new classifier `classify_this_model_add_count_choice` in `loadout_parser.py`,
@@ -329,6 +338,23 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### B110 — `faction_taxonomy.json` still shows Grey Knights as `built: false` — **NEW S209; data; XS**
+Found while scoping Emperor's Children. `units.json` confirms Grey Knights is fully built (25/25
+units) and B100 closed at S208, but `faction_taxonomy.json`'s Imperium group still carries
+`{'name': 'Grey Knights', 'built': False}` — nobody flipped the flag when the faction shipped. Not
+currently causing a visible bug (checked: no UI or check harness was found reading this field to
+gate Grey Knights specifically), but it's a stale data point that could produce a false-negative in
+some future faction census the way S206/S207's stale "next Adeptus Astartes faction" prose did. Fix
+is a one-line flag flip; can ride with any other data turn.
+
+### B109 — "My Army Lists" page: replace "target ####" label with "#### Points" — **NEW S208
+(Ryan-reported); engine; XS; render site now located**
+Render site found (S209): `index.html`'s `renderMyLists()`, the line
+`const tgt = r.points_target ? ('target ' + r.points_target) : '';`. One-line change to
+`(r.points_target + ' Points')` (or similar). Not made this session — would mix an engine edit into
+a scoping-typed turn. Standalone engine-only turn, or ride with the Emperor's Children detachments
+build.
 
 ### B108 — `Thousand_Sons_web.txt` committed to the public repo (GW-derived) AND still absent from the private source repo — **NEW S207 (D301); RYAN ACTION; CRITICAL (compliance)**
 `repo_check.py` at S207 open flagged `Thousand_Sons_web.txt` in the public repo. Verified against a

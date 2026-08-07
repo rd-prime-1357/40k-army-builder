@@ -736,3 +736,16 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   own scoping pass first; no scope doc exists yet. B108 (Ryan action) remains open — public-repo
   removal side still outstanding, private-repo push side now confirmed done. Also logged: **B109** —
   "My Army Lists" page, "Target ####" → "#### Points" label change (Ryan-reported, UI copy only).
+- **D303** — Emperor's Children scoped (S209), scoping-only. No committed file changed.
+  `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` written (net-new). 23 datasheets, zero LEGENDS exclusions,
+  zero engine gaps found — the first faction where scoping surfaces no engine ticket. Full dry-run
+  pipeline clean (23/23 priced, 0 collisions). Loadout parser flagged exactly 2 units (Tormentors,
+  Infractors — same free equip-only "icon of excess" item, already-solved shape). Confirmed no
+  version-mismatch risk in CSM's already-shipped cross-reference to `MFM_Emperors_Children_v1_0.txt`
+  for its own Noise Marines cult-troop unit (a different datasheet ID from EC's own Noise Marines;
+  both MFM versions price it identically). Confirmed EC needs no chapter-override or co-leader
+  registration. Detachments: 10, no unique tags, 4 force-disposition changes v1_0→v1.1, one genuine
+  Defiler wargear price increase (10→15 pts ×2 options) — build from v1.1 per D293. Unrelated finding
+  logged as **B110**: `faction_taxonomy.json` still shows Grey Knights `built: false`, stale since
+  B100 closed at S208. Located but did not touch B109's render site in `index.html`
+  (`renderMyLists`) — an engine edit would mix with this scoping turn.
