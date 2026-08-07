@@ -332,7 +332,12 @@ def e14_count(S):
     # +7 GK units. Verified by faction breakdown before updating the literal, not assumed:
     # every non-GK faction's count is unchanged (54 units / same per-faction split as before),
     # GK contributes exactly 7 units / 15 options -> 90/61.
-    return (len(q) == 90 and len(units) == 61), f'{len(q)} options across {len(units)} units'
+    # Emperor's Children units turn (S210): +8 qualifying free seeds across +6 EC units —
+    # Tormentors' and Infractors' Icon of Excess (the hand-authored EC-DATA shape), Chaos
+    # Land Raider's and Chaos Rhino's Havoc launcher, and Daemonettes' and Seekers'
+    # Instrument of Chaos + Daemonic Icon pair (2 each). Verified by faction breakdown
+    # before updating the literal: every non-EC faction's count is unchanged -> 98/67.
+    return (len(q) == 98 and len(units) == 67), f'{len(q)} options across {len(units)} units'
 
 def b18_named_body(S):
     lines = [re.sub(r'<[^>]+>', ' ', r['description'])
@@ -1017,7 +1022,7 @@ ASSERTIONS = [
     ('E14-2',
      'The seeding rule is total, not a hand-picked list: an add qualifies iff it is '
      'type=add, has no requires_weapon, no pool_id, no per_n_models, max_total == 1, and '
-     'its item is unpriced. 75 options across 54 units qualify today.',
+     'its item is unpriced. 98 options across 67 units qualify today.',
      'unit_loadouts.json; wargear_points.json',
      lambda S: e14_count(S)),
 
@@ -1854,20 +1859,21 @@ ASSERTIONS = [
      lambda S: b61_plague_legions_census(S)),
 
     ('B61-2',
-     'No unit in any army block outside the allied-carrier armies (Death Guard, Thousand Sons) '
-     'carries allied_group. The tag is scoped to the sections it was derived from and has not '
-     'leaked into Space Marines, the chapter variants, Chaos Space Marines, or Chaos Daemons\' '
-     'own native copies of the same units.',
-     'units.json, all armies (B61, D208; TS added D248/E24)',
+     'No unit in any army block outside the allied-carrier armies (Death Guard, Thousand '
+     'Sons, Emperor\'s Children) carries allied_group. The tag is scoped to the sections '
+     'it was derived from and has not leaked into Space Marines, the chapter variants, '
+     'Chaos Space Marines, or Chaos Daemons\' own native copies of the same units.',
+     'units.json, all armies (B61, D208; TS added D248/E24; EC added S210)',
      lambda S: b61_no_other_army_carries_allied_group(S)),
 
     ('B61-3',
      'Chaos Daemons carries its own native copy of every carrier unit under distinct unit_ids '
      '(local:chaos-daemons:*), and none of those native copies carries allied_group. This is '
      'the fact that makes each allied-carrier army\'s copies genuine duplicates rather than a '
-     'merge collision — confirming Wahapedia\'s double-listing is intact on both sides of the '
-     'fix, for Death Guard and now Thousand Sons.',
-     'units.json Chaos Daemons vs Death Guard/Thousand Sons (B61, D208; TS added D248/E24)',
+     'merge collision -- confirming Wahapedia\'s double-listing is intact on both sides of the '
+     'fix, for Death Guard, Thousand Sons, and now Emperor\'s Children.',
+     'units.json Chaos Daemons vs Death Guard/Thousand Sons/Emperor\'s Children (B61, D208; '
+     'TS added D248/E24; EC added S210)',
      lambda S: b61_cd_native_copies_distinct(S)),
 
     ('B61-4',
@@ -2191,6 +2197,18 @@ ASSERTIONS = [
      'replacement_choices populated / max_total set / no replaces key.',
      'Datasheets_options.csv trigger scan vs unit_loadouts.json (B106-DATA, D302)',
      lambda S: b106_data_distinct_add_shape(S)),
+
+    # ── EC-DATA (S210). Emperor's Children's Tormentors/Infractors hit a sentence shape
+    # none of loadout_parser.py's classifiers match; both were hand-authored directly.
+    # This re-derives the trigger from source so a future faction hitting the same GW
+    # phrasing is caught, not silently missed.
+    ('EC-DATA',
+     'Every currently-built datasheet whose Datasheets_options.csv row matches the '
+     '"N <UnitName> can be equipped with N <item>" shape (unit name standing in for '
+     'the generic word "model") carries a matching add/equipment/max_total:1 option '
+     'in unit_loadouts.json.',
+     'Datasheets_options.csv trigger scan vs unit_loadouts.json (EC-DATA, S210)',
+     lambda S: ec_data_named_model_add_shape(S)),
 
     # ── B104 (D298/S205). scoped_name2id's ambiguous-candidate fallback was
     # insertion-order-dependent: appending a new same-named faction (Grey Knights)
@@ -4080,6 +4098,11 @@ ALLIED_CARRIER_GROUPS = {
     'Thousand Sons': ('Scintillating Legions', {'Kairos Fateweaver', 'Lord of Change',
                                                  'Flamers', 'Screamers', 'Pink Horrors',
                                                  'Blue Horrors'}),
+    # S210: Emperor's Children's Legions of Excess carriers, confirmed against units.json
+    # (5 units tagged 'Legions of Excess', all with distinct local:chaos-daemons:* ids on
+    # the Chaos Daemons side) -- the one-line add the comment above anticipated.
+    "Emperor's Children": ('Legions of Excess', {'Shalaxi Helbane', 'Daemonettes', 'Fiends',
+                                                  'Keeper of Secrets', 'Seekers'}),
 }
 
 
@@ -4454,6 +4477,59 @@ _B101_MARKER_RE = re.compile(
     r'\((?:you cannot select the same option more than once'
     r'|duplicates are not allowed)\)',
     re.IGNORECASE)
+
+
+# EC-DATA (S210): Emperor's Children's Tormentors/Infractors use "N <UnitName> can be
+# equipped with N <item>." — the generic word "model" replaced with the unit's own
+# singular name. None of loadout_parser.py's 19 CLASSIFIERS match this (they hard-code
+# the literal word "model"), so both were hand-authored directly into unit_loadouts.json
+# rather than adding a 20th regex classifier for a two-unit sentence shape (same emitted
+# shape as the existing Icon of Despair precedent: add + equipment + max_total:1). This
+# assertion re-derives the trigger from source every run, same rationale as B101-DATA/
+# B106-DATA: a future faction hitting the same GW phrasing on a datasheet nobody has
+# looked at yet should be caught here, not just eyeballed.
+_EC_NAMED_MODEL_ADD_RE = re.compile(
+    r'^(?:One|1)\s+(?!models?\b)[A-Z][\w\u2019\'-]*(?:\s[A-Z][\w\u2019\'-]*)*'
+    r' can be equipped with (\d+\s+\S.*?)\.?$')
+
+
+def ec_data_named_model_add_shape(S):
+    """Every currently-built Emperor's Children datasheet whose Datasheets_options.csv
+    row matches the 'N <UnitName> can be equipped with N <item>' shape (unit's own
+    singular name standing in for the generic word 'model') carries a matching
+    add-type option in the committed unit_loadouts.json: type 'add', an 'equipment'
+    key naming the item, and max_total == 1. Re-derived by scanning ALL Emperor's
+    Children rows in the source CSV for the trigger, not by pinning Tormentors/
+    Infractors' two IDs.
+
+    Scoped to Emperor's Children rather than every currently-built faction: the same
+    sentence shape already exists, unfixed, on several other factions' datasheets
+    (e.g. Infiltrator Squad's helix gauntlet, Rubric Marines' icon of flame, Incursor
+    Squad's haywire mine) as pre-existing UNMATCHED residuals tracked separately in
+    the backlog — this assertion is not the mechanism meant to catch those, and
+    scoping wide would fail the gate on gaps this session did not create or touch.
+    """
+    ec_ids = {u['unit_id'] for army in S.units() if army['army'] == "Emperor's Children"
+              for u in army['units']}
+    loadouts = S.loadouts()
+    hits = [r for r in S.options()
+            if _EC_NAMED_MODEL_ADD_RE.search(re.sub(r'<[^>]+>', ' ', r.get('description', '')))]
+    in_scope = sorted({r['datasheet_id'] for r in hits} & ec_ids)
+    bad = []
+    for ds_id in in_scope:
+        entry = loadouts.get(ds_id)
+        if not entry:
+            bad.append(f'{ds_id}: no unit_loadouts.json entry at all')
+            continue
+        adds = [opt for opt in entry.get('options', [])
+                if opt.get('type') == 'add' and opt.get('equipment') and opt.get('max_total') == 1]
+        if not adds:
+            bad.append(f'{ds_id}: no add/equipment/max_total:1 option present')
+    if bad:
+        return False, '%d datasheet(s) fail the named-model-add shape check: %s' % (
+            len(bad), '; '.join(bad[:8]))
+    return True, ('%d Emperor\'s Children named-model-add datasheet(s) matched in source, '
+                  'all carry the correct add/equipment/max_total:1 shape' % len(in_scope))
 
 
 def b101_data_distinct_survives_the_marker(S):

@@ -3,7 +3,19 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S209 (up from 22 at S208 — B110 opened, nothing closed):
+not here, it isn't open. **24 open** as of S210 (up from 23 at S209 — B111 opened, nothing
+closed; B110 corrected in place, not closed): B111, B110, B109, B108, B99, B98, B97, B103, E28,
+B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. Data-only turn
+(Emperor's Children units, D304). `units.json` +23 EC units, `unit_loadouts.json` +23 EC entries
+(21 auto-parsed + 2 hand-authored), `wargear_points.json` +1 unit, `datasheet_wargear_abilities
+.json` +5 units — all diff-guarded, 0 changed/removed elsewhere in each. New structural assertion
+`EC-DATA`. Found and opened **B111** (v1.1 MFM files' `WARGEAR OPTIONS` format broke
+`mfm_points_parser.py`'s `--wargear` pass project-wide, not EC-specific — surfaced by EC's
+Defiler, the first case where the resulting stale v1_0 pricing is actually wrong). **Corrected
+B110** (not executed): Grey Knights has zero detachments in `detachments.json`, so flipping
+`built: true` per the original wording would be premature — flagged for Ryan rather than done.
+
+**23 open** as of S209 (up from 22 at S208 — B110 opened, nothing closed):
 B110, B109, B108, B99, B98, B97, B103, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23,
 B67b, E12, B17. Scoping-only turn (Emperor's Children, D303). No committed file changed.
 `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` written — 23 datasheets, zero LEGENDS exclusions, zero engine
@@ -347,6 +359,37 @@ currently causing a visible bug (checked: no UI or check harness was found readi
 gate Grey Knights specifically), but it's a stale data point that could produce a false-negative in
 some future faction census the way S206/S207's stale "next Adeptus Astartes faction" prose did. Fix
 is a one-line flag flip; can ride with any other data turn.
+
+**Correction, S210:** the S209 claim above ("no UI... was found reading this field to gate Grey
+Knights specifically") was checked incompletely. `index.html` reads `f.built` generically to gate
+every faction's selectability (`opt.disabled = !f.built`), so it DOES gate Grey Knights the same as
+any other faction — that part of the original investigation missed the actual read site. More to
+the point: `detachments.json` was checked directly this session and has **zero** Grey Knights
+entries. Flipping `built: true` now, as the ticket originally recommended, would let a player select
+Grey Knights and reach an empty detachment picker — a broken list-building state, not a cosmetic
+stale flag. **Not a one-line flip.** This ticket is correct that the flag is stale, but the fix is
+blocked on Grey Knights getting its own detachments build, not just a data toggle. Left open,
+`built: false` unchanged, until detachments ship.
+
+### B111 — `mfm_points_parser.py`'s `--wargear` pass is blind to v1.1 `WARGEAR OPTIONS` text
+— **NEW S210; tooling/engine; found while building Emperor's Children units**
+Sourcing EC's Defiler wargear from `MFM_Emperors_Children_v1.1.txt` (per D293's "build from newest
+MFM" rule) returned zero items. Root cause, confirmed directly against multiple files: every v1.1
+MFM file dropped the leading bullet character (`•`) from `WARGEAR OPTIONS` lines that v1_0 files
+have (checked `MFM_Grey_Knights_v1.1.txt`, `MFM_Death_Guard_v1.1.txt`, `MFM_Thousand_Sons_v1.1.txt`,
+`MFM_Chaos_Space_Marines_v1.1.txt` — all bullet-less, universal not EC-specific).
+`mfm_points_parser.py`'s `WARGEAR_RE` regex hard-requires that leading bullet, so the `--wargear`
+pass has been silently unable to read v1.1 wargear pricing for every faction since the v1.1
+migration. Harmless everywhere else purely by coincidence — every other faction's wargear item
+happens to cost the same in v1_0 and v1.1, so the stale v1_0 sourcing still produces the right
+number. EC's Defiler is the first case where the two versions genuinely disagree (10 vs 15 pts per
+item), which is what surfaced the gap. S210 shipped EC's Defiler wargear at the stale v1_0 price (10
+pts), consistent with its already-shipped siblings (DG/TS/CSM Defilers, all currently also stuck at
+v1_0 pricing for this same pre-existing reason), rather than leaving the items unpriced or
+hand-patching a number outside the pipeline. Fix: update `WARGEAR_RE` to accept both the bulleted
+v1_0 format and the bullet-less v1.1 format. After the regex fix, the wargear pass should be re-run
+across every already-shipped faction (not just EC) and diff-guarded, in case another v1.1-only price
+change is hiding behind the same gap elsewhere — don't assume EC's Defiler is the only casualty.
 
 ### B109 — "My Army Lists" page: replace "target ####" label with "#### Points" — **NEW S208
 (Ryan-reported); engine; XS; render site now located**

@@ -27,7 +27,16 @@ Importable: repro(dir_) -> (ok, message).
 import argparse, json, os, shutil, subprocess, sys, tempfile
 from collections import OrderedDict
 
-HAND_AUTHORED = ['000001157', '000001044', '000004131', '000002712']
+HAND_AUTHORED = ['000001157', '000001044', '000004131', '000002712',
+                  '000004079', '000004080']
+# 000004079/000004080 (Tormentors, Infractors) added S210 (Emperor's Children): both
+# carry the single sentence "1 <unit name> can be equipped with 1 icon of excess." --
+# the generic word "model" is replaced with the unit's own singular name, a sentence
+# shape none of the 19 CLASSIFIERS match (classify_one_model_add hard-codes the literal
+# word "model"). The emitted shape itself needs no new schema -- it's the same
+# add + equipment + max_total:1 pattern already shipped for 000001044's Icon of Despair
+# -- so this is authored directly rather than adding a 20th regex classifier for a
+# two-unit sentence shape.
 # 000002712 (Outrider Squad) added B59b/D184: its "Invader ATV" model group carries
 # non_consuming + a literal MFM price_per_model, neither derivable from Wahapedia
 # source (Datasheets_options.csv doesn't know MFM pricing or "does not consume the
@@ -37,7 +46,11 @@ HAND_AUTHORED = ['000001157', '000001044', '000004131', '000002712']
 # pass alone. B104 (S205) fixed the cross-faction scoped_name2id bug that blocked
 # this; reverified clean against the fixed parser before this session's regen.
 WEB_PASSES = ['Space_Marines', 'Death_Guard', 'Black_Templars', 'Dark_Angels', 'Space_Wolves', 'Chaos_Space_Marines', 'Thousand_Sons']
-FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK']
+# B100/S210 (S209): Emperor's Children added to FACTIONS. Needs no WEB_PASSES entry --
+# confirmed this session (not assumed from EMPEROR_S_CHILDREN_BUILD_SCOPE.md's dry run)
+# that the real loadout_parser.py + equipped_parser.py --datasheets pass resolves every
+# multi-group EC unit cleanly, mirroring the Grey Knights precedent exactly.
+FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK', 'EC']
 
 
 def _run(cmd, cwd):

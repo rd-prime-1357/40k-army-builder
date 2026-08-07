@@ -33,6 +33,14 @@ to the committed units.json:
      --datasheets pass, since each one's groups carry identical default gear per the
      datasheet's own "Every model is equipped with" wording — not a parser gap, so
      repro_check.py's WEB_PASSES list does not need a Grey Knights entry either.
+  4b. Emperor's Children: wahapedia_transform.py (--faction EC) -> mfm_points_parser.py
+     (against MFM_Emperors_Children_v1.1.txt, D293) -> convert_to_json.py
+     --emit-fourth-plus, in its own working dir. Fully self-sourced (23/23, zero LEGENDS
+     exclusions, no cross-file append, no chapter points) — mirrors the Grey Knights
+     block exactly (EMPEROR_S_CHILDREN_BUILD_SCOPE.md). No dedicated composition-paste
+     file needed: confirmed this session (S210) that the real loadout_parser.py run
+     resolves every multi-group unit's options cleanly from Datasheets.csv alone, so
+     repro_check.py's WEB_PASSES list needs no Emperor's Children entry either.
   5. Chaos Daemons: convert_to_json.py run DIRECTLY against the project root's own
      Unit_Stats.csv / Unit_Points.csv / Unit_Wargear_Options.csv / Unit_Other_Options.csv /
      Unit_Weapons.csv / Unit_Abilities.csv / Keywords.csv / Rules.csv / Weapon_Abilities.csv.
@@ -292,6 +300,33 @@ def repro(dir_):
         if rc != 0:
             return False, 'convert_to_json.py (GK) failed:\n' + out[-600:]
 
+        # --- Emperor's Children: transform -> mfm points -> convert. Fully self-sourced,
+        # 23/23 (EMPEROR_S_CHILDREN_BUILD_SCOPE.md), zero LEGENDS exclusions, zero engine
+        # gaps -- the first faction where scoping found none. Mirrors the Death Guard/
+        # Thousand Sons/Grey Knights blocks exactly. ---
+        ec_dir = os.path.join(tmp, 'ec')
+        os.makedirs(ec_dir)
+        rc, out = _run([sys.executable, 'wahapedia_transform.py',
+                        '--wahapedia-dir', dir_, '--seed-dir', dir_,
+                        '--out-dir', ec_dir, '--faction', 'EC',
+                        '--army-name', "Emperor's Children"], cwd=dir_)
+        if rc != 0:
+            return False, "wahapedia_transform.py (EC) failed:\n" + out[-600:]
+        rc, out = _run([sys.executable, 'mfm_points_parser.py',
+                        '--mfm', 'MFM_Emperors_Children_v1.1.txt',
+                        '--out-dir', ec_dir, '--stats', os.path.join(ec_dir, 'Unit_Stats.csv')],
+                        cwd=dir_)
+        if rc != 0:
+            return False, "mfm_points_parser.py (EC) failed:\n" + out[-600:]
+        ec_json = os.path.join(tmp, 'ec_json')
+        os.makedirs(ec_json)
+        rc, out = _run([sys.executable, 'convert_to_json.py',
+                        '--input-dir', ec_dir, '--output-dir', ec_json,
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json'),
+                        '--emit-fourth-plus'], cwd=dir_)
+        if rc != 0:
+            return False, "convert_to_json.py (EC) failed:\n" + out[-600:]
+
         # --- Chaos Space Marines: transform -> mfm points (self, 54 of 58) -> D240
         # cult-troop cross-file append (the remaining 4, one at a time, each isolated
         # to its own single-row stats scope) -> convert. Unit_Stats.csv is left
@@ -345,7 +380,7 @@ def repro(dir_):
         os.makedirs(deploy)
         rc, out = _run([sys.executable, 'merge_factions.py',
                         '--in', sm_dir, '--in', cd_json, '--in', dg_json, '--in', csm_json,
-                        '--in', ts_json, '--in', gk_json,
+                        '--in', ts_json, '--in', gk_json, '--in', ec_json,
                         '--taxonomy', 'faction_taxonomy.json',
                         '--out-dir', deploy], cwd=dir_)
         if rc != 0:

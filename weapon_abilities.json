@@ -158,5 +158,9 @@
   {
     "weapon_ability_name": "Apothecary’s Narthecium",
     "weapon_ability_description": "In your Command phase, if the bearer is not destroyed, you can return 1 destroyed model (excluding CHARACTERS ) to the bearer’s unit."
+  },
+  {
+    "weapon_ability_name": "Icon of Excess",
+    "weapon_ability_description": "At the end of your Shooting phase or the Fight phase, if the bearer’s unit destroyed one or more enemy units that phase, the bearer’s unit takes a Leadership test. If that test is passed, you gain 1CP."
   }
 ]

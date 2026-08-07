@@ -175,6 +175,20 @@
    }
   }
  },
+ "000004208": {
+  "items": {
+   "hades lascannon": {
+    "cost": 10,
+    "display": "Hades lascannon",
+    "source": "MFM_Emperors_Children_v1_0.txt:32"
+   },
+   "heavy reaper autocannon": {
+    "cost": 10,
+    "display": "Heavy reaper autocannon",
+    "source": "MFM_Emperors_Children_v1_0.txt:31"
+   }
+  }
+ },
  "000004209": {
   "items": {
    "hades lascannon": {

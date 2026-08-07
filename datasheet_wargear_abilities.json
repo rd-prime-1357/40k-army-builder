@@ -136,6 +136,23 @@
  "000003876": {
   "Voice Eater": "Enemy units (excluding <span class=\"kwb\">MONSTERS</span> and <span class=\"kwb\">VEHICLES</span>) cannot be targeted with Stratagems while they are within Engagement Range of the bearer’s unit."
  },
+ "000004079": {
+  "Icon of Excess": "At the end of your Shooting phase or the Fight phase, if the bearer’s unit destroyed one or more enemy units that phase, the bearer’s unit takes a Leadership test. If that test is passed, you gain 1CP."
+ },
+ "000004080": {
+  "Icon of Excess": "At the end of your Shooting phase or the Fight phase, if the bearer’s unit destroyed one or more enemy units that phase, the bearer’s unit takes a Leadership test. If that test is passed, you gain 1CP."
+ },
+ "000004095": {
+  "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
+  "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
+ },
+ "000004097": {
+  "Shining Aegis": "The bearer has a Save characteristic of 3+."
+ },
+ "000004098": {
+  "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
+  "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
+ },
  "000004113": {
   "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
   "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."

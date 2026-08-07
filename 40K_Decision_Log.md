@@ -12177,3 +12177,107 @@ Also this session: located B109's render site in `index.html` (`renderMyLists`, 
 `tgt = 'target ' + r.points_target` line) but did not touch it — an `index.html` edit would mix
 engine and scoping work in one turn, which turn typing prohibits. B109 remains open, now confirmed
 XS and single-line.
+
+### D304 — Emperor's Children units shipped (S210), data-only
+
+`EC` registered in `units_repro_check.py` (mirrors the Grey Knights/Thousand Sons block exactly) and
+in `merge_factions.py`'s `--in` list. The real pipeline was run end to end, not a dry run:
+`wahapedia_transform.py` (`--faction EC`) → `mfm_points_parser.py` (`MFM_Emperors_Children_v1.1.txt`,
+per D293) → `convert_to_json.py --emit-fourth-plus` → `merge_factions.py` → `add_loadout_groups.py` →
+`add_co_leader.py` → `add_bodyguard_stat_flags.py` → `add_chapter_point_overrides.py`. Diff-guarded
+at unit-id level against the previously committed `units.json`: 23 EC units added, 0 removed, 0
+changed elsewhere; `units_repro_check.py` passes byte-identical against the promoted file. Merged
+lookups diff-guarded the same way: `abilities.json` +26 (all EC-only), `weapon_abilities.json` +1
+(Icon of Excess), `rules.json`/`keywords.json` unchanged.
+
+Confirmed by direct demonstration — not by trusting S209's scope doc — that the real build needed
+far less manual authoring than estimated. Of the "6 manual" wargear groups and 5 "ambiguous"
+weapon-name matches the transform-stage validation flagged, the real `loadout_parser.py` run (a
+different, less conservative check than the transform's own validation report) resolved every one of
+them cleanly: bare weapon names for all 5 ambiguous matches (matching how every other faction already
+handles the identical plasma-pistol/plasma-gun/heavy-missile-launcher ambiguity — this is an
+established project-wide convention, not a per-unit judgment call), `classify_n_model_swap`'s existing
+compound-swap handling for Lord Kakophonist and both Noise Marines options, existing classifiers for
+Maulerfiend and Chaos Rhino, and — checked directly against the raw option text — the Chaos Terminators
+bundled swap needed no new `bundled_swaps.json` entry at all, since the plain "combi-bolter and
+accursed weapon replaced with paired accursed weapons" compound already resolves via the existing
+`replaces: "X + Y"` shape. EC's own Defiler (`000004208`, confirmed a separate datasheet ID from
+CSM's `000000969`, DG's `000004209`, TS's `000001030`, and WE's `000004207` — each Chaos Legion carries
+its own Defiler datasheet despite identical rules text) also parsed cleanly, matching its four already-
+shipped siblings' structure exactly.
+
+Only Tormentors (`000004079`) and Infractors (`000004080`) needed genuine hand-authoring. Both carry
+the sentence "1 `<UnitName>` can be equipped with 1 icon of excess." — the generic word "model"
+replaced with the unit's own singular name, a shape none of `loadout_parser.py`'s 19 `CLASSIFIERS`
+match (`classify_one_model_add` hard-codes the literal word "model"). Checked the actual source text
+before copying the Icon of Despair precedent's full structure (`requires_weapon`/`blocks_swap`): Icon
+of Despair's real MFM text carries an explicit gating clause ("One Plague Marine equipped with a
+boltgun can be equipped with 1 icon of despair. This model's boltgun cannot be replaced.") that Icon
+of Excess's text does not have, so the two new entries use the plain `add` + `equipment` +
+`max_total: 1` shape only. Both added to `repro_check.py`'s `HAND_AUTHORED` list; `EC` added to
+`FACTIONS`; confirmed by direct demonstration (the real `--datasheets`-only `equipped_parser.py` pass,
+the same one `repro_check.py` runs last) that no `Emperors_Children_web.txt` composition file is
+needed, mirroring the Grey Knights precedent exactly — `WEB_PASSES` unchanged. `unit_loadouts.json`
+regenerated via the real `loadout_parser.py` + `equipped_parser.py` chain: 21 auto-parsed EC units + 2
+hand-authored added, 0 removed, 0 changed elsewhere; `repro_check.py` passes byte-identical. The
+equipped-parser pass correctly enriched the two hand-authored entries' per-model-group
+`default_weapons` split and added `_defaults_source: "equipped"` — the pipeline working as designed,
+not a corruption of the hand-authored seed.
+
+New structural assertion `EC-DATA` added, re-derived from source every run per the `B101-DATA`/
+`B106-DATA` pattern: scans `Datasheets_options.csv` for the "N `<UnitName>` can be equipped with N
+`<item>`" trigger and confirms every matching Emperor's Children datasheet carries the corresponding
+add/equipment/max_total:1 option. Deliberately scoped to Emperor's Children only, not every
+currently-built faction: the same sentence shape already exists, unfixed, on several other factions'
+datasheets (Infiltrator Squad's helix gauntlet, Rubric Marines' icon of flame ×2, Incursor Squad's
+haywire mine) as pre-existing `UNMATCHED` residuals — confirmed these are already-known backlog debt,
+not something this session created or is responsible for fixing; scoping the assertion wide would have
+failed the gate on gaps outside this session's turn. 122 assertions now registered (was 121).
+
+`datasheet_wargear_abilities.json` regenerated — a real, previously-unflagged gap: 5 EC units
+(`000004079`, `000004080`, `000004095`, `000004097`, `000004098`) were missing from the file entirely.
+Diff-guarded: 5 added, 0 removed, 0 changed elsewhere.
+
+`B61-2`/`B61-3` extended for Emperor's Children's Legions of Excess carriers. Confirmed directly
+against `units.json`: 5 units (Shalaxi Helbane, Daemonettes, Fiends, Keeper of Secrets, Seekers) carry
+`allied_group: "Legions of Excess"`, each with a distinct `local:chaos-daemons:*` id on the Chaos
+Daemons side (not a merge collision) — the identical shape Death Guard's Plague Legions and Thousand
+Sons' Scintillating Legions already use. `ALLIED_CARRIER_GROUPS` extended with the one-line entry its
+own comment anticipated; both assertions' docstrings updated to name the third carrier army.
+
+`E14-2`'s hardcoded count updated 90/61 → 98/67. Verified by faction breakdown before updating the
+literal, not assumed: every non-EC faction's count is unchanged; Emperor's Children contributes
+exactly 8 qualifying free-add options across 6 units — Tormentors' and Infractors' Icon of Excess (the
+hand-authored EC-DATA shape), Chaos Land Raider's and Chaos Rhino's Havoc launcher, and Daemonettes'
+and Seekers' Instrument of Chaos + Daemonic Icon pair (2 each).
+
+**Found and opened B111, not fixed this session (would mix engine work into a data-only turn).**
+Sourcing EC's Defiler wargear from `MFM_Emperors_Children_v1.1.txt` (per the scope doc's expectation of
+a 15-pt price) returned zero items. Root cause, confirmed directly: every v1.1 MFM file dropped the
+leading bullet character (`•`) from `WARGEAR OPTIONS` lines that v1_0 files have — checked
+`MFM_Grey_Knights_v1.1.txt`, `MFM_Death_Guard_v1.1.txt`, `MFM_Thousand_Sons_v1.1.txt`, and
+`MFM_Chaos_Space_Marines_v1.1.txt` directly; all show the same bullet-less format. `mfm_points_parser
+.py`'s `WARGEAR_RE` regex hard-requires that bullet, so the `--wargear` pass has been silently blind to
+v1.1 pricing for every faction since the v1.1 migration — not an EC-specific bug, and harmless
+everywhere else purely because those factions' v1_0/v1.1 wargear item prices happen to be identical.
+EC's Defiler is the first case where the two versions actually diverge (10 vs 15 pts), which is what
+surfaced the gap. Shipped EC's Defiler wargear sourced from v1_0 (10 pts per item), consistent with its
+already-shipped siblings (DG/TS/CSM Defilers, all currently also stuck at v1_0 pricing for the same
+pre-existing reason) rather than leaving it unpriced (worse: a reachable item silently costing 0) or
+hand-patching a number outside the pipeline. Diff-guarded: 1 unit added (`000004208`), 2 items, 0
+removed, 0 changed elsewhere. `B111` tracks the regex fix as a dedicated tooling/engine turn.
+
+**B110 corrected, not executed.** S209's B110 recommended flipping Grey Knights' `faction_taxonomy
+.json` flag to `built: true`, reasoning that `units.json` shows 25/25 units complete. Checked
+`detachments.json` directly this session (not assumed) and found Grey Knights has zero detachment
+entries there. `built: true` is exactly the flag `index.html` uses to gate faction selectability
+(`opt.disabled = !f.built`) — flipping it now would let a player select Grey Knights and reach an
+empty detachment picker, a broken list-building state. Not executed; flagged for Ryan rather than
+silently patched over, since the correct sequencing (Grey Knights detachments vs. Emperor's Children
+detachments first) is a product-sequencing call, not a data question this session can resolve alone.
+Grey Knights' taxonomy flag stays `false`.
+
+Detachments and `faction_taxonomy.json` deliberately untouched this session — turn typing (this is a
+units data turn) and the fact that Emperor's Children's own detachments are still unbuilt. Emperor's
+Children's taxonomy flag stays `built: false` until both units and detachments are complete, per the
+same reasoning as the B110 correction above.
