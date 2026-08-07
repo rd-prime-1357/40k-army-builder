@@ -3,7 +3,17 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S206 (down from 23 at S205 — B105 closed; B107 opened
+not here, it isn't open. **22 open** as of S207 (unchanged count from S206 — B106 closed, B108 opened):
+B108, B99, B98, B97, B103, E28, B93, B90, B94, B89, B100, B85, B86, B69, B70, B75, P2, P4, E23, B67b,
+E12, B17. Engine-only turn (B106). `index.html` v6.17 → v6.18: `loRollup`'s fixed-1 branch now accepts
+a `count` option with `distinct: true`, `replacement_choices` and no `replaces` as a pure addition,
+reusing the B101 machinery. Net-new `b106_check.js` (32 assertions), gated in `baseline.sh` and
+`pipeline_manifest.py`. Grey Knights fully unblocked — parser change + Dreadknight regeneration next
+session. Also this session: baseline reconciled at open found `Thousand_Sons_web.txt` committed to the
+public repo (verbatim GW datasheet material, standing-constraint violation) and still absent from the
+private source repo — the S206 Ryan action went to the wrong repo. Opened as B108. Cannot fix from
+this session (public-repo push scope + read-only private token).
+**22 open** as of S206 (down from 23 at S205 — B105 closed; B107 opened
 and closed same session, never counted as open): B106, B99, B98, B97, B103, E28, B93, B90, B94, B89,
 B100, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. Tooling+data turn. B105 (passive
 single-model swap classifier) and B107 (new — wargear-allowlist quote-normalisation fix, found
@@ -307,24 +317,21 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
-### B106 — B101's `distinct` engine support doesn't cover a fixed-1-group pure-addition "up to N, no duplicates" option — **NEW S204; ENGINE; S; blocks Nemesis Dreadknight / Grand Master in Nemesis Dreadknight's ranged-weapon options**
-Found authoring Grey Knights' two Dreadknights (B100). Both carry "This model can be equipped with
-up to two of the following, but cannot take duplicates: 1 gatling psilencer / 1 heavy incinerator /
-1 heavy psycannon[/1 sublimator]" — a pure addition (no `replaces`, nothing is consumed) on a
-fixed-1 model group. Traced `loRollup` in `index.html` directly: the fixed-1-group branch's `count`
-handling requires `parts.length` from a real `o.replaces` matching something the model actually
-carries (`if (!parts.length || !parts.some(s => onModel.has(s))) continue;`), so a `count` option
-with no `replaces` is silently skipped and emits nothing. The `add` type does support fixed-1 groups
-and `pool_id`-shared caps, but the pool-cap mechanism (`Math.max` of member `max_total` when no
-member carries `per_n_models`) computes a cap equal to the **largest single member's** cap, not a
-sum — so three `add` options each capped at 1 (one per weapon, achieving "no duplicates" by
-construction) would produce a pool cap of 1, not 2. Confirmed via `b101_check.js`'s own fixtures:
-the shipped, tested `distinct` shape is exclusively the swap case (`replaces: 'Chainsword'` in the
-fixture), never a no-`replaces` pure addition. This is a genuinely untested combination, not
-something safe to force into production data without a real engine change. Left as a residual
-`UNMATCHED` flag on both units in the meantime, same precedent as Raptors'/Legionaries' pre-B101
-residuals — but functionally more significant, since it means both Dreadknights currently ship with
-no ranged-weapon options at all, their primary loadout customization.
+### B108 — `Thousand_Sons_web.txt` committed to the public repo (GW-derived) AND still absent from the private source repo — **NEW S207 (D301); RYAN ACTION; CRITICAL (compliance)**
+`repo_check.py` at S207 open flagged `Thousand_Sons_web.txt` in the public repo. Verified against a
+direct fetch of the public tarball (`codeload.github.com/rd-prime-1357/40k-army-builder/tar.gz/main`):
+the file is genuinely in the repo. Content is verbatim GW datasheet material — unit profiles, weapons,
+abilities — the same class the standing constraint excludes ("faction web composition files"). Also
+verified against the private repo via the read-only token: the file is still not there,
+`source_manifest.json` still doesn't list it, so S206's Ryan action (push to the private repo) was
+not completed and the file appears to have gone to the public repo instead. Two distinct actions
+required, both by Ryan (private-repo token is read-only, public-repo push isn't in Claude's scope):
+(1) remove `Thousand_Sons_web.txt` from the public repo — at minimum from HEAD; ideally scrub git
+history via `git filter-repo` since the content shouldn't have been public; (2) push
+`Thousand_Sons_web.txt` to the private `rd-prime-1357-data-sources` repo and regenerate
+`source_manifest.json`. Until (1) lands, `repo_check` will keep flagging CRITICAL on every session
+open; until (2) lands, any data-turn `--fetch --data-turn` open will fall back on the same
+project-mount-only stopgap S206 and S207 both used.
 
 ### B99 — Enhancement "Eldritch Vortex of E'Taph" (+1 Strength/Damage to bearer's Psychic weapons) has no effect on displayed weapon stats — **NEW (Ryan-reported, pre-S194); engine/data; scope TBD; live D0-adjacent gap**
 Ryan-reported via screenshot (Daemon Prince of Tzeentch with Wings). Checked before logging:
@@ -1090,6 +1097,17 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B106** — B101's `distinct` engine support didn't cover a fixed-1-group pure-addition
+  "up to N, no duplicates" option — **NEW S204 (D297); CLOSED S207 (D301); ENGINE.** Fix reuses the
+  existing B101 machinery: a `count` option with `distinct: true`, `replacement_choices: [...]`,
+  `max_total: N` and no `replaces` now rides the same `loDistinctCap` / `loChoiceGroupCap` /
+  `loDistinctPicks` path as the swap case. `loRollup`'s fixed-1 branch changed: a two-line guard
+  accepts the no-`replaces` shape, and `chargeF` skips source-consumption for it. Body-group branch
+  needed no change — `loSrcOnGroup` already returned true for empty `replaces` (verified against
+  source, then pinned by the harness). `add`+`pool_id` was rejected because its cap is `max` of
+  member caps, not a sum. Net-new `b106_check.js` (32 assertions), gated in `baseline.sh` and
+  `pipeline_manifest.py`. `index.html` v6.17 → v6.18. Grey Knights fully unblocked for the
+  Dreadknight parser + regeneration turn.
 - **B105** — `loadout_parser.py` doesn't classify a passive single-model swap sentence ("N `<model>`
   can have its X replaced with Y") — **NEW S204 (D297); CLOSED S206 (D300); TOOLING.** Added
   `classify_one_model_passive_swap`, mirroring `classify_one_model_swap`'s active-voice shape but for

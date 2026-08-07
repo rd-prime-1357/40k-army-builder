@@ -700,3 +700,19 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   updated 75/54 → 90/61, verified by faction breakdown. B100 substantially closed; B106 (Dreadknights'
   distinct-addition engine gap) remains open, untouched, correctly the only residual flag left on Grey
   Knights.
+- **D301** — B106 shipped (S207), engine-only. `loRollup`'s fixed-1 branch now accepts a distinct-
+  addition count option: a `count` with `distinct: true`, `replacement_choices: [...]`, `max_total: N`
+  and **no** `replaces` — a pure addition ("this model can be equipped with up to N of the following,
+  but cannot take duplicates"). Chosen after tracing both existing paths against source: the fixed-1
+  branch was the actual gap (a two-line guard, plus a one-line skip inside `chargeF`); the body-group
+  branch already accepted the shape via `loSrcOnGroup` returning true for empty `replaces` (verified,
+  not assumed); the `add`+`pool_id` path can't express the rule because its cap is `max` of member
+  caps, not a sum; a new top-level type would multiply surface area across the renderer, cost
+  calculator, selection path and every check harness. Net-new `b106_check.js` (32 assertions covering
+  helpers, both rollup branches, selection path, and the plain-replacement regression), gated in
+  `baseline.sh` and `pipeline_manifest.py`. `index.html` v6.17 → v6.18. Grey Knights fully unblocked
+  for data-turn authoring (parser change + Dreadknight regeneration next session). Baseline reconciled
+  at open surfaced a critical, unrelated finding: `Thousand_Sons_web.txt` is committed to the public
+  repo — verbatim GW composition material, standing-constraint violation — and the S206 Ryan action
+  to push it to the private repo is still not done. Cannot fix from this session (public-repo push
+  scope + read-only private token); opened as **B108**.

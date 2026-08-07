@@ -2222,7 +2222,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.17';
+  const VERSION = '6.18';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -5987,7 +5987,13 @@
         for (const o of opts) {
           if (o.type !== 'count' || !reqOk(o)) continue;
           const parts = loWeaponParts(o.replaces);
-          if (!parts.length || !parts.some(s => onModel.has(s))) continue;
+          // B106: a count option with no `replaces` and a `replacement_choices` list is
+          // a pure addition — "this model can be equipped with up to N of the following,
+          // but cannot take duplicates". The picks are emitted, but no default weapon is
+          // consumed. The existing distinct/pool/cap machinery is otherwise unchanged.
+          // A replacement-shaped count still requires its named source to be on the model.
+          const isAddOnly = !parts.length && Array.isArray(o.replacement_choices);
+          if (!isAddOnly && (!parts.length || !parts.some(s => onModel.has(s)))) continue;
           let cap = Math.min(loMaxCount(o, size, n), reqCap(o));
           // B18e: a fixed-1 group can carry a pooled count (a capped generic swap
           // fanned onto a leader/sergeant). Bound its cap by the shared pool's
@@ -6003,7 +6009,7 @@
           let usedThis = 0;
           const chargeF = (repl, cnt) => {
             if (!(cnt > 0)) return;
-            for (const s of parts) cUsed[s] = (cUsed[s] || 0) + cnt;
+            if (!isAddOnly) for (const s of parts) cUsed[s] = (cUsed[s] || 0) + cnt;   // B106
             emitF.push({ opt: o, replacement: repl, n: cnt });
           };
           if (o.replacement_choices) {

@@ -11931,3 +11931,114 @@ literal updated 75/54 → 90/61; assertion count unchanged (still 120). `index.h
 `equipped_parser.py`, `detachment_parser.py`, `units.json`: untouched. B106 (Dreadknights'
 distinct-addition engine gap) remains open and untouched — correctly still the only residual flag on
 Grey Knights.
+
+## D301 — B106 shipped (S207), engine-only: `loRollup` fixed-1 branch now accepts a distinct-addition count option; Grey Knights fully unblocked. Baseline surfaced a public-repo publication problem — `Thousand_Sons_web.txt` committed to the public repo (Ryan action opened as B108)
+
+### Baseline reconciled at open: a GW-derived source file committed to the public repo
+
+`repo_check.py` at open flagged `Thousand_Sons_web.txt` as CRITICAL — present in the public repo,
+matching `.gitignore`'s `*.txt` pattern. Verified by fetching the public tarball directly
+(`codeload.github.com/rd-prime-1357/40k-army-builder/tar.gz/main`) and listing its contents: the file
+is genuinely there. Its content is verbatim GW datasheet material — unit profiles, weapons, abilities
+in the same shape as every other `*_web.txt` faction composition file the standing constraint
+explicitly excludes. Cross-checked the private `rd-prime-1357-data-sources` repo via the read-only
+token (`SOURCE_REPO_TOKEN.txt`): `Thousand_Sons_web.txt` is still not in the private repo and
+`source_manifest.json` still doesn't list it — S206's Ryan action (push to the private repo) was not
+completed; the file appears to have been pushed to the public repo instead. Two distinct problems:
+the file needs to come out of the public repo, and it still needs to go into the private one.
+
+Cannot fix either from this session — the public repo is not my push scope and the private-repo
+token is read-only. Opened as **B108** (see backlog) so the actions are tracked as their own item
+rather than folded into a session-open note that will disappear the next time the backlog is
+trimmed. Continued with B106 rather than blocking on B108 — B108 is Ryan action, not sequencing that
+gates any of my own work.
+
+### B106 — the mechanism, chosen after reading both existing paths against source
+
+Read `loRollup`'s fixed-1 branch, the body-group branch, the `add`/`pool_id` cap machinery, and B101's
+`distinct` helpers together before choosing a shape — per the session prompt's explicit warning
+against forcing either existing path to fit.
+
+Findings:
+- **Fixed-1 branch was the actual gap.** The count-handling block requires
+  `parts.length && parts.some(s => onModel.has(s))` — a real `o.replaces` matching something the
+  model carries — before it emits anything. A `count` option with no `replaces` was silently skipped
+  regardless of `distinct` state. This is where both Dreadknights failed.
+- **Body-group branch already accepted the shape.** `loSrcOnGroup(g, o)` returns true when
+  `loWeaponParts(o.replaces)` is empty (`"add-choice: nothing to replace"`, existing comment), and
+  `chargeSource(undefined, N)` is a safe no-op (`loWeaponParts(undefined) === []`). Verified this
+  by tracing every read of `o.replaces` in the body-group emit path; nothing else needed to change
+  there.
+- **`add` + `pool_id` cannot express the rule.** `poolCap[o.pool_id]` is set to
+  `Math.max(poolCap[o.pool_id] || 0, o.max_total)` — the largest single member's cap, not a sum.
+  Three `add` options each capped at 1 (one per weapon, achieving "no duplicates" by construction)
+  produce a pool cap of 1, not 2. Confirmed by direct read of the pool-init loop, not inferred.
+- **A new top-level type (`count_add` or similar) would multiply surface area** across the renderer,
+  the cost calculator, the selection path, `loIsFreeDefaultAdd`, and every check harness that walks
+  option types. Rejected on that basis.
+
+**Chose the minimal-delta shape: reuse the existing B101 `count`-with-`distinct` machinery.** A
+distinct-addition option is authored as `type: 'count'`, `distinct: true`, `replacement_choices: […]`,
+`max_total: N`, **no `replaces`**. The engine treats a missing `replaces` on a `count`-with-choices
+option as "pure addition, no source consumption". Every other piece — `loDistinctCap`,
+`loChoiceGroupCap`, `loDistinctPicks`, the selection-path per-choice cap, the renderer's stepper
+grey-out and "pick up to N, no duplicates" note, the cost lookup — works unchanged.
+
+### The engine change
+
+`loRollup`'s fixed-1-group count block (`index.html`):
+
+- Split the existing skip condition. A `count` option with empty `parts` (no `replaces`) and a
+  `replacement_choices` list is now recognised as an add-only option; the replacement-shape guard
+  (source-on-model) still applies only when `parts.length > 0`.
+- `chargeF` no longer bumps `cUsed[s]` for an add-only option — nothing is consumed. Emits are
+  otherwise identical, so pool_id accounting, requires_weapon gates and every other bookkeeping loop
+  around this block stays byte-for-byte the same.
+
+Two lines of guard, one guarded branch inside `chargeF`. Body-group branch: untouched, verified
+against source that it already accepts the shape.
+
+`VERSION` bumped `6.17` → `6.18`.
+
+### The harness — net-new `b106_check.js`, gated in `baseline.sh`
+
+Synthetic fixtures modelling the actual Dreadknight shape (fixed-1 group, 3-choice menu, `max_total`
+2, `distinct: true`, no `replaces`). Covered:
+
+- Helpers are shape-agnostic re: `replaces` (`loDistinctCap`, `loChoiceGroupCap`).
+- Fixed-1 rollup emits picks and the default weapon (Dreadfists) is not consumed — the core B106
+  win. Two-pick, one-pick, and zero-pick states.
+- Stale duplicates clamp to one; the freed slot is not silently spent on any other choice.
+- `max_total` binds even when the menu is larger than the cap (the 4-choice Grand Master variant).
+- Selection path: perMax refuses a second identical pick, groupMax refuses a third pick of any kind,
+  clearing is always allowed, and the freed slot can be spent on a different choice.
+- Body-group regression pin: the same shape parked on a Trooper group emits picks without consuming
+  any Chainsword or Bolt pistol — the branch already worked, but now it's held there by a check.
+- Plain replacement shape (with `replaces`, no `distinct`) is byte-for-byte unchanged.
+
+Registered `b106_check.js` in `pipeline_manifest.py`'s `GUARDED` and in `baseline.sh` immediately
+after the `b101_check` gate. Same argument shape (`node b106_check.js index.html`), same
+one-line-per-gate summary contract.
+
+### Verification
+
+All 24 engine/data harnesses pass, including `b101_check` (no regression) and the new `b106_check`.
+`rules_assertions --tier a` reports 81/82 mid-session — the only failing assertion is P3, which
+tripped on this session's own `index.html` and `baseline.sh` edits before the manifest was
+regenerated; resolved by `pipeline_manifest.py --write` at close, then `--freshness-check` re-hashes
+the decision log and this handoff to catch the ordering trap S180/S202 both hit.
+
+Tier-B checks (`repro_check`, `units_repro_check`, `detachments_repro`, `b87_check`, `b88_check`) are
+tier-skipped this session because GW sources aren't loaded — this is an engine turn, not a data turn,
+and none of the files those checks rebuild changed.
+
+### State at close
+
+`index.html`: v6.17 → **v6.18**; `loRollup` fixed-1 branch accepts the distinct-addition shape.
+`pipeline_manifest.py`: `b106_check.js` and `SESSION_HANDOFF_207.md` appended to `GUARDED`.
+`baseline.sh`: `b106_check` gate added after `b101_check`. `b106_check.js`: **net-new**, 32 assertions,
+all pass. `loadout_parser.py`, `equipped_parser.py`, `detachment_parser.py`, `units.json`,
+`unit_loadouts.json`, `wargear_points.json`, `detachments.json`, `rules_assertions.py`: **untouched**.
+Grey Knights fully unblocked for data-turn authoring: parser change + regeneration of both
+Dreadknights' ranged-weapon options is next session's work, followed by the next Adeptus Astartes
+faction per the priority order.
