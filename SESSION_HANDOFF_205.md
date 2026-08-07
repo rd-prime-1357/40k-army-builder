@@ -100,6 +100,7 @@ Verify these at S206 open.
 | `rules_assertions.py` | `f767cdb962df` | B104 assertion added; 120 total |
 | `unit_loadouts.json` | `42f3ad99ebb7` | 7 AA entries improved; all else byte-identical |
 | `pipeline_manifest.py` | `e3880603027b` | S205 handoff appended to GUARDED |
+| `40K_Decision_Log.md` | `68375fc125af` | D298 full prose entry appended |
 | `DECISION_INDEX.md` | `2997f05243d6` | D298 entry |
 | `OPEN_ITEMS_BACKLOG.md` | `1d4fe5b95154` | B104 closed; 23 open |
 | `NEXT_SESSION_PROMPT.md` | (unguarded) | S206 |

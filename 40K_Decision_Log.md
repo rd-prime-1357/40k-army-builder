@@ -11698,3 +11698,119 @@ byte-identical to S203's shipped state. `index.html`, `loadout_parser.py`, `equi
 manifest is current). Wording in `units_repro_check.py`'s own docstring was adjusted once, mid-session,
 after it accidentally tripped the P4 source census by literally naming a nonexistent file in a
 negative sentence — reworded to describe the same fact without the literal filename string.
+
+## D298 — B104 fixed (S205), tooling-only: `scoped_name2id`'s insertion-order-dependent fallback replaced with scope-alias + parent-army resolution and cross-candidate propagation
+
+### The bug, re-derived from source rather than trusted from S204's handoff prose
+
+Read `equipped_parser.py`'s `load_roster` and `scoped_name2id` directly before writing anything, per
+the session prompt's standing instruction. Confirmed two distinct failure paths, not one:
+
+1. **Scope-alias gap.** `Space_Marines_web.txt` derives a filename-based scope of `Space Marines`,
+   but the actual `units.json` block is named `Adeptus Astartes`. Since `Space Marines` is not a
+   real army block, `scoped_name2id` set `scope = None`, which meant EVERY multi-candidate name
+   resolved via `cands[-1]` regardless of which faction the composition text actually named. This is
+   a broader gap than S204's handoff described: it silently affected every shared name touched by
+   the SM pass, not only the 8 vehicles diff-guard caught (those 8 were simply the ones whose
+   pre-existing `cands[-1]` happened to differ from the correct answer once Grey Knights was
+   appended — the SM pass had been silently guessing all along).
+2. **Chapter-fallback gap.** `Dark_Angels_web.txt` and `Space_Wolves_web.txt` correctly resolve
+   scope to their own block names, but shared vehicle names (candidates: Adeptus Astartes, Black
+   Templars, and now Grey Knights) have no candidate matching a chapter's own scope — none of these
+   chapters field the vehicle under a chapter-specific `unit_id`. These passes also fell through to
+   `cands[-1]`.
+
+Confirmed by direct trace, not assumed: `scoped_name2id`'s exact-scope resolution logic itself was
+already correct in isolation. The defect was entirely in what happened when no candidate matched —
+an accident of `units.json`'s block declaration order, never a deliberate default.
+
+### The fix: three-tier resolution plus propagation
+
+`load_scope_maps()` is new: it reads `faction_taxonomy.json` and builds two dicts. `scope_aliases`
+maps a faction's display name to its `data_army` block name (currently one entry: `Space Marines` ->
+`Adeptus Astartes`). `parent_armies` maps every Adeptus Astartes chapter's `data_army` to the generic
+`Adeptus Astartes` block (11 entries — every chapter in the taxonomy's Adeptus Astartes group).
+Degrades gracefully to empty dicts if the taxonomy file is absent, so the parser has no hard
+dependency on it.
+
+`scoped_name2id` now resolves in order: (1) exact scope match against the composition file's own
+army, resolved through the alias map first if needed; (2) parent-army fallback, so a chapter pass
+referencing a name with no chapter-scoped candidate routes to the generic block; (3) `cands[-1]`,
+now reached only for genuinely unresolvable cases (a name with candidates from armies unrelated to
+the composition file's own scope or its parent — none exist in current data, but the fallback is
+kept rather than raising, since a future faction with a truly novel collision shape shouldn't hard-
+crash the pipeline over a case the fix can't yet anticipate).
+
+**Propagation**, the second half of the fix: `scoped_name2id` now returns `(name2id,
+propagation_map)`. The propagation map records, for each multi-candidate name's chosen primary
+`unit_id`, every OTHER candidate `unit_id` sharing that name. After `segment()` attributes
+composition text to the primary, the caller copies the same equipped lines to every other candidate —
+unless that candidate already has data from a prior pass (`_defaults_source == 'equipped'`) or is
+independently covered by this pass's own composition text. This was necessary because the old,
+wrong `cands[-1]` behaviour had accidentally been supplying Black Templars' shared vehicles with
+equipped data all along (by misattributing the SM/DA/SW passes' text to them); without propagation,
+fixing the scope resolution alone would have correctly attributed data to Adeptus Astartes but
+silently regressed Black Templars back to the flat, un-enriched baseline. Verified this exact
+regression risk directly: the first fix attempt (scope resolution only, no propagation) reverted
+all 7 previously-Black-Templars-attributed entries; adding propagation restored them while also
+fixing the 7 Adeptus Astartes entries that had never had correct data in the first place.
+
+### Verification — two full regenerations, field-level diff-guard
+
+Ran `repro_check`'s real pipeline twice, per the session prompt's explicit instruction not to trust
+a clean exit code alone.
+
+**Run 1, `GK` excluded from `FACTIONS`** (the regression test): 7 Adeptus Astartes entries changed
+from the committed file — Land Raider Crusader (`000000066`), Gladiator Reaper (`000001667`),
+Gladiator Valiant (`000001825`), Impulsor (`000002568`), Gladiator Lancer (`000002705`), Repulsor
+(`000002721`), Repulsor Executioner (`000002722`) — each gaining `_defaults_source: equipped` and
+correct per-model default weapon counts they had never actually had (a pre-existing gap the buggy
+fallback had been masking, not introducing). All 7 Black Templars counterparts confirmed
+byte-identical to committed via propagation. All 8 of S204's originally-flagged critical units
+(Land Raider and variants, Rhino, Razorback, Stormhawk/Stormtalon/Stormraven) matched committed
+exactly. All Chaos-side shared names (Chaos Land Raider, Chaos Rhino, Helbrute, etc. — DG/CSM/TS)
+confirmed byte-identical, unaffected by the Astartes-side fix.
+
+**Run 2, `GK` added to `FACTIONS`**: 25 new Grey Knights entries; zero existing entries changed
+versus Run 1. All 8 critical units identical whether Grey Knights is present or not — the specific
+symptom B104 was filed against is confirmed gone.
+
+Field-level check (not exit-code-only) run for the 8 critical units plus a sample of unrelated
+units (Chaos Space Marines Sorcerer, Death Guard's hand-authored Plague Marines entry, Adeptus
+Astartes Sternguard Veteran Squad) across both runs.
+
+### `unit_loadouts.json` regenerated this session (without GK in FACTIONS)
+
+The 7 Adeptus Astartes corrections are a mechanical, deterministic consequence of the parser fix —
+not new faction data, and not a data-turn decision. Regenerating and committing them alongside the
+tooling fix, rather than leaving a known-wrong file for a future session to reconcile, is a "how it
+gets built" sequencing call within standing development authority. `repro_check` now passes
+byte-identical to the regenerated file. `GK` deliberately left out of `repro_check.py`'s `FACTIONS` —
+that remains the loadouts data turn, sequenced for S206, per strict turn-typing.
+
+### New assertion: B104
+
+`rules_assertions.py` gains a synthetic-fixture assertion rather than one pinned to real faction
+data — mirroring B101's own precedent (D295/D296), since a check tied to Grey Knights' specific
+`unit_id`s would go silent the moment that faction's own data changes for unrelated reasons. The
+fixture models a name with candidates spanning three armies, tests all three resolution paths
+(direct scope, alias, parent fallback) plus insertion-order stability (appending a fourth candidate
+must not change any existing pass's result — the exact insertion-order sensitivity B104 documents)
+plus single-candidate stability and the propagation map's correctness. Confirmed the assertion fails
+against the pre-fix parser (a `TypeError` on the old three-argument signature) and passes against
+the fixed one.
+
+### State at close
+
+`equipped_parser.py`: B104 fix shipped — `load_scope_maps()` added, `scoped_name2id` rewritten
+(now returns a tuple), new optional `--taxonomy` argument. `rules_assertions.py`: B104 assertion
+added, count 119 -> 120. `unit_loadouts.json`: regenerated with the fixed parser (GK excluded from
+FACTIONS); 7 Adeptus Astartes entries corrected, all else byte-identical to S204's committed state;
+`repro_check` passes. `repro_check.py`: `FACTIONS` unchanged — GK still not added, by design.
+`index.html`, `loadout_parser.py`, `detachment_parser.py`, `units.json`: untouched.
+`pipeline_manifest.py`: `SESSION_HANDOFF_205.md` appended to GUARDED. `pipeline_manifest.json`
+regeneration blocked this session: `SESSION_HANDOFF_203.md` is absent from both the repo and the
+project area (confirmed via a fresh clone, not assumed) — apparently never pushed, first visible in
+S204's own baseline `fetch-verify` failure. `--write` cannot complete until Ryan either locates and
+pushes S203's content or removes its GUARDED entry; the session's Files table carries manually
+computed SHA-256 hashes in the interim, flagged as such rather than presented as manifest-verified.
