@@ -723,6 +723,36 @@ def classify_this_model_add_choice(text, unit_name):
                      'choices': choices}]
     return None
 
+_WORD_NUM = {'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5}
+
+def classify_this_model_add_count_choice(text, unit_name):
+    """'This model can be equipped with up to N of the following, but cannot take
+    duplicates: …' (B106, S208). A pure addition — no default weapon replaced —
+    capped at N total picks, with all picks required to be distinct from each
+    other. Distinct from classify_this_model_add_choice (a single pick, no cap)
+    and from the count_choice family in classify_n_model_swap/classify_per_n
+    (both of which require a 'replaces' source item this shape doesn't have).
+
+    Confirmed against a full-corpus scan of Datasheets_options.csv: 'up to N' in
+    this exact phrasing is always spelled out as a word (two/three), never a
+    digit, across all 27 matches found (22 'two', 5 'three'). The colon after
+    'duplicates' is present on most rows but not all (two Tau rows omit it before
+    the '<ul>' list marker) — both handled by the optional colon in the pattern."""
+    m = re.match(
+        r"This (?:model|unit) can be equipped with up to (?P<n>\w+) of the following,?\s*"
+        r"but cannot take duplicates:?\s*(?P<list>.+)",
+        text, re.I)
+    if not m:
+        return None
+    n = _WORD_NUM.get(m.group('n').lower())
+    if n is None:
+        return None
+    choices, _distinct = _choices_from_list(m.group('list'))
+    if not choices:
+        return None
+    return [{'_type': 'add_count_choice', '_scope_hint': 'single',
+             'replacement_choices': choices, 'max_total': n, 'distinct': True}]
+
 def classify_n_model_swap(text, unit_name):
     """'1 Tactical Marine's boltgun can be replaced with one of the following: …'
        'N <model>'s X can be replaced with N Y'
@@ -789,6 +819,7 @@ CLASSIFIERS = [
     classify_add,
     classify_this_model_choice,
     classify_this_model_add_choice,
+    classify_this_model_add_count_choice,
     classify_n_model_swap,
 ]
 
@@ -1147,6 +1178,23 @@ def build_loadout(unit_id, unit_name, comp_rows, size_brackets, weapons_list, op
                          'type': 'choice', 'replaces': None, 'choices': choices_out,
                          '_note': 'add_choice: no base weapon replaced; pick one to add'}
                 if equip_out: entry['equipment_choices'] = equip_out
+                options.append(entry)
+            elif ot == 'add_count_choice':
+                # B106 (S208): "up to N of the following, but cannot take
+                # duplicates" — a pure addition, no replaces, capped at max_total
+                # total picks, all distinct. Every currently-known match (both
+                # Grey Knights Dreadknights) is a ranged-weapon menu, so the group
+                # label is authored as 'Ranged Weapons' here; a future faction
+                # hitting this same classifier with a non-ranged-weapon list would
+                # need this label revisited by hand, per the session's scope note.
+                choices_out = []
+                for c in op['replacement_choices']:
+                    cn, cok = normalise_weapon(c, weapon_idx, global_idx)
+                    if not cok: flags.append(f'WEAPON_NOT_FOUND: {c} (add_count_choice) on {unit_name}')
+                    choices_out.append(base_display(cn) if cok else c)
+                entry = {'id': new_id('add'), 'scope': scope, 'group': 'Ranged Weapons',
+                         'type': 'count', 'replacement_choices': choices_out,
+                         'distinct': True, 'max_total': op['max_total']}
                 options.append(entry)
             elif ot == 'add':
 

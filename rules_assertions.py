@@ -2180,6 +2180,18 @@ ASSERTIONS = [
      'Datasheets_options.csv marker scan vs unit_loadouts.json (B101-DATA, D295/D296)',
      lambda S: b101_data_distinct_survives_the_marker(S)),
 
+    # ── B106-DATA (D302/S208). The engine half (B106, S207) taught loRollup to
+    # accept a distinct-addition count option; this is the data half — the parser
+    # classifier that actually emits the shape, checked against source so a future
+    # faction hitting the same GW phrasing can't silently regress it.
+    ('B106-DATA',
+     'Every currently-built datasheet whose Datasheets_options.csv row matches the '
+     '"up to N of the following, but cannot take duplicates" trigger, and whose option '
+     'the parser classifies (not UNMATCHED), carries type count / distinct true / '
+     'replacement_choices populated / max_total set / no replaces key.',
+     'Datasheets_options.csv trigger scan vs unit_loadouts.json (B106-DATA, D302)',
+     lambda S: b106_data_distinct_add_shape(S)),
+
     # ── B104 (D298/S205). scoped_name2id's ambiguous-candidate fallback was
     # insertion-order-dependent: appending a new same-named faction (Grey Knights)
     # silently corrupted 8 unrelated vehicles by stealing the cands[-1] slot.
@@ -4374,6 +4386,62 @@ def b60a_restrictions_no_stratagem_cp_debris(S):
     if bad:
         return False, '%d restrictions value(s) contain stratagem/CP debris: %s' % (len(bad), '; '.join(bad[:5]))
     return True, 'no restrictions value contains stratagem/CP debris (STRATAGEM, WHEN:, CP)'
+
+
+# B106-DATA (D302/S208): the "up to N of the following, but cannot take duplicates"
+# shape — a pure addition with no source item consumed — is a different sentence
+# from the B101 marker (which always rides on a REPLACEMENT list). Re-derived from
+# source every run, same rationale as B101-DATA: nothing else would catch a future
+# faction hitting this same GW phrasing on a datasheet nobody has looked at yet.
+_B106_TRIGGER_RE = re.compile(
+    r'up to (?:one|two|three|four|five|\d+) of the following,?\s*but cannot take duplicates',
+    re.IGNORECASE)
+
+
+def b106_data_distinct_add_shape(S):
+    """Every currently-built datasheet whose Datasheets_options.csv row matches the
+    B106 'up to N ... but cannot take duplicates' trigger, and whose option the
+    parser actually classifies (not UNMATCHED), carries the shape the engine's
+    B106 fix expects: type 'count', distinct: true, replacement_choices populated,
+    max_total set to a positive integer, and no 'replaces' key (this shape adds,
+    it does not consume a default weapon).
+
+    Re-derived by scanning ALL rows in the source CSV for the trigger phrase, not
+    by pinning the two Dreadknight unit IDs S208 built this from — a future
+    faction (or a Tau/other build outside the current priority order) hitting the
+    same GW phrasing should be caught here too, not just eyeballed."""
+    built_ids = {u['unit_id'] for army in S.units() for u in army['units']}
+    loadouts = S.loadouts()
+    marked_ds = sorted({r['datasheet_id'] for r in S.options()
+                         if _B106_TRIGGER_RE.search(r.get('description', ''))})
+    in_scope = [d for d in marked_ds if d in built_ids]
+    bad = []
+    checked = 0
+    for ds_id in in_scope:
+        entry = loadouts.get(ds_id)
+        if not entry:
+            continue
+        matches = [o for o in entry.get('options', [])
+                   if o.get('type') == 'count' and 'replacement_choices' in o
+                   and 'replaces' not in o]
+        if not matches:
+            # Parser left it UNMATCHED (flagged elsewhere) or classified it under a
+            # different shape entirely — not this assertion's fact to check.
+            continue
+        for opt in matches:
+            checked += 1
+            if not opt.get('distinct'):
+                bad.append(f'{ds_id}/{opt.get("id")}: no distinct flag')
+            mt = opt.get('max_total')
+            if not isinstance(mt, int) or mt < 1:
+                bad.append(f'{ds_id}/{opt.get("id")}: max_total missing or not a positive int')
+            if not opt.get('replacement_choices'):
+                bad.append(f'{ds_id}/{opt.get("id")}: replacement_choices empty')
+    if bad:
+        return False, '%d option(s) fail the B106 shape check: %s' % (len(bad), '; '.join(bad[:8]))
+    return True, ('%d marker-bearing datasheet(s) in-scope (of %d matched in source), '
+                   '%d option(s) checked, all carry the correct add-count-distinct shape'
+                   % (len(in_scope), len(marked_ds), checked))
 
 
 # B101-DATA marker phrases (D295/S202): GW states "you cannot select the same option

@@ -3,7 +3,20 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S207 (unchanged count from S206 — B106 closed, B108 opened):
+not here, it isn't open. **22 open** as of S208 (unchanged count from S207 — B100 closed, B109
+opened): B108, B99, B98, B97, B103, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23,
+B67b, E12, B17, B109. Data+parser turn (B106-DATA). Both Grey Knights Dreadknights' ranged-weapon
+options authored — new classifier `classify_this_model_add_count_choice` in `loadout_parser.py`,
+`unit_loadouts.json` and `wargear_points.json` regenerated and diff-guarded (2 units changed in each,
+0 elsewhere), new structural assertion `B106-DATA` re-derived from source. **B100 (Grey Knights)
+CLOSED — faction fully complete, 25/25 units, zero residual `_parser_flags`.** Baseline reconciliation
+at open fixed a stale manifest hash on `SESSION_HANDOFF_207.md` (same self-referential-hash problem as
+prior manifest gaps, different symptom). B108's private-repo-push half now confirmed done; public-repo
+removal half still outstanding, B108 stays open. Faction-priority census corrected by reading
+`units.json` directly: all twelve Adeptus Astartes chapters are already built — Emperor's Children is
+the correct next faction, not "the next Adeptus Astartes faction" as the prior two sessions' prompts
+assumed. Also logged Ryan's change request as **B109** (My Army Lists page label copy).
+**22 open** as of S207 (unchanged count from S206 — B106 closed, B108 opened):
 B108, B99, B98, B97, B103, E28, B93, B90, B94, B89, B100, B85, B86, B69, B70, B75, P2, P4, E23, B67b,
 E12, B17. Engine-only turn (B106). `index.html` v6.17 → v6.18: `loRollup`'s fixed-1 branch now accepts
 a `count` option with `distinct: true`, `replacement_choices` and no `replaces` as a pure addition,
@@ -640,69 +653,14 @@ Building it is a net-new faction build (own scoping pass first, `CSM_BUILD_SCOPE
 B89's definition. Tracked separately below as a new ticket. B89 itself has **no remaining in-scope
 candidate** until either a Grey Knights build lands or World Eaters/Emperor's Children unblocks CSM.
 
-### B100 — Build Grey Knights faction — **NEW S199 (D292); PROCESS; scoped S200; units half shipped S204; loadouts half shipped S206 except B106 (Dreadknights, engine-scoped, tracked separately)**
-Adeptus Astartes priority-order faction with zero built units at any version. Both
-`MFM_Grey_Knights_v1_0.txt` and `_v1.1.txt` are present and already mapped in `mfm_points_parser.py`'s
-`FACTION_BY_MFM`, and it was never part of the SM chapter-override chain (`add_chapter_point_overrides.py`'s
-`CHAPTERS` list holds only the five named chapters), so nothing blocks a build from a tooling
-standpoint.
+### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
+Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon
+options) shipped; faction fully complete, 25/25 units, zero residual `_parser_flags`.
 
-**SCOPED S200 (D293)** — `GREY_KNIGHTS_BUILD_SCOPE.md` written (net-new). 25 current-edition
-datasheets, not the raw 31; the smallest faction build the project has done. Fully self-sourced: no
-cross-file points append, not part of the `add_chapter_point_overrides.py` chain, so D291's
-version-mismatch hazard doesn't apply. Mirrors the Death Guard / Thousand Sons blocks in
-`units_repro_check.py` exactly. Full pipeline dry run clean (transform -> points -> convert, 25
-units, Gate of Infinity correctly routed as an army-level ability). Points coverage complete: 0
-datasheets unpriced, 0 unparsable costs, 0 bracket collisions, 0 dropped attach-list entries. Six
-exclusions verified against the MFM's own `LEGENDS` header — Draigo's absence is correct, not a bug.
-The Thunderhawk Gunship is unbuildable rather than excluded (Wahapedia's Forge World source is
-edition `0`, no datasheet exists); same silent gap applies to every built faction, recorded not
-fixed. **B94's open Grey Knights concern retires** — the `1ST TO 3RD`/`4TH +` copy-tier shape is gone
-in v1.1 (`REQUISITION THRESHOLDS REMOVED`). Loadouts need only four units authored, in two shapes:
-compound "weapon and banner" replacements plus a narthecium upgrade (no new schema — Sanguinary
-Guard's banner and Tzaangors' Herd Banner/Brayhorn are shipped precedents), and the two Nemesis
-Dreadknights' pick-two-distinct constraint, which depends on **B101-data turn 2** (turn 1 shipped
-S202/D295). Nine detachments, 28 enhancements, no unique tags; v1_0 vs v1.1 differ only in three force
-dispositions. Build from `_v1.1.txt` per D293.
-
-**UNITS HALF SHIPPED S204.** Registered Grey Knights in `units_repro_check.py` (mirrors the
-Thousand Sons block exactly). `units.json` regenerated and diff-guarded: exactly 25 units added,
-nothing else changed. Demonstrated directly (not assumed from the scope doc) that Grey Knights needs
-no dedicated composition-paste file — its six multi-group units gap-fill completely and correctly
-from the final `--datasheets` pass alone, since each one's groups carry identical default gear per
-the datasheet's own "Every model is equipped with" wording. `repro_check.py`'s `FACTIONS` list does
-**not** yet include `GK` — see below.
-
-**LOADOUTS HALF BLOCKED — three gaps found while attempting to author the four flagged units,
-tracked as their own tickets so the loadouts half can ship independently once each is resolved:**
-- **B104** (serious, blocks any `unit_loadouts.json` regeneration while Grey Knights exists in
-  `units.json`, not just its own loadouts): registering Grey Knights exposed a real, pre-existing
-  ambiguous-fallback bug in `equipped_parser.py`'s `scoped_name2id` that silently corrupts 8
-  unrelated, already-shipped generic-vehicle units the moment Grey Knights' same-named vehicles
-  (Land Raider, Land Raider Crusader, Land Raider Redeemer, Rhino, Razorback, Stormhawk Interceptor,
-  Stormtalon Gunship, Stormraven Gunship) are appended after them. See B104's own entry for the
-  full root cause.
-- **B105**: the narthecium sentence ("1 Terminator can have its storm bolter replaced with 1
-  Apothecary's narthecium") uses passive phrasing no classifier in `loadout_parser.py` matches.
-  Confirmed data-only-fixable pieces first: added `Ancient's Banner` and `Apothecary's Narthecium`
-  wargear-ability text via `ds_wargear_abilities_parser.py`'s regeneration — the SAME "compound
-  weapon + banner" option (Brotherhood Terminator Squad / Paladin Squad's `cc_2`) is already
-  correctly classified by the existing parser and needs no code change once B104 is fixed and a
-  clean regeneration lands it with its display name resolved. Only the standalone narthecium
-  sentence needs a new classifier.
-- **B106**: both Dreadknights' "up to two of the following, but cannot take duplicates" line (no
-  `replaces` — a pure addition, not a swap) is a genuinely untested shape: traced the actual
-  `loRollup` code in `index.html` and confirmed the shipped B101 `distinct` support only covers
-  options with a real source weapon on a fixed-1 group. This needs new engine support, not just a
-  parser regex, before it can ship.
-
-Sequencing recommendation (mine, proceeding on it): fix B104 first — it blocks the whole
-`unit_loadouts.json` gate regardless of Grey Knights' own loadouts and risks silently corrupting
-other factions' data on any future data turn if left alone. Then B105 (parser-only, small). B106
-(engine + tooling + data) can follow on its own schedule since it only blocks the two Dreadknights,
-not the rest of the roster. Once all three ship, re-add `GK` to `repro_check.py`'s `FACTIONS` list
-and regenerate `unit_loadouts.json` for real, re-verifying the 8 previously-affected vehicles resolve
-correctly alongside Grey Knights' own 25 units.
+### B109 — "My Army Lists" page: replace "Target ####" label with "#### Points" — **NEW S208 (D302); Ryan-reported; UI copy only; XS**
+Ryan's change request, logged verbatim. Not yet scoped against `index.html` — needs the render site for
+the "My Army Lists" page's list-row label found and the copy changed. No rules content, no data or
+parser involvement; pure UI-text turn.
 
 ### B103 — Non-distinct `replacement_choices` rollup emits past its cap and hides the over-allocation — **NEW S201 (D294); engine; M; affects shipped lists' points**
 Found while landing B101 and deliberately left alone there. In `loRollup`'s multi-model body branch, a
@@ -1108,6 +1066,90 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
   member caps, not a sum. Net-new `b106_check.js` (32 assertions), gated in `baseline.sh` and
   `pipeline_manifest.py`. `index.html` v6.17 → v6.18. Grey Knights fully unblocked for the
   Dreadknight parser + regeneration turn.
+
+- **B106-DATA** — the parser/data half of B106 — **NEW S208 (D302); CLOSED S208 (D302); DATA+PARSER.**
+  New classifier `classify_this_model_add_count_choice` in `loadout_parser.py` matches "This model can
+  be equipped with up to N of the following, but cannot take duplicates" (N always spelled as a word in
+  source — confirmed across the full corpus, 22 "two" + 5 "three", never a digit), emitting `type:
+  'count'`, `distinct: true`, `replacement_choices`, `max_total`, no `replaces` — exactly the shape
+  B106's engine fix was built to accept. Regression-checked against the full options corpus: only the
+  two Grey Knights Dreadknights match this classifier's lead-in; four more raw-text matches (all Tau)
+  use a different lead-in ("Any number of models…") and are out of scope regardless (not currently
+  built). `unit_loadouts.json` regenerated via the seven-pass chain, seeded with only the four
+  `HAND_AUTHORED` entries — 2 units changed, 0 elsewhere, `repro_check` byte-identical.
+  `wargear_points.json` regenerated via the canonical `FACTION_BY_MFM` order — 2 units added, 0
+  elsewhere. New structural assertion `B106-DATA`, re-derived from source, not pinned to unit IDs.
+
+- **B100** — Build Grey Knights faction — **NEW S199 (D292); scoped S200 (D293); units half shipped
+  S204; loadouts half shipped S206; CLOSED S208 (D302) once B106-DATA shipped the two Dreadknights'
+  ranged-weapon options.** Full original body below, kept intact for the scoping/build history.
+
+  Adeptus Astartes priority-order faction with zero built units at any version. Both
+  `MFM_Grey_Knights_v1_0.txt` and `_v1.1.txt` are present and already mapped in `mfm_points_parser.py`'s
+  `FACTION_BY_MFM`, and it was never part of the SM chapter-override chain (`add_chapter_point_overrides.py`'s
+  `CHAPTERS` list holds only the five named chapters), so nothing blocks a build from a tooling
+  standpoint.
+
+  **SCOPED S200 (D293)** — `GREY_KNIGHTS_BUILD_SCOPE.md` written (net-new). 25 current-edition
+  datasheets, not the raw 31; the smallest faction build the project has done. Fully self-sourced: no
+  cross-file points append, not part of the `add_chapter_point_overrides.py` chain, so D291's
+  version-mismatch hazard doesn't apply. Mirrors the Death Guard / Thousand Sons blocks in
+  `units_repro_check.py` exactly. Full pipeline dry run clean (transform -> points -> convert, 25
+  units, Gate of Infinity correctly routed as an army-level ability). Points coverage complete: 0
+  datasheets unpriced, 0 unparsable costs, 0 bracket collisions, 0 dropped attach-list entries. Six
+  exclusions verified against the MFM's own `LEGENDS` header — Draigo's absence is correct, not a bug.
+  The Thunderhawk Gunship is unbuildable rather than excluded (Wahapedia's Forge World source is
+  edition `0`, no datasheet exists); same silent gap applies to every built faction, recorded not
+  fixed. **B94's open Grey Knights concern retires** — the `1ST TO 3RD`/`4TH +` copy-tier shape is gone
+  in v1.1 (`REQUISITION THRESHOLDS REMOVED`). Loadouts need only four units authored, in two shapes:
+  compound "weapon and banner" replacements plus a narthecium upgrade (no new schema — Sanguinary
+  Guard's banner and Tzaangors' Herd Banner/Brayhorn are shipped precedents), and the two Nemesis
+  Dreadknights' pick-two-distinct constraint, which depends on **B101-data turn 2** (turn 1 shipped
+  S202/D295). Nine detachments, 28 enhancements, no unique tags; v1_0 vs v1.1 differ only in three force
+  dispositions. Build from `_v1.1.txt` per D293.
+
+  **UNITS HALF SHIPPED S204.** Registered Grey Knights in `units_repro_check.py` (mirrors the
+  Thousand Sons block exactly). `units.json` regenerated and diff-guarded: exactly 25 units added,
+  nothing else changed. Demonstrated directly (not assumed from the scope doc) that Grey Knights needs
+  no dedicated composition-paste file — its six multi-group units gap-fill completely and correctly
+  from the final `--datasheets` pass alone, since each one's groups carry identical default gear per
+  the datasheet's own "Every model is equipped with" wording. `repro_check.py`'s `FACTIONS` list does
+  **not** yet include `GK` — see below.
+
+  **LOADOUTS HALF BLOCKED — three gaps found while attempting to author the four flagged units,
+  tracked as their own tickets so the loadouts half can ship independently once each is resolved:**
+  - **B104** (serious, blocks any `unit_loadouts.json` regeneration while Grey Knights exists in
+    `units.json`, not just its own loadouts): registering Grey Knights exposed a real, pre-existing
+    ambiguous-fallback bug in `equipped_parser.py`'s `scoped_name2id` that silently corrupts 8
+    unrelated, already-shipped generic-vehicle units the moment Grey Knights' same-named vehicles
+    (Land Raider, Land Raider Crusader, Land Raider Redeemer, Rhino, Razorback, Stormhawk Interceptor,
+    Stormtalon Gunship, Stormraven Gunship) are appended after them. See B104's own entry for the
+    full root cause.
+  - **B105**: the narthecium sentence ("1 Terminator can have its storm bolter replaced with 1
+    Apothecary's narthecium") uses passive phrasing no classifier in `loadout_parser.py` matches.
+    Confirmed data-only-fixable pieces first: added `Ancient's Banner` and `Apothecary's Narthecium`
+    wargear-ability text via `ds_wargear_abilities_parser.py`'s regeneration — the SAME "compound
+    weapon + banner" option (Brotherhood Terminator Squad / Paladin Squad's `cc_2`) is already
+    correctly classified by the existing parser and needs no code change once B104 is fixed and a
+    clean regeneration lands it with its display name resolved. Only the standalone narthecium
+    sentence needs a new classifier.
+  - **B106**: both Dreadknights' "up to two of the following, but cannot take duplicates" line (no
+    `replaces` — a pure addition, not a swap) is a genuinely untested shape: traced the actual
+    `loRollup` code in `index.html` and confirmed the shipped B101 `distinct` support only covers
+    options with a real source weapon on a fixed-1 group. This needs new engine support, not just a
+    parser regex, before it can ship.
+
+  Sequencing recommendation (mine, proceeding on it): fix B104 first — it blocks the whole
+  `unit_loadouts.json` gate regardless of Grey Knights' own loadouts and risks silently corrupting
+  other factions' data on any future data turn if left alone. Then B105 (parser-only, small). B106
+  (engine + tooling + data) can follow on its own schedule since it only blocks the two Dreadknights,
+  not the rest of the roster. Once all three ship, re-add `GK` to `repro_check.py`'s `FACTIONS` list
+  and regenerate `unit_loadouts.json` for real, re-verifying the 8 previously-affected vehicles resolve
+  correctly alongside Grey Knights' own 25 units.
+
+  **CLOSED S208 (D302):** B106-DATA shipped both Dreadknights' ranged-weapon options — see B106-DATA's
+  own entry above for the classifier, regeneration, and assertion detail. Grey Knights is now fully
+  complete: 25/25 units built, zero residual `_parser_flags` anywhere in the faction.
 - **B105** — `loadout_parser.py` doesn't classify a passive single-model swap sentence ("N `<model>`
   can have its X replaced with Y") — **NEW S204 (D297); CLOSED S206 (D300); TOOLING.** Added
   `classify_one_model_passive_swap`, mirroring `classify_one_model_swap`'s active-voice shape but for

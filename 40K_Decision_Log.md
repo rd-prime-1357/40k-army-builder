@@ -12042,3 +12042,102 @@ all pass. `loadout_parser.py`, `equipped_parser.py`, `detachment_parser.py`, `un
 Grey Knights fully unblocked for data-turn authoring: parser change + regeneration of both
 Dreadknights' ranged-weapon options is next session's work, followed by the next Adeptus Astartes
 faction per the priority order.
+
+## D302 — B106-DATA shipped (S208), data+parser turn: both Grey Knights Dreadknights' ranged-weapon options authored; Grey Knights fully complete. Faction-priority census corrected — the "next Adeptus Astartes faction" framing carried by S206/S207 was stale; all twelve are already built
+
+### Baseline reconciliation at open
+
+`pipeline_manifest.json` had a stale hash on `SESSION_HANDOFF_207.md` — the handoff's own Files table
+listed its hash as "pre-computation; verify against banked copy," and the manifest had in fact been
+written before the file reached its final committed content. Same underlying failure class as the
+S180/S202 GUARDED-append gaps, a different symptom (the filename WAS appended; the recorded hash was
+just wrong). Reconciled via `pipeline_manifest.py --write`; `rules_assertions`, `pipeline_manifest`,
+and `--freshness-check` all confirmed clean afterward. B108 (Ryan action, opened S207): the private-
+repo push half is now done — `source-fetch` verified 85 files against `source_manifest.json` cleanly
+this session, where it previously fell back to the project-mount stopgap. The public-repo removal half
+is still outstanding — `repo_check` still flags `Thousand_Sons_web.txt` CRITICAL in the public repo.
+Non-blocking for this data turn since sources loaded fine either way; B108 stays open.
+
+### Dreadknight ranged-weapon options authored
+
+Verified source directly against `Datasheets_options.csv` before writing anything (not assumed from
+the scope doc): vanilla Nemesis Dreadknight (`000000389`) offers 3 ranged weapons with no sublimator;
+Grand Master in Nemesis Dreadknight (`000001360`) offers all 4, sublimator included — matches the
+S208 prompt's own note exactly.
+
+New classifier `classify_this_model_add_count_choice` in `loadout_parser.py`, matching "This model can
+be equipped with up to N of the following, but cannot take duplicates: …" (N spelled as a word — a
+full corpus scan found this exact phrasing always uses "two"/"three", never a digit, across all 27
+matches: 22 "two", 5 "three"). Emits a new `_type`, `add_count_choice`, dispatched in `build_loadout`
+to a `type: 'count'` entry with `distinct: true`, `replacement_choices` populated, `max_total` set, and
+**no** `replaces` key — exactly the shape B106's engine fix (D301) was built to accept, confirmed
+against `b106_check.js`'s own pre-existing test fixture (`id: 'add_r'`, `group: 'Ranged Weapons'`,
+`max_total: 2`), which had already encoded this target shape a session ahead of the data half landing.
+Group label `'Ranged Weapons'` is a hardcoded default for this classifier, not derived generically from
+the sentence — both currently-known matches are ranged-weapon menus; a future faction hitting the same
+GW phrasing with a non-ranged list would need this label revisited by hand.
+
+**Regression-checked against the full options corpus before touching the pipeline**, per the B105/S206
+methodology: ran the classifier directly against every row in `Datasheets_options.csv`. Two hits, both
+Grey Knights Dreadknights — no other unit's option shape changed. A broader text-level scan of the raw
+"but cannot take duplicates" phrase (not the classifier's specific "This model/unit …" lead-in) turned
+up four more matches, all Tau (`000000433`, `000003699`, `000003700`, `000003701`, one variant missing
+the trailing colon before the list) — but their lead-in is "Any number of models can be equipped
+with…", a different sentence shape the classifier doesn't match, and none are currently-built units
+regardless. Correctly out of scope, left untouched.
+
+**`unit_loadouts.json` regenerated** via the same seven-pass chain `repro_check.py` itself runs,
+seeded with only the four `HAND_AUTHORED` entries (not an `--existing` full-file carry-forward, which
+would have silently preserved the pre-fix `UNMATCHED` residuals). Key-level diff against the previously
+committed file: **exactly the two Dreadknights changed, 0 added/removed elsewhere, 0 changed elsewhere
+— both lose their `UNMATCHED` flag and gain the new option.** Field-checked both units' final option
+content against source by eye before promoting. `repro_check.py` re-run clean against the promoted file.
+
+**`wargear_points.json` regenerated** using the canonical `FACTION_BY_MFM` insertion-order file list
+(not alphabetical — S206's D236-class trap, re-confirmed by checking that the two priced items'
+`source` provenance correctly cites the v1_0 file, first in insertion order, matching the pattern of
+the four Grey Knights entries S206 already added). Confirmed v1_0 and v1.1 carry identical prices for
+both items before trusting the provenance choice (Heavy psycannon 15 pts on both units; Sublimator 15
+pts on the Grand Master only — Gatling psilencer and Heavy incinerator are free on both, matching the
+MFM's WARGEAR OPTIONS blocks directly). Diff-guarded: **2 units added, 0 removed, 0 changed elsewhere.**
+`E14-2`'s pinned census unaffected — the new options are `type: 'count'`, not `type: 'add'`, so none
+qualify for E14-2's free-add criteria; confirmed by the assertion passing unchanged (still checks the
+same 90/61 literal).
+
+**New structural assertion `B106-DATA`** in `rules_assertions.py`, mirroring `B101-DATA`'s re-derive-
+from-source pattern rather than pinning the two Dreadknight IDs: scans `Datasheets_options.csv` for the
+"up to N of the following, but cannot take duplicates" trigger, and for every currently-built match
+whose option the parser actually classifies, confirms `type: 'count'`, `distinct: true`,
+`replacement_choices` populated, `max_total` a positive int, and no `replaces` key. 121 assertions now
+registered; 120 pass at commit (P3 fails until the manifest write below, expected and resolved by it).
+
+### Faction-priority census corrected
+
+Before recommending what session S209 should build, pulled the actual built-faction list directly from
+`units.json` rather than trusting the standing priority text or S206/S207's "next Adeptus Astartes
+faction" framing. Result: **all twelve Adeptus Astartes entries in the priority order are already
+built** (Black Templars, Dark Angels, Blood Angels, Deathwatch, Grey Knights, Imperial Fists, Iron
+Hands, Raven Guard, Salamanders, Space Wolves, Ultramarines, White Scars — plus the generic Adeptus
+Astartes pool). This is consistent with D293 (S200), which already stated Grey Knights was joining
+"sixteen" pre-existing armies at that point — Grey Knights was in fact the *last* Adeptus Astartes
+chapter still open, not a mid-list entry, and S206/S207's prompts inherited stale phrasing rather than
+re-deriving it. Of the Heretic Astartes tier, Chaos Space Marines, Thousand Sons and Death Guard are
+also already built; Emperor's Children and World Eaters are not. Chaos Daemons is built (out of the
+tier's nominal order, already shipped in an earlier session); Drukhari is not yet started. **Emperor's
+Children is the correct next faction**, needing its own scoping pass first (CSM/TS/Grey Knights
+precedent) — no `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` exists yet. Corrected in `NEXT_SESSION_PROMPT.md`
+rather than carrying the stale framing forward a third session.
+
+### State at close
+
+`loadout_parser.py`: `classify_this_model_add_count_choice` added (new `_type` `add_count_choice`,
+dispatched in `build_loadout`). `unit_loadouts.json`: 2 units changed (both Dreadknights), 0 elsewhere;
+`repro_check` byte-identical. `wargear_points.json`: 2 units added, 0 elsewhere; rebuilds clean from the
+MFM. `rules_assertions.py`: `B106-DATA` added (121 assertions registered, 120 pass pre-manifest-write).
+B100 (Grey Knights) **CLOSED** — the faction is fully complete, 25/25 units with clean loadouts, no
+residual `_parser_flags` anywhere in the faction. `index.html`, `equipped_parser.py`,
+`detachment_parser.py`, `units.json`, `detachments.json`, `detachment_effects.json`: **untouched**.
+B108 (Ryan action) remains open — public-repo removal still outstanding.
+
+Also logged this session (Ryan-reported, not yet scoped): on the "My Army Lists" page, replace the
+"Target ####" label with "#### Points" — filed as **B109**, UI copy change, XS, no rules content.

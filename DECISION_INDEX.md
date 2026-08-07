@@ -716,3 +716,23 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   repo — verbatim GW composition material, standing-constraint violation — and the S206 Ryan action
   to push it to the private repo is still not done. Cannot fix from this session (public-repo push
   scope + read-only private token); opened as **B108**.
+- **D302** — B106-DATA shipped (S208), data+parser turn. New classifier `classify_this_model_add_count_choice`
+  matches "This model can be equipped with up to N of the following, but cannot take duplicates" (N
+  spelled as a word, confirmed across a full corpus scan — never a digit), emitting the exact shape
+  B106's engine fix (D301) was built to accept: `type: 'count'`, `distinct: true`, `replacement_choices`
+  populated, `max_total` set, no `replaces`. Both Grey Knights Dreadknights authored — the only two
+  currently-built matches, confirmed by running the classifier against the full options corpus (four
+  more raw-text matches found, all Tau, different sentence shape, not currently built, correctly left
+  alone). `unit_loadouts.json` regenerated via the seven-pass chain seeded with only the four
+  `HAND_AUTHORED` entries (2 units changed, 0 elsewhere; `repro_check` byte-identical).
+  `wargear_points.json` regenerated via the canonical `FACTION_BY_MFM` file order (2 units added, 0
+  elsewhere; v1_0/v1.1 prices confirmed identical before trusting the v1_0 provenance). New structural
+  assertion `B106-DATA`, re-derived from source per the `B101-DATA` pattern rather than pinned to the
+  two unit IDs. **B100 (Grey Knights) CLOSED — faction fully complete, 25/25 units, zero residual
+  `_parser_flags`.** Faction-priority census corrected by reading `units.json` directly: all twelve
+  Adeptus Astartes entries are already built (Grey Knights was the last, not mid-list, consistent with
+  D293's "sixteen pre-existing armies" framing at S200) — **Emperor's Children is the correct next
+  faction**, not "the next Adeptus Astartes faction" as S206/S207's prompts carried forward. Needs its
+  own scoping pass first; no scope doc exists yet. B108 (Ryan action) remains open — public-repo
+  removal side still outstanding, private-repo push side now confirmed done. Also logged: **B109** —
+  "My Army Lists" page, "Target ####" → "#### Points" label change (Ryan-reported, UI copy only).

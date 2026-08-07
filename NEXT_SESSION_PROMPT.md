@@ -1,98 +1,78 @@
-# NEXT SESSION PROMPT — Session 208
+# NEXT SESSION PROMPT — Session 209
 
-## Recommended turn type: data-turn (Grey Knights Dreadknights authoring + parser change), unless
-## B108 is still open — see below.
+## Recommended turn type: scoping-only (Emperor's Children)
 
-Read `SESSION_HANDOFF_207.md` first, then this prompt. S207 shipped B106 — `loRollup`'s fixed-1
-branch now accepts a distinct-addition count option (`type: 'count'`, `distinct: true`,
-`replacement_choices: [...]`, `max_total: N`, no `replaces`). `index.html` is at v6.18. Grey Knights
-is fully unblocked for the parser + data turn.
+Read `SESSION_HANDOFF_208.md` first, then this prompt. S208 shipped B106-DATA — both Grey Knights
+Dreadknights' ranged-weapon options are authored, `unit_loadouts.json` and `wargear_points.json`
+regenerated and diff-guarded, new `B106-DATA` structural assertion added. **Grey Knights is fully
+complete: 25/25 units, zero residual `_parser_flags`.** B100 closed.
 
-## Before starting: B108 status check
+## Corrected faction-priority finding — read before picking work
 
-S207 open surfaced a critical publication problem: `Thousand_Sons_web.txt` is in the public repo
-(GW-derived content, standing-constraint violation) AND still absent from the private repo. Both are
-Ryan actions and neither could be fixed from S207.
+S206 and S207's prompts both said "move to the next Adeptus Astartes faction" after Grey Knights.
+That phrasing was stale. S208 checked `units.json` directly rather than trusting it: **all twelve
+Adeptus Astartes chapters in the standing priority order are already built** — Black Templars, Dark
+Angels, Blood Angels, Deathwatch, Grey Knights, Imperial Fists, Iron Hands, Raven Guard, Salamanders,
+Space Wolves, Ultramarines, White Scars, plus the generic Adeptus Astartes pool. Grey Knights was in
+fact the last one open, not mid-list — consistent with D293 (S200), which already described Grey
+Knights joining "sixteen pre-existing armies."
 
-- If Ryan has removed it from the public repo AND pushed it to the private repo, `repo_check` and
-  the `--fetch --data-turn` source-fetch gate will both clear at open. Proceed with the main task.
-- If either is still outstanding, `repo_check` will keep flagging CRITICAL (public-repo copy still
-  present) and/or the source-fetch gate will fail the same way S206/S207 did. This is a data turn,
-  so a source-fetch failure DOES gate work. If B108's second half (private-repo push) is not done,
-  fall back to the same project-mount stopgap S206 and S207 used: pull `Thousand_Sons_web.txt` from
-  `/mnt/project/` and re-flag B108. Do NOT treat this as new — it's still B108.
+Of the Heretic Astartes tier: Chaos Space Marines, Thousand Sons, and Death Guard are built.
+**Emperor's Children and World Eaters are not.** Chaos Daemons is already built (shipped out of the
+tier's nominal order in an earlier session — not a gap, already done). Drukhari is not started.
 
-## Primary task: author both Dreadknights' ranged-weapon options + regeneration
+**Emperor's Children is the correct next faction to build**, per the standing priority order
+(Heretic Astartes precedes Chaos Daemons/Drukhari, and within Heretic Astartes, Emperor's Children
+precedes World Eaters).
 
-Both Grey Knights Dreadknights (`000000389` Nemesis Dreadknight, `000001360` Grand Master in Nemesis
-Dreadknight) carry the sentence:
+## Primary task: scope Emperor's Children
 
-> "This model can be equipped with up to two of the following, but cannot take duplicates:
-> 1 gatling psilencer / 1 heavy incinerator / 1 heavy psycannon[/1 sublimator]"
+No `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` exists yet. Follow the CSM/Thousand Sons/Grey Knights
+precedent (`CSM_BUILD_SCOPE.md`, `THOUSAND_SONS_BUILD_SCOPE.md`, `GREY_KNIGHTS_BUILD_SCOPE.md`) —
+scoping is data-gathering and analysis, not a build. Recommended checks, all against source directly,
+not assumed from any prior document:
 
-The sublimator is only on the Grand Master, not the vanilla Nemesis Dreadknight — verify against
-source before authoring, don't assume.
+- Current-edition datasheet count from `MFM_Emperors_Children_v1.1.txt` (build from newest per D293),
+  cross-checked against `Datasheets.csv`'s Emperor's Children rows — confirm the LEGENDS exclusions
+  the same way Grey Knights' were confirmed (against the MFM's own header, not Wahapedia's
+  classification).
+- Full pipeline dry run (transform → points → convert) for a clean read: unpriced datasheets,
+  unparsable costs, bracket collisions, dropped attach-list entries — same checklist Grey Knights used.
+- Loadout complexity census: how many units need loadouts authored, and whether any sentence shapes
+  are genuinely new (unlikely at this point in the project, but check rather than assume — Emperor's
+  Children has some Noise Marine-specific wargear that may not match existing classifiers).
+- Detachment count, enhancement count, unique tags, and whether v1_0 vs v1.1 differ materially
+  (same check Grey Knights ran).
+- Confirm nothing in `add_chapter_point_overrides.py`'s `CHAPTERS` list or any other chapter-override
+  chain affects Emperor's Children (Grey Knights needed no such check to pass; Emperor's Children,
+  being Heretic Astartes rather than Space Marine-descended, almost certainly doesn't either, but
+  confirm rather than assume).
 
-### Parser change
+Output: a new `EMPEROR'S_CHILDREN_BUILD_SCOPE.md`, plus a decision log entry recording the findings
+and the recommended build sequencing (units half / loadouts half / detachments half, same split
+pattern as every prior faction). No committed data, parser, or engine file should change this
+session — scoping-only, per the CSM/TS/GK precedent.
 
-`loadout_parser.py` needs a new classifier for this sentence shape:
+## Also open: B109 (small, unscoped)
 
-- Trigger phrase: "up to N of the following, but cannot take duplicates" (or the equivalent —
-  read source, don't assume; there may be prior-art phrasings this session should catch too).
-- Emitted option shape: `type: 'count'`, `distinct: true`, `replacement_choices: [...listed weapons]`,
-  `max_total: N`, no `replaces` field. `scope` = the model-group name. `group` = a sensible label
-  authored from the sentence (e.g. "Ranged Weapons").
-- Regression-check the new classifier against the full options corpus before touching the pipeline:
-  scan `Datasheets_options.csv` for every match, then confirm each hit is currently unclassified by
-  every other function in `CLASSIFIERS` and belongs to a currently-built unit — same methodology
-  B105 (S206) used. Any hits outside Grey Knights need explicit review; do not silently regenerate.
-
-### Data regeneration
-
-Run the seven-pass `equipped_parser.py` chain in a scratch directory, seeded with the four
-`HAND_AUTHORED` entries only (same methodology `repro_check.py` uses, NOT a `--existing`
-carry-forward — that would silently preserve the pre-fix `UNMATCHED` residuals on both Dreadknights).
-Diff-guard at key level: expected diff is exactly the two Dreadknight units updated (both losing
-their `_parser_flags` line, both gaining the new ranged-weapon option), zero change elsewhere. Field-
-check the actual emitted option on both units against source before promoting.
-
-### Cost sanity check
-
-`wargear_points.json` may need regeneration if the MFM prices the ranged weapons — check
-`MFM_Grey_Knights_v1.1.txt`'s WARGEAR OPTIONS block for the two Dreadknights and confirm whether
-prices already exist in `wargear_points.json` (they may — S206 already added 4 GK units to it).
-If prices exist and are already correct, no regeneration; if any are missing, run the canonical
-`FACTION_BY_MFM` insertion-order path (NOT alphabetical — S206 documented the trap), diff-guard,
-and update `E14-2`'s pinned census if the counts change.
-
-### Assertion
-
-Add a structural assertion in `rules_assertions.py` covering the new sentence shape — scan
-`Datasheets_options.csv` for the trigger phrase and confirm every match in a currently-built
-faction has a corresponding option in `unit_loadouts.json` with the correct shape (`type: 'count'`,
-`distinct: true`, `replacement_choices` populated, `max_total` set, no `replaces`). Same shape as
-B101-DATA. Don't pin by unit ID — a future faction may hit this sentence too.
-
-## After the Dreadknight turn ships
-
-Grey Knights will be **fully complete**. Move to the next Adeptus Astartes faction per the standing
-priority order — check `40K_Decision_Log.md`'s most recent faction-priority note for which is next
-(the standing order is Black Templars, Dark Angels, Blood Angels, Deathwatch, Grey Knights, Imperial
-Fists, Iron Hands, Raven Guard, Salamanders, Space Wolves, Ultramarines, White Scars, but the log is
-the authority on which are already built).
+Ryan's change request from S208: on the "My Army Lists" page, replace the "Target ####" label with
+"#### Points". Not yet scoped against `index.html` — find the render site before touching anything.
+This is UI-copy-only, XS, no rules content. Could be picked up as a quick engine-only turn either
+before or after the Emperor's Children scoping pass, at your discretion — it doesn't block or get
+blocked by anything else currently open.
 
 ## Standing reminders
 
-- `./baseline.sh --fetch --data-turn` at open (see B108 caveat above).
-- All 30+ gates should be green at S207 close (once the manifest is regenerated) — confirm they
-  still are before starting new work.
-- Re-derive from source, don't trust prior-session prose.
-- Do NOT hand-edit `unit_loadouts.json`. Fix parsers, regenerate.
-- Turn typing: this is a data turn (with parser + assertion pieces). Do not mix in unrelated engine
-  or tooling changes.
+- `./baseline.sh --fetch` at open (scoping turns don't need `--data-turn`, but sources are already
+  loaded from S208 and should still pass the sources_loaded check either way).
+- All 34 gates should be green at S208 close except `repo_check` (B108, Ryan action) — confirm before
+  starting new work.
+- Re-derive from source, don't trust prior-session prose — this prompt's own faction-priority
+  correction is itself a case in point.
+- Turn typing: scoping is its own type. Do not mix in unrelated engine, parser, or data changes.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_208.md` in `pipeline_manifest.py`'s GUARDED
+Produce the four documents, register `SESSION_HANDOFF_209.md` in `pipeline_manifest.py`'s GUARDED
 list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
 command.

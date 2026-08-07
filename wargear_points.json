@@ -83,6 +83,15 @@
    }
   }
  },
+ "000000389": {
+  "items": {
+   "heavy psycannon": {
+    "cost": 15,
+    "display": "Heavy psycannon",
+    "source": "MFM_Grey_Knights_v1_0.txt:97"
+   }
+  }
+ },
  "000000967": {
   "items": {
    "ectoplasma cannon": {
@@ -117,6 +126,20 @@
     "cost": 10,
     "display": "Heavy reaper autocannon",
     "source": "MFM_Thousand_Sons_v1_0.txt:47"
+   }
+  }
+ },
+ "000001360": {
+  "items": {
+   "heavy psycannon": {
+    "cost": 15,
+    "display": "Heavy psycannon",
+    "source": "MFM_Grey_Knights_v1_0.txt:58"
+   },
+   "sublimator": {
+    "cost": 15,
+    "display": "Sublimator",
+    "source": "MFM_Grey_Knights_v1_0.txt:57"
    }
   }
  },
