@@ -671,3 +671,12 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   own D296 entry had gone missing (index and backlog referenced it correctly, but the full prose entry
   was never written despite S203's handoff claiming it was) — reconstructed from the handoff, manifest
   regenerated.
+- **D298** — B104 fixed (S205), tooling-only. `equipped_parser.py`'s `scoped_name2id` rewritten with
+  scope-alias + parent-army fallback from `faction_taxonomy.json`, plus propagation of composition data
+  to all same-named candidates. Fixes the insertion-order-dependent `cands[-1]` fallback that silently
+  corrupted 8 vehicles when Grey Knights was appended to `units.json`. Also corrects a pre-existing gap
+  where 7 Adeptus Astartes generic vehicles (Land Raider Crusader, 3 Gladiators, Impulsor, Repulsor,
+  Repulsor Executioner) never received `equipped` composition data because the SM web pass's scope
+  (`Space Marines`) didn't match the block name (`Adeptus Astartes`). Synthetic B104 assertion added to
+  `rules_assertions.py`. `unit_loadouts.json` regenerated (without GK in FACTIONS) to capture the 7 AA
+  improvements; repro_check byte-identical.

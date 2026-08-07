@@ -3,7 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S204 (up from 21 at S203 — three new tickets opened,
+not here, it isn't open. **23 open** as of S205 (down from 24 at S204 — B104 closed): B105, B106,
+B99, B98, B97, B103, E28, B93, B90, B94, B89, B100, B85, B86, B69, B70, B75, P2, P4, E23, B67b,
+E12, B17. Tooling-only turn (B104). `equipped_parser.py`'s `scoped_name2id` rewritten with scope-alias
++ parent-army fallback + propagation. Fixes the insertion-order-dependent `cands[-1]` fallback (D298).
+Also corrects a pre-existing gap: 7 AA generic vehicles now gain correct `equipped` composition data.
+`unit_loadouts.json` regenerated (no GK in FACTIONS); repro_check byte-identical. B104 assertion added
+to `rules_assertions.py`. B100 still blocked on B105/B106 for its loadouts half.
+**24 open** as of S204 (up from 21 at S203 — three new tickets opened,
 B100 stays open but its units half closed): B104, B105, B106, B99, B98, B97, B103, E28, B93, B90, B94,
 B89, B100, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. Data-only turn (B100, units half).
 `units.json` regenerated with Grey Knights (25 units), diff-guarded at key level against committed —
@@ -286,36 +293,6 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
-
-### B104 — `equipped_parser.py`'s `scoped_name2id` ambiguous-candidate fallback silently corrupts unrelated units when a new faction reuses a generic name — **NEW S204; TOOLING; S; blocks any `unit_loadouts.json` regeneration while Grey Knights exists in `units.json`**
-Found while attempting to register Grey Knights' loadouts (B100). Root cause, confirmed by direct
-tracing rather than assumed: `scoped_name2id` resolves a composition-pass title to a unit_id by
-exact army-scope match first, and falls back to `cands[-1][1]` — the **last-declared** candidate in
-`units.json`'s block order — whenever the current pass's own army name doesn't match any candidate.
-This fallback is not merely imprecise, it is actively wrong for names referenced by a pass whose
-scope matches none of the name's real candidates: "Land Raider Crusader" has candidates
-`(Adeptus Astartes, 000000066)` and `(Black Templars, 000004139)`, but its composition TEXT lives
-only in `Space_Marines_web.txt`, `Dark_Angels_web.txt` and `Space_Wolves_web.txt` — none of whose
-scopes match either candidate — so all three passes fall through to `cands[-1]`, which happened to
-be Black Templars' entry purely because it was declared last among the pre-Grey-Knights blocks.
-Appending Grey Knights (which legitimately fields its own Land Raider Crusader under a separate
-unit_id, per its own MFM/roster) makes IT the new last-declared candidate, silently stealing the
-composition match and reverting Black Templars' entry to `loadout_parser.py`'s flat, un-enriched
-baseline — losing real per-model data (e.g. its documented 2× Hurricane bolter count). Confirmed by
-direct trace: `scoped_name2id`'s exact-scope resolution is correct in isolation (`scope='Black
-Templars'` correctly resolves to `000004139`), but that unit's own composition text is never
-actually present in `Black_Templars_web.txt` — it is only reachable via the ambiguous fallback from
-a different pass. Affects 8 units total, confirmed by diff-guard: Land Raider (`000000065`), Land
-Raider Crusader (`000004139`), Land Raider Redeemer (`000002173`), Rhino (`000002723`), Razorback
-(`000000129`), Stormhawk Interceptor (`000000084`), Stormtalon Gunship (`000001190`), Stormraven
-Gunship (`000001191`). This is a pre-existing fragility exposed, not introduced, by Grey Knights —
-the "last declared wins" resolution has never been a deliberate, stable answer to genuine ambiguity,
-just an accident of block order. Needs a real fix in `equipped_parser.py` (e.g. only accept the
-fallback when there is exactly one non-scope-matching candidate, or explicitly prefer the generic/
-base-army block, or refuse to guess and flag the ambiguity for review instead) plus a full
-`unit_loadouts.json` regeneration across **all** built factions to confirm the fix doesn't regress
-anything else, not just Grey Knights. Blocks B100's loadouts half; also blocks re-adding `GK` to
-`repro_check.py`'s `FACTIONS` list.
 
 ### B105 — `loadout_parser.py` doesn't classify a passive single-model swap sentence ("N `<model>` can have its X replaced with Y") — **NEW S204; TOOLING; XS**
 Found authoring Grey Knights' Brotherhood Terminator Squad / Paladin Squad (B100). The sentence "1
@@ -1116,6 +1093,11 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+- **B104** — `equipped_parser.py`'s `scoped_name2id` ambiguous-candidate fallback silently corrupts
+  unrelated units — **NEW S204 (D297); CLOSED S205 (D298).** Fixed with scope-alias + parent-army
+  fallback from `faction_taxonomy.json`, plus propagation of composition data to all same-named
+  candidates. Also corrected a pre-existing gap: 7 AA generic vehicles gained correct `equipped`
+  composition data. Synthetic B104 assertion added to `rules_assertions.py`.
 - **B101-data** — The no-duplicate rule was expressible (B101 engine half) but nothing authored it; the
   marker string shipped as a fake option — **NEW S201 (D294); TURN 1 (TOOLING) SHIPPED S202 (D295);
   TURN 2 (DATA) SHIPPED S203 (D296); CLOSED S203.** Three Chaos Space Marines options held GW's

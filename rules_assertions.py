@@ -797,6 +797,88 @@ def e27_leader_support_wording(S):
                   'no hardcoded "Leader" string remains at either site')
 
 
+def b104_scoped_name2id_deterministic(S):
+    """B104: scoped_name2id must resolve multi-candidate names deterministically
+    using scope alias + parent-army fallback, NOT insertion-order cands[-1].
+
+    Uses a synthetic fixture: a name ('Test Vehicle') with three candidates from
+    three army blocks (ArmyA, ArmyB, ArmyC).  Tests that:
+    1. A pass whose filename-derived scope matches ArmyA picks ArmyA.
+    2. A pass whose filename-derived scope is an alias for ArmyA picks ArmyA.
+    3. A pass whose scope is ArmyB (a child of ArmyA via parent_armies) and no
+       candidate matches ArmyB, falls back to ArmyA — not cands[-1] (ArmyC).
+    4. Appending a fourth candidate (ArmyD) does NOT change the result for any
+       existing pass — this is the insertion-order-stability check that B104 pins.
+    5. Single-candidate names remain unaffected regardless of scope.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('equipped_parser',
+               os.path.join(S.dir, 'equipped_parser.py'))
+    ep = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ep)
+
+    # --- synthetic fixture ---
+    # ArmyB is a valid block but NOT a candidate for 'test vehicle' — it inherits
+    # the generic ArmyA version via parent_armies, just like Dark Angels inherits
+    # the generic Adeptus Astartes Land Raider.
+    army_blocks = {'ArmyA', 'ArmyB', 'ArmyC', 'ArmyD'}
+    scope_aliases = {'AliasForA': 'ArmyA'}
+    parent_armies = {'ArmyB': 'ArmyA'}
+
+    cands_3 = {
+        'test vehicle': [('ArmyA', 'uid_a'), ('ArmyC', 'uid_c'), ('ArmyD', 'uid_d')],
+        'unique unit':  [('ArmyA', 'uid_solo')],
+    }
+
+    fails = []
+
+    # 1. Direct scope match: ArmyA_web.txt -> ArmyA -> uid_a
+    m, _ = ep.scoped_name2id(cands_3, army_blocks, 'ArmyA_web.txt', scope_aliases, parent_armies)
+    if m.get('test vehicle') != 'uid_a':
+        fails.append(f'direct scope: got {m.get("test vehicle")}, want uid_a')
+
+    # 2. Alias match: AliasForA_web.txt -> alias -> ArmyA -> uid_a
+    m, _ = ep.scoped_name2id(cands_3, army_blocks, 'AliasForA_web.txt', scope_aliases, parent_armies)
+    if m.get('test vehicle') != 'uid_a':
+        fails.append(f'alias scope: got {m.get("test vehicle")}, want uid_a')
+
+    # 3. Parent fallback: ArmyB_web.txt -> ArmyB (no candidate) -> parent ArmyA -> uid_a
+    m, _ = ep.scoped_name2id(cands_3, army_blocks, 'ArmyB_web.txt', scope_aliases, parent_armies)
+    if m.get('test vehicle') != 'uid_a':
+        fails.append(f'parent fallback: got {m.get("test vehicle")}, want uid_a')
+
+    # 4. Insertion-order stability: add ArmyE candidate. Results must not change.
+    cands_4 = {
+        'test vehicle': [('ArmyA', 'uid_a'), ('ArmyC', 'uid_c'), ('ArmyD', 'uid_d'), ('ArmyE', 'uid_e')],
+        'unique unit':  [('ArmyA', 'uid_solo')],
+    }
+    army_blocks_4 = army_blocks | {'ArmyE'}
+    for label, path, want in [
+        ('direct+4', 'ArmyA_web.txt', 'uid_a'),
+        ('alias+4',  'AliasForA_web.txt', 'uid_a'),
+        ('parent+4', 'ArmyB_web.txt', 'uid_a'),
+    ]:
+        m, _ = ep.scoped_name2id(cands_4, army_blocks_4, path, scope_aliases, parent_armies)
+        if m.get('test vehicle') != want:
+            fails.append(f'{label}: got {m.get("test vehicle")}, want {want}')
+
+    # 5. Single-candidate names always resolve regardless of scope.
+    for path in ['ArmyA_web.txt', 'ArmyB_web.txt', 'AliasForA_web.txt']:
+        m, _ = ep.scoped_name2id(cands_3, army_blocks, path, scope_aliases, parent_armies)
+        if m.get('unique unit') != 'uid_solo':
+            fails.append(f'single-cand ({path}): got {m.get("unique unit")}, want uid_solo')
+
+    # 6. Propagation map: primary uid_a should list other candidates.
+    _, prop = ep.scoped_name2id(cands_3, army_blocks, 'ArmyA_web.txt', scope_aliases, parent_armies)
+    if 'uid_a' not in prop or set(prop['uid_a']) != {'uid_c', 'uid_d'}:
+        fails.append(f'propagation map: got {prop}, want uid_a -> [uid_c, uid_d]')
+
+    if fails:
+        return False, '; '.join(fails)
+    return True, ('scoped_name2id resolves deterministically via scope/alias/parent, '
+                  'is stable under candidate insertion, and builds correct propagation map')
+
+
 ASSERTIONS = [
 
     # ── P1. Parser freshness gate, machine-enforced (D118/D123). Prose could not hold
@@ -2079,6 +2161,36 @@ ASSERTIONS = [
      'clause, not just the keyword clause.',
      'detachment_effects.json tank_ace target vs units.json keyword_names/unit_type (E23, D273)',
      lambda S: e23_tank_ace_pool_counts(S)),
+
+    # ── B101-DATA (D296/S203). loadout_parser.py's marker fix (D295/S202) is not, on
+    # its own, provable to hold for a datasheet nobody has looked at — a session
+    # building a future faction could reintroduce the bug's symptom (marker text
+    # riding into replacement_choices) via a code path this ticket didn't touch, and
+    # nothing would catch it until someone happened to read the option text by eye.
+    # This assertion re-derives the marker's full footprint from source every run.
+    ('B101-DATA',
+     'Every currently-built datasheet whose Datasheets_options.csv row carries GW\'s '
+     'no-duplicate marker, and whose option the parser successfully classifies (not '
+     'UNMATCHED), carries distinct: true in the committed unit_loadouts.json, and the '
+     'marker text itself never survives into replacement_choices.',
+     'Datasheets_options.csv marker scan vs unit_loadouts.json (B101-DATA, D295/D296)',
+     lambda S: b101_data_distinct_survives_the_marker(S)),
+
+    # ── B104 (D298/S205). scoped_name2id's ambiguous-candidate fallback was
+    # insertion-order-dependent: appending a new same-named faction (Grey Knights)
+    # silently corrupted 8 unrelated vehicles by stealing the cands[-1] slot.
+    # The fix uses scope aliases + parent-army fallback from faction_taxonomy.json.
+    # This assertion tests all three resolution paths plus insertion-order stability
+    # against a synthetic fixture, so it breaks the moment the deterministic
+    # resolution regresses regardless of which real faction data is present.
+    ('B104',
+     'equipped_parser.py scoped_name2id resolves multi-candidate names deterministically '
+     'via scope match, scope alias (Space Marines -> Adeptus Astartes), and parent-army '
+     'fallback (chapter -> Adeptus Astartes), and is stable when a new same-named '
+     'candidate is appended — tested against a synthetic fixture so the check does not '
+     'depend on any particular faction being built.',
+     'equipped_parser.py scoped_name2id synthetic fixture (B104, D298)',
+     lambda S: b104_scoped_name2id_deterministic(S)),
 
 ]
 
@@ -4249,6 +4361,70 @@ def b60a_restrictions_no_stratagem_cp_debris(S):
     if bad:
         return False, '%d restrictions value(s) contain stratagem/CP debris: %s' % (len(bad), '; '.join(bad[:5]))
     return True, 'no restrictions value contains stratagem/CP debris (STRATAGEM, WHEN:, CP)'
+
+
+# B101-DATA marker phrases (D295/S202): GW states "you cannot select the same option
+# more than once" two ways in Datasheets_options.csv — as a parenthetical inside the
+# option row itself, or (a distinct, still-unhandled shape) as a separate footnote row
+# starting '*'. Only the parenthetical shape is what loadout_parser.py's
+# _choices_from_list strips and converts to distinct: true; the footnote shape is a
+# different, un-classified row entirely and is out of scope here.
+_B101_MARKER_RE = re.compile(
+    r'\((?:you cannot select the same option more than once'
+    r'|duplicates are not allowed)\)',
+    re.IGNORECASE)
+
+
+def b101_data_distinct_survives_the_marker(S):
+    """Every currently-built unit whose Datasheets_options.csv row carries the
+    no-duplicate marker, and which the parser actually classifies into a
+    count/count_choice/any_count_choice option (rather than leaving it UNMATCHED),
+    carries distinct: true on that option in the committed unit_loadouts.json — and
+    the fake marker-text choice entry the old bug produced is gone.
+
+    Re-derived by scanning ALL rows in the source CSV for the marker, not by pinning
+    the three unit IDs D295 named: that keeps the check honest against a future
+    faction build (Grey Knights next, then the rest of Adeptus Astartes) that hits
+    the same GW phrasing on a datasheet nobody has looked at yet. Rows belonging to
+    units not yet in units.json, or whose option the parser could not classify at all
+    (UNMATCHED — confirmed at S203 on Nemesis Claw 000003876, a pre-existing gap
+    unrelated to this fix), are correctly excluded: the marker never reaches
+    replacement_choices for those, so distinct: true is not the applicable fact.
+    """
+    built_ids = {u['unit_id'] for army in S.units() for u in army['units']}
+    loadouts = S.loadouts()
+    marked_ds = sorted({r['datasheet_id'] for r in S.options()
+                         if _B101_MARKER_RE.search(r.get('description', ''))})
+    in_scope = [d for d in marked_ds if d in built_ids]
+    bad = []
+    for ds_id in in_scope:
+        entry = loadouts.get(ds_id)
+        if not entry:
+            continue
+        for opt in entry.get('options', []):
+            choices = opt.get('replacement_choices')
+            if choices is None:
+                continue
+            if any(_B101_MARKER_RE.search(c) or 'you cannot select the same option' in c.lower()
+                   or 'duplicates are not allowed' in c.lower() for c in choices):
+                bad.append(f'{ds_id}/{opt.get("id")}: marker text survived into replacement_choices')
+            elif not opt.get('distinct'):
+                # Only an option whose choices actually came from a marker-bearing row
+                # is required to carry distinct: true — a unit can have unrelated count
+                # options on the same datasheet, so this only fires when the marker's own
+                # row is the one that produced this option. Matched by group name against
+                # the row(s) recognised. Skip options whose replacement_choices don't
+                # length-match the marked row's list (best-effort correlation is not
+                # attempted; unmatched-shape rows are excluded above, so any option with
+                # replacement_choices on a marked datasheet not yet flagged distinct is
+                # the fact this assertion exists to catch).
+                bad.append(f'{ds_id}/{opt.get("id")}: no distinct flag on an option built '
+                           f'from a marker-bearing source row')
+    if bad:
+        return False, '%d option(s) fail the distinct/marker check: %s' % (len(bad), '; '.join(bad[:8]))
+    return True, ('%d marker-bearing datasheet(s) in-scope (of %d marked in source), '
+                   'all classified options carry distinct: true and no marker text survives'
+                   % (len(in_scope), len(marked_ds)))
 
 
 # ── tier classification (P4/D231, M0/S149) ────────────────────────────────────

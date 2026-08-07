@@ -209,30 +209,104 @@ def load_roster(units_path):
     return name2id, exact_by_id, base_by_id, roster_ids, g_exact, g_base, name_cands, army_blocks
 
 
-def scoped_name2id(name_cands, army_blocks, composition_path):
-    """Return a name -> uid map resolved for the faction the composition file owns.
+def load_scope_maps(taxonomy_path):
+    """Build scope-alias and parent-army dicts from faction_taxonomy.json.
 
-    Scope is inferred from the composition filename: '<Army_Name>_web.txt' -> '<Army Name>',
-    used only if that army is an actual block in units.json (so the Space Marines pass,
-    which has no single block, and the datasheets pass over os.devnull both fall through
-    to flat behaviour). For a name with one candidate the sole uid is used regardless of
-    scope; only genuinely colliding names are steered to the in-scope block, and when no
-    in-scope candidate exists the last-declared candidate is kept — byte-identical to the
-    old flat name2id for every non-colliding title in every pass."""
+    scope_aliases maps non-block faction names to their data_army name — the only
+    current case is 'Space Marines' -> 'Adeptus Astartes', because the web-pass
+    filename is Space_Marines_web.txt but the units.json block is Adeptus Astartes.
+
+    parent_armies maps chapter data_army names to 'Adeptus Astartes'.  When a
+    chapter pass (Dark_Angels_web.txt, Space_Wolves_web.txt, …) references a
+    generic vehicle that only exists in the Adeptus Astartes block, the parent
+    fallback routes the composition text to the correct generic unit_id instead
+    of the insertion-order-dependent cands[-1].
+
+    Returns ({}, {}) if the taxonomy file is absent so the caller can degrade
+    gracefully — no hard dependency on the file.
+    """
+    if not os.path.exists(taxonomy_path):
+        return {}, {}
+    tax = json.load(open(taxonomy_path))
+    aliases, parents = {}, {}
+    for g in tax.get('groups', []):
+        generic_army = None
+        for f in g.get('factions', []):
+            da = f.get('data_army')
+            if not da or da == '-':
+                continue
+            if f.get('name') != da:
+                aliases[f['name']] = da          # "Space Marines" -> "Adeptus Astartes"
+            if f.get('roster_mode') == 'union' and f.get('is_subfaction') is False:
+                generic_army = da                 # first non-subfaction union entry is the generic
+        if generic_army:
+            for f in g.get('factions', []):
+                da = f.get('data_army')
+                if da and da != '-' and da != generic_army and f.get('roster_mode') == 'union':
+                    parents[da] = generic_army    # "Dark Angels" -> "Adeptus Astartes"
+    return aliases, parents
+
+
+def scoped_name2id(name_cands, army_blocks, composition_path,
+                   scope_aliases=None, parent_armies=None):
+    """Return (name2id, propagation_map) resolved for the composition file's faction.
+
+    name2id maps each normalised title to the primary uid the composition text should
+    be attributed to.  propagation_map maps each such primary uid to a list of OTHER
+    uids that share the same datasheet name and should receive the same composition
+    data — because a 'Gladiator Lancer' in Space_Marines_web.txt describes the same
+    physical loadout whether the unit belongs to Adeptus Astartes or Black Templars.
+    The caller should copy owner_lines entries from the primary to each propagation
+    target (unless the target was already covered by a prior pass).
+
+    Scope is inferred from the composition filename: '<Army_Name>_web.txt' -> '<Army Name>'.
+    If the raw scope is not an army block, scope_aliases is checked (e.g. 'Space Marines'
+    -> 'Adeptus Astartes').  For a name with one candidate the sole uid is used regardless
+    of scope.  When multiple candidates exist and no in-scope candidate is found, the
+    parent_armies fallback is tried (e.g. Dark Angels -> Adeptus Astartes) so that a
+    chapter web pass referencing a generic Astartes vehicle routes to the correct generic
+    unit_id deterministically, rather than the insertion-order-dependent cands[-1] that
+    silently breaks whenever a new same-named faction is appended to units.json (B104)."""
+    if scope_aliases is None:
+        scope_aliases = {}
+    if parent_armies is None:
+        parent_armies = {}
     stem = os.path.splitext(os.path.basename(composition_path or ''))[0]
     if stem.endswith('_web'):
         stem = stem[:-len('_web')]
     scope = stem.replace('_', ' ')
+    # Apply alias only when the raw scope is not already an army block.
+    if scope not in army_blocks:
+        scope = scope_aliases.get(scope, scope)
     if scope not in army_blocks:
         scope = None
+    parent = parent_armies.get(scope) if scope else None
     out = {}
+    prop = {}   # primary_uid -> [other_uids]
     for name, cands in name_cands.items():
-        if len(cands) == 1 or scope is None:
+        if len(cands) == 1:
+            out[name] = cands[0][1]
+            continue
+        if scope is None:
             out[name] = cands[-1][1]
             continue
+        # Exact scope match.
         pick = next((uid for army, uid in cands if army == scope), None)
-        out[name] = pick if pick is not None else cands[-1][1]
-    return out
+        if pick is not None:
+            out[name] = pick
+        else:
+            # Parent-army fallback (e.g. Dark Angels -> Adeptus Astartes).
+            if parent:
+                pick = next((uid for army, uid in cands if army == parent), None)
+            if pick is None:
+                # No scope, no parent — keep last-declared candidate.
+                pick = cands[-1][1]
+            out[name] = pick
+        # Build propagation list: every OTHER candidate's uid.
+        others = [uid for army, uid in cands if uid != pick]
+        if others:
+            prop[pick] = others
+    return out, prop
 
 
 def resolve(tok, ex, ba, g_ex, g_ba):
@@ -491,16 +565,41 @@ def main():
     ap.add_argument('--datasheets', default=None,
                     help='Datasheets.csv; gap-fills the loadout partition for multi-group '
                          'units the web.txt composition dump misses (web.txt takes precedence).')
+    ap.add_argument('--taxonomy', default='faction_taxonomy.json',
+                    help='faction_taxonomy.json; used to resolve scope aliases and parent-army '
+                         'fallbacks for multi-candidate name resolution (B104). Optional — '
+                         'degrades gracefully if absent.')
     args = ap.parse_args()
 
     name2id, ex_by_id, ba_by_id, roster_ids, g_ex, g_ba, name_cands, army_blocks = load_roster(args.units)
-    # B68: resolve titles within the composition file's own faction so generic Chaos
-    # vehicle names shared between Death Guard and Chaos Space Marines route to the
-    # correct unit_id instead of last-write-wins across blocks.
-    name2id = scoped_name2id(name_cands, army_blocks, args.composition)
+    # B68/B104: resolve titles within the composition file's own faction so generic
+    # vehicle names shared across faction blocks route to the correct unit_id.  The
+    # scope_aliases/parent_armies maps (from faction_taxonomy.json) fix B104's silent
+    # mis-routing when a chapter pass references a generic Astartes vehicle whose
+    # candidates include blocks from other factions.
+    scope_aliases, parent_armies = load_scope_maps(args.taxonomy)
+    name2id, propagation_map = scoped_name2id(name_cands, army_blocks, args.composition,
+                                              scope_aliases, parent_armies)
     ld = json.load(open(args.loadouts))
     text = open(args.composition, encoding='utf-8').read()
     owner_lines, dropped_lines = segment(text, name2id)
+
+    # B104 propagation: when a web pass attributes composition text to a primary uid
+    # (e.g. the Adeptus Astartes 'Gladiator Lancer'), copy the same equipped lines to
+    # every other candidate that shares the name (e.g. the Black Templars variant)
+    # UNLESS the target already has equipped data from a prior pass.
+    propagated = 0
+    for primary_uid, other_uids in propagation_map.items():
+        if primary_uid not in owner_lines:
+            continue
+        for other_uid in other_uids:
+            if other_uid in owner_lines:
+                continue  # already covered by this pass's composition text
+            other_entry = ld.get(other_uid)
+            if isinstance(other_entry, dict) and other_entry.get('_defaults_source') == 'equipped':
+                continue  # already had equipped data from a prior web pass
+            owner_lines[other_uid] = owner_lines[primary_uid]
+            propagated += 1
 
     # Gap-fill from Datasheets.csv loadout prose. Only multi-group units the web.txt
     # dump didn't cover: single-group units are already correct (flat == the one group),
