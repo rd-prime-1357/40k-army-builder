@@ -3,7 +3,23 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S222 (up from 22 at S221 — **B115, B116 opened, nothing
+not here, it isn't open. **23 open** as of S223 (down from 24 at S222 — **B115 closed, nothing
+new opened**): B116, B114, B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70,
+B75, P2, P4, E23, B67b, E12, B17.
+Tooling-only turn (D317): open-time manifest reconciliation (two guarded files' hashes had drifted
+from what S222's `--write` banked; verified both against a fresh repo clone before reconciling —
+see D317, no open item, nothing to add here). **B115 closed** — `wahapedia_transform.py --faction
+DRU` now excludes exactly the 14 Aeldari-mistagged datasheets via a targeted `FOREIGN_SOURCE_OWNER`
+map, not the broader generalization the prompt offered as "preferred": that version was tested
+against every faction_id first and found to silently break the already-shipped Chaos Space Marines
+roster (its 4 cult-troop units are legitimately CSM-tagged but priced from their own Legion's book
+per D240/S157). Verified by exact datasheet-id-set comparison across every faction — only DRU
+changes — and by rerunning `mfm_points_parser.py` against the corrected 23-datasheet selection
+(0 "no MFM points" datasheets, was 14). Full baseline clean, zero regression to any built faction.
+No units/detachments build started (tooling-only, per the standing turn-typing rule and the
+prompt's explicit instruction).
+
+**24 open** as of S222 (up from 22 at S221 — **B115, B116 opened, nothing
 closed**): B116, B115, B114, B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69,
 B70, B75, P2, P4, E23, B67b, E12, B17.
 Scoping-only turn (D316): Drukhari scoped — roster (23 units, 7 Legends exclusions), points/
@@ -494,22 +510,6 @@ for this shape. Recommendation (`DRUKHARI_BUILD_SCOPE.md` §6): ship Drukhari's 
 illegal-state risk under D0) and open this as its own follow-on build, gated on whether/when
 Aeldari is prioritized. Needs Ryan's call — sets precedent for how the tool handles cross-book
 allied inclusion generally.
-
-### B115 — `wahapedia_transform.py --faction DRU` wrongly includes 14 Harlequin/Aeldari-Corsair datasheets — **NEW S222 (D316); tooling; XS; must fix before Drukhari units data turn**
-Found while scoping Drukhari. A dry `--faction DRU` run selects 37 datasheets, not the 23 that
-belong to Drukhari's own MFM file. The extra 14 (Death Jester, Shadowseer, Solitaire, Troupe
-Master, Starweaver, Skyweavers, Troupe, Voidweaver, Corsair Voidreavers, Corsair Voidscarred,
-Corsair Skyreavers, Kharseth, Prince Yriel, Starfangs) carry a legacy `faction_id == DRU` tag in
-Wahapedia's export but their real `source_id` is the Aeldari Faction Pack (current-edition, not
-Legends) — `select_datasheets`'s existing filter only excludes non-current/Legends sources, with no
-check for the source belonging to a different faction's own pack, so it waves these through.
-Independently confirmed: a dry `mfm_points_parser.py` run flags the same 14 as having no MFM points
-at all (they appear nowhere in `MFM_Drukhari_v1.1.txt`). Fix: exclude Aeldari's `source_id`
-specifically, or generalize `select_datasheets` to check the source's own faction against the
-target faction. Small, contained — recommend as its own XS tooling turn immediately before the
-Drukhari units data turn, not folded into it. (These 14 units are not simply noise to drop — see
-B116, which covers whether/how to support including them as Drukhari's legal Harlequins/Anhrathe
-allowance.)
 
 ### B111 — `mfm_points_parser.py`'s `--wargear` pass was blind to v1.1 `WARGEAR OPTIONS` text
 — **CLOSED S216 (D310); tooling half D309, data half D310**
@@ -1191,6 +1191,53 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B115 — `wahapedia_transform.py --faction DRU` wrongly includes 14 Harlequin/Aeldari-Corsair datasheets — **NEW S222 (D316); tooling; XS; CLOSED S223 (D317)**
+Found while scoping Drukhari. A dry `--faction DRU` run selected 37 datasheets, not the 23 that
+belong to Drukhari's own MFM file. The extra 14 (Death Jester, Shadowseer, Solitaire, Troupe
+Master, Starweaver, Skyweavers, Troupe, Voidweaver, Corsair Voidreavers, Corsair Voidscarred,
+Corsair Skyreavers, Kharseth, Prince Yriel, Starfangs) carried a legacy `faction_id == DRU` tag in
+Wahapedia's export but their real `source_id` is the Aeldari Faction Pack (current-edition, not
+Legends) — `select_datasheets`'s existing filter only excluded non-current/Legends sources, with no
+check for the source belonging to a different faction's own pack, so it waved these through.
+Independently confirmed at the time: a dry `mfm_points_parser.py` run flagged the same 14 as having
+no MFM points at all (they appear nowhere in `MFM_Drukhari_v1.1.txt`). (These 14 units are not
+simply noise to drop — see B116, which covers whether/how to support including them as Drukhari's
+legal Harlequins/Anhrathe allowance.)
+
+**Closed S223 (D317).** Re-derived from source rather than trusting S222's numbers: reconfirmed
+37→23 and the zero-MFM-points finding by direct rerun before touching any code. The prompt offered
+two fix shapes; both were tested, not assumed. The "preferred" generalized version — exclude a
+datasheet if its source is itself a different real Factions.csv faction's own Faction Pack — was
+run against every faction_id, built and unbuilt, before any code changed. It fixes Drukhari cleanly
+and leaves Space Marines untouched (chapter packs like Black Templars have no standalone
+Factions.csv entry, so the rule never fires on them). But it would have broken the already-shipped
+**Chaos Space Marines** roster: `CSM_BUILD_SCOPE.md` §4 (D240, S157) documents that CSM's four
+cult-troop units (Khorne Berzerkers, Rubric Marines, Plague Marines, Noise Marines) are legitimately
+`faction_id=CSM` but have zero points entries in CSM's own MFM file at all — confirmed directly
+(`grep` for each name against `MFM_Chaos_Space_Marines_v1.1.txt` returns nothing) — and are shipped
+via a deliberate, separately-scoped MFM append against their own Legion's book, specifically because
+`wahapedia_transform.py --faction CSM`'s raw selection is expected to surface them by faction_id
+first (confirmed: that raw selection is currently byte-identical to CSM's shipped 58-unit roster).
+The generalized filter would have silently dropped all four out of that selection — a live
+regression to an already-shipped, intentionally-engineered mechanism. Chaos Daemons' 21 and Chaos
+Knights' 7 CSM-Faction-Pack-sourced candidates are dormant either way (confirmed absent from CD's
+shipped 53-unit roster; the Shadow Legion allied-unlock reads CSM's own `units.json` by keyword at
+the engine level, never this selection) — so only Aeldari→Drukhari was a real, live mistag.
+
+Shipped instead: a small `FOREIGN_SOURCE_OWNER` map in `wahapedia_transform.py` (`source_id -> the
+one faction_id it legitimately belongs to`; one entry today, Aeldari's `source_id` → `AE`),
+threaded through `source_is_excluded(src_row, faction)`. Verified by exact datasheet-id-set
+comparison across every faction_id, old vs new: DRU is the only faction that changes (37→23,
+exactly the 14 Aeldari-tagged datasheets dropped, nothing added); every other faction is
+byte-identical. Downstream re-verified: running the fixed transform + `mfm_points_parser.py`
+against the corrected 23-datasheet selection reports zero "no MFM points" datasheets (was 14), the
+same 7 Legends-only MFM entries with no datasheet match, and the same one attach-list drop (Archon
+→ Court of the Archon, B73/D260) — an exact match to S222's numbers, now proven by rerun. Full
+baseline re-run with the fix in place: all three repro checks, 121/122 rules assertions (the one
+red is the expected P3 manifest-drift for the just-edited `wahapedia_transform.py`, cleared by
+`--write` at this session's close), and every harness pass clean — zero regression to any
+already-built faction. No units/detachments build started (tooling-only turn type).
 
 ### B112 — Chaos Daemons' LORDS OF THE WARP detachment disposition unverified against v1.1 — **NEW S213 (D307); split off B89; data; XS; UNBLOCKED S217 (D311); CLOSED S221 (D315)**
 Chaos Daemons had no v1.1 detachment source file to diff against (only the v1_0 file existed

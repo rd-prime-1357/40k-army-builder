@@ -59,14 +59,46 @@ SUBFACTION_KEYWORD_ARMY = {
     "Ravenwing": "Dark Angels",
 }
 
-# Source rows to EXCLUDE (Legends / Forge World). We keep edition == "10".
-def source_is_excluded(src_row):
+# B115: source_ids that are a DIFFERENT faction's own current-edition Faction Pack,
+# carrying no legitimate content for any other faction_id that happens to be tagged
+# on one of their datasheets. Wahapedia sometimes tags a datasheet's faction_id with
+# a legacy/incorrect value while its source_id correctly points at the book it's
+# really printed in (Drukhari's Harlequins/Aeldari-Corsair datasheets: faction_id
+# DRU, source_id 000000186 = the Aeldari Faction Pack -- confirmed by MFM_Drukhari
+# carrying zero points entries for any of them). Keyed by source_id -> the one
+# faction_id that source legitimately belongs to, so building that faction itself
+# is unaffected.
+#
+# Deliberately NOT generalized to "exclude any source whose name is a different
+# real Factions.csv faction" -- that broader rule was tested against every built
+# faction (S223) and would silently break Chaos Space Marines: CSM's four cult-troop
+# units (Khorne Berzerkers, Rubric Marines, Plague Marines, Noise Marines) are
+# legitimately faction_id=CSM but source_id-sourced from their own Legion's Faction
+# Pack, because CSM's own MFM does not price them at all -- D240/S157 already prices
+# them via a separate scoped MFM append specifically because wahapedia_transform's
+# faction-id selection is expected to surface them. A blanket source-mismatch filter
+# would drop them from `--faction CSM`'s selection outright. Chaos Daemons' 21
+# CSM-Faction-Pack-sourced candidates and Chaos Knights' 7 are dormant either way
+# (never in their shipped units.json; the Shadow Legion allied-unlock reads CSM's
+# own units.json by keyword, not this selection), so only Aeldari->Drukhari is a
+# real, live mistag today. Extend this map, not the general rule, if another
+# instance is ever found.
+FOREIGN_SOURCE_OWNER = {
+    "000000186": "AE",  # Aeldari Faction Pack
+}
+
+# Source rows to EXCLUDE (Legends / Forge World / a genuinely different faction's
+# own book). We keep edition == "10".
+def source_is_excluded(src_row, faction=None):
     name = (src_row.get("name") or "")
     edition = (src_row.get("edition") or "").strip()
     low = name.lower()
     if "legend" in low or "forge world" in low:
         return True
     if edition != "10":
+        return True
+    owner = FOREIGN_SOURCE_OWNER.get(src_row.get("id"))
+    if owner and faction != owner:
         return True
     return False
 
@@ -221,7 +253,7 @@ def load(args):
 
 
 def select_datasheets(data, faction):
-    excluded_sources = {s["id"] for s in data["sources"] if source_is_excluded(s)}
+    excluded_sources = {s["id"] for s in data["sources"] if source_is_excluded(s, faction)}
     selected = OrderedDict()
     skipped_legends = []
     for d in data["datasheets"]:

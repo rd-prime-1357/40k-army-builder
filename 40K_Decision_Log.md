@@ -12870,3 +12870,64 @@ swap, 4 ambiguous weapon-name matches, 1 equip/add-no-profile item, 1 multi-mode
 review — all true-Drukhari-only counts, separated from the 14 contaminating Harlequin/Corsair
 entries in the same dry-run report. On the same order as Grey Knights (4 flagged units) before it.
 No units or detachments build started this session, per the scoping-only turn type.
+
+### D317 — B115 fixed (S223), tooling-only; plus an open-time manifest reconciliation
+
+**Manifest reconciliation at open, before any assigned work.** `./baseline.sh --fetch --data-turn`
+failed on `pipeline_manifest.py`'s plain check: `SESSION_HANDOFF_222.md` and `wargear_points.json`
+did not match the hashes `--write` banked at S222 close. Verified before touching anything: a fresh
+clone of the public repo agrees byte-for-byte with the local project-area copy of both files —
+neither is corrupted or stale relative to what's actually live — and `wargear_points.json`
+independently reproduces byte-for-byte from the current pipeline (`units_repro_check` passed
+against it). Every other one of the 183 guarded entries matched clean; this was isolated to exactly
+the two files the S222 close protocol structurally cannot self-verify (a handoff can't list its own
+hash; `wargear_points.json` wasn't touched by S222's own work, so nothing in that session's own
+checks would have caught a stale entry for it). Root cause unconfirmed — nothing should have
+touched either file between S222 close and S223 open. Reconciled by re-running
+`pipeline_manifest.py --write` against the verified-correct live state; confirmed by diff that only
+those two entries changed, count of guarded files unchanged (183), and full baseline then passed
+clean (31/31, 34/34 with `repo_check`). No further action recommended — there's no surviving
+evidence to chase a cause from, and the plain manifest check already did its job by catching the
+drift at the very next session's open.
+
+**B115 fixed — targeted, not generalized.** Re-derived from source rather than trusting S222:
+confirmed `wahapedia_transform.py --faction DRU` selects 37 datasheets against a real 23-unit
+roster, the 14 extras genuinely Aeldari-book content (zero MFM points anywhere in
+`MFM_Drukhari_v1.1.txt`). The prompt's two options were tested, not assumed. The "preferred"
+generalized version — exclude a datasheet if its source is itself a different, real Factions.csv
+faction's own Faction Pack — was run against every faction_id, built and unbuilt, before any code
+changed. It fixes Drukhari cleanly and leaves Space Marines untouched (chapter packs like Black
+Templars/Blood Angels/etc. have no standalone Factions.csv entry of their own, so the rule never
+fires on them). But it would have broken the already-shipped **Chaos Space Marines** roster:
+`CSM_BUILD_SCOPE.md` §4 (D240, S157) documents that CSM's four cult-troop units — Khorne
+Berzerkers, Rubric Marines, Plague Marines, Noise Marines — are legitimately `faction_id=CSM` but
+have zero points entries in CSM's own MFM file at all (confirmed directly: `grep` for each name
+against `MFM_Chaos_Space_Marines_v1.1.txt` returns nothing); their points are shipped via a
+deliberate, separately-scoped MFM append against their own Legion's book specifically because
+`wahapedia_transform.py --faction CSM`'s raw selection is expected to surface them by
+faction_id first. The generalized filter would have silently dropped all four out of that
+selection — a live regression to an already-shipped, intentionally-engineered mechanism, not a
+hypothetical one, and confirmed by direct comparison of the datasheet sets, not just counts (raw
+selection is currently byte-identical to CSM's shipped 58-unit roster). Chaos Daemons' 21 and Chaos
+Knights' 7 CSM-Faction-Pack-sourced candidates are dormant either way — confirmed absent from CD's
+shipped 53-unit roster; the Shadow Legion allied-unlock (`detachment_effects.json`) reads CSM's own
+`units.json` by keyword at the engine level, never this selection — so only the Aeldari→Drukhari
+case is a real, live mistag today.
+
+Shipped instead: a small `FOREIGN_SOURCE_OWNER` map in `wahapedia_transform.py` (`source_id ->
+the one faction_id it legitimately belongs to`), threaded through `source_is_excluded(src_row,
+faction)`. Today it holds one entry (Aeldari's `source_id` → `AE`). Verified by direct comparison
+of `select_datasheets()` output across every faction_id, old vs new, both by count and by exact
+datasheet-id set: **DRU is the only faction that changes** (37→23, exactly the 14 Aeldari-tagged
+datasheets dropped, nothing added), every other faction_id (built or not) is byte-identical.
+Independently re-verified downstream: running the fixed transform + `mfm_points_parser.py` against
+the corrected 23-datasheet selection reports **zero** "datasheets with no MFM points" (was 14),
+the same 7 Legends-only MFM entries with no datasheet match, and the same one attach-list drop
+(Archon → Court of the Archon, B73/D260) — an exact match to S222's numbers, now proven by rerun
+rather than carried forward as prose. Full baseline re-run with the fix in place: all three repro
+checks, `rules_assertions` (121/122 — the one red is the expected P3 manifest-drift for the edited
+`wahapedia_transform.py` itself, pending `--write` at close), and all harnesses pass clean — zero
+regression to any already-built faction.
+
+No units or detachments build started this session, per the tooling-only turn type and the
+prompt's explicit instruction not to begin the Drukhari data turn this session.

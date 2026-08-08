@@ -927,3 +927,15 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   Recommended deferring the allied-inclusion mechanic to a follow-on ticket and shipping Drukhari's
   own 23-unit/9-detachment build first; flagged for Ryan's call (sets precedent). `DRUKHARI_BUILD_
   SCOPE.md` produced; no units/detachments build started.
+- **D317** — B115 fixed (S223), tooling-only. Open-time finding: `pipeline_manifest.py` failed on
+  two files whose local/repo content (verified identical to each other) didn't match the hashes
+  banked at S222 close — reconciled via `--write` against the verified-correct state, root cause
+  unconfirmed, no further action needed. B115: tested the "preferred" generalized fix (exclude any
+  source belonging to a different real faction) against every faction_id first — it would have
+  broken the already-shipped Chaos Space Marines roster (its 4 cult-troop units are legitimately
+  CSM-tagged but sourced from their own Legion's Faction Pack, per D240/S157). Shipped the targeted
+  fix instead: a `FOREIGN_SOURCE_OWNER` map (Aeldari's `source_id` → `AE`) threaded through
+  `source_is_excluded`. Verified by exact datasheet-id-set comparison: only DRU changes (37→23),
+  every other faction byte-identical. Downstream re-verified: 0 "no MFM points" datasheets (was
+  14), same 7 Legends exclusions, same 1 attach-list drop — exact match to S222, now proven by
+  rerun. Full baseline clean, zero regression. No units/detachments build started (tooling-only).
