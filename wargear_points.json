@@ -15,7 +15,7 @@
      "cost": 60,
      "count": 1,
      "display": "Invader ATV",
-     "source": "MFM_Space_Marines_v1_0.txt:282"
+     "source": "MFM_Black_Templars_v1.1.txt:367"
     }
    }
   }
@@ -25,7 +25,7 @@
    "thunder hammer": {
     "cost": 5,
     "display": "Thunder hammer",
-    "source": "MFM_Space_Marines_v1_0.txt:373"
+    "source": "MFM_Black_Templars_v1.1.txt:451"
    }
   }
  },
@@ -34,7 +34,7 @@
    "storm shield": {
     "cost": 5,
     "display": "Storm Shield",
-    "source": "MFM_Space_Wolves_v1_0.txt:89"
+    "source": "MFM_Space_Wolves_v1.1.txt:98"
    }
   }
  },
@@ -43,7 +43,7 @@
    "storm shield": {
     "cost": 5,
     "display": "Storm Shield",
-    "source": "MFM_Space_Wolves_v1_0.txt:54"
+    "source": "MFM_Space_Wolves_v1.1.txt:60"
    }
   }
  },
@@ -52,7 +52,7 @@
    "psycannon": {
     "cost": 5,
     "display": "Psycannon",
-    "source": "MFM_Grey_Knights_v1_0.txt:40"
+    "source": "MFM_Grey_Knights_v1.1.txt:41"
    }
   }
  },
@@ -61,7 +61,7 @@
    "psycannon": {
     "cost": 5,
     "display": "Psycannon",
-    "source": "MFM_Grey_Knights_v1_0.txt:128"
+    "source": "MFM_Grey_Knights_v1.1.txt:137"
    }
   }
  },
@@ -70,7 +70,7 @@
    "psycannon": {
     "cost": 5,
     "display": "Psycannon",
-    "source": "MFM_Grey_Knights_v1_0.txt:110"
+    "source": "MFM_Grey_Knights_v1.1.txt:117"
    }
   }
  },
@@ -79,7 +79,7 @@
    "psycannon": {
     "cost": 5,
     "display": "Psycannon",
-    "source": "MFM_Grey_Knights_v1_0.txt:119"
+    "source": "MFM_Grey_Knights_v1.1.txt:127"
    }
   }
  },
@@ -88,7 +88,7 @@
    "heavy psycannon": {
     "cost": 15,
     "display": "Heavy psycannon",
-    "source": "MFM_Grey_Knights_v1_0.txt:97"
+    "source": "MFM_Grey_Knights_v1.1.txt:103"
    }
   }
  },
@@ -97,35 +97,53 @@
    "ectoplasma cannon": {
     "cost": 5,
     "display": "Ectoplasma cannon",
-    "source": "MFM_Chaos_Space_Marines_v1_0.txt:117"
+    "source": "MFM_Chaos_Space_Marines_v1.1.txt:129"
    }
   }
  },
  "000000969": {
   "items": {
    "hades lascannon": {
-    "cost": 10,
+    "cost": 15,
     "display": "Hades lascannon",
-    "source": "MFM_Chaos_Space_Marines_v1_0.txt:102"
+    "source": "MFM_Chaos_Space_Marines_v1.1.txt:112"
    },
    "heavy reaper autocannon": {
-    "cost": 10,
+    "cost": 15,
     "display": "Heavy reaper autocannon",
-    "source": "MFM_Chaos_Space_Marines_v1_0.txt:101"
+    "source": "MFM_Chaos_Space_Marines_v1.1.txt:111"
+   }
+  }
+ },
+ "000001028": {
+  "items": {
+   "ectoplasma cannon": {
+    "cost": 5,
+    "display": "Ectoplasma cannon",
+    "source": "MFM_Thousand_Sons_v1.1.txt:71"
    }
   }
  },
  "000001030": {
   "items": {
    "hades lascannon": {
-    "cost": 10,
+    "cost": 15,
     "display": "Hades lascannon",
-    "source": "MFM_Thousand_Sons_v1_0.txt:46"
+    "source": "MFM_Thousand_Sons_v1.1.txt:50"
    },
    "heavy reaper autocannon": {
-    "cost": 10,
+    "cost": 15,
     "display": "Heavy reaper autocannon",
-    "source": "MFM_Thousand_Sons_v1_0.txt:47"
+    "source": "MFM_Thousand_Sons_v1.1.txt:51"
+   }
+  }
+ },
+ "000001193": {
+  "items": {
+   "twin lascannon": {
+    "cost": 5,
+    "display": "Twin lascannon",
+    "source": "MFM_Black_Templars_v1.1.txt:217"
    }
   }
  },
@@ -134,12 +152,12 @@
    "heavy psycannon": {
     "cost": 15,
     "display": "Heavy psycannon",
-    "source": "MFM_Grey_Knights_v1_0.txt:58"
+    "source": "MFM_Grey_Knights_v1.1.txt:62"
    },
    "sublimator": {
     "cost": 15,
     "display": "Sublimator",
-    "source": "MFM_Grey_Knights_v1_0.txt:57"
+    "source": "MFM_Grey_Knights_v1.1.txt:61"
    }
   }
  },
@@ -148,7 +166,16 @@
    "macro plasma incinerator": {
     "cost": 10,
     "display": "Macro plasma incinerator",
-    "source": "MFM_Space_Marines_v1_0.txt:302"
+    "source": "MFM_Black_Templars_v1.1.txt:390"
+   }
+  }
+ },
+ "000002790": {
+  "items": {
+   "heavy laser destroyer": {
+    "cost": 10,
+    "display": "Heavy laser destroyer",
+    "source": "MFM_Black_Templars_v1.1.txt:86"
    }
   }
  },
@@ -157,49 +184,49 @@
    "thunder hammer": {
     "cost": 5,
     "display": "Thunder hammer",
-    "source": "MFM_Death_Watch_v1_0.txt:9"
+    "source": "MFM_Death_Watch_v1.1.txt:10"
    }
   }
  },
  "000004185": {
   "items": {
    "banner of macragge": {
-    "cost": 10,
+    "cost": 15,
     "display": "banner of Macragge",
-    "source": "MFM_Space_Marines_v1_0.txt:482"
+    "source": "MFM_Space_Marines_v1.1.txt:532"
    },
    "blades of honour": {
     "cost": 10,
     "display": "Blades of honour",
-    "source": "MFM_Space_Marines_v1_0.txt:483"
+    "source": "MFM_Space_Marines_v1.1.txt:533"
    }
   }
  },
  "000004208": {
   "items": {
    "hades lascannon": {
-    "cost": 10,
+    "cost": 15,
     "display": "Hades lascannon",
-    "source": "MFM_Emperors_Children_v1_0.txt:32"
+    "source": "MFM_Emperors_Children_v1.1.txt:35"
    },
    "heavy reaper autocannon": {
-    "cost": 10,
+    "cost": 15,
     "display": "Heavy reaper autocannon",
-    "source": "MFM_Emperors_Children_v1_0.txt:31"
+    "source": "MFM_Emperors_Children_v1.1.txt:34"
    }
   }
  },
  "000004209": {
   "items": {
    "hades lascannon": {
-    "cost": 10,
+    "cost": 15,
     "display": "Hades lascannon",
-    "source": "MFM_Death_Guard_v1_0.txt:52"
+    "source": "MFM_Death_Guard_v1.1.txt:56"
    },
    "heavy reaper autocannon": {
-    "cost": 10,
+    "cost": 15,
     "display": "Heavy reaper autocannon",
-    "source": "MFM_Death_Guard_v1_0.txt:51"
+    "source": "MFM_Death_Guard_v1.1.txt:55"
    }
   }
  }

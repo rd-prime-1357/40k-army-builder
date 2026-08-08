@@ -12501,3 +12501,43 @@ values (coincidental non-changes). The prompt's warning "don't assume EC's Defil
 casualty" was correct; Banner of Macragge is the proof.
 
 B111 tooling half shipped; data half open. No engine, no data file, no other tooling file touched.
+
+---
+
+### D310 — B111 data turn: `wargear_points.json` regenerated from v1.1 (S216), data-only
+
+`wargear_points.json` only. Baseline reconciled at open via `--fetch --data-turn`: 32/34 gates
+green. Both reds were the documented, expected ones — `rules_assertions` on E14-1 (the known-red
+left open by D309) and `repo_check` on the pre-existing B108 finding. Private source repo fetched
+and verified fresh: 85/85 files match `source_manifest.json`.
+
+**Regeneration.** Ran `mfm_points_parser.py --wargear MFM_*.txt --units units.json --loadouts
+unit_loadouts.json --datasheets Datasheets.csv --wargear-out wargear_points.json`. Diffed the
+output against the pre-turn file key-by-key before banking.
+
+**Price changes (9, all forecast in D309).** Heavy reaper autocannon and Hades lascannon
+10 → 15 pts on Defiler across the four built Defiler factions — Chaos Space Marines, Thousand
+Sons, Death Guard, Emperor's Children (8 changes). Space Marines' Victrix Honour Guard "Banner of
+Macragge" 10 → 15 pts (1 change). No other existing item's price moved. World Eaters' Defiler
+entries appear in the parser's raw MFM read but are out of scope (unit not yet in `units.json`,
+faction unbuilt) and do not touch the output — expected, not a gap.
+
+**Three new items surfaced, not individually forecast in D309 (D309 only itemized price
+conflicts, not new keys).** Checked each against both MFM versions before banking, all three are
+genuine: the v1.1 file adds a `WARGEAR OPTIONS` block that did not exist at all in v1_0, on a unit
+whose base points already carry the v1.1 value in `units.json` (confirming the base-price
+migration already accounted for the change and this option is additive, not a double-count):
+Black Templars' Repulsor Executioner gains "Heavy laser destroyer" (10 pts); Thousand Sons'
+Forgefiend gains "Ectoplasma cannon" (5 pts); the generic Centurion Devastator Squad (Adeptus
+Astartes, appears in the Black Templars MFM file) gains "Twin lascannon" (5 pts). Zero items
+removed.
+
+**Confirmation checks.** `repro_check`, `units_repro_check`, `detachments_repro_check`, `b87_check`,
+`b88_check` all still pass byte-identical after the regen — `units.json` and `unit_loadouts.json`
+did not move, confirming these wargear items price per-instance at build time and are not folded
+into unit base points. `rules_assertions --tier all`: E14-1 now passes; the only remaining fail is
+P3 (`wargear_points.json` off the manifest hash), which is the expected pre-`--write` state, not a
+real failure.
+
+B111 fully closed (tooling half D309 + data half this entry). No engine, no other data file, no
+tooling file touched.

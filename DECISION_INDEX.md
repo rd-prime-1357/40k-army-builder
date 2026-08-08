@@ -840,3 +840,10 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   and closed with E14-1 as a documented known-red; B111 data turn made mandatory-next. Confirmed live
   price changes for the data turn: four Defilers (CSM/TS/DG/EC) 10→15 pts, plus SM Banner of Macragge
   10→15 pts (new casualty).
+- **D310** — B111 data turn (S216), data-only. `wargear_points.json` regenerated from v1.1 MFM
+  sources. 9 price changes as forecast in D309 (four Defiler factions' Heavy reaper autocannon and
+  Hades lascannon 10→15 pts; SM Banner of Macragge 10→15 pts). Plus 3 genuinely new v1.1-only
+  wargear items surfaced and verified (Black Templars Repulsor Executioner heavy laser destroyer,
+  Thousand Sons Forgefiend ectoplasma cannon, Centurion Devastator Squad twin lascannon) — none
+  double-counted against base unit points. Zero removed. E14-1 now green; repro/b87/b88 all
+  byte-identical. B111 fully closed.

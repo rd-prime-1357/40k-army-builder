@@ -3,18 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S215 (unchanged from S214 — B111's tooling half shipped
-but the ticket stays open on its data half; nothing closed, nothing new opened): B111, B110, B108,
-B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
-Tooling-only turn (D309): `mfm_points_parser.py`'s `WARGEAR_RE` leading bullet made optional so
-bullet-less v1.1 `WARGEAR OPTIONS` lines parse. v1_0 output byte-identical; all twelve built v1.1
-files now read wargear (previously zero). **Finding: B111 is not splittable as the S215 prompt
-assumed** — assertion E14-1 rebuilds `wargear_points.json` from the parser every baseline, so the
-parser fix makes E14-1 go red until the data is regenerated. Tooling half shipped; **E14-1 closed
-this session as a documented known-red** (same pattern as `repo_check`/B108); the B111 data turn is
-mandatory-next. Live changes confirmed for that data turn: four Defilers (CSM/TS/DG/EC) 10→15 pts
-per item, plus **SM Banner of Macragge 10→15 pts** (the casualty beyond EC's Defiler the prompt
-warned to look for).
+not here, it isn't open. **22 open** as of S216 (down from 23 at S215 — B111 closed, nothing new
+opened): B110, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23,
+B67b, E12, B17, B112.
+Data-only turn (D310): `wargear_points.json` regenerated from v1.1 MFM sources, clearing the
+known-red E14-1 left open by D309. 9 forecast price changes (four Defiler factions' items and SM
+Banner of Macragge, 10→15 pts each) plus 3 verified-new v1.1-only wargear items (Repulsor
+Executioner, Forgefiend, Centurion Devastator Squad). Zero removed; repro/b87/b88 byte-identical
+throughout. B111 fully closed — see Closed / Shipped.
 
 **23 open** as of S214 (down from 24 at S213 — B109 closed, nothing
 opened): B111, B110, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86,
@@ -426,38 +422,9 @@ stale flag. **Not a one-line flip.** This ticket is correct that the flag is sta
 blocked on Grey Knights getting its own detachments build, not just a data toggle. Left open,
 `built: false` unchanged, until detachments ship.
 
-### B111 — `mfm_points_parser.py`'s `--wargear` pass is blind to v1.1 `WARGEAR OPTIONS` text
-— **NEW S210; tooling/engine; found while building Emperor's Children units**
-Sourcing EC's Defiler wargear from `MFM_Emperors_Children_v1.1.txt` (per D293's "build from newest
-MFM" rule) returned zero items. Root cause, confirmed directly against multiple files: every v1.1
-MFM file dropped the leading bullet character (`•`) from `WARGEAR OPTIONS` lines that v1_0 files
-have (checked `MFM_Grey_Knights_v1.1.txt`, `MFM_Death_Guard_v1.1.txt`, `MFM_Thousand_Sons_v1.1.txt`,
-`MFM_Chaos_Space_Marines_v1.1.txt` — all bullet-less, universal not EC-specific).
-`mfm_points_parser.py`'s `WARGEAR_RE` regex hard-requires that leading bullet, so the `--wargear`
-pass has been silently unable to read v1.1 wargear pricing for every faction since the v1.1
-migration. Harmless everywhere else purely by coincidence — every other faction's wargear item
-happens to cost the same in v1_0 and v1.1, so the stale v1_0 sourcing still produces the right
-number. EC's Defiler is the first case where the two versions genuinely disagree (10 vs 15 pts per
-item), which is what surfaced the gap. S210 shipped EC's Defiler wargear at the stale v1_0 price (10
-pts), consistent with its already-shipped siblings (DG/TS/CSM Defilers, all currently also stuck at
-v1_0 pricing for this same pre-existing reason), rather than leaving the items unpriced or
-hand-patching a number outside the pipeline. Fix: update `WARGEAR_RE` to accept both the bulleted
-v1_0 format and the bullet-less v1.1 format. After the regex fix, the wargear pass should be re-run
-across every already-shipped faction (not just EC) and diff-guarded, in case another v1.1-only price
-change is hiding behind the same gap elsewhere — don't assume EC's Defiler is the only casualty.
-
-**S215 update (D309) — tooling half shipped; data half open.** `WARGEAR_RE`'s leading bullet made
-optional; verified against all built v1.1 files (v1_0 output byte-identical, all twelve v1.1 files
-now parse wargear, previously zero). The S215 prompt's assumption that B111 could be a clean
-tooling-only turn was wrong: assertion **E14-1 (`e14_free`)** rebuilds `wargear_points.json` from the
-parser every baseline and compares prices to the committed file, so the moment the parser is
-corrected E14-1 goes red until the data is regenerated. Closed the tooling turn with E14-1 as a
-documented known-red (same pattern as `repo_check`/B108). **Data turn remaining:** re-run the wargear
-pass (`mfm_points_parser.py --wargear`) across every already-built faction and regenerate
-`wargear_points.json`, diff-guarded. Confirmed price changes to expect: Heavy reaper autocannon and
-Hades lascannon 10 → 15 pts on the four Defiler factions (CSM, TS, DG, EC); Space Marines' Victrix
-Honour Guard **Banner of Macragge 10 → 15 pts** (the casualty beyond EC's Defiler). Everything else
-matches shipped v1_0 values. This data turn also clears E14-1 back to green.
+### B111 — `mfm_points_parser.py`'s `--wargear` pass was blind to v1.1 `WARGEAR OPTIONS` text
+— **CLOSED S216 (D310); tooling half D309, data half D310**
+See Closed / Shipped for full history.
 
 ### B108 — `Thousand_Sons_web.txt` committed to the public repo (GW-derived) AND still absent from the private source repo — **NEW S207 (D301); RYAN ACTION; CRITICAL (compliance)**
 `repo_check.py` at S207 open flagged `Thousand_Sons_web.txt` in the public repo. Verified against a
@@ -1118,6 +1085,43 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B111 — `mfm_points_parser.py`'s `--wargear` pass was blind to v1.1 `WARGEAR OPTIONS` text
+— **NEW S210; CLOSED S216 (D310); tooling half D309, data half D310**
+Sourcing EC's Defiler wargear from `MFM_Emperors_Children_v1.1.txt` (per D293's "build from newest
+MFM" rule) returned zero items. Root cause, confirmed directly against multiple files: every v1.1
+MFM file dropped the leading bullet character (`•`) from `WARGEAR OPTIONS` lines that v1_0 files
+have (checked `MFM_Grey_Knights_v1.1.txt`, `MFM_Death_Guard_v1.1.txt`, `MFM_Thousand_Sons_v1.1.txt`,
+`MFM_Chaos_Space_Marines_v1.1.txt` — all bullet-less, universal not EC-specific).
+`mfm_points_parser.py`'s `WARGEAR_RE` regex hard-required that leading bullet, so the `--wargear`
+pass had been silently unable to read v1.1 wargear pricing for every faction since the v1.1
+migration. Harmless everywhere else purely by coincidence — every other faction's wargear item
+happened to cost the same in v1_0 and v1.1, so the stale v1_0 sourcing still produced the right
+number. EC's Defiler was the first case where the two versions genuinely disagreed (10 vs 15 pts
+per item), which is what surfaced the gap. S210 shipped EC's Defiler wargear at the stale v1_0
+price (10 pts), consistent with its already-shipped siblings (DG/TS/CSM Defilers, all also stuck at
+v1_0 pricing for this same pre-existing reason), rather than leaving the items unpriced or
+hand-patching a number outside the pipeline.
+
+**Tooling half (S215, D309).** `WARGEAR_RE`'s leading bullet made optional; verified against all
+built v1.1 files (v1_0 output byte-identical, all twelve v1.1 files now parse wargear, previously
+zero). Finding: assertion **E14-1 (`e14_free`)** rebuilds `wargear_points.json` from the parser
+every baseline and compares prices to the committed file, so the moment the parser is corrected
+E14-1 goes red until the data is regenerated — parser correctness and data freshness are coupled by
+design, so B111 could not be a clean tooling-only turn as first assumed. Closed the tooling turn
+with E14-1 as a documented known-red (same pattern as `repo_check`/B108), data turn made
+mandatory-next.
+
+**Data half (S216, D310).** Re-ran `mfm_points_parser.py --wargear` across every already-built
+faction and regenerated `wargear_points.json`, diff-guarded key-by-key against the pre-turn file.
+9 price changes, all forecast: Heavy reaper autocannon and Hades lascannon 10 → 15 pts on the four
+Defiler factions (CSM, TS, DG, EC); Space Marines' Victrix Honour Guard "Banner of Macragge"
+10 → 15 pts. Plus 3 new v1.1-only wargear items not individually forecast (D309 only itemized price
+conflicts, not new keys) but each verified against source before banking: Black Templars' Repulsor
+Executioner gains a heavy laser destroyer option (10 pts); Thousand Sons' Forgefiend gains an
+ectoplasma cannon option (5 pts); the Centurion Devastator Squad gains a twin lascannon option
+(5 pts) — all three additive to base points already migrated to v1.1 in `units.json`, confirmed by
+`units_repro_check` staying byte-identical. Zero items removed. E14-1 now green.
 
 ### B109 — "My Army Lists" page label fix — **CLOSED S214 (D308); engine-only**
 `index.html`'s `renderMyLists()` `tgt` line changed from `'target ' + r.points_target` to
