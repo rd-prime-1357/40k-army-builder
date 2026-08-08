@@ -8,25 +8,25 @@
    "none"
   ],
   "armies": 17,
-  "detachment_records": 179,
-  "army_detachment_slots": 311,
-  "enhancements": 641,
+  "detachment_records": 185,
+  "army_detachment_slots": 323,
+  "enhancements": 653,
   "upgrade_enhancements": 39,
   "force_disposition_counts": {
    "DISRUPTION": 34,
    "PRIORITY ASSETS": 42,
-   "PURGE THE FOE": 30,
+   "PURGE THE FOE": 23,
    "RECONNAISSANCE": 27,
-   "TAKE AND HOLD": 46
+   "TAKE AND HOLD": 59
   },
   "text_source_counts": {
    "faction_pack": 71,
-   "none": 14,
+   "none": 20,
    "wahapedia_10e": 94
   },
   "enhancement_description_source_counts": {
    "faction_pack": 226,
-   "none": 43,
+   "none": 55,
    "wahapedia_10e": 372
   },
   "wahapedia_only_enhancements_dropped": 14,
@@ -44,6 +44,12 @@
     "dp": 1
    },
    {
+    "key": "Black Templars|VENGEFUL HOSTS",
+    "source_faction": "Black Templars",
+    "detachment": "Vengeful Hosts",
+    "dp": 1
+   },
+   {
     "key": "Blood Angels|ENCARMINE SPEARTIP",
     "source_faction": "Blood Angels",
     "detachment": "Encarmine Speartip",
@@ -53,6 +59,12 @@
     "key": "Blood Angels|LEGACY OF GRACE",
     "source_faction": "Blood Angels",
     "detachment": "Legacy of Grace",
+    "dp": 1
+   },
+   {
+    "key": "Blood Angels|VENGEFUL HOSTS",
+    "source_faction": "Blood Angels",
+    "detachment": "Vengeful Hosts",
     "dp": 1
    },
    {
@@ -74,6 +86,12 @@
     "dp": 1
    },
    {
+    "key": "Dark Angels|VENGEFUL HOSTS",
+    "source_faction": "Dark Angels",
+    "detachment": "Vengeful Hosts",
+    "dp": 1
+   },
+   {
     "key": "Death Guard|CONTAGION ENGINES",
     "source_faction": "Death Guard",
     "detachment": "Contagion Engines",
@@ -83,6 +101,12 @@
     "key": "Death Guard|PARAGONS OF PUTRESCENCE",
     "source_faction": "Death Guard",
     "detachment": "Paragons of Putrescence",
+    "dp": 1
+   },
+   {
+    "key": "Deathwatch|VENGEFUL HOSTS",
+    "source_faction": "Deathwatch",
+    "detachment": "Vengeful Hosts",
     "dp": 1
    },
    {
@@ -104,9 +128,21 @@
     "dp": 1
    },
    {
+    "key": "Space Marines|VENGEFUL HOSTS",
+    "source_faction": "Space Marines",
+    "detachment": "Vengeful Hosts",
+    "dp": 1
+   },
+   {
     "key": "Space Wolves|LEGENDS OF SAGA AND SONG",
     "source_faction": "Space Wolves",
     "detachment": "Legends of Saga and Song",
+    "dp": 1
+   },
+   {
+    "key": "Space Wolves|VENGEFUL HOSTS",
+    "source_faction": "Space Wolves",
+    "detachment": "Vengeful Hosts",
     "dp": 1
    },
    {
@@ -122,7 +158,7 @@
    "name": "1st Company Task Force",
    "name_raw": "1ST COMPANY TASK FORCE",
    "dp": 2,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Space Marines|1ST COMPANY TASK FORCE",
    "source_faction": "Space Marines",
@@ -477,7 +513,7 @@
     {
      "name": "Armour of Antoninus",
      "name_raw": "Armour of Antoninus",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "Originally worn by a storied Captain of the Ultramarines' First Company, this artificer armour is bestowed by the Chapter Master himself upon a worthy wearer.\nAdeptus Astartes model only. The bearer has a Save characteristic of 2+ and the Feel No Pain 5+ ability.",
      "description_source": "faction_pack"
@@ -638,7 +674,7 @@
    "name": "Emperor's Shield",
    "name_raw": "EMPEROR'S SHIELD",
    "dp": 2,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Space Marines|EMPEROR'S SHIELD",
    "source_faction": "Space Marines",
@@ -725,7 +761,7 @@
    "name": "Firestorm Assault Force",
    "name_raw": "FIRESTORM ASSAULT FORCE",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Space Marines|FIRESTORM ASSAULT FORCE",
    "source_faction": "Space Marines",
@@ -812,7 +848,7 @@
    "name": "Forgefather's Seekers",
    "name_raw": "FORGEFATHER'S SEEKERS",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Space Marines|FORGEFATHER'S SEEKERS",
    "source_faction": "Space Marines",
@@ -899,7 +935,7 @@
    "name": "Fulguris Task Force",
    "name_raw": "FULGURIS TASK FORCE",
    "dp": 1,
-   "force_disposition": "DISRUPTION",
+   "force_disposition": "RECONNAISSANCE",
    "unique_tag": null,
    "key": "Space Marines|FULGURIS TASK FORCE",
    "source_faction": "Space Marines",
@@ -973,7 +1009,7 @@
     {
      "name": "Artificer Armour",
      "name_raw": "Artificer Armour",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has a Save characteristic of 2+ and the Feel No Pain 5+ ability.",
      "description_source": "wahapedia_10e"
@@ -1039,7 +1075,7 @@
    "name": "Hammer of Avernii",
    "name_raw": "HAMMER OF AVERNII",
    "dp": 2,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Space Marines|HAMMER OF AVERNII",
    "source_faction": "Space Marines",
@@ -1213,7 +1249,7 @@
    "name": "Ironstorm Spearhead",
    "name_raw": "IRONSTORM SPEARHEAD",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Space Marines|IRONSTORM SPEARHEAD",
    "source_faction": "Space Marines",
@@ -1250,7 +1286,7 @@
     {
      "name": "The Flesh Is Weak",
      "name_raw": "The Flesh Is Weak",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has the Feel No Pain 4+ ability.",
      "description_source": "wahapedia_10e"
@@ -1321,7 +1357,7 @@
     {
      "name": "Fusillade",
      "name_raw": "Fusillade",
-     "points": 20,
+     "points": 25,
      "is_upgrade": false,
      "description": "Adeptus Astartes Psyker model only. Ranged weapons equipped by models in the bearer's unit have the [ANTI-MONSTER 5+] and [ANTI-VEHICLE 5+] abilities, and:\n▪ The [SUSTAINED HITS 1] ability if the Pyromancy Discipline is active for your army.\n▪ Add 6\" to the Range characteristic of those weapons if the Telekinesis Discipline is active for your army.",
      "description_source": "wahapedia_10e"
@@ -1345,7 +1381,7 @@
     {
      "name": "Temporal Corridor",
      "name_raw": "Temporal Corridor",
-     "points": 15,
+     "points": 25,
      "is_upgrade": false,
      "description": null,
      "description_source": "none"
@@ -1830,7 +1866,7 @@
    "name": "Subversion Assets",
    "name_raw": "SUBVERSION ASSETS",
    "dp": 1,
-   "force_disposition": "RECONNAISSANCE",
+   "force_disposition": "DISRUPTION",
    "unique_tag": null,
    "key": "Space Marines|SUBVERSION ASSETS",
    "source_faction": "Space Marines",
@@ -1965,6 +2001,40 @@
     }
    ],
    "stratagem_source": "wahapedia_10e"
+  },
+  "Space Marines|VENGEFUL HOSTS": {
+   "name": "Vengeful Hosts",
+   "name_raw": "VENGEFUL HOSTS",
+   "dp": 1,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "Space Marines|VENGEFUL HOSTS",
+   "source_faction": "Space Marines",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Avenging Angel",
+     "name_raw": "Avenging Angel",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Orksbane",
+     "name_raw": "Orksbane",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
   },
   "Black Templars|ANVIL SIEGE FORCE": {
    "name": "Anvil Siege Force",
@@ -2399,7 +2469,7 @@
    "name": "Firestorm Assault Force",
    "name_raw": "FIRESTORM ASSAULT FORCE",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Black Templars|FIRESTORM ASSAULT FORCE",
    "source_faction": "Black Templars",
@@ -2486,7 +2556,7 @@
    "name": "Fulguris Task Force",
    "name_raw": "FULGURIS TASK FORCE",
    "dp": 1,
-   "force_disposition": "DISRUPTION",
+   "force_disposition": "RECONNAISSANCE",
    "unique_tag": null,
    "key": "Black Templars|FULGURIS TASK FORCE",
    "source_faction": "Black Templars",
@@ -2560,7 +2630,7 @@
     {
      "name": "Artificer Armour",
      "name_raw": "Artificer Armour",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has a Save characteristic of 2+ and the Feel No Pain 5+ ability.",
      "description_source": "wahapedia_10e"
@@ -2626,7 +2696,7 @@
    "name": "Godhammer Assault Force",
    "name_raw": "GODHAMMER ASSAULT FORCE",
    "dp": 2,
-   "force_disposition": "DISRUPTION",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Black Templars|GODHAMMER ASSAULT FORCE",
    "source_faction": "Black Templars",
@@ -2800,7 +2870,7 @@
    "name": "Ironstorm Spearhead",
    "name_raw": "IRONSTORM SPEARHEAD",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Black Templars|IRONSTORM SPEARHEAD",
    "source_faction": "Black Templars",
@@ -2837,7 +2907,7 @@
     {
      "name": "The Flesh Is Weak",
      "name_raw": "The Flesh Is Weak",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has the Feel No Pain 4+ ability.",
      "description_source": "wahapedia_10e"
@@ -3095,7 +3165,7 @@
    "name": "Subversion Assets",
    "name_raw": "SUBVERSION ASSETS",
    "dp": 1,
-   "force_disposition": "RECONNAISSANCE",
+   "force_disposition": "DISRUPTION",
    "unique_tag": null,
    "key": "Black Templars|SUBVERSION ASSETS",
    "source_faction": "Black Templars",
@@ -3148,7 +3218,7 @@
    "name": "The Living Miracle",
    "name_raw": "THE LIVING MIRACLE",
    "dp": 1,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "DISRUPTION",
    "unique_tag": null,
    "key": "Black Templars|THE LIVING MIRACLE",
    "source_faction": "Black Templars",
@@ -3256,6 +3326,40 @@
     }
    ],
    "stratagem_source": "wahapedia_10e"
+  },
+  "Black Templars|VENGEFUL HOSTS": {
+   "name": "Vengeful Hosts",
+   "name_raw": "VENGEFUL HOSTS",
+   "dp": 1,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "Black Templars|VENGEFUL HOSTS",
+   "source_faction": "Black Templars",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Avenging Angel",
+     "name_raw": "Avenging Angel",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Orksbane",
+     "name_raw": "Orksbane",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
   },
   "Black Templars|VINDICATION TASK FORCE": {
    "name": "Vindication Task Force",
@@ -3419,7 +3523,7 @@
    "name": "1st Company Task Force",
    "name_raw": "1ST COMPANY TASK FORCE",
    "dp": 2,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Blood Angels|1ST COMPANY TASK FORCE",
    "source_faction": "Blood Angels",
@@ -3969,7 +4073,7 @@
    "name": "Firestorm Assault Force",
    "name_raw": "FIRESTORM ASSAULT FORCE",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Blood Angels|FIRESTORM ASSAULT FORCE",
    "source_faction": "Blood Angels",
@@ -4056,7 +4160,7 @@
    "name": "Fulguris Task Force",
    "name_raw": "FULGURIS TASK FORCE",
    "dp": 1,
-   "force_disposition": "DISRUPTION",
+   "force_disposition": "RECONNAISSANCE",
    "unique_tag": null,
    "key": "Blood Angels|FULGURIS TASK FORCE",
    "source_faction": "Blood Angels",
@@ -4130,7 +4234,7 @@
     {
      "name": "Artificer Armour",
      "name_raw": "Artificer Armour",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has a Save characteristic of 2+ and the Feel No Pain 5+ ability.",
      "description_source": "wahapedia_10e"
@@ -4283,7 +4387,7 @@
    "name": "Ironstorm Spearhead",
    "name_raw": "IRONSTORM SPEARHEAD",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Blood Angels|IRONSTORM SPEARHEAD",
    "source_faction": "Blood Angels",
@@ -4320,7 +4424,7 @@
     {
      "name": "The Flesh Is Weak",
      "name_raw": "The Flesh Is Weak",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has the Feel No Pain 4+ ability.",
      "description_source": "wahapedia_10e"
@@ -4512,7 +4616,7 @@
     {
      "name": "Fusillade",
      "name_raw": "Fusillade",
-     "points": 20,
+     "points": 25,
      "is_upgrade": false,
      "description": "Adeptus Astartes Psyker model only. Ranged weapons equipped by models in the bearer's unit have the [ANTI-MONSTER 5+] and [ANTI-VEHICLE 5+] abilities, and:\n▪ The [SUSTAINED HITS 1] ability if the Pyromancy Discipline is active for your army.\n▪ Add 6\" to the Range characteristic of those weapons if the Telekinesis Discipline is active for your army.",
      "description_source": "wahapedia_10e"
@@ -4536,7 +4640,7 @@
     {
      "name": "Temporal Corridor",
      "name_raw": "Temporal Corridor",
-     "points": 15,
+     "points": 25,
      "is_upgrade": false,
      "description": null,
      "description_source": "none"
@@ -4847,7 +4951,7 @@
    "name": "Subversion Assets",
    "name_raw": "SUBVERSION ASSETS",
    "dp": 1,
-   "force_disposition": "RECONNAISSANCE",
+   "force_disposition": "DISRUPTION",
    "unique_tag": null,
    "key": "Blood Angels|SUBVERSION ASSETS",
    "source_faction": "Blood Angels",
@@ -5157,6 +5261,40 @@
    ],
    "stratagem_source": "wahapedia_10e"
   },
+  "Blood Angels|VENGEFUL HOSTS": {
+   "name": "Vengeful Hosts",
+   "name_raw": "VENGEFUL HOSTS",
+   "dp": 1,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "Blood Angels|VENGEFUL HOSTS",
+   "source_faction": "Blood Angels",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Avenging Angel",
+     "name_raw": "Avenging Angel",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Orksbane",
+     "name_raw": "Orksbane",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
+  },
   "Blood Angels|WRATH OF THE DOOMED": {
    "name": "Wrath of the Doomed",
    "name_raw": "WRATH OF THE DOOMED",
@@ -5195,7 +5333,7 @@
    "name": "1st Company Task Force",
    "name_raw": "1ST COMPANY TASK FORCE",
    "dp": 2,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Dark Angels|1ST COMPANY TASK FORCE",
    "source_faction": "Dark Angels",
@@ -5817,7 +5955,7 @@
    "name": "Firestorm Assault Force",
    "name_raw": "FIRESTORM ASSAULT FORCE",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Dark Angels|FIRESTORM ASSAULT FORCE",
    "source_faction": "Dark Angels",
@@ -5904,7 +6042,7 @@
    "name": "Fulguris Task Force",
    "name_raw": "FULGURIS TASK FORCE",
    "dp": 1,
-   "force_disposition": "DISRUPTION",
+   "force_disposition": "RECONNAISSANCE",
    "unique_tag": null,
    "key": "Dark Angels|FULGURIS TASK FORCE",
    "source_faction": "Dark Angels",
@@ -5978,7 +6116,7 @@
     {
      "name": "Artificer Armour",
      "name_raw": "Artificer Armour",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has a Save characteristic of 2+ and the Feel No Pain 5+ ability.",
      "description_source": "wahapedia_10e"
@@ -6218,7 +6356,7 @@
    "name": "Interrogation Conclave",
    "name_raw": "INTERROGATION CONCLAVE",
    "dp": 1,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Dark Angels|INTERROGATION CONCLAVE",
    "source_faction": "Dark Angels",
@@ -6271,7 +6409,7 @@
    "name": "Ironstorm Spearhead",
    "name_raw": "IRONSTORM SPEARHEAD",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Dark Angels|IRONSTORM SPEARHEAD",
    "source_faction": "Dark Angels",
@@ -6308,7 +6446,7 @@
     {
      "name": "The Flesh Is Weak",
      "name_raw": "The Flesh Is Weak",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has the Feel No Pain 4+ ability.",
      "description_source": "wahapedia_10e"
@@ -6379,7 +6517,7 @@
     {
      "name": "Fusillade",
      "name_raw": "Fusillade",
-     "points": 20,
+     "points": 25,
      "is_upgrade": false,
      "description": "Adeptus Astartes Psyker model only. Ranged weapons equipped by models in the bearer's unit have the [ANTI-MONSTER 5+] and [ANTI-VEHICLE 5+] abilities, and:\n▪ The [SUSTAINED HITS 1] ability if the Pyromancy Discipline is active for your army.\n▪ Add 6\" to the Range characteristic of those weapons if the Telekinesis Discipline is active for your army.",
      "description_source": "wahapedia_10e"
@@ -6403,7 +6541,7 @@
     {
      "name": "Temporal Corridor",
      "name_raw": "Temporal Corridor",
-     "points": 15,
+     "points": 25,
      "is_upgrade": false,
      "description": null,
      "description_source": "none"
@@ -6490,7 +6628,7 @@
     {
      "name": "Stalwart Champion",
      "name_raw": "Stalwart Champion",
-     "points": 25,
+     "points": 15,
      "is_upgrade": false,
      "description": "Possessed of obdurate will, this warrior champion instils an indomitable resolve and absolute refusal to cede ground within his brothers. Captain, Chaplain or Lieutenant model only. While the bearer's unit is not Battle-shocked, add 1 to the Objective Control characteristic of models in the bearer's unit.",
      "description_source": "faction_pack"
@@ -6714,7 +6852,7 @@
    "name": "Subversion Assets",
    "name_raw": "SUBVERSION ASSETS",
    "dp": 1,
-   "force_disposition": "RECONNAISSANCE",
+   "force_disposition": "DISRUPTION",
    "unique_tag": null,
    "key": "Dark Angels|SUBVERSION ASSETS",
    "source_faction": "Dark Angels",
@@ -6937,6 +7075,40 @@
    ],
    "stratagem_source": "wahapedia_10e"
   },
+  "Dark Angels|VENGEFUL HOSTS": {
+   "name": "Vengeful Hosts",
+   "name_raw": "VENGEFUL HOSTS",
+   "dp": 1,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "Dark Angels|VENGEFUL HOSTS",
+   "source_faction": "Dark Angels",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Avenging Angel",
+     "name_raw": "Avenging Angel",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Orksbane",
+     "name_raw": "Orksbane",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
+  },
   "Dark Angels|WRATH OF THE ROCK": {
    "name": "Wrath of the Rock",
    "name_raw": "WRATH OF THE ROCK",
@@ -7028,7 +7200,7 @@
    "name": "1st Company Task Force",
    "name_raw": "1ST COMPANY TASK FORCE",
    "dp": 2,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Deathwatch|1ST COMPANY TASK FORCE",
    "source_faction": "Deathwatch",
@@ -7370,7 +7542,7 @@
    "name": "Black Spear Task Force",
    "name_raw": "BLACK SPEAR TASK FORCE",
    "dp": 3,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Deathwatch|BLACK SPEAR TASK FORCE",
    "source_faction": "Deathwatch",
@@ -7544,7 +7716,7 @@
    "name": "Firestorm Assault Force",
    "name_raw": "FIRESTORM ASSAULT FORCE",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Deathwatch|FIRESTORM ASSAULT FORCE",
    "source_faction": "Deathwatch",
@@ -7631,7 +7803,7 @@
    "name": "Fulguris Task Force",
    "name_raw": "FULGURIS TASK FORCE",
    "dp": 1,
-   "force_disposition": "DISRUPTION",
+   "force_disposition": "RECONNAISSANCE",
    "unique_tag": null,
    "key": "Deathwatch|FULGURIS TASK FORCE",
    "source_faction": "Deathwatch",
@@ -7705,7 +7877,7 @@
     {
      "name": "Artificer Armour",
      "name_raw": "Artificer Armour",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has a Save characteristic of 2+ and the Feel No Pain 5+ ability.",
      "description_source": "wahapedia_10e"
@@ -7858,7 +8030,7 @@
    "name": "Ironstorm Spearhead",
    "name_raw": "IRONSTORM SPEARHEAD",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Deathwatch|IRONSTORM SPEARHEAD",
    "source_faction": "Deathwatch",
@@ -7895,7 +8067,7 @@
     {
      "name": "The Flesh Is Weak",
      "name_raw": "The Flesh Is Weak",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has the Feel No Pain 4+ ability.",
      "description_source": "wahapedia_10e"
@@ -7966,7 +8138,7 @@
     {
      "name": "Fusillade",
      "name_raw": "Fusillade",
-     "points": 20,
+     "points": 25,
      "is_upgrade": false,
      "description": "Adeptus Astartes Psyker model only. Ranged weapons equipped by models in the bearer's unit have the [ANTI-MONSTER 5+] and [ANTI-VEHICLE 5+] abilities, and:\n▪ The [SUSTAINED HITS 1] ability if the Pyromancy Discipline is active for your army.\n▪ Add 6\" to the Range characteristic of those weapons if the Telekinesis Discipline is active for your army.",
      "description_source": "wahapedia_10e"
@@ -7990,7 +8162,7 @@
     {
      "name": "Temporal Corridor",
      "name_raw": "Temporal Corridor",
-     "points": 15,
+     "points": 25,
      "is_upgrade": false,
      "description": null,
      "description_source": "none"
@@ -8214,7 +8386,7 @@
    "name": "Subversion Assets",
    "name_raw": "SUBVERSION ASSETS",
    "dp": 1,
-   "force_disposition": "RECONNAISSANCE",
+   "force_disposition": "DISRUPTION",
    "unique_tag": null,
    "key": "Deathwatch|SUBVERSION ASSETS",
    "source_faction": "Deathwatch",
@@ -8350,11 +8522,45 @@
    ],
    "stratagem_source": "wahapedia_10e"
   },
+  "Deathwatch|VENGEFUL HOSTS": {
+   "name": "Vengeful Hosts",
+   "name_raw": "VENGEFUL HOSTS",
+   "dp": 1,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "Deathwatch|VENGEFUL HOSTS",
+   "source_faction": "Deathwatch",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Avenging Angel",
+     "name_raw": "Avenging Angel",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Orksbane",
+     "name_raw": "Orksbane",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
+  },
   "Space Wolves|1ST COMPANY TASK FORCE": {
    "name": "1st Company Task Force",
    "name_raw": "1ST COMPANY TASK FORCE",
    "dp": 2,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "PURGE THE FOE",
    "unique_tag": null,
    "key": "Space Wolves|1ST COMPANY TASK FORCE",
    "source_faction": "Space Wolves",
@@ -8783,7 +8989,7 @@
    "name": "Champions of Fenris",
    "name_raw": "CHAMPIONS OF FENRIS",
    "dp": 1,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Space Wolves|CHAMPIONS OF FENRIS",
    "source_faction": "Space Wolves",
@@ -8854,7 +9060,7 @@
    "name": "Firestorm Assault Force",
    "name_raw": "FIRESTORM ASSAULT FORCE",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Space Wolves|FIRESTORM ASSAULT FORCE",
    "source_faction": "Space Wolves",
@@ -8941,7 +9147,7 @@
    "name": "Fulguris Task Force",
    "name_raw": "FULGURIS TASK FORCE",
    "dp": 1,
-   "force_disposition": "DISRUPTION",
+   "force_disposition": "RECONNAISSANCE",
    "unique_tag": null,
    "key": "Space Wolves|FULGURIS TASK FORCE",
    "source_faction": "Space Wolves",
@@ -9015,7 +9221,7 @@
     {
      "name": "Artificer Armour",
      "name_raw": "Artificer Armour",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has a Save characteristic of 2+ and the Feel No Pain 5+ ability.",
      "description_source": "wahapedia_10e"
@@ -9168,7 +9374,7 @@
    "name": "Ironstorm Spearhead",
    "name_raw": "IRONSTORM SPEARHEAD",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Space Wolves|IRONSTORM SPEARHEAD",
    "source_faction": "Space Wolves",
@@ -9205,7 +9411,7 @@
     {
      "name": "The Flesh Is Weak",
      "name_raw": "The Flesh Is Weak",
-     "points": 10,
+     "points": 20,
      "is_upgrade": false,
      "description": "ADEPTUS ASTARTES model only. The bearer has the Feel No Pain 4+ ability.",
      "description_source": "wahapedia_10e"
@@ -9310,7 +9516,7 @@
     {
      "name": "Fusillade",
      "name_raw": "Fusillade",
-     "points": 20,
+     "points": 25,
      "is_upgrade": false,
      "description": "Adeptus Astartes Psyker model only. Ranged weapons equipped by models in the bearer's unit have the [ANTI-MONSTER 5+] and [ANTI-VEHICLE 5+] abilities, and:\n▪ The [SUSTAINED HITS 1] ability if the Pyromancy Discipline is active for your army.\n▪ Add 6\" to the Range characteristic of those weapons if the Telekinesis Discipline is active for your army.",
      "description_source": "wahapedia_10e"
@@ -9334,7 +9540,7 @@
     {
      "name": "Temporal Corridor",
      "name_raw": "Temporal Corridor",
-     "points": 15,
+     "points": 25,
      "is_upgrade": false,
      "description": null,
      "description_source": "none"
@@ -9906,7 +10112,7 @@
    "name": "Subversion Assets",
    "name_raw": "SUBVERSION ASSETS",
    "dp": 1,
-   "force_disposition": "RECONNAISSANCE",
+   "force_disposition": "DISRUPTION",
    "unique_tag": null,
    "key": "Space Wolves|SUBVERSION ASSETS",
    "source_faction": "Space Wolves",
@@ -10041,6 +10247,40 @@
     }
    ],
    "stratagem_source": "wahapedia_10e"
+  },
+  "Space Wolves|VENGEFUL HOSTS": {
+   "name": "Vengeful Hosts",
+   "name_raw": "VENGEFUL HOSTS",
+   "dp": 1,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "Space Wolves|VENGEFUL HOSTS",
+   "source_faction": "Space Wolves",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Avenging Angel",
+     "name_raw": "Avenging Angel",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Orksbane",
+     "name_raw": "Orksbane",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
   },
   "Space Wolves|VETERANS OF THE FANG": {
    "name": "Veterans of the Fang",
@@ -14189,7 +14429,8 @@
    "Space Marines|SPEARPOINT TASK FORCE",
    "Space Marines|STORMLANCE TASK FORCE",
    "Space Marines|SUBVERSION ASSETS",
-   "Space Marines|VANGUARD SPEARHEAD"
+   "Space Marines|VANGUARD SPEARHEAD",
+   "Space Marines|VENGEFUL HOSTS"
   ],
   "Black Templars": [
    "Black Templars|ANVIL SIEGE FORCE",
@@ -14209,6 +14450,7 @@
    "Black Templars|SUBVERSION ASSETS",
    "Black Templars|THE LIVING MIRACLE",
    "Black Templars|VANGUARD SPEARHEAD",
+   "Black Templars|VENGEFUL HOSTS",
    "Black Templars|VINDICATION TASK FORCE",
    "Black Templars|WRATHFUL PROCESSION"
   ],
@@ -14235,6 +14477,7 @@
    "Blood Angels|THE ANGELIC HOST",
    "Blood Angels|THE LOST BRETHREN",
    "Blood Angels|VANGUARD SPEARHEAD",
+   "Blood Angels|VENGEFUL HOSTS",
    "Blood Angels|WRATH OF THE DOOMED"
   ],
   "Dark Angels": [
@@ -14260,6 +14503,7 @@
    "Dark Angels|SUBVERSION ASSETS",
    "Dark Angels|UNFORGIVEN TASK FORCE",
    "Dark Angels|VANGUARD SPEARHEAD",
+   "Dark Angels|VENGEFUL HOSTS",
    "Dark Angels|WRATH OF THE ROCK"
   ],
   "Deathwatch": [
@@ -14278,7 +14522,8 @@
    "Deathwatch|ORBITAL ASSAULT FORCE",
    "Deathwatch|STORMLANCE TASK FORCE",
    "Deathwatch|SUBVERSION ASSETS",
-   "Deathwatch|VANGUARD SPEARHEAD"
+   "Deathwatch|VANGUARD SPEARHEAD",
+   "Deathwatch|VENGEFUL HOSTS"
   ],
   "Imperial Fists": [
    "Space Marines|1ST COMPANY TASK FORCE",
@@ -14302,7 +14547,8 @@
    "Space Marines|SPEARPOINT TASK FORCE",
    "Space Marines|STORMLANCE TASK FORCE",
    "Space Marines|SUBVERSION ASSETS",
-   "Space Marines|VANGUARD SPEARHEAD"
+   "Space Marines|VANGUARD SPEARHEAD",
+   "Space Marines|VENGEFUL HOSTS"
   ],
   "Iron Hands": [
    "Space Marines|1ST COMPANY TASK FORCE",
@@ -14326,7 +14572,8 @@
    "Space Marines|SPEARPOINT TASK FORCE",
    "Space Marines|STORMLANCE TASK FORCE",
    "Space Marines|SUBVERSION ASSETS",
-   "Space Marines|VANGUARD SPEARHEAD"
+   "Space Marines|VANGUARD SPEARHEAD",
+   "Space Marines|VENGEFUL HOSTS"
   ],
   "Raven Guard": [
    "Space Marines|1ST COMPANY TASK FORCE",
@@ -14350,7 +14597,8 @@
    "Space Marines|SPEARPOINT TASK FORCE",
    "Space Marines|STORMLANCE TASK FORCE",
    "Space Marines|SUBVERSION ASSETS",
-   "Space Marines|VANGUARD SPEARHEAD"
+   "Space Marines|VANGUARD SPEARHEAD",
+   "Space Marines|VENGEFUL HOSTS"
   ],
   "Salamanders": [
    "Space Marines|1ST COMPANY TASK FORCE",
@@ -14374,7 +14622,8 @@
    "Space Marines|SPEARPOINT TASK FORCE",
    "Space Marines|STORMLANCE TASK FORCE",
    "Space Marines|SUBVERSION ASSETS",
-   "Space Marines|VANGUARD SPEARHEAD"
+   "Space Marines|VANGUARD SPEARHEAD",
+   "Space Marines|VENGEFUL HOSTS"
   ],
   "Space Wolves": [
    "Space Wolves|1ST COMPANY TASK FORCE",
@@ -14398,6 +14647,7 @@
    "Space Wolves|STORMLANCE TASK FORCE",
    "Space Wolves|SUBVERSION ASSETS",
    "Space Wolves|VANGUARD SPEARHEAD",
+   "Space Wolves|VENGEFUL HOSTS",
    "Space Wolves|VETERANS OF THE FANG"
   ],
   "Ultramarines": [
@@ -14422,7 +14672,8 @@
    "Space Marines|SPEARPOINT TASK FORCE",
    "Space Marines|STORMLANCE TASK FORCE",
    "Space Marines|SUBVERSION ASSETS",
-   "Space Marines|VANGUARD SPEARHEAD"
+   "Space Marines|VANGUARD SPEARHEAD",
+   "Space Marines|VENGEFUL HOSTS"
   ],
   "White Scars": [
    "Space Marines|1ST COMPANY TASK FORCE",
@@ -14446,7 +14697,8 @@
    "Space Marines|SPEARPOINT TASK FORCE",
    "Space Marines|STORMLANCE TASK FORCE",
    "Space Marines|SUBVERSION ASSETS",
-   "Space Marines|VANGUARD SPEARHEAD"
+   "Space Marines|VANGUARD SPEARHEAD",
+   "Space Marines|VENGEFUL HOSTS"
   ],
   "Chaos Daemons": [
    "Chaos Daemons|BLOOD LEGION",

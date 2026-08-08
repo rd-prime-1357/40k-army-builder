@@ -12388,3 +12388,55 @@ tracked for the SM-family group next.
 
 No engine file touched this session. No `faction_taxonomy.json` change needed — all three factions
 were already `built: true`.
+
+---
+
+### D307 — B89 Space Marines-family group detachment v1.1 fix (S213), data-only
+
+`detachment_parser.py` and `detachments.json` changed. Baseline reconciled at open via
+`--fetch --data-turn`: 33/34 gates green, sources loaded, 122/122 assertions, all three repro
+checks byte-identical; `repo_check` red only on the pre-existing B108 finding (unchanged).
+
+Direct parse-and-diff run on all six registered v1_0 detachment files against their v1.1
+counterparts before touching anything, per S213's instruction not to assume D291's prose note was
+exhaustive. Re-pointed `ARMY_TO_MFM` and `MFM_SOURCE_NAME` for the six-file Space Marines group
+(base Adeptus Astartes, Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves) from
+v1_0 to v1.1, mirroring the CSM/DG/TS (D306) and Emperor's Children (D305) precedent.
+
+Regenerated `detachments.json`, diff-guarded at record-key level against the pre-session committed
+file: 6 keys added, 0 removed, 50 changed — 179 to 185 distinct detachment records, 17 armies
+unchanged.
+- **Added (6):** a new "Vengeful Hosts" detachment (1DP, Take and Hold), one record per source
+  file — Space Marines, Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves. No
+  faction-pack or Wahapedia prose exists yet for its ability text (`text_source: none`), which
+  matches the pre-existing pattern of 14 other detachments already carrying `text_source: none` —
+  not a new gap shape, confirmed by direct comparison rather than assumed benign.
+- **Changed (50), by kind:**
+  - Force-disposition corrections (37 records) — the majority of the diff. Every one of the six
+    files carries an explicit "UPDATED — FORCE DISPOSITION(S) CHANGED" marker in the raw MFM text
+    directly above the affected detachment, so each correction was verified against that marker
+    rather than inferred from the value change alone.
+  - Enhancement price changes (13 records) — five distinct enhancements re-priced: Artificer Armour
+    (10→20, six factions sharing the same enhancement name), The Flesh Is Weak (10→20, six
+    factions), Fusillade (20→25, five factions), Temporal Corridor (15→25, five factions), Armour
+    of Antoninus (10→20, Space Marines only), Stalwart Champion (25→15, Dark Angels only). All
+    match the raw MFM's ▲/▼ price-change markers.
+  - No DP changes and no unique-tag changes surfaced in this group, unlike CSM/DG/TS's Hexwarp
+    Thrallband DP change at D306.
+
+Checked, not assumed: `detachment_effects.json`'s entries for these six factions (Blood Angels' The
+Lost Brethren, Dark Angels' Company of Hunters, and all six factions' Headhunter Task Force
+entries) against the full 56-key changed-or-added set — zero overlap, confirmed programmatically.
+No update needed. Checked `rules_assertions.py` for any pinned value on a detachment name or
+enhancement name in the changed/added set — zero matches; no assertion needed reconciling.
+`faction_taxonomy.json`: confirmed directly (not assumed) that all twelve Adeptus Astartes chapters
+are already `built: true` — no change needed. `detachments_repro_check.py` passes byte-identical
+against the newly regenerated file.
+
+This closes B89's detachments-side v1_0-sourcing gap for the entire Adeptus Astartes group. The
+only remaining piece of B89 is Chaos Daemons, which stays blocked — no v1.1 detachment file exists
+for GW to have published yet. B89 is recommended for closure at next open unless the Chaos Daemons
+block is itself deprioritized into its own ticket.
+
+No engine file touched this session (`detachment_parser.py`'s registration dict only). No
+`faction_taxonomy.json` change needed.

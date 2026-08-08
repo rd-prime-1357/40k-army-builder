@@ -3,7 +3,20 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S212 (unchanged from S211 — nothing closed, nothing
+not here, it isn't open. **24 open** as of S213 (unchanged count from S212 — B89 closed, B112
+opened same session): B111, B110, B109, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86,
+B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
+Data-only turn (D307): `detachment_parser.py`'s `ARMY_TO_MFM`/`MFM_SOURCE_NAME` re-pointed the
+six-file Space Marines group (base Adeptus Astartes, Black Templars, Blood Angels, Dark Angels,
+Deathwatch, Space Wolves) at their v1.1 MFM files, mirroring CSM/DG/TS (D306) and Emperor's
+Children (D305). 6 detachments added (a new Vengeful Hosts per source file), 50 changed (37
+force-disposition corrections, 13 enhancement price changes). `detachment_effects.json` and
+`rules_assertions.py` checked directly against the full changed/added set — no overlap, nothing to
+reconcile. This closes B89's detachments-side gap for the entire Adeptus Astartes group. Chaos
+Daemons' remaining LORDS OF THE WARP item split off as B112 (blocked on GW publishing a v1.1 CD
+detachment file). **B89 closed. B112 opened.**
+
+**24 open** as of S212 (unchanged from S211 — nothing closed, nothing
 new opened; B89 advanced but did not close): B111, B110, B109, B108, B99, B98, B97, B103, E28,
 B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 Data-only turn (D306): `detachment_parser.py`'s `ARMY_TO_MFM`/`MFM_SOURCE_NAME` re-pointed Chaos
@@ -675,121 +688,23 @@ change, correctly). `b87_check.js` extended with a 4th fact pinning the row-leve
 (loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom (Drukhari), plus Rubric Marines.
 Rare in v1_0 (only Rubric Marines + Brotherhood Terminator Squad), widespread in v1.1.
 
-### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); FIRST FACTION SHIPPED S195 (D288); data; L; depends B88; spans sessions**
-Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and
-merge, key-level diff against the committed output — expected diffs are points values only, any
-structural diff investigated before acceptance. Assertions pinning points values are reconciled
-against the new source, never loosened. `source_manifest.json` updated per faction as it migrates.
-Standard priority order. E23's D273 per-army pool counts re-verified after the six Astartes armies
-migrate. The v1_0 layout reader retires when the last faction leaves it.
+### B89 — CLOSED S213 (D307); pointer only — full body in Closed / Shipped
+MFM v1.1 adoption arc (units-side, all factions; detachments-side, CSM/DG/TS S212, SM-family S213).
+CLOSED S213: detachments-side gap closed for the entire Adeptus Astartes group. Chaos Daemons'
+remaining detachments item split off as B112.
 
-**Thousand Sons migrated S195 (D288)**, first of the arc — chosen over Death Guard per the S195
-prompt's own recommendation (fully self-sourced, no chapter points). 12 units' points changed
-(11 real re-prices, matching `MFM_v1_1_Reconciliation.md`'s adopt-mechanically list exactly, plus
-Rubric Marines' `fourth_plus` under B94); all other 15 armies byte-identical. No points-value
-assertions needed reconciling — none exist for this faction. `source_manifest.json` needed no change
-(both source files already correctly hashed). **Left open for Thousand Sons**, tracked in the
-reconciliation report, not new tickets: a Defiler wargear removal (`wargear_points.json`, Hades
-lascannon/Heavy reaper autocannon) and 3 detachment force-disposition/unique-tag changes
-(`detachments.json`) — both outside a units-only data turn's scope. **Death Guard migrated S196
-(D289)**, second of the arc: 5 points changes (Plague Marines, Chaos Rhino [also gains `fourth_plus`
-under B94], Deathshroud Terminators, Mortarion, Defiler), all other 15 armies byte-identical.
-Reconciliation report found wrong on Defiler's wargear (repriced, not removed as the report states) —
-flagged, not corrected, since `wargear_points.json` is untouched by a units-only turn.
-
-**Chaos Daemons migrated S197 (D290)**, third of the arc and the first via a different mechanism: CD's
-Gen-1 root `Unit_Points.csv` has no source-file-swap path (no `_v1_0.txt`/`_v1.1.txt` selection —
-there is only the one hand-authored file), so this migration is a direct hand-edit of the 6 changed
-values, decided this session as the correct precedented mechanism (see D290 for the full reasoning; a
-`mfm_points_parser.py`-against-CD path exists in principle but is unvalidated new tooling, deferred).
-6 units changed (Beasts of Nurgle, Bloodcrushers, Fluxmaster, Kairos Fateweaver, Lord of Change,
-Shalaxi Helbane), all confined to `points`, all other 15 armies and all four merged lookups
-byte-identical. `source_manifest.json`'s `Unit_Points.csv` hash updated to match — **Ryan action
-required**: push the same edit to the private `rd-prime-1357-data-sources` repo, since Claude's token
-there is read-only. Reconciliation report found wrong twice for CD: 3 enhancement re-prices
-misattributed to SCINTILLATING LEGION instead of SHADOW LEGION (flagged for whoever migrates CD's
-`detachments.json`), and a PLAGUE LEGION force-disposition banner that checked out as unchanged
-(`TAKE AND HOLD` both versions) — not a missed item. CD's own investigate-first item (LORDS OF THE WARP
-force disposition, PURGE THE FOE→TAKE AND HOLD) stays tracked for the detachments migration, out of
-scope here.
-
-**The six-file Space Marines group (base + Black Templars, Blood Angels, Dark Angels, Deathwatch,
-Space Wolves) migrated together S198 (D291)**, fourth of the arc and the first multi-file atomic
-migration: `add_chapter_point_overrides.py` compares each chapter's shared-unit prices against the
-*current* generic base price on every build, so this group cannot split faction-by-faction like
-CD/DG/TS — confirmed from source, not new tooling, just a synchronized filename swap across
-`units_repro_check.py` and `add_chapter_point_overrides.py` (see D291). 47 units changed (14 Adeptus
-Astartes, 8 Ultramarines, 9 Dark Angels, 7 Space Wolves, 1 White Scars, 8 Black Templars): `points` on
-all 47, `chapter_point_overrides` on 2 (Inceptor Squad newly gains four chapter overrides; Vanguard
-Veteran Squad With Jump Packs' existing Blood Angels override re-prices), `model_groups` on 1 (Uriel
-Ventris legitimately gains Victrix Honour Guard as an attach option in v1.1). All ten other armies and
-all four merged lookups byte-identical. One pinned `rules_assertions.py` value reconciled
-(`b56a_bt_negative_control`, Impulsor AA/BT 80/85 -> 70/75).
-
-**Found and stopgap-fixed a genuine source-text defect** (not a reconciliation-report error this
-time — a raw MFM transcription defect): `MFM_Space_Marines_v1.1.txt`'s Marneus Calgar LEADER line is
-missing a comma between "ERADICATOR SQUAD" and "STERNGUARD VETERAN SQUAD", gluing them into one
-unresolvable token and silently dropping both legal units from his attach list. Scanned all six
-SM-family files' validation reports for the same pattern (a dropped attach-list token that splits
-cleanly into two-or-three known unit names) — isolated to this one instance, not systemic. Fixed via a
-narrow, filename-and-substring-scoped correction table in `mfm_points_parser.py`
-(`_KNOWN_SOURCE_FIXES`) that fails loudly if the source text changes underneath it. **Ryan action
-required**: push the missing-comma fix to the private repo's `MFM_Space_Marines_v1.1.txt`, then this
-dict entry can be removed. Detachments scope (Black Templars gains a new VENGEFUL HOSTS detachment,
-several enhancement re-prices) untouched, tracked separately per convention.
-
-**S199 (D292): checked both open fronts, neither is actionable right now.** The Calgar comma fix has
-not landed in the private repo (verified via a direct fetch, not the local copy — still glued at
-`MFM_Space_Marines_v1.1.txt` line 538); stopgap unchanged. Chaos Space Marines re-confirmed blocked:
-`units.json` has no World Eaters or Emperor's Children entries. **Grey Knights corrected off this
-list** — it was never a migration candidate. `units.json` has zero Grey Knights units at any version
-(matches the standing "GK is not a built army" note from B94/S194), so there is nothing to migrate.
-Building it is a net-new faction build (own scoping pass first, `CSM_BUILD_SCOPE.md`/
-`THOUSAND_SONS_BUILD_SCOPE.md` precedent — no such doc exists yet for GK) and does not belong under
-B89's definition. Tracked separately below as a new ticket. B89 itself has **no remaining in-scope
-candidate** until either a Grey Knights build lands or World Eaters/Emperor's Children unblocks CSM.
-
-**S211: confirmed and quantified the detachments-side gap this ticket already flagged for TS/DG/CD.**
-Registering Emperor's Children in `detachment_parser.py` surfaced that `ARMY_TO_MFM` still points
-Chaos Space Marines, Death Guard, and Thousand Sons at their v1_0 MFM files for detachments, even
-though all three factions' `units.json` migrated to v1.1 under this ticket. Direct parse-and-diff of
-each registered v1_0 file against its v1.1 counterpart confirms real, already-shipped errors, not just
-the disposition drift this ticket already expected: Thousand Sons' Hexwarp Thrallband is priced 2 DP
-(should be 3), Chaos Space Marines' Soulforged Warpack enhancement Tempting Addendum is priced 25 pts
-(should be 40), plus six force-disposition mismatches across the three factions (TS: Ritual of
-Regeneration, Sekhetar Cohort, Warpforged Cabal; CSM: Murdertalon Raiders, Soulforged Warpack; DG:
-Contagion Engines). Chaos Daemons has no v1.1 detachment file to compare against, so its already-noted
-LORDS OF THE WARP item stays unverified by this pass. Not fixed this session — three different
-factions' committed `detachments.json`/`detachment_effects.json` data, out of scope for an
-Emperor's-Children-only data turn. **Recommended as the next data turn under this ticket**, now that
-Emperor's Children's own detachments (D305) are the one item that was blocking a clean sequencing
-choice.
-
-**S212 (D306): fixed the CSM/Death Guard/Thousand Sons portion of the gap.** `ARMY_TO_MFM`
-re-pointed all three factions at their v1.1 files, mirroring Emperor's Children. Regenerated and
-diff-guarded at record-key level: 0 keys added/removed (179 total unchanged), exactly the 7
-predicted records changed — Hexwarp Thrallband's DP fix, the six disposition corrections, and
-Soulforged Warpack's enhancement price fix, matching the S211 finding item for item. One extra,
-harmless diff: Death Guard's Contagion Engines enhancement gained a hyphen in its v1.1 name
-("Parasitic Woe reaper" to "Parasitic Woe-reaper"), a text correction with no points/legality
-effect. `detachment_effects.json` (Death Guard's, Chaos Space Marines', and Thousand Sons' entries)
-and `rules_assertions.py` (CSM-3, TS-2, both pin `text_source` only) checked directly against the 7
-changed keys — neither needed reconciling. `detachments_repro_check.py` passes byte-identical.
-**Ticket stays open**: the same v1_0-detachment-sourcing pattern applies to the six-file Space
-Marines group (base Adeptus Astartes, Black Templars, Blood Angels, Dark Angels, Deathwatch, Space
-Wolves) — flagged since D291 (Black Templars gains a new Vengeful Hosts detachment in v1.1, several
-enhancement re-prices) but not yet confirmed/quantified by a direct parse-and-diff the way this
-session did for CSM/DG/TS. **Recommended as B89's next data turn.** Chaos Daemons remains blocked
-— no v1.1 detachment file exists to diff against, so its LORDS OF THE WARP item stays unverified.
+### B112 — Chaos Daemons' LORDS OF THE WARP detachment disposition unverified against v1.1 — **NEW S213 (D307); split off B89; data; XS; BLOCKED on GW publication**
+Chaos Daemons has no v1.1 detachment source file to diff against (only the v1_0 file exists locally
+or in the private source repo). The LORDS OF THE WARP force-disposition item (possible PURGE THE
+FOE → TAKE AND HOLD per the same pattern seen across every other faction's v1.1 migration) has been
+flagged since S211 (D291-adjacent) but cannot be confirmed or fixed without GW publishing a
+Chaos Daemons v1.1 MFM detachments file. Not actionable this session or any session until that file
+exists. Check GW's Munitorum Field Manual page periodically; when a v1.1 CD file appears, this
+becomes a same-pattern data-only fix mirroring D306/D307.
 
 ### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon
 options) shipped; faction fully complete, 25/25 units, zero residual `_parser_flags`.
-
-### B109 — "My Army Lists" page: replace "Target ####" label with "#### Points" — **NEW S208 (D302); Ryan-reported; UI copy only; XS**
-Ryan's change request, logged verbatim. Not yet scoped against `index.html` — needs the render site for
-the "My Army Lists" page's list-row label found and the copy changed. No rules content, no data or
-parser involvement; pure UI-text turn.
 
 ### B103 — Non-distinct `replacement_choices` rollup emits past its cap and hides the over-allocation — **NEW S201 (D294); engine; M; affects shipped lists' points**
 Found while landing B101 and deliberately left alone there. In `loRollup`'s multi-model body branch, a
@@ -1183,6 +1098,132 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); FIRST FACTION SHIPPED S195 (D288); data; L; depends B88; spans sessions**
+Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and
+merge, key-level diff against the committed output — expected diffs are points values only, any
+structural diff investigated before acceptance. Assertions pinning points values are reconciled
+against the new source, never loosened. `source_manifest.json` updated per faction as it migrates.
+Standard priority order. E23's D273 per-army pool counts re-verified after the six Astartes armies
+migrate. The v1_0 layout reader retires when the last faction leaves it.
+
+**Thousand Sons migrated S195 (D288)**, first of the arc — chosen over Death Guard per the S195
+prompt's own recommendation (fully self-sourced, no chapter points). 12 units' points changed
+(11 real re-prices, matching `MFM_v1_1_Reconciliation.md`'s adopt-mechanically list exactly, plus
+Rubric Marines' `fourth_plus` under B94); all other 15 armies byte-identical. No points-value
+assertions needed reconciling — none exist for this faction. `source_manifest.json` needed no change
+(both source files already correctly hashed). **Left open for Thousand Sons**, tracked in the
+reconciliation report, not new tickets: a Defiler wargear removal (`wargear_points.json`, Hades
+lascannon/Heavy reaper autocannon) and 3 detachment force-disposition/unique-tag changes
+(`detachments.json`) — both outside a units-only data turn's scope. **Death Guard migrated S196
+(D289)**, second of the arc: 5 points changes (Plague Marines, Chaos Rhino [also gains `fourth_plus`
+under B94], Deathshroud Terminators, Mortarion, Defiler), all other 15 armies byte-identical.
+Reconciliation report found wrong on Defiler's wargear (repriced, not removed as the report states) —
+flagged, not corrected, since `wargear_points.json` is untouched by a units-only turn.
+
+**Chaos Daemons migrated S197 (D290)**, third of the arc and the first via a different mechanism: CD's
+Gen-1 root `Unit_Points.csv` has no source-file-swap path (no `_v1_0.txt`/`_v1.1.txt` selection —
+there is only the one hand-authored file), so this migration is a direct hand-edit of the 6 changed
+values, decided this session as the correct precedented mechanism (see D290 for the full reasoning; a
+`mfm_points_parser.py`-against-CD path exists in principle but is unvalidated new tooling, deferred).
+6 units changed (Beasts of Nurgle, Bloodcrushers, Fluxmaster, Kairos Fateweaver, Lord of Change,
+Shalaxi Helbane), all confined to `points`, all other 15 armies and all four merged lookups
+byte-identical. `source_manifest.json`'s `Unit_Points.csv` hash updated to match — **Ryan action
+required**: push the same edit to the private `rd-prime-1357-data-sources` repo, since Claude's token
+there is read-only. Reconciliation report found wrong twice for CD: 3 enhancement re-prices
+misattributed to SCINTILLATING LEGION instead of SHADOW LEGION (flagged for whoever migrates CD's
+`detachments.json`), and a PLAGUE LEGION force-disposition banner that checked out as unchanged
+(`TAKE AND HOLD` both versions) — not a missed item. CD's own investigate-first item (LORDS OF THE WARP
+force disposition, PURGE THE FOE→TAKE AND HOLD) stays tracked for the detachments migration, out of
+scope here.
+
+**The six-file Space Marines group (base + Black Templars, Blood Angels, Dark Angels, Deathwatch,
+Space Wolves) migrated together S198 (D291)**, fourth of the arc and the first multi-file atomic
+migration: `add_chapter_point_overrides.py` compares each chapter's shared-unit prices against the
+*current* generic base price on every build, so this group cannot split faction-by-faction like
+CD/DG/TS — confirmed from source, not new tooling, just a synchronized filename swap across
+`units_repro_check.py` and `add_chapter_point_overrides.py` (see D291). 47 units changed (14 Adeptus
+Astartes, 8 Ultramarines, 9 Dark Angels, 7 Space Wolves, 1 White Scars, 8 Black Templars): `points` on
+all 47, `chapter_point_overrides` on 2 (Inceptor Squad newly gains four chapter overrides; Vanguard
+Veteran Squad With Jump Packs' existing Blood Angels override re-prices), `model_groups` on 1 (Uriel
+Ventris legitimately gains Victrix Honour Guard as an attach option in v1.1). All ten other armies and
+all four merged lookups byte-identical. One pinned `rules_assertions.py` value reconciled
+(`b56a_bt_negative_control`, Impulsor AA/BT 80/85 -> 70/75).
+
+**Found and stopgap-fixed a genuine source-text defect** (not a reconciliation-report error this
+time — a raw MFM transcription defect): `MFM_Space_Marines_v1.1.txt`'s Marneus Calgar LEADER line is
+missing a comma between "ERADICATOR SQUAD" and "STERNGUARD VETERAN SQUAD", gluing them into one
+unresolvable token and silently dropping both legal units from his attach list. Scanned all six
+SM-family files' validation reports for the same pattern (a dropped attach-list token that splits
+cleanly into two-or-three known unit names) — isolated to this one instance, not systemic. Fixed via a
+narrow, filename-and-substring-scoped correction table in `mfm_points_parser.py`
+(`_KNOWN_SOURCE_FIXES`) that fails loudly if the source text changes underneath it. **Ryan action
+required**: push the missing-comma fix to the private repo's `MFM_Space_Marines_v1.1.txt`, then this
+dict entry can be removed. Detachments scope (Black Templars gains a new VENGEFUL HOSTS detachment,
+several enhancement re-prices) untouched, tracked separately per convention.
+
+**S199 (D292): checked both open fronts, neither is actionable right now.** The Calgar comma fix has
+not landed in the private repo (verified via a direct fetch, not the local copy — still glued at
+`MFM_Space_Marines_v1.1.txt` line 538); stopgap unchanged. Chaos Space Marines re-confirmed blocked:
+`units.json` has no World Eaters or Emperor's Children entries. **Grey Knights corrected off this
+list** — it was never a migration candidate. `units.json` has zero Grey Knights units at any version
+(matches the standing "GK is not a built army" note from B94/S194), so there is nothing to migrate.
+Building it is a net-new faction build (own scoping pass first, `CSM_BUILD_SCOPE.md`/
+`THOUSAND_SONS_BUILD_SCOPE.md` precedent — no such doc exists yet for GK) and does not belong under
+B89's definition. Tracked separately below as a new ticket. B89 itself has **no remaining in-scope
+candidate** until either a Grey Knights build lands or World Eaters/Emperor's Children unblocks CSM.
+
+**S211: confirmed and quantified the detachments-side gap this ticket already flagged for TS/DG/CD.**
+Registering Emperor's Children in `detachment_parser.py` surfaced that `ARMY_TO_MFM` still points
+Chaos Space Marines, Death Guard, and Thousand Sons at their v1_0 MFM files for detachments, even
+though all three factions' `units.json` migrated to v1.1 under this ticket. Direct parse-and-diff of
+each registered v1_0 file against its v1.1 counterpart confirms real, already-shipped errors, not just
+the disposition drift this ticket already expected: Thousand Sons' Hexwarp Thrallband is priced 2 DP
+(should be 3), Chaos Space Marines' Soulforged Warpack enhancement Tempting Addendum is priced 25 pts
+(should be 40), plus six force-disposition mismatches across the three factions (TS: Ritual of
+Regeneration, Sekhetar Cohort, Warpforged Cabal; CSM: Murdertalon Raiders, Soulforged Warpack; DG:
+Contagion Engines). Chaos Daemons has no v1.1 detachment file to compare against, so its already-noted
+LORDS OF THE WARP item stays unverified by this pass. Not fixed this session — three different
+factions' committed `detachments.json`/`detachment_effects.json` data, out of scope for an
+Emperor's-Children-only data turn. **Recommended as the next data turn under this ticket**, now that
+Emperor's Children's own detachments (D305) are the one item that was blocking a clean sequencing
+choice.
+
+**S212 (D306): fixed the CSM/Death Guard/Thousand Sons portion of the gap.** `ARMY_TO_MFM`
+re-pointed all three factions at their v1.1 files, mirroring Emperor's Children. Regenerated and
+diff-guarded at record-key level: 0 keys added/removed (179 total unchanged), exactly the 7
+predicted records changed — Hexwarp Thrallband's DP fix, the six disposition corrections, and
+Soulforged Warpack's enhancement price fix, matching the S211 finding item for item. One extra,
+harmless diff: Death Guard's Contagion Engines enhancement gained a hyphen in its v1.1 name
+("Parasitic Woe reaper" to "Parasitic Woe-reaper"), a text correction with no points/legality
+effect. `detachment_effects.json` (Death Guard's, Chaos Space Marines', and Thousand Sons' entries)
+and `rules_assertions.py` (CSM-3, TS-2, both pin `text_source` only) checked directly against the 7
+changed keys — neither needed reconciling. `detachments_repro_check.py` passes byte-identical.
+**Ticket stays open**: the same v1_0-detachment-sourcing pattern applies to the six-file Space
+Marines group (base Adeptus Astartes, Black Templars, Blood Angels, Dark Angels, Deathwatch, Space
+Wolves) — flagged since D291 (Black Templars gains a new Vengeful Hosts detachment in v1.1, several
+enhancement re-prices) but not yet confirmed/quantified by a direct parse-and-diff the way this
+session did for CSM/DG/TS. **Recommended as B89's next data turn.** Chaos Daemons remains blocked
+— no v1.1 detachment file exists to diff against, so its LORDS OF THE WARP item stays unverified.
+
+**S213 (D307): CLOSED.** The six-file Space Marines group re-pointed to v1.1 for detachments,
+mirroring CSM/DG/TS. Direct parse-and-diff run first, not assumed from D291's prose — confirmed the
+diff was real and larger than the three-faction turn, as D291 itself warned it might be. 6
+detachments added (a new "Vengeful Hosts" per source file — Space Marines, Black Templars, Blood
+Angels, Dark Angels, Deathwatch, Space Wolves — 1DP, Take and Hold, no sourced rule text yet, which
+matches the pre-existing 14-record no-text-source pattern rather than being a new gap shape), 50
+changed — 37 force-disposition corrections (each verified against the MFM's own "UPDATED — FORCE
+DISPOSITION(S) CHANGED" marker) and 13 enhancement price changes across five enhancement names
+(Artificer Armour, The Flesh Is Weak, Fusillade, Temporal Corridor, Armour of Antoninus, Stalwart
+Champion). `detachment_effects.json` and `rules_assertions.py` checked directly against the full
+56-key changed/added set — zero overlap, nothing to reconcile. `faction_taxonomy.json` confirmed
+unchanged — all twelve Adeptus Astartes chapters already `built: true`. `detachments_repro_check.py`
+passes byte-identical. This closes B89's detachments-side gap for the entire Adeptus Astartes group.
+The one remaining piece — Chaos Daemons' LORDS OF THE WARP disposition, blocked on GW not having
+published a v1.1 CD detachment file — is spun off as its own ticket (B112) so it can sit correctly
+as "blocked, not actionable" rather than keeping this now-otherwise-complete ticket open indefinitely.
+**B89 CLOSED.**
+
 
 - **B106** — B101's `distinct` engine support didn't cover a fixed-1-group pure-addition
   "up to N, no duplicates" option — **NEW S204 (D297); CLOSED S207 (D301); ENGINE.** Fix reuses the

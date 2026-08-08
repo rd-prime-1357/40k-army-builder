@@ -818,3 +818,14 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   fix in Contagion Engines' enhancement name. `detachment_effects.json` and `rules_assertions.py`
   both checked directly and confirmed unaffected. B89 stays open — the same v1_0 sourcing gap still
   applies to the six-file Space Marines group, not yet confirmed/quantified by direct diff.
+
+- **D307** — Space Marines-family group (base Adeptus Astartes, Black Templars, Blood Angels, Dark
+  Angels, Deathwatch, Space Wolves) detachments re-pointed to v1.1 (S213), data-only. Direct
+  parse-and-diff run first, not assumed from D291's prose. 6 detachments added (a new "Vengeful
+  Hosts" per source file, matching the pre-existing no-text-source pattern), 50 changed — 37
+  force-disposition corrections (each verified against the MFM's own "UPDATED" marker) and 13
+  enhancement price changes across five enhancement names. `detachment_effects.json` and
+  `rules_assertions.py` both checked directly against the full changed/added set — zero overlap,
+  no update needed. `faction_taxonomy.json` confirmed unchanged. This closes B89's
+  detachments-side gap for the entire Adeptus Astartes group — only Chaos Daemons remains blocked
+  on GW not having published a v1.1 detachment file.
