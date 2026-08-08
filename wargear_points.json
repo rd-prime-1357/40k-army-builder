@@ -161,6 +161,15 @@
    }
   }
  },
+ "000002638": {
+  "items": {
+   "ectoplasma cannon": {
+    "cost": 5,
+    "display": "Ectoplasma cannon",
+    "source": "MFM_World_Eaters_v1.1.txt:70"
+   }
+  }
+ },
  "000002717": {
   "items": {
    "macro plasma incinerator": {
@@ -199,6 +208,20 @@
     "cost": 10,
     "display": "Blades of honour",
     "source": "MFM_Space_Marines_v1.1.txt:533"
+   }
+  }
+ },
+ "000004207": {
+  "items": {
+   "hades lascannon": {
+    "cost": 15,
+    "display": "Hades lascannon",
+    "source": "MFM_World_Eaters_v1.1.txt:47"
+   },
+   "heavy reaper autocannon": {
+    "cost": 15,
+    "display": "Heavy reaper autocannon",
+    "source": "MFM_World_Eaters_v1.1.txt:48"
    }
   }
  },

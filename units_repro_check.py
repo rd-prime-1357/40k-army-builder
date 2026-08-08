@@ -41,6 +41,18 @@ to the committed units.json:
      file needed: confirmed this session (S210) that the real loadout_parser.py run
      resolves every multi-group unit's options cleanly from Datasheets.csv alone, so
      repro_check.py's WEB_PASSES list needs no Emperor's Children entry either.
+  4c. World Eaters: wahapedia_transform.py (--faction WE) -> mfm_points_parser.py
+     (against MFM_World_Eaters_v1.1.txt, D293) -> convert_to_json.py --emit-fourth-plus,
+     in its own working dir. Fully self-sourced (30/30, 28 LEGENDS exclusions confirmed
+     both directions, no cross-file append, no chapter points) — mirrors the Grey
+     Knights/Emperor's Children blocks exactly (WORLD_EATERS_BUILD_SCOPE.md §1/§6). The
+     five Blood Legions carrier units get their allied_group tag automatically from the
+     MFM file's own section header, the same generic ALLIED_GROUP_HEADERS mechanism
+     Death Guard's Plague Legions and Thousand Sons' Scintillating Legions use — no
+     World Eaters-specific tagging code needed. No dedicated composition-paste file
+     needed: `loadout_parser.py --factions WE` flagged exactly 2 of 30 (Jakhals,
+     Helbrute), both authored directly into `unit_loadouts.json`'s HAND_AUTHORED set
+     (repro_check.py) rather than needing a WEB_PASSES entry.
   5. Chaos Daemons: convert_to_json.py run DIRECTLY against the project root's own
      Unit_Stats.csv / Unit_Points.csv / Unit_Wargear_Options.csv / Unit_Other_Options.csv /
      Unit_Weapons.csv / Unit_Abilities.csv / Keywords.csv / Rules.csv / Weapon_Abilities.csv.
@@ -97,6 +109,10 @@ REQUIRED = [
     # B100 (S204): Grey Knights, built directly from v1.1 per D293 — the first faction
     # with no v1_0 migration debt, since it is the first one built after D293 was set.
     'MFM_Grey_Knights_v1.1.txt',
+    # B100 (S209): Emperor's Children, built directly from v1.1 per D293.
+    'MFM_Emperors_Children_v1.1.txt',
+    # B100 (S218): World Eaters, built directly from v1.1 per D293.
+    'MFM_World_Eaters_v1.1.txt',
     # B56a: the five Space Marines chapter point files. Correctly-scoped, they are
     # purely additive on top of the base SM run (D167/D168) and sit inside the fixed
     # point from here on — this is exactly the kind of input that goes stale silently
@@ -327,6 +343,33 @@ def repro(dir_):
         if rc != 0:
             return False, "convert_to_json.py (EC) failed:\n" + out[-600:]
 
+        # --- World Eaters: transform -> mfm points -> convert. Fully self-sourced,
+        # 30/30 (WORLD_EATERS_BUILD_SCOPE.md §1/§6), 28 LEGENDS exclusions confirmed
+        # both directions, zero engine gaps. Mirrors the Grey Knights/Emperor's
+        # Children blocks exactly. ---
+        we_dir = os.path.join(tmp, 'we')
+        os.makedirs(we_dir)
+        rc, out = _run([sys.executable, 'wahapedia_transform.py',
+                        '--wahapedia-dir', dir_, '--seed-dir', dir_,
+                        '--out-dir', we_dir, '--faction', 'WE',
+                        '--army-name', 'World Eaters'], cwd=dir_)
+        if rc != 0:
+            return False, 'wahapedia_transform.py (WE) failed:\n' + out[-600:]
+        rc, out = _run([sys.executable, 'mfm_points_parser.py',
+                        '--mfm', 'MFM_World_Eaters_v1.1.txt',
+                        '--out-dir', we_dir, '--stats', os.path.join(we_dir, 'Unit_Stats.csv')],
+                        cwd=dir_)
+        if rc != 0:
+            return False, 'mfm_points_parser.py (WE) failed:\n' + out[-600:]
+        we_json = os.path.join(tmp, 'we_json')
+        os.makedirs(we_json)
+        rc, out = _run([sys.executable, 'convert_to_json.py',
+                        '--input-dir', we_dir, '--output-dir', we_json,
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json'),
+                        '--emit-fourth-plus'], cwd=dir_)
+        if rc != 0:
+            return False, 'convert_to_json.py (WE) failed:\n' + out[-600:]
+
         # --- Chaos Space Marines: transform -> mfm points (self, 54 of 58) -> D240
         # cult-troop cross-file append (the remaining 4, one at a time, each isolated
         # to its own single-row stats scope) -> convert. Unit_Stats.csv is left
@@ -380,7 +423,7 @@ def repro(dir_):
         os.makedirs(deploy)
         rc, out = _run([sys.executable, 'merge_factions.py',
                         '--in', sm_dir, '--in', cd_json, '--in', dg_json, '--in', csm_json,
-                        '--in', ts_json, '--in', gk_json, '--in', ec_json,
+                        '--in', ts_json, '--in', gk_json, '--in', ec_json, '--in', we_json,
                         '--taxonomy', 'faction_taxonomy.json',
                         '--out-dir', deploy], cwd=dir_)
         if rc != 0:

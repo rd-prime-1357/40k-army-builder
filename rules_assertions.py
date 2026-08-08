@@ -337,7 +337,12 @@ def e14_count(S):
     # Land Raider's and Chaos Rhino's Havoc launcher, and Daemonettes' and Seekers'
     # Instrument of Chaos + Daemonic Icon pair (2 each). Verified by faction breakdown
     # before updating the literal: every non-EC faction's count is unchanged -> 98/67.
-    return (len(q) == 98 and len(units) == 67), f'{len(q)} options across {len(units)} units'
+    # World Eaters units turn (S218): +10 qualifying free seeds across +8 WE units —
+    # Jakhals' Icon of Khorne (the hand-authored WE-DATA shape) among them. Verified by
+    # full per-army breakdown before updating the literal: every non-WE faction's count is
+    # unchanged (98/67 sums exactly across the other ten armies), WE contributes exactly
+    # 10 options / 8 units -> 108/75.
+    return (len(q) == 108 and len(units) == 75), f'{len(q)} options across {len(units)} units'
 
 def b18_named_body(S):
     lines = [re.sub(r'<[^>]+>', ' ', r['description'])
@@ -4103,6 +4108,11 @@ ALLIED_CARRIER_GROUPS = {
     # the Chaos Daemons side) -- the one-line add the comment above anticipated.
     "Emperor's Children": ('Legions of Excess', {'Shalaxi Helbane', 'Daemonettes', 'Fiends',
                                                   'Keeper of Secrets', 'Seekers'}),
+    # S218: World Eaters' Blood Legions carriers, confirmed against units.json (5 units
+    # tagged 'Blood Legions', matching WORLD_EATERS_BUILD_SCOPE.md §2's Khorne-Daemon set
+    # exactly) -- same B61/ALLIED_GROUP_HEADERS mechanism, no engine change needed.
+    'World Eaters': ('Blood Legions', {'Skarbrand', 'Bloodthirster', 'Bloodletters',
+                                        'Bloodcrushers', 'Flesh Hounds'}),
 }
 
 

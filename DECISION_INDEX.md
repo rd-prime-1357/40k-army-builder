@@ -860,3 +860,20 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   `LEADER:` enhancement-eligibility restriction is discarded as parser noise, pre-existing on CSM
   (×2)/TS(×1)/EC(×1), not a World Eaters blocker. **B112 unblocked**: a v1.1 Chaos Daemons MFM
   file now exists in the private repo (absent at S214), ready for its own data turn.
+
+- **D312** — World Eaters units shipped (S218), data-only. `units.json` built from
+  `MFM_World_Eaters_v1.1.txt`, diff-guarded: 30 added, 0 changed/removed. `units_repro_check.py`
+  gained the WE block (mirroring GK/EC); `MFM_Emperors_Children_v1.1.txt` also added to `REQUIRED`
+  (a pre-existing gap, not new behavior). Jakhals (`000002628`) hand-authored into
+  `unit_loadouts.json` — a genuinely new two-bracket `or:` composition shape, default weapons read
+  directly off the datasheet's own loadout prose (Dishonoured carry no sidearm). Helbrute needed no
+  hand authoring — resolved automatically with the same already-accepted `UNMATCHED` flag shipped
+  on three sibling factions' Helbrutes. Full loadout regen diff-guarded: 30 added, 0 changed/removed.
+  A mid-session false alarm (three unrelated units appearing to change) was traced to a mistake in
+  a diagnostic seed file, not a real engine issue — confirmed by rebuild with the correct seed.
+  Companion updates, all verified before changing: `ALLIED_CARRIER_GROUPS` (B61) gained World
+  Eaters' five Blood Legions carriers; `wargear_points.json` regenerated (+2 units, Forgefiend/
+  Defiler, matching the scope doc's forecast); E14-2 literal 98/67 → 108/75 (WE +10/+8, every other
+  army's count reverified unchanged); `datasheet_wargear_abilities.json` regenerated (+5 WE
+  datasheets). Full baseline green except the expected pre-`--write` state. `detachments.json`
+  deliberately untouched — World Eaters' own detachments are next.

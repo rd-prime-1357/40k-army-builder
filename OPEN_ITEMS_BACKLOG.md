@@ -3,7 +3,18 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S217 (up from 22 at S216 — B113 opened, nothing
+not here, it isn't open. **23 open** as of S218 (unchanged count from S217 — no ticket opened or
+closed this session, a faction-build data turn, not a ticket turn): B113, B110, B108, B99, B98,
+B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
+Data-only turn (D312): World Eaters units shipped end to end. `units.json` +30 (0 changed/
+removed), `unit_loadouts.json` +30 (29 auto + Jakhals hand-authored, 0 changed/removed). Companion
+regenerations, all diff-guarded: `wargear_points.json` +2 units, `datasheet_wargear_abilities.json`
++5 datasheets, `ALLIED_CARRIER_GROUPS` and E14-2's literal both updated for World Eaters' new data.
+A mid-session false alarm (three unrelated units appearing to change) traced to a diagnostic seed
+mistake, not a real issue. `detachments.json` deliberately untouched — World Eaters' own
+detachments are the next data turn.
+
+**23 open** as of S217 (up from 22 at S216 — B113 opened, nothing
 closed; B112 unblocked but still open, not counted as a change): B113, B110, B108, B99, B98, B97,
 B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
 Scoping-only turn (D311): `WORLD_EATERS_BUILD_SCOPE.md` written (net-new). No committed file

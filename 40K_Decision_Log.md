@@ -12582,3 +12582,73 @@ Chaos Space Marines (×2), Thousand Sons (×1), Emperor's Children (×1); World 
 more instances of the same unenforced pattern. Not a World Eaters blocker. **B112 unblocked**: a
 v1.1 Chaos Daemons MFM file now exists in the private repo (absent as of S214 when B112 opened) —
 ready for its own data turn whenever convenient, not touched this session.
+
+### D312 — World Eaters units shipped (S218), data-only
+
+`units.json` built end to end from `MFM_World_Eaters_v1.1.txt` and the Wahapedia CSVs
+(`wahapedia_transform.py` → `mfm_points_parser.py` → `convert_to_json.py`), mirroring the Grey
+Knights/Emperor's Children blocks exactly. Diff-guarded against the committed file before banking:
+**exactly 30 World Eaters units added, 0 changed, 0 removed elsewhere**. `abilities.json` gained 39
+World Eaters entries (0 changed/removed); `rules.json`, `keywords.json`, `weapon_abilities.json`
+unaffected. `faction_taxonomy.json` deliberately left untouched — World Eaters' `built` flag stays
+`false` until its detachments ship (same call as Grey Knights at D298: `index.html` gates faction
+selectability on `built`, and flipping it early would expose a faction with no detachment picker).
+
+`units_repro_check.py`: World Eaters block added (REQUIRED list, transform/points/convert calls,
+merge input), mirroring the Grey Knights/Emperor's Children shape. In the same edit,
+`MFM_Emperors_Children_v1.1.txt` was added to `REQUIRED` — it was missing from that preflight list
+(a pre-existing small inconsistency; the pipeline call itself already referenced it, so this closes
+a latent gap rather than changing behavior) — and `MFM_World_Eaters_v1.1.txt` was added alongside it.
+
+**Loadouts.** `repro_check.py`: `WE` added to `FACTIONS`; Jakhals (`000002628`) added to
+`HAND_AUTHORED`. Jakhals' composition is a genuinely new two-option shape joined by a bare `or:`
+line tying two size brackets — `classify_comp_row`'s OR-profile split only recognises a literal
+`OR` line, not `or:`, so this is authored directly (three model groups — Jakhal Pack Leader fixed
+1, Dishonoured per-bracket 1/2, Jakhals per-bracket 8/17 — matching the `per_bracket` schema already
+shipped for 000004175/000004182) rather than extending the parser for one unit. Default weapons per
+named group read directly off the datasheet's own loadout prose: Dishonoured carry no sidearm,
+confirmed by the text's own omission ("Every Dishonoured is equipped with: paired manglers" — no
+autopistol), not assumed. Three options authored: the per-10-models chainblade→mauler chainblade
+swap (Jakhals), the any-number paired manglers→skullsmasher and mangler swap (Dishonoured), and the
+per-10-models Icon of Khorne add (Jakhals), each matching the shape already shipped for equivalent
+sentences on other factions. Helbrute (`000002632`) needed no hand authoring — the real parser run
+resolved it automatically with the same `UNMATCHED` flag already accepted on Death Guard/CSM/
+Thousand Sons' own Helbrutes (identical sentence, already-solved shape).
+
+Full regeneration (`loadout_parser.py` + the seven-faction `equipped_parser.py` web-pass chain +
+the final `--datasheets` pass) diff-guarded against the committed `unit_loadouts.json`: **exactly 30
+World Eaters entries added (29 auto-parsed + 1 hand-authored), 0 changed, 0 removed elsewhere.**
+
+**A test-harness false alarm, not a real finding.** Mid-session, an intermediate diff appeared to
+show three unrelated units (Deathwatch Veterans 000002783, a Space Marine jump-pack kill team
+000003874, Space Wolves Thunderwolf Cavalry 000000322) changing as a side effect of adding World
+Eaters. Traced to a mistake in the diagnostic seed file — it accidentally carried the full committed
+`unit_loadouts.json` instead of just the six true hand-authored entries, causing those three
+already-fully-processed units to run through the `equipped_parser.py` fan/dedup chain a second time
+on top of already-fanned data. Rebuilding with the correct seed (matching `repro_check.py`'s own
+construction exactly) reproduced all three untouched. No engine issue; confirmed by full byte-diff
+before banking anything.
+
+**Companion literal/regen updates surfaced by the new roster, all verified before changing:**
+- `rules_assertions.py`'s `ALLIED_CARRIER_GROUPS` (B61): World Eaters' five Blood Legions carriers
+  (Skarbrand, Bloodthirster, Bloodletters, Bloodcrushers, Flesh Hounds) added, mirroring the D305 EC
+  precedent. B61-1/2/3 all iterate this one dict, so a single edit closed all three.
+- `wargear_points.json` (E14-1) regenerated from the real parser across every `MFM_*.txt` file
+  including World Eaters' now-present source. Diff-guarded: **2 units added (Forgefiend 5 pts
+  Ectoplasma cannon; Defiler 15/15 pts Hades lascannon/Heavy reaper autocannon), 0 changed/removed
+  elsewhere** — matching `WORLD_EATERS_BUILD_SCOPE.md` §5's forecast exactly (these three items
+  were already priced identically on sibling Defiler/Forgefiend factions; only the file's own
+  provenance needed to catch up).
+- `rules_assertions.py`'s E14-2 literal: World Eaters contributes 10 qualifying free-add options
+  across 8 units (Jakhals' Icon of Khorne among them). Verified by full per-army breakdown before
+  updating the literal — every one of the other ten armies' counts summed to exactly the prior
+  98/67 unchanged — 98/67 → 108/75.
+- `datasheet_wargear_abilities.json` regenerated (`ds_wargear_abilities_parser.py`, restricted to
+  `units.json`'s own unit_ids): **5 World Eaters datasheets added, 0 changed/removed elsewhere.**
+
+Full baseline re-run after all six file updates: every gate green except the expected pre-`--write`
+P3/`pipeline_manifest`/`repo_check` state.
+
+Not touched this session, per `WORLD_EATERS_BUILD_SCOPE.md` §9 step 1's own scope: `detachments.json`
+(next data turn), `wargear_points.json` beyond the two surfaced above (no new World Eaters-specific
+items to price — confirmed, all three already existed from sibling factions), B112, B113.

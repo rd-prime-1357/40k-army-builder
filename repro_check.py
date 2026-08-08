@@ -28,7 +28,7 @@ import argparse, json, os, shutil, subprocess, sys, tempfile
 from collections import OrderedDict
 
 HAND_AUTHORED = ['000001157', '000001044', '000004131', '000002712',
-                  '000004079', '000004080']
+                  '000004079', '000004080', '000002628']
 # 000004079/000004080 (Tormentors, Infractors) added S210 (Emperor's Children): both
 # carry the single sentence "1 <unit name> can be equipped with 1 icon of excess." --
 # the generic word "model" is replaced with the unit's own singular name, a sentence
@@ -50,7 +50,23 @@ WEB_PASSES = ['Space_Marines', 'Death_Guard', 'Black_Templars', 'Dark_Angels', '
 # confirmed this session (not assumed from EMPEROR_S_CHILDREN_BUILD_SCOPE.md's dry run)
 # that the real loadout_parser.py + equipped_parser.py --datasheets pass resolves every
 # multi-group EC unit cleanly, mirroring the Grey Knights precedent exactly.
-FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK', 'EC']
+# 000002628 (Jakhals) added S218 (World Eaters): its composition table carries a
+# genuinely new two-option shape joined by a bare 'or:' line tying two size brackets
+# (10-model: 1 Pack Leader, 1 Dishonoured, 8 Jakhals; 20-model: 1 Pack Leader,
+# 2 Dishonoured, 17 Jakhals) -- confirmed the only instance of this exact shape across
+# the full Datasheets_unit_composition.csv by direct grep (WORLD_EATERS_BUILD_SCOPE.md
+# §7). classify_comp_row's OR-profile split only recognises a literal 'OR' line, not
+# 'or:', so this is authored directly rather than extending the parser for one unit.
+# Base weapons per named group read directly off the datasheet's own loadout prose
+# ("The Jakhal Pack Leader and every Jakhal is equipped with: autopistol; chainblades."
+# / "Every Dishonoured is equipped with: paired manglers.") -- Dishonoured carry no
+# sidearm, confirmed by the text's own omission, not assumed.
+# B100 (S218): World Eaters added to FACTIONS. Its Helbrute (000002632) carries the
+# identical "For each Helbrute fist this model is equipped with..." sentence already
+# UNMATCHED-but-shipped on Death Guard/CSM/Thousand Sons' own Helbrutes (000000954 /
+# 000001021 / 000001046) -- same already-solved shape, resolves automatically through
+# the ordinary parser run with the same UNMATCHED flag, no hand authoring needed.
+FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK', 'EC', 'WE']
 
 
 def _run(cmd, cwd):

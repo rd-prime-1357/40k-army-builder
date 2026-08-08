@@ -96,6 +96,12 @@
  "000002570": {
   "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
  },
+ "000002627": {
+  "Icon of Khorne": "If the bearer’s unit contains one or more Icons of Khorne, each time the bearer’s unit destroys an enemy unit, you gain 1 Bloodshed point. Each time you make a Blessings of Khorne roll, roll one additional D6 for each Bloodshed point you have, after which, all your Bloodshed points are lost."
+ },
+ "000002628": {
+  "Icon of Khorne": "If the bearer’s unit contains one or more Icons of Khorne, each time the bearer’s unit destroys an enemy unit, you gain 1 Bloodshed point. Each time you make a Blessings of Khorne roll, roll one additional D6 for each Bloodshed point you have, after which, all your Bloodshed points are lost."
+ },
  "000002677": {
   "Terminator Storm Shield": "The bearer has a Wounds characteristic of 6."
  },
@@ -152,6 +158,17 @@
  "000004098": {
   "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
   "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
+ },
+ "000004106": {
+  "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
+  "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
+ },
+ "000004107": {
+  "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
+  "Instrument of Chaos": "Add 1 to Charge rolls made for the bearer’s unit."
+ },
+ "000004108": {
+  "Collar of Khorne": "The bearer has the Feel No Pain 3+ ability against Psychic Attacks."
  },
  "000004113": {
   "Daemonic Icon": "Models in the bearer’s unit have a Leadership characteristic of 6+.",
