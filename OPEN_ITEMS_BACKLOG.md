@@ -3,7 +3,19 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S218 (unchanged count from S217 — no ticket opened or
+not here, it isn't open. **23 open** as of S219 (unchanged count from S218 — no ticket opened or
+closed this session, a faction-build data turn, not a ticket turn): B113, B110, B108, B99, B98,
+B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
+Data-only turn (D313): World Eaters detachments shipped end to end. `detachments.json` +8 (0
+changed/removed) — both forecast disposition changes, zero remaining `UNIQUE:` tags, and the
+Archslaughterer re-price all confirmed direct from source. `detachment_effects.json` +2 rows found
+by direct check (not assumed): Khorne Daemonkin (Blood Legions unlock, the forecast pattern) and
+Cult of Blood (Jakhals/Goremongers BATTLELINE, caught by `rules_assertions.py` on baseline re-run,
+not manually spotted). `e21b_check.js`'s sweep literal 7 → 9. `faction_taxonomy.json`: World
+Eaters `built` → `true`, now fully built and selectable. B113 gains 2 more instances (Cult of
+Blood's Butcher Lord, Khorne Daemonkin's Icon of War), not opened new — still the same ticket.
+
+**23 open** as of S218 (unchanged count from S217 — no ticket opened or
 closed this session, a faction-build data turn, not a ticket turn): B113, B110, B108, B99, B98,
 B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
 Data-only turn (D312): World Eaters units shipped end to end. `units.json` +30 (0 changed/

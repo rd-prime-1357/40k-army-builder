@@ -877,3 +877,17 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   army's count reverified unchanged); `datasheet_wargear_abilities.json` regenerated (+5 WE
   datasheets). Full baseline green except the expected pre-`--write` state. `detachments.json`
   deliberately untouched — World Eaters' own detachments are next.
+
+- **D313** — World Eaters detachments shipped (S219), data-only. `WE` registered in
+  `detachment_parser.py`'s three maps, built from `MFM_World_Eaters_v1.1.txt`. `detachments.json`
+  diff-guarded: 8 added, 0 changed/removed — the forecast Brazen Engines/Butchers of Khorne
+  disposition changes, zero remaining `UNIQUE:` tags, and Archslaughterer's 40→30 pt re-price all
+  confirmed direct from source. Checking `detachment_effects.json` directly (not assumed clean)
+  found **two** construction-effect gaps, not the one the scope doc anticipated: Khorne Daemonkin
+  (Blood Legions allied-unlock + no-Warlord, the expected pattern) and Cult of Blood (Jakhals/
+  Goremongers BATTLELINE grant, an unflagged pattern caught by `rules_assertions.py`'s
+  `e21a_coverage` assertion on baseline re-run). Both rows authored mirroring existing sibling-
+  faction precedent, diff-guarded 0 changed/removed elsewhere. `e21b_check.js`'s battleline-sweep
+  literal updated 7 → 9 units, confirmed by the harness's own live sweep. `faction_taxonomy.json`:
+  World Eaters `built` flipped to `true`, `data_army` added — World Eaters is now fully built and
+  selectable. B113 gains 2 more instances (not opened new). B112 remains open, not picked up.

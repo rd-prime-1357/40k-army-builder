@@ -183,7 +183,7 @@ console.log('\n5 — the whole battleline half of the table, swept');
       }
     }
   }
-  ok(named === 7,       `the table names 7 units for elevation (${named})`);
+  ok(named === 9,       `the table names 9 units for elevation (${named})`);
   ok(unresolved === 0,  'every named unit resolves in its army\'s pool');
   ok(noop === 0,        'no effect names a unit that is already Battleline');
 }

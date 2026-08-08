@@ -7,29 +7,29 @@
    "wahapedia_10e",
    "none"
   ],
-  "armies": 17,
-  "detachment_records": 185,
-  "army_detachment_slots": 323,
-  "enhancements": 653,
-  "upgrade_enhancements": 39,
+  "armies": 18,
+  "detachment_records": 193,
+  "army_detachment_slots": 331,
+  "enhancements": 679,
+  "upgrade_enhancements": 43,
   "force_disposition_counts": {
-   "DISRUPTION": 34,
-   "PRIORITY ASSETS": 42,
-   "PURGE THE FOE": 23,
-   "RECONNAISSANCE": 27,
-   "TAKE AND HOLD": 59
+   "DISRUPTION": 35,
+   "PRIORITY ASSETS": 44,
+   "PURGE THE FOE": 25,
+   "RECONNAISSANCE": 28,
+   "TAKE AND HOLD": 61
   },
   "text_source_counts": {
    "faction_pack": 71,
-   "none": 20,
-   "wahapedia_10e": 94
+   "none": 22,
+   "wahapedia_10e": 100
   },
   "enhancement_description_source_counts": {
    "faction_pack": 226,
-   "none": 55,
-   "wahapedia_10e": 372
+   "none": 59,
+   "wahapedia_10e": 394
   },
-  "wahapedia_only_enhancements_dropped": 14,
+  "wahapedia_only_enhancements_dropped": 16,
   "text_gap_manifest": [
    {
     "key": "Black Templars|MARSHAL'S HOUSEHOLD",
@@ -149,6 +149,18 @@
     "key": "Space Wolves|VETERANS OF THE FANG",
     "source_faction": "Space Wolves",
     "detachment": "Veterans of the Fang",
+    "dp": 1
+   },
+   {
+    "key": "World Eaters|BRAZEN ENGINES",
+    "source_faction": "World Eaters",
+    "detachment": "Brazen Engines",
+    "dp": 1
+   },
+   {
+    "key": "World Eaters|BUTCHERS OF KHORNE",
+    "source_faction": "World Eaters",
+    "detachment": "Butchers of Khorne",
     "dp": 1
    }
   ]
@@ -14404,6 +14416,580 @@
    ],
    "stratagems": [],
    "stratagem_source": "none"
+  },
+  "World Eaters|BERZERKER WARBAND": {
+   "name": "Berzerker Warband",
+   "name_raw": "BERZERKER WARBAND",
+   "dp": 3,
+   "force_disposition": "PURGE THE FOE",
+   "unique_tag": null,
+   "key": "World Eaters|BERZERKER WARBAND",
+   "source_faction": "World Eaters",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Relentless Rage",
+   "rule_text": "Each time a World Eaters unit from your army makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic and add 2 to the Strength characteristic of melee weapons equipped by models in that unit.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Battle-lust",
+     "name_raw": "Battle-lust",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "WORLD EATERS model only. You can re-roll Charge rolls made for the bearer's unit. In addition, while the Unbridled Bloodlust Blessing of Khorne is active for your army, add 1 to Charge rolls made for the bearer's unit.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Berzerker Glaive",
+     "name_raw": "Berzerker Glaive",
+     "points": 35,
+     "is_upgrade": false,
+     "description": "WORLD EATERS model only. Add 1 to the Attacks and Damage characteristics of melee weapons (excluding Extra Attacks weapons) equipped by the bearer.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Favoured of Khorne",
+     "name_raw": "Favoured of Khorne",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "WORLD EATERS model only. Each time you make a Blessings of Khorne roll, if the bearer is on the battlefield, you can re-roll up to two of the D6 rolled.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Helm of Brazen Ire",
+     "name_raw": "Helm of Brazen Ire",
+     "points": 30,
+     "is_upgrade": false,
+     "description": "WORLD EATERS model only. Each time an attack is allocated to the bearer, subtract 1 from the Damage characteristic of that attack.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Apoplectic Frenzy",
+     "cp": 1,
+     "type": "Berzerker Warband - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Movement phase, just after a KHORNE BERZERKERS unit from your army is selected to Advance.\nTARGET: That Khorne Berzerkers unit.\nEFFECT: Until the end of the turn, your unit is eligible to declare a charge in a turn in which it Advanced."
+    },
+    {
+     "name": "Berzerker's Wrath",
+     "cp": 1,
+     "type": "Berzerker Warband - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase, just after an enemy unit has shot.\nTARGET: One Khorne Berzerkers unit from your army that can make a Blood Surge move as a result of those attacks.\nEFFECT: Do not roll a D6 to determine how far models in your unit can move when they make their Blood Surge move. Instead, when making their Blood Surge move, these models can move up to 8\"."
+    },
+    {
+     "name": "Blood Offering",
+     "cp": 1,
+     "type": "Berzerker Warband - Epic Deed Stratagem",
+     "description": "WHEN: Any phase.\nTARGET: One World Eaters unit from your army that was just destroyed while it was within range of one or more objective markers you controlled at the end of the previous phase. You can use this Stratagem on that unit even though it was just destroyed.\nEFFECT: Select one of those objective markers. That objective marker remains under your control until your opponent's Level of Control over that objective marker is greater than yours at the end of a phase."
+    },
+    {
+     "name": "Frenzied Resilience",
+     "cp": 2,
+     "type": "Berzerker Warband - Battle Tactic Stratagem",
+     "description": "WHEN: Fight phase, just after an enemy unit has selected its targets.\nTARGET: One World Eaters unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, each time an attack is allocated to a model in your unit, subtract 1 from the Damage characteristic of that attack."
+    },
+    {
+     "name": "Hack and Slash",
+     "cp": 1,
+     "type": "Berzerker Warband - Battle Tactic Stratagem",
+     "description": "WHEN: Fight phase.\nTARGET: One World Eaters unit from your army that has not been selected to fight this phase and that made a charge move this turn.\nEFFECT: Until the end of the phase, improve the Armour Penetration characteristic of melee weapons equipped by models in your unit by 1."
+    },
+    {
+     "name": "Skulls for the Skull Throne!",
+     "cp": 1,
+     "type": "Berzerker Warband - Strategic Ploy Stratagem",
+     "description": "WHEN: Fight phase, just after a WORLD EATERS unit from your army destroys a CHARACTER or MONSTER model.\nTARGET: That World Eaters unit.\nEFFECT: Make a Blessings of Khorne roll and use the results to activate one Blessing of Khorne. Until the end of the battle round, that Blessing of Khorne is active in addition to any other Blessings of Khorne that are currently active."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "World Eaters|BRAZEN ENGINES": {
+   "name": "Brazen Engines",
+   "name_raw": "BRAZEN ENGINES",
+   "dp": 1,
+   "force_disposition": "DISRUPTION",
+   "unique_tag": null,
+   "key": "World Eaters|BRAZEN ENGINES",
+   "source_faction": "World Eaters",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Murder-forged Entity",
+     "name_raw": "Murder-forged Entity (Upgrade)",
+     "points": 15,
+     "is_upgrade": true,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Talons of Butchery",
+     "name_raw": "Talons of Butchery (Upgrade)",
+     "points": 20,
+     "is_upgrade": true,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
+  },
+  "World Eaters|BUTCHERS OF KHORNE": {
+   "name": "Butchers of Khorne",
+   "name_raw": "BUTCHERS OF KHORNE",
+   "dp": 1,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "World Eaters|BUTCHERS OF KHORNE",
+   "source_faction": "World Eaters",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Gore-stained Veterans",
+     "name_raw": "Gore-stained Veterans (Upgrade)",
+     "points": 20,
+     "is_upgrade": true,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Sanctified in Slaughter",
+     "name_raw": "Sanctified in Slaughter (Upgrade)",
+     "points": 15,
+     "is_upgrade": true,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
+  },
+  "World Eaters|CULT OF BLOOD": {
+   "name": "Cult of Blood",
+   "name_raw": "CULT OF BLOOD",
+   "dp": 2,
+   "force_disposition": "PRIORITY ASSETS",
+   "unique_tag": null,
+   "key": "World Eaters|CULT OF BLOOD",
+   "source_faction": "World Eaters",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Idols of Khorne",
+   "rule_text": "At the start of your Command phase, you can select one of the Idols of Khorne abilities listed below. Until the start of your next Command phase, that ability is active and its effects apply to all World Eaters Titanic and World Eaters Monster units from your army. You can only select each Idols of Khorne ability once per battle.\nIdol of Infinite Rage (Aura)\nWhile a friendly Jakhals or Goremongers unit is within 6\" of this model (or within 9\" if this model is TITANIC), each time a model in that unit makes an attack, add 1 to the Hit roll and add 1 to the Wound roll.\nIdol of Burning Wrath (Aura)\nWhile a friendly JAKHALS or GOREMONGERS unit is within 6\" of this model (or within 9\" if this model is TITANIC), add 1\" to the Move characteristic of models in that unit and add 1 to Advance and Charge rolls made for that unit.\nIdol of Blessed Blood (Aura)\nWhile a friendly JAKHALS or GOREMONGERS unit is within 6\" of this model (or within 9\" if this model is TITANIC), models in that unit have a 4+ invulnerable save.\nKEYWORDS\nJAKHALS and GOREMONGERS units from your army have the BATTLELINE keyword.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Brazen Form",
+     "name_raw": "Brazen Form",
+     "points": 25,
+     "is_upgrade": false,
+     "description": "World Eaters Monster model only. Add 1 to the bearer's Toughness characteristic and the bearer has the Feel No Pain 5+ ability.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Butcher Lord",
+     "name_raw": "Butcher Lord",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "World Eaters Infantry model only. During the Declare Battle Formations step, the bearer can be attached to a Jakhals or Goremongers unit. If attached to a GOREMONGERS unit, the bearer has the Infiltrators ability.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Chosen of the Blood God",
+     "name_raw": "Chosen of the Blood God",
+     "points": 15,
+     "is_upgrade": false,
+     "description": "World Eaters Monster model only. Add 3\" to the range of the bearers Aura abilities.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Strategic Slaughter",
+     "name_raw": "Strategic Slaughter",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "World Eaters model only. After both players have deployed their armies, select up to three Jakhals and/or Goremongers units from your army and redeploy them. When doing so, you can set those units up in Strategic Reserves, regardless of how many units are already in Strategic Reserves.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Bloodthirsty Horde",
+     "cp": 1,
+     "type": "Cult of Blood - Battle Tactic Stratagem",
+     "description": "WHEN: Fight phase.\nTARGET: One Jakhals or Goremongers unit from your army that has not been selected to fight this phase and is within Engagement Range of one or more enemy units.\nEFFECT: Until the end of the phase, each time your unit is selected to fight, when determining which models in it are eligible to fight, any models in your unit that are within 3\" of one or more enemy models are eligible to fight. When resolving those attacks, such models can target one of those enemy units that is within 3\" of them and within Engagement Range of their unit."
+    },
+    {
+     "name": "Bloody Vengeance",
+     "cp": 1,
+     "type": "Cult of Blood - Epic Deed Stratagem",
+     "description": "WHEN: Any phase.\nTARGET: One World Eaters Monster or World Eaters Titanic unit from your army that was just destroyed by an enemy unit. You can use this Stratagem on that unit even though it was just destroyed.\nEFFECT: Until the end of the battle, each time a model in a Jakhals or Goremongers unit from your army makes an attack that targets the enemy unit that just destroyed your unit, you can re-roll the Hit roll."
+    },
+    {
+     "name": "Brazen Idol",
+     "cp": 2,
+     "type": "Cult of Blood - Epic Deed Stratagem",
+     "description": "WHEN: Your Command phase.\nTARGET: One World Eaters Monster or World Eaters Titanic unit from your army.\nEFFECT: Select the Idol of Infinite Rage, Idol of Burning Wrath or Idol of Blessed Blood. Until the start of your next Command phase, that Idols of Khorne ability is active for your unit instead of any other Idols of Khorne ability that is active for your army, even if you have already selected that ability this battle.\nRESTRICTIONS: You can only use this Stratagem once per battle."
+    },
+    {
+     "name": "Drawn to the Slaughter",
+     "cp": 2,
+     "type": "Cult of Blood - Strategic Ploy Stratagem",
+     "description": "WHEN: Any phase.\nTARGET: One Jakhals unit from your army that was just destroyed. You can use this Stratagem on that unit even though it was just destroyed.\nEFFECT: Add a new unit to your army identical to your destroyed unit, in Strategic Reserves, at its Starting Strength.\nRESTRICTIONS: This Stratagem cannot be used to return destroyed Character units to Attached units. You can only use this Stratagem once per battle."
+    },
+    {
+     "name": "Fail Not the Blood God",
+     "cp": 1,
+     "type": "Cult of Blood - Strategic Ploy Stratagem",
+     "description": "WHEN: Fight phase.\nTARGET: One Jakhals or Goremongers unit from your army.\nEFFECT: Until the end of the phase, each time a model in your unit makes an attack, re-roll a Hit roll of 1. If that model's unit is within 6\" of one or more friendly World Eaters Monster units, or within 9\" of one or more friendly World Eaters Titanic units, you can re-roll the Hit roll instead."
+    },
+    {
+     "name": "In the Shadow of Brass Idols",
+     "cp": 1,
+     "type": "Cult of Blood - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets.\nTARGET: One Jakhals or Goremongers unit from your army that was selected as the target as one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, models in your unit have the Feel No Pain 6+ ability. If your unit is within 6\" of one or more friendly World Eaters Monster units, or within 9\" of one or more friendly World Eaters Titanic units, your unit has the Feel No Pain 5+ ability instead."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "World Eaters|GORETRACK ONSLAUGHT": {
+   "name": "Goretrack Onslaught",
+   "name_raw": "GORETRACK ONSLAUGHT",
+   "dp": 2,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "World Eaters|GORETRACK ONSLAUGHT",
+   "source_faction": "World Eaters",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Rush to the Fray",
+   "rule_text": "Each time a World Eaters unit from your army disembarks from a Transport, until the end of the turn, add 1 to Charge rolls made for that unit and that unit's melee weapons have the [lance] ability.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Aggressive Deployment",
+     "name_raw": "Aggressive Deployment",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "World Eaters model only. In the Declare Battle Formations step, if the bearer starts the battle embarked within a Dedicated Transport, that DEDICATED TRANSPORT has the Scouts 9\" ability.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Infernal Infusion",
+     "name_raw": "Infernal Infusion",
+     "points": 25,
+     "is_upgrade": false,
+     "description": "World Eaters model only. Once per battle, at the start of the Fight phase, the bearer can use this Enhancement. If it does, until the end of the phase, the bearer's unit has the Fights First ability.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Murderous Onslaught",
+     "name_raw": "Murderous Onslaught",
+     "points": 5,
+     "is_upgrade": false,
+     "description": "World Eaters model only. If the bearer's unit disembarked from a Transport this turn, until the end of the turn, enemy units cannot use the Fire Overwatch Stratagem to shoot at the bearer's unit.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Unleash Hell",
+     "name_raw": "Unleash Hell",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "World Eaters model only. At the start of your Shooting phase, you can select one Vehicle model within 6\" of the bearer or, if the bearer is embarked within a Transport, you can select that TRANSPORT model. Until the end of the phase, after the selected model has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next turn, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Aggressive Disembarkation",
+     "cp": 1,
+     "type": "Goretrack Onslaught - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Movement phase.\nTARGET: One World Eaters Rhino model from your army that has not been selected to move this phase.\nEFFECT: One WORLD EATERS unit embarked within your RHINO can disembark. When doing so, models in that unit can be set up anywhere on the battlefield wholly within 6\" of your RHINO and can be set up within Engagement Range of one or more enemy units."
+    },
+    {
+     "name": "Endless Pursuit of Violence",
+     "cp": 1,
+     "type": "Goretrack Onslaught - Strategic Ploy Stratagem",
+     "description": "WHEN: End of the Fight phase.\nTARGET: One World Eaters Infantry unit from your army and one friendly Transport that it is able to embark within.\nEFFECT: If your WORLD EATERS INFANTRY unit is wholly within 6\" of that TRANSPORT, it can embark within it."
+    },
+    {
+     "name": "Full-Throttle Assault",
+     "cp": 1,
+     "type": "Goretrack Onslaught - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Movement phase.\nTARGET: One World Eaters Rhino model from your army that has not been selected to move this phase.\nEFFECT: Until the end of the phase, each time a WORLD EATERS unit disembarks from that model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+    },
+    {
+     "name": "Fury Unleashed",
+     "cp": 1,
+     "type": "Goretrack Onslaught - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase, just after an enemy unit has shot.\nTARGET: One World Eaters Rhino model from your army that has one or more wounds remaining and was hit by one or more of the attacking unit's attacks.\nEFFECT: One Khorne Berzerkers unit embarked within your model can disembark and make a Blood Surge move.\nRESTRICTIONS: A unit cannot be targeted by this Stratagem and the Unrelenting Advance Stratagem in the same phase."
+    },
+    {
+     "name": "Smash Through",
+     "cp": 1,
+     "type": "Goretrack Onslaught - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Movement phase.\nTARGET: One World Eaters Vehicle model from your army that has not been selected to move this phase.\nEFFECT: Until the end of the phase, each time your unit makes a Normal or Advance move, it can move horizontally through terrain features."
+    },
+    {
+     "name": "Unrelenting Advance",
+     "cp": 1,
+     "type": "Goretrack Onslaught - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase, just after an enemy unit has shot.\nTARGET: One World Eaters Vehicle model from your army that was hit by one or more of the attacking unit's attacks.\nEFFECT: Your model can make a Normal move of up to 6\".\nRESTRICTIONS: A unit cannot be targeted by this Stratagem and the Fury Unleashed Stratagem in the same phase."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "World Eaters|KHORNE DAEMONKIN": {
+   "name": "Khorne Daemonkin",
+   "name_raw": "KHORNE DAEMONKIN",
+   "dp": 2,
+   "force_disposition": "RECONNAISSANCE",
+   "unique_tag": null,
+   "key": "World Eaters|KHORNE DAEMONKIN",
+   "source_faction": "World Eaters",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Blood Tithe",
+   "rule_text": "Each time a Blood Legions or World Eaters unit from your army destroys an enemy unit, roll one D6: on a 3+, you gain 1 Blood Tithe point (BTP). At the start of the Command phase, you can spend one or more of your BTP to activate one of the following abilities until the end of the battle:\n▪ Enraged Abjuration [2BTP]\nBLOOD LEGIONS and WORLD EATERS models from your army have the Feel No Pain 5+ ability against Psychic Attacks and mortal wounds.\n▪ Daemonic Rage [3BTP]\nMelee weapons equipped by BLOOD LEGIONS units from your army have the [lance] ability.\n▪ Boon of Blood [4BTP]\nBLOOD LEGIONS units from your army have a 4+ invulnerable save.\n▪ Might of Khorne [5BTP]\nBLOOD LEGIONS units from your army gain the Blessings of Khorne ability.\nRESTRICTIONS\nYou can include the Blood Legions units in your army. The combined points cost of such units you can include in your army is:\nIncursion: Up to 500 pts\nStrike Force: Up to 1000 pts\nOnslaught: Up to 1500 pts\nNo BLOOD LEGIONS model from your army can be your WARLORD.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Blade of Endless Bloodshed",
+     "name_raw": "Blade of Endless Bloodshed",
+     "points": 30,
+     "is_upgrade": false,
+     "description": "World Eaters model only. Add 1 to the Attacks, Strength and Damage characteristics of the bearers melee weapons. Each time the bearer's unit destroys an enemy unit with a melee attack, do not roll to gain a Blood Tithe point, you automatically gain 1 Blood Tithe point instead.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Blood-Forged Armour",
+     "name_raw": "Blood-Forged Armour",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "Blood Legions or World Eaters model only. The bearer has a Save characteristic of 2+. If the bearer is destroyed, you gain 1 Blood Tithe point.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Disciple of Khorne",
+     "name_raw": "Disciple of Khorne",
+     "points": 15,
+     "is_upgrade": false,
+     "description": "Lord on Juggernaut model only. During the Declare Battle Formations step, the bearer can be attached to a Bloodcrushers or Flesh Hounds unit. While leading one of these units, the bearer has the Deep Strike ability, and it has the BLOOD LEGIONS Faction keyword instead of the WORLD EATERS Faction keyword.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Icon of War",
+     "name_raw": "Icon of War",
+     "points": 25,
+     "is_upgrade": false,
+     "description": "World Eaters model only. While a friendly Blood Legions unit is within 6\" of the bearer, that unit has the Blessings of Khorne ability. If the Might of Khorne ability is active for your army, then while a friendly BLOOD LEGIONS unit is within 6\" of the bearer, you can re-roll Battle-shock tests taken for that unit.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "A Worthy Skull",
+     "cp": 1,
+     "type": "Khorne Daemonkin - Epic Deed Stratagem",
+     "description": "WHEN: Fight phase, just after a Blood Legions or World Eaters unit from your army has fought, and one or more enemy CHARACTER or MONSTER models were destroyed as a result of those attacks.\nTARGET: That BLOOD LEGIONS or WORLD EATERS unit.\nEFFECT: You gain D3BTP and you can then spend one or more BTP you have to activate one of the Blood Tithe abilities."
+    },
+    {
+     "name": "Blessing of Burning Blood",
+     "cp": 1,
+     "type": "Khorne Daemonkin - Battle Tactic Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets.\nTARGET: One Blood Legions unit from your army that is within 6\" of a friendly World Eaters unit that was selected as the target as one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, models in your WORLD EATERS unit have a 5+ invulnerable save. If the Boon of Blood ability is active for your army, then until the end of the phase, models in your WORLD EATERS unit have a 4+ invulnerable save."
+    },
+    {
+     "name": "Daemonic Fury",
+     "cp": 1,
+     "type": "Khorne Daemonkin - Battle Tactic Stratagem",
+     "description": "WHEN: Start of your Fight phase.\nTARGET: One Blood Legions unit from your army.\nEFFECT: Select one friendly World Eaters unit within 6\" of your unit. Until the end of the turn, melee weapons equipped by models in your WORLD EATERS unit have the [LANCE] ability. If the Daemonic Rage ability is active for your army, then until the end of the phase those melee weapons also have the [TWIN-LINKED] ability."
+    },
+    {
+     "name": "Daemontide",
+     "cp": 1,
+     "type": "Khorne Daemonkin - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Command phase.\nTARGET: One World Eaters unit from your army.\nEFFECT: Select one friendly Blood Legions unit within 6\" of your unit. One destroyed Mounted model, up to D3 destroyed Beast models, or up to D6 destroyed Infantry models are returned to that BLOOD LEGIONS unit with their full wounds remaining.\nRESTRICTIONS: This Stratagem cannot be used to return destroyed Character models to Attached units."
+    },
+    {
+     "name": "Murder-Call",
+     "cp": 1,
+     "type": "Khorne Daemonkin - Strategic Ploy Stratagem",
+     "description": "WHEN: End of your opponent's Fight phase.\nTARGET: One Blood Legions unit from your army that is on the battlefield and not within Engagement Range of one or more enemy units.\nEFFECT: Remove your unit from the battlefield and place it into Strategic Reserves."
+    },
+    {
+     "name": "Summoned By Slaughter",
+     "cp": 1,
+     "type": "Khorne Daemonkin - Strategic Ploy Stratagem",
+     "description": "WHEN: Any phase, when the last model in a unit is destroyed, before removing it from play. (If that unit is a Transport, any units embarked within that TRANSPORT model must disembark first.)\nTARGET: One Bloodletters unit from your army that is in Reserves.\nEFFECT: Set your unit up anywhere on the battlefield wholly within 9\" of that destroyed model and more than 6\" horizontally away from all enemy units, then remove the destroyed model from play.\nRESTRICTIONS: You cannot use this Stratagem more than once per battle round."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "World Eaters|POSSESSED SLAUGHTERBAND": {
+   "name": "Possessed Slaughterband",
+   "name_raw": "POSSESSED SLAUGHTERBAND",
+   "dp": 2,
+   "force_disposition": "PURGE THE FOE",
+   "unique_tag": null,
+   "key": "World Eaters|POSSESSED SLAUGHTERBAND",
+   "source_faction": "World Eaters",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Brazen Fury",
+   "rule_text": "World Eaters Possessed units from your army have the following ability:\nBrazen Fury: In your opponent's Shooting phase, each time an enemy unit has shot, if any models from this unit were destroyed as a result of those attacks, this unit can make a Brazen Fury move. To do so, roll one D6: models in this unit move a number of inches up to this result, but this unit must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT). When doing so, those models can be moved within Engagement Range of that enemy unit. This unit cannot make a Brazen Fury move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Brazen Fury move per phase.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Frenzied Focus",
+     "name_raw": "Frenzied Focus",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "World Eaters Daemon model only. Each time a model in the bearer's unit makes an attack, a Critical Hit is scored on an unmodified Hit roll of 5+, instead of only a 6.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Killing Clarity",
+     "name_raw": "Killing Clarity",
+     "points": 15,
+     "is_upgrade": false,
+     "description": "World Eaters Daemon model only. Each time the bearer's unit destroys an enemy unit, roll one D6: on a 4+, you gain 1CP.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Malicious Vigour",
+     "name_raw": "Malicious Vigour",
+     "points": 30,
+     "is_upgrade": false,
+     "description": "Slaughterbound model only. Each time the bearer's unit makes a Brazen Fury move, it is treated as having rolled a 6 for the distance the unit can be moved.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Violent Demise",
+     "name_raw": "Violent Demise",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "World Eaters Daemon model only. The bearer's Deadly Demise ability inflicts mortal wounds on a D6 roll of 2+ instead of on a 6. In addition, the bearer has the Deadly Demise D3+1 ability, instead of the Deadly Demise D3 ability.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Daemonic Resistance",
+     "cp": 2,
+     "type": "Possessed Slaughterband - Battle Tactic Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets.\nTARGET: One World Eaters Possessed unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, each time an attack targets your unit, subtract 1 from the Wound roll."
+    },
+    {
+     "name": "Daemonic Strength",
+     "cp": 1,
+     "type": "Possessed Slaughterband - Battle Tactic Stratagem",
+     "description": "WHEN: Fight phase.\nTARGET: One World Eaters Possessed unit from your army that has not been selected to fight this phase.\nEFFECT: Until the end of the phase, each time an attack made by a model in your unit is allocated to an enemy model, if your unit has the Eightbound keyword and that enemy model is not a MONSTER or VEHICLE, add 1 to the Damage characteristic of that attack. If your unit has the Exalted Eightbound keyword and that enemy model is a MONSTER or VEHICLE, add 1 to the Damage characteristic of that attack instead."
+    },
+    {
+     "name": "Horrifying Violence",
+     "cp": 1,
+     "type": "Possessed Slaughterband - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Command phase.\nTARGET: One World Eaters Possessed unit from your army.\nEFFECT: Each enemy unit within Engagement Range of your unit must take a Battle-shock test, subtracting 1 from that test."
+    },
+    {
+     "name": "Immortal Fury",
+     "cp": 2,
+     "type": "Possessed Slaughterband - Battle Tactic Stratagem",
+     "description": "WHEN: Fight phase, just after an enemy unit has selected its targets.\nTARGET: One World Eaters Possessed unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, each time a model in your unit is destroyed, if that model has not fought this phase, do not remove it from play. The destroyed model can fight after the attacking model's unit has finished making its attacks, and is then removed from play."
+    },
+    {
+     "name": "Rapid Manifestation",
+     "cp": 1,
+     "type": "Possessed Slaughterband - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Movement phase.\nTARGET: One Exalted Eightbound unit from your army that is arriving using the Deep Strike ability this phase.\nEFFECT: Your unit can be set up anywhere on the battlefield that is more than 6\" horizontally away from all enemy units.\nRESTRICTIONS: A unit targeted with this Stratagem is not eligible to declare a charge in the same turn."
+    },
+    {
+     "name": "Warp Stalkers",
+     "cp": 1,
+     "type": "Possessed Slaughterband - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Movement phase or your Charge phase.\nTARGET: One World Eaters Possessed unit from your army that has not been selected to move or declare a charge this phase.\nEFFECT: Until the end of the phase, each time a model in your unit makes a Normal, Advance, Fall Back or Charge move, it can move through enemy models (excluding MONSTERS and VEHICLES). When doing so, it can move within Engagement Range of such models but, unless that move was a Charge move, it cannot end that move within Engagement Range of them, and any Desperate Escape test is automatically passed."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "World Eaters|VESSELS OF WRATH": {
+   "name": "Vessels of Wrath",
+   "name_raw": "VESSELS OF WRATH",
+   "dp": 1,
+   "force_disposition": "PRIORITY ASSETS",
+   "unique_tag": null,
+   "key": "World Eaters|VESSELS OF WRATH",
+   "source_faction": "World Eaters",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Wrath of Khorne",
+   "rule_text": "At the start of the battle round, after activating Blessings of Khorne, you can select one or more models from your army from those listed below (including models that are embarked within Transports):\n▪ World Eaters Character (excluding Epic Heroes)\n▪ Eightbound Champion\n▪ Exalted Eightbound Champion\n▪ Khorne Berzerkers Champion\n▪ World Eaters Terminator Champion\nYou can select the same type of model multiple times. The maximum number of models you can select depends on the battle size, as follows:\nINCURSION: - 2 MODELS\nSTRIKE FORCE: - 3 MODELS\nONSLAUGHT: - 4 MODELS\nUntil the end of the battle round, each of those models has the VESSEL OF WRATH keyword (we recommend marking such models with a suitable token). Then, select one Blessing of Khorne that is not currently active for your army. Until the end of the battle round, that Blessing of Khorne is active for VESSEL OF WRATH units from your army in addition to any others that are active for your army.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Archslaughterer",
+     "name_raw": "Archslaughterer",
+     "points": 30,
+     "is_upgrade": false,
+     "description": "WORLD EATERS model only. Improve the Armour Penetration characteristic of melee weapons equipped by the bearer by 1. While the bearer is a VESSEL OF WRATH , improve the Damage characteristic of those weapons by 1 as well.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Gateways to Glory",
+     "name_raw": "Gateways to Glory",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "World Eaters Daemon Prince or World Eaters Mounted model only. Each time the bearer makes a Normal, Advance or Charge move, it can move horizontally through models and terrain features. When doing so, it can move within Engagement Range of such models but cannot end a Normal or Advance move within Engagement Range of them.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Aspire to Infamy",
+     "cp": 1,
+     "type": "Vessels of Wrath - Battle Tactic Stratagem",
+     "description": "WHEN: Fight phase.\nTARGET: One Khorne Berzerkers or Jakhals unit from your army that has not been selected to fight this phase and is within 8\" of one or more friendly World Eaters Character models.\nEFFECT: Until the end of the phase, improve the Strength and Armour Penetration characteristics of melee weapons equipped by non-CHARACTER models in your unit by 1."
+    },
+    {
+     "name": "Brazen Contempt",
+     "cp": 1,
+     "type": "Vessels of Wrath - Battle Tactic Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase, just after an enemy unit has selected its targets.\nTARGET: One WORLD EATERS unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, each time an attack targets your unit, if the Strength characteristic of that attack is greater than the Toughness characteristic of your unit, subtract 1 from the Wound roll, or, if it is a VESSEL OF WRATH unit, subtract 1 from the Wound roll instead."
+    },
+    {
+     "name": "Gory Dedication",
+     "cp": 1,
+     "type": "Vessels of Wrath - Strategic Ploy Stratagem",
+     "description": "WHEN: End of the Fight phase.\nTARGET: One WORLD EATERS unit from your army that destroyed one or more enemy models with a melee attack this phase.\nEFFECT: Select one objective marker you control that your unit is within range of. That objective marker remains under your control until your opponent's Level of Control over that objective marker is greater than yours at the end of a phase."
+    },
+    {
+     "name": "Meet Force with Force",
+     "cp": 1,
+     "type": "Vessels of Wrath - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase, just after an enemy unit has shot.\nTARGET: One World Eaters Infantry, World Eaters Mounted or World Eaters Daemon Prince unit from your army that lost one or more wounds as a result of those attacks.\nEFFECT: Your unit can make a Blood Surge move. To do so, roll one D6: models in your unit move a number of inches up to the result, but your unit must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT). When doing so, those models can be moved within Engagement Range of that enemy unit. If your unit is a Khorne Berzerkers or VESSEL OF WRATH unit, you can re-roll the D6 to determine how far your unit can move."
+    },
+    {
+     "name": "Overshadowed By None",
+     "cp": 1,
+     "type": "Vessels of Wrath - Battle Tactic Stratagem",
+     "description": "WHEN: Fight phase.\nTARGET: One World Eaters Infantry, World Eaters Mounted or World Eaters Daemon Prince unit from your army that has not been selected to fight this phase.\nEFFECT: Until the end of the phase, each time a model in your unit makes an attack that targets a MONSTER or VEHICLE unit, you can re-roll the Wound roll."
+    },
+    {
+     "name": "Punish the Craven",
+     "cp": 1,
+     "type": "Vessels of Wrath - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Movement phase, just after an enemy unit (excluding MONSTERS and VEHICLES) is selected to Fall Back.\nTARGET: One World Eaters Infantry or World Eaters Daemon Prince unit from your army within Engagement Range of that enemy unit.\nEFFECT: When that enemy unit Falls Back, all models in that enemy unit must take a Desperate Escape test. When doing so, if your unit is a VESSEL OF WRATH unit, subtract 1 from each of those tests."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
   }
  },
  "armies": {
@@ -14763,6 +15349,16 @@
    "Emperor's Children|RAPID EVISCERATION",
    "Emperor's Children|SLAANESH'S CHOSEN",
    "Emperor's Children|SPECTACLE OF SLAUGHTER"
+  ],
+  "World Eaters": [
+   "World Eaters|BERZERKER WARBAND",
+   "World Eaters|BRAZEN ENGINES",
+   "World Eaters|BUTCHERS OF KHORNE",
+   "World Eaters|CULT OF BLOOD",
+   "World Eaters|GORETRACK ONSLAUGHT",
+   "World Eaters|KHORNE DAEMONKIN",
+   "World Eaters|POSSESSED SLAUGHTERBAND",
+   "World Eaters|VESSELS OF WRATH"
   ]
  }
 }

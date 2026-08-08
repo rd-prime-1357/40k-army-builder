@@ -12652,3 +12652,63 @@ P3/`pipeline_manifest`/`repo_check` state.
 Not touched this session, per `WORLD_EATERS_BUILD_SCOPE.md` §9 step 1's own scope: `detachments.json`
 (next data turn), `wargear_points.json` beyond the two surfaced above (no new World Eaters-specific
 items to price — confirmed, all three already existed from sibling factions), B112, B113.
+
+### D313 — World Eaters detachments shipped (S219), data-only
+
+`WE` registered in `detachment_parser.py`'s three maps (`ARMY_TO_MFM`, `MFM_SOURCE_NAME`,
+`ARMY_TO_WAHA_FACTION`), mirroring the Emperor's Children pattern (D305) exactly. Built
+`detachments.json` from `MFM_World_Eaters_v1.1.txt` per D293 (always the newest MFM). Diff-guarded
+against the committed file: **exactly the forecast 8 World Eaters detachments added, 0 changed, 0
+removed elsewhere.**
+
+Verified directly against `WORLD_EATERS_BUILD_SCOPE.md` §4's forecast, all landing correct on
+first build: Brazen Engines' force disposition Purge the Foe → Disruption; Butchers of Khorne's
+Disruption → Take and Hold; **zero `UNIQUE:` tags remain anywhere in the source file**, confirmed
+by direct text search (not assumed) — Brazen Engines and Goretrack Onslaught's shared
+`UNIQUE: ONSLAUGHT` tag is gone from both; Archslaughterer (Vessels of Wrath) re-priced 40 → 30
+pts. No DP changes; 8 detachments in both MFM versions, same names.
+
+**Two construction-effect gaps found, not the one gap the scope doc anticipated.** The scope doc
+flagged checking `detachment_effects.json` directly rather than assuming none needed (the way EC's
+Carnival of Excess was found at D305). That check surfaced two rows, not one:
+
+- **Khorne Daemonkin** — the pattern the scope doc expected: rule text reads "You can include the
+  Blood Legions units in your army," capped 500/1000/1500 pts by battle size (Incursion/Strike
+  Force/Onslaught), plus "No BLOOD LEGIONS model from your army can be your WARLORD." Same shape as
+  Death Guard's Tallyband Summoners (Plague Legions), Thousand Sons' Changehost of Deceit
+  (Scintillating Legions), and Emperor's Children's Carnival of Excess (Legions of Excess). The five
+  World Eaters Blood Legions units (Skarbrand, Bloodthirster, Bloodletters, Bloodcrushers, Flesh
+  Hounds) already carry `allied_group: "Blood Legions"` in `units.json` from S218's B61 update —
+  without this row they would be permanently unreachable (D0), or worse, offered without the
+  points-cap/Warlord gate. Row authored mirroring the Tallyband Summoners shape exactly.
+- **Cult of Blood** — a second, different pattern the scope doc did not flag: rule text's KEYWORDS
+  clause reads "JAKHALS and GOREMONGERS units from your army have the BATTLELINE keyword." Same
+  `battleline`-kind shape as Thousand Sons' Servants of Change / Warpmeld Pact (Tzaangors). Both
+  Jakhals and Goremongers confirmed present as World Eaters Infantry in `units.json` and are the
+  only two units named. This one was not caught by manual scan — `rules_assertions.py`'s
+  `e21a_coverage` assertion (P3-adjacent, scans every built detachment's `rule_text`/`restrictions`
+  for the BATTLELINE-grant and allied-unlock regexes) failed on exactly this when the full baseline
+  was re-run after the Khorne Daemonkin row alone, naming `World Eaters|CULT OF BLOOD` directly.
+  Row authored mirroring the Servants of Change/Warpmeld Pact shape.
+
+Both rows diff-guarded against `detachment_effects.json`: **exactly the two named keys added, 0
+changed, 0 removed elsewhere.**
+
+`e21b_check.js`'s battleline-sweep literal updated: the table now names 9 units for elevation (was
+7) — the two new World Eaters units added to the five already covered (Death Company Marines ×2,
+Outrider Squad, Poxwalkers, Traitor Guardsmen Squad) and Tzaangors named twice (Servants of Change,
+Warpmeld Pact). Confirmed by the harness's own live sweep, not asserted by hand.
+
+`faction_taxonomy.json`: World Eaters' `built` flag flipped to `true`, `data_army: "World Eaters"`
+added — same sequencing as D298 (Grey Knights) and D305 (Emperor's Children). World Eaters is now
+fully built (units + detachments both complete) and selectable.
+
+Full baseline re-run clean after all four file updates (`detachment_parser.py`, `detachments.json`,
+`detachment_effects.json`, `faction_taxonomy.json`, `e21b_check.js`) — every gate green except the
+expected pre-`--write` P3/`pipeline_manifest` state.
+
+**B113** (the `LEADER:` enhancement-eligibility parser-noise gap) gains 2 more instances from World
+Eaters (Cult of Blood's Butcher Lord → Goremongers/Jakhals; Khorne Daemonkin's Icon of War →
+Bloodcrushers/Flesh Hounds), confirmed present in the parsed `enhancements` — not opened as new,
+still tracked under the existing ticket. **B112** (Chaos Daemons LORDS OF THE WARP, unblocked at
+S217) remains open, not picked up this session — its own data turn.

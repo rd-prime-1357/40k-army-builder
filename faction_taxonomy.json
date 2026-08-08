@@ -158,7 +158,8 @@
         },
         {
           "name": "World Eaters",
-          "built": false
+          "built": true,
+          "data_army": "World Eaters"
         }
       ]
     },
