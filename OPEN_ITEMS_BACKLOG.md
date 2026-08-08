@@ -3,7 +3,16 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S216 (down from 23 at S215 — B111 closed, nothing new
+not here, it isn't open. **23 open** as of S217 (up from 22 at S216 — B113 opened, nothing
+closed; B112 unblocked but still open, not counted as a change): B113, B110, B108, B99, B98, B97,
+B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
+Scoping-only turn (D311): `WORLD_EATERS_BUILD_SCOPE.md` written (net-new). No committed file
+changed. 30 datasheets, 28 Legends exclusions, zero engine gaps, 2 units flagged for ordinary
+manual loadout authoring (Jakhals — new bounded composition shape; Helbrute — already-solved
+shape). B113 opened (LEADER: enhancement-restriction gap, pre-existing, not a WE blocker). B112
+unblocked (v1.1 CD MFM file now exists) but left open for its own data turn.
+
+**22 open** as of S216 (down from 23 at S215 — B111 closed, nothing new
 opened): B110, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23,
 B67b, E12, B17, B112.
 Data-only turn (D310): `wargear_points.json` regenerated from v1.1 MFM sources, clearing the
@@ -680,14 +689,28 @@ MFM v1.1 adoption arc (units-side, all factions; detachments-side, CSM/DG/TS S21
 CLOSED S213: detachments-side gap closed for the entire Adeptus Astartes group. Chaos Daemons'
 remaining detachments item split off as B112.
 
-### B112 — Chaos Daemons' LORDS OF THE WARP detachment disposition unverified against v1.1 — **NEW S213 (D307); split off B89; data; XS; BLOCKED on GW publication**
-Chaos Daemons has no v1.1 detachment source file to diff against (only the v1_0 file exists locally
-or in the private source repo). The LORDS OF THE WARP force-disposition item (possible PURGE THE
-FOE → TAKE AND HOLD per the same pattern seen across every other faction's v1.1 migration) has been
-flagged since S211 (D291-adjacent) but cannot be confirmed or fixed without GW publishing a
-Chaos Daemons v1.1 MFM detachments file. Not actionable this session or any session until that file
-exists. Check GW's Munitorum Field Manual page periodically; when a v1.1 CD file appears, this
-becomes a same-pattern data-only fix mirroring D306/D307.
+### B112 — Chaos Daemons' LORDS OF THE WARP detachment disposition unverified against v1.1 — **NEW S213 (D307); split off B89; data; XS; UNBLOCKED S217 (D311)**
+Chaos Daemons had no v1.1 detachment source file to diff against (only the v1_0 file existed
+locally or in the private source repo). The LORDS OF THE WARP force-disposition item (possible
+PURGE THE FOE → TAKE AND HOLD per the same pattern seen across every other faction's v1.1
+migration) was flagged since S211 (D291-adjacent) but could not be confirmed or fixed without GW
+publishing a Chaos Daemons v1.1 MFM detachments file. **S217: confirmed present in the private
+repo** (`MFM_Chaos Daemons_v1.1.txt`, absent as of S214) — found while checking on unrelated World
+Eaters scoping, not investigated further this session. Ready for its own data-only turn, same
+pattern as D306/D307.
+
+### B113 — Detachment enhancement `LEADER:` eligibility restriction discarded as parser noise — **NEW S217 (D311); scoping finding; engine; S**
+`detachment_parser.py`'s `MFM_BLOCK_NOISE` regex matches and silently drops any `^LEADER:` line
+inside a DETACHMENTS block. These lines restrict an enhancement to a leader attached to specific
+units (e.g. World Eaters' Cult of Blood: Butcher Lord → only usable by a leader of Goremongers or
+Jakhals). Nothing in the pipeline or `index.html` currently enforces this — a player could legally
+apply the enhancement to any eligible character regardless of which unit it leads. Confirmed
+pre-existing and not new to World Eaters: Chaos Space Marines carries 2 instances of this shape,
+Thousand Sons and Emperor's Children 1 each, all four already shipped unenforced. World Eaters
+would add 2 more (Cult of Blood's Butcher Lord, Khorne Daemonkin's Icon of War). Decision D0
+(illegal states unreachable) makes this worth its own engine turn once convenient — not urgent
+enough to block any faction build, since it's been silently true for three shipped factions
+already.
 
 ### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon

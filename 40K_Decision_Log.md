@@ -12541,3 +12541,44 @@ real failure.
 
 B111 fully closed (tooling half D309 + data half this entry). No engine, no other data file, no
 tooling file touched.
+
+### D311 — World Eaters scoped (S217), scoping-only
+
+`WORLD_EATERS_BUILD_SCOPE.md` written (net-new). No committed file changed. Baseline reconciled at
+open via `--fetch --data-turn`: 33/34 gates green (34 total; `pipeline_manifest` and every parser
+gate pass), only red the pre-existing B108 finding, unchanged. Private source repo fetched and
+verified: 85/85 files match `source_manifest.json`.
+
+30 datasheets, 28 Legends exclusions confirmed both directions (manual MFM cross-reference before
+running the transform, then the transform's own dry run independently named the identical 28).
+Zero engine gaps. "Blood Legions" allied-Daemon sub-block (Bloodcrushers, Bloodletters,
+Bloodthirster, Flesh Hounds, Skarbrand) is an already-wired pattern — `ALLIED_GROUP_HEADERS` (B61)
+already recognises the name, alongside Death Guard/Thousand Sons/Emperor's Children's equivalents;
+Death Guard's own five Nurgle-Daemon units are the shipped precedent for building these as native
+World Eaters entries.
+
+Leader/attachment mapping (5 LEADER blocks) cross-checked against `Datasheets_leader.csv`
+independently of the MFM text — exact match, zero discrepancies. Confirmed no chapter-override or
+co-leader registration needed (Heretic Astartes, not Space Marine-descended, same as GK/EC).
+
+Build from v1.1 per D293: two force-disposition changes (Brazen Engines, Butchers of Khorne), two
+`UNIQUE TAG REMOVED` events (Brazen Engines and Goretrack Onslaught previously shared a tag — both
+now untagged, zero unique tags remain), one enhancement re-price (Archslaughterer 40→30). Dry run
+of the full pipeline (`wahapedia_transform.py` → `mfm_points_parser.py` → `convert_to_json.py`)
+clean: 0 collisions, 0 unmatched datasheets, 5 leader overrides matching Section 3 exactly, 3
+wargear items priced (all three already exist in the committed `wargear_points.json` from sibling
+Defiler/Forgefiend factions — nothing new to price).
+
+`loadout_parser.py --factions WE` against a merged 19-army `units.json` flagged exactly 2 of 30:
+Jakhals (`COMP_PARSE_FAIL` — a genuinely new two-option composition shape joined by a bare `or:`
+line, confirmed unique in `Datasheets_unit_composition.csv` by direct grep, bounded to one unit)
+and Helbrute (`UNMATCHED` — the identical sentence already solved on three sibling factions'
+already-shipped Helbrutes, copy the existing pattern).
+
+Two findings logged separately, not resolved this session: **B113** opened — the `LEADER:`
+enhancement-eligibility restriction (Cult of Blood's Butcher Lord, Khorne Daemonkin's Icon of War)
+is discarded as parser noise, a pre-existing cross-faction gap already present unenforced on
+Chaos Space Marines (×2), Thousand Sons (×1), Emperor's Children (×1); World Eaters would add 2
+more instances of the same unenforced pattern. Not a World Eaters blocker. **B112 unblocked**: a
+v1.1 Chaos Daemons MFM file now exists in the private repo (absent as of S214 when B112 opened) —
+ready for its own data turn whenever convenient, not touched this session.

@@ -847,3 +847,16 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   Thousand Sons Forgefiend ectoplasma cannon, Centurion Devastator Squad twin lascannon) — none
   double-counted against base unit points. Zero removed. E14-1 now green; repro/b87/b88 all
   byte-identical. B111 fully closed.
+- **D311** — World Eaters scoped (S217), scoping-only. No committed file changed.
+  `WORLD_EATERS_BUILD_SCOPE.md` written (net-new). 30 datasheets, 28 Legends exclusions confirmed
+  both directions, zero engine gaps. "Blood Legions" allied-Daemon block confirmed already-wired
+  (B61 pattern, DG's Nurgle-Daemon units are the shipped precedent). Leader mapping (5 blocks)
+  cross-checked against `Datasheets_leader.csv` independently — exact match. Build from v1.1: two
+  force-disposition changes, two `UNIQUE TAG REMOVED` events (zero unique tags remain), one
+  enhancement re-price. Full pipeline dry run clean (0 collisions, 5 leader overrides, 3 wargear
+  items already priced from sibling factions). `loadout_parser.py` flagged 2 of 30: Jakhals (a
+  genuinely new two-option composition shape, confirmed unique by direct grep) and Helbrute
+  (already-solved shape, three sibling factions ship the identical sentence). **B113 opened**: a
+  `LEADER:` enhancement-eligibility restriction is discarded as parser noise, pre-existing on CSM
+  (×2)/TS(×1)/EC(×1), not a World Eaters blocker. **B112 unblocked**: a v1.1 Chaos Daemons MFM
+  file now exists in the private repo (absent at S214), ready for its own data turn.

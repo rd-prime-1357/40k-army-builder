@@ -1,51 +1,56 @@
-# NEXT SESSION PROMPT — Session 217
+# NEXT SESSION PROMPT — Session 218
 
-## Recommended turn type: scoping-only (World Eaters — next faction in priority order)
+## Recommended turn type: data-only (World Eaters units)
 
-Read `SESSION_HANDOFF_216.md` first. S216 closed B111 (data half — `wargear_points.json`
-regenerated from v1.1, D310; tooling half was D309). Baseline should be fully green this session
-except `repo_check` (B108, pre-existing, your action, unchanged) — no other known-red carried
-forward.
+Read `SESSION_HANDOFF_217.md` and `WORLD_EATERS_BUILD_SCOPE.md` first. S217 scoped World Eaters
+clean: 30 units, 28 Legends exclusions, zero engine gaps, 2 units needing manual loadout authoring.
+Baseline should be fully green this session except `repo_check` (B108, pre-existing, your action,
+unchanged) — no other known-red carried forward.
 
-Open with `./baseline.sh --fetch --data-turn` (sources still needed for a scoping pass that will
-read MFM/Datasheets source files, even though nothing gets regenerated). Confirm clean before
-starting.
+Open with `./baseline.sh --fetch --data-turn`. Confirm clean before starting.
 
-## World Eaters scoping — the work
+## World Eaters units — the work
 
-All of Heretic Astartes except World Eaters is now built (Chaos Space Marines, Thousand Sons,
-Death Guard, Emperor's Children). World Eaters is next in the standing priority order. Produce
-`WORLD_EATERS_BUILD_SCOPE.md` following the `CSM_BUILD_SCOPE.md` / `EMPEROR_S_CHILDREN_BUILD_SCOPE.md`
-pattern: unit list from source (`MFM_World_Eaters_v1.1.txt`, `Datasheets.csv` and siblings,
-`World_Eaters_web.txt` if present in the private repo — check, don't assume), leader/support
-attachment mapping, wargear cost items, detachment list, any faction-specific mechanism that
-doesn't fit the existing engine cleanly (flag those explicitly — they're "how it works" questions
-for Ryan, not build-it-yourself calls).
+Per `WORLD_EATERS_BUILD_SCOPE.md` Section 9, step 1:
 
-This is scoping only — no committed pipeline file touched (not `units.json`, not
-`unit_loadouts.json`, not `wargear_points.json`, not `detachments.json`). That's what makes it a
-separate session from any data turn. Re-derive every fact from source; do not carry forward
-assumptions from the other four Heretic Astartes builds about how World Eaters' unit or
-detachment shape works — check.
+1. Register `WE` in `units_repro_check.py` and `merge_factions.py` (mirrors the GK/TS/EC block
+   pattern exactly — see either script for the shape).
+2. Build `units.json` end to end from `MFM_World_Eaters_v1.1.txt` and the Wahapedia CSVs
+   (`wahapedia_transform.py` → `mfm_points_parser.py` → `convert_to_json.py`), the same sequence
+   the scoping dry run already ran clean.
+3. Author the two flagged units:
+   - **Jakhals** — new two-option composition (`1 Pack Leader, 1 Dishonoured, 8 Jakhals` for the
+     10-model bracket; `1 Pack Leader, 2 Dishonoured, 17 Jakhals` for the 20-model bracket). This
+     is a genuinely new shape (confirmed unique in `Datasheets_unit_composition.csv`), not a copy
+     of existing precedent — take care with it.
+   - **Helbrute** — copy the already-shipped pattern from Death Guard, Chaos Space Marines, or
+     Thousand Sons' own Helbrute (`unit_loadouts.json` keys `000000954`, `000001021`, `000001046`)
+     — identical sentence, already-solved.
+4. Diff-guard the output before banking: confirm exactly 30 World Eaters units added, 0 changed or
+   removed elsewhere, `units_repro_check.py` byte-identical.
+
+This is units only — do not touch `detachments.json` (that's the next data turn, per the scope
+doc's step 2). Do not touch `wargear_points.json` (all three World Eaters wargear items already
+exist there from sibling factions — confirm this stays true, don't regenerate).
 
 ## Also open, at your discretion
 
-- **B110** — Grey Knights `faction_taxonomy.json` `built: false` until it has detachments
-  (`detachments.json` has zero GK entries). No change since S211. Not a scoping-session fit;
-  leave for its own data/engine turn.
-- **B112** — Chaos Daemons LORDS OF THE WARP disposition unverified against v1.1; blocked until GW
-  publishes a v1.1 CD detachment file. Just check whether one exists yet in the private repo.
+- **B112** — Chaos Daemons LORDS OF THE WARP disposition, now unblocked (a v1.1 CD MFM file exists
+  in the private repo as of S217). Same-pattern data-only fix mirroring D306/D307. Not a World
+  Eaters-session fit; its own turn.
+- **B113** — detachment enhancement `LEADER:` eligibility restriction discarded as parser noise
+  (4 instances across CSM/TS/EC today, 2 more once World Eaters ships). Engine turn, small. Not
+  urgent — pre-existing and unenforced on 3 shipped factions already.
 
 ## Standing reminders
 
-- Re-derive from source, don't trust prior-session prose — this is what caught the B111
-  not-splittable finding in S215 and the stale Emperor's Children priority assumption earlier.
-- Turn typing: World Eaters scoping is scoping-only. If the scoping pass surfaces a data or engine
-  need, note it for a future typed session — don't fold it into this one.
-- No decisions currently waiting on Ryan from S216.
+- Re-derive from source, don't trust prior-session prose.
+- Turn typing: World Eaters units is data-only. If it surfaces an engine or tooling need, note it
+  for a future typed session — don't fold it into this one.
+- No decisions currently waiting on Ryan from S217.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_217.md` in `pipeline_manifest.py`'s GUARDED
+Produce the four documents, register `SESSION_HANDOFF_218.md` in `pipeline_manifest.py`'s GUARDED
 list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
 command.
