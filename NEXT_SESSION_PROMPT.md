@@ -1,42 +1,49 @@
-# NEXT SESSION PROMPT — Session 221
+# NEXT SESSION PROMPT — Session 222
 
-## Recommended turn type: data-only (B112 — Chaos Daemons LORDS OF THE WARP disposition)
+## Recommended turn type: scoping (Drukhari — first faction build pass)
 
-Read `SESSION_HANDOFF_220.md` first. S220 shipped Grey Knights detachments clean — **all twelve
-Adeptus Astartes armies are now fully built** (units + detachments both complete). Per this
-project's faction priority order, Heretic Astartes (already complete since S219) and Adeptus
-Astartes are both done; Chaos Daemons is next.
+Read `SESSION_HANDOFF_221.md` first. S221 shipped Chaos Daemons' LORDS OF THE WARP detachment
+disposition clean — **Chaos Daemons is now fully built (units + detachments both complete)**,
+closing B112. Per the project's faction priority order (all Adeptus Astartes, then all Heretic
+Astartes, then Chaos Daemons, then Drukhari), **Drukhari is the only faction left in the priority
+list**, and it has no scope doc yet — `MFM_Drukhari_v1.1.txt` and `MFM_Drukhari_v1_0.txt` are both
+present in the project area, but nothing has scoped a units or detachments build against them.
 
-Open with `./baseline.sh --fetch --data-turn`. Confirm clean before starting. `MFM_Chaos
-Daemons_v1.1.txt` (note the literal space in the filename, not an underscore) and
-`MFM_Chaos_Daemons_v1_0.txt` are both confirmed present and byte-verified against
-`source_manifest.json` as of S220's open.
+Open with `./baseline.sh --fetch --data-turn`. Confirm clean before starting.
 
-## B112 — the work
+## Drukhari scoping — the work
 
-Per the ticket (`OPEN_ITEMS_BACKLOG.md`), Chaos Daemons had no v1.1 detachment source to diff
-against until the private repo received one at S217. The suspected change is the **LORDS OF THE
-WARP** detachment's force disposition, forecast as Purge the Foe → Take and Hold by analogy with
-every other faction's v1.1 migration pattern — **verify this directly from the v1.1 text, don't
-assume the forecast is right.** S220's Grey Knights turn found the sibling scope doc's own
-enhancement count was off by 2 despite being checked at S200; treat any inherited forecast the same
-way.
+Follow the same shape as the existing `*_BUILD_SCOPE.md` docs (`CSM_BUILD_SCOPE.md`,
+`THOUSAND_SONS_BUILD_SCOPE.md`, `EMPEROR_S_CHILDREN_BUILD_SCOPE.md`, `WORLD_EATERS_BUILD_SCOPE.md`,
+`GREY_KNIGHTS_BUILD_SCOPE.md`) as templates for section structure, but re-derive every number from
+`MFM_Drukhari_v1.1.txt` directly — do not assume Drukhari's shape mirrors any prior faction's.
+Per the standing discipline (reinforced hard at S220/S221: two different sibling scope docs were
+each found wrong on re-check despite careful prior passes), every count in the scope doc must come
+from a fresh read of the source, not carried over from memory of how another faction's build went.
 
-Same pattern as D306/D307 (CSM/DG/TS, then the six-file Space Marines group): re-point
-`detachment_parser.py`'s `ARMY_TO_MFM` entry for `"Chaos Daemons"` at
-`"MFM_Chaos Daemons_v1.1.txt"` (Chaos Daemons is already registered in all three maps from its
-original build — this is a re-point, not a new registration). Diff-guard `detachments.json` before
-banking: expect force-disposition and/or enhancement-price changes only, investigate any structural
-diff before accepting it. Check `detachment_effects.json` directly for Chaos Daemons per the
-standing discipline (D313, D314) — don't assume none needed; let `rules_assertions.py`'s
-`e21a_coverage` assertion confirm on the full baseline re-run regardless of the manual scan's
-result.
+Cover at minimum: unit count and Leader/Support attachment map; detachment count, DP range, and
+whether any carry `UNIQUE:` tags; enhancement count per detachment; whether Drukhari has any
+allied-codex or BATTLELINE-grant pattern requiring `detachment_effects.json` rows (check directly,
+don't assume none); whether any units have Requisition Threshold or Wargear point-scaling shapes
+not yet seen in a built faction; confirm Drukhari's Wahapedia faction code before use (do not guess
+— derive it from `mfm_points_parser.py`/`repro_check.py`/`units_repro_check.py` per the standing
+pattern used for every prior faction's registration in `detachment_parser.py`'s three maps).
+
+This is a scoping turn only — do not start the units or detachments build itself this session.
+Produce `DRUKHARI_BUILD_SCOPE.md` and stop there for Ryan's review of any product/legality calls it
+surfaces, per the same handoff shape used for prior scope docs.
 
 ## Also open, at your discretion
 
 - **B113** — detachment enhancement `LEADER:` eligibility restriction discarded as parser noise (6
-  instances: CSM ×2, TS ×1, EC ×1, World Eaters ×2; Grey Knights confirmed to add 0 more at S220).
-  Engine turn, small. Not urgent — pre-existing and unenforced on six shipped detachments already.
+  instances: CSM ×2, TS ×1, EC ×1, World Eaters ×2; Grey Knights and Chaos Daemons both confirmed to
+  add 0 more). Engine turn, small. Not urgent — pre-existing and unenforced on six shipped
+  detachments already.
+- **B114** — Chaos Daemons' `Shadow Legion` HERETIC ASTARTES unlock (`detachment_effects.json`) is
+  recorded `enforced: false` on a stale premise (its own reason names Chaos Space Marines as
+  not-built, which has been false since S212). Needs its own scoping pass to determine whether
+  flipping `enforced: true` is safe as-is or needs the detachment's CSM unit list resolved from rule
+  text first — found while checking B112, not investigated further this session.
 - **GK §6** (from `GREY_KNIGHTS_BUILD_SCOPE.md`) — the Nemesis Dreadknight "cannot take duplicates"
   gap, a pre-existing D0 violation affecting 3 already-shipped Chaos Space Marines units too. Was
   recommended as an engine ticket ahead of the Grey Knights units build back at S200; units shipped
@@ -51,19 +58,17 @@ result.
 
 ## Standing reminders
 
-- Re-derive from source, don't trust prior-session prose — including this prompt's own numbers.
-  S220 found the Grey Knights scope doc's enhancement count was wrong (28 forecast, 30 actual)
-  despite being a careful S200 scoping pass; the same discipline applies to B112's disposition
-  forecast.
-- Turn typing: B112 is data-only. If it surfaces an engine or tooling need, note it for its own
-  typed session — don't fold it in.
-- No decisions currently waiting on Ryan from S220.
-- Construction-effect rows: check `detachment_effects.json` directly for every built detachment
-  this session touches — a manual read-through of rule text is not sufficient on its own; let the
-  full baseline (`rules_assertions.py`'s `e21a_coverage`) confirm.
+- Re-derive from source, don't trust prior-session prose — including this prompt's own assumptions
+  about Drukhari's shape. S220 and S221 both found inherited forecasts wrong on re-check (Grey
+  Knights' enhancement count off by 2 despite a careful S200 pass; treat any assumption about
+  Drukhari mirroring another faction the same way).
+- Turn typing: this is a scoping turn. If it surfaces engine or tooling needs, note them for their
+  own typed session — don't fold them in, and don't start the units/detachments build itself this
+  session.
+- No decisions currently waiting on Ryan from S221.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_221.md` in `pipeline_manifest.py`'s GUARDED
+Produce the four documents, register `SESSION_HANDOFF_222.md` in `pipeline_manifest.py`'s GUARDED
 list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
 command.

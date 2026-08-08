@@ -904,3 +904,13 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   now complete.** Also reconciled at open: `OUTPUT_FORMAT_SPEC_for_project_instructions.md` had
   drifted from the manifest (project-area copy ahead of the unpushed repo); re-pinned to the area's
   copy, left `repo_check.py` correctly red as a Ryan push action.
+
+- **D315** — Chaos Daemons LORDS OF THE WARP disposition shipped (S221), data-only. Verified from
+  source, not the forecast: v1.1 confirms Purge the Foe → Take and Hold, its own banner present.
+  `detachment_parser.py` re-pointed (not re-registered) at `MFM_Chaos Daemons_v1.1.txt`.
+  `detachments.json` diff-guarded: only the disposition change and 3 Scintillating Legion re-prices
+  (10→15, 25→20, 20→25) anywhere in the file, all matching the source's own price markers. **Closes
+  B112.** `detachment_effects.json` checked directly: existing Shadow Legion HERETIC ASTARTES unlock
+  row found stale — its `enforced: false` reason names Chaos Space Marines as not-built, which has
+  been false since S212 — **opens B114** rather than fixed in this data-only turn. B113 gains 0 new
+  instances. `faction_taxonomy.json` already correct, no edit needed.

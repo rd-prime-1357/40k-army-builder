@@ -15,9 +15,9 @@
   "force_disposition_counts": {
    "DISRUPTION": 37,
    "PRIORITY ASSETS": 46,
-   "PURGE THE FOE": 26,
+   "PURGE THE FOE": 25,
    "RECONNAISSANCE": 30,
-   "TAKE AND HOLD": 63
+   "TAKE AND HOLD": 64
   },
   "text_source_counts": {
    "faction_pack": 71,
@@ -10664,7 +10664,7 @@
    "name": "Lords of the Warp",
    "name_raw": "LORDS OF THE WARP",
    "dp": 1,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Chaos Daemons|LORDS OF THE WARP",
    "source_faction": "Chaos Daemons",
@@ -10823,7 +10823,7 @@
     {
      "name": "Inescapable Eye",
      "name_raw": "Inescapable Eye",
-     "points": 10,
+     "points": 15,
      "is_upgrade": false,
      "description": "Inescapable Eye (Tzeentch, gain 1 extra Flux token in Command phase if opponent has any)",
      "description_source": "faction_pack"
@@ -10831,7 +10831,7 @@
     {
      "name": "Infernal Puppeteer",
      "name_raw": "Infernal Puppeteer",
-     "points": 25,
+     "points": 20,
      "is_upgrade": false,
      "description": "Infernal Puppeteer (Tzeentch Monster, Shooting phase: measure range/visibility from another friendly Tzeentch unit within 9\")",
      "description_source": "faction_pack"
@@ -10839,7 +10839,7 @@
     {
      "name": "Neverblade",
      "name_raw": "Neverblade",
-     "points": 20,
+     "points": 25,
      "is_upgrade": false,
      "description": "Neverblade (Tzeentch Monster, +2S, +1A, +1AP on melee weapons, +1 Hit roll)",
      "description_source": "faction_pack"

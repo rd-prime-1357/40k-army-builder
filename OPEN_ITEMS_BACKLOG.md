@@ -3,7 +3,18 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S220 (down from 23 at S219 — **B110 closed**, nothing
+not here, it isn't open. **22 open** as of S221 (unchanged count from S220 — **B112 closed, B114
+opened**): B114, B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2,
+P4, E23, B67b, E12, B17.
+Data-only turn (D315): Chaos Daemons LORDS OF THE WARP disposition verified and shipped —
+`detachment_parser.py` re-pointed at `MFM_Chaos Daemons_v1.1.txt`, `detachments.json` diff-guarded
+(disposition change + 3 Scintillating Legion re-prices only, confirmed from source). **Closes
+B112.** `detachment_effects.json` checked directly per standing discipline: found the existing
+Shadow Legion HERETIC ASTARTES unlock's `enforced: false` reason is now stale (Chaos Space Marines,
+named as not-built in that row, has been built since S212) — **opens B114** rather than folding the
+fix into this data turn. B113 gains 0 new instances from Chaos Daemons.
+
+**22 open** as of S220 (down from 23 at S219 — **B110 closed**, nothing
 new opened): B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
 E23, B67b, E12, B17, B112.
 Data-only turn (D314): Grey Knights detachments shipped end to end — closes out the entire
@@ -714,15 +725,18 @@ MFM v1.1 adoption arc (units-side, all factions; detachments-side, CSM/DG/TS S21
 CLOSED S213: detachments-side gap closed for the entire Adeptus Astartes group. Chaos Daemons'
 remaining detachments item split off as B112.
 
-### B112 — Chaos Daemons' LORDS OF THE WARP detachment disposition unverified against v1.1 — **NEW S213 (D307); split off B89; data; XS; UNBLOCKED S217 (D311)**
-Chaos Daemons had no v1.1 detachment source file to diff against (only the v1_0 file existed
-locally or in the private source repo). The LORDS OF THE WARP force-disposition item (possible
-PURGE THE FOE → TAKE AND HOLD per the same pattern seen across every other faction's v1.1
-migration) was flagged since S211 (D291-adjacent) but could not be confirmed or fixed without GW
-publishing a Chaos Daemons v1.1 MFM detachments file. **S217: confirmed present in the private
-repo** (`MFM_Chaos Daemons_v1.1.txt`, absent as of S214) — found while checking on unrelated World
-Eaters scoping, not investigated further this session. Ready for its own data-only turn, same
-pattern as D306/D307.
+### B114 — `detachment_effects.json`'s Chaos Daemons Shadow Legion HERETIC ASTARTES unlock is unenforced on a now-false premise — **NEW S221 (B112 finding); data or engine, TBD; XS–S**
+The existing `Chaos Daemons|SHADOW LEGION` row (D204 ruling 3) carries an `unlock` effect targeting
+the `HERETIC ASTARTES` keyword with `enforced: false`, reasoned as: "the unlocked set is an
+explicit list of Chaos Space Marines datasheets, and Chaos Space Marines is not built yet. Nothing
+is currently reachable through this effect, so the gap costs no legality today." Chaos Space
+Marines shipped at S212/D307, so that premise is now false — the gap is reachable and the
+unenforced flag is stale. Found while checking `detachment_effects.json` directly for Chaos
+Daemons per B112's instructions; unrelated to the LORDS OF THE WARP disposition change and not
+picked up this session (data-only turn; this may need engine work to resolve the actual CSM unit
+list from the detachment's rule text, not just a flag flip). Needs its own scoping pass to
+determine whether flipping `enforced: true` is safe as-is or needs the target's unit list
+populated first.
 
 ### B113 — Detachment enhancement `LEADER:` eligibility restriction discarded as parser noise — **NEW S217 (D311); scoping finding; engine; S**
 `detachment_parser.py`'s `MFM_BLOCK_NOISE` regex matches and silently drops any `^LEADER:` line
@@ -1133,6 +1147,34 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B112 — Chaos Daemons' LORDS OF THE WARP detachment disposition unverified against v1.1 — **NEW S213 (D307); split off B89; data; XS; UNBLOCKED S217 (D311); CLOSED S221 (D315)**
+Chaos Daemons had no v1.1 detachment source file to diff against (only the v1_0 file existed
+locally or in the private source repo). The LORDS OF THE WARP force-disposition item (possible
+PURGE THE FOE → TAKE AND HOLD per the same pattern seen across every other faction's v1.1
+migration) was flagged since S211 (D291-adjacent) but could not be confirmed or fixed without GW
+publishing a Chaos Daemons v1.1 MFM detachments file. S217: confirmed present in the private repo
+(`MFM_Chaos Daemons_v1.1.txt`, absent as of S214) — found while checking on unrelated World Eaters
+scoping, not investigated further that session.
+
+**Closed S221 (D315).** Verified directly from source rather than trusting the forecast: LORDS OF
+THE WARP does change Purge the Foe → Take and Hold in the v1.1 text, carrying its own `FORCE
+DISPOSITION(S) CHANGED` banner. `detachment_parser.py`'s `ARMY_TO_MFM` and `MFM_SOURCE_NAME` entries
+re-pointed from `MFM_Chaos_Daemons_v1_0.txt` to `MFM_Chaos Daemons_v1.1.txt` (re-point, not a new
+registration — Chaos Daemons was already registered in all three maps from its original build).
+`detachments.json` regenerated and diff-guarded field-by-field against the committed file: same 9
+detachments, same DP values, zero `UNIQUE:` tags in either version (confirmed by direct search) —
+the only two real diffs anywhere in the 202-detachment file were the Lords of the Warp disposition
+change and three Scintillating Legion enhancement re-prices (Inescapable Eye 10→15, Infernal
+Puppeteer 25→20, Neverblade 20→25), all matching the source's own price-change markers. All
+detachment-dependent gates (repro, e1b/e1c, e4b/e4c, e21b/e21c, e25) re-run clean against the new
+file. `detachment_effects.json` checked directly per D313/D314's standing discipline: the one
+pre-existing Chaos Daemons row (Shadow Legion) is unrelated to this change but was found to carry a
+now-stale `enforced: false` reason (Chaos Space Marines, named as not-built-yet in that row's
+rationale, has in fact been built since S212) — spun off as its own ticket, **B114**, rather than
+folded into this data-only turn. B113 gains zero new instances from Chaos Daemons (no `LEADER:`
+lines in its detachments block). `faction_taxonomy.json` already carried `built: true` for Chaos
+Daemons — no edit needed.
 
 ### B110 — `faction_taxonomy.json` still shows Grey Knights as `built: false` — **NEW S209; CLOSED S220 (D314); data; XS**
 Found while scoping Emperor's Children. `units.json` confirmed Grey Knights fully built (25/25

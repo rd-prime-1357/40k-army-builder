@@ -12768,3 +12768,45 @@ the repo. Confirmed via `repo_check.py` this was the only file differing between
 byte-identical, 1 differs, 13 repo-only informational). Re-pinned the manifest to the area's copy
 (the standing "area copy wins" convention for docs), verified only that one entry changed. Left
 `repo_check.py` correctly still red on this file — Ryan's push action, same shape as B108.
+
+### D315 — Chaos Daemons LORDS OF THE WARP disposition shipped (S221), data-only — closes B112
+
+Per B112 (unblocked since S217, when `MFM_Chaos Daemons_v1.1.txt` first appeared in the private
+repo), verified the forecast directly from source rather than trusting it: the v1.1 text carries
+LORDS OF THE WARP's own `FORCE DISPOSITION(S) CHANGED` banner, confirming Purge the Foe → Take and
+Hold. `detachment_parser.py`'s `ARMY_TO_MFM` and `MFM_SOURCE_NAME` entries re-pointed from
+`MFM_Chaos_Daemons_v1_0.txt` to `MFM_Chaos Daemons_v1.1.txt` — a re-point, not a new registration;
+Chaos Daemons was already registered in all three maps (including `ARMY_TO_WAHA_FACTION`, unchanged)
+from its original build.
+
+`detachments.json` regenerated and diff-guarded field-by-field against the committed file, not just
+"ran clean": same 9 Chaos Daemons detachments, same DP costs (1–3), zero `UNIQUE:` tags in either
+MFM version (confirmed by direct text search of both files). The only two real diffs anywhere in
+the 202-detachment output were the Lords of the Warp disposition change and three Scintillating
+Legion enhancement re-prices — Inescapable Eye 10→15, Infernal Puppeteer 25→20, Neverblade 20→25 —
+each matching the v1.1 text's own `▲`/`▼` price-change markers (disregarded per the standing
+instruction that only the final listed value matters). Nothing else in the file moved.
+
+All detachment-dependent gates re-run clean against the regenerated file: `detachments_repro_check`,
+`e1b_check`, `e1c_check`, `e4b_check`, `e4c_check`, `e21b_check`, `e21c_check`, `e25_check`.
+
+**`detachment_effects.json` checked directly, per D313/D314's standing discipline — not assumed.**
+The one existing Chaos Daemons row (`Chaos Daemons|SHADOW LEGION`, D204 ruling 3) carries an
+`unlock` effect targeting the `HERETIC ASTARTES` keyword with `enforced: false`, reasoned in its own
+`unenforced_reason` as: Chaos Space Marines datasheets name the unlocked set, and Chaos Space
+Marines was not built yet, so nothing was reachable through the gap. That premise is now false —
+Chaos Space Marines shipped at S212/D307. The row is unrelated to this session's disposition change
+and was not touched this turn (data-only; resolving it may need the detachment's actual CSM unit
+list resolved from rule text, not just a flag flip) — **opened as its own ticket, B114**, rather
+than folded in. `rules_assertions.py`'s `e21a_coverage` assertion still passes clean on the full
+baseline re-run; the gap is pre-existing and was already correctly recorded as unenforced, just on
+a rationale that no longer holds.
+
+B113 (the `LEADER:` enhancement-eligibility parser-noise gap) gains **zero** new instances from
+Chaos Daemons — confirmed by direct text search of its `DETACHMENTS` block, no `LEADER:` lines
+present. `faction_taxonomy.json` already carried `built: true` for Chaos Daemons from its original
+units build — no edit needed this session.
+
+Full baseline re-run after the two file updates (`detachment_parser.py`, `detachments.json`) —
+every gate green except the expected pre-`--write` P3/`pipeline_manifest`/`repo_check` state
+(resolved by the `--write` at the end of this handoff). **This closes B112.**
