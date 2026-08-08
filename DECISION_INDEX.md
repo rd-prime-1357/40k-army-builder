@@ -832,3 +832,11 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D308** — B109 "My Army Lists" label fix (S214), engine-only. `index.html`'s `renderMyLists()`
   `tgt` line changed from `'target ' + r.points_target` to `r.points_target + ' Points'`. Version
   bumped 6.18 → 6.19. Only file touched. B109 closed.
+- **D309** — B111 tooling fix (S215), tooling-only. `mfm_points_parser.py`'s `WARGEAR_RE` leading
+  bullet made optional so bullet-less v1.1 `WARGEAR OPTIONS` lines parse (v1_0 output byte-identical;
+  all twelve built v1.1 files now read wargear, previously zero). Finding: B111 is not splittable as
+  the S215 prompt assumed — assertion E14-1 rebuilds `wargear_points.json` from the parser every
+  baseline, so fixing the parser makes it red until the data is regenerated. Shipped the tooling half
+  and closed with E14-1 as a documented known-red; B111 data turn made mandatory-next. Confirmed live
+  price changes for the data turn: four Defilers (CSM/TS/DG/EC) 10→15 pts, plus SM Banner of Macragge
+  10→15 pts (new casualty).

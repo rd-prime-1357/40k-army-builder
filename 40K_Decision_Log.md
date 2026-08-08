@@ -12458,3 +12458,46 @@ manifest hash, which is the expected and correct state until `--write` runs at c
 failure.
 
 B109 closed. No other file touched.
+
+---
+
+### D309 — B111 tooling fix: `WARGEAR_RE` now reads bullet-less v1.1 `WARGEAR OPTIONS` (S215), tooling-only
+
+`mfm_points_parser.py` only. Baseline reconciled at open via `--fetch --no-repo`: 27/27 gates
+green (5 tier-B skipped, sources not yet loaded); `repo_check` run separately, unchanged (red only
+on the pre-existing B108 finding). Private source repo then fetched and verified (85/85 files match
+`source_manifest.json`) so the fix could be checked against every real v1.1 file, not assumed from
+one.
+
+**The fix.** `WARGEAR_RE`'s leading bullet character class `[\u2022\-\*]` was made optional
+(`[\u2022\-\*]?`). v1_0 files print `• per <item><n> pts`; every v1.1 file drops the bullet and
+prints `per <item> <n> pts`. The regex is only ever run inside an already-open `WARGEAR OPTIONS`
+block (`collecting_wargear`), so dropping the required bullet cannot make it match anything outside
+that block. Verified: v1_0 wargear output is byte-identical (Defiler still 2 items at 10 pts across
+CSM/TS/DG/EC); all twelve already-built v1.1 files that carry a `WARGEAR OPTIONS` block now parse
+their items (previously zero).
+
+**Finding that reshaped the turn — B111 is NOT splittable as NEXT_SESSION_PROMPT S215 assumed.**
+The prompt scoped B111 as a tooling-only regex fix with the multi-faction wargear re-run as a
+separate data turn. That split does not hold: assertion **E14-1 (`e14_free`)** rebuilds
+`wargear_points.json` from the parser on every baseline run and compares prices to the committed
+file. The instant the parser is corrected, the rebuild yields the true v1.1 prices, which no longer
+match the stale committed file, so E14-1 goes red. Parser correctness and data freshness are
+coupled by design — a tooling-only turn that fixes the parser cannot end with a green baseline.
+
+**Decision (sequencing — dev-manager call).** Ship the parser fix this turn as a complete
+tooling-only turn and close with E14-1 as a **documented known-red**, exactly the pattern the
+project already runs for `repo_check`/B108. The B111 data turn (regenerate `wargear_points.json`) is
+made the mandatory immediate-next work in `NEXT_SESSION_PROMPT.md`, so the red gate is the loud
+headline of the next session — tracked at maximum visibility, never worked around in passing. This
+honours the standing turn-typing rule (parser fix and data regen stay in separate typed turns)
+rather than combining them into one mixed turn.
+
+**Live price discrepancies confirmed for the data turn (preview only, nothing regenerated this
+turn).** Four Defiler factions (CSM, TS, DG, EC) move Heavy reaper autocannon and Hades lascannon
+10 → 15 pts; plus one casualty beyond those already flagged — **Space Marines' Victrix Honour
+Guard "Banner of Macragge" 10 → 15 pts**. All other v1.1 wargear items match their shipped v1_0
+values (coincidental non-changes). The prompt's warning "don't assume EC's Defiler is the only
+casualty" was correct; Banner of Macragge is the proof.
+
+B111 tooling half shipped; data half open. No engine, no data file, no other tooling file touched.

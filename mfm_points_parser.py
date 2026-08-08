@@ -123,7 +123,16 @@ SKIP_HEADERS = re.compile(r"^(your |munitorum|points value|wargear|enhancement)"
 # thunder hammer, only swap it away, so its 5 pts can only be pricing the default).
 # SKIP_HEADERS keeps "WARGEAR OPTIONS" from being read as a unit name; the block is
 # collected separately below and attached to the preceding unit.
-WARGEAR_RE = re.compile(r"^[\u2022\-\*]\s*per\s+(.+?)\s*(\d+)\s*pts\s*$", re.I)
+# B111 (D-next): v1.1 MFM files dropped the leading bullet ("• per ...") that v1_0
+# files carry, printing the item line bullet-less ("per ..."). The bullet is now
+# OPTIONAL so both editions parse. The match is still anchored on the literal "per "
+# prefix and a trailing "<n> pts", and is only ever run inside an already-open
+# WARGEAR OPTIONS block (collecting_wargear), so dropping the required bullet cannot
+# make it match anything outside that block. v1.1 lines carrying an inline change
+# marker ("per Hades lascannon▲ (+5) 15 pts") are already stripped to
+# "per Hades lascannon 15 pts" by normalize_v1_1 before this matches, so only the
+# final printed value is ever captured.
+WARGEAR_RE = re.compile(r"^[\u2022\-\*]?\s*per\s+(.+?)\s*(\d+)\s*pts\s*$", re.I)
 
 # B61. Wahapedia carries an army's allied units a second time under the shared
 # codex that makes them includable (Death Guard's TALLYBAND SUMMONERS pulls the six
