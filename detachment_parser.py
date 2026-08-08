@@ -62,9 +62,9 @@ ARMY_TO_MFM = OrderedDict([
     ("Ultramarines",     "MFM_Space_Marines_v1_0.txt"),
     ("White Scars",      "MFM_Space_Marines_v1_0.txt"),
     ("Chaos Daemons",    "MFM_Chaos_Daemons_v1_0.txt"),
-    ("Death Guard",      "MFM_Death_Guard_v1_0.txt"),
-    ("Chaos Space Marines", "MFM_Chaos_Space_Marines_v1_0.txt"),
-    ("Thousand Sons",   "MFM_Thousand_Sons_v1_0.txt"),
+    ("Death Guard",      "MFM_Death_Guard_v1.1.txt"),
+    ("Chaos Space Marines", "MFM_Chaos_Space_Marines_v1.1.txt"),
+    ("Thousand Sons",   "MFM_Thousand_Sons_v1.1.txt"),
     ("Emperor's Children", "MFM_Emperors_Children_v1.1.txt"),
 ])
 
@@ -77,9 +77,9 @@ MFM_SOURCE_NAME = {
     "MFM_Death_Watch_v1_0.txt":    "Deathwatch",
     "MFM_Space_Wolves_v1_0.txt":   "Space Wolves",
     "MFM_Chaos_Daemons_v1_0.txt":  "Chaos Daemons",
-    "MFM_Death_Guard_v1_0.txt":    "Death Guard",
-    "MFM_Chaos_Space_Marines_v1_0.txt": "Chaos Space Marines",
-    "MFM_Thousand_Sons_v1_0.txt": "Thousand Sons",
+    "MFM_Death_Guard_v1.1.txt":    "Death Guard",
+    "MFM_Chaos_Space_Marines_v1.1.txt": "Chaos Space Marines",
+    "MFM_Thousand_Sons_v1.1.txt": "Thousand Sons",
     "MFM_Emperors_Children_v1.1.txt": "Emperor's Children",
 }
 

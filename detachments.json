@@ -15,9 +15,9 @@
   "force_disposition_counts": {
    "DISRUPTION": 34,
    "PRIORITY ASSETS": 42,
-   "PURGE THE FOE": 34,
-   "RECONNAISSANCE": 25,
-   "TAKE AND HOLD": 44
+   "PURGE THE FOE": 30,
+   "RECONNAISSANCE": 27,
+   "TAKE AND HOLD": 46
   },
   "text_source_counts": {
    "faction_pack": 71,
@@ -10846,7 +10846,7 @@
    "name": "Contagion Engines",
    "name_raw": "CONTAGION ENGINES",
    "dp": 1,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "RECONNAISSANCE",
    "unique_tag": "ENGINES",
    "key": "Death Guard|CONTAGION ENGINES",
    "source_faction": "Death Guard",
@@ -10865,8 +10865,8 @@
      "description_source": "none"
     },
     {
-     "name": "Parasitic Woe reaper",
-     "name_raw": "Parasitic Woe reaper (Upgrade)",
+     "name": "Parasitic Woe-reaper",
+     "name_raw": "Parasitic Woe-reaper (Upgrade)",
      "points": 15,
      "is_upgrade": true,
      "description": null,
@@ -12134,7 +12134,7 @@
    "name": "Murdertalon Raiders",
    "name_raw": "MURDERTALON RAIDERS",
    "dp": 1,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "RECONNAISSANCE",
    "unique_tag": "NIGHTMARE",
    "key": "Chaos Space Marines|MURDERTALON RAIDERS",
    "source_faction": "Chaos Space Marines",
@@ -12516,7 +12516,7 @@
    "name": "Soulforged Warpack",
    "name_raw": "SOULFORGED WARPACK",
    "dp": 2,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Chaos Space Marines|SOULFORGED WARPACK",
    "source_faction": "Chaos Space Marines",
@@ -12553,7 +12553,7 @@
     {
      "name": "Tempting Addendum",
      "name_raw": "Tempting Addendum",
-     "points": 25,
+     "points": 40,
      "is_upgrade": false,
      "description": "HERETIC ASTARTES model only. Each time a HERETIC ASTARTES DAEMON VEHICLE unit from your army invokes its contract while within 3\" of the bearer:\n▪ If it suffers one or more mortal wounds as a result of that Dark Pact, add 1 to the number of mortal wounds it suffers.\n▪ Until the end of the phase, each time a model in that unit makes an attack, you can re-roll the Hit roll.",
      "description_source": "wahapedia_10e"
@@ -12950,7 +12950,7 @@
   "Thousand Sons|HEXWARP THRALLBAND": {
    "name": "Hexwarp Thrallband",
    "name_raw": "HEXWARP THRALLBAND",
-   "dp": 2,
+   "dp": 3,
    "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Thousand Sons|HEXWARP THRALLBAND",
@@ -13038,7 +13038,7 @@
    "name": "Ritual of Regeneration",
    "name_raw": "RITUAL OF REGENERATION",
    "dp": 1,
-   "force_disposition": "PURGE THE FOE",
+   "force_disposition": "TAKE AND HOLD",
    "unique_tag": null,
    "key": "Thousand Sons|RITUAL OF REGENERATION",
    "source_faction": "Thousand Sons",
@@ -13178,7 +13178,7 @@
    "name": "Sekhetar Cohort",
    "name_raw": "SEKHETAR COHORT",
    "dp": 1,
-   "force_disposition": "PRIORITY ASSETS",
+   "force_disposition": "DISRUPTION",
    "unique_tag": null,
    "key": "Thousand Sons|SEKHETAR COHORT",
    "source_faction": "Thousand Sons",
@@ -13284,7 +13284,7 @@
    "name": "Warpforged Cabal",
    "name_raw": "WARPFORGED CABAL",
    "dp": 2,
-   "force_disposition": "DISRUPTION",
+   "force_disposition": "PRIORITY ASSETS",
    "unique_tag": null,
    "key": "Thousand Sons|WARPFORGED CABAL",
    "source_faction": "Thousand Sons",

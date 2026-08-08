@@ -3,7 +3,20 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S211 (unchanged from S210 — nothing closed, nothing
+not here, it isn't open. **24 open** as of S212 (unchanged from S211 — nothing closed, nothing
+new opened; B89 advanced but did not close): B111, B110, B109, B108, B99, B98, B97, B103, E28,
+B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+Data-only turn (D306): `detachment_parser.py`'s `ARMY_TO_MFM`/`MFM_SOURCE_NAME` re-pointed Chaos
+Space Marines, Death Guard, and Thousand Sons at their v1.1 MFM files, mirroring Emperor's
+Children. `detachments.json` +0/-0 records, 7 changed (Hexwarp Thrallband 2 DP to 3 DP, six
+disposition corrections, Soulforged Warpack's Tempting Addendum 25 to 40 pts), diff-guarded exact
+match against the D305 finding's predicted list. `detachment_effects.json` and
+`rules_assertions.py` checked directly, both unaffected. **B89 still open**: the same v1_0
+detachment-sourcing gap applies to the six-file Space Marines group (base Adeptus Astartes, Black
+Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves) — noted since D291 but not yet
+confirmed/quantified by direct diff — recommended as B89's next data turn.
+
+**24 open** as of S211 (unchanged from S210 — nothing closed, nothing
 new opened; B89 gained confirmed evidence, not a new ticket): B111, B110, B109, B108, B99, B98,
 B97, B103, E28, B93, B90, B94, B89, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 Data-only turn (Emperor's Children detachments, D305). `EC` registered in `detachment_parser.py`'s
@@ -751,6 +764,23 @@ factions' committed `detachments.json`/`detachment_effects.json` data, out of sc
 Emperor's-Children-only data turn. **Recommended as the next data turn under this ticket**, now that
 Emperor's Children's own detachments (D305) are the one item that was blocking a clean sequencing
 choice.
+
+**S212 (D306): fixed the CSM/Death Guard/Thousand Sons portion of the gap.** `ARMY_TO_MFM`
+re-pointed all three factions at their v1.1 files, mirroring Emperor's Children. Regenerated and
+diff-guarded at record-key level: 0 keys added/removed (179 total unchanged), exactly the 7
+predicted records changed — Hexwarp Thrallband's DP fix, the six disposition corrections, and
+Soulforged Warpack's enhancement price fix, matching the S211 finding item for item. One extra,
+harmless diff: Death Guard's Contagion Engines enhancement gained a hyphen in its v1.1 name
+("Parasitic Woe reaper" to "Parasitic Woe-reaper"), a text correction with no points/legality
+effect. `detachment_effects.json` (Death Guard's, Chaos Space Marines', and Thousand Sons' entries)
+and `rules_assertions.py` (CSM-3, TS-2, both pin `text_source` only) checked directly against the 7
+changed keys — neither needed reconciling. `detachments_repro_check.py` passes byte-identical.
+**Ticket stays open**: the same v1_0-detachment-sourcing pattern applies to the six-file Space
+Marines group (base Adeptus Astartes, Black Templars, Blood Angels, Dark Angels, Deathwatch, Space
+Wolves) — flagged since D291 (Black Templars gains a new Vengeful Hosts detachment in v1.1, several
+enhancement re-prices) but not yet confirmed/quantified by a direct parse-and-diff the way this
+session did for CSM/DG/TS. **Recommended as B89's next data turn.** Chaos Daemons remains blocked
+— no v1.1 detachment file exists to diff against, so its LORDS OF THE WARP item stays unverified.
 
 ### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon

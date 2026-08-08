@@ -809,3 +809,12 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   flagged these as "investigate-first" at the time of the original migration; B89 has stayed
   open since, and its detachment-side work for these three factions was never finished.
   Recommending it as the next data turn under B89, not opened as a new ticket.
+
+- **D306** — CSM/Death Guard/Thousand Sons detachments re-pointed to v1.1 (S212), data-only. Fixes
+  the D305 finding: `ARMY_TO_MFM` re-pointed at each faction's v1.1 MFM file, mirroring Emperor's
+  Children. 7 detachment records changed (0 added/removed, 179 total unchanged), matching D305's
+  predicted list exactly — Hexwarp Thrallband 2 DP to 3 DP, six force-disposition corrections,
+  Soulforged Warpack's Tempting Addendum 25 to 40 pts. One extra harmless diff: a v1.1 hyphenation
+  fix in Contagion Engines' enhancement name. `detachment_effects.json` and `rules_assertions.py`
+  both checked directly and confirmed unaffected. B89 stays open — the same v1_0 sourcing gap still
+  applies to the six-file Space Marines group, not yet confirmed/quantified by direct diff.

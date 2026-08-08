@@ -12342,3 +12342,49 @@ noted in the backlog update below rather than treated as a new ticket, since B89
 No engine file (`index.html`, `loadout_parser.py`, `equipped_parser.py`, `mfm_points_parser.py`)
 touched this session. Emperor's Children is now fully built — units (D304) and detachments (this
 entry) both complete, diff-guard clean throughout.
+
+### D306 — CSM/Death Guard/Thousand Sons detachments re-pointed to v1.1, fixing the D305 finding (S212), data-only
+
+Re-pointed `detachment_parser.py`'s `ARMY_TO_MFM` and `MFM_SOURCE_NAME` entries for Chaos Space
+Marines, Death Guard, and Thousand Sons from their v1_0 MFM files to the corresponding v1.1 files
+(`MFM_Chaos_Space_Marines_v1.1.txt`, `MFM_Death_Guard_v1.1.txt`, `MFM_Thousand_Sons_v1.1.txt`),
+mirroring how Emperor's Children was registered in D305. `source_manifest.json` needed no change —
+both the v1_0 and v1.1 files for all three factions were already hashed and present (v1_0 stays
+needed by the units-side pipeline).
+
+Regenerated `detachments.json` and diff-guarded at record-key level against the committed file:
+zero keys added or removed (still 179 detachment records across 17 armies), exactly 7 records
+changed, matching the D305 finding's predicted list item for item:
+- Thousand Sons — Hexwarp Thrallband: 2 DP to 3 DP.
+- Thousand Sons — three force-disposition corrections: Ritual of Regeneration (Purge the Foe to
+  Take and Hold), Sekhetar Cohort (Priority Assets to Disruption), Warpforged Cabal (Disruption to
+  Priority Assets).
+- Chaos Space Marines — Murdertalon Raiders' disposition (Purge the Foe to Reconnaissance).
+- Chaos Space Marines — Soulforged Warpack's disposition (Purge the Foe to Take and Hold) plus its
+  Tempting Addendum enhancement price (25 pts to 40 pts).
+- Death Guard — Contagion Engines' disposition (Purge the Foe to Reconnaissance).
+
+One additional, unpredicted but harmless diff surfaced in the same pass: Death Guard's Contagion
+Engines carries an enhancement whose v1.1 name gained a hyphen ("Parasitic Woe reaper" to
+"Parasitic Woe-reaper") — a raw MFM text correction, not a points or legality change. Investigated
+and accepted rather than assumed benign on sight.
+
+Checked `detachment_effects.json`'s entries for all three factions (Death Guard's Shamblerot
+Vectorium and Tallyband Summoners, Chaos Space Marines' Chaos Cult, Thousand Sons' Changehost of
+Deceit/Servants of Change/Warpmeld Pact) against the 7 changed keys directly — none match, so no
+effects entry needed reconciling; confirmed rather than assumed from the D211 prompt's expectation.
+Checked `rules_assertions.py` for pinned values on any of the 7 changed keys — CSM-3 and TS-2 pin
+`text_source` only for Murdertalon Raiders/Ritual of Regeneration/Sekhetar Cohort, a field this
+session's fix does not touch; no assertion needed reconciling. `detachments_repro_check.py` passes
+byte-identical against the new committed file.
+
+This closes the CSM/Death Guard/Thousand Sons portion of B89's detachments-side gap. **Not closed:
+the same v1_0-detachment-sourcing pattern still applies to the six-file Space Marines group** (base
+Adeptus Astartes, Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves) — already
+noted at D291 (Black Templars gains a new Vengeful Hosts detachment in v1.1, several enhancement
+re-prices) but never confirmed/quantified by direct diff the way this session did for CSM/DG/TS.
+Chaos Daemons remains blocked — no v1.1 detachment file exists to compare against. B89 stays open,
+tracked for the SM-family group next.
+
+No engine file touched this session. No `faction_taxonomy.json` change needed — all three factions
+were already `built: true`.
