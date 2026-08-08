@@ -829,3 +829,6 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   no update needed. `faction_taxonomy.json` confirmed unchanged. This closes B89's
   detachments-side gap for the entire Adeptus Astartes group — only Chaos Daemons remains blocked
   on GW not having published a v1.1 detachment file.
+- **D308** — B109 "My Army Lists" label fix (S214), engine-only. `index.html`'s `renderMyLists()`
+  `tgt` line changed from `'target ' + r.points_target` to `r.points_target + ' Points'`. Version
+  bumped 6.18 → 6.19. Only file touched. B109 closed.

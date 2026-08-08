@@ -2222,7 +2222,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.18';
+  const VERSION = '6.19';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -7378,7 +7378,7 @@
       rows = sortMyListRows(rows);
       c.innerHTML = '<div class="mylists">' + rows.map(r => {
         const when = r.modified ? new Date(r.modified).toLocaleDateString() : '';
-        const tgt  = r.points_target ? ('target ' + r.points_target) : '';
+        const tgt  = r.points_target ? (r.points_target + ' Points') : '';
         const n    = r.entry_count;
         return '<div class="mylist-row" onclick="openList(\'' + r.id + '\')">'
           + '<div class="mylist-main">'

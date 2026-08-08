@@ -12440,3 +12440,21 @@ block is itself deprioritized into its own ticket.
 
 No engine file touched this session (`detachment_parser.py`'s registration dict only). No
 `faction_taxonomy.json` change needed.
+
+---
+
+### D308 — B109 "My Army Lists" label fix (S214), engine-only
+
+`index.html` only. Baseline reconciled at open via `--fetch --no-repo`: 27/27 gates green (5
+tier-B skipped, sources not loaded — not needed for an engine-only turn), `repo_check` unchanged
+(still red only on the pre-existing B108 finding).
+
+Render site (located S209): `renderMyLists()`'s `tgt` line, previously
+`r.points_target ? ('target ' + r.points_target) : ''`. Changed to
+`r.points_target ? (r.points_target + ' Points') : ''` — the only functional change this session.
+Version bumped 6.18 → 6.19 in the same file. Full gate suite re-run after the edit: all 27
+functional gates still pass; `rules_assertions` and `pipeline_manifest` report `index.html` off the
+manifest hash, which is the expected and correct state until `--write` runs at close, not a real
+failure.
+
+B109 closed. No other file touched.

@@ -3,9 +3,11 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S213 (unchanged count from S212 — B89 closed, B112
-opened same session): B111, B110, B109, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86,
+not here, it isn't open. **23 open** as of S214 (down from 24 at S213 — B109 closed, nothing
+opened): B111, B110, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86,
 B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
+Engine-only turn (D308): `index.html`'s `renderMyLists()` label fixed. Version 6.18 → 6.19. B109
+closed.
 Data-only turn (D307): `detachment_parser.py`'s `ARMY_TO_MFM`/`MFM_SOURCE_NAME` re-pointed the
 six-file Space Marines group (base Adeptus Astartes, Black Templars, Blood Angels, Dark Angels,
 Deathwatch, Space Wolves) at their v1.1 MFM files, mirroring CSM/DG/TS (D306) and Emperor's
@@ -430,14 +432,6 @@ hand-patching a number outside the pipeline. Fix: update `WARGEAR_RE` to accept 
 v1_0 format and the bullet-less v1.1 format. After the regex fix, the wargear pass should be re-run
 across every already-shipped faction (not just EC) and diff-guarded, in case another v1.1-only price
 change is hiding behind the same gap elsewhere — don't assume EC's Defiler is the only casualty.
-
-### B109 — "My Army Lists" page: replace "target ####" label with "#### Points" — **NEW S208
-(Ryan-reported); engine; XS; render site now located**
-Render site found (S209): `index.html`'s `renderMyLists()`, the line
-`const tgt = r.points_target ? ('target ' + r.points_target) : '';`. One-line change to
-`(r.points_target + ' Points')` (or similar). Not made this session — would mix an engine edit into
-a scoping-typed turn. Standalone engine-only turn, or ride with the Emperor's Children detachments
-build.
 
 ### B108 — `Thousand_Sons_web.txt` committed to the public repo (GW-derived) AND still absent from the private source repo — **NEW S207 (D301); RYAN ACTION; CRITICAL (compliance)**
 `repo_check.py` at S207 open flagged `Thousand_Sons_web.txt` in the public repo. Verified against a
@@ -1098,6 +1092,10 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B109 — "My Army Lists" page label fix — **CLOSED S214 (D308); engine-only**
+`index.html`'s `renderMyLists()` `tgt` line changed from `'target ' + r.points_target` to
+`r.points_target + ' Points'`. Version 6.18 → 6.19. Only file touched.
 
 ### B89 — MFM v1.1 adoption arc — **NEW S183 (D274); FIRST FACTION SHIPPED S195 (D288); data; L; depends B88; spans sessions**
 Per-faction data-only turns: regenerate points from the v1_1 file, full pipeline through convert and
