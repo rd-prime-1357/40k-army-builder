@@ -891,3 +891,16 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   literal updated 7 → 9 units, confirmed by the harness's own live sweep. `faction_taxonomy.json`:
   World Eaters `built` flipped to `true`, `data_army` added — World Eaters is now fully built and
   selectable. B113 gains 2 more instances (not opened new). B112 remains open, not picked up.
+
+- **D314** — Grey Knights detachments shipped (S220), data-only. `GK` registered in
+  `detachment_parser.py`'s three maps, built from `MFM_Grey_Knights_v1.1.txt`. `detachments.json`
+  diff-guarded: 9 added, 0 changed/removed — zero `UNIQUE:` tags, and the three forecast
+  force-disposition changes all confirmed direct from source. **Correction to the scope doc: 30
+  enhancements, not the scoped 28** (Upgrade count of 4 was right), caught by re-deriving rather
+  than trusting prior-session prose. `detachment_effects.json` checked directly: no row needed,
+  confirmed both by manual scan and by `rules_assertions.py`'s `e21a_coverage` passing clean.
+  `faction_taxonomy.json`: Grey Knights `built` flipped to `true`, `data_army` added — **closes
+  B110**. Grey Knights is now fully built and selectable. **All twelve Adeptus Astartes armies are
+  now complete.** Also reconciled at open: `OUTPUT_FORMAT_SPEC_for_project_instructions.md` had
+  drifted from the manifest (project-area copy ahead of the unpushed repo); re-pinned to the area's
+  copy, left `repo_check.py` correctly red as a Ryan push action.

@@ -7,29 +7,29 @@
    "wahapedia_10e",
    "none"
   ],
-  "armies": 18,
-  "detachment_records": 193,
-  "army_detachment_slots": 331,
-  "enhancements": 679,
-  "upgrade_enhancements": 43,
+  "armies": 19,
+  "detachment_records": 202,
+  "army_detachment_slots": 340,
+  "enhancements": 709,
+  "upgrade_enhancements": 47,
   "force_disposition_counts": {
-   "DISRUPTION": 35,
-   "PRIORITY ASSETS": 44,
-   "PURGE THE FOE": 25,
-   "RECONNAISSANCE": 28,
-   "TAKE AND HOLD": 61
+   "DISRUPTION": 37,
+   "PRIORITY ASSETS": 46,
+   "PURGE THE FOE": 26,
+   "RECONNAISSANCE": 30,
+   "TAKE AND HOLD": 63
   },
   "text_source_counts": {
    "faction_pack": 71,
-   "none": 22,
-   "wahapedia_10e": 100
+   "none": 25,
+   "wahapedia_10e": 106
   },
   "enhancement_description_source_counts": {
    "faction_pack": 226,
-   "none": 59,
-   "wahapedia_10e": 394
+   "none": 68,
+   "wahapedia_10e": 415
   },
-  "wahapedia_only_enhancements_dropped": 16,
+  "wahapedia_only_enhancements_dropped": 19,
   "text_gap_manifest": [
    {
     "key": "Black Templars|MARSHAL'S HOUSEHOLD",
@@ -125,6 +125,24 @@
     "key": "Emperor's Children|SPECTACLE OF SLAUGHTER",
     "source_faction": "Emperor's Children",
     "detachment": "Spectacle of Slaughter",
+    "dp": 1
+   },
+   {
+    "key": "Grey Knights|ARGENT ASSAULT",
+    "source_faction": "Grey Knights",
+    "detachment": "Argent Assault",
+    "dp": 1
+   },
+   {
+    "key": "Grey Knights|FIRES OF PURGATION",
+    "source_faction": "Grey Knights",
+    "detachment": "Fires of Purgation",
+    "dp": 1
+   },
+   {
+    "key": "Grey Knights|IMMATERIAL INTERDICTION",
+    "source_faction": "Grey Knights",
+    "detachment": "Immaterial Interdiction",
     "dp": 1
    },
    {
@@ -14990,6 +15008,630 @@
     }
    ],
    "stratagem_source": "wahapedia_10e"
+  },
+  "Grey Knights|ARGENT ASSAULT": {
+   "name": "Argent Assault",
+   "name_raw": "ARGENT ASSAULT",
+   "dp": 1,
+   "force_disposition": "PRIORITY ASSETS",
+   "unique_tag": null,
+   "key": "Grey Knights|ARGENT ASSAULT",
+   "source_faction": "Grey Knights",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Psychic Celerity",
+     "name_raw": "Psychic Celerity",
+     "points": 15,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Vigilance of Titan",
+     "name_raw": "Vigilance of Titan",
+     "points": 20,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
+  },
+  "Grey Knights|AUGURIUM TASK FORCE": {
+   "name": "Augurium Task Force",
+   "name_raw": "AUGURIUM TASK FORCE",
+   "dp": 2,
+   "force_disposition": "RECONNAISSANCE",
+   "unique_tag": null,
+   "key": "Grey Knights|AUGURIUM TASK FORCE",
+   "source_faction": "Grey Knights",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Prescient Redeployment",
+   "rule_text": "From the second battle round onwards, at the start of your Movement phase, if you did not select the maximum number of Grey Knights units from your army using the Gate of Infinity ability at the end of your opponent's previous turn, you can select one GREY KNIGHTS unit from your army that is on the battlefield that could have been selected using the Gate of Infinity ability. Remove that unit from the battlefield and place it into Strategic Reserves.\nDesigner's Note: This means that your unit can retain its position on the battlefield at the end of your Command phase, and then be placed into Strategic Reserves at the start of your Movement phase, to set it up again in your Reinforcements step in another position.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Doomseer's Amulet",
+     "name_raw": "Doomseer's Amulet",
+     "points": 25,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Each time the bearer's unit is set up in your Reinforcements step, the bearer can use this Enhancement. If it does, select one enemy unit within 12\" of and visible to the bearer. That enemy unit must take a Battle-shock test, subtracting 1 from that test.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Grimoire of Conjunctions",
+     "name_raw": "Grimoire of Conjunctions",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Once per battle, at the start of the Fight phase, the bearer can use this Enhancement. If it does, until the end of the phase, add 4 to the Strength characteristic of melee weapons equipped by the bearer.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "One Foot in the Future",
+     "name_raw": "One Foot in the Future",
+     "points": 15,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Shield of Prophecy",
+     "name_raw": "Shield of Prophecy",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Once per battle, at the start of the battle round, the bearer can use this Enhancement. If it does, until the end of the battle round, add 2 to the Toughness characteristic of models in the bearer's unit.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Aggressive Anticipation",
+     "cp": 1,
+     "type": "Augurium Task Force - Battle Tactic Stratagem",
+     "description": "WHEN: Your Shooting phase or the Fight phase.\nTARGET: One Grey Knights Psyker unit from your army that has not been selected to shoot or fight this phase.\nEFFECT: Until the end of the phase, each time a model in your unit makes an attack, you can ignore any or all modifiers to that attack's Weapon Skill or Ballistic Skill characteristics and/or any or all modifiers to the Hit roll."
+    },
+    {
+     "name": "Appointed Hour",
+     "cp": 1,
+     "type": "Augurium Task Force - Battle Tactic Stratagem",
+     "description": "WHEN: Your Shooting phase or the Fight phase.\nTARGET: One Grey Knights Psyker unit from your army that has not been selected to shoot or fight this phase.\nEFFECT: Until the end of the phase, each time a model in your unit makes an attack, an unmodified Hit roll of 5+ scores a Critical Hit."
+    },
+    {
+     "name": "Forewarned Evasion",
+     "cp": 1,
+     "type": "Augurium Task Force - Epic Deed Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets.\nTARGET: One Grey Knights Walker unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, each time an attack targets your unit, subtract 1 from the Hit roll."
+    },
+    {
+     "name": "Mirage of Echoes",
+     "cp": 1,
+     "type": "Augurium Task Force - Strategic Ploy Stratagem",
+     "description": "WHEN: The Reinforcements step of your opponent's Movement phase, just after an enemy unit is set up.\nTARGET: One Grey Knights Psyker unit from your army that is within 12\" of that enemy unit and is not within Engagement Range of one or more enemy units.\nEFFECT: If your unit has the Deep Strike ability, it can be placed into Strategic Reserves."
+    },
+    {
+     "name": "Necessary End",
+     "cp": 1,
+     "type": "Augurium Task Force - Epic Deed Stratagem",
+     "description": "WHEN: Fight phase, just after an enemy unit has selected its targets.\nTARGET: One Grey Knights Infantry unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, each time a model in your unit is destroyed, if that model has not fought this phase, roll one D6. If the result is greater than the current battle round number, do not remove the destroyed model from play; it can fight after the attacking unit has finished making its attacks, and is then removed from play."
+    },
+    {
+     "name": "Redirected Strike",
+     "cp": 1,
+     "type": "Augurium Task Force - Epic Deed Stratagem",
+     "description": "WHEN: End of your Command phase.\nTARGET: One Grey Knights Psyker unit from your army that is not within Engagement Range of one or more enemy units.\nEFFECT: If your unit has the Deep Strike ability, it can be placed into Strategic Reserves.\nDesigner's Note: This Stratagem lets players utilise abilities that retain control of objective markers and react to their missions and objectives with this unit."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "Grey Knights|BANISHERS": {
+   "name": "Banishers",
+   "name_raw": "BANISHERS",
+   "dp": 2,
+   "force_disposition": "DISRUPTION",
+   "unique_tag": null,
+   "key": "Grey Knights|BANISHERS",
+   "source_faction": "Grey Knights",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Channelled Force",
+   "rule_text": "Each time a Grey Knights unit from your army is selected to fight, that unit can take a Leadership test. If that test is passed, select one of the following rules. Until the end of the phase, that unit has that rule.\n▪ Melee weapons equipped by models in this unit with the [psychic] ability also have the [sustained hits 1] ability.\n▪ Melee weapons equipped by models in this unit with the [psychic] ability also have the [LETHAL HITS] ability.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Ephemeral Tome",
+     "name_raw": "Ephemeral Tome",
+     "points": 15,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Pyresoul",
+     "name_raw": "Pyresoul",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. At the start of your Shooting phase, the bearer can use this Enhancement. If it does, select one enemy unit within 24\" of and visible to the bearer; that unit suffers D3 mortal wounds.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Sigil of the Hunt",
+     "name_raw": "Sigil of the Hunt",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. In your Shooting phase, each time a model in the bearer's unit makes an attack, re-roll a Hit roll of 1.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Sixty-sixth Seal",
+     "name_raw": "Sixty-sixth Seal",
+     "points": 25,
+     "is_upgrade": false,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Celerity",
+     "cp": 1,
+     "type": "Banishers - Epic Deed Stratagem",
+     "description": "WHEN: Your Charge phase.\nTARGET: One Grey Knights Psyker Infantry unit from your army.\nEFFECT: Until the end of the turn, your unit is eligible to declare a charge in a turn in which it Advanced."
+    },
+    {
+     "name": "Chaos Bane",
+     "cp": 1,
+     "type": "Banishers - Epic Deed Stratagem",
+     "description": "WHEN: Your Shooting phase.\nTARGET: One Grey Knights Psyker unit from your army that has not been selected to shoot this phase.\nEFFECT: Until the end of the phase, ranged weapons equipped by models in your unit have the [ANTI-CHAOS 4+] ability."
+    },
+    {
+     "name": "Circle of Sanctuary",
+     "cp": 1,
+     "type": "Banishers - Epic Deed Stratagem",
+     "description": "WHEN: Start of your opponent's Movement phase.\nTARGET: One Grey Knights Character model from your army.\nEFFECT: Until the end of the phase, enemy units that are set up on the battlefield as Reinforcements cannot be set up within 12\" horizontally of your model."
+    },
+    {
+     "name": "Hexwrought Reprisal",
+     "cp": 1,
+     "type": "Banishers - Epic Deed Stratagem",
+     "description": "WHEN: End of any phase.\nTARGET: One Grey Knights Psyker unit from your army that is on the battlefield and suffered one or more mortal wounds this phase.\nEFFECT: Select one enemy unit which inflicted one or more mortal wounds on your unit this phase, then roll a number of dice equal to the number of mortal wounds your unit suffered this phase: for each 2+, that enemy unit suffers one mortal wound (to a maximum of 6 mortal wounds). These mortal wounds are Psychic Attacks."
+    },
+    {
+     "name": "Shadow of Anarch",
+     "cp": 1,
+     "type": "Banishers - Epic Deed Stratagem",
+     "description": "WHEN: Your opponent's Movement phase, just after an enemy unit ends a Normal, Advance or Fall Back move.\nTARGET: One Grey Knights Psyker unit from your army that is within 9\" of that enemy unit and is not within Engagement Range of one or more enemy units.\nEFFECT: Your unit can make a Normal move of up to 6\" or, if it has the Deep Strike ability, it can be placed into Strategic Reserves."
+    },
+    {
+     "name": "Warding Chant",
+     "cp": 1,
+     "type": "Banishers - Epic Deed Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets.\nTARGET: One Grey Knights Psyker unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, models in your unit have the Feel No Pain 5+ ability against attacks with an unmodified Damage characteristic of 1."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "Grey Knights|BROTHERHOOD STRIKE": {
+   "name": "Brotherhood Strike",
+   "name_raw": "BROTHERHOOD STRIKE",
+   "dp": 2,
+   "force_disposition": "PURGE THE FOE",
+   "unique_tag": null,
+   "key": "Grey Knights|BROTHERHOOD STRIKE",
+   "source_faction": "Grey Knights",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Fury of Titan",
+   "rule_text": "Each time a unit from your army is set up using the Deep Strike ability, until the end of the turn, each time a model in that unit makes an attack, re-roll a Hit roll of 1 and re-roll a Wound roll of 1.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Banishing Wave",
+     "name_raw": "Banishing Wave",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Each time the bearer's unit is set up using the Deep Strike ability, roll one D6 for each enemy unit within 12\" of the bearer: on a 2-5, that unit suffers 1 mortal wound; on a 6, that unit suffers D3 mortal wounds.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Blinding Aura",
+     "name_raw": "Blinding Aura",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Each time the bearer's unit is set up using the Deep Strike ability, until the end of the turn, enemy units cannot use the Fire Overwatch Stratagem to shoot at the bearer's unit.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Purity of Purpose",
+     "name_raw": "Purity of Purpose",
+     "points": 15,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Each time the bearer's unit is set up using the Deep Strike ability, until the end of the turn, you can re-roll Charge rolls made for the bearer's unit.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Tome of Forbidden Ways",
+     "name_raw": "Tome of Forbidden Ways",
+     "points": 25,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. While the bearer is on the battlefield or in Strategic Reserves, add 1 to the number of units from your army that you can select for the Gate of Infinity rule.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Combat Manifestation",
+     "cp": 1,
+     "type": "Brotherhood Strike - Epic Deed Stratagem",
+     "description": "WHEN: Your Movement phase.\nTARGET: One Grey Knights unit from your army that is arriving using the Deep Strike ability this phase.\nEFFECT: Set your unit up anywhere on the battlefield that is more than 6\" horizontally away from all enemy units, but until the end of the turn, it is not eligible to declare a charge."
+    },
+    {
+     "name": "Duty Unending",
+     "cp": 1,
+     "type": "Brotherhood Strike - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Movement phase, just after an enemy unit within Engagement Range of one or more Grey Knights units from your army Falls Back.\nTARGET: One of those GREY KNIGHTS units that is not within Engagement Range of one or more enemy units.\nEFFECT: If your unit has the Deep Strike ability, it can be placed into Strategic Reserves."
+    },
+    {
+     "name": "Expeditious Exit",
+     "cp": 2,
+     "type": "Brotherhood Strike - Strategic Ploy Stratagem",
+     "description": "WHEN: End of your opponent's Fight phase.\nTARGET: One Grey Knights Psyker Infantry unit from your army.\nEFFECT: If every model in your unit has the Deep Strike ability, remove your unit from the battlefield and place it into Strategic Reserves.\nDesigner's Note: This Stratagem allows you to remove a unit in addition to those removed using the Gate of Infinity rule, and it allows you to remove a unit within Engagement Range of one or more enemy units."
+    },
+    {
+     "name": "Purgation Pattern",
+     "cp": 1,
+     "type": "Brotherhood Strike - Battle Tactic Stratagem",
+     "description": "WHEN: Your Shooting phase.\nTARGET: One Grey Knights unit from your army that was set up using the Deep Strike ability this turn and has not been selected to shoot this phase.\nEFFECT: Until the end of the phase, weapons equipped by models in your unit have the [SUSTAINED HITS 1] ability."
+    },
+    {
+     "name": "Shining Veil",
+     "cp": 1,
+     "type": "Brotherhood Strike - Battle Tactic Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase, just after an enemy unit has selected its targets.\nTARGET: One Grey Knights unit that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, your unit has the Stealth ability."
+    },
+    {
+     "name": "Truesilver Channelling",
+     "cp": 2,
+     "type": "Brotherhood Strike - Strategic Ploy Stratagem",
+     "description": "WHEN: Fight phase.\nTARGET: One Grey Knights Infantry unit from your army that has not been selected to fight this phase.\nEFFECT: Until the end of the phase, Psychic weapons equipped by models in your unit have the [DEVASTATING WOUNDS] ability."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "Grey Knights|FIRES OF PURGATION": {
+   "name": "Fires of Purgation",
+   "name_raw": "FIRES OF PURGATION",
+   "dp": 1,
+   "force_disposition": "DISRUPTION",
+   "unique_tag": null,
+   "key": "Grey Knights|FIRES OF PURGATION",
+   "source_faction": "Grey Knights",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Boons of Deimos",
+     "name_raw": "Boons of Deimos (Upgrade)",
+     "points": 20,
+     "is_upgrade": true,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Precognicient Volleys",
+     "name_raw": "Precognicient Volleys (Upgrade)",
+     "points": 10,
+     "is_upgrade": true,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
+  },
+  "Grey Knights|HALLOWED CONCLAVE": {
+   "name": "Hallowed Conclave",
+   "name_raw": "HALLOWED CONCLAVE",
+   "dp": 2,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "Grey Knights|HALLOWED CONCLAVE",
+   "source_faction": "Grey Knights",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Duty Before All",
+   "rule_text": "Grey Knights Terminator units from your army are eligible to shoot and declare a charge in a turn in which they Fell Back.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Eye of the Augurium",
+     "name_raw": "Eye of the Augurium",
+     "points": 25,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Once per battle round, the bearer can use this Enhancement. If it does, you can target the bearer's unit with the Fire Overwatch or Heroic Intervention Stratagem for 0CP, and can do so even if you have already targeted a different unit with that Stratagem this turn.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Inescapable Judgement",
+     "name_raw": "Inescapable Judgement",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Each time an enemy unit within Engagement Range of the bearer's unit Falls Back, the bearer can use this Enhancement. If it does, roll one D6: on a 2-5, that enemy unit suffers D3 mortal wounds; on a 6, that enemy unit suffers D3+3 mortal wounds. These mortal wounds are Psychic Attacks.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Nemesis Rounds",
+     "name_raw": "Nemesis Rounds",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS TERMINATOR model only. Each time you target the bearer's unit with the Fire Overwatch Stratagem, hits are scored on unmodified Hit rolls of 5+ while resolving that Stratagem.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Sanctic Reaper",
+     "name_raw": "Sanctic Reaper",
+     "points": 15,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS TERMINATOR model only. Add 3 to the Attacks characteristic of the bearer's melee weapons.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Giants of the Battlefield",
+     "cp": 1,
+     "type": "Hallowed Conclave - Battle Tactic Stratagem",
+     "description": "WHEN: Fight phase.\nTARGET: One Grey Knights Terminator unit from your army that has not been selected to fight this phase.\nEFFECT: Until the end of the phase, add 1 to the Attacks characteristic of melee weapons equipped by models in your unit."
+    },
+    {
+     "name": "Grind Them Underfoot",
+     "cp": 1,
+     "type": "Hallowed Conclave - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Charge phase, just after a Grey Knights Terminator unit from your army ends a Charge move.\nTARGET: That GREY KNIGHTS unit.\nEFFECT: Select one enemy unit within Engagement Range of your unit, then roll one D6 for each model in your unit that is within Engagement Range of that enemy unit: for each 4+, that enemy unit suffers 1 mortal wound (to a maximum of 6 mortal wounds)."
+    },
+    {
+     "name": "Point-Blank Purgation",
+     "cp": 1,
+     "type": "Hallowed Conclave - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Shooting phase.\nTARGET: One Grey Knights Infantry unit from your army that has not been selected to shoot this phase.\nEFFECT: Until the end of the phase, storm bolter weapons equipped by models in your unit have the [PISTOL] and [TWIN-LINKED] abilities."
+    },
+    {
+     "name": "Precognitive Strategies",
+     "cp": 1,
+     "type": "Hallowed Conclave - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Movement phase, just after an enemy unit ends a Normal, Advance or Fall Back move.\nTARGET: One Grey Knights Infantry unit from your army that is within 9\" of that enemy unit and not within Engagement Range of one or more enemy units.\nEFFECT: Your unit can make a Normal move of up to D6\"."
+    },
+    {
+     "name": "Shining Resolve",
+     "cp": 1,
+     "type": "Hallowed Conclave - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase, just after an enemy unit has selected its targets.\nTARGET: One Grey Knights Infantry unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, each time an attack targets your unit, if the Strength characteristic of that attack is greater than the Toughness characteristic of your unit, subtract 1 from the Wound roll."
+    },
+    {
+     "name": "Unending Fidelity",
+     "cp": 1,
+     "type": "Hallowed Conclave - Strategic Ploy Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase or the Fight phase, just after an enemy unit has selected its targets.\nTARGET: One Grey Knights Infantry unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, each time a model in your unit is destroyed, if that model has not shot or fought this phase, roll one D6. On a 4+, do not remove the destroyed model from play; it can shoot or fight after the attacking unit has finished making its attacks, and is then removed from play."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "Grey Knights|IMMATERIAL INTERDICTION": {
+   "name": "Immaterial Interdiction",
+   "name_raw": "IMMATERIAL INTERDICTION",
+   "dp": 1,
+   "force_disposition": "RECONNAISSANCE",
+   "unique_tag": null,
+   "key": "Grey Knights|IMMATERIAL INTERDICTION",
+   "source_faction": "Grey Knights",
+   "text_source": "none",
+   "text_source_detail": null,
+   "rule_name": null,
+   "rule_text": null,
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Astral Overlap",
+     "name_raw": "Astral Overlap (Upgrade)",
+     "points": 10,
+     "is_upgrade": true,
+     "description": null,
+     "description_source": "none"
+    },
+    {
+     "name": "Predestined Coordinates",
+     "name_raw": "Predestined Coordinates (Upgrade)",
+     "points": 10,
+     "is_upgrade": true,
+     "description": null,
+     "description_source": "none"
+    }
+   ],
+   "stratagems": [],
+   "stratagem_source": "none"
+  },
+  "Grey Knights|SANCTIC SPEARHEAD": {
+   "name": "Sanctic Spearhead",
+   "name_raw": "SANCTIC SPEARHEAD",
+   "dp": 2,
+   "force_disposition": "PRIORITY ASSETS",
+   "unique_tag": null,
+   "key": "Grey Knights|SANCTIC SPEARHEAD",
+   "source_faction": "Grey Knights",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Mailed Fist",
+   "rule_text": "Each time a Grey Knights Vehicle unit from your army Advances, do not make an Advance roll for it; until the end of the phase, add 6\" to the Move characteristic of models in that unit, and until the end of the turn, ranged weapons equipped by models in that unit have the [ASSAULT] ability.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Driven by Duty",
+     "name_raw": "Driven by Duty",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS WALKER model only. Each time the bearer's unit Piles In or Consolidates, the bearer can move up to 6\" instead of up to 3\".",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Quickening Foci",
+     "name_raw": "Quickening Foci",
+     "points": 15,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS INFANTRY model only. In your Movement phase, each time the bearer's unit disembarks from a Transport, until the end of the turn, you can re-roll Charge rolls made for that unit.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Sigil of Exigence",
+     "name_raw": "Sigil of Exigence",
+     "points": 30,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Once per battle, in your opponent's Shooting phase, when the bearer's unit is selected as the target of a ranged attack, you can remove the bearer's unit from the battlefield and then set it back up again anywhere on the battlefield that is more than 9\" horizontally away from all enemy units. If the bearer's unit is no longer an eligible target, your opponent can then select new targets for any attacks that had targeted the bearer's unit.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Spiritus Machina",
+     "name_raw": "Spiritus Machina",
+     "points": 25,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS INFANTRY model only. In your Shooting phase, each time the bearer's unit is selected to shoot, if the bearer's unit disembarked from a Transport this turn, until the end of the phase, each time a model in the bearer's unit makes an attack, you can re-roll the Wound roll.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Abominus-Class Targets",
+     "cp": 1,
+     "type": "Sanctic Spearhead - Battle Tactic Stratagem",
+     "description": "WHEN: Your Shooting phase or the Fight phase.\nTARGET: One Grey Knights unit from your army that has not been selected to shoot or fight this phase.\nEFFECT: Until the end of the phase, each time a model in your unit makes an attack that targets a MONSTER or VEHICLE unit, add 1 to the Wound roll."
+    },
+    {
+     "name": "Argent Wrath",
+     "cp": 1,
+     "type": "Sanctic Spearhead - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Charge phase, just after a Grey Knights Vehicle unit from your army ends a Charge move.\nTARGET: That GREY KNIGHTS VEHICLE unit.\nEFFECT: Each enemy unit within 3\" of your unit must take a Battle-shock test, subtracting 1 from that test."
+    },
+    {
+     "name": "Armoured Aegis",
+     "cp": 1,
+     "type": "Sanctic Spearhead - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Command phase.\nTARGET: One Grey Knights Psyker Vehicle unit from your army.\nEFFECT: One model in your unit regains up to 3 lost wounds."
+    },
+    {
+     "name": "Force Wave",
+     "cp": 1,
+     "type": "Sanctic Spearhead - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Movement phase or your Charge phase.\nTARGET: One Grey Knights Vehicle unit from your army that has not been selected to move or charge this phase.\nEFFECT: Until the end of the phase, each time your unit makes a Normal, Advance or Charge move, it can move horizontally through terrain features."
+    },
+    {
+     "name": "Redoubled Assault",
+     "cp": 1,
+     "type": "Sanctic Spearhead - Strategic Ploy Stratagem",
+     "description": "WHEN: Your Movement phase, just after a Grey Knights Vehicle unit from your army Falls Back.\nTARGET: That GREY KNIGHTS VEHICLE unit.\nEFFECT: Until the end of the turn, your unit is eligible to shoot and declare a charge in a turn in which it Fell Back."
+    },
+    {
+     "name": "Truesilver Will",
+     "cp": 1,
+     "type": "Sanctic Spearhead - Epic Deed Stratagem",
+     "description": "WHEN: Any phase, just after a Grey Knights Psyker Vehicle unit from your army suffers a mortal wound.\nTARGET: That GREY KNIGHTS PSYKER VEHICLE unit.\nEFFECT: Until the end of the phase, models in your unit have the Feel No Pain 4+ ability against mortal wounds."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
+  },
+  "Grey Knights|WARPBANE TASK FORCE": {
+   "name": "Warpbane Task Force",
+   "name_raw": "WARPBANE TASK FORCE",
+   "dp": 3,
+   "force_disposition": "TAKE AND HOLD",
+   "unique_tag": null,
+   "key": "Grey Knights|WARPBANE TASK FORCE",
+   "source_faction": "Grey Knights",
+   "text_source": "wahapedia_10e",
+   "text_source_detail": "Wahapedia 10th Edition",
+   "rule_name": "Hallowed Ground",
+   "rule_text": "Certain areas of the battlefield are within your army's Hallowed Ground, as follows:\n▪ Your deployment zone is always within your army's Hallowed Ground.\n▪ The area of the battlefield within 6\" of one or more Purifier Squad units from your army is within your army's Hallowed Ground.\n▪ At the start of any phase, if you control at least half of the objective markers within No Man's Land, until the end of that phase, No Man's Land is within your army's Hallowed Ground.\n▪ At the start of any phase, if you control at least half of the objective markers within your opponent's deployment zone, until the end of that phase, your opponent's deployment zone is within your army's Hallowed Ground.Each time a model in a GREY KNIGHTS unit from your army makes a ranged attack that targets a visible target or makes a melee attack, re-roll a Hit roll of 1. If that unit is a PURIFIER SQUAD and/or is wholly within your army's Hallowed Ground, you can re-roll the Hit roll instead.",
+   "restrictions": null,
+   "enhancements": [
+    {
+     "name": "Mandulian Reliquary",
+     "name_raw": "Mandulian Reliquary",
+     "points": 20,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. While the bearer's unit is not Battle-shocked, add 3 to the bearer's Objective Control characteristic.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Paragon of Sanctity",
+     "name_raw": "Paragon of Sanctity",
+     "points": 10,
+     "is_upgrade": false,
+     "description": "GREY KNIGHTS model only. Once per battle, at the start of any phase, the bearer can select one friendly GREY KNIGHTS unit within 18\" of and visible to it. If it does, until the end of the phase, that unit is within your army's Hallowed Ground.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Phial of the Abyss",
+     "name_raw": "Phial of the Abyss",
+     "points": 15,
+     "is_upgrade": false,
+     "description": "Grey Knights Infantry model only. Models in the bearer's unit have the Stealth ability.",
+     "description_source": "wahapedia_10e"
+    },
+    {
+     "name": "Radiant Champion",
+     "name_raw": "Radiant Champion",
+     "points": 15,
+     "is_upgrade": false,
+     "description": "Grey Knights Infantry model only. The bearer's melee weapons have the [PRECISION] ability, and while the bearer is wholly within your army's Hallowed Ground, each time a melee attack made by the bearer scores a wound, the target of that attack suffers 1 mortal wound in addition to any normal damage.",
+     "description_source": "wahapedia_10e"
+    }
+   ],
+   "stratagems": [
+    {
+     "name": "Aegis Eternal",
+     "cp": 1,
+     "type": "Warpbane Task Force - Battle Tactic Stratagem",
+     "description": "WHEN: Your opponent's Shooting phase, just after an enemy unit has selected its targets.\nTARGET: One Grey Knights Infantry unit from your army that was selected as the target of one or more of the attacking unit's attacks.\nEFFECT: Until the end of the phase, models in your unit that are wholly within your Hallowed Ground have a 4+ invulnerable save."
+    },
+    {
+     "name": "Fires of Covenant",
+     "cp": 1,
+     "type": "Warpbane Task Force - Battle Tactic Stratagem",
+     "description": "WHEN: Start of your opponent's Movement phase.\nTARGET: One Grey Knights Infantry unit from your army.\nEFFECT: Until the end of the phase, each time an enemy unit is set up or ends a Normal, Advance or Fall Back move within 6\" of your unit, roll one D6, adding 2 to the result if your unit is wholly within your army's Hallowed Ground: on a 4+, that enemy unit suffers D3 mortal wounds."
+    },
+    {
+     "name": "Flames of Sanctity",
+     "cp": 1,
+     "type": "Warpbane Task Force - Strategic Ploy Stratagem",
+     "description": "WHEN: End of the Fight phase.\nTARGET: One Purifier Squad unit from your army that was eligible to fight this phase.\nEFFECT: Roll one D6 for each enemy unit within 6\" of your unit, adding 1 to the result if your unit includes Castellan Crowe: on a 4+, that enemy unit suffers D3 mortal wounds."
+    },
+    {
+     "name": "Hallowed Beacon",
+     "cp": 1,
+     "type": "Warpbane Task Force - Battle Tactic Stratagem",
+     "description": "WHEN: Reinforcements step of your Movement phase.\nTARGET: One Grey Knights Infantry unit (excluding Terminator units) that is arriving using the Deep Strike ability this phase.\nEFFECT: Set up your unit wholly within your army's Hallowed Ground and more than 6\" horizontally away from all enemy units."
+    },
+    {
+     "name": "Repelling Sphere",
+     "cp": 1,
+     "type": "Warpbane Task Force - Battle Tactic Stratagem",
+     "description": "WHEN: Start of your opponent's Charge phase.\nTARGET: One Grey Knights Infantry unit from your army.\nEFFECT: Until the end of the phase, each time an enemy unit declares a charge and your unit is one of the targets of that charge, subtract 1 from the Charge roll, or subtract 2 instead if your unit is wholly within your army's Hallowed Ground."
+    },
+    {
+     "name": "Sanctified Kill Zone",
+     "cp": 1,
+     "type": "Warpbane Task Force - Battle Tactic Stratagem",
+     "description": "WHEN: Your Shooting phase or the Fight phase.\nTARGET: One GREY KNIGHTS unit from your army that has not been selected to shoot or fight this phase and that is wholly within your army's Hallowed Ground.\nEFFECT: Until the end of the phase, each time a model in your unit makes an attack, re-roll a Wound roll of 1, or, re-roll the Wound roll instead if your unit is a Purifier Squad."
+    }
+   ],
+   "stratagem_source": "wahapedia_10e"
   }
  },
  "armies": {
@@ -15359,6 +16001,17 @@
    "World Eaters|KHORNE DAEMONKIN",
    "World Eaters|POSSESSED SLAUGHTERBAND",
    "World Eaters|VESSELS OF WRATH"
+  ],
+  "Grey Knights": [
+   "Grey Knights|ARGENT ASSAULT",
+   "Grey Knights|AUGURIUM TASK FORCE",
+   "Grey Knights|BANISHERS",
+   "Grey Knights|BROTHERHOOD STRIKE",
+   "Grey Knights|FIRES OF PURGATION",
+   "Grey Knights|HALLOWED CONCLAVE",
+   "Grey Knights|IMMATERIAL INTERDICTION",
+   "Grey Knights|SANCTIC SPEARHEAD",
+   "Grey Knights|WARPBANE TASK FORCE"
   ]
  }
 }

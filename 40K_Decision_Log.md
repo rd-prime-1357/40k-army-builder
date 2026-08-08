@@ -12712,3 +12712,59 @@ Eaters (Cult of Blood's Butcher Lord → Goremongers/Jakhals; Khorne Daemonkin's
 Bloodcrushers/Flesh Hounds), confirmed present in the parsed `enhancements` — not opened as new,
 still tracked under the existing ticket. **B112** (Chaos Daemons LORDS OF THE WARP, unblocked at
 S217) remains open, not picked up this session — its own data turn.
+
+### D314 — Grey Knights detachments shipped (S220), data-only — Adeptus Astartes group complete
+
+`GK` registered in `detachment_parser.py`'s three maps (`ARMY_TO_MFM`, `MFM_SOURCE_NAME`,
+`ARMY_TO_WAHA_FACTION`), mirroring the World Eaters pattern (D313) exactly. Built `detachments.json`
+from `MFM_Grey_Knights_v1.1.txt` per D293 (always the newest MFM). Diff-guarded against the
+committed file: **exactly the forecast 9 Grey Knights detachments added, 0 changed, 0 removed
+elsewhere.**
+
+Verified directly against `GREY_KNIGHTS_BUILD_SCOPE.md` §8's forecast, checked fresh from source
+rather than trusted: DP costs run 1–3; **zero `UNIQUE:` tags anywhere in the faction**, confirmed by
+direct text search; exactly the three forecast force-disposition changes, each carrying its own
+`FORCE DISPOSITION(S) CHANGED` banner in the v1.1 text — Argent Assault Purge the Foe → Priority
+Assets, Immaterial Interdiction Priority Assets → Reconnaissance, Warpbane Task Force Purge the Foe
+→ Take and Hold. No DP changes, no enhancement re-prices between v1_0 and v1.1.
+
+**One correction to the scope doc, caught by re-deriving rather than trusting prior-session prose:**
+§8 forecast 28 enhancements total; the real count from source is **30** (2+4+4+4+2+4+2+4+4 across
+the nine detachments). The "4 Upgrade-tagged" part of the forecast was correct — Boons of Deimos,
+Precognicient Volleys, Astral Overlap, Predestined Coordinates, all in the two lowest-DP
+detachments (Fires of Purgation, Immaterial Interdiction).
+
+**`detachment_effects.json` checked directly, per D313's established discipline — no row needed.**
+Manual read of all nine detachments' `rule_text`/`restrictions` found no allied-unlock or
+BATTLELINE-grant pattern, consistent with Grey Knights having no allied-codex problem (§3: fully
+self-contained, no cross-file points sourcing). `rules_assertions.py`'s `e21a_coverage` assertion —
+the same automated scan that caught World Eaters' unflagged Cult of Blood gap at D313 — passed
+clean on the full baseline re-run, confirming the manual scan wasn't missing anything. `e21b_check.js`'s
+battleline-sweep literal stays at 9 (unchanged; Grey Knights grants no BATTLELINE keyword).
+
+`faction_taxonomy.json`: Grey Knights' `built` flag flipped to `true`, `data_army: "Grey Knights"`
+added — same sequencing as D298 (original attempt, corrected S210 when detachments turned out to
+be zero), D305 (Emperor's Children), D313 (World Eaters). **This closes B110** (`faction_taxonomy.json`
+stale `built: false`), which was correctly left open at S210 pending exactly this build rather than
+flipped prematurely. Grey Knights is now fully built (units + detachments both complete) and safely
+selectable.
+
+Full baseline re-run after all three file updates (`detachment_parser.py`, `detachments.json`,
+`faction_taxonomy.json`) — every gate green except the expected pre-`--write` P3/`pipeline_manifest`/
+`repo_check` state (resolved by the `--write` at the end of this handoff).
+
+**B113** (the `LEADER:` enhancement-eligibility parser-noise gap) gains **zero** new instances —
+confirmed by direct text search of the Grey Knights `DETACHMENTS` block, no `LEADER:` lines present.
+**With this turn, all twelve Adeptus Astartes armies are fully built** (units + detachments) —
+per the project's faction priority order, Heretic Astartes and Chaos Daemons/Drukhari work may now
+proceed without an outstanding Adeptus Astartes gap. B112 (Chaos Daemons LORDS OF THE WARP,
+unblocked since S217) and B113 (6 pre-existing instances, unchanged this session) remain open, not
+picked up this session — their own turns.
+
+Also found and reconciled at session open, unrelated to Grey Knights: `OUTPUT_FORMAT_SPEC_for_project_instructions.md`
+had drifted from `pipeline_manifest.json`'s recorded hash — the project-area copy carries a new
+instruction (grouping delivered files into "Repo-only" vs "Project area" labels) not yet pushed to
+the repo. Confirmed via `repo_check.py` this was the only file differing between area and repo (185
+byte-identical, 1 differs, 13 repo-only informational). Re-pinned the manifest to the area's copy
+(the standing "area copy wins" convention for docs), verified only that one entry changed. Left
+`repo_check.py` correctly still red on this file — Ryan's push action, same shape as B108.

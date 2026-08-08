@@ -9,7 +9,10 @@ Paste this into the project instructions, **replacing** the existing "lead with 
 1. **What's wrong / findings** — lead here. The decision-relevant results, corrections, and anything broken or surprising.
 2. **Decisions needed** — explicit choices for Ryan, if any.
 3. **Shipped / changed** — what was built or edited, in plain prose: files touched, version, the substance of the change.
-4. **Files** — delivered via the file panel.
+4. **Files** — delivered via the file panel. When a turn delivers more than one file, group them under two labels, in this order, omitting either if empty:
+   - **Repo-only — do not add to project area**: guarded files fetched by `baseline.sh --fetch` rather than held in the project area (the large generated data files — units.json, detachments.json, unit_loadouts.json, abilities.json — plus any repo-only rolling doc such as 40K_Decision_Log.md or BACKLOG_ARCHIVE.md).
+   - **Project area**: everything else — files Ryan should upload or keep current in the project Files panel.
+   A single-file turn skips the labels and just states where the file belongs.
 
 **Not allowed anywhere in the reply:**
 - Narrating tool calls or steps ("now I'll…", "let me…", "next I'll check…").

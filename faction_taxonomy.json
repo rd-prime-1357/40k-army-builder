@@ -111,7 +111,8 @@
         },
         {
           "name": "Grey Knights",
-          "built": false
+          "built": true,
+          "data_army": "Grey Knights"
         },
         {
           "name": "Imperial Agents",

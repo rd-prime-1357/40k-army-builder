@@ -3,7 +3,29 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S219 (unchanged count from S218 — no ticket opened or
+not here, it isn't open. **22 open** as of S220 (down from 23 at S219 — **B110 closed**, nothing
+new opened): B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
+E23, B67b, E12, B17, B112.
+Data-only turn (D314): Grey Knights detachments shipped end to end — closes out the entire
+Adeptus Astartes group. `GK` registered in `detachment_parser.py`'s three maps, built from
+`MFM_Grey_Knights_v1.1.txt` per D293. `detachments.json` +9 Grey Knights detachments, diff-guarded
+0 changed/removed elsewhere: DP 1–3, zero `UNIQUE:` tags anywhere in the faction (confirmed by
+direct text search), exactly the three forecast force-disposition changes (Argent Assault Purge
+the Foe → Priority Assets; Immaterial Interdiction Priority Assets → Reconnaissance; Warpbane Task
+Force Purge the Foe → Take and Hold). **Correction to `GREY_KNIGHTS_BUILD_SCOPE.md` §8: the real
+enhancement count is 30, not the scoped 28** (4 Upgrade-tagged, that part was right) — caught by
+re-deriving from source rather than trusting the four-session-old scope doc. `detachment_effects.json`
+checked directly per D313's discipline: no allied-unlock or BATTLELINE-grant pattern in any of the
+9 detachments' rule text, confirmed both by manual scan and by `rules_assertions.py`'s
+`e21a_coverage` assertion passing clean — no row needed, consistent with Grey Knights having no
+allied-codex problem. `e21b_check.js`'s battleline-sweep literal unchanged at 9 (Grey Knights adds
+no BATTLELINE grant). `faction_taxonomy.json`: Grey Knights `built` flipped to `true`,
+`data_army: "Grey Knights"` added — **closes B110**, which was blocked exactly on this build. Grey
+Knights is now fully built (units + detachments both complete) and selectable. B113 gains 0 new
+instances — confirmed zero `LEADER:` lines in the Grey Knights detachments block by direct search.
+With this turn, **all Adeptus Astartes factions are complete.**
+
+**23 open** as of S219 (unchanged count from S218 — no ticket opened or
 closed this session, a faction-build data turn, not a ticket turn): B113, B110, B108, B99, B98,
 B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17, B112.
 Data-only turn (D313): World Eaters detachments shipped end to end. `detachments.json` +8 (0
@@ -433,26 +455,6 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
-
-### B110 — `faction_taxonomy.json` still shows Grey Knights as `built: false` — **NEW S209; data; XS**
-Found while scoping Emperor's Children. `units.json` confirms Grey Knights is fully built (25/25
-units) and B100 closed at S208, but `faction_taxonomy.json`'s Imperium group still carries
-`{'name': 'Grey Knights', 'built': False}` — nobody flipped the flag when the faction shipped. Not
-currently causing a visible bug (checked: no UI or check harness was found reading this field to
-gate Grey Knights specifically), but it's a stale data point that could produce a false-negative in
-some future faction census the way S206/S207's stale "next Adeptus Astartes faction" prose did. Fix
-is a one-line flag flip; can ride with any other data turn.
-
-**Correction, S210:** the S209 claim above ("no UI... was found reading this field to gate Grey
-Knights specifically") was checked incompletely. `index.html` reads `f.built` generically to gate
-every faction's selectability (`opt.disabled = !f.built`), so it DOES gate Grey Knights the same as
-any other faction — that part of the original investigation missed the actual read site. More to
-the point: `detachments.json` was checked directly this session and has **zero** Grey Knights
-entries. Flipping `built: true` now, as the ticket originally recommended, would let a player select
-Grey Knights and reach an empty detachment picker — a broken list-building state, not a cosmetic
-stale flag. **Not a one-line flip.** This ticket is correct that the flag is stale, but the fix is
-blocked on Grey Knights getting its own detachments build, not just a data toggle. Left open,
-`built: false` unchanged, until detachments ship.
 
 ### B111 — `mfm_points_parser.py`'s `--wargear` pass was blind to v1.1 `WARGEAR OPTIONS` text
 — **CLOSED S216 (D310); tooling half D309, data half D310**
@@ -1131,6 +1133,20 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B110 — `faction_taxonomy.json` still shows Grey Knights as `built: false` — **NEW S209; CLOSED S220 (D314); data; XS**
+Found while scoping Emperor's Children. `units.json` confirmed Grey Knights fully built (25/25
+units, B100 closed S208), but `faction_taxonomy.json`'s Imperium group still carried
+`{'name': 'Grey Knights', 'built': False}` — nobody flipped the flag when the units shipped. Not a
+cosmetic issue: `index.html` reads `f.built` generically to gate every faction's selectability
+(`opt.disabled = !f.built`), and at S210 `detachments.json` was confirmed to hold **zero** Grey
+Knights entries — flipping the flag early would have let a player select Grey Knights and reach an
+empty detachment picker, a broken list-building state. Correctly left open pending Grey Knights'
+own detachments build (`GREY_KNIGHTS_BUILD_SCOPE.md` §10 step 4), not just a data toggle.
+
+**Closed S220 (D314).** Grey Knights detachments shipped end to end this session — 9 detachments,
+diff-guarded, `detachment_effects.json` confirmed to need no new row. `built` flipped to `true`,
+`data_army: "Grey Knights"` added. Grey Knights is now fully built and safely selectable.
 
 ### B111 — `mfm_points_parser.py`'s `--wargear` pass was blind to v1.1 `WARGEAR OPTIONS` text
 — **NEW S210; CLOSED S216 (D310); tooling half D309, data half D310**
