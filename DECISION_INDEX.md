@@ -914,3 +914,16 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   row found stale — its `enforced: false` reason names Chaos Space Marines as not-built, which has
   been false since S212 — **opens B114** rather than fixed in this data-only turn. B113 gains 0 new
   instances. `faction_taxonomy.json` already correct, no edit needed.
+- **D316** — Drukhari scoped (S222), scoping-only. Roster 23 units (7 Legends exclusions, both
+  confirmed), zero Support units, all points/threshold shapes precedented and proven by direct
+  parse. Detachments: 9, DP 1–3, 30 enhancements; three shared-Unique-tag pairs (COVENS, WYCH CULT,
+  KABAL), confirmed already-precedented against `detachments.json` (Blood Angels, Death Guard, CSM,
+  Thousand Sons). B113 gains 0 new instances. **Two real findings**: (1) `wahapedia_transform.py
+  --faction DRU` wrongly pulls in 14 Harlequin/Aeldari-Corsair datasheets (legacy `faction_id`
+  mistag; real source is the Aeldari Faction Pack) — a real transform bug, must be fixed before the
+  units data turn; (2) those 14 units are not noise — Drukhari's "Corsairs and Travelling Players"
+  army rule and the Reaper's Wager detachment legally permit including them at a battle-size-scaled
+  points cap sourced from a different, unbuilt faction's MFM — no built faction has this shape.
+  Recommended deferring the allied-inclusion mechanic to a follow-on ticket and shipping Drukhari's
+  own 23-unit/9-detachment build first; flagged for Ryan's call (sets precedent). `DRUKHARI_BUILD_
+  SCOPE.md` produced; no units/detachments build started.

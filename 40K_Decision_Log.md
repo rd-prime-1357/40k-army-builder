@@ -12810,3 +12810,63 @@ units build — no edit needed this session.
 Full baseline re-run after the two file updates (`detachment_parser.py`, `detachments.json`) —
 every gate green except the expected pre-`--write` P3/`pipeline_manifest`/`repo_check` state
 (resolved by the `--write` at the end of this handoff). **This closes B112.**
+
+### D316 — Drukhari scoped (S222), scoping-only
+
+Per the faction priority order, Drukhari is the only faction left in the priority list. Produced
+`DRUKHARI_BUILD_SCOPE.md`. No committed file changed; all findings from command output against
+this session's own baseline open (34/34 gates, sources loaded, 122/122 assertions, all three repro
+checks byte-identical, `repo_check` clean).
+
+**Roster: 23 current-edition units, matches `Datasheets.csv` exactly, 7 Legends exclusions confirmed
+both ways.** Zero SUPPORT units — Drukhari has no co-leader shape at all. 6 buildable LEADER units;
+a 7th (Urien Rakarth) is Legends-only. Archon's attach list names Court of the Archon (Legends);
+confirmed already-solved by the existing B73/D260 guard that drops attach-list entries with no
+matching datasheet — no new engine work.
+
+**Points/threshold shapes: all precedented, proven by direct parse.** Three units changed v1_0→
+v1.1: Raider and Venom each gain a new `1st-to-3rd/4th+` tier boundary (the same shape B87's `esc4`
+reader already handles — proven by running `mfm_points_parser.py` directly against the file, not
+assumed); Ravager loses its threshold entirely (`REQUISITION THRESHOLDS REMOVED`, flat 110 pts) and
+gains a wargear option. A `--wargear` harvest pass found all 4 wargear-cost items in the file
+correctly. No new points-parsing shape.
+
+**Detachments: 9, DP 1–3, 30 enhancements, 3 force-disposition changes (Covenite Coterie,
+Exhibition of Slaughter, Kabalite Agonysts), all explicitly `UPDATED`-tagged in source.** Three
+Unique tags (COVENS, WYCH CULT, KABAL) are each shared by two detachments — checked against
+`detachments.json` directly: this exact shared-tag pattern is already precedented and enforced
+(Blood Angels GRACE/DOOMED, Death Guard FLYBLOWN/ENGINES, CSM NIGHTMARE, Thousand Sons MUTANT) via
+`rules_assertions.py`'s `e1a_no_duplicate_names_and_unique_tags` — not a new mechanism. Two
+enhancement-name collisions across detachments (Towering Arrogance, Periapt of Torments, each at
+different point costs in each detachment) are a non-issue — enhancements key off detachment+name.
+Three of the 9 detachments (Exhibition of Slaughter, Kabalite Agonysts, Tools of Torment) have no
+Wahapedia rule text and no GW Faction Pack source exists for Drukhari in the project area — these
+will ship `text_source: "none"`, matching 25 already-precedented instances of this gap. B113 gains
+zero new instances.
+
+**Two real findings.** (1) `wahapedia_transform.py --faction DRU` (dry run) selects 37 datasheets,
+not 23 — the extra 14 are Harlequins/Aeldari-Corsair units carrying a legacy `faction_id == DRU`
+tag whose real `source_id` is the Aeldari Faction Pack (current-edition, not Legends), which the
+existing filter doesn't catch since it only excludes non-current/Legends sources, not
+wrong-faction-of-origin ones. Independently confirmed: a dry `mfm_points_parser.py` run flags the
+same 14 as having no MFM points at all — they appear nowhere in `MFM_Drukhari_v1.1.txt`. This is a
+real transform bug and must be fixed (recommend: exclude Aeldari's `source_id`, or generalize to a
+"source belongs to a different faction's current pack" check) before the units data turn runs; not
+fixed this session (scoping turn, per the standing turn-typing rule). (2) The 14 flagged datasheets
+are not noise — they are exactly the units Drukhari's own "Corsairs and Travelling Players" army
+rule and the Reaper's Wager detachment's "Callous Competition" ability legally permit including, at
+points caps that scale by battle size (250/500/750 base rule; 500/1000/1500 via Reaper's Wager,
+mutually exclusive with the base rule) and are priced from a *different, unbuilt* faction's MFM
+(`MFM_Aeldari_v1_0.txt`). No built faction has this cross-book allied-inclusion shape — the existing
+Shadow Legion / Legions of Excess / Scintillating Legions / Plague Legions patterns all price their
+allied units inline in the host faction's own MFM, with no points cap and no battle-size scaling.
+**Recommendation, flagged for Ryan's call rather than decided unilaterally (sets precedent):** ship
+Drukhari's own 23-unit/9-detachment build first without this mechanic — it under-represents legal
+options but creates no illegal-state risk under D0 — and open a follow-on ticket for the
+allied-inclusion mechanic itself, gated on whether/when Aeldari is prioritized.
+
+Loadouts: 13 wargear-option groups across 9 units, 8 compound replacements, 1 bundled two-weapon
+swap, 4 ambiguous weapon-name matches, 1 equip/add-no-profile item, 1 multi-model-line split
+review — all true-Drukhari-only counts, separated from the 14 contaminating Harlequin/Corsair
+entries in the same dry-run report. On the same order as Grey Knights (4 flagged units) before it.
+No units or detachments build started this session, per the scoping-only turn type.

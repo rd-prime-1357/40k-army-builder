@@ -1,74 +1,71 @@
-# NEXT SESSION PROMPT — Session 222
+# NEXT SESSION PROMPT — Session 223
 
-## Recommended turn type: scoping (Drukhari — first faction build pass)
+## Recommended turn type: tooling-only (B115 — fix `wahapedia_transform.py`'s Drukhari
+faction-selection bug)
 
-Read `SESSION_HANDOFF_221.md` first. S221 shipped Chaos Daemons' LORDS OF THE WARP detachment
-disposition clean — **Chaos Daemons is now fully built (units + detachments both complete)**,
-closing B112. Per the project's faction priority order (all Adeptus Astartes, then all Heretic
-Astartes, then Chaos Daemons, then Drukhari), **Drukhari is the only faction left in the priority
-list**, and it has no scope doc yet — `MFM_Drukhari_v1.1.txt` and `MFM_Drukhari_v1_0.txt` are both
-present in the project area, but nothing has scoped a units or detachments build against them.
+Read `SESSION_HANDOFF_222.md` first, then `DRUKHARI_BUILD_SCOPE.md`. S222 scoped Drukhari and found
+two things: a real transform bug (B115) and a genuinely new allied-inclusion mechanic with no
+built-faction precedent (B116, deferred, awaiting Ryan's call — see "Decisions waiting on Ryan"
+below, not blocking this session).
 
 Open with `./baseline.sh --fetch --data-turn`. Confirm clean before starting.
 
-## Drukhari scoping — the work
+## B115 — the fix
 
-Follow the same shape as the existing `*_BUILD_SCOPE.md` docs (`CSM_BUILD_SCOPE.md`,
-`THOUSAND_SONS_BUILD_SCOPE.md`, `EMPEROR_S_CHILDREN_BUILD_SCOPE.md`, `WORLD_EATERS_BUILD_SCOPE.md`,
-`GREY_KNIGHTS_BUILD_SCOPE.md`) as templates for section structure, but re-derive every number from
-`MFM_Drukhari_v1.1.txt` directly — do not assume Drukhari's shape mirrors any prior faction's.
-Per the standing discipline (reinforced hard at S220/S221: two different sibling scope docs were
-each found wrong on re-check despite careful prior passes), every count in the scope doc must come
-from a fresh read of the source, not carried over from memory of how another faction's build went.
+`wahapedia_transform.py --faction DRU` currently selects 37 datasheets against Drukhari's real
+23-unit roster. The extra 14 are Harlequins/Aeldari-Corsair units carrying a legacy `faction_id ==
+DRU` tag but real `source_id == 000000186` (the Aeldari Faction Pack, current-edition, not
+Legends). `select_datasheets`'s existing filter (`source_is_excluded`) only checks
+edition/legend-status, not whether the source belongs to the target faction's own pack.
 
-Cover at minimum: unit count and Leader/Support attachment map; detachment count, DP range, and
-whether any carry `UNIQUE:` tags; enhancement count per detachment; whether Drukhari has any
-allied-codex or BATTLELINE-grant pattern requiring `detachment_effects.json` rows (check directly,
-don't assume none); whether any units have Requisition Threshold or Wargear point-scaling shapes
-not yet seen in a built faction; confirm Drukhari's Wahapedia faction code before use (do not guess
-— derive it from `mfm_points_parser.py`/`repro_check.py`/`units_repro_check.py` per the standing
-pattern used for every prior faction's registration in `detachment_parser.py`'s three maps).
+Re-verify this from source before touching code — don't trust S222's numbers without re-running
+the dry pass yourself, per standing discipline. Fix `select_datasheets` (or `source_is_excluded`)
+so a source outside the target faction's own current Faction Pack is excluded — either a targeted
+exclusion of Aeldari's `source_id`, or (preferred if it's a clean generalization) a check that the
+source's own name/id maps back to the faction being built. Re-run the dry pass and confirm exactly
+23 datasheets select for `--faction DRU`, matching `MFM_Drukhari_v1.1.txt`'s 23-unit list.
 
-This is a scoping turn only — do not start the units or detachments build itself this session.
-Produce `DRUKHARI_BUILD_SCOPE.md` and stop there for Ryan's review of any product/legality calls it
-surfaces, per the same handoff shape used for prior scope docs.
+Check whether this same gap could affect any other already-built faction sharing a Wahapedia
+faction_id with a different current-edition pack (`DRUKHARI_BUILD_SCOPE.md` found no such case in
+the 16 already-built factions, but re-confirm rather than trust the prior session's negative
+finding, since B115 itself is proof a negative finding can be wrong until actually run per faction).
+
+This is a tooling turn — fix and re-verify only; do not build the Drukhari units data this session
+per the standing turn-typing rule. If B115 turns out deeper than a filter fix (e.g. if the general
+check breaks an already-built faction), stop and report rather than pushing through.
 
 ## Also open, at your discretion
 
+- **Drukhari units data turn** — once B115 is fixed and verified, this is the natural next session:
+  run the corrected transform, register Drukhari in `detachment_parser.py`'s three maps, build
+  `units.json` for the 23-unit roster. `DRUKHARI_BUILD_SCOPE.md` §§1, 3, 4 have the full source
+  read already done.
 - **B113** — detachment enhancement `LEADER:` eligibility restriction discarded as parser noise (6
-  instances: CSM ×2, TS ×1, EC ×1, World Eaters ×2; Grey Knights and Chaos Daemons both confirmed to
-  add 0 more). Engine turn, small. Not urgent — pre-existing and unenforced on six shipped
-  detachments already.
+  instances: CSM ×2, TS ×1, EC ×1, World Eaters ×2; Grey Knights, Chaos Daemons, and now Drukhari
+  all confirmed to add 0 more). Engine turn, small. Not urgent.
 - **B114** — Chaos Daemons' `Shadow Legion` HERETIC ASTARTES unlock (`detachment_effects.json`) is
-  recorded `enforced: false` on a stale premise (its own reason names Chaos Space Marines as
-  not-built, which has been false since S212). Needs its own scoping pass to determine whether
-  flipping `enforced: true` is safe as-is or needs the detachment's CSM unit list resolved from rule
-  text first — found while checking B112, not investigated further this session.
-- **GK §6** (from `GREY_KNIGHTS_BUILD_SCOPE.md`) — the Nemesis Dreadknight "cannot take duplicates"
-  gap, a pre-existing D0 violation affecting 3 already-shipped Chaos Space Marines units too. Was
-  recommended as an engine ticket ahead of the Grey Knights units build back at S200; units shipped
-  anyway (S208) capped-but-not-distinct. Worth confirming current state and opening as its own
-  ticket if not already tracked — this prompt does not have a ticket ID for it.
-- **GK §7** — `detachment_parser.py --report`'s `KeyError` on any run that produces a gap record
-  (reads `g["army"]`, the actual key is `g["source_faction"]`). One-line fix, XS, tooling turn. Has
-  never fired in a gate; will fire the moment a session runs the parser with `--report` for
-  diagnostics. Avoid `--report` until fixed, or fix it first as its own tooling aside.
-- **Repo push** — `OUTPUT_FORMAT_SPEC_for_project_instructions.md` is unpushed (S220 finding,
-  Ryan's action) alongside the still-outstanding B108 (`Thousand_Sons_web.txt`).
+  recorded `enforced: false` on a stale premise. Needs its own scoping pass.
+- **GK §6 / GK §7** — carried unchanged from S222's prompt; still not investigated.
+- **Repo push** — `OUTPUT_FORMAT_SPEC_for_project_instructions.md` and `Thousand_Sons_web.txt`
+  (B108) both still outstanding, Ryan's action.
 
 ## Standing reminders
 
-- Re-derive from source, don't trust prior-session prose — including this prompt's own assumptions
-  about Drukhari's shape. S220 and S221 both found inherited forecasts wrong on re-check (Grey
-  Knights' enhancement count off by 2 despite a careful S200 pass; treat any assumption about
-  Drukhari mirroring another faction the same way).
-- Turn typing: this is a scoping turn. If it surfaces engine or tooling needs, note them for their
-  own typed session — don't fold them in, and don't start the units/detachments build itself this
-  session.
-- No decisions currently waiting on Ryan from S221.
+- Re-derive from source, don't trust prior-session prose — including B115's own diagnosis above.
+  S220–S222 have all found inherited assumptions wrong on re-check.
+- Turn typing: this is a tooling turn. Fix and verify B115 only — the units/detachments build is
+  its own, later, data-typed session.
+
+## Decisions waiting on Ryan
+
+**B116** — whether/when to build Drukhari's Harlequins/Anhrathe cross-book allied-inclusion
+mechanic (points-capped inclusion of units priced from the unbuilt Aeldari faction). Recommendation
+in `DRUKHARI_BUILD_SCOPE.md` §6 is to defer it and ship Drukhari's own roster/detachments first.
+Does not block B115 or the Drukhari units build — only relevant once/if Aeldari itself is
+prioritized.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_222.md` in `pipeline_manifest.py`'s GUARDED
+Produce the four documents, register `SESSION_HANDOFF_223.md` in `pipeline_manifest.py`'s GUARDED
 list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
 command.
