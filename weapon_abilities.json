@@ -162,5 +162,37 @@
   {
     "weapon_ability_name": "Icon of Excess",
     "weapon_ability_description": "At the end of your Shooting phase or the Fight phase, if the bearer’s unit destroyed one or more enemy units that phase, the bearer’s unit takes a Leadership test. If that test is passed, you gain 1CP."
+  },
+  {
+    "weapon_ability_name": "Cluster Caltrops",
+    "weapon_ability_description": "Each time you roll to inflict wounds using this unit’s Eviscerating Fly-by ability, you can re-roll one D6 for each model in this unit equipped with cluster caltrops."
+  },
+  {
+    "weapon_ability_name": "Grav-talon",
+    "weapon_ability_description": "The bearer’s melee weapons have an Armour Penetration characteristic of -2 and the [LETHAL HITS] ability."
+  },
+  {
+    "weapon_ability_name": "Incubi Shrine Token",
+    "weapon_ability_description": "Once per battle for each Incubi Shrine token this unit has, you can change the result of one Hit roll or one Wound roll made for a Klaivex or Incubi model in this unit to an unmodified 6. Designer's Note: Place an Incubi Shrine token next to the unit for each Incubi Shrine token it has, removing one each time this ability is used."
+  },
+  {
+    "weapon_ability_name": "Kabalite Icon",
+    "weapon_ability_description": "While the bearer’s unit is not Battle-shocked, add 1 to the bearer’s Objective Control characteristic."
+  },
+  {
+    "weapon_ability_name": "Phantasm Grenade Launcher",
+    "weapon_ability_description": "The bearer’s unit has the Smoke and Grenades keywords."
+  },
+  {
+    "weapon_ability_name": "Shadowfield",
+    "weapon_ability_description": "You cannot re-roll invulnerable saving throws made for the bearer. The first time an invulnerable saving throw made for the bearer is failed, until the end of the battle, the bearer has no invulnerable save."
+  },
+  {
+    "weapon_ability_name": "Soul Trap",
+    "weapon_ability_description": "Add 1 to the Attacks and Strength characteristics of the bearer’s melee weapons. The first time the bearer makes a melee attack that destroys an enemy model, after all the bearer’s attacks have been resolved, until the end of the battle, add an additional 1 to the Attacks and Strength characteristics of the bearer’s melee weapons."
+  },
+  {
+    "weapon_ability_name": "Stimm-needler",
+    "weapon_ability_description": "Once per turn, the first time a saving throw is failed for a model in the bearer’s unit, change the Damage characteristic of that attack to 0."
   }
 ]

@@ -939,3 +939,11 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   every other faction byte-identical. Downstream re-verified: 0 "no MFM points" datasheets (was
   14), same 7 Legends exclusions, same 1 attach-list drop — exact match to S222, now proven by
   rerun. Full baseline clean, zero regression. No units/detachments build started (tooling-only).
+- **D318** — Drukhari units built (S224), data-only. 23/23 datasheets match scope exactly, all 6
+  Leader attach lists correct, Raider/Venom/Ravager v1.1 tier shapes confirmed. Rebuild diffed
+  against a clean repo fetch: units.json +23 units/0 changed, abilities.json +59,
+  weapon_abilities.json +8, datasheet_wargear_abilities.json +6 — all purely additive, zero
+  removals. wargear_points.json correctly unchanged (gated on unfinished loadout groups).
+  Detachment-map registration (prompt's own step 3) deferred to the detachments build turn —
+  registering early breaks detachments_repro_check since Drukhari's detachments.json doesn't exist
+  yet; reverted after testing. Full baseline clean, zero regression.

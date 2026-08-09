@@ -3,7 +3,25 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S223 (down from 24 at S222 — **B115 closed, nothing
+not here, it isn't open. **23 open** as of S224 (unchanged from S223 — Drukhari units build is
+part of the standing faction-priority-order sequence, not its own backlog ticket; nothing closed,
+nothing opened): B116, B114, B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17.
+Data-only turn (D318): Drukhari's 23-unit roster built and shipped — `wahapedia_transform.py
+--faction DRU` (B115's fix confirmed still in place) -> `mfm_points_parser.py` ->
+`units_repro_check.py`'s new Drukhari block -> `merge_factions.py`. Verified against source, not
+just "ran clean": all 23 unit names, all 6 Leader attach lists, and Raider/Venom/Ravager's v1.1
+tier prices confirmed exact matches to `DRUKHARI_BUILD_SCOPE.md`. Diffed the rebuild against a
+clean repo fetch: `units.json` +23/-0, `abilities.json` +59, `weapon_abilities.json` +8,
+`datasheet_wargear_abilities.json` +6, all purely additive; `wargear_points.json` correctly
+unchanged (gated on unbuilt loadout groups). Detachment-map registration — the prompt's own step
+3 — tested and found to break `detachments_repro_check` (Drukhari's `detachments.json` doesn't
+exist yet), so deferred to the detachments build turn instead; not a new open item, folded into
+the existing DRUKHARI_BUILD_SCOPE.md §8 sequencing. Full baseline clean, zero regression.
+Loadouts (13 wargear-option groups) and detachments (9 detachments + the deferred map
+registration) remain open, separate turns.
+
+**23 open** as of S223 (down from 24 at S222 — **B115 closed, nothing
 new opened**): B116, B114, B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70,
 B75, P2, P4, E23, B67b, E12, B17.
 Tooling-only turn (D317): open-time manifest reconciliation (two guarded files' hashes had drifted

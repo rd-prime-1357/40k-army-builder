@@ -80861,5 +80861,4376 @@
         "abilities": []
       }
     ]
+  },
+  {
+    "army": "Drukhari",
+    "units": [
+      {
+        "unit_id": "000000634",
+        "unit_name": "Archon",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Hatred Eternal (Pain)": "In your Shooting phase or the Fight phase, when you select this model’s unit to shoot or fight, you can spend 1 Pain token to Empower that unit. While that unit is Empowered, each time a model in that unit makes an attack, you can re-roll the Hit roll.",
+          "Overlord": "Once per battle, at the start of any phase, you can select one friendly Drukhari unit that is Battle-shocked and within 12\" of this model. That unit is no longer Battle-shocked.",
+          "Devious Mastermind": "Once per battle round, one model from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 3,
+            "SV": 4,
+            "INV": 2,
+            "INV_Condition": "* See Shadowfield ability (below)",
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Hand of the Archon",
+              "Incubi",
+              "Kabalite Warriors"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Hatred Eternal (Pain)",
+              "Overlord",
+              "Devious Mastermind"
+            ],
+            "rule_names": [
+              "Leader",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Archon",
+              "Character",
+              "Infantry",
+              "Kabal"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Shadowfield",
+              "Soul Trap"
+            ],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blast pistol",
+            "range": "6\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Agoniser",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Huskblade",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "2",
+            "S": 3,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Master-crafted power weapon",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 4,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter pistol",
+            "replacement_weapon_name": "Blast pistol",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter pistol",
+            "replacement_weapon_name": "soul trap",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Huskblade",
+            "replacement_weapon_name": "Agoniser",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Huskblade",
+            "replacement_weapon_name": "Master-crafted power weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000639",
+        "unit_name": "Succubus",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Lithe Agility (Pain)": "In your Movement phase when you select this model’s unit to Advance, or in your Charge phase before you make a Charge roll for this model’s unit, you can spend 1 Pain token to Empower that unit. While that unit is Empowered, you can re-roll Advance and Charge rolls made for that unit.",
+          "Storm of Blades": "While this model is leading a unit, melee weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability.",
+          "Bloody Spectacle": "Each time this model makes a melee attack that targets a CHARACTER unit, you can re-roll the Hit roll and you can re-roll the Wound roll. Each time this model’s unit destroys a CHARACTER model, you gain 1CP."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 3,
+            "SV": 6,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Wyches"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Lithe Agility (Pain)",
+              "Storm of Blades",
+              "Bloody Spectacle"
+            ],
+            "rule_names": [
+              "Leader",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Character",
+              "Infantry",
+              "Succubus",
+              "Wych Cult"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Archite glaive and agoniser",
+            "range": "Melee",
+            "A": "7",
+            "BS": null,
+            "WS": "2",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Precision"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 50,
+              "second_unit": 50,
+              "third_plus": 50
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000640",
+        "unit_name": "Lelith Hesperax",
+        "unit_type": "Epic Hero",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Brides of Death (Pain)": "In the Fight phase, when you select this model’s unit to fight, you can spend 1 Pain token to Empower that unit. While that unit is Empowered, each time a model in that unit makes a melee attack, improve the Strength and Armour Penetration characteristics of that attack by 1.",
+          "Blur of Blades": "While this model is leading a unit, models in that unit have the Fights First ability.",
+          "Thrilling Spectacle": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does, until the end of the phase, this model has a 3+ invulnerable save and change the Attacks characteristic of melee weapons equipped by this model to 12."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 3,
+            "SV": 6,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Wyches"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Brides of Death (Pain)",
+              "Blur of Blades",
+              "Thrilling Spectacle"
+            ],
+            "rule_names": [
+              "Fights First",
+              "Leader",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Character",
+              "Epic Hero",
+              "Infantry",
+              "Lelith Hesperax",
+              "Succubus",
+              "Wych Cult"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Lelith’s blades",
+            "range": "Melee",
+            "A": "8",
+            "BS": null,
+            "WS": "2",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Precision",
+              "Sustained Hits 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000641",
+        "unit_name": "Haemonculus",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Fleshcraft (Pain)": "In your Command phase, you can spend 1 Pain token to Empower this model’s unit. Each time you do, you can return up to D3+1 destroyed Bodyguard models to that unit.",
+          "Fear Incarnate (Aura)": "While an enemy unit is within 6\" of this model, worsen the Leadership characteristic of models in that unit by 1. In addition, in the Battle-shock step of your opponent’s Command phase, if such an enemy unit is below its Starting Strength, it must take a Battle-shock test.",
+          "Pain Adept": "In your Command phase, if one or more models from your army with this ability are on the battlefield, roll one D6: on a 4+, you gain 1 Pain token."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 4,
+            "SV": 5,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": "5+",
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Wracks"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Fleshcraft (Pain)",
+              "Fear Incarnate (Aura)",
+              "Pain Adept"
+            ],
+            "rule_names": [
+              "Feel No Pain 5+",
+              "Leader",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Character",
+              "Haemonculus",
+              "Haemonculus Covens",
+              "Infantry"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Stinger pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 2,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Pistol",
+              "Precision"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Haemonculus tools and scissorhands",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 3,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Precision"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 50,
+              "second_unit": 50,
+              "third_plus": 50
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000643",
+        "unit_name": "Drazhar",
+        "unit_type": "Epic Hero",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Master of Blades (Pain)": "In the Fight phase, when you select this model’s unit to fight, you can spend 1 Pain token to Empower that unit. While that unit is Empowered, each time a model in that unit makes a melee attack, add 1 to the Wound roll.",
+          "Onslaught": "While this model is leading a unit, each time a model in that unit makes a Pile-in or Consolidation move, it can move up to 6\" instead of up to 3\".",
+          "Silent Executioner": "Each time this model makes an attack that targets a unit that is below its Starting Strength, you can re-roll the Hit roll. If that target is Below Half-strength, you can re-roll the Wound roll as well."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 3,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Incubi"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Master of Blades (Pain)",
+              "Onslaught",
+              "Silent Executioner"
+            ],
+            "rule_names": [
+              "Leader",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Blades for Hire",
+              "Character",
+              "Drazhar",
+              "Epic Hero",
+              "Infantry"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Executioner’s demiklaives – single blade",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Executioner’s demiklaives – dual blades",
+            "range": "Melee",
+            "A": "8",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000644",
+        "unit_name": "Kabalite Warriors",
+        "unit_type": "Battleline",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Sadistic Raiders (Pain)": "In your Shooting phase or the Fight phase, when you select this unit to shoot or fight, you can spend 1 Pain token to Empower this unit. While Empowered, each time a model in this unit makes an attack, re-roll a Wound roll of 1. If the target is within range of an objective marker, you can re-roll the Wound roll instead.",
+          "Cruel Enforcers": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 3,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Sadistic Raiders (Pain)",
+              "Cruel Enforcers"
+            ],
+            "rule_names": [
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Battleline",
+              "Infantry",
+              "Kabal",
+              "Kabalite Warriors"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blast pistol",
+            "range": "6\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blaster",
+            "range": "18\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -4,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Dark lance",
+            "range": "36\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+2",
+            "weapon_ability_names": [
+              "Heavy"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Shredder",
+            "range": "18\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Assault",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "4",
+            "WS": null,
+            "S": 3,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Heavy",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter rifle",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Close combat weapon",
+            "replacement_weapon_name": "Power weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Blast pistol",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Splinter pistol",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Blaster",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Dark lance",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Shredder",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Splinter cannon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Kabalite Icon",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "While the bearer’s unit is not Battle-shocked, add 1 to the bearer’s Objective Control characteristic.",
+            "ability_name": "Kabalite Icon",
+            "is_mutually_exclusive": true,
+            "exclusion_group": "B"
+          },
+          {
+            "model_group": "All",
+            "option_name": "Phantasm Grenade Launcher",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "The bearer’s unit has the Smoke and Grenades keywords.",
+            "ability_name": "Phantasm Grenade Launcher",
+            "is_mutually_exclusive": true,
+            "exclusion_group": "B"
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000646",
+        "unit_name": "Wyches",
+        "unit_type": "Battleline",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Acrobatic Gladiators (Pain)": "At the start of your Charge phase, you can spend 1 Pain token to Empower this unit. While Empowered, this unit is eligible to declare a charge in a turn in which it Advanced or Fell Back.",
+          "No Escape": "Each time an enemy unit (excluding MONSTERS and VEHICLES ) within Engagement Range of one or more units from your army with this ability Falls Back, all models in that enemy unit must take a Desperate Escape test. When doing so, if that enemy unit is Battle-shocked, subtract 1 from each of those tests."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 3,
+            "SV": 6,
+            "INV": 6,
+            "INV_Condition": "* 4+ against melee attacks",
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Acrobatic Gladiators (Pain)",
+              "No Escape"
+            ],
+            "rule_names": [
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Battleline",
+              "Grenades",
+              "Infantry",
+              "Wych Cult",
+              "Wyches"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blast pistol",
+            "range": "6\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -4,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Gladiatorial weapons",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hekatarii blade",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power weapon",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter pistol",
+            "replacement_weapon_name": "Blast pistol",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Hekatarii blade",
+            "replacement_weapon_name": "Power weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000648",
+        "unit_name": "Incubi",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Decapitating Strikes (Pain)": "In the Fight phase, when you select this unit to fight, you can spend 1 Pain token to Empower this unit. While Empowered, each time a model in this unit makes a melee attack that targets an INFANTRY unit, that attack has the [DEVASTATING WOUNDS] ability.",
+          "Tormentors": "At the start of the Fight phase, each enemy unit within Engagement Range of one or more units with this ability must take a Battle-shock test. Each time a model in this unit makes a melee attack that targets a Battle-shocked unit, add 1 to the Hit roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "INCUBI",
+            "M": "7\"",
+            "T": 3,
+            "SV": 3,
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Decapitating Strikes (Pain)",
+              "Tormentors"
+            ],
+            "rule_names": [
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Blades for Hire",
+              "Incubi",
+              "Infantry"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          },
+          {
+            "model_group": "KLAIVEX",
+            "M": "7\"",
+            "T": 3,
+            "SV": 3,
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Decapitating Strikes (Pain)",
+              "Tormentors"
+            ],
+            "rule_names": [
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Blades for Hire",
+              "Incubi",
+              "Infantry"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Demiklaives – single blade",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Demiklaives – dual blades",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Klaive",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Klaive",
+            "replacement_weapon_name": "demiklaives",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Incubi Shrine Token",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "Once per battle for each Incubi Shrine token this unit has, you can change the result of one Hit roll or one Wound roll made for a Klaivex or Incubi model in this unit to an unmodified 6. Designer's Note: Place an Incubi Shrine token next to the unit for each Incubi Shrine token it has, removing one each time this ability is used.",
+            "ability_name": "Incubi Shrine Token",
+            "is_mutually_exclusive": false,
+            "exclusion_group": null
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 100
+            },
+            {
+              "size": 10,
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 190
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000649",
+        "unit_name": "Mandrakes",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Fade Away (Pain)": "At the end of your opponent’s Fight phase, if this unit is not within Engagement Range of one or more enemy units, you can spend 1 Pain token to Empower this unit. Each time you do, remove this unit from the battlefield and place it into Strategic Reserves.",
+          "Shade Weavers": "This unit cannot be targeted by ranged attacks unless the attacking model is within 18\"."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 3,
+            "SV": 7,
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Fade Away (Pain)",
+              "Shade Weavers"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Infiltrators",
+              "Stealth",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Blades for Hire",
+              "Infantry",
+              "Mandrakes"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Baleblast",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Assault",
+              "Devastating Wounds",
+              "Ignores Cover"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Glimmersteel blade",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 90
+            },
+            {
+              "size": 10,
+              "first_unit": 160,
+              "second_unit": 160,
+              "third_plus": 170
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000650",
+        "unit_name": "Wracks",
+        "unit_type": "Battleline",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Experimental Enhancements (Pain)": "In the Fight phase, when you select this unit to fight, you can spend 1 Pain token to Empower this unit. Each time you do, select one of the following to apply to this unit until the end of the phase: Melee weapons equipped by non- CHARACTER models in this unit have an Attacks characteristic of 3.; Melee weapons equipped by non- CHARACTER models in this unit have an Attacks characteristic of 4 and the [HAZARDOUS] ability.",
+          "Torturer’s Craft": "In your Shooting phase and the Fight phase, after this unit has shot or fought, select one enemy unit (excluding VEHICLES ) hit by one or more of those attacks. That unit must take a Battle-shock test."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 4,
+            "SV": 5,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 7,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Experimental Enhancements (Pain)",
+              "Torturer’s Craft"
+            ],
+            "rule_names": [
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Battleline",
+              "Haemonculus Covens",
+              "Infantry",
+              "Wracks"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Hexrifle",
+            "range": "36\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Heavy",
+              "Precision"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Liquifier gun",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Ossefactor",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Stinger pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Torturer’s tools",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Twin torturer’s tools",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "tool",
+            "replacement_weapon_name": "Power weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            },
+            {
+              "size": 8,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            },
+            {
+              "size": 10,
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 120
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000656",
+        "unit_name": "Raider",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Splinter Racks (Pain)": "In your Shooting phase, when you select this model to shoot, you can spend 1 Pain token to Empower this model. While Empowered, if one or more units are embarked within this model, each time this model makes an attack with a ranged weapon that has the [ANTI] ability, you can re-roll the Hit roll.",
+          "Vanguard of the Dark City": "At the start of your Command phase, select one of the abilities in the Vanguard of the Dark City section (see above) for this model. Until the start of your next Command phase, this model has that ability.",
+          "Masters of the Shadowed Sky": "At the end of your Command phase, if this model is within range of an objective marker you control, and if one or more Kabalite Warriors units are embarked within it, that objective marker remains under your control until your opponent’s Level of Control over that objective marker is greater than yours at the end of a phase.",
+          "Speed of the Kill": "Each time a Wyches unit disembarks from this model (excluding Emergency Disembarkations), models in that WYCHES unit must be set up wholly within 6\" of this model.",
+          "Visions of Butchery": "While one or more Wracks units are embarked within this model, for each WRACKS model embarked within this model, add 1 to the Attacks characteristic of this model’s bladevanes and chainsnares.",
+          "Aethersails": "While one or more Drukhari units are embarked within this model, you can re-roll Advance and Charge rolls made for this model.",
+          "Transport": "This model has a transport capacity of 11 Drukhari Infantry models (excluding Jump Pack models)."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "14\"",
+            "T": 8,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": 7,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Splinter Racks (Pain)",
+              "Vanguard of the Dark City",
+              "Masters of the Shadowed Sky",
+              "Speed of the Kill",
+              "Visions of Butchery",
+              "Aethersails",
+              "Transport"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Deep Strike",
+              "Firing Deck 11",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Dedicated Transport",
+              "Fly",
+              "Raider",
+              "Transport",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Dark lance",
+            "range": "36\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Disintegrator cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bladevanes and chainsnares",
+            "range": "Melee",
+            "A": "D3+3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Dark lance",
+            "replacement_weapon_name": "Disintegrator cannon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 75,
+              "fourth_plus": 85
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000657",
+        "unit_name": "Venom",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Rapid Deployment (Pain)": "In your Movement phase, when you select this model to Advance, you can spend 1 Pain token to Empower this model. While Empowered, units can disembark from this model after it has Advanced. Units that do so count as having made a Normal move that phase, and cannot declare a charge in the same turn, but can otherwise act normally in the remainder of the turn.",
+          "Aerialists": "At the end of the Fight phase, if there are no models currently embarked within this TRANSPORT , you can select one friendly Drukhari Infantry unit that has 6 or fewer models that is wholly within 6\" of this TRANSPORT (you cannot select a unit that can Fly). Unless that unit is within Engagement Range of one or more enemy units, it can embark within this TRANSPORT .",
+          "Transport": "This model has a transport capacity of 6 Drukhari Infantry models (excluding Jump Pack models). Before the battle, at the start of the Declare Battle Formations step, you can select one Kabalite Warriors, Hand of the Archon or Wyches unit from your army that has not already been split. If you do, that unit is split into two units, each containing as equal a number of models as possible (when splitting a unit in this way, make a note of which models form each of the two new units]. One of these units must start the battle embarked within this model; the other can start the battle embarked within another TRANSPORT , or it can be deployed as a separate unit."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "14\"",
+            "T": 6,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 6,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Rapid Deployment (Pain)",
+              "Aerialists",
+              "Transport"
+            ],
+            "rule_names": [
+              "Deadly Demise 1",
+              "Deep Strike",
+              "Firing Deck 6",
+              "Stealth",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Dedicated Transport",
+              "Fly",
+              "Transport",
+              "Vehicle",
+              "Venom"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 3,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin splinter rifle",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Rapid Fire 2",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bladevanes",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Twin splinter rifle",
+            "replacement_weapon_name": "Splinter cannon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65,
+              "fourth_plus": 75
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000658",
+        "unit_name": "Reavers",
+        "unit_type": "Mounted",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Matchless Swiftness (Pain)": "In your Movement phase, when you select this unit to Advance, you can spend 1 Pain token to Empower this unit. While Empowered, each time this unit Advances, do not make an Advance roll. Instead, until the end of the phase, add 8\" to the Move characteristic of models in this unit.",
+          "Eviscerating Fly-by": "Each time this unit ends a Normal or Advance move, you can select one enemy unit (excluding MONSTERS and VEHICLES ) that it moved over during that move, then roll one D6 for each model in this unit: for each 4+, that enemy unit suffers 1 mortal wound."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "16\"",
+            "T": 4,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 7,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Matchless Swiftness (Pain)",
+              "Eviscerating Fly-by"
+            ],
+            "rule_names": [
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Fly",
+              "Mounted",
+              "Reavers",
+              "Wych Cult"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blaster",
+            "range": "18\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -4,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heat lance",
+            "range": "18\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 14,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Assault",
+              "Melta 3"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter rifle",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bladevanes",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Lance"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": 3,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Blaster",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 3,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Heat lance",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          }
+        ],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Cluster Caltrops",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "Each time you roll to inflict wounds using this unit’s Eviscerating Fly-by ability, you can re-roll one D6 for each model in this unit equipped with cluster caltrops.",
+            "ability_name": "Cluster Caltrops",
+            "is_mutually_exclusive": true,
+            "exclusion_group": "B"
+          },
+          {
+            "model_group": "All",
+            "option_name": "Grav-talon",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "The bearer’s melee weapons have an Armour Penetration characteristic of -2 and the [LETHAL HITS] ability.",
+            "ability_name": "Grav-talon",
+            "is_mutually_exclusive": true,
+            "exclusion_group": "B"
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 85
+            },
+            {
+              "size": 6,
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 160
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000659",
+        "unit_name": "Hellions",
+        "unit_type": "Mounted",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Battlefield Butchery (Pain)": "In the Fight phase, when you select this unit to fight, you can spend 1 Pain token to Empower this unit. While Empowered, add 1 to the Attacks and Strength characteristics of this unit’s melee weapons.",
+          "Skyboard Evasion": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, this unit can make a Normal move of up to D6\"."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "14\"",
+            "T": 4,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Battlefield Butchery (Pain)",
+              "Skyboard Evasion"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Fly",
+              "Hellions",
+              "Mounted",
+              "Wych Cult"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pods",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hellglaive",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Lance",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Lance",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Stunclaw",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Lance",
+              "Precision"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Phantasm Grenade Launcher",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "The bearer’s unit has the Smoke and Grenades keywords.",
+            "ability_name": "Phantasm Grenade Launcher",
+            "is_mutually_exclusive": false,
+            "exclusion_group": null
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 100
+            },
+            {
+              "size": 10,
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 190
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000660",
+        "unit_name": "Razorwing Jetfighter",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Nowhere to Run (Pain)": "In your Shooting phase, when you select this unit to shoot, you can spend 1 Pain token to Empower this unit. While Empowered, after this unit has shot, select one enemy unit (excluding MONSTERS and VEHICLES ) hit by one or more of those attacks; until the start of your next turn, that enemy unit is pinned. While a unit is pinned, subtract 2 from that unit’s Move characteristic and subtract 2 from Charge rolls made for that unit.",
+          "Ground Attack Craft": "Each time a model in this unit makes a ranged attack that targets an enemy unit (excluding units that can FLY ), add 1 to the Hit roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "20+\"",
+            "T": 8,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 10,
+            "LD": 7,
+            "OC": 0,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Nowhere to Run (Pain)",
+              "Ground Attack Craft"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Stealth",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Aircraft",
+              "Fly",
+              "Razorwing Jetfighter",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Dark Lance",
+            "range": "36\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Disintegrator cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Razorwing missiles – monoscythe missiles",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Razorwing missiles – neurotoxin missiles",
+            "range": "48\"",
+            "A": "D6+3",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Razorwing missiles – shatterfield missiles",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 3,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin splinter rifle",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Rapid Fire 2",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bladed wings",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Twin splinter rifle",
+            "replacement_weapon_name": "Splinter cannon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 170
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000661",
+        "unit_name": "Voidraven Bomber",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Nowhere to Hide (Pain)": "In your Shooting phase, when you select this unit to shoot, you can spend 1 Pain token to Empower this unit. While Empowered, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, that enemy unit cannot have the Benefit of Cover.",
+          "Void Mine": "Once per battle, after this unit ends a Normal move, you can select one enemy model that it moved over during that move, then roll one D6 for each enemy unit within D6\" of that model: on a 4+, that enemy unit suffers D6 mortal wounds."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "20+\"",
+            "T": 9,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 12,
+            "LD": 7,
+            "OC": 0,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Nowhere to Hide (Pain)",
+              "Void Mine"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Stealth",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Aircraft",
+              "Fly",
+              "Vehicle",
+              "Voidraven Bomber"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Dark scythe",
+            "range": "24\"",
+            "A": "6",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -4,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Void lance",
+            "range": "36\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 14,
+            "AP": -4,
+            "D": "D6+2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Voidraven missiles – implosion missiles",
+            "range": "48\"",
+            "A": "D3",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Voidraven missiles – shatterfield missiles",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bladed wings",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Voidraven missiles",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 245,
+              "second_unit": 245,
+              "third_plus": 245
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000662",
+        "unit_name": "Scourges with Heavy Weapons",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Winged Strike (Pain)": "In your Shooting phase, when you select this unit to shoot, you can spend 1 Pain token to Empower this unit. While Empowered, each time a model in this unit makes a ranged attack, you can re-roll the Hit roll.",
+          "Airborne Evasion": "In your Shooting phase, after this unit has shot, if it is not within Engagement Range of one or more enemy units, it can make a Normal move of up to 6\". If it does, until the end of the turn, this unit is not eligible to declare a charge."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "14\"",
+            "T": 3,
+            "SV": 4,
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Winged Strike (Pain)",
+              "Airborne Evasion"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Blades for Hire",
+              "Fly",
+              "Grenades",
+              "Infantry",
+              "Jump Pack",
+              "Scourges",
+              "Scourges with Heavy Weapons"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blast pistol",
+            "range": "6\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blaster",
+            "range": "18\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -4,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Dark lance",
+            "range": "36\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+2",
+            "weapon_ability_names": [
+              "Heavy"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Haywire blaster",
+            "range": "24\"",
+            "A": "2",
+            "BS": "4",
+            "WS": null,
+            "S": 3,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [
+              "Anti-Vehicle 4+",
+              "Devastating Wounds",
+              "Heavy"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heat lance",
+            "range": "18\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 14,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Assault",
+              "Heavy",
+              "Melta 3"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Shardcarbine",
+            "range": "18\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Shredder",
+            "range": "18\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Assault",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "4",
+            "WS": null,
+            "S": 3,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Heavy",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Splinter cannon",
+            "replacement_weapon_name": "Blaster",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Splinter cannon",
+            "replacement_weapon_name": "Dark lance",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Splinter cannon",
+            "replacement_weapon_name": "Haywire blaster",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Splinter cannon",
+            "replacement_weapon_name": "Heat lance",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Splinter cannon",
+            "replacement_weapon_name": "Shredder",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 120
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000663",
+        "unit_name": "Talos",
+        "unit_type": "Monster",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Mindless Killing Machines (Pain)": "At the start of the Fight phase, you can spend 1 Pain token to Empower this unit. While Empowered, each time a model in this unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6. On a 2+, do not remove it from play; that destroyed model can fight after the attacking unit has finished making its attacks, and it is then removed from play.",
+          "Devoted to Pain": "If a model in this unit is equipped with 2 macro-scalpels, those weapons have the [TWIN-LINKED] ability.",
+          "Torture Device": "Each time this unit destroys an enemy unit, you gain 1 additional Pain token."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 7,
+            "SV": 3,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": "5+",
+            "FNP_Condition": null,
+            "W": 7,
+            "LD": 7,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Mindless Killing Machines (Pain)",
+              "Devoted to Pain",
+              "Torture Device"
+            ],
+            "rule_names": [
+              "Deadly Demise 1",
+              "Feel No Pain 5+",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Fly",
+              "Haemonculus Covens",
+              "Monster",
+              "Talos"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Stinger pod",
+            "range": "24\"",
+            "A": "2D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin haywire blaster",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 3,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [
+              "Anti-Vehicle 4+",
+              "Devastating Wounds",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin heat lance",
+            "range": "18\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 14,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Assault",
+              "Melta 3",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin liquifier gun",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Torrent",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Twin splinter cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 3,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Sustained Hits 1",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Chain-flails",
+            "range": "Melee",
+            "A": "8",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Macro-scalpel",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 7,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Talos gauntlet",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "4",
+            "S": 9,
+            "AP": -2,
+            "D": "3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Talos ichor injector",
+            "range": "Melee",
+            "A": "1",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Extra Attacks"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Twin splinter cannon",
+            "replacement_weapon_name": "Stinger pod",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Twin splinter cannon",
+            "replacement_weapon_name": "Twin haywire blaster",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Twin splinter cannon",
+            "replacement_weapon_name": "Twin heat lance",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 85
+            },
+            {
+              "size": 2,
+              "first_unit": 150,
+              "second_unit": 150,
+              "third_plus": 160
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000664",
+        "unit_name": "Cronos",
+        "unit_type": "Monster",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Pain Parasite (Pain)": "In your Shooting phase or the Fight phase, when you select this unit to shoot or fight, you can spend 1 Pain token to Empower this unit. While Empowered, each time this unit shoots or fights, after it has resolved its attacks, if one or more enemy models were destroyed as a result of those attacks, one model in this unit regains up to 3 lost wounds (if all models in this unit have their starting number of wounds and this unit is below its Starting Strength, 1 model is returned to this unit with 3 wounds remaining).",
+          "Pain Engine (Aura)": "Each time you spend 1 Pain token to Empower a friendly unit within 9\" of this unit, roll one D6, adding 1 to the result if one or more models in this unit are not equipped with a spirit vortex: on a 5+, you gain 1 Pain token. Designer’s Note: Pain tokens you spend for reasons other than Empowering a unit do not trigger this ability."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 7,
+            "SV": 3,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": "5+",
+            "FNP_Condition": null,
+            "W": 7,
+            "LD": 7,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Pain Parasite (Pain)",
+              "Pain Engine (Aura)"
+            ],
+            "rule_names": [
+              "Deadly Demise 1",
+              "Feel No Pain 5+",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Cronos",
+              "Fly",
+              "Haemonculus Covens",
+              "Monster"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Spirit syphon",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Spirit vortex",
+            "range": "18\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast",
+              "Ignores Cover"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Spirit-leech tentacles",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": null,
+            "replacement_weapon_name": "Spirit vortex",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 55,
+              "second_unit": 55,
+              "third_plus": 55
+            },
+            {
+              "size": 2,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000000665",
+        "unit_name": "Ravager",
+        "unit_type": "Vehicle",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Agonising Suppression (Pain)": "In your Shooting phase, when you select this model to shoot, you can spend 1 Pain token to Empower this model. While Empowered, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next turn, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll.",
+          "Eradicate the Foe": "Each time this model makes an attack that targets an enemy unit that is at its Starting Strength, you can re-roll the Hit roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "14\"",
+            "T": 9,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 11,
+            "LD": 7,
+            "OC": 3,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Agonising Suppression (Pain)",
+              "Eradicate the Foe"
+            ],
+            "rule_names": [
+              "Deadly Demise D3",
+              "Deep Strike",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Fly",
+              "Kabal",
+              "Ravager",
+              "Vehicle"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Dark lance",
+            "range": "36\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Disintegrator cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Bladevanes",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 6,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 110
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004155",
+        "unit_name": "Lady Malys",
+        "unit_type": "Epic Hero",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Archon of the Poisoned Tongue (Pain)": "In your Shooting phase or the Fight phase, when you select this model’s unit to shoot or fight, you can spend 1 Pain token to Empower that unit. If you do, select one of the following abilities: [SUSTAINED HITS 1]; [LETHAL HITS]. Until the end of the phase, while that unit is Empowered, weapons equipped by models in that unit have that selected ability.",
+          "Precognisant": "If your army includes this model, after both players have deployed their armies, select up to three Drukhari units from your army and redeploy them. When doing so, you can set those units up in Strategic Reserves if you wish, regardless of how many units are already in Strategic Reserves.",
+          "Mind Like a Steel Trap (Aura)": "Each time your opponent targets a unit from their army with a Stratagem, if that unit is within 12\" of this model, increase the cost of that use of that Stratagem by 1CP."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 3,
+            "SV": 4,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": "5+",
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 6,
+            "OC": 2,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Hand of the Archon",
+              "Incubi",
+              "Kabalite Warriors"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Archon of the Poisoned Tongue (Pain)",
+              "Precognisant",
+              "Mind Like a Steel Trap (Aura)"
+            ],
+            "rule_names": [
+              "Feel No Pain 5+",
+              "Leader",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Archon",
+              "Character",
+              "Epic Hero",
+              "Infantry",
+              "Kabal",
+              "Lady Malys"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Lady’s Blade",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Hazardous"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Razor fan",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Extra Attacks"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 100,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004156",
+        "unit_name": "Hand of the Archon",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Assassins’ Poisons (Pain)": "In your Shooting phase or the Fight phase, when you select this unit to shoot or fight, you can spend 1 Pain token to Empower this unit. While Empowered, weapons equipped by models in this unit (excluding blast pistols, blasters and dark lances) have the [LETHAL HITS] and [PRECISION] abilities.",
+          "Archon’s Will": "At the start of the first battle round, select one objective marker on the battlefield. Until the end of the battle, while this unit is within range of that objective marker, unless this unit is Battle-shocked, models in this unit have a 5+ invulnerable save and an Objective Control characteristic of 3.",
+          "ARCHON’S RETINUE": "If this unit has a Leader unit attached to it during the Declare Battle Formations step, that Leader unit gains the Scouts 7\" ability."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "7\"",
+            "T": 3,
+            "SV": 4,
+            "INV": 6,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Assassins’ Poisons (Pain)",
+              "Archon’s Will",
+              "ARCHON’S RETINUE"
+            ],
+            "rule_names": [
+              "Scouts 7\"",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Grenades",
+              "Hand of the Archon",
+              "Infantry",
+              "Kabal"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [
+              "Stimm-needler"
+            ],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blast pistol",
+            "range": "6\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blaster",
+            "range": "18\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -4,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Dark lance",
+            "range": "36\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+2",
+            "weapon_ability_names": [
+              "Heavy"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Shardcarbine",
+            "range": "18\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Shredder",
+            "range": "18\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Assault",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter cannon",
+            "range": "36\"",
+            "A": "3",
+            "BS": "4",
+            "WS": null,
+            "S": 3,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Heavy",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter rifle",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Stinger pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 2+",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Pain sculptors",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Razorflail",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Close combat weapon",
+            "replacement_weapon_name": "Power weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Blast pistol",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Splinter pistol",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Blaster",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "D"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Shredder",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "D"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Dark lance",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "E"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Splinter cannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "E"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Stinger pistol",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Shardcarbine",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Splinter rifle",
+            "replacement_weapon_name": "Pain sculptors",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Kabalite Icon",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "While the bearer’s unit is not Battle-shocked, add 1 to the bearer’s Objective Control characteristic.",
+            "ability_name": "Kabalite Icon",
+            "is_mutually_exclusive": true,
+            "exclusion_group": "C"
+          },
+          {
+            "model_group": "All",
+            "option_name": "Phantasm Grenade Launcher",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "The bearer’s unit has the Smoke and Grenades keywords.",
+            "ability_name": "Phantasm Grenade Launcher",
+            "is_mutually_exclusive": true,
+            "exclusion_group": "C"
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 115,
+              "second_unit": 115,
+              "third_plus": 115
+            }
+          ]
+        },
+        "abilities": []
+      },
+      {
+        "unit_id": "000004157",
+        "unit_name": "Scourges with Shardcarbines",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Power from Pain": "Pain Abilities All Drukhari units have a Pain ability, tagged with the word ‘Pain’. Pain abilities only apply to a unit while it is Empowered. If your Army Faction is DRUKHARI , you can Empower units from your army with Pain abilities by spending Pain tokens (see below). Designer’s Note: You can also spend Pain tokens to activate additional effects in certain other rules such as Enhancements and Stratagems. Gaining Pain Tokens If your Army Faction is DRUKHARI , you gain Pain tokens as follows: 1 Pain token at the start of your Command phase.; 1 Pain token each time an enemy unit is destroyed.; 1 Pain token each time an enemy unit fails a Battle-shock test.; Each time you gain a Pain token, keep it to one side - this is your Pain token pool. Each time you spend a Pain token, reduce your Pain token pool by the same amount. Empowered Through Pain Each Pain ability will state when you can spend Pain tokens to Empower that unit. When you do, until the end of the phase, that unit is Empowered and all Pain abilities it has take effect. While an Attached unit is Empowered, the Pain abilities of all Leader and Bodyguard units in that unit take effect - you do not need to spend additional Pain tokens to activate each of those Pain abilities. Example: At the start of your Charge phase, you spend 1 Pain token to Empower a unit of Wyches. The unit becomes Empowered, and so its Acrobatic Gladiators ability takes effect until the end of the phase. A Succubus is leading the unit, and so its Lithe Agility ability also takes effect until the end of the phase (no additional Pain token is required to activate that ability as well).",
+          "Swooping Descent (Pain)": "In your Movement phase, you can spend 1 Pain token to Empower this unit. While Empowered, each time a model in this unit is set up on the battlefield using the Deep Strike ability, it can be set up anywhere on the battlefield that is more than 6\" horizontally away from all enemy units. When doing so, if this unit is set up within 9\" of one or more enemy units, until the end of the turn, it is not eligible to declare a charge.",
+          "Murderous Crossfire": "After this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, each time a friendly Drukhari unit makes a ranged attack that targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1. The same enemy unit can only be affected by this ability once per turn."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "14\"",
+            "T": 3,
+            "SV": 4,
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Swooping Descent (Pain)",
+              "Murderous Crossfire"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Power from Pain"
+            ],
+            "keyword_names": [
+              "Aeldari",
+              "Blades for Hire",
+              "Fly",
+              "Grenades",
+              "Infantry",
+              "Jump Pack",
+              "Scourges",
+              "Scourges with Shardcarbines"
+            ],
+            "faction_keyword_names": [
+              "Drukhari"
+            ],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blast pistol",
+            "range": "6\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Blaster",
+            "range": "18\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -4,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Shardcarbine",
+            "range": "18\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Shredder",
+            "range": "18\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 6,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Assault",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Splinter pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 2,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+",
+              "Assault",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 3,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Shardcarbine",
+            "replacement_weapon_name": "Blaster",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Shardcarbine",
+            "replacement_weapon_name": "Shredder",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 75,
+              "second_unit": 75,
+              "third_plus": 85
+            }
+          ]
+        },
+        "abilities": []
+      }
+    ]
   }
 ]

@@ -173,7 +173,8 @@
         },
         {
           "name": "Drukhari",
-          "built": false
+          "built": true,
+          "data_army": "Drukhari"
         },
         {
           "name": "Genestealer Cults",

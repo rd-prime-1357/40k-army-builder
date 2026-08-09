@@ -53,6 +53,19 @@ to the committed units.json:
      needed: `loadout_parser.py --factions WE` flagged exactly 2 of 30 (Jakhals,
      Helbrute), both authored directly into `unit_loadouts.json`'s HAND_AUTHORED set
      (repro_check.py) rather than needing a WEB_PASSES entry.
+  4d. Drukhari: wahapedia_transform.py (--faction DRU) -> mfm_points_parser.py (against
+     MFM_Drukhari_v1.1.txt) -> convert_to_json.py --emit-fourth-plus, in its own working
+     dir. Fully self-sourced (23/23, 7 LEGENDS exclusions confirmed both directions, no
+     cross-file append, no chapter points) — mirrors the Grey Knights/Emperor's
+     Children/World Eaters blocks exactly (DRUKHARI_BUILD_SCOPE.md §1/§4). Requires
+     wahapedia_transform.py's B115 fix (FOREIGN_SOURCE_OWNER) to be in place first — an
+     unfixed transform pulls 37 datasheets (14 Aeldari/Harlequin-sourced extras); this
+     block will fail loudly on a stats-row-count mismatch against DRUKHARI_BUILD_SCOPE.md
+     §1 if that fix regresses. --emit-fourth-plus needed for Raider/Venom's 1st-to-3rd/
+     4th+ tier shape (DRUKHARI_BUILD_SCOPE.md §4). No dedicated composition-paste file
+     needed: confirmed this session that Incubi's two model-line groups (INCUBI,
+     KLAIVEX) resolve from Datasheets.csv alone in equipped_parser.py's final
+     --datasheets pass, same as Grey Knights' multi-group units.
   5. Chaos Daemons: convert_to_json.py run DIRECTLY against the project root's own
      Unit_Stats.csv / Unit_Points.csv / Unit_Wargear_Options.csv / Unit_Other_Options.csv /
      Unit_Weapons.csv / Unit_Abilities.csv / Keywords.csv / Rules.csv / Weapon_Abilities.csv.
@@ -62,7 +75,7 @@ to the committed units.json:
      roster (see D132). Running wahapedia_transform.py --faction CD anywhere near this
      input directory would silently overwrite these same CSV filenames with the wrong
      source; this check never does that.
-  6. merge_factions.py across the five outputs.
+  6. merge_factions.py across the six outputs.
   7. cmp the merged result against the committed units.json.
 
 All work happens in a temp dir; nothing in the project directory is touched.
@@ -113,6 +126,8 @@ REQUIRED = [
     'MFM_Emperors_Children_v1.1.txt',
     # B100 (S218): World Eaters, built directly from v1.1 per D293.
     'MFM_World_Eaters_v1.1.txt',
+    # B100 (S224): Drukhari, built directly from v1.1 per D293.
+    'MFM_Drukhari_v1.1.txt',
     # B56a: the five Space Marines chapter point files. Correctly-scoped, they are
     # purely additive on top of the base SM run (D167/D168) and sit inside the fixed
     # point from here on — this is exactly the kind of input that goes stale silently
@@ -370,6 +385,34 @@ def repro(dir_):
         if rc != 0:
             return False, 'convert_to_json.py (WE) failed:\n' + out[-600:]
 
+        # --- Drukhari: transform -> mfm points -> convert. Fully self-sourced,
+        # 23/23 (DRUKHARI_BUILD_SCOPE.md §1/§4), 7 LEGENDS exclusions confirmed both
+        # directions, zero engine gaps. Mirrors the Grey Knights/Emperor's Children/
+        # World Eaters blocks exactly. Requires B115's FOREIGN_SOURCE_OWNER fix in
+        # wahapedia_transform.py — an unfixed transform pulls 37 datasheets, not 23. ---
+        dru_dir = os.path.join(tmp, 'dru')
+        os.makedirs(dru_dir)
+        rc, out = _run([sys.executable, 'wahapedia_transform.py',
+                        '--wahapedia-dir', dir_, '--seed-dir', dir_,
+                        '--out-dir', dru_dir, '--faction', 'DRU',
+                        '--army-name', 'Drukhari'], cwd=dir_)
+        if rc != 0:
+            return False, 'wahapedia_transform.py (DRU) failed:\n' + out[-600:]
+        rc, out = _run([sys.executable, 'mfm_points_parser.py',
+                        '--mfm', 'MFM_Drukhari_v1.1.txt',
+                        '--out-dir', dru_dir, '--stats', os.path.join(dru_dir, 'Unit_Stats.csv')],
+                        cwd=dir_)
+        if rc != 0:
+            return False, 'mfm_points_parser.py (DRU) failed:\n' + out[-600:]
+        dru_json = os.path.join(tmp, 'dru_json')
+        os.makedirs(dru_json)
+        rc, out = _run([sys.executable, 'convert_to_json.py',
+                        '--input-dir', dru_dir, '--output-dir', dru_json,
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json'),
+                        '--emit-fourth-plus'], cwd=dir_)
+        if rc != 0:
+            return False, 'convert_to_json.py (DRU) failed:\n' + out[-600:]
+
         # --- Chaos Space Marines: transform -> mfm points (self, 54 of 58) -> D240
         # cult-troop cross-file append (the remaining 4, one at a time, each isolated
         # to its own single-row stats scope) -> convert. Unit_Stats.csv is left
@@ -424,6 +467,7 @@ def repro(dir_):
         rc, out = _run([sys.executable, 'merge_factions.py',
                         '--in', sm_dir, '--in', cd_json, '--in', dg_json, '--in', csm_json,
                         '--in', ts_json, '--in', gk_json, '--in', ec_json, '--in', we_json,
+                        '--in', dru_json,
                         '--taxonomy', 'faction_taxonomy.json',
                         '--out-dir', deploy], cwd=dir_)
         if rc != 0:

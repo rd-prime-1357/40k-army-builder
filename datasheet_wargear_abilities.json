@@ -55,6 +55,24 @@
   "Ancient’s Banner": "Add 1 to the Objective Control characteristic of models in the bearer’s unit.",
   "Apothecary's Narthecium": "In your Command phase, if the bearer is not destroyed, you can return 1 destroyed model (excluding <span class=\"kwb\">CHARACTERS</span>) to the bearer’s unit."
  },
+ "000000634": {
+  "Shadowfield": "You cannot re-roll invulnerable saving throws made for the bearer. The first time an invulnerable saving throw made for the bearer is failed, until the end of the battle, the bearer has no invulnerable save.",
+  "Soul Trap": "Add 1 to the Attacks and Strength characteristics of the bearer’s melee weapons. The first time the bearer makes a melee attack that destroys an enemy model, after all the bearer’s attacks have been resolved, until the end of the battle, add an additional 1 to the Attacks and Strength characteristics of the bearer’s melee weapons."
+ },
+ "000000644": {
+  "Kabalite Icon": "While the bearer’s unit is not Battle-shocked, add 1 to the bearer’s Objective Control characteristic.",
+  "Phantasm Grenade Launcher": "The bearer’s unit has the Smoke and Grenades keywords."
+ },
+ "000000648": {
+  "Incubi Shrine Token": "Once per battle for each Incubi Shrine token this unit has, you can change the result of one Hit roll or one Wound roll made for a Klaivex or Incubi model in this unit to an unmodified 6.<br><br><b>Designer's Note:</b> <i>Place an Incubi Shrine token next to the unit for each Incubi Shrine token it has, removing one each time this ability is used.</i>"
+ },
+ "000000658": {
+  "Cluster Caltrops": "Each time you roll to inflict wounds using this unit’s Eviscerating Fly-by ability, you can re-roll one D6 for each model in this unit equipped with cluster caltrops.",
+  "Grav-talon": "The bearer’s melee weapons have an Armour Penetration characteristic of -2 and the [LETHAL HITS] ability."
+ },
+ "000000659": {
+  "Phantasm Grenade Launcher": "The bearer’s unit has the Smoke and Grenades keywords."
+ },
  "000000939": {
   "Chaos Familiar": "Once per battle, when an attack is allocated to the bearer, you can change the Damage characteristic to 0."
  },
@@ -193,6 +211,11 @@
  },
  "000004133": {
   "Blizzard Shield": "The bearer has a 4+ invulnerable save."
+ },
+ "000004156": {
+  "Kabalite Icon": "While the bearer’s unit is not Battle-shocked, add 1 to the bearer’s Objective Control characteristic.",
+  "Phantasm Grenade Launcher": "The bearer’s unit has the Smoke keyword.",
+  "Stimm-needler": "Once per turn, the first time a saving throw is failed for a model in the bearer’s unit, change the Damage characteristic of that attack to 0."
  },
  "000004175": {
   "Astartes Shield": "The bearer has a 4+ invulnerable save."

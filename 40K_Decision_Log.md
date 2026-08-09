@@ -12931,3 +12931,57 @@ regression to any already-built faction.
 
 No units or detachments build started this session, per the tooling-only turn type and the
 prompt's explicit instruction not to begin the Drukhari data turn this session.
+
+### D318 — Drukhari units built (S224), data-only; detachment-map registration deferred out of the prompt's own scope
+
+**Build.** Ran the real (non-scratch) `wahapedia_transform.py --faction DRU --army-name Drukhari`
+with B115's fix in place: 23 datasheets, matching `DRUKHARI_BUILD_SCOPE.md` §1 exactly (24 stats
+rows — Incubi splits into two model groups, INCUBI/KLAIVEX, both resolved from `Datasheets.csv`
+alone with no composition-paste file needed, same shape as Grey Knights' multi-group units).
+`mfm_points_parser.py` against `MFM_Drukhari_v1.1.txt` and the real build output: zero "no MFM
+points" datasheets, the same 7 Legends-only MFM entries with no datasheet match, and the same one
+attach-list drop (Archon → Court of the Archon, B73/D260) — an exact match to S222/S223's numbers,
+now proven against the real (not scratch-dir) build. Added a Drukhari block to
+`units_repro_check.py`, mirroring the Grey Knights/Emperor's Children/World Eaters pattern
+(`--emit-fourth-plus` for Raider/Venom's 1st-to-3rd/4th+ tier shape), wired into `merge_factions.py`.
+Flipped `faction_taxonomy.json`'s Drukhari entry to `built: true` / `data_army: "Drukhari"`.
+
+**Verified field-by-field, not just "ran clean."** All 23 unit names match the scope roster exactly;
+all 6 Leader attach lists match (Archon's 3-target list, Drazhar→Incubi, Haemonculus→Wracks, Lady
+Malys's 3-target list, Lelith Hesperax→Wyches, Succubus→Wyches); Raider (75/75/75/85), Venom
+(65/65/65/75), Ravager (110 flat) points match the v1.1 tier shapes exactly. Diffed the rebuild
+against a clean fetch of the public repo (not the project mount, which does not carry
+`abilities.json`): `units.json` gained exactly 23 new unit_ids, zero existing units changed;
+`abilities.json` +59, `weapon_abilities.json` +8, `rules.json`/`keywords.json` +0 (Drukhari's
+keywords are all already-shared generic ones) — purely additive across every merged lookup, zero
+removals. `datasheet_wargear_abilities.json` regenerated against the new `units.json` (its only
+input besides `Datasheets_abilities.csv`, independent of `unit_loadouts.json`): +6 datasheet
+entries, purely additive. `wargear_points.json` correctly did NOT change — its
+`build_wargear_points()` gates every priced item on `reachable_items()` from
+`unit_loadouts.json`, and Drukhari has no loadout groups authored yet (that's the next tooling
+turn, DRUKHARI_BUILD_SCOPE.md §7/§8); confirmed by rerunning the full `e14_free` rebuild path and
+diffing prices, not assumed from the turn-type boundary alone.
+
+**Detachment-map registration deferred — corrects the prompt's own step 3.** The prompt asked to
+register Drukhari in `detachment_parser.py`'s three maps (`ARMY_TO_MFM`, `MFM_SOURCE_NAME`,
+`ARMY_TO_WAHA_FACTION`) this session. Tested it directly rather than assuming it was safe:
+registering the map makes `detachment_parser.py --root` (and therefore `detachments_repro_check.py`)
+attempt to build Drukhari's detachments immediately, since the parser iterates the full map with no
+"registered but not yet shipped" allowlist. Drukhari's `detachments.json` content does not exist yet
+— that's DRUKHARI_BUILD_SCOPE.md §8's separate, later data turn — so the rebuild diverges from
+committed `detachments.json` (1,096,218 vs 1,056,124 bytes) and the gate fails. Left unregistered,
+this would fail `detachments_repro_check` at every session open between now and the detachments
+build turn, which the standing rule against carrying a failing gate forward in prose does not
+permit. Reverted the registration; it will ship together with the detachments build itself instead
+of a turn ahead of it. `detachment_parser.py` is unchanged this session (confirmed byte-identical
+to the fetched original after revert).
+
+**Full baseline clean.** `units_repro_check` and `detachments_repro_check` both byte-identical to
+committed; `rules_assertions` 121/122 (the one red is the expected P3 manifest-drift for the six
+now-edited files — `units.json`, `abilities.json`, `weapon_abilities.json`,
+`datasheet_wargear_abilities.json`, `faction_taxonomy.json`, `units_repro_check.py` — cleared by
+`--write` at close); every harness clean, zero regression to any already-built faction.
+
+Loadouts (13 wargear-option groups, DRUKHARI_BUILD_SCOPE.md §7) and detachments (9 detachments,
+§5, plus the deferred map registration above) remain open, separate turns, per the never-mix rule
+and this session's own scope.
