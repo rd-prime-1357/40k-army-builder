@@ -342,7 +342,11 @@ def e14_count(S):
     # full per-army breakdown before updating the literal: every non-WE faction's count is
     # unchanged (98/67 sums exactly across the other ten armies), WE contributes exactly
     # 10 options / 8 units -> 108/75.
-    return (len(q) == 108 and len(units) == 75), f'{len(q)} options across {len(units)} units'
+    # Drukhari loadouts turn (S225): +1 qualifying free seed on +1 DRU unit — Voidraven
+    # Bomber's Voidraven missiles (add, max_total:1, unpriced; the auto-parser resolved
+    # this cleanly with no hand-authoring). Verified by full per-army breakdown before
+    # updating the literal: every non-DRU faction's count is unchanged at 108/75 -> 109/76.
+    return (len(q) == 109 and len(units) == 76), f'{len(q)} options across {len(units)} units'
 
 def b18_named_body(S):
     lines = [re.sub(r'<[^>]+>', ' ', r['description'])

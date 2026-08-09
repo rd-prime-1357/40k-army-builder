@@ -92,6 +92,38 @@
    }
   }
  },
+ "000000662": {
+  "items": {
+   "dark lance": {
+    "cost": 5,
+    "display": "Dark lance",
+    "source": "MFM_Drukhari_v1.1.txt:91"
+   },
+   "haywire blaster": {
+    "cost": 5,
+    "display": "Haywire blaster",
+    "source": "MFM_Drukhari_v1.1.txt:90"
+   }
+  }
+ },
+ "000000663": {
+  "items": {
+   "twin haywire blaster": {
+    "cost": 5,
+    "display": "Twin haywire blaster",
+    "source": "MFM_Drukhari_v1.1.txt:112"
+   }
+  }
+ },
+ "000000665": {
+  "items": {
+   "dark lance": {
+    "cost": 5,
+    "display": "Dark lance",
+    "source": "MFM_Drukhari_v1.1.txt:72"
+   }
+  }
+ },
  "000000967": {
   "items": {
    "ectoplasma cannon": {

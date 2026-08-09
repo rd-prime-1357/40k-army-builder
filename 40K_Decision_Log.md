@@ -12985,3 +12985,74 @@ now-edited files — `units.json`, `abilities.json`, `weapon_abilities.json`,
 Loadouts (13 wargear-option groups, DRUKHARI_BUILD_SCOPE.md §7) and detachments (9 detachments,
 §5, plus the deferred map registration above) remain open, separate turns, per the never-mix rule
 and this session's own scope.
+
+### D319 — Drukhari loadouts built (S225), tooling-only
+
+`unit_loadouts.json`, `wargear_points.json`, `repro_check.py`, `rules_assertions.py` only. No
+engine, no other data file touched.
+
+**§7's carried-forward numbers didn't match live output — re-derived from source before authoring
+anything, per standing discipline.** Ran the real `loadout_parser.py --factions ... DRU` +
+`equipped_parser.py --datasheets` pass against the shipped 23-unit roster. The actual flagged set
+is 8 units, not 9, and only partially overlaps `DRUKHARI_BUILD_SCOPE.md` §7's named list:
+
+- **4 of §7's named units resolve automatically with no authoring at all** — Razorwing
+  Jetfighter, Voidraven Bomber, Scourges with Heavy Weapons, Scourges with Shardcarbines all
+  parsed clean through the datasheets gap-fill pass, same precedent as Grey Knights. §7's "13
+  wargear-option groups across 9 units" figure over-counted these.
+- **3 units the real parser flags were absent from §7 entirely** — Kabalite Warriors, Reavers,
+  Cronos.
+- **Of the real 8 flagged units, only 4 needed `unit_loadouts.json` authoring.** Kabalite
+  Warriors, Reavers, Hellions, and Hand of the Archon each carry only an "equipped with one of
+  the following: [non-weapon item]" line pointing at `units.json`'s own `other_options`
+  (Kabalite Icon/Phantasm Grenade Launcher/Cluster Caltrops/Grav-talon). Confirmed `index.html`
+  renders `other_options` directly and independently of `unit_loadouts.json` (grep, not assumed)
+  — same shape already shipped and left `UNMATCHED` for Incursor Squad's Haywire Mine
+  (000001159). These stay `UNMATCHED`, correctly, no engine gap.
+
+**The 4 units actually hand-authored: Wracks, Talos, Cronos, Ravager.** Added to
+`repro_check.py`'s `HAND_AUTHORED`.
+
+- **Wracks (000000650)**: the auto-parser already resolved the Acothyst's primary swap
+  correctly (`Twin torturer's tools` → `Power weapon + Torturer's tools`). Two gaps remained: (1)
+  a conditional second Acothyst option — "if the Acothyst is not equipped with a power weapon,
+  its torturer's tools can be replaced with 1 power weapon" — confirmed verbatim against the
+  official rule text (not a Wahapedia extraction artifact) via search; modeled as a second
+  alternative in the same `choice` list (`Power weapon` alongside the existing compound), which
+  reproduces the exact same legal-state set as the RAW conditional. (2) a 4-way "for every 5
+  models" compound special-weapon group (Hexrifle/Liquifier gun/Ossefactor/Stinger pistol, each
+  `+ Torturer's tools`), scoped to the regular `Wracks` model group (not the Acothyst), matching
+  the file's existing pattern for named-leader-vs-squad option scoping.
+- **Talos (000000663)**: two "replace one of their macro-scalpels" groups authored as `count`
+  type against the single `Macro-scalpel` weapon row (the model's two physical macro-scalpels
+  share one profile entry, same shape already used for the unit's own auto-parsed Twin splinter
+  cannon options).
+- **Cronos (000000664)**: simple `add` for Spirit vortex (already a priced-free weapon row in
+  `units.json`), `max_total_all: true`.
+- **Ravager (000000665)**: `count`-type replace of `Dark lance` → `Disintegrator cannon`,
+  `max_total_all: true` (the model's three physical dark lances share one profile row, same
+  single-row-multiple-copies shape as Talos's macro-scalpels).
+
+**Diff-guarded, not just "ran clean."** Full regen via the real pipeline (all `FACTIONS` including
+`DRU`, hand-authored seed for the 11 total `HAND_AUTHORED` ids) reproduces the new committed
+`unit_loadouts.json` byte-for-byte (`repro_check.py` OK). Field-by-field diff against the
+pre-session file: +23 keys (exactly Drukhari's 23 units), 0 removed, 0 existing units changed.
+
+**`wargear_points.json` rebuilt and confirmed.** Ran the canonical
+`mfm_points_parser.py --wargear MFM_*.txt ...` rebuild. Exactly the 4 forecasted Drukhari items
+populate — Ravager's Dark lance (+5), Scourges with Heavy Weapons' Haywire blaster (+5) and Dark
+lance (+5), Talos's Twin haywire blaster (+5) — 0 removed, 0 unrelated changes.
+
+**E14 literal updated, verified by full per-army breakdown, not assumed.** The auto-parsed
+Voidraven Bomber's `Voidraven missiles` add (max_total:1, unpriced) is a new qualifying free seed.
+Confirmed every non-DRU faction's count is unchanged at 108/75 before updating
+`rules_assertions.py`'s `e14_count` literal to 109/76.
+
+**Full baseline clean.** `repro_check`, `units_repro_check`, `detachments_repro_check` all
+byte-identical to committed; `rules_assertions` 121/122 (the one red is the expected P3
+manifest-drift for the four now-edited files, cleared by `--write` at close); every harness clean,
+zero regression to any already-built faction.
+
+Detachments (`DRUKHARI_BUILD_SCOPE.md` §5, 9 detachments) and the deferred `detachment_parser.py`
+three-map registration remain the next, separate data turn, per §8's sequencing and the never-mix
+rule.

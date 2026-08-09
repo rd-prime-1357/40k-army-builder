@@ -3,7 +3,21 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S224 (unchanged from S223 — Drukhari units build is
+not here, it isn't open. **23 open** as of S225 (unchanged from S224 — Drukhari loadouts turn is
+part of the standing faction-priority-order sequence, not its own backlog ticket; nothing closed,
+nothing opened): B116, B114, B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17.
+Tooling-only turn (D319): Drukhari's loadouts built and shipped. Re-derived the flagged-unit set
+from the real pipeline rather than trusting `DRUKHARI_BUILD_SCOPE.md` §7's carried-forward
+numbers — actual authoring gap was 4 units (Wracks, Talos, Cronos, Ravager), not the 9 §7 named;
+4 of §7's units resolve automatically, 4 more of the real 8 flagged units need no
+`unit_loadouts.json` entry at all (`other_options` handles them natively). Diff-guarded: +23
+units, 0 removed, 0 existing changed. `wargear_points.json` rebuilt, exactly the 4 forecasted
+items populate. `rules_assertions.py`'s E14 literal updated 108/75 → 109/76, verified by full
+per-army breakdown. Full baseline clean, zero regression. Detachments (9 detachments) and the
+deferred `detachment_parser.py` map registration remain the next, separate data turn.
+
+**23 open** as of S224 (unchanged from S223 — Drukhari units build is
 part of the standing faction-priority-order sequence, not its own backlog ticket; nothing closed,
 nothing opened): B116, B114, B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69,
 B70, B75, P2, P4, E23, B67b, E12, B17.

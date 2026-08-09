@@ -947,3 +947,11 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   Detachment-map registration (prompt's own step 3) deferred to the detachments build turn —
   registering early breaks detachments_repro_check since Drukhari's detachments.json doesn't exist
   yet; reverted after testing. Full baseline clean, zero regression.
+- **D319** — Drukhari loadouts built (S225), tooling-only. Re-derived the flagged-unit set from
+  the real pipeline rather than trusting §7's carried-forward numbers: actual gap was 4 units
+  needing authoring (Wracks, Talos, Cronos, Ravager), not 9 — 4 of §7's named units resolve
+  automatically, 4 more flagged units need no unit_loadouts.json entry at all (other_options
+  handles them natively, same precedent as Incursor Squad's Haywire Mine). Diff-guarded: +23
+  units, 0 removed, 0 existing changed. wargear_points.json rebuilt, exactly the 4 forecasted
+  Drukhari items populate. E14 literal updated 108/75 → 109/76, verified by full per-army
+  breakdown. Full baseline clean, zero regression.

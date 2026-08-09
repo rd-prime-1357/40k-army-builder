@@ -28,7 +28,8 @@ import argparse, json, os, shutil, subprocess, sys, tempfile
 from collections import OrderedDict
 
 HAND_AUTHORED = ['000001157', '000001044', '000004131', '000002712',
-                  '000004079', '000004080', '000002628']
+                  '000004079', '000004080', '000002628',
+                  '000000650', '000000663', '000000664', '000000665']
 # 000004079/000004080 (Tormentors, Infractors) added S210 (Emperor's Children): both
 # carry the single sentence "1 <unit name> can be equipped with 1 icon of excess." --
 # the generic word "model" is replaced with the unit's own singular name, a sentence
@@ -66,7 +67,18 @@ WEB_PASSES = ['Space_Marines', 'Death_Guard', 'Black_Templars', 'Dark_Angels', '
 # UNMATCHED-but-shipped on Death Guard/CSM/Thousand Sons' own Helbrutes (000000954 /
 # 000001021 / 000001046) -- same already-solved shape, resolves automatically through
 # the ordinary parser run with the same UNMATCHED flag, no hand authoring needed.
-FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK', 'EC', 'WE']
+# S225: Drukhari added to FACTIONS. Of the 8 units the real (non-scratch) loadout_parser.py
+# + equipped_parser.py --datasheets pass actually flags for DRU (re-derived this session --
+# NEXT_SESSION_PROMPT.md's carried-forward 13-group/9-unit count from DRUKHARI_BUILD_SCOPE.md
+# §7 did not match live output and was not trusted unchecked), 4 resolve with no unit_loadouts.json
+# authoring at all: Kabalite Warriors (000000644), Reavers (000000658), Hellions (000000659), and
+# Hand of the Archon (000004156) each carry only an "equipped with one of the following: [non-weapon
+# item]" line pointing at units.json's own other_options (Kabalite Icon/Phantasm Grenade Launcher/
+# Cluster Caltrops/Grav-talon) -- index.html renders other_options directly and independently of
+# unit_loadouts.json (confirmed by grep), matching the precedented UNMATCHED-and-left-alone shape
+# already shipped for Incursor Squad's Haywire Mine (000001159). The remaining 4 (000000650,
+# 000000663, 000000664, 000000665) are real weapon-swap gaps and are hand-authored below.
+FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK', 'EC', 'WE', 'DRU']
 
 
 def _run(cmd, cwd):
