@@ -955,3 +955,12 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   units, 0 removed, 0 existing changed. wargear_points.json rebuilt, exactly the 4 forecasted
   Drukhari items populate. E14 literal updated 108/75 → 109/76, verified by full per-army
   breakdown. Full baseline clean, zero regression.
+- **D320** — Drukhari detachments built (S226), data-only. Registered Drukhari in `detachment_
+  parser.py`'s three maps (deferred from S224). 9 detachments, DP 1–3, 30 enhancements, three
+  shared Unique tags, three `text_source: "none"` — all re-derived from a real parser run and
+  matching §5 exactly. B113 re-confirmed at 0 new instances. Diff-guarded against a clean repo
+  fetch: +9 detachments, 0 removed, 0 existing records changed. Real finding: Drukhari adds 2
+  same-army enhancement-name collisions (Towering Arrogance, Periapt of Torments), both
+  differently priced — precedented per §5, no engine change needed, `e4b_name_collision_census`
+  literal updated 30/6/1 → 32/8/3. Full baseline clean, zero regression. Drukhari's units,
+  loadouts, and detachments are now all shipped; only B116 remains open.

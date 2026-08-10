@@ -13056,3 +13056,56 @@ zero regression to any already-built faction.
 Detachments (`DRUKHARI_BUILD_SCOPE.md` §5, 9 detachments) and the deferred `detachment_parser.py`
 three-map registration remain the next, separate data turn, per §8's sequencing and the never-mix
 rule.
+
+### D320 — Drukhari detachments built (S226), data-only
+
+Registered Drukhari in `detachment_parser.py`'s three maps (`ARMY_TO_MFM` →
+`MFM_Drukhari_v1.1.txt`, `MFM_SOURCE_NAME` → "Drukhari", `ARMY_TO_WAHA_FACTION` → "DRU"), deferred
+from S224 specifically because doing it before `detachments.json` content existed broke
+`detachments_repro_check`. Safe now.
+
+**Re-derived §5's numbers against a real parser run, not trusted unchecked.** 9 detachments, DP
+range 1–3, matches §5 exactly: Covenite Coterie (2 DP), Exhibition of Slaughter (1), Kabalite
+Agonysts (1), Kabalite Cartel (2), Realspace Raiders (2), Reaper's Wager (3), Skysplinter Assault
+(2), Spectacle of Spite (2), Tools of Torment (1). Three shared Unique tags confirmed
+(COVENS: Covenite Coterie + Tools of Torment; WYCH CULT: Exhibition of Slaughter + Spectacle of
+Spite; KABAL: Kabalite Agonysts + Kabalite Cartel) — already-precedented mechanism, no new code.
+30 enhancements total, confirmed by direct count. Three detachments (Covenite Coterie, Kabalite
+Agonysts, Exhibition of Slaughter) carry the `FORCE DISPOSITION(S) CHANGED` / `UPDATED` tags
+between v1_0 and v1.1, confirmed by direct grep of the source (3 instances, not assumed). Three
+detachments (Exhibition of Slaughter, Kabalite Agonysts, Tools of Torment) ship with
+`text_source: "none"` — confirmed no Wahapedia rule text exists for these in either
+`Detachment_abilities.csv` or `Detachments.csv`, matching the 25-instance precedent (now 28 with
+Drukhari's 3). Tools of Torment's "Elixir of the Corpse Courts (Upgrade)" confirmed correctly
+stripped and flagged by the existing `is_upgrade` handling — no new code needed.
+
+**B113 re-confirmed at 0 new instances for Drukhari**, checked directly against the real
+9-detachment build: zero `LEADER:` lines found inside Drukhari's `DETACHMENTS` block in
+`MFM_Drukhari_v1.1.txt`.
+
+**Diff-guarded against a clean repo fetch, not just "ran clean."** Field-by-field comparison of
+the regenerated `detachments.json` against the pre-session committed version (fetched fresh from
+the public repo, not assumed from the local copy): +9 Drukhari detachment records, +1 army entry,
+0 removed, 0 existing detachment records changed. `_meta` counts move cleanly: armies 19→20,
+detachment_records 202→211, enhancements 709→739 (+30), upgrade_enhancements 47→48 (+1), gap
+manifest 25→28 (+3, exactly Drukhari's three `text_source: "none"` entries).
+
+**Real finding: Drukhari introduces 2 new same-army enhancement-name collisions, both
+differently priced across their two detachments** — Towering Arrogance (Kabalite Agonysts 15pts
+vs Kabalite Cartel 20pts) and Periapt of Torments (Exhibition of Slaughter 20pts vs Spectacle of
+Spite 25pts). Flagged in `DRUKHARI_BUILD_SCOPE.md` §5 as a non-issue mechanically (enhancements
+key off detachment+name, not name alone) and confirmed against the live build: the `e4b_name_
+collision_census` D199 pinned assertion moved from 30/6/1 (pairs/names/differing) to 32/8/3.
+Updated the literal in `rules_assertions.py`, same pattern as S225's E14 update — a dated comment
+records the new figures and the two new colliding names. No engine change needed; the existing
+detachment-keyed storage already handles this correctly.
+
+**Full baseline clean.** `repro_check`, `units_repro_check`, `detachments_repro_check` all
+byte-identical to committed; `rules_assertions` 121/122 (the one red is the expected P3
+manifest-drift for the three edited files — `detachment_parser.py`, `detachments.json`,
+`rules_assertions.py` — cleared by `--write` at close); every harness clean, zero regression to
+any already-built faction.
+
+Drukhari's units (D318), loadouts (D319), and detachments (D320) are now all shipped. B116 (the
+Harlequins/Anhrathe cross-book allied-inclusion mechanic, §6) remains the one open item, still
+awaiting Ryan's call, still not blocking — Drukhari's own build does not depend on it.

@@ -1787,15 +1787,18 @@ ASSERTIONS = [
      lambda S: e4b_eligibility_derivations_agree(S)),
 
     ('E4b-3',
-     'The name-collision census is pinned: 30 reachable same-army cross-detachment collisions '
-     'across 6 distinct names, exactly one of them priced differently in its two detachments. '
-     'The sixth name (Warp-Fuelled Thrusters, CSM-internal) entered with the CSM detachment '
-     'build (D237/S154) and does not change the design: a non-zero count still forces the '
-     'duplicate rule to be keyed by name army-wide rather than by (detachment, name), and the '
-     'one differing price (Dark Angels/Deathwing Assault, unrelated to CSM) still forces a '
-     'stored assignment to carry a detachment key rather than a bare name. If a regeneration '
-     'moves either number, both choices need revisiting rather than inheriting.',
-     'detachments.json enhancements per army (E4b, D199; updated S155 for CSM, D237)',
+     'The name-collision census is pinned: 32 reachable same-army cross-detachment collisions '
+     'across 8 distinct names, three of them priced differently in their two detachments. '
+     'The seventh and eighth names (Towering Arrogance and Periapt of Torments, both '
+     'Drukhari-internal) entered with the Drukhari detachment build (S226) and do not change '
+     'the design: a non-zero count still forces the duplicate rule to be keyed by name '
+     'army-wide rather than by (detachment, name), and the two new differing prices '
+     '(Drukhari/Towering Arrogance: 15 vs 20; Drukhari/Periapt of Torments: 20 vs 25 — both '
+     'flagged in DRUKHARI_BUILD_SCOPE.md §5 as non-issues since enhancements key off '
+     'detachment+name) still force a stored assignment to carry a detachment key rather than '
+     'a bare name. If a regeneration moves either number, both choices need revisiting rather '
+     'than inheriting.',
+     'detachments.json enhancements per army (E4b, D199; updated S226 for Drukhari)',
      lambda S: e4b_name_collision_census(S)),
 
     ('E4b-4',
@@ -3933,7 +3936,11 @@ def e4b_name_collision_census(S):
                 if len({r[1] for r in rows}) > 1:
                     differing.append(f'{army}/{n}')
 
-    EXPECTED_PAIRS, EXPECTED_NAMES, EXPECTED_DIFFERING = 30, 6, 1
+    # S226: Drukhari added 2 same-army collisions (Towering Arrogance: Kabalite Agonysts 15 vs
+    # Kabalite Cartel 20; Periapt of Torments: Exhibition of Slaughter 20 vs Spectacle of Spite
+    # 25), both differently priced — precedented per DRUKHARI_BUILD_SCOPE.md §5, confirmed
+    # against the real detachments.json build, not assumed. 30/6/1 -> 32/8/3.
+    EXPECTED_PAIRS, EXPECTED_NAMES, EXPECTED_DIFFERING = 32, 8, 3
     bad = []
     if len(pairs) != EXPECTED_PAIRS:
         bad.append(f'{len(pairs)} reachable same-army cross-detachment collisions, expected '

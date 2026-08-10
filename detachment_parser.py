@@ -68,6 +68,7 @@ ARMY_TO_MFM = OrderedDict([
     ("Emperor's Children", "MFM_Emperors_Children_v1.1.txt"),
     ("World Eaters",       "MFM_World_Eaters_v1.1.txt"),
     ("Grey Knights",       "MFM_Grey_Knights_v1.1.txt"),
+    ("Drukhari",           "MFM_Drukhari_v1.1.txt"),
 ])
 
 # Human-readable name of the MFM source list, for the source_faction field.
@@ -85,6 +86,7 @@ MFM_SOURCE_NAME = {
     "MFM_Emperors_Children_v1.1.txt": "Emperor's Children",
     "MFM_World_Eaters_v1.1.txt": "World Eaters",
     "MFM_Grey_Knights_v1.1.txt": "Grey Knights",
+    "MFM_Drukhari_v1.1.txt": "Drukhari",
 }
 
 # Wahapedia faction_id supplying tier-2 prose for each app army. The 10th Edition
@@ -96,7 +98,7 @@ ARMY_TO_WAHA_FACTION = {
     "Space Wolves": "SM", "Ultramarines": "SM", "White Scars": "SM",
     "Chaos Daemons": "CD", "Death Guard": "DG", "Chaos Space Marines": "CSM",
     "Thousand Sons": "TS", "Emperor's Children": "EC", "World Eaters": "WE",
-    "Grey Knights": "GK",
+    "Grey Knights": "GK", "Drukhari": "DRU",
 }
 
 FORCE_DISPOSITIONS = (
