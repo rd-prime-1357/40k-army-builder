@@ -280,6 +280,8 @@ GUARDED = [
     'SESSION_HANDOFF_225.md',
     'SESSION_HANDOFF_226.md',
     'SESSION_HANDOFF_227.md',
+    'SESSION_HANDOFF_228.md',
+    'SESSION_HANDOFF_229.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

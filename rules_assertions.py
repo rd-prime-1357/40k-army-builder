@@ -107,6 +107,67 @@ class Sources:
             self._cache['fkw'] = out
         return self._cache['fkw']
 
+    def all_keywords(self):
+        """datasheet_id -> set of every keyword (faction and non-faction), straight from
+        source. Used where a faction-keyword-only view (faction_keywords()) is not enough —
+        e.g. checking the INFANTRY/MOUNTED/MONSTER keyword that distinguishes which
+        Characters a "Faction Infantry model only" enhancement restriction actually reaches
+        (B113)."""
+        if 'akw' not in self._cache:
+            out = {}
+            for r in pipe_rows(os.path.join(self.dir, 'Datasheets_keywords.csv')):
+                out.setdefault(r['datasheet_id'], set()).add(r['keyword'])
+            self._cache['akw'] = out
+        return self._cache['akw']
+
+    def mfm_leader_lines(self):
+        """Every `LEADER:` line inside each ARMY_TO_MFM v1.1 file's DETACHMENTS block,
+        attributed to the enhancement printed immediately above it — the binding B113
+        confirmed against the 10e rules text already in detachments.json (each named target
+        matches the enhancement directly above the LEADER: line, never the one below or the
+        detachment as a whole). Returns a list of (mfm_filename, detachment_name,
+        enhancement_name, target_units) tuples, one per LEADER: line found.
+
+        Reuses detachment_parser.py's own clean_chars/sniff_is_v1_1/normalize_detachments_v1_1
+        so this walks the exact same normalised line stream parse_mfm_detachments() does —
+        the only difference is this keeps the LEADER: lines parse_mfm_detachments() treats as
+        noise and discards.
+        """
+        if 'mfmld' not in self._cache:
+            mod, _ = self.mfm_detachment_rows()
+            out = []
+            for fn in sorted(set(mod.ARMY_TO_MFM.values())):
+                path = os.path.join(self.dir, fn)
+                with open(path, encoding='utf-8-sig') as f:
+                    lines = [mod.clean_chars(ln).rstrip('\n').rstrip('\r').strip() for ln in f]
+                start = lines.index('DETACHMENTS')
+                end = len(lines)
+                for j in range(start + 1, len(lines)):
+                    if lines[j] == 'LEGENDS':
+                        end = j
+                        break
+                block = lines[start + 1:end]
+                if mod.sniff_is_v1_1(lines):
+                    block = mod.normalize_detachments_v1_1(block)
+                cur_det, cur_enh = None, None
+                for ln in block:
+                    if not ln:
+                        continue
+                    m = mod.MFM_DP_RE.match(ln)
+                    if m:
+                        cur_det, cur_enh = m.group(1).strip(), None
+                        continue
+                    me = mod.MFM_ENH_RE.match(ln)
+                    if me:
+                        raw = me.group(1).strip()
+                        cur_enh = re.sub(r'\s*\(Upgrade\)\s*', ' ', raw, flags=re.I).strip()
+                        continue
+                    if ln.startswith('LEADER:'):
+                        targets = tuple(t.strip() for t in ln[len('LEADER:'):].split(','))
+                        out.append((fn, cur_det, cur_enh, targets))
+            self._cache['mfmld'] = out
+        return self._cache['mfmld']
+
     def taxonomy(self):
         if 'tax' not in self._cache:
             with open(os.path.join(self.dir, 'faction_taxonomy.json'), encoding='utf-8') as f:
@@ -1818,9 +1879,36 @@ ASSERTIONS = [
      'not the single entry, an Epic Hero is refused an Upgrade as well as a regular, a refused '
      'assignment leaves no trace on the entry, the attach action refuses to merge two carriers, '
      'and every selected row stays clearable however over-constrained the army is. Three '
-     'different thresholds live in one 25.04 sentence, so these are executed, not described.',
-     'e4b_check.js (E4b, S128)',
+     'different thresholds live in one 25.04 sentence, so these are executed, not described. '
+     'Extended S228/B113 for the bearer-restriction gate (see E4b-6/E4b-7).',
+     'e4b_check.js (E4b, S128; extended S228)',
      lambda S: e4b_harness_gate(S)),
+
+    # ── B113. LEADER: line bearer restriction (option A: enforce the bearer, not the
+    # LEADER: attach-enablement — see B113_LEADER_RESTRICTION_SCOPE.md, Ryan's call S228).
+    ('E4b-6',
+     'The MFM LEADER: line census is 8, not the 6 every prior statement (the original B113 '
+     'entry, D311, the S227 prompt) gave — re-derived directly from the raw MFM DETACHMENTS '
+     'blocks, not trusted from prior-session prose. Each LEADER: line binds to the enhancement '
+     'printed immediately above it (confirmed independently against the 10e rules text already '
+     'in detachments.json), never the last enhancement in the detachment or the detachment as '
+     'a whole. A future MFM regeneration or faction build that moves this count reopens the '
+     'scope question S227/S228 already settled.',
+     'ARMY_TO_MFM v1.1 files, DETACHMENTS blocks (B113, S228)',
+     lambda S: b113_leader_line_census(S)),
+
+    ('E4b-7',
+     'The curated ENHANCEMENT_BEARER_RESTRICTIONS table enforces the bearer restriction '
+     'printed in each enhancement\'s own description ("X model only") — the half of the rule '
+     'that makes an illegal army reachable — not the LEADER: attach-enablement, which would '
+     'make these enhancements assignable to nobody (scope doc §2). Checked against source, '
+     'not merely present: exactly 7 rows (Pact of Cursed Pinions has no bearer text anywhere '
+     'in the held sources and stays deliberately unenforced), every named-unit row resolves '
+     'in its army\'s real unit pool, the one faction-keyword row (Wolf-touched) is not vacuous, '
+     'and Butcher Lord\'s "World Eaters Infantry model only" two-unit set is verified against '
+     'Datasheets_keywords.csv rather than assumed from the datasheet list.',
+     'index.html ENHANCEMENT_BEARER_RESTRICTIONS vs units.json / Datasheets_keywords.csv (B113, S228)',
+     lambda S: b113_bearer_table_matches_source(S)),
 
     # ── B63. Soul Grinder's god weapons were reachable simultaneously — a live D0
     # violation on a built faction (D206). Allegiance_Condition never reached units.json,
@@ -3958,6 +4046,138 @@ def e4b_name_collision_census(S):
                        f'name-keyed duplicates and the stored detachment key are both still forced')
 
 
+def b113_leader_line_census(S):
+    """B113_LEADER_RESTRICTION_SCOPE.md §1: every `LEADER:` line across the ARMY_TO_MFM v1.1
+    files is 8, not the 6 every prior statement (the original B113 entry, D311, the S227
+    prompt) gave — the two missed are both Space Wolves, which shipped after B113 opened.
+    Pinned so a future MFM regeneration or faction build that changes this count is caught
+    immediately rather than silently reopening the scope question S227 already settled.
+    Also pins the binding rule: each LEADER: line belongs to the enhancement printed
+    immediately above it, not the last enhancement in the detachment or the detachment as a
+    whole — confirmed independently against the 10e rules text already in detachments.json."""
+    rows = S.mfm_leader_lines()
+    EXPECTED = {
+        ('MFM_Chaos_Space_Marines_v1.1.txt', 'MURDERTALON RAIDERS', 'Pact of Cursed Pinions', ('WARP TALONS',)),
+        ('MFM_Chaos_Space_Marines_v1.1.txt', 'NIGHTMARE HUNT', 'Sorrowscent Vulture', ('WARP TALONS',)),
+        ("MFM_Emperors_Children_v1.1.txt", 'COURT OF THE PHOENICIAN', 'Exalted Patron', ('FLAWLESS BLADES',)),
+        ('MFM_Space_Wolves_v1.1.txt', 'SAGA OF THE BEASTSLAYER', 'Wolf-touched', ('WULFEN', 'WULFEN WITH STORM SHIELDS')),
+        ('MFM_Space_Wolves_v1.1.txt', 'SAGA OF THE GREAT WOLF', "Grimnar's Mark", ('WOLF GUARD TERMINATORS',)),
+        ('MFM_Thousand_Sons_v1.1.txt', 'WARPMELD PACT', 'Bray Lord', ('TZAANGORS',)),
+        ('MFM_World_Eaters_v1.1.txt', 'CULT OF BLOOD', 'Butcher Lord', ('GOREMONGERS', 'JAKHALS')),
+        ('MFM_World_Eaters_v1.1.txt', 'KHORNE DAEMONKIN', 'Disciple of Khorne', ('BLOODCRUSHERS', 'FLESH HOUNDS')),
+    }
+    got = set(rows)
+    if got != EXPECTED:
+        missing = EXPECTED - got
+        extra = got - EXPECTED
+        return False, (f'LEADER: line census does not match the pinned 8: '
+                       f'{len(missing)} missing {sorted(missing)[:3]}, '
+                       f'{len(extra)} unexpected {sorted(extra)[:3]}')
+    return True, f'{len(rows)} LEADER: lines found across ARMY_TO_MFM v1.1 files, matching the pinned census exactly'
+
+
+def b113_bearer_table_matches_source(S):
+    """B113 option (A): the curated ENHANCEMENT_BEARER_RESTRICTIONS table in index.html
+    enforces the bearer restriction printed in each enhancement's own description ("X model
+    only"), not the LEADER: attach-enablement. This checks the table is well-formed against
+    source rather than merely present:
+      - exactly 7 rows (Pact of Cursed Pinions is deliberately absent — no bearer text
+        anywhere in the held sources, confirmed directly, not assumed from its sibling
+        Sorrowscent Vulture which shares the same LEADER: target)
+      - every unit_name-kind row names a real unit in the right army's resolved pool
+      - the one faction_keyword-kind row (Wolf-touched: Space Wolves) is not vacuous — at
+        least one real Space Wolves Character actually carries that keyword
+      - Butcher Lord's "World Eaters Infantry model only" resolves to exactly the World
+        Eaters Characters carrying the Infantry keyword (Datasheets_keywords.csv) — checked
+        against source instead of eyeballing the datasheet list, since the Daemon Princes and
+        Bloodthirster are Monster and Lord on Juggernaut is Mounted, none of them Infantry
+    """
+    ix = S.index_html()
+    m = re.search(r'const ENHANCEMENT_BEARER_RESTRICTIONS = \{(.*?)\n  \};', ix, re.S)
+    if not m:
+        return False, 'ENHANCEMENT_BEARER_RESTRICTIONS is no longer locatable in index.html'
+    # Normalise whitespace/newlines so a row's key and its object literal can be split
+    # across lines in the source (as written, for readability) without affecting parsing.
+    flat = re.sub(r'\s+', ' ', m.group(1)).strip()
+    row_re = re.compile(
+        r"""(['"])(.+?)::(.+?)\1\s*:\s*\{\s*kind:\s*'(\w+)',\s*"""
+        r"""(?:units:\s*\[(.*?)\]|keyword:\s*'([^']+)')\s*\}""")
+    entries = []
+    pos = 0
+    for mm in row_re.finditer(flat):
+        entries.append(mm)
+        pos = mm.end()
+    if not entries:
+        return False, f'no rows matched the expected shape in ENHANCEMENT_BEARER_RESTRICTIONS: {flat[:200]!r}'
+    parsed = []
+    for mm in entries:
+        _, det_key, name, kind, units_raw, keyword = mm.groups()
+        units = [u.strip().strip("'\"") for u in units_raw.split(',')] if units_raw else None
+        parsed.append((det_key, name, kind, units, keyword))
+    entries = parsed
+
+    if len(entries) != 7:
+        return False, f'{len(entries)} curated bearer rows, expected 7 (8 census rows minus Pact of Cursed Pinions)'
+
+    by_key = {(d, n): (kind, units, keyword) for d, n, kind, units, keyword in entries}
+    if ('Chaos Space Marines|MURDERTALON RAIDERS', 'Pact of Cursed Pinions') in by_key:
+        return False, 'Pact of Cursed Pinions has a curated bearer row — it has no source text and should stay unenforced'
+
+    pool_cache = {}
+    def pool_for(army):
+        if army not in pool_cache:
+            pool_cache[army] = S.resolved_pool(army)
+        return pool_cache[army]
+
+    KEY_TO_ARMY = {
+        "Space Wolves|SAGA OF THE GREAT WOLF": 'Space Wolves',
+        'Chaos Space Marines|NIGHTMARE HUNT': 'Chaos Space Marines',
+        'Thousand Sons|WARPMELD PACT': 'Thousand Sons',
+        "Emperor's Children|COURT OF THE PHOENICIAN": "Emperor's Children",
+        'World Eaters|CULT OF BLOOD': 'World Eaters',
+        'World Eaters|KHORNE DAEMONKIN': 'World Eaters',
+    }
+    bad = []
+    for det_key, name, kind, units, keyword in entries:
+        if kind == 'unit_name':
+            army = KEY_TO_ARMY.get(det_key)
+            if not army:
+                bad.append(f'{det_key}/{name}: unrecognised detachment key')
+                continue
+            pool = pool_for(army)
+            for u in units:
+                if u not in pool:
+                    bad.append(f'{det_key}/{name}: bearer unit {u!r} not found in {army}\'s resolved pool')
+
+    # Wolf-touched: the keyword must actually distinguish a real Space Wolves Character.
+    sw_pool = pool_for('Space Wolves')
+    sw_chars_with_kw = [n for n, u in sw_pool.items() if u['unit_type'] == 'Character'
+                        and 'Space Wolves' in ((u.get('model_groups') or [{}])[0].get('faction_keyword_names') or [])]
+    if not sw_chars_with_kw:
+        bad.append("Wolf-touched's Space Wolves faction_keyword restriction matches zero real Characters")
+
+    # Butcher Lord: World Eaters Infantry Characters, derived from source keywords, must equal
+    # the curated 2-unit set exactly.
+    ds = S.datasheets()
+    akw = S.all_keywords()
+    name_to_id = {v.lower(): k for k, v in ds.items()}
+    we_pool = pool_for('World Eaters')
+    we_infantry_chars = sorted(
+        n for n, u in we_pool.items() if u['unit_type'] == 'Character'
+        and 'Infantry' in akw.get(name_to_id.get(n.lower(), ''), set()))
+    curated_butcher = sorted(by_key.get(('World Eaters|CULT OF BLOOD', 'Butcher Lord'), (None, [], None))[1] or [])
+    if we_infantry_chars != curated_butcher:
+        bad.append(f"Butcher Lord's curated bearer set {curated_butcher} != source-derived World "
+                   f"Eaters Infantry Characters {we_infantry_chars}")
+
+    if bad:
+        return False, '; '.join(bad)
+    return True, (f'7 curated bearer rows, Pact of Cursed Pinions correctly absent, every unit_name row '
+                  f'resolves in its army pool, the Space Wolves keyword matches {len(sw_chars_with_kw)} real '
+                  f"Character(s), and Butcher Lord's set matches the source-derived Infantry-keyword "
+                  f'Characters exactly ({curated_butcher})')
+
+
 def e4b_engine_functions_defined_once(S):
     """E1c-1's guard, applied to E4b. The functions that answer enhancement legality are declared
     inside the E4b block and NOWHERE else in index.html. Consumers call them; nothing redefines
@@ -3977,7 +4197,8 @@ def e4b_engine_functions_defined_once(S):
              'enhancementIsOffered', 'assignedEnhancements', 'enhancementCount',
              'enhancementCopies', 'enhancementMaxCopies', 'attachedGroupListIds',
              'groupEnhancementCarriers', 'enhancementTypeEligible', 'canAssignEnhancement',
-             'enhancementArmyState', 'enhancementRowState', 'enhancementAttachBlock']
+             'enhancementArmyState', 'enhancementRowState', 'enhancementAttachBlock',
+             'enhancementBearerRestriction', 'enhancementBearerEligible']
     bad = []
     for name in names:
         pat = re.compile(r'^\s*function\s+' + re.escape(name) + r'\s*\(')
@@ -4017,7 +4238,8 @@ def e4b_harness_gate(S):
         return False, 'e4b_check.js not found — the E4b behaviour gate is missing'
     try:
         r = subprocess.run(['node', p, os.path.join(S.dir, 'index.html'),
-                            os.path.join(S.dir, 'detachments.json')],
+                            os.path.join(S.dir, 'detachments.json'),
+                            os.path.join(S.dir, 'units.json')],
                            capture_output=True, text=True, timeout=120, cwd=S.dir)
     except FileNotFoundError:
         return False, 'node is not available, so the E4b behaviour gate cannot run'

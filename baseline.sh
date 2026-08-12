@@ -245,7 +245,7 @@ gate b101_check           node b101_check.js index.html
 gate b106_check           node b106_check.js index.html
 gate e1b_check            node e1b_check.js index.html detachments.json list_store.js
 gate e1c_check            node e1c_check.js index.html detachments.json
-gate e4b_check            node e4b_check.js index.html detachments.json
+gate e4b_check            node e4b_check.js index.html detachments.json units.json
 gate e4c_check            node e4c_check.js index.html detachments.json
 gate e21b_check           node e21b_check.js index.html detachment_effects.json units.json
 gate e21c_check           node e21c_check.js index.html detachment_effects.json units.json

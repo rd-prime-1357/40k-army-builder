@@ -13,9 +13,13 @@
 //   6. hard block: a refused assignment leaves no trace on the entry
 //   7. the attach gate, the second enforcement point
 //   8. flag-don't-drop: a stale or over-limit state stays visible and exitable
+//   9. B113: the curated bearer-restriction table — a restricted enhancement
+//      refuses a non-bearer, allows the named bearer(s), and a keyword-kind
+//      restriction (Wolf-touched) reads faction_keyword_names off the raw unit
+//      record rather than a hardcoded name
 //
 // Build-time only; not part of the served app.
-// Usage: node e4b_check.js index.html detachments.json
+// Usage: node e4b_check.js index.html detachments.json units.json
 const fs = require('fs');
 
 function slice(lines, startNeedle, endNeedle) {
@@ -25,11 +29,11 @@ function slice(lines, startNeedle, endNeedle) {
   return lines.slice(s, e).join('\n');
 }
 
-function loadEngine(path, defs) {
+function loadEngine(path, defs, rawUnits) {
   const lines = fs.readFileSync(path, 'utf8').split('\n');
   const e4b = slice(lines, '// ── E4b: enhancement assignment rules', '// ── E4b block end');
   const src = 'let detachmentDefs = DEFS; let selectedDetachments = []; '
-            + 'let armyList = []; let POINTS_CAP = 2000; '
+            + 'let armyList = []; let POINTS_CAP = 2000; let rawUnits = RAWUNITS; '
             + 'function renderAll(){}\n'
             + e4b
             + '\nreturn { enhancementLimit, enhancementRecord, enhancementPoints, '
@@ -39,18 +43,22 @@ function loadEngine(path, defs) {
             + 'enhancementTypeEligible, canAssignEnhancement, enhancementArmyState, '
             + 'enhancementRowState, enhancementRefusalText, enhancementAttachBlock, '
             + 'enhancementPointsForEntry, assignEnhancement, clearEnhancement, '
+            + 'enhancementBearerRestriction, enhancementBearerEligible, '
             + 'setArmy: (a) => { armyList = a; }, '
             + 'setDetachments: (d) => { selectedDetachments = d; }, '
             + 'setCap: (p) => { POINTS_CAP = p; }, '
             + 'army: () => armyList };';
-  return new Function('DEFS', src)(defs);
+  return new Function('DEFS', 'RAWUNITS', src)(defs, rawUnits);
 }
 
-const idxPath = process.argv[2] || 'index.html';
-const detPath = process.argv[3] || 'detachments.json';
+const idxPath  = process.argv[2] || 'index.html';
+const detPath  = process.argv[3] || 'detachments.json';
+const unitPath = process.argv[4] || 'units.json';
 
 const DJ = JSON.parse(fs.readFileSync(detPath, 'utf8'));
-const E  = loadEngine(idxPath, DJ.detachments);
+const UJ = JSON.parse(fs.readFileSync(unitPath, 'utf8'));
+const rawUnitsFlat = [].concat(...UJ.map(a => a.units));
+const E  = loadEngine(idxPath, DJ.detachments, rawUnitsFlat);
 
 let fail = 0;
 const ok = (cond, msg) => { if (!cond) { fail++; console.log('  FAIL ' + msg); } else console.log('  ok   ' + msg); };
@@ -359,6 +367,62 @@ console.log('E4b — the row classifier is the read path, not a second copy of i
   }
   ok(rows >= 100, `the sweep covered a meaningful number of rows (${rows})`);
   ok(mismatches === 0, `every row's disabled flag is canAssignEnhancement's answer, and no refusal is mute (${mismatches} mismatches)`);
+}
+
+// ── B113: bearer-restriction gate ─────────────────────────────────────────
+console.log('\nB113 bearer restriction:');
+{
+  const K_KD   = 'World Eaters|KHORNE DAEMONKIN';   // Disciple of Khorne, bearer: Lord on Juggernaut
+  const K_SGW  = 'Space Wolves|SAGA OF THE GREAT WOLF'; // Grimnar's Mark, bearer: Captain In Terminator Armour
+  const K_SGB  = 'Space Wolves|SAGA OF THE BEASTSLAYER'; // Wolf-touched, keyword: Space Wolves
+  const K_MR   = 'Chaos Space Marines|MURDERTALON RAIDERS'; // Pact of Cursed Pinions — deliberately unenforced
+
+  E.setDetachments([K_KD, K_SGW, K_SGB, K_MR]);
+
+  // Named-unit restriction: correct bearer allowed, wrong bearer refused.
+  const juggernaut = entry(1, 'Character', 'Lord on Juggernaut');
+  const otherChar   = entry(2, 'Character', 'Master of Executions');
+  const caGood = E.canAssignEnhancement(juggernaut, 'Disciple of Khorne', K_KD, 2000);
+  const caBad  = E.canAssignEnhancement(otherChar,  'Disciple of Khorne', K_KD, 2000);
+  ok(caGood.ok, 'Lord on Juggernaut is allowed Disciple of Khorne');
+  ok(!caBad.ok && caBad.reason === 'bearer_restriction',
+     `Master of Executions is refused Disciple of Khorne (got ok=${caBad.ok} reason=${caBad.reason})`);
+  ok(!!E.enhancementRefusalText(caBad), 'the bearer refusal is not mute');
+
+  const capTerm = entry(3, 'Character', 'Captain In Terminator Armour');
+  const caCap = E.canAssignEnhancement(capTerm, "Grimnar's Mark", K_SGW, 2000);
+  ok(caCap.ok, "Captain In Terminator Armour is allowed Grimnar's Mark");
+
+  // Faction-keyword restriction: a Space-Wolves-specific Character passes, a
+  // generic Adeptus Astartes Character (no Space Wolves keyword tag) is refused.
+  const wolfPriest = entry(4, 'Character', 'Wolf Priest');
+  const genericCap = entry(5, 'Character', 'Captain');
+  const caWP = E.canAssignEnhancement(wolfPriest, 'Wolf-touched', K_SGB, 2000);
+  const caGC = E.canAssignEnhancement(genericCap, 'Wolf-touched', K_SGB, 2000);
+  ok(caWP.ok, 'Wolf Priest (carries the Space Wolves keyword) is allowed Wolf-touched');
+  ok(!caGC.ok && caGC.reason === 'bearer_restriction',
+     `generic Captain (no Space Wolves keyword) is refused Wolf-touched (got ok=${caGC.ok} reason=${caGC.reason})`);
+
+  // Pact of Cursed Pinions has no curated bearer row — deliberately unenforced
+  // (no source text; B113_LEADER_RESTRICTION_SCOPE.md §1). Confirms the table
+  // does not silently grow a guessed entry for it.
+  ok(E.enhancementBearerRestriction('Pact of Cursed Pinions', K_MR) === null,
+     'Pact of Cursed Pinions carries no curated bearer restriction');
+  const anyChar = entry(6, 'Character', 'Master of Executions');
+  const caPact = E.canAssignEnhancement(anyChar, 'Pact of Cursed Pinions', K_MR, 2000);
+  ok(caPact.ok, 'Pact of Cursed Pinions is unenforced and assignable to any eligible Character');
+
+  // Flag-don't-drop: an already-assigned bearer-restricted enhancement that no
+  // longer matches its bearer (simulating a stale import) surfaces in wrongBearer
+  // rather than silently vanishing, and the row stays exitable.
+  const staleArmy = [assign(entry(7, 'Character', 'Master of Executions'), 'Disciple of Khorne', K_KD)];
+  E.setArmy(staleArmy);
+  const armyState = E.enhancementArmyState(2000);
+  ok(armyState.wrongBearer.length === 1 && armyState.wrongBearer[0].unit_name === 'Master of Executions',
+     `stale bearer assignment surfaces in wrongBearer (got ${JSON.stringify(armyState.wrongBearer)})`);
+  ok(!armyState.legal, 'army state is not legal while a wrongBearer entry is present');
+  const rowState = E.enhancementRowState(staleArmy[0], 'Disciple of Khorne', K_KD, 2000);
+  ok(rowState.disabled === false, 'the stale selected row itself stays clickable/exitable, not disabled');
 }
 
 console.log(fail === 0 ? '\nall E4b checks pass' : `\n${fail} E4b check(s) FAILED`);

@@ -2222,7 +2222,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.19';
+  const VERSION = '6.20';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3034,6 +3034,70 @@
     return Number(pointsTotal) <= 1000 ? 2 : 4;
   }
 
+  // B113. Curated bearer-restriction table for the enhancements identified in
+  // B113_LEADER_RESTRICTION_SCOPE.md as carrying a `LEADER:` line in the MFM.
+  // This enforces the OTHER half of each enhancement's rule text — the "X model
+  // only" bearer restriction printed in the enhancement's own description — not
+  // the LEADER: line itself, which is an attach-ENABLER (grants an attachment
+  // the bearer otherwise lacks) and stays unenforced. Enforcing the LEADER: line
+  // as an assignment restriction would make these enhancements assignable to
+  // nobody (scope doc §2): six of the eight named units have zero leaders that
+  // can attach to them at all under the app's own leaderEligible model.
+  //
+  // Hand-curated, not parser-derived, because the source prose is not uniformly
+  // parseable: a single named unit in most cases, an "A or B" pair twice
+  // (Bray Lord, Butcher Lord — Butcher Lord's "World Eaters Infantry model
+  // only" resolves to exactly Master of Executions and Slaughterbound, the only
+  // two World Eaters Characters carrying the Infantry keyword; the Daemon
+  // Princes and Bloodthirster are Monster, Lord on Juggernaut is Mounted —
+  // checked against Datasheets_keywords.csv directly), and once a whole-faction
+  // keyword rather than a named unit (Wolf-touched — checked against
+  // faction_keyword_names: generic Adeptus Astartes Characters carry only the
+  // Adeptus Astartes tag, so only the three Space-Wolves-specific Characters
+  // qualify, not e.g. a generic Captain used in a Space Wolves list).
+  //
+  // Murdertalon Raiders' Pact of Cursed Pinions is deliberately ABSENT from this
+  // table: it carries no bearer text anywhere in the held sources (MFM,
+  // Wahapedia web export, or raw CSVs — checked directly this session, not
+  // assumed from its sibling Sorrowscent Vulture, which shares the same
+  // LEADER: target but is a different detachment). Left unenforced pending a
+  // source or a product call, rather than guessed — see B113_LEADER_RESTRICTION_SCOPE.md §4.
+  const ENHANCEMENT_BEARER_RESTRICTIONS = {
+    'Space Wolves|SAGA OF THE BEASTSLAYER::Wolf-touched':
+      { kind: 'faction_keyword', keyword: 'Space Wolves' },
+    "Space Wolves|SAGA OF THE GREAT WOLF::Grimnar's Mark":
+      { kind: 'unit_name', units: ['Captain In Terminator Armour'] },
+    'Chaos Space Marines|NIGHTMARE HUNT::Sorrowscent Vulture':
+      { kind: 'unit_name', units: ['Chaos Lord with Jump Pack'] },
+    'Thousand Sons|WARPMELD PACT::Bray Lord':
+      { kind: 'unit_name', units: ['Sorcerer', 'Infernal Master'] },
+    "Emperor's Children|COURT OF THE PHOENICIAN::Exalted Patron":
+      { kind: 'unit_name', units: ['Lord Exultant'] },
+    'World Eaters|CULT OF BLOOD::Butcher Lord':
+      { kind: 'unit_name', units: ['Master of Executions', 'Slaughterbound'] },
+    'World Eaters|KHORNE DAEMONKIN::Disciple of Khorne':
+      { kind: 'unit_name', units: ['Lord on Juggernaut'] },
+  };
+
+  function enhancementBearerRestriction(name, detachmentKey) {
+    return ENHANCEMENT_BEARER_RESTRICTIONS[detachmentKey + '::' + name] || null;
+  }
+
+  // rawUnits (not the lightweight allUnits view) carries model_groups with
+  // faction_keyword_names, needed for the one keyword-kind restriction.
+  function enhancementBearerEligible(entry, name, detachmentKey) {
+    const rule = enhancementBearerRestriction(name, detachmentKey);
+    if (!rule) return true;
+    if (rule.kind === 'unit_name') return rule.units.indexOf(entry.unit_name) >= 0;
+    if (rule.kind === 'faction_keyword') {
+      const raw = (rawUnits || []).find(u => u.unit_name === entry.unit_name);
+      const mg  = raw && raw.model_groups && raw.model_groups[0];
+      const fkn = (mg && mg.faction_keyword_names) || [];
+      return fkn.indexOf(rule.keyword) >= 0;
+    }
+    return true;
+  }
+
   // A stored assignment is {name, detachment_key}. The key is carried because
   // the name alone does not determine the price: Deathwing Assault is 30 pts in
   // INNER CIRCLE TASK FORCE and 15 pts in WRATH OF THE ROCK (D199).
@@ -3206,6 +3270,13 @@
     if (!enhancementTypeEligible(entry.unit_type, isUpgrade))
       return { ok: false, reason: 'unit_type', unit_type: entry.unit_type || null, is_upgrade: isUpgrade };
 
+    // B113. Checked here, ahead of unit_has_one/duplicate/army_limit — like
+    // unit_type, no rearrangement of the rest of the army fixes a bearer
+    // mismatch, only swapping which unit holds the enhancement does.
+    const bearerRule = enhancementBearerRestriction(name, detachmentKey);
+    if (bearerRule && !enhancementBearerEligible(entry, name, detachmentKey))
+      return { ok: false, reason: 'bearer_restriction', bearer_rule: bearerRule };
+
     const carriers = groupEnhancementCarriers(entry.listId, entry.listId);
     if (carriers.length)
       return { ok: false, reason: 'unit_has_one',
@@ -3245,6 +3316,7 @@
     const duplicates = [];
     const notOffered = [];
     const wrongType  = [];
+    const wrongBearer = [];
     const sharedUnits = [];
     const seenRoot = {};
 
@@ -3255,6 +3327,11 @@
       if (!enhancementIsOffered(a.name, a.detachment_key)) notOffered.push(a);
       const e = (armyList || []).find(x => x.listId === a.listId);
       if (e && !enhancementTypeEligible(e.unit_type, isUpgrade)) wrongType.push(a);
+      // B113: an already-assigned bearer-restricted enhancement can go stale on
+      // a data regeneration or a unit swap after assignment — flagged, not
+      // silently dropped, same as wrongType.
+      if (e && enhancementBearerRestriction(a.name, a.detachment_key) &&
+          !enhancementBearerEligible(e, a.name, a.detachment_key)) wrongBearer.push(a);
       const root = attachedGroupListIds(a.listId)[0];
       if (seenRoot[root] != null) {
         if (sharedUnits.indexOf(root) < 0) sharedUnits.push(root);
@@ -3265,9 +3342,9 @@
       limit: limit, used: used, state: state, remaining: limit - used,
       assigned: assigned,
       duplicates: duplicates, notOffered: notOffered,
-      wrongType: wrongType, sharedUnits: sharedUnits,
+      wrongType: wrongType, wrongBearer: wrongBearer, sharedUnits: sharedUnits,
       legal: state !== 'over' && duplicates.length === 0 && notOffered.length === 0 &&
-             wrongType.length === 0 && sharedUnits.length === 0
+             wrongType.length === 0 && wrongBearer.length === 0 && sharedUnits.length === 0
     };
   }
 
@@ -3303,6 +3380,14 @@
       if (canAssign.unit_type === 'Epic Hero') return 'Epic Heroes cannot be given enhancements.';
       return canAssign.is_upgrade ? 'This unit cannot take this Upgrade.'
                                   : 'Only Characters can be given this enhancement.';
+    }
+    if (canAssign.reason === 'bearer_restriction') {
+      const rule = canAssign.bearer_rule;
+      if (rule && rule.kind === 'unit_name')
+        return 'Only ' + rule.units.join(' or ') + ' can take this enhancement.';
+      if (rule && rule.kind === 'faction_keyword')
+        return 'Only a ' + rule.keyword + ' model can take this enhancement.';
+      return 'This unit cannot take this enhancement.';
     }
     if (canAssign.reason === 'unit_has_one')
       return canAssign.attached
@@ -3450,6 +3535,9 @@
     }
     for (const a of st.wrongType) {
       html += `<div class="det-list-warning">${escHtml(a.unit_name)}'s ${escHtml(a.name)} is no longer a legal type for that unit.</div>`;
+    }
+    for (const a of st.wrongBearer) {
+      html += `<div class="det-list-warning">${escHtml(a.unit_name)}'s ${escHtml(a.name)} is not a legal bearer for that enhancement.</div>`;
     }
     for (const a of st.notOffered) {
       html += `<div class="det-list-warning">${escHtml(a.unit_name)}'s ${escHtml(a.name)} is not offered by any detachment you have selected.</div>`;

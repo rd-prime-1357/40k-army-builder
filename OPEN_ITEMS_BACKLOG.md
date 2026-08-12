@@ -3,16 +3,15 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S227 (unchanged from S226 — B113 was worked this
+not here, it isn't open. **22 open** as of S229 (unchanged from S228 — B114 was scoped this
 session but stayed open, re-scoped, not closed; nothing else closed, nothing opened): B116, B114,
-B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b,
-E12, B17.
-Scoping turn (D321): B113's engine build was stopped at open. Its premise was wrong — the
-`LEADER:` line is an attach-enabler, not an assignment restriction, and the census is 8 not 6 (two
-Space Wolves instances missed since S217). B113 stays open, re-scoped, and now carries a
-product/rules-legality decision for Ryan (see its entry below and
-`B113_LEADER_RESTRICTION_SCOPE.md`). Open-time manifest reconciliation: S226's handoff hash was one
-edit stale; re-banked, diff-guarded to one entry, baseline 34/34.
+B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+Scoping turn (D323): B114's real problem is deeper than a stale flag — its stored target shape has
+no consuming engine code, and the true unlockable set (21 units, source-derived) is materially
+narrower than a literal keyword reading would suggest. Recommended mechanism: reuse the existing
+allied_group machinery. Not a Ryan decision. See its entry below and `B114_SHADOW_LEGION_SCOPE.md`.
+Engine turn (D322): B113 closed. Ryan chose option (A) — enforce the bearer restriction only. See
+the Closed / Shipped entry below for the full build.
 Data-only turn (D320): Drukhari's detachments built and shipped — 9 detachments, DP 1–3, 30
 enhancements, three shared Unique tags, all re-derived from a real parser run and matching
 `DRUKHARI_BUILD_SCOPE.md` §5 exactly. B113 re-confirmed at 0 new Drukhari instances. Diff-guarded
@@ -821,48 +820,33 @@ MFM v1.1 adoption arc (units-side, all factions; detachments-side, CSM/DG/TS S21
 CLOSED S213: detachments-side gap closed for the entire Adeptus Astartes group. Chaos Daemons'
 remaining detachments item split off as B112.
 
-### B114 — `detachment_effects.json`'s Chaos Daemons Shadow Legion HERETIC ASTARTES unlock is unenforced on a now-false premise — **NEW S221 (B112 finding); data or engine, TBD; XS–S**
+### B114 — `detachment_effects.json`'s Chaos Daemons Shadow Legion HERETIC ASTARTES unlock is unenforced, and its stored target shape is unbuildable as-is — **NEW S221 (B112 finding); SCOPED S229 (D323); data-only; S**
 The existing `Chaos Daemons|SHADOW LEGION` row (D204 ruling 3) carries an `unlock` effect targeting
-the `HERETIC ASTARTES` keyword with `enforced: false`, reasoned as: "the unlocked set is an
-explicit list of Chaos Space Marines datasheets, and Chaos Space Marines is not built yet. Nothing
-is currently reachable through this effect, so the gap costs no legality today." Chaos Space
-Marines shipped at S212/D307, so that premise is now false — the gap is reachable and the
-unenforced flag is stale. Found while checking `detachment_effects.json` directly for Chaos
-Daemons per B112's instructions; unrelated to the LORDS OF THE WARP disposition change and not
-picked up this session (data-only turn; this may need engine work to resolve the actual CSM unit
-list from the detachment's rule text, not just a flag flip). Needs its own scoping pass to
-determine whether flipping `enforced: true` is safe as-is or needs the target's unit list
-populated first.
+the `HERETIC ASTARTES` keyword, `enforced: false`. Original premise ("nothing is reachable until CSM
+ships") went stale at S212/D307 when CSM shipped, but S229 found the real problem runs deeper: the
+stored `target: {"keyword": "HERETIC ASTARTES"}` shape has **no consuming engine code at all** —
+`index.html`'s `unlockedAlliedGroups`/`alliedPointsCap` only read `target.allied_group`. Flipping
+the flag today changes nothing. Full write-up in `B114_SHADOW_LEGION_SCOPE.md`.
 
-### B113 — Detachment enhancement `LEADER:` line discarded as parser noise — **NEW S217 (D311); RE-SCOPED S227 (D321); now carries a Ryan decision; engine; M**
-`detachment_parser.py`'s `MFM_BLOCK_NOISE` regex matches and silently drops any `^LEADER:` line
-inside a DETACHMENTS block. S227 diagnosed the item before building and **stopped the build** —
-the original premise (and the S227 prompt's) was wrong. Full write-up in
-`B113_LEADER_RESTRICTION_SCOPE.md`; three source-derived corrections (D321):
+**Real unlockable set, pulled from the actual Wahapedia ability text** (`Detachment_abilities.csv`
+id `000009976`, "Thralls of the First Prince" — not the paraphrased `rule_text`/reference-doc
+summary, both of which omit it): 15 named items; one, "Damned units," is itself a 17-datasheet
+keyword group. Cross-checked against the shipped 58-unit CSM roster: **21 units buildable** (14
+named + 7 already-shipped "Damned" units, all CSM-Codex-sourced and priced); 10 more "Damned"
+datasheets are unbuilt and carry no CSM MFM pricing (different, shared Wahapedia source) —
+correctly out of scope already, not a new gap. Flagged: a bare "every HERETIC ASTARTES-keyword
+unit" filter would be over-permissive (CSM's Epic Heroes/named characters almost certainly carry
+that keyword and are not on the real unlock list) — the same failure shape B113 found in an
+unrelated mechanism.
 
-- **Census is 8, not 6.** Prior statements (this entry, D311, the S227 prompt) all said 6 (CSM ×2,
-  TS ×1, EC ×1, WE ×2). Re-derived from every `ARMY_TO_MFM` v1.1 file: **8**. The two missed are
-  both **Space Wolves** (Saga of the Beastslayer → Wolf-touched; Saga of the Great Wolf →
-  Grimnar's Mark), shipped after this ticket opened.
-- **Binding was mis-stated.** This entry's "Khorne Daemonkin's Icon of War" is wrong — the
-  `LEADER:` line binds to the enhancement *immediately above* it (Disciple of Khorne); Icon of War
-  is below the line and unrestricted.
-- **`LEADER:` is an attach-ENABLER, not an assignment restriction.** The named units are bodyguards
-  the bearer normally can't lead (for 6 of 8 targets, *no* leader can attach at all). Enforcing the
-  prompt's "refuse the enhancement unless the leader is already attached to the named unit" would
-  make these enhancements assignable to **nobody** — the opposite of D0. The reachable illegal
-  state is instead the "X model only" **bearer restriction** in the description prose (any Character
-  can currently take Disciple of Khorne, when only a Lord on Juggernaut should) — and that clause is
-  *not* on the `LEADER:` line.
-
-**Decision waiting on Ryan** (product/rules-legality, lasting precedent — first
-enhancement-conditional attachment mechanic): (A) enforce the bearer restriction only — the
-reachable illegal state — via a small curated/asserted per-enhancement bearer map [**recommended**];
-(B) full attach-enablement (expand `leaderEligible` while the enhancement is held; larger,
-order-dependent, needs (A)'s data); (C) capture-only, defer. Do **not** build the prompt's
-attach-target assignment gate under any option. Whichever Ryan picks, the corrected 8-instance
-census and binding are settled inputs and should land as a `rules_assertions.py` census check at
-the top of that build.
+**Recommended mechanism:** reuse the existing `allied_group` machinery already shipping for Death
+Guard's Plague Legions and Thousand Sons' Scintillating Legions — tag the 21 units, retarget the
+effect from `keyword` to `allied_group`, flip `enforced: true`. No new engine code; the existing
+`points_cap` table (500/1000/1500) is unchanged and already correct. One checked difference from
+the Plague Legions precedent: Shadow Legion's ability carries no Warlord-ban clause for its allied
+units — do not add a matching `warlord` effect. Not a Ryan decision (mechanism reuse, fully
+source-determined set) — proceed under standing dev-manager authority whenever picked up as a
+data-only build turn.
 
 ### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon
@@ -1260,6 +1244,42 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B113 — Detachment enhancement `LEADER:` line discarded as parser noise — **NEW S217 (D311); RE-SCOPED S227 (D321); CLOSED S228 (D322)**
+`detachment_parser.py`'s `MFM_BLOCK_NOISE` regex matches and silently drops any `^LEADER:` line
+inside a DETACHMENTS block. S227 diagnosed the item before building and stopped the build — the
+original premise (and the S227 prompt's) was wrong. Full write-up in
+`B113_LEADER_RESTRICTION_SCOPE.md`; three source-derived corrections landed at S227 (D321):
+census is 8 not 6 (two Space Wolves instances missed since S217); the `LEADER:` line binds to the
+enhancement immediately above it, not the last one in the detachment; and decisively, `LEADER:` is
+an attach-**enabler**, not an assignment restriction — the named units are bodyguards the bearer
+normally can't lead, so enforcing "refuse unless already attached" would make these enhancements
+assignable to nobody. The reachable illegal state is the "X model only" bearer clause in the
+enhancement's own description prose, not the `LEADER:` line.
+
+**Closed S228 (D322).** Ryan chose option (A): enforce the bearer restriction only, leave the
+`LEADER:` attach-enablement itself unenforced (a separate, later item if ever built). Shipped a
+curated `ENHANCEMENT_BEARER_RESTRICTIONS` table in `index.html`'s E4b block (7 rows — 6 named-unit
+restrictions, one faction-keyword restriction for Wolf-touched), a new `bearer_restriction` refusal
+reason in `canAssignEnhancement`, and a `wrongBearer` flag-don't-drop entry in `enhancementArmyState`
+for a stale/imported mismatch. Pact of Cursed Pinions (Murdertalon Raiders) is deliberately absent
+from the table — re-checked this session against the raw MFM, the Wahapedia web export and the raw
+CSVs directly, and it carries no bearer text anywhere in the held sources; left unenforced rather
+than guessed (in particular, not assumed to share its sibling Sorrowscent Vulture's bearer just
+because both target Warp Talons).
+
+Two new pinned assertions (`rules_assertions.py` E4b-6/E4b-7): the MFM LEADER: line census,
+re-derived independently this session straight from the raw MFM DETACHMENTS blocks and matching
+S227's corrected 8 exactly; and the bearer table checked against source, not merely present —
+every named-unit row resolved against its army's real unit pool, the Space Wolves keyword row
+confirmed non-vacuous (matches real Characters, not zero), and Butcher Lord's "World Eaters
+Infantry model only" two-unit set (Master of Executions, Slaughterbound) verified against
+`Datasheets_keywords.csv` rather than eyeballed off the datasheet list — the World Eaters Daemon
+Princes and Bloodthirster are Monster, Lord on Juggernaut is Mounted, none of them Infantry.
+`e4b_check.js` extended with a dedicated B113 section (named-unit allow/refuse, keyword
+allow/refuse, the unenforced row staying assignable, and the stale-assignment flag-don't-drop
+path) — all pass, and the pre-existing 132-row sweep is unaffected. Full baseline clean, zero
+regression.
 
 ### B115 — `wahapedia_transform.py --faction DRU` wrongly includes 14 Harlequin/Aeldari-Corsair datasheets — **NEW S222 (D316); tooling; XS; CLOSED S223 (D317)**
 Found while scoping Drukhari. A dry `--faction DRU` run selected 37 datasheets, not the 23 that

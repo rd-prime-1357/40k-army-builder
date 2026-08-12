@@ -979,3 +979,46 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   restriction is the "X model only" bearer clause in prose, not the `LEADER:` line. Decision for
   Ryan (lasting precedent): (A) enforce bearer restriction only [recommended], (B) full
   attach-enablement, (C) capture-only defer. B113 stays open, re-scoped, decision-ready.
+
+- **D322** — B113 built and closed (S228), engine turn. Ryan chose option (A): enforce the bearer
+  restriction only, leave the `LEADER:` attach-enablement itself unenforced. Before building,
+  independently re-derived the 8-row `LEADER:` census straight from raw MFM (matched S227's D321
+  finding exactly) and pulled the actual GW keyword data (`Datasheets_keywords.csv`,
+  `faction_keyword_names`) to resolve two rows the prose alone didn't cleanly give: Butcher Lord's
+  "World Eaters Infantry model only" resolves to exactly two units (Master of Executions,
+  Slaughterbound — the other World Eaters Characters are Monster or Mounted, not Infantry), and
+  Wolf-touched's "Space Wolves model only" is a faction-keyword restriction, not a named unit,
+  matched via `faction_keyword_names` rather than a hardcoded list. Pact of Cursed Pinions
+  (Murdertalon Raiders) confirmed to carry no bearer text anywhere in the held sources — checked
+  directly against the MFM, the Wahapedia web export, and the raw CSVs — and left deliberately
+  unenforced rather than guessed from its sibling Sorrowscent Vulture, which shares the same
+  `LEADER:` target unit but is a different detachment.
+
+  Shipped: `index.html` (v6.20) — curated `ENHANCEMENT_BEARER_RESTRICTIONS` table (7 rows) inside
+  the E4b block, a new `bearer_restriction` reason in `canAssignEnhancement`, matching refusal
+  prose, and a `wrongBearer` flag-don't-drop entry in `enhancementArmyState` for a stale/imported
+  mismatch (same pattern as the existing `wrongType`). `e4b_check.js` extended with a dedicated
+  B113 section (named-unit allow/refuse, the keyword-kind restriction, the deliberately-unenforced
+  row staying assignable, and the stale-assignment flag-don't-drop path); `baseline.sh` updated to
+  pass `units.json` to the harness (needed for the keyword check). Two new pinned
+  `rules_assertions.py` checks (E4b-6, E4b-7): the MFM census, and the bearer table verified
+  against source rather than merely present — every named-unit row resolves in its army's real
+  unit pool, the keyword row is confirmed non-vacuous, and Butcher Lord's two-unit set is checked
+  against the raw keyword CSV. Negative-tested E4b-7 by deliberately corrupting a bearer unit name
+  and confirming the assertion fails correctly before relying on it. Full baseline clean: 124/124
+  assertions (was 121/124 before the manifest write), all repro checks byte-for-byte, zero
+  regression on the pre-existing 132-row E4b sweep.
+
+- **D323** — B114 scoped (S229), scoping-only. The B112/D204 "flip enforced:true once CSM ships"
+  premise assumed the flag only needed CSM to exist; it didn't — `target: {"keyword": "HERETIC
+  ASTARTES"}` has never had any consuming engine code, confirmed by reading `unlockedAlliedGroups`/
+  `alliedPointsCap` directly (both filter on `target.allied_group` only). Real unlockable set pulled
+  from the actual Wahapedia ability text (not the paraphrased summary): 15 named items, one of which
+  ("Damned units") is itself a 17-datasheet keyword group. Cross-checked against the shipped CSM
+  roster: 21 units buildable (14 named + 7 already-shipped "Damned" units), 10 more unbuilt and
+  unpriced under CSM's own MFM (different Wahapedia source, correctly out of scope already).
+  Recommended mechanism: reuse the existing `allied_group` machinery (Plague Legions/Scintillating
+  Legions precedent) rather than build new keyword-unlock logic — no new engine code needed.
+  Confirmed the Shadow Legion ability carries no Warlord-ban clause, unlike Plague Legions, so no
+  matching `warlord` effect should be added. Not a Ryan decision — mechanism reuse, fully
+  source-determined set. `B114_SHADOW_LEGION_SCOPE.md` written (net-new); no engine/data change.

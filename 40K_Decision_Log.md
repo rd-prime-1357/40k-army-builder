@@ -13173,3 +13173,109 @@ do not build the prompt's attach-target assignment gate under any option.** B113
 re-scoped, decision-ready — not closed. The corrected census and binding are the settled inputs
 and should land as a `rules_assertions.py` census check at the top of that build (same shape as
 `e4b_name_collision_census`) so the scope cannot drift again the way "6" did.
+
+### D322 — B113 built and closed: enhancement bearer restriction enforced, option (A) (S228), engine turn
+
+**Ryan's call: option (A).** Enforce the bearer restriction printed in each enhancement's own
+description ("X model only") and leave the `LEADER:` attach-enablement itself unenforced — a
+separate, later item if ever built. Confirmed before building rather than assumed from D321's
+prose: the 8-row `LEADER:` census was re-derived independently this session, straight from the raw
+MFM DETACHMENTS blocks (new `Sources.mfm_leader_lines()`), and matched D321's corrected 8 exactly,
+row for row.
+
+**Two rows needed source data beyond the prose to resolve correctly, both checked directly rather
+than guessed:**
+
+1. **Butcher Lord's "World Eaters Infantry model only"** is not a single named unit. Checked every
+   World Eaters Character against `Datasheets_keywords.csv`: Daemon Prince of Khorne (Monster),
+   Daemon Prince of Khorne with Wings (Monster), Lord on Juggernaut (Mounted), Bloodthirster
+   (Monster) — none carry the Infantry keyword. Only **Master of Executions** and **Slaughterbound**
+   do. The curated bearer set is these two, not a guess at "the melee Character" or similar.
+2. **Wolf-touched's "Space Wolves model only"** is a faction-keyword restriction, not a named unit —
+   different in kind from the other seven rows. `units.json`'s `faction_keyword_names` field already
+   distinguishes Space-Wolves-specific Characters (Iron Priest, Wolf Priest, Wolf Guard Battle
+   Leader — all tagged `['Adeptus Astartes', 'Space Wolves']`) from generic Adeptus Astartes
+   Characters used in a Space Wolves list (tagged `['Adeptus Astartes']` only, statically, with no
+   chapter tag). Enforced as a keyword check against that field rather than a hardcoded unit list, so
+   a future Space Wolves Character build extends the restriction automatically.
+
+**Pact of Cursed Pinions (Murdertalon Raiders) confirmed to have no bearer text anywhere in the held
+sources** — checked directly against the raw MFM, the Wahapedia web export (`Chaos_Space_Marines_
+web.txt`), and every raw CSV; genuinely absent, not merely unparsed. Left deliberately unenforced.
+Explicitly **not** assumed to share its sibling Sorrowscent Vulture's bearer (Chaos Lord with Jump
+Pack) just because both enhancements' `LEADER:` line targets Warp Talons — the two are different
+detachments and nothing in source ties their bearers together.
+
+**Shipped.** `index.html` (v6.19 → v6.20): a curated `ENHANCEMENT_BEARER_RESTRICTIONS` table (7
+rows: 6 `unit_name`-kind, 1 `faction_keyword`-kind) inside the E4b block; `canAssignEnhancement`
+gains a `bearer_restriction` refusal reason, checked immediately after the existing `unit_type`
+check (same tier — a rearrangement of the rest of the army cannot fix either); `enhancementRefusalText`
+gains matching prose for both restriction kinds; `enhancementArmyState` gains a `wrongBearer` array
+and folds it into `legal`, following the exact flag-don't-drop pattern already used for `wrongType` —
+an already-assigned enhancement that goes stale on a data regeneration or unit swap is surfaced, not
+silently dropped, and the row itself stays clickable so the state can be exited. `e4b_check.js`
+extended with a dedicated B113 section (named-bearer allow/refuse, the keyword-kind restriction
+allow/refuse, confirming the unenforced row stays freely assignable, and the stale-assignment
+flag-don't-drop path); it and its harness call site (`baseline.sh`, `e4b_harness_gate`) now also
+pass `units.json`, needed for the keyword check to resolve a unit's `faction_keyword_names`.
+
+**Two new pinned `rules_assertions.py` checks (E4b-6, E4b-7), plus a new `Sources.mfm_leader_lines()`
+and `Sources.all_keywords()`.** E4b-6 re-derives the LEADER: census from raw MFM and pins it at 8,
+same shape as `e4b_name_collision_census`. E4b-7 parses the curated table straight out of
+`index.html` and checks it against source rather than merely confirming it is present: exactly 7
+rows (Pact of Cursed Pinions correctly absent), every named-unit row resolves in its army's real
+resolved unit pool, the Space Wolves keyword row is confirmed non-vacuous (matches at least one real
+Character, not zero), and Butcher Lord's two-unit set is required to equal the source-derived
+Infantry-keyword World Eaters Character set exactly — not just contain it. Negative-tested E4b-7
+before relying on it: corrupted a bearer unit name in a scratch copy of `index.html` and confirmed
+the assertion fails with a specific, correctly-attributed message.
+
+**Full baseline clean.** Fetched the private sources repo directly this session (needed for the raw
+MFM census re-derivation and the keyword cross-checks — an engine turn reading source for
+verification, not a data-turn regeneration; no output JSON was touched, confirmed by all three repro
+checks staying byte-identical throughout). `rules_assertions.py --tier all`: 124/124 (was 121/124
+before `pipeline_manifest.py --write` absorbed the four edited files — `index.html`, `e4b_check.js`,
+`baseline.sh`, `rules_assertions.py`). `repro_check`, `units_repro_check`, `detachments_repro_check`
+all byte-identical to committed, confirming no output file was hand-edited. `e4b_check.js`: the
+pre-existing 132-row sweep plus the new B113 section, all pass.
+
+B113 is now closed. B116 (Harlequins/Anhrathe allied-inclusion, still awaiting Ryan's call) and B114
+(Chaos Daemons Shadow Legion unlock, needs its own scoping pass) are the remaining engine/scoping
+backlog from the S227/S228 handoff chain.
+
+### D323 — B114 scoped: Shadow Legion's unlock target shape was never wired, real unlockable set is 21 named units, not a keyword filter (S229), scoping
+
+**Diagnosed before building; no engine/data change shipped.** The B112/D204 premise ("flip
+`enforced: true` once CSM ships") assumed the flag merely needed CSM to exist. It didn't — the
+stored effect's `target: {"keyword": "HERETIC ASTARTES"}` shape has never had any consuming code at
+all. `index.html`'s `unlockedAlliedGroups`/`alliedPointsCap` — the only engine functions that read
+an `unlock`-kind effect — filter exclusively on `target.allied_group`; their own comment says as
+much. Flipping the flag today would change nothing, because nothing reads that field.
+
+**The real unlockable set, pulled from the actual Wahapedia ability text** (`Detachment_abilities.csv`
+id `000009976`, "Thralls of the First Prince" — not the paraphrased summary already in
+`detachments.json`/`chaos_daemons_reference.md`, both of which omit the explicit list): 15 named
+items, 14 literal datasheet names plus "Damned units," itself a Wahapedia keyword group covering 17
+distinct datasheets. Cross-checked against the shipped 58-unit CSM roster: all 14 named units and 7
+of the 17 "Damned"-keyword units are already built and priced (source `000000012`, CSM's own
+Codex); the other 10 "Damned" datasheets carry a different, shared source (`000000355`) and have no
+CSM MFM pricing — correctly out of `CSM_BUILD_SCOPE.md`'s original 58-unit build for unrelated
+reasons. Buildable total: **21 units**. Flagged explicitly: if a future change unlocked "every unit
+carrying the HERETIC ASTARTES keyword" as a bare filter instead of this 21-unit set, that would be
+over-permissive — CSM's Epic Heroes and named characters almost certainly carry that keyword too
+and are nowhere on the actual unlock list. Same failure shape as B113 (a broad-sounding label is not
+the real reachable legal set), unrelated mechanism.
+
+**Recommended mechanism: reuse `allied_group`**, the same pattern already shipping for Death Guard's
+Plague Legions and Thousand Sons' Scintillating Legions — tag the 21 units, retarget the effect from
+`keyword` to `allied_group`, flip `enforced: true`. No new engine code; `unlockedAlliedGroups` and
+friends already handle this shape correctly, tested, with existing coverage. The existing
+`points_cap` table (500/1000/1500) already matches the pulled ability text exactly, unchanged.
+Checked one difference from the Plague Legions precedent rather than assuming symmetry: the Shadow
+Legion ability carries no Warlord-ban clause for its allied units (unlike Plague Legions' explicit
+one) — recommend not inventing a matching `warlord` effect.
+
+Not a decision for Ryan — the mechanism is a straight reuse of an already-decided pattern and the
+unlockable set is fully source-determined, not a judgment call. `B114_SHADOW_LEGION_SCOPE.md`
+written (net-new). Recommended next: build as a data-only turn (tag units, retarget effect, add a
+pinned census assertion in the same shape as B113's E4b-6/E4b-7).
