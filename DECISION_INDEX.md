@@ -964,3 +964,18 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   differently priced — precedented per §5, no engine change needed, `e4b_name_collision_census`
   literal updated 30/6/1 → 32/8/3. Full baseline clean, zero regression. Drukhari's units,
   loadouts, and detachments are now all shipped; only B116 remains open.
+
+- **D321** — B113 build stopped at open and re-scoped (S227), scoping (was typed engine-only).
+  `B113_LEADER_RESTRICTION_SCOPE.md` written (net-new); no engine/data/assertion change. Open-time
+  manifest reconciliation: S226 handoff hash one edit stale (committed handoff `eb4ac9ac4851` vs
+  manifest `ad9575270ad0`, a post-`--write` edit S226's freshness-check missed) — re-banked,
+  diff-guarded to one entry, baseline 34/34. Three source-derived findings: (1) census is **8, not
+  6** — Space Wolves' two instances (Wolf-touched, Grimnar's Mark) were missed everywhere since
+  S217; (2) the `LEADER:` line binds to the enhancement **immediately above** it (WE's case is
+  Disciple of Khorne, not the mis-recorded Icon of War); (3) decisively, `LEADER:` is an
+  attach-**enabler**, not an assignment restriction — the named units are bodyguards the bearer
+  can't normally lead (0 leaders can attach to 6 of 8 targets), so the prompt's "refuse unless
+  attached" gate would make these enhancements assignable to nobody, the opposite of D0. Real
+  restriction is the "X model only" bearer clause in prose, not the `LEADER:` line. Decision for
+  Ryan (lasting precedent): (A) enforce bearer restriction only [recommended], (B) full
+  attach-enablement, (C) capture-only defer. B113 stays open, re-scoped, decision-ready.

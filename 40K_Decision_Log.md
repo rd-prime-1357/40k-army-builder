@@ -13109,3 +13109,67 @@ any already-built faction.
 Drukhari's units (D318), loadouts (D319), and detachments (D320) are now all shipped. B116 (the
 Harlequins/Anhrathe cross-book allied-inclusion mechanic, §6) remains the one open item, still
 awaiting Ryan's call, still not blocking — Drukhari's own build does not depend on it.
+
+### D321 — B113 build stopped at open, re-scoped; `LEADER:` is an attach-enabler not an assignment restriction (S227), scoping (was typed engine-only)
+
+**Turn typed engine-only; found no correct engine change to make and produced scoping instead.**
+No engine, data, or assertion change shipped. `B113_LEADER_RESTRICTION_SCOPE.md` written (net-new).
+Only committed-file change is an open-time manifest reconciliation (below) plus the four rolling
+close documents.
+
+**Open-time manifest reconciliation.** `./baseline.sh --fetch --data-turn` (data-turn used, not the
+prompt's `--fetch`-only, because zero source files were resident in the workspace and the MFM
+sources are needed both to re-derive the census from source per the prompt's own item 3 and to run
+tier-all — the flag runs *more* gate, not less; turn type unaffected) reported 32/34, the two reds
+both `SESSION_HANDOFF_226.md` not matching the manifest. Diagnosed: the committed handoff
+(`eb4ac9ac4851`) and its project-area copy are byte-identical, but the committed manifest banked
+`ad9575270ad0` — one edit behind, the classic D239/D251/B81 "handoff edited after `--write`"
+slip that S226's `--freshness-check` should have caught last but evidently did not. Re-banked via
+`--write`; diff-guarded that exactly one manifest entry changed (`SESSION_HANDOFF_226.md`
+`ad9575270ad0`→`eb4ac9ac4851`), nothing else added/removed/changed. Both gates then green; full
+baseline 34/34.
+
+**Three source-derived findings, all re-derived directly, none trusted from prior prose:**
+
+1. **Census is 8, not 6.** Every prior statement (this prompt, the B113 entry, D311) says 6 (CSM
+   ×2, TS ×1, EC ×1, WE ×2). Parsing every `ARMY_TO_MFM` v1.1 file with the parser's own line
+   handling finds **8** — the two missed are both **Space Wolves** (Saga of the Beastslayer →
+   Wolf-touched → Wulfen/Wulfen w/ Storm Shields; Saga of the Great Wolf → Grimnar's Mark → Wolf
+   Guard Terminators), a faction that shipped after B113 was opened at S217. v1_0 and unbuilt-faction
+   `LEADER:` lines exist but are not referenced by `ARMY_TO_MFM` and are correctly out of scope.
+
+2. **The binding was mis-stated.** The B113 entry names WE's second case as "Icon of War"; the
+   `LEADER:` line binds to the enhancement **immediately above it**, which is **Disciple of
+   Khorne** — Icon of War is below the line and unrestricted. The line is mid-list in most cases,
+   not at the end. Confirmed by the 10e rules text already in `detachments.json`, which names the
+   same target under the same enhancement and leaves the others (incl. the one printed directly
+   above) untouched.
+
+3. **`LEADER:` is an attach-ENABLER, not an assignment restriction — the prompt's mechanic is
+   backwards.** The named units are bodyguard units the bearer normally cannot lead; the
+   enhancement grants the attachment. Checked against the app's own `leaderEligible`/`canAttachLeader`
+   model: for six of eight targets (Warp Talons, Wulfen ×2, Jakhals, Goremongers, Bloodcrushers,
+   Flesh Hounds) **no leader in the faction can attach at all**, and in every case the intended
+   bearer attaches elsewhere (Chaos Lord w/ Jump Pack → Raptors, not Warp Talons; Lord on Juggernaut
+   → Eightbound/Berzerkers, not Bloodcrushers/Flesh Hounds). Implementing the prompt's
+   "refuse unless already attached to the named unit" would make these enhancements assignable to
+   **nobody**, because the app will not permit the prerequisite attachment — strictly worse than the
+   over-permissive present state, the opposite of D0.
+
+**Structure:** each enhancement bundles (a) a bearer restriction — "X model only", in the
+description prose, **not** on the `LEADER:` line — which is the actually-reachable illegal state
+today (any Character can currently take Disciple of Khorne, when only a Lord on Juggernaut should),
+and (b) the optional attach enablement (the `LEADER:` line). B113's `LEADER:`-only data capture
+captures only (b), and enforcing it as an assignment gate enforces the wrong half in the wrong
+direction.
+
+**Decision for Ryan (product/rules-legality, lasting precedent — first enhancement-conditional
+attachment mechanic).** Options in `B113_LEADER_RESTRICTION_SCOPE.md` §4: (A) enforce the bearer
+restriction only — the reachable illegal state — via a small curated/asserted per-enhancement
+bearer map (7 of 8 bearers are in the prose; Pact of Cursed Pinions has no source text);
+(B) full attach-enablement, expanding `leaderEligible` while the enhancement is held (larger, order-
+dependent, needs (A)'s data first); (C) capture-only, defer. **Recommendation: re-scope to (A);
+do not build the prompt's attach-target assignment gate under any option.** B113 stays open,
+re-scoped, decision-ready — not closed. The corrected census and binding are the settled inputs
+and should land as a `rules_assertions.py` census check at the top of that build (same shape as
+`e4b_name_collision_census`) so the scope cannot drift again the way "6" did.

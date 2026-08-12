@@ -3,10 +3,16 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S226 (unchanged from S225 — Drukhari detachments turn
-is part of the standing faction-priority-order sequence, not its own backlog ticket; nothing
-closed, nothing opened): B116, B114, B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85,
-B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **23 open** as of S227 (unchanged from S226 — B113 was worked this
+session but stayed open, re-scoped, not closed; nothing else closed, nothing opened): B116, B114,
+B113, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b,
+E12, B17.
+Scoping turn (D321): B113's engine build was stopped at open. Its premise was wrong — the
+`LEADER:` line is an attach-enabler, not an assignment restriction, and the census is 8 not 6 (two
+Space Wolves instances missed since S217). B113 stays open, re-scoped, and now carries a
+product/rules-legality decision for Ryan (see its entry below and
+`B113_LEADER_RESTRICTION_SCOPE.md`). Open-time manifest reconciliation: S226's handoff hash was one
+edit stale; re-banked, diff-guarded to one entry, baseline 34/34.
 Data-only turn (D320): Drukhari's detachments built and shipped — 9 detachments, DP 1–3, 30
 enhancements, three shared Unique tags, all re-derived from a real parser run and matching
 `DRUKHARI_BUILD_SCOPE.md` §5 exactly. B113 re-confirmed at 0 new Drukhari instances. Diff-guarded
@@ -828,18 +834,35 @@ list from the detachment's rule text, not just a flag flip). Needs its own scopi
 determine whether flipping `enforced: true` is safe as-is or needs the target's unit list
 populated first.
 
-### B113 — Detachment enhancement `LEADER:` eligibility restriction discarded as parser noise — **NEW S217 (D311); scoping finding; engine; S**
+### B113 — Detachment enhancement `LEADER:` line discarded as parser noise — **NEW S217 (D311); RE-SCOPED S227 (D321); now carries a Ryan decision; engine; M**
 `detachment_parser.py`'s `MFM_BLOCK_NOISE` regex matches and silently drops any `^LEADER:` line
-inside a DETACHMENTS block. These lines restrict an enhancement to a leader attached to specific
-units (e.g. World Eaters' Cult of Blood: Butcher Lord → only usable by a leader of Goremongers or
-Jakhals). Nothing in the pipeline or `index.html` currently enforces this — a player could legally
-apply the enhancement to any eligible character regardless of which unit it leads. Confirmed
-pre-existing and not new to World Eaters: Chaos Space Marines carries 2 instances of this shape,
-Thousand Sons and Emperor's Children 1 each, all four already shipped unenforced. World Eaters
-would add 2 more (Cult of Blood's Butcher Lord, Khorne Daemonkin's Icon of War). Decision D0
-(illegal states unreachable) makes this worth its own engine turn once convenient — not urgent
-enough to block any faction build, since it's been silently true for three shipped factions
-already.
+inside a DETACHMENTS block. S227 diagnosed the item before building and **stopped the build** —
+the original premise (and the S227 prompt's) was wrong. Full write-up in
+`B113_LEADER_RESTRICTION_SCOPE.md`; three source-derived corrections (D321):
+
+- **Census is 8, not 6.** Prior statements (this entry, D311, the S227 prompt) all said 6 (CSM ×2,
+  TS ×1, EC ×1, WE ×2). Re-derived from every `ARMY_TO_MFM` v1.1 file: **8**. The two missed are
+  both **Space Wolves** (Saga of the Beastslayer → Wolf-touched; Saga of the Great Wolf →
+  Grimnar's Mark), shipped after this ticket opened.
+- **Binding was mis-stated.** This entry's "Khorne Daemonkin's Icon of War" is wrong — the
+  `LEADER:` line binds to the enhancement *immediately above* it (Disciple of Khorne); Icon of War
+  is below the line and unrestricted.
+- **`LEADER:` is an attach-ENABLER, not an assignment restriction.** The named units are bodyguards
+  the bearer normally can't lead (for 6 of 8 targets, *no* leader can attach at all). Enforcing the
+  prompt's "refuse the enhancement unless the leader is already attached to the named unit" would
+  make these enhancements assignable to **nobody** — the opposite of D0. The reachable illegal
+  state is instead the "X model only" **bearer restriction** in the description prose (any Character
+  can currently take Disciple of Khorne, when only a Lord on Juggernaut should) — and that clause is
+  *not* on the `LEADER:` line.
+
+**Decision waiting on Ryan** (product/rules-legality, lasting precedent — first
+enhancement-conditional attachment mechanic): (A) enforce the bearer restriction only — the
+reachable illegal state — via a small curated/asserted per-enhancement bearer map [**recommended**];
+(B) full attach-enablement (expand `leaderEligible` while the enhancement is held; larger,
+order-dependent, needs (A)'s data); (C) capture-only, defer. Do **not** build the prompt's
+attach-target assignment gate under any option. Whichever Ryan picks, the corrected 8-instance
+census and binding are settled inputs and should land as a `rules_assertions.py` census check at
+the top of that build.
 
 ### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon
