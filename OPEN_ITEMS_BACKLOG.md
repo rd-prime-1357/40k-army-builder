@@ -3,9 +3,16 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S229 (unchanged from S228 — B114 was scoped this
-session but stayed open, re-scoped, not closed; nothing else closed, nothing opened): B116, B114,
-B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **22 open** as of S230 (unchanged from S229 — B114 build was attempted,
+found deeper than scoped, and re-scoped again rather than shipped; nothing else closed, nothing
+opened): B116, B114, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
+E23, B67b, E12, B17.
+Scoping turn (D324): B114 build attempt at S230 found the S229 mechanism recommendation was right
+about the mechanism but wrong about the size of the work — the shipped allied_group precedents
+source each allied entry from its own real per-faction Wahapedia datasheet ID, not a copy of the
+native entry with a tag added, and all 21 IDs exist in source but none are in `units.json` yet.
+This is a pipeline turn, not a two-file data edit. Nothing built or hand-edited; stopped cleanly.
+Not a Ryan decision. See its entry below and `B114_SHADOW_LEGION_SCOPE.md` §6.
 Scoping turn (D323): B114's real problem is deeper than a stale flag — its stored target shape has
 no consuming engine code, and the true unlockable set (21 units, source-derived) is materially
 narrower than a literal keyword reading would suggest. Recommended mechanism: reuse the existing
@@ -820,7 +827,7 @@ MFM v1.1 adoption arc (units-side, all factions; detachments-side, CSM/DG/TS S21
 CLOSED S213: detachments-side gap closed for the entire Adeptus Astartes group. Chaos Daemons'
 remaining detachments item split off as B112.
 
-### B114 — `detachment_effects.json`'s Chaos Daemons Shadow Legion HERETIC ASTARTES unlock is unenforced, and its stored target shape is unbuildable as-is — **NEW S221 (B112 finding); SCOPED S229 (D323); data-only; S**
+### B114 — `detachment_effects.json`'s Chaos Daemons Shadow Legion HERETIC ASTARTES unlock is unenforced, and its stored target shape is unbuildable as-is — **NEW S221 (B112 finding); SCOPED S229 (D323); RE-SCOPED S230 (build attempt found it's a pipeline turn, not data-only); M**
 The existing `Chaos Daemons|SHADOW LEGION` row (D204 ruling 3) carries an `unlock` effect targeting
 the `HERETIC ASTARTES` keyword, `enforced: false`. Original premise ("nothing is reachable until CSM
 ships") went stale at S212/D307 when CSM shipped, but S229 found the real problem runs deeper: the
@@ -837,16 +844,26 @@ datasheets are unbuilt and carry no CSM MFM pricing (different, shared Wahapedia
 correctly out of scope already, not a new gap. Flagged: a bare "every HERETIC ASTARTES-keyword
 unit" filter would be over-permissive (CSM's Epic Heroes/named characters almost certainly carry
 that keyword and are not on the real unlock list) — the same failure shape B113 found in an
-unrelated mechanism.
+unrelated mechanism. Independently re-derived this same 14/7/10 split at S230 build time, matching
+exactly.
 
-**Recommended mechanism:** reuse the existing `allied_group` machinery already shipping for Death
-Guard's Plague Legions and Thousand Sons' Scintillating Legions — tag the 21 units, retarget the
-effect from `keyword` to `allied_group`, flip `enforced: true`. No new engine code; the existing
-`points_cap` table (500/1000/1500) is unchanged and already correct. One checked difference from
-the Plague Legions precedent: Shadow Legion's ability carries no Warlord-ban clause for its allied
-units — do not add a matching `warlord` effect. Not a Ryan decision (mechanism reuse, fully
-source-determined set) — proceed under standing dev-manager authority whenever picked up as a
-data-only build turn.
+**S230: build attempt found the S229 mechanism plan was wrong about the size of the work.**
+Checked how the shipped precedents (Plague Legions, Scintillating Legions, Legions of Excess, Blood
+Legions) actually store their allied entries before touching `units.json` — they are not the native
+unit entry with a tag added. Each is its own record sourced from a separate, real Wahapedia
+datasheet ID: the destination faction's own book-variant of that unit, carrying faction-flavored
+ability text (Rotigus's Death-Guard-allied entry names "Plague Legions" explicitly; its native
+Chaos Daemons entry doesn't) and its own `unit_id`. Checked `Datasheets.csv` directly: a distinct
+`CD`-faction, `source_id 000000012` row exists for all 21 Shadow Legion units, none yet in
+`units.json`. The correct build is a pipeline run (`wahapedia_transform.py`, `loadout_parser.py`,
+`equipped_parser.py`, `convert_to_json.py`, `merge_factions.py`) against 21 new datasheet IDs to
+generate 21 new Chaos Daemons-block entries tagged `allied_group: "Shadow Legion Thralls"` — sized
+like a small faction-build turn, not a two-file data edit. Nothing hand-edited or shipped this
+session; stopped cleanly rather than hand-tag the wrong data shape. Still not a Ryan decision — the
+mechanism and the buildable set are both fully source-determined; this is purely a "how much work"
+correction. One checked difference from the Plague Legions precedent carries forward: Shadow
+Legion's ability has no Warlord-ban clause for its allied units — do not add a matching `warlord`
+effect. Ready to build as its own dedicated pipeline session whenever picked up.
 
 ### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon

@@ -99,13 +99,13 @@ Sons' Scintillating Legions. `unlockedAlliedGroups`, `alliedPointsCap`, `alliedS
 mechanism to enforce the same rule family would duplicate all of that for one detachment, with no
 existing test coverage and no other consumer.
 
-**Recommendation:** tag the 21 units above with a new `allied_group` value (e.g.
-`"Shadow Legion Thralls"`) in `units.json`, and change `detachment_effects.json`'s Shadow Legion
-unlock `target` from `{"keyword": "HERETIC ASTARTES"}` to `{"allied_group": "Shadow Legion
-Thralls"}`, `enforced: true`. The existing `points_cap` table (500/1000/1500) is already correct
-and unchanged since D204 — it matches the ability text pulled directly this session. This is a
-data-only change to `units.json` and `detachment_effects.json` plus flipping the one flag; no new
-engine code.
+**Recommendation (S229, superseded — see §6):** tag the 21 units above with a new `allied_group`
+value (e.g. `"Shadow Legion Thralls"`) directly in `units.json`, and change
+`detachment_effects.json`'s Shadow Legion unlock `target` from `{"keyword": "HERETIC ASTARTES"}` to
+`{"allied_group": "Shadow Legion Thralls"}`, `enforced: true`. The existing `points_cap` table
+(500/1000/1500) is already correct and unchanged since D204 — it matches the ability text pulled
+directly this session. **This framing turned out to be wrong about what "data-only" meant — see §6,
+found at S230 build attempt.**
 
 **One difference from the Plague Legions/Scintillating Legions precedent, checked rather than
 assumed:** neither "Thralls of the First Prince" nor the rest of the Shadow Legion detachment rule
@@ -138,3 +138,40 @@ proceeding under standing dev-manager authority. Recommend building next as a da
 tag the 21 units, retarget the effect, flip `enforced: true`, add a pinned assertion (same shape as
 `e4b_name_collision_census`/B113's E4b-6/E4b-7) checking the 21-unit set against source so a future
 MFM or Wahapedia regeneration can't silently drift it.
+
+## 6. S230 finding: the build is deeper than §3's recommendation — stopped, not shipped
+
+Re-derived the 21-unit set independently at S230 build time (per standing practice), matching §2's
+14/7/10 split exactly from `Detachment_abilities.csv` id `000009976` and `Datasheets_keywords.csv`
+filtered on `Damned`. Before touching `units.json`, checked how the existing precedent
+(Plague Legions) actually stores its allied entries — not assumed from §3.
+
+**Finding: the four shipped precedents (Plague Legions, Scintillating Legions, Legions of Excess,
+Blood Legions) do not copy the native unit entry with a tag added. Each allied entry is its own
+record, sourced from a *separate, real Wahapedia datasheet ID* — the destination faction's own
+book-variant of that unit, with faction-flavored ability text (e.g. Rotigus's Death-Guard-allied
+entry explicitly names "Plague Legions" in its ability text; the native Chaos Daemons entry does
+not) and its own `unit_id`.** Checked directly: `Datasheets.csv` carries a distinct `CD`-faction
+row, under `source_id 000000012`, for every one of the 14 named units and all 7 built "Damned"
+units — 21 real datasheet IDs, none yet in `units.json`. Confirmed the supporting source files
+(`Datasheets_abilities`, `Datasheets_models`, `Datasheets_models_cost`, `Datasheets_options`,
+`Datasheets_unit_composition`, `Datasheets_wargear`, `Datasheets_leader` where applicable) all carry
+rows for these IDs already, spot-checked on 5 of the 21.
+
+**This means §3's plan — hand-tag the existing CSM entries with a new `allied_group` field — was
+never a real option: it would have meant hand-editing output-shaped data, and it would have shipped
+generic (non-faction-flavored) ability text where the real source has faction-specific wording.
+Building this correctly means running the actual pipeline (`wahapedia_transform.py`,
+`loadout_parser.py`, `equipped_parser.py`, `convert_to_json.py`, `merge_factions.py`) against 21 new
+Wahapedia datasheet IDs to generate 21 new entries in the Chaos Daemons block of `units.json`,
+tagged `allied_group: "Shadow Legion Thralls"` — the same shape of work as originally building
+Plague Legions or Scintillating Legions, not a two-file data edit.**
+
+Points values match between the native and per-book-variant entries where checked (Rotigus: 280 in
+both) — no reason to expect the 21 Shadow Legion units to price differently from their native CSM
+entries, but this needs pipeline verification, not an assumption, before shipping.
+
+**Stopped cleanly, nothing built or hand-edited this session.** No change to `units.json`,
+`detachment_effects.json`, or `rules_assertions.py`. Re-scoping as a **pipeline turn** — same
+category as an original faction build, sized more like a small build than a two-file data edit.
+Recommend running it as its own dedicated session rather than folding it into whatever comes next.

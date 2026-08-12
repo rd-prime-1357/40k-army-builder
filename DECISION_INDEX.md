@@ -1022,3 +1022,22 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   Confirmed the Shadow Legion ability carries no Warlord-ban clause, unlike Plague Legions, so no
   matching `warlord` effect should be added. Not a Ryan decision — mechanism reuse, fully
   source-determined set. `B114_SHADOW_LEGION_SCOPE.md` written (net-new); no engine/data change.
+
+- **D324** — B114 build attempt (S230) found the S229 plan was wrong about the size of the work.
+  Re-derived the 21-unit set independently at build time, matching S229's split exactly (14 named +
+  7 "Damned"-keyword, both source `000000012`; 10 more "Damned" datasheets correctly excluded,
+  source `000000355`). Before hand-tagging `units.json`, checked how the four shipped allied_group
+  precedents (Plague Legions, Scintillating Legions, Legions of Excess, Blood Legions) actually
+  store their allied entries: each is sourced from a separate, real Wahapedia datasheet ID — the
+  destination faction's own book-variant of the unit, with faction-flavored ability text (Rotigus's
+  Death-Guard-allied entry names "Plague Legions" explicitly; its native Chaos Daemons entry
+  doesn't) — not the native entry copied with a tag added. Checked `Datasheets.csv` directly: a
+  distinct `CD`-faction, `source_id 000000012` row exists for all 21 Shadow Legion units, none yet
+  present in `units.json`. Correct build is a pipeline run against 21 new datasheet IDs to generate
+  21 new Chaos Daemons-block entries, sized like a small faction build, not a two-file data edit.
+  Confirmed all supporting source files (abilities, models, models_cost, options, unit_composition,
+  wargear) already hold rows for these IDs on a 5-unit spot check — no missing source material, just
+  more pipeline work than scoped. Stopped cleanly: no hand-edit to `units.json`,
+  `detachment_effects.json`, or `rules_assertions.py` this session. Not a Ryan decision — same
+  grounds as D323, this is a "how it gets built" correction. `B114_SHADOW_LEGION_SCOPE.md` §6 added
+  (update, not net-new); `OPEN_ITEMS_BACKLOG.md` B114 entry rewritten with the corrected scope.
