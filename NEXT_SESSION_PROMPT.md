@@ -1,57 +1,54 @@
-# NEXT SESSION PROMPT — Session 232
+# NEXT SESSION PROMPT — Session 233
 
-## No item is blocked on a Ryan decision. GK §6/§7 is the natural next pick.
+## No item is blocked on a Ryan decision. GK §6/§7 is still the natural next pick.
 
-B114 (Shadow Legion Thralls) shipped and closed at S231 (D325). Read
-`SESSION_HANDOFF_231.md` first if any of this session's reasoning needs re-checking —
-the short version is below.
+S232 was forced into a tooling-only turn by two session-open gate failures — no assigned build
+happened. Read `SESSION_HANDOFF_232.md` first if any of this session's reasoning needs
+re-checking — the short version is below.
 
-Shadow Legion's Chaos Daemons detachment now correctly allies in 21 Chaos Space Marines
-units (14 named + 7 built "Damned"), tagged `allied_group: "Shadow Legion Thralls"` in the
-Chaos Daemons block of `units.json`, priced off their Chaos Space Marines native points
-(no separate GW points table exists for this detachment — checked directly in both
-factions' MFM files). `detachment_effects.json`'s unlock is `enforced: true`. Chaos Daemons
-stays fully source-reproducible: the 21 units were appended into the project-root Gen-1
-CSVs (`Unit_Stats.csv` and friends), not hand-patched into `units.json` — `units_repro_check`
-and `repro_check` are both green. A real, previously-undocumented finding from this build:
-the CD-faction Wahapedia datasheet rows this ticket sourced from are mistag duplicates
-(D131/D132's pattern), not real GW book-variant reprints like Rotigus — worth remembering if
-a similar-looking allied-unlock ticket comes up again, since the "check the ability text
-before trusting a `Datasheets.csv` faction tag" step is what caught it.
+Fixed a real bug in `rules_assertions.py`'s tier classifier (`classify_tier` couldn't see inside
+`Sources` class methods, so one assertion, `E4b-6`, misclassified as tier A and crashed under
+`--tier a` instead of skipping). Also fixed a doc-integrity gap: D324 and D325 had only ever been
+written into `DECISION_INDEX.md`, never into the authoritative `40K_Decision_Log.md` — moved,
+content unchanged. Neither of these touched `units.json`, `detachments.json`, `index.html`, or any
+other shipped output — pure tooling/process, zero product change.
+
+## Ryan action required (new)
+
+- **B117** — six GW-derived Gen-1 Chaos Daemons CSVs are committed to the public repo despite
+  matching its own `.gitignore` rule. Same shape as the still-outstanding B108. See the backlog
+  entry for the exact file list. `repo_check` will keep flagging CRITICAL every session open until
+  this lands.
 
 ## Open, at your discretion
 
-- **GK §6/§7** — carried unchanged for several sessions; still not investigated. Read what
-  exists of it first; if it turns out to need re-scoping from scratch, that's a normal
-  scoping turn, not a problem.
-- Remaining engine/data backlog (B108's Ryan action, B99/B98/B97/B103/E28/B93/B90/B94/B85/
-  B86/B69/B70/B75/P2/P4/E23/B67b/E12/B17) — 21 open, no new priority signal this session.
-  Pick in whatever order groups cleanly into a single turn type; none of them depend on
-  B114 or on each other in a way that forces an order.
+- **GK §6/§7** — carried unchanged for several sessions; still not investigated. Read what exists
+  of it first; if it turns out to need re-scoping from scratch, that's a normal scoping turn.
+- Remaining engine/data backlog (B108's Ryan action, B117's Ryan action, B99/B98/B97/B103/E28/B93/
+  B90/B94/B85/B86/B69/B70/B75/P2/P4/E23/B67b/E12/B17) — 22 open, no new priority signal this
+  session. Pick in whatever order groups cleanly into a single turn type.
 
 ## Standing reminders
 
-- Re-derive from source, don't trust prior-session prose — including this prompt's claims
-  about what shipped. Verify S231's Files table hashes against `pipeline_manifest.json`
-  before starting.
-- Turn typing stays strict. If GK §6/§7 turns out to need both a scoping pass and a build,
-  that's two sessions, not one.
-- The B114 build touched `rules_assertions.py` fairly widely (five separate assertion
-  areas). If a future baseline shows an unexpected assertion failure anywhere near allied
-  groups, Character-keyword gaps, or the seeded-add count, check this session's changes
-  first before assuming a new bug.
+- Re-derive from source, don't trust prior-session prose — including this prompt's claims about
+  what shipped. Verify S232's Files table hashes against `pipeline_manifest.json` before starting.
+- Turn typing stays strict. If GK §6/§7 turns out to need both a scoping pass and a build, that's
+  two sessions, not one.
+- Check both `40K_Decision_Log.md` and `DECISION_INDEX.md`'s own tails directly when opening
+  either — S230/S231 wrote two entries into the wrong one; the fix is in, but it's worth spot
+  re-checking rather than assuming a filing error can't recur.
 
 ## Decisions waiting on Ryan
 
-- **B116** — unchanged. Drukhari's Harlequins/Anhrathe cross-book allied-inclusion mechanic
-  (see `DRUKHARI_BUILD_SCOPE.md` §6). Build as its own follow-on ticket once Ryan decides.
-  Does not block anything shipped.
-- **Next faction after Drukhari** — the documented priority order is fully built; no faction
-  is queued. Recommendation stands: clear the remaining engine/scoping backlog (GK §6/§7
-  and the rest) before revisiting which faction, if any, comes next.
+- **B116** — unchanged. Drukhari's Harlequins/Anhrathe cross-book allied-inclusion mechanic (see
+  `DRUKHARI_BUILD_SCOPE.md` §6). Build as its own follow-on ticket once Ryan decides. Does not
+  block anything shipped.
+- **Next faction after Drukhari** — the documented priority order is fully built; no faction is
+  queued. Recommendation stands: clear the remaining engine/scoping backlog (GK §6/§7 and the
+  rest) before revisiting which faction, if any, comes next.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_232.md` in `pipeline_manifest.py`'s
-GUARDED list **before** running `--write`, and run `pipeline_manifest.py --freshness-check`
-as the **last** command.
+Produce the four documents, register `SESSION_HANDOFF_233.md` in `pipeline_manifest.py`'s GUARDED
+list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the
+**last** command.

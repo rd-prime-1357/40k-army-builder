@@ -3,9 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **21 open** as of S231 (down from 22 — B114 closed; nothing else closed,
-nothing opened): B116, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
+not here, it isn't open. **22 open** as of S232 (up from 21 — B117 opened this session; nothing
+closed): B117, B116, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
 E23, B67b, E12, B17.
+Tooling-only turn (D326): session-open reconciliation found a real, verified custody violation —
+6 GW-derived Gen-1 Chaos Daemons CSVs committed to the public repo, matching the `.gitignore`'s own
+`*.csv` rule. Logged as B117 (Ryan action, same shape as B108). Also fixed `classify_tier`'s
+Sources-class reachability gap (`rules_assertions.py`) and a doc-integrity gap where D324/D325 had
+been filed only into `DECISION_INDEX.md` and never reached `40K_Decision_Log.md`. See D326.
 S231 (D325): B114 built and closed. Ran the pipeline scoped to the 21 Shadow Legion Thralls
 datasheet IDs, appended them into the Gen-1 Chaos Daemons root CSVs so the block stays
 source-reproducible, retargeted `detachment_effects.json` onto the allied_group mechanism
@@ -555,6 +560,21 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### B117 — Six GW-derived Gen-1 Chaos Daemons CSVs committed to the public repo — **NEW S232 (D326); RYAN ACTION; CRITICAL (compliance)**
+`repo_check.py` at S232 open flagged `Unit_Stats.csv`, `Unit_Points.csv`, `Unit_Wargear_Options.csv`,
+`Unit_Other_Options.csv`, `Unit_Weapons.csv`, `Unit_Ability_Details.csv` as present in the public
+repo despite each matching the repo's own `.gitignore` `*.csv` pattern — meaning they were force-added
+or committed before the ignore rule existed, not a routine sync gap. Verified against a direct fetch
+of the public tarball (`codeload.github.com/rd-prime-1357/40k-army-builder/tar.gz/main`), not assumed
+from the project mount. Content is GW-derived by the standing constraint's own test (unit stats,
+points, wargear options, and ability text — the same class of material `Thousand_Sons_web.txt`/B108
+was flagged for), regardless of these being the project's own pipeline-adjacent root CSVs rather than
+a raw Wahapedia export. These are the same six files S231 (D325) appended the 21 Shadow Legion
+Thralls rows into. Ryan action required (public-repo push isn't in Claude's scope): remove all six
+from the public repo — at minimum from HEAD; ideally scrub git history given the content shouldn't
+have been public. Until this lands, `repo_check` will keep flagging CRITICAL on every session open,
+same as B108's still-outstanding pattern.
 
 ### B116 — Drukhari's Harlequins/Anhrathe allied-unit inclusion has no built-faction precedent — **NEW S222 (D316); product scope call; blocked on Ryan / on Aeldari being prioritized**
 Found while scoping Drukhari. Drukhari carries an army-wide rule ("Corsairs and Travelling

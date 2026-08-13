@@ -1023,60 +1023,27 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   matching `warlord` effect should be added. Not a Ryan decision — mechanism reuse, fully
   source-determined set. `B114_SHADOW_LEGION_SCOPE.md` written (net-new); no engine/data change.
 
-- **D324** — B114 build attempt (S230) found the S229 plan was wrong about the size of the work.
-  Re-derived the 21-unit set independently at build time, matching S229's split exactly (14 named +
-  7 "Damned"-keyword, both source `000000012`; 10 more "Damned" datasheets correctly excluded,
-  source `000000355`). Before hand-tagging `units.json`, checked how the four shipped allied_group
-  precedents (Plague Legions, Scintillating Legions, Legions of Excess, Blood Legions) actually
-  store their allied entries: each is sourced from a separate, real Wahapedia datasheet ID — the
-  destination faction's own book-variant of the unit, with faction-flavored ability text (Rotigus's
-  Death-Guard-allied entry names "Plague Legions" explicitly; its native Chaos Daemons entry
-  doesn't) — not the native entry copied with a tag added. Checked `Datasheets.csv` directly: a
-  distinct `CD`-faction, `source_id 000000012` row exists for all 21 Shadow Legion units, none yet
-  present in `units.json`. Correct build is a pipeline run against 21 new datasheet IDs to generate
-  21 new Chaos Daemons-block entries, sized like a small faction build, not a two-file data edit.
-  Confirmed all supporting source files (abilities, models, models_cost, options, unit_composition,
-  wargear) already hold rows for these IDs on a 5-unit spot check — no missing source material, just
-  more pipeline work than scoped. Stopped cleanly: no hand-edit to `units.json`,
-  `detachment_effects.json`, or `rules_assertions.py` this session. Not a Ryan decision — same
-  grounds as D323, this is a "how it gets built" correction. `B114_SHADOW_LEGION_SCOPE.md` §6 added
-  (update, not net-new); `OPEN_ITEMS_BACKLOG.md` B114 entry rewritten with the corrected scope.
-- **D325** — B114 built and closed (S231), pipeline/data turn. S230's plan (D324) was directionally
-  right but its stated reason was wrong: the CD-faction datasheet rows are not real GW book-variant
-  reprints (unlike Rotigus/Plague Legions) — they are Wahapedia mistag duplicates, the exact D131/D132
-  finding, confirmed directly by diffing CD-tagged Chaos Lord (000004036) against CSM's native
-  Chaos Lord (000000929): byte-identical ability text. Building was still correct and necessary
-  regardless: `index.html`'s `resolveUnits`/`setFaction` resolve a faction's roster strictly by
-  `army` block, so the 21 units had to physically exist in the Chaos Daemons block for the app to
-  ever offer them there. Also found neither Chaos Daemons' nor Chaos Space Marines' own MFM file
-  prints a Shadow Legion points table (checked directly, unlike the other four allied-group
-  precedents) — the ability text only caps a pool, so the 21 units price off their Chaos Space
-  Marines native points exactly, cross-checked as an executable assertion (E21a-7) rather than
-  assumed. Ran the real scoped pipeline (wahapedia_transform.py filtered to the 21 target datasheet
-  IDs only, hand-built Unit_Points.csv sourced from CSM's shipped prices, convert_to_json.py) and,
-  critically, appended the same 21 units into the Gen-1 Chaos Daemons root CSVs
-  (`Unit_Stats.csv`/`Unit_Points.csv`/`Unit_Wargear_Options.csv`/`Unit_Other_Options.csv`/
-  `Unit_Weapons.csv`/`Unit_Ability_Details.csv`, plus a new `Allied_Group` column and a new
-  `Datasheet ID` column on `Unit_Stats.csv`) so Chaos Daemons stays a genuine, source-reproducible
-  fixed point rather than a hand-patched `units.json` — confirmed via `units_repro_check.py`/
-  `repro_check.py`, both green. `repro_check.py`'s FACTIONS list gained `CD` (same precedent as
-  each prior faction addition) so the 21 units' loadout defaults regenerate from source via the
-  existing B68/B104 cross-army-block propagation mechanism (Chaos_Space_Marines_web.txt's
-  composition text correctly propagates to the CD-block duplicates by design — confirmed, not
-  assumed). `detachment_effects.json`'s Shadow Legion unlock retargeted from the dead
-  `{"keyword": "HERETIC ASTARTES"}, enforced:false` stub to `{"allied_group": "Shadow Legion
-  Thralls"}, enforced:true` — zero engine change needed, `unlockedAlliedGroups`/`alliedPointsCap`/
-  `canAddUnitToList` are fully generic. `rules_assertions.py`: E21a-4's hardcoded unenforced
-  inventory and prose updated; new E21a-7 pins the 21-unit census against both units.json and CSM's
-  native roster; E4B_KEYWORD_GAPS extended by the 3 pre-existing Character-keyword gaps duplicating
-  onto Chaos Daemons; ALLIED_CARRIER_GROUPS gained a Chaos Daemons entry and a
-  NATIVE_ARMY_OVERRIDES map (Shadow Legion Thralls is the first allied-carrier group where Chaos
-  Daemons is the carrier rather than the donor — `b61_cd_native_copies_distinct` needed a real fix,
-  not just a data addition, to check Chaos Space Marines as the donor instead of the hardcoded
-  Chaos Daemons default); E14-2's seeded-add count moved 109/76 → 113/80, verified by full
-  per-army breakdown before updating the literal. `e21c_check.js` S4 rewritten: the old assertion
-  tested Shadow Legion's dead enforced:false stub as a convenient real-data example of "nothing
-  unlocks" — replaced with a genuine positive test of the now-live unlock (offer-without/offer-with/
-  refusal-reason, mirroring Plague Legions' own S4 coverage) rather than deleting the coverage.
-  `datasheet_wargear_abilities.json` regenerated (+5 entries, purely additive). Diff-guarded
-  throughout: every regenerated output confirmed additive-only against the prior committed state.
+- **D324** — B114 build attempt stopped (S230), scoping. The S229 plan (D323) undercounted the
+  work: the four shipped allied_group precedents each source their allied entries from a real,
+  separate Wahapedia datasheet ID (the destination faction's own book-variant), not a tagged copy of
+  the native entry — confirmed directly against `Datasheets.csv`. Correct build is a pipeline run
+  against 21 new datasheet IDs, not a two-file data edit. Stopped cleanly, no hand-edit. Not a Ryan
+  decision — a "how it gets built" correction. `B114_SHADOW_LEGION_SCOPE.md` §6 added.
+- **D325** — B114 built and closed (S231), pipeline/data. D324's plan was right but its stated
+  reason was wrong: the CD-faction datasheet rows are Wahapedia mistag duplicates (D131/D132
+  pattern), not real book-variant reprints — confirmed by a byte-identical diff against CSM's native
+  Chaos Lord. Ran the scoped pipeline and appended the 21 units into the Gen-1 Chaos Daemons root
+  CSVs (not a `units.json` hand-patch), keeping Chaos Daemons source-reproducible.
+  `detachment_effects.json`'s Shadow Legion unlock retargeted onto the existing `allied_group`
+  mechanism, `enforced: true`, zero engine change. Five `rules_assertions.py` areas updated/added
+  (E21a-4, new E21a-7, `E4B_KEYWORD_GAPS`, `ALLIED_CARRIER_GROUPS`/`NATIVE_ARMY_OVERRIDES`, E14-2);
+  `e21c_check.js` S4 rewritten onto live behavior. Full detail in `40K_Decision_Log.md`.
+- **D326** — Session-open reconciliation (S232), tooling. Fixed `classify_tier`'s reachability
+  walker (stopped at the `Sources`-class boundary, so a tier-B assertion one call removed from a
+  module global misclassified as tier A and crashed under `--tier a` instead of skipping) — 83 A /
+  42 B after the fix, `--tier a` runs clean. Found and fixed a doc-integrity gap: D324/D325's full
+  entries had been written into `DECISION_INDEX.md` instead of `40K_Decision_Log.md`, leaving the
+  log itself stopped at D323; moved into the log, index entries compressed to proper one-liners, no
+  content lost. Real finding left open: 6 GW-derived Gen-1 Chaos Daemons CSVs are committed to the
+  public repo (`.gitignore`'s own `*.csv` rule notwithstanding) — logged as **B117**, Ryan action,
+  same shape as B108. No engine/data change; tooling-only turn.

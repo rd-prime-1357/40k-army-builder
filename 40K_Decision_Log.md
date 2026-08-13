@@ -13279,3 +13279,127 @@ Not a decision for Ryan — the mechanism is a straight reuse of an already-deci
 unlockable set is fully source-determined, not a judgment call. `B114_SHADOW_LEGION_SCOPE.md`
 written (net-new). Recommended next: build as a data-only turn (tag units, retarget effect, add a
 pinned census assertion in the same shape as B113's E4b-6/E4b-7).
+
+### D324 — B114 build attempt stopped: allied_group precedent requires real per-datasheet IDs, not tagged copies (S230), scoping
+
+**B114 build attempt (S230) found the S229 plan was wrong about the size of the work.** Re-derived
+the 21-unit set independently at build time, matching S229's split exactly (14 named + 7
+"Damned"-keyword, both source `000000012`; 10 more "Damned" datasheets correctly excluded, source
+`000000355`). Before hand-tagging `units.json`, checked how the four shipped allied_group
+precedents (Plague Legions, Scintillating Legions, Legions of Excess, Blood Legions) actually store
+their allied entries: each is sourced from a separate, real Wahapedia datasheet ID — the destination
+faction's own book-variant of the unit, with faction-flavored ability text (Rotigus's
+Death-Guard-allied entry names "Plague Legions" explicitly; its native Chaos Daemons entry
+doesn't) — not the native entry copied with a tag added. Checked `Datasheets.csv` directly: a
+distinct `CD`-faction, `source_id 000000012` row exists for all 21 Shadow Legion units, none yet
+present in `units.json`. Correct build is a pipeline run against 21 new datasheet IDs to generate 21
+new Chaos Daemons-block entries, sized like a small faction build, not a two-file data edit.
+Confirmed all supporting source files (abilities, models, models_cost, options, unit_composition,
+wargear) already hold rows for these IDs on a 5-unit spot check — no missing source material, just
+more pipeline work than scoped.
+
+**Stopped cleanly: no hand-edit to `units.json`, `detachment_effects.json`, or
+`rules_assertions.py` this session.** Not a Ryan decision — same grounds as D323, this is a "how it
+gets built" correction. `B114_SHADOW_LEGION_SCOPE.md` §6 added (update, not net-new);
+`OPEN_ITEMS_BACKLOG.md` B114 entry rewritten with the corrected scope.
+
+### D325 — B114 built and closed: Shadow Legion Thralls shipped via scoped pipeline into Chaos Daemons Gen-1 CSVs (S231), pipeline/data
+
+**B114 built and closed (S231), pipeline/data turn.** S230's plan (D324) was directionally right
+but its stated reason was wrong: the CD-faction datasheet rows are not real GW book-variant reprints
+(unlike Rotigus/Plague Legions) — they are Wahapedia mistag duplicates, the exact D131/D132 finding,
+confirmed directly by diffing CD-tagged Chaos Lord (000004036) against CSM's native Chaos Lord
+(000000929): byte-identical ability text. Building was still correct and necessary regardless:
+`index.html`'s `resolveUnits`/`setFaction` resolve a faction's roster strictly by `army` block, so
+the 21 units had to physically exist in the Chaos Daemons block for the app to ever offer them
+there. Also found neither Chaos Daemons' nor Chaos Space Marines' own MFM file prints a Shadow
+Legion points table (checked directly, unlike the other four allied-group precedents) — the ability
+text only caps a pool, so the 21 units price off their Chaos Space Marines native points exactly,
+cross-checked as an executable assertion (E21a-7) rather than assumed.
+
+**Ran the real scoped pipeline** (`wahapedia_transform.py` filtered to the 21 target datasheet IDs
+only, hand-built `Unit_Points.csv` sourced from CSM's shipped prices, `convert_to_json.py`) and,
+critically, appended the same 21 units into the Gen-1 Chaos Daemons root CSVs
+(`Unit_Stats.csv`/`Unit_Points.csv`/`Unit_Wargear_Options.csv`/`Unit_Other_Options.csv`/
+`Unit_Weapons.csv`/`Unit_Ability_Details.csv`, plus a new `Allied_Group` column and a new
+`Datasheet ID` column on `Unit_Stats.csv`) so Chaos Daemons stays a genuine, source-reproducible
+fixed point rather than a hand-patched `units.json` — confirmed via `units_repro_check.py`/
+`repro_check.py`, both green. `repro_check.py`'s FACTIONS list gained `CD` (same precedent as each
+prior faction addition) so the 21 units' loadout defaults regenerate from source via the existing
+B68/B104 cross-army-block propagation mechanism (`Chaos_Space_Marines_web.txt`'s composition text
+correctly propagates to the CD-block duplicates by design — confirmed, not assumed).
+`detachment_effects.json`'s Shadow Legion unlock retargeted from the dead `{"keyword": "HERETIC
+ASTARTES"}, enforced:false` stub to `{"allied_group": "Shadow Legion Thralls"}, enforced:true` —
+zero engine change needed, `unlockedAlliedGroups`/`alliedPointsCap`/`canAddUnitToList` are fully
+generic.
+
+**`rules_assertions.py`:** E21a-4's hardcoded unenforced inventory and prose updated; new E21a-7
+pins the 21-unit census against both `units.json` and CSM's native roster; `E4B_KEYWORD_GAPS`
+extended by the 3 pre-existing Character-keyword gaps duplicating onto Chaos Daemons;
+`ALLIED_CARRIER_GROUPS` gained a Chaos Daemons entry and a `NATIVE_ARMY_OVERRIDES` map (Shadow
+Legion Thralls is the first allied-carrier group where Chaos Daemons is the carrier rather than the
+donor — `b61_cd_native_copies_distinct` needed a real fix, not just a data addition, to check Chaos
+Space Marines as the donor instead of the hardcoded Chaos Daemons default); E14-2's seeded-add count
+moved 109/76 → 113/80, verified by full per-army breakdown before updating the literal.
+`e21c_check.js` S4 rewritten: the old assertion tested Shadow Legion's dead `enforced:false` stub as
+a convenient real-data example of "nothing unlocks" — replaced with a genuine positive test of the
+now-live unlock (offer-without/offer-with/refusal-reason, mirroring Plague Legions' own S4 coverage)
+rather than deleting the coverage. `datasheet_wargear_abilities.json` regenerated (+5 entries,
+purely additive). Diff-guarded throughout: every regenerated output confirmed additive-only against
+the prior committed state.
+
+B114 is now closed. B116 (Harlequins/Anhrathe allied-inclusion, awaiting Ryan's call) is the only
+open item from the S227/S228 handoff chain; the remaining ~21-item backlog carries no forced order.
+
+### D326 — Session-open reconciliation: `classify_tier` reachability gap fixed, decision-log/index doc-integrity restored, repo custody violation found (S232), tooling
+
+**Session opened with two gate failures.** `./baseline.sh --fetch` (no GW sources loaded, tier B —
+not a data turn): `rules_assertions --tier a` failed on `E4b-6` with a raw `FileNotFoundError` for
+`MFM_Black_Templars_v1.1.txt`, and `repo_check` failed with 6 problems. Reconciled both before
+starting any assigned work, per standing constraint.
+
+**Bug found and fixed: `classify_tier`'s reachability walker stops at the Sources-class boundary.**
+`E4b-6` (`b113_leader_line_census`) is tier B in substance — it calls `S.mfm_leader_lines()`, which
+calls `S.mfm_detachment_rows()`, a listed `TIER_B_NAMES` method that opens raw MFM files — but
+`classify_tier` misclassified it as tier A, so a `--tier a` run (the only mode available without GW
+sources loaded) tried to run it anyway and crashed instead of skipping cleanly. Root cause:
+`_reachable_names`'s one-level-of-recursion walk resolves called names via `globals()` only; `Sources`
+*methods* (called as `S.foo()`) live on the class, not the module namespace, so the walk reached
+`mfm_leader_lines` but had no way to look inside it and find `mfm_detachment_rows`. Fixed by falling
+back to `getattr(Sources, n, None)` when a name isn't in `globals()`. Re-ran the full
+`ASSERTIONS` list under the fixed classifier: tier distribution moved from 84 A / 41 B to 83 A / 42
+B (exactly the one assertion affected); `--tier a` now runs clean (83/83, `E4b-6` correctly skipped
+as tier B) instead of crashing. This is a testing-infrastructure fix, not a rules-legality change —
+no assertion's pass/fail *content* changed, only which mode it correctly runs under. Worth
+remembering: any future `Sources` method that calls another `Sources` method transitively carries
+the same blind spot for any assertion that only reaches it one level removed from a module global —
+the fix generalizes (any class, not just `Sources`), but a second class added later would need the
+same `getattr` fallback pointed at it explicitly.
+
+**Doc-integrity gap found and fixed: `40K_Decision_Log.md` was missing D324 and D325 entirely.**
+Both sessions (S230, S231) wrote their full decision entries into `DECISION_INDEX.md` instead of the
+authoritative log — the index carried complete, multi-paragraph copies of what should have been
+one-line pointers, and the log itself stopped at D323. Caught by checking the log's own tail against
+the index's tail rather than trusting either alone. Fixed: D324 and D325's full entries moved into
+`40K_Decision_Log.md` in the established heading format (content unchanged, not rewritten);
+`DECISION_INDEX.md`'s D324/D325 entries replaced with proper one-line pointers matching D320's
+established length and style. No content was lost — this was a filing error, not a missing record.
+
+**Real finding, left open: 6 GW-derived CSVs are committed to the public repo.** `repo_check.py`
+flagged `Unit_Stats.csv`, `Unit_Points.csv`, `Unit_Wargear_Options.csv`, `Unit_Other_Options.csv`,
+`Unit_Weapons.csv`, `Unit_Ability_Details.csv` — all six matching the `.gitignore`'s own `*.csv`
+pattern, meaning they were added to git history despite the ignore rule (force-added or committed
+before the rule existed), not a sync gap. These are the same six files S231 (D325) appended the 21
+Shadow Legion Thralls rows into — Gen-1 Chaos Daemons source CSVs, GW-derived by the standing
+constraint's own test (unit stat/points/wargear/ability text, not who generated the file). Verified
+directly against a fresh tarball fetch of the public repo, not assumed from a stale mount. Same
+shape as B108 (`Thousand_Sons_web.txt`), a distinct instance, both Ryan actions since a public-repo
+push isn't in Claude's scope — logged as **B117**.
+
+**Baseline clean after reconciliation.** Full local run (`--no-repo`, since `repo_check`'s finding is
+real and pre-existing, not a regression to chase in this session): 26/26 gates pass (5 tier-B
+skipped, sources correctly not loaded for a non-data turn). `pipeline_manifest.py --write` re-run
+after the `rules_assertions.py` edit; `--freshness-check` clean.
+
+No engine or data change this session — tooling-only, per turn typing. GK §6/§7 (S232's
+recommended next pick) was not started; a scoping turn belongs in its own session.

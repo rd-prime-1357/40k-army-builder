@@ -5006,7 +5006,17 @@ def _reachable_names(fn, _seen=None):
         if n in _seen:
             continue
         _seen.add(n)
+        # Module-level functions are reachable via globals(); Sources *methods*
+        # (called as S.foo()) are not — they live on the class, not the module
+        # namespace, so a plain globals() lookup silently stops the walk at the
+        # class boundary. This is what let E4b-6 (b113_leader_line_census, which
+        # calls S.mfm_leader_lines(), which itself calls S.mfm_detachment_rows())
+        # misclassify as tier A: the walk reached 'mfm_leader_lines' but never
+        # got inside it to find 'mfm_detachment_rows'. Checking the Sources class
+        # dict as a fallback closes that gap.
         target = globals().get(n)
+        if target is None:
+            target = getattr(Sources, n, None)
         if callable(target) and hasattr(target, '__code__'):
             result |= _reachable_names(target, _seen)
     return result
