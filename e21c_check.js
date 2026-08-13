@@ -163,9 +163,25 @@ const cdEpicHeroes = cdPool.filter(u => u.unit_type === 'Epic Hero').map(u => u.
   ok(gate.ok === false && gate.reason === 'not_unlocked', 'S4: adding an allied unit with no unlock is refused (not_unlocked)');
   ok(E.addRefusalText(gate).length > 0, 'S4: the not_unlocked refusal carries a reason string');
 
-  // Shadow Legion's second effect (HERETIC ASTARTES unlock) is enforced:false and
-  // targets a keyword, not an allied_group — it must unlock nothing here.
-  ok(E.unlockedAlliedGroups([SHADOW]).size === 0, 'S4: an enforced:false / keyword unlock unlocks no allied group');
+  // B114 (S231): Shadow Legion's unlock was re-shaped from a dead enforced:false/keyword
+  // stub onto the real allied_group mechanism (Shadow Legion Thralls, 21 units, sourced
+  // from Chaos Space Marines). Same D0 leak shape as Plague Legions above, now with a
+  // live built row to test rather than a synthetic one.
+  const thrallNames = cdPool.filter(u => u.alliedGroup === 'Shadow Legion Thralls').map(u => u.unit_name);
+  ok(thrallNames.length === 21, `S4: fixture has the 21 Shadow Legion Thralls units (got ${thrallNames.length})`);
+
+  const cdWithout = new Set(E.offerableUnits(cdPool, []).map(u => u.unit_name));
+  ok(thrallNames.every(n => !cdWithout.has(n)), 'S4: NONE of the 21 Thralls units is offered without Shadow Legion');
+  ok(cdWithout.has('Bloodthirster'), 'S4: a native Chaos Daemons unit is still offered');
+
+  const cdWithSL = new Set(E.offerableUnits(cdPool, [SHADOW]).map(u => u.unit_name));
+  ok(thrallNames.every(n => cdWithSL.has(n)), 'S4: all 21 Thralls units are offered once Shadow Legion is selected');
+
+  E.select([]); E.setPool(cdPool); E.setList([]);
+  const cl = view('Chaos Daemons', 'Chaos Lord');
+  const slGate = E.canAddUnitToList(cl, 90);
+  ok(slGate.ok === false && slGate.reason === 'not_unlocked', 'S4: adding a Thralls unit with no unlock is refused (not_unlocked)');
+  ok(E.addRefusalText(slGate).length > 0, 'S4: the Thralls not_unlocked refusal carries a reason string');
 }
 
 // ── Section 5: unlock points sub-cap, keyed by battle size ───────────────────

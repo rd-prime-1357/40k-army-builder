@@ -1,0 +1,77 @@
+﻿Army Name,Unit Name,Model Group,Models Per Trigger,Max Substitutions Per Trigger,Weapon Replaced,Replacement Weapon Name,Points Cost,Is Choice,Option Group
+Chaos Daemons,Lord of Change,All,,,Staff of Tzeentch,Rod of sorcery,,Yes,A
+Chaos Daemons,Lord of Change,All,,,Staff of Tzeentch,Baleful sword,,Yes,A
+Chaos Daemons,Great Unclean One,All,,,Plague flail,Bileblade,,No,
+Chaos Daemons,Great Unclean One,All,,,Bilesword - strike,Doomsday bell,,No,
+Chaos Daemons,Great Unclean One,All,,,Bilesword - sweep,Doomsday bell,,No,
+Chaos Daemons,Keeper of Secrets,All,,,Phantasmagoria - witchfire,Living whip,,Yes,A
+Chaos Daemons,Keeper of Secrets,All,,,Phantasmagoria - focused witchfire,Living whip,,Yes,A
+Chaos Daemons,Keeper of Secrets,All,,,Snapping claws,Ritual knife,,Yes,A
+Chaos Daemons,Keeper of Secrets,All,,,Witstealer sword,Shining Aegis,,Yes,A
+Chaos Daemons,Soul Grinder,All,,,Warpsword,Warpclaw,,No,
+Chaos Daemons,Chaos Lord,All,,,Daemon hammer,Accursed weapon,,Yes,A
+Chaos Daemons,Chaos Lord,All,,,Daemon hammer,Astartes chainsword,,Yes,A
+Chaos Daemons,Chaos Lord,All,,,plasma pistol,Power fist,,No,
+Chaos Daemons,Chaos Lord In Terminator Armour,All,,,Combi-bolter,Combi-weapon,,No,
+Chaos Daemons,Chaos Lord In Terminator Armour,All,,,Exalted weapon,Chainfist,,Yes,B
+Chaos Daemons,Chaos Lord In Terminator Armour,All,,,Exalted weapon,Power fist,,Yes,B
+Chaos Daemons,Chaos Lord with Jump Pack,All,,,Bolt pistol,plasma pistol,,No,
+Chaos Daemons,Chaos Lord with Jump Pack,All,,,Accursed weapon,Power fist,,No,
+Chaos Daemons,Chaos Terminator Squad,All,5,,Combi-bolter,Heavy flamer,,Yes,A
+Chaos Daemons,Chaos Terminator Squad,All,5,,Combi-bolter,Reaper autocannon,,Yes,A
+Chaos Daemons,Chaos Terminator Squad,All,,Any,Combi-bolter,Combi-weapon,,No,
+Chaos Daemons,Chaos Terminator Squad,All,5,3,Accursed weapon,Power fist,,No,
+Chaos Daemons,Chaos Terminator Squad,All,5,,Accursed weapon,Chainfist,,No,
+Chaos Daemons,Chosen,All,5,2,Bolt pistol,plasma pistol,,No,
+Chaos Daemons,Chosen,All,5,2,Boltgun,Combi-weapon,,No,
+Chaos Daemons,Chosen,All,5,,Accursed weapon,power fist. That model’s boltgun cannot be replaced,,No,
+Chaos Daemons,Cultist Mob,All,,,Autopistol,Bolt pistol,,No,
+Chaos Daemons,Fellgor Beastmen,All,,,Bolt pistol,plasma pistol,,No,
+Chaos Daemons,Fellgor Beastmen,All,,,Close combat weapon,Great weapon,,No,
+Chaos Daemons,Fellgor Beastmen,All,,,Close combat weapon,corrupted stave,,No,
+Chaos Daemons,Traitor Guardsmen Squad,All,,3,Lasgun,Cultist grenade launcher,,Yes,A
+Chaos Daemons,Traitor Guardsmen Squad,All,,3,Lasgun,Flamer,,Yes,A
+Chaos Daemons,Traitor Guardsmen Squad,All,,3,Lasgun,Meltagun,,Yes,A
+Chaos Daemons,Traitor Guardsmen Squad,All,,3,Lasgun,plasma gun,,Yes,A
+Chaos Daemons,Traitor Guardsmen Squad,All,,3,Lasgun,Cultist sniper rifle,,Yes,A
+Chaos Daemons,Traitor Guardsmen Squad,All,,,Close combat weapon,Chainsword,,Yes,B
+Chaos Daemons,Traitor Guardsmen Squad,All,,,Close combat weapon,Power weapon,,Yes,B
+Chaos Daemons,Traitor Guardsmen Squad,All,,,Corrupted pistol,Boltgun,,No,
+Chaos Daemons,Havocs,All,,,Astartes chainsword,Accursed weapon,,Yes,A
+Chaos Daemons,Havocs,All,,,Astartes chainsword,Power fist,,Yes,A
+Chaos Daemons,Havocs,All,,,Flamer,Boltgun,,Yes,B
+Chaos Daemons,Havocs,All,,,Flamer,Meltagun,,Yes,B
+Chaos Daemons,Havocs,All,,,Flamer,plasma gun,,Yes,B
+Chaos Daemons,Havocs,All,,,Flamer,plasma pistol,,Yes,B
+Chaos Daemons,Havocs,All,,,Flamer,Accursed weapon,,Yes,B
+Chaos Daemons,Havocs,All,,,Flamer,Power fist,,Yes,B
+Chaos Daemons,Havocs,All,,Any,Havoc autocannon or Havoc lascannon,Havoc autocannon,,Yes,C
+Chaos Daemons,Havocs,All,,Any,Havoc autocannon or Havoc lascannon,Havoc heavy bolter,,Yes,C
+Chaos Daemons,Havocs,All,,Any,Havoc autocannon or Havoc lascannon,Havoc lascannon,,Yes,C
+Chaos Daemons,Havocs,All,,Any,Havoc autocannon or Havoc lascannon,Havoc missile launcher,,Yes,C
+Chaos Daemons,Havocs,All,,Any,Havoc autocannon or Havoc lascannon,Havoc reaper chaincannon,,Yes,C
+Chaos Daemons,Legionaries,All,,,Boltgun,plasma pistol*,,Yes,A
+Chaos Daemons,Legionaries,All,,,Boltgun,Accursed weapon,,Yes,A
+Chaos Daemons,Legionaries,All,,,Boltgun,Astartes chainsword,,Yes,A
+Chaos Daemons,Legionaries,All,,,Boltgun,Heavy melee weapon,,Yes,A
+Chaos Daemons,Legionaries,All,,,Bolt pistol,plasma pistol*,,Yes,B
+Chaos Daemons,Legionaries,All,,,Bolt pistol,Accursed weapon,,Yes,B
+Chaos Daemons,Legionaries,All,,,Bolt pistol,Astartes chainsword,,Yes,B
+Chaos Daemons,Legionaries,All,,,Bolt pistol,Heavy melee weapon,,Yes,B
+Chaos Daemons,Legionaries,All,,Any,Boltgun,Astartes chainsword,,No,
+Chaos Daemons,Legionaries,All,,,Boltgun,Heavy melee weapon,,No,
+Chaos Daemons,Legionaries,All,,,Boltgun,Balefire tome,,No,
+Chaos Daemons,Legionaries,All,5,,Boltgun,Flamer,,Yes,G
+Chaos Daemons,Legionaries,All,5,,Boltgun,Havoc autocannon,,Yes,G
+Chaos Daemons,Legionaries,All,5,,Boltgun,Heavy bolter,,Yes,G
+Chaos Daemons,Legionaries,All,5,,Boltgun,Lascannon,,Yes,G
+Chaos Daemons,Legionaries,All,5,,Boltgun,Meltagun,,Yes,G
+Chaos Daemons,Legionaries,All,5,,Boltgun,missile launcher,,Yes,G
+Chaos Daemons,Legionaries,All,5,,Boltgun,plasma gun,,Yes,G
+Chaos Daemons,Legionaries,All,5,,Boltgun,Reaper chaincannon,,Yes,G
+Chaos Daemons,Raptors,All,,,Bolt pistol,plasma pistol,,No,
+Chaos Daemons,Raptors,All,,,Astartes chainsword,Accursed weapon,,Yes,B
+Chaos Daemons,Raptors,All,,,Astartes chainsword,Heavy melee weapon,,Yes,B
+Chaos Daemons,Raptors,All,5,2,Bolt pistol,plasma pistol (these models’ Astartes chainswords cannot be replaced),,No,
+Chaos Daemons,Raptors,All,5,2,Astartes chainsword,Heavy melee weapon,,No,
+Chaos Daemons,Sorcerer In Terminator Armour,All,,,Combi-bolter,Combi-weapon,,No,

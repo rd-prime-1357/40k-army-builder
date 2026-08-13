@@ -1041,3 +1041,42 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   `detachment_effects.json`, or `rules_assertions.py` this session. Not a Ryan decision — same
   grounds as D323, this is a "how it gets built" correction. `B114_SHADOW_LEGION_SCOPE.md` §6 added
   (update, not net-new); `OPEN_ITEMS_BACKLOG.md` B114 entry rewritten with the corrected scope.
+- **D325** — B114 built and closed (S231), pipeline/data turn. S230's plan (D324) was directionally
+  right but its stated reason was wrong: the CD-faction datasheet rows are not real GW book-variant
+  reprints (unlike Rotigus/Plague Legions) — they are Wahapedia mistag duplicates, the exact D131/D132
+  finding, confirmed directly by diffing CD-tagged Chaos Lord (000004036) against CSM's native
+  Chaos Lord (000000929): byte-identical ability text. Building was still correct and necessary
+  regardless: `index.html`'s `resolveUnits`/`setFaction` resolve a faction's roster strictly by
+  `army` block, so the 21 units had to physically exist in the Chaos Daemons block for the app to
+  ever offer them there. Also found neither Chaos Daemons' nor Chaos Space Marines' own MFM file
+  prints a Shadow Legion points table (checked directly, unlike the other four allied-group
+  precedents) — the ability text only caps a pool, so the 21 units price off their Chaos Space
+  Marines native points exactly, cross-checked as an executable assertion (E21a-7) rather than
+  assumed. Ran the real scoped pipeline (wahapedia_transform.py filtered to the 21 target datasheet
+  IDs only, hand-built Unit_Points.csv sourced from CSM's shipped prices, convert_to_json.py) and,
+  critically, appended the same 21 units into the Gen-1 Chaos Daemons root CSVs
+  (`Unit_Stats.csv`/`Unit_Points.csv`/`Unit_Wargear_Options.csv`/`Unit_Other_Options.csv`/
+  `Unit_Weapons.csv`/`Unit_Ability_Details.csv`, plus a new `Allied_Group` column and a new
+  `Datasheet ID` column on `Unit_Stats.csv`) so Chaos Daemons stays a genuine, source-reproducible
+  fixed point rather than a hand-patched `units.json` — confirmed via `units_repro_check.py`/
+  `repro_check.py`, both green. `repro_check.py`'s FACTIONS list gained `CD` (same precedent as
+  each prior faction addition) so the 21 units' loadout defaults regenerate from source via the
+  existing B68/B104 cross-army-block propagation mechanism (Chaos_Space_Marines_web.txt's
+  composition text correctly propagates to the CD-block duplicates by design — confirmed, not
+  assumed). `detachment_effects.json`'s Shadow Legion unlock retargeted from the dead
+  `{"keyword": "HERETIC ASTARTES"}, enforced:false` stub to `{"allied_group": "Shadow Legion
+  Thralls"}, enforced:true` — zero engine change needed, `unlockedAlliedGroups`/`alliedPointsCap`/
+  `canAddUnitToList` are fully generic. `rules_assertions.py`: E21a-4's hardcoded unenforced
+  inventory and prose updated; new E21a-7 pins the 21-unit census against both units.json and CSM's
+  native roster; E4B_KEYWORD_GAPS extended by the 3 pre-existing Character-keyword gaps duplicating
+  onto Chaos Daemons; ALLIED_CARRIER_GROUPS gained a Chaos Daemons entry and a
+  NATIVE_ARMY_OVERRIDES map (Shadow Legion Thralls is the first allied-carrier group where Chaos
+  Daemons is the carrier rather than the donor — `b61_cd_native_copies_distinct` needed a real fix,
+  not just a data addition, to check Chaos Space Marines as the donor instead of the hardcoded
+  Chaos Daemons default); E14-2's seeded-add count moved 109/76 → 113/80, verified by full
+  per-army breakdown before updating the literal. `e21c_check.js` S4 rewritten: the old assertion
+  tested Shadow Legion's dead enforced:false stub as a convenient real-data example of "nothing
+  unlocks" — replaced with a genuine positive test of the now-live unlock (offer-without/offer-with/
+  refusal-reason, mirroring Plague Legions' own S4 coverage) rather than deleting the coverage.
+  `datasheet_wargear_abilities.json` regenerated (+5 entries, purely additive). Diff-guarded
+  throughout: every regenerated output confirmed additive-only against the prior committed state.

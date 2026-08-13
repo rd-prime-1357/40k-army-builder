@@ -154,16 +154,15 @@
     {
      "kind": "unlock",
      "target": {
-      "keyword": "HERETIC ASTARTES"
+      "allied_group": "Shadow Legion Thralls"
      },
      "points_cap": {
       "1000": 500,
       "2000": 1000,
       "3000": 1500
      },
-     "enforced": false,
-     "unenforced_reason": "The unlocked set is an explicit list of Chaos Space Marines datasheets, and Chaos Space Marines is not built yet. Nothing is currently reachable through this effect, so the gap costs no legality today; it becomes enforceable the session CSM lands. Recorded rather than omitted so it is countable (D203).",
-     "source": "D204 ruling 3 — MFM_Chaos_Daemons_v1_0.txt carries no HERETIC ASTARTES section; the set is named inside the detachment's own rule text."
+     "enforced": true,
+     "source": "B114 (S231). The stored keyword-targeted unlock was never wired to any engine mechanism (D204 ruling 3 named the wrong target shape; index.html's unlockedAlliedGroups/alliedPointsCap read allied_group only, confirmed by its own comment). Re-shaped onto the tested allied_group mechanism, same as Plague Legions/Scintillating Legions/Legions of Excess/Blood Legions. Detachment_abilities.csv id 000009976 'Thralls of the First Prince' names 14 explicit datasheets plus the 'Damned' keyword group (17 datasheets, 7 already shipped in Chaos Space Marines' built roster); the 21 buildable units are tagged allied_group: Shadow Legion Thralls in the Chaos Daemons block. Points caps unchanged since D204, verified against the ability text directly."
     }
    ]
   },

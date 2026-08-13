@@ -42649,6 +42649,4916 @@
           ]
         },
         "abilities": []
+      },
+      {
+        "unit_id": "000004036",
+        "unit_name": "Chaos Lord",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Lord of Chaos": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP.",
+          "Chance for Glory": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does, until the end of the phase, improve the Strength, Attacks, Armour Penetration and Damage characteristics of melee weapons equipped by this model by 1."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 3,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Chosen",
+              "Legionaries"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Lord of Chaos",
+              "Chance for Glory"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Chaos Lord",
+              "Character",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Accursed weapon",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Pistol",
+              "Hazardous"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Daemon hammer",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Astartes chainblade",
+            "range": "Melee",
+            "A": "7",
+            "BS": null,
+            "WS": "2",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Daemon hammer",
+            "replacement_weapon_name": "Accursed weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Daemon hammer",
+            "replacement_weapon_name": "Astartes chainsword",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "plasma pistol",
+            "replacement_weapon_name": "Power fist",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004037",
+        "unit_name": "Chaos Lord In Terminator Armour",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Lord of Chaos": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP.",
+          "Formidably Resilient": "Each time an attack is allocated to this model, halve the Damage characteristic of that attack."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 6,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Chaos Terminator Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Lord of Chaos",
+              "Formidably Resilient"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Chaos Lord",
+              "Chaos Lord in Terminator Armour",
+              "Character",
+              "Infantry",
+              "Shadow Legion",
+              "Terminator",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Exalted weapon",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Chainfist",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Vehicle 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Paired accursed weapons",
+            "range": "Melee",
+            "A": "7",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Combi-bolter",
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Exalted weapon",
+            "replacement_weapon_name": "Chainfist",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Exalted weapon",
+            "replacement_weapon_name": "Power fist",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 85,
+              "second_unit": 85,
+              "third_plus": 85
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004038",
+        "unit_name": "Chaos Lord with Jump Pack",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Lord of Chaos": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP.",
+          "Cruel Hunter": "While this model is leading a unit, each time that unit Piles In or Consolidates, each model in that unit can move up to 6\" instead of up to 3\"."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 4,
+            "SV": 3,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Raptors"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Lord of Chaos",
+              "Cruel Hunter"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Chaos Lord",
+              "Character",
+              "Fly",
+              "Grenades",
+              "Infantry",
+              "Jump Pack",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Pistol",
+              "Hazardous"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "2",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Twin lightning claws",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Accursed weapon",
+            "range": "Melee",
+            "A": "6",
+            "BS": null,
+            "WS": "2",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "plasma pistol",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Accursed weapon",
+            "replacement_weapon_name": "Power fist",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004043",
+        "unit_name": "Chaos Terminator Squad",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Despoilers": "Each time this unit makes a Dark Pact, until the end of the phase, each time a model in this unit makes an attack, you can re-roll the Hit roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 3,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Despoilers"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Chaos Terminator Squad",
+              "Infantry",
+              "Shadow Legion",
+              "Terminator",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Paired accursed weapons",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Chainfist",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Vehicle 3+"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Accursed weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Reaper autocannon",
+            "range": "36\"",
+            "A": "4",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy flamer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Combi-bolter",
+            "replacement_weapon_name": "Heavy flamer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Combi-bolter",
+            "replacement_weapon_name": "Reaper autocannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Combi-bolter",
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 3,
+            "weapon_replaced": "Accursed weapon",
+            "replacement_weapon_name": "Power fist",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Accursed weapon",
+            "replacement_weapon_name": "Chainfist",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 180,
+              "second_unit": 180,
+              "third_plus": 180
+            },
+            {
+              "size": 10,
+              "first_unit": 360,
+              "second_unit": 360,
+              "third_plus": 360
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004044",
+        "unit_name": "Chosen",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Chosen Marauders": "This unit is eligible to shoot and declare a charge in a turn in which it Advanced or Fell Back."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 3,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Chosen Marauders"
+            ],
+            "rule_names": [
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Chosen",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Accursed weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Boltgun",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Paired accursed weapons",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "plasma pistol",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Accursed weapon",
+            "replacement_weapon_name": "power fist. That model’s boltgun cannot be replaced",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Chaos Icon",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test.",
+            "ability_name": "Chaos Icon",
+            "is_mutually_exclusive": false,
+            "exclusion_group": null
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 125,
+              "second_unit": 135,
+              "third_plus": 135
+            },
+            {
+              "size": 10,
+              "first_unit": 250,
+              "second_unit": 260,
+              "third_plus": 260
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004045",
+        "unit_name": "Cultist Firebrand",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Fiery Faith": "While this model is leading a unit, you can re-roll Leadership tests taken for that unit.",
+          "Cursed Flames": "In your Shooting phase, after this model has shot, select one enemy INFANTRY unit hit by one or more of those attacks. That unit must take a Battle-shock test."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 4,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Accursed Cultists",
+              "Cultist Mob"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Fiery Faith",
+              "Cursed Flames"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Cultist Firebrand",
+              "Damned",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Balefire pike",
+            "range": "12\"",
+            "A": "D6+3",
+            "BS": "N/A",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "4",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 45,
+              "second_unit": 45,
+              "third_plus": 50
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004046",
+        "unit_name": "Dark Commune",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Faithful Flock": "While this unit is leading a unit and contains a CULT DEMAGOGUE model, models in that unit have a 5+ invulnerable save.",
+          "Dark Ritual": "Once per battle, in your Command phase, if this unit contains a CULT DEMAGOGUE model, it can use this ability. If it does, until the end of the turn, this unit can declare a charge in a turn in which it Advanced and each time a model in this unit makes an attack, add 1 to the Hit roll and add 1 to the Wound roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "CULT DEMAGOGUE",
+            "M": "6\"",
+            "T": 3,
+            "SV": 6,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Accursed Cultists",
+              "Cultist Mob"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Faithful Flock",
+              "Dark Ritual"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Damned",
+              "Dark Commune",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          },
+          {
+            "model_group": "OTHER MODELS",
+            "M": "6\"",
+            "T": 3,
+            "SV": 6,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Accursed Cultists",
+              "Cultist Mob"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Faithful Flock",
+              "Dark Ritual"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Damned",
+              "Dark Commune",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Autopistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Warp Curse – witchfire",
+            "range": "18\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Commune stave",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "4",
+            "S": 3,
+            "AP": 0,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Devastating Wounds"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Commune blade",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "4",
+            "S": 4,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "1",
+            "BS": null,
+            "WS": "4",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Warp Curse – focused witchfire",
+            "range": "18\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Psychic",
+              "Sustained Hits 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 90,
+              "second_unit": 100,
+              "third_plus": 100
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004047",
+        "unit_name": "Traitor Enforcer",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Brutal Example": "Once per turn, while this unit is leading a unit and contains a TRAITOR ENFORCER model, you can target that unit with the Fire Overwatch Stratagem for 0CP, and can do so even if you have already targeted a different unit from your army with that Stratagem this turn. Each time you use this ability, one Bodyguard model in that unit is destroyed.",
+          "Mutated Bodyguard": "While this unit contains a Traitor Ogryn model, CHARACTER models in this unit have the Feel No Pain 4+ ability."
+        },
+        "model_groups": [
+          {
+            "model_group": "TRAITOR ENFORCER",
+            "M": "6\"",
+            "T": 3,
+            "SV": 5,
+            "INV": 5,
+            "INV_Condition": "* Traitor Enforcer model only.",
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 3,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Traitor Guardsmen Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Brutal Example",
+              "Mutated Bodyguard"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Damned",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          },
+          {
+            "model_group": "TRAITOR OGRYN",
+            "M": "6\"",
+            "T": 6,
+            "SV": 5,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Traitor Guardsmen Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Brutal Example",
+              "Mutated Bodyguard"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Damned",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Ogryn weapons",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 7,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 2,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004050",
+        "unit_name": "Cultist Mob",
+        "unit_type": "Battleline",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "For the Dark Gods": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 3,
+            "SV": 6,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "For the Dark Gods"
+            ],
+            "rule_names": [
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Battleline",
+              "Chaos",
+              "Cultist Mob",
+              "Damned",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Autopistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Brutal assault weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "4",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Autopistol",
+            "replacement_weapon_name": "Bolt pistol",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 50,
+              "second_unit": 50,
+              "third_plus": 50
+            },
+            {
+              "size": 20,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004052",
+        "unit_name": "Accursed Cultists",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Accursed Horde": "Each time an enemy unit has shot, if one or more models from this unit were destroyed as a result of those attacks, this unit can make a Horde move. To do so, roll one D6: this unit can be moved a number of inches up to the result, but this unit must finish that move as close as possible to the closest enemy unit (excluding AIRCRAFT ). When doing so, those models can be moved within Engagement Range of that enemy unit. A unit cannot make a Horde move while it is Battle-shocked."
+        },
+        "model_groups": [
+          {
+            "model_group": "MUTANT",
+            "M": "6\"",
+            "T": 4,
+            "SV": 6,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": "6+",
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Accursed Horde"
+            ],
+            "rule_names": [
+              "Feel No Pain 6+",
+              "Scouts 6\"",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Accursed Cultists",
+              "Chaos",
+              "Damned",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          },
+          {
+            "model_group": "TORMENT",
+            "M": "6\"",
+            "T": 4,
+            "SV": 6,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": "6+",
+            "FNP_Condition": null,
+            "W": 3,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Accursed Horde"
+            ],
+            "rule_names": [
+              "Feel No Pain 6+",
+              "Scouts 6\"",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Accursed Cultists",
+              "Chaos",
+              "Damned",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Blasphemous appendages",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "4",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hideous mutations",
+            "range": "Melee",
+            "A": "D6+2",
+            "BS": null,
+            "WS": "4",
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 8,
+              "first_unit": 90,
+              "second_unit": 110,
+              "third_plus": 110
+            },
+            {
+              "size": 16,
+              "first_unit": 195,
+              "second_unit": 215,
+              "third_plus": 215
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004053",
+        "unit_name": "Fellgor Beastmen",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Bestial Raiders": "If this unit starts the game in Strategic Reserves, it can be set up in the Reinforcements step of your first, second or third Movement phase, regardless of any mission rules. If this unit is in Strategic Reserves, for the purposes of setting up this unit on the battlefield, treat the current battle round number as being one higher than it actually is."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 5,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Bestial Raiders"
+            ],
+            "rule_names": [
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Damned",
+              "Fellgor Beastmen",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Autopistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Great weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "5",
+            "S": 8,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Corrupted stave",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "4",
+            "S": 4,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "4",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Chainsword",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Corrupted stave",
+            "range": "18\"",
+            "A": "D3",
+            "BS": "4",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "plasma pistol",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Close combat weapon",
+            "replacement_weapon_name": "Great weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Close combat weapon",
+            "replacement_weapon_name": "corrupted stave",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004054",
+        "unit_name": "Traitor Guardsmen Squad",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Twisted Defence Force": "While this unit is within range of an objective marker, each time a ranged attack targets this unit, models in this unit have the Benefit of Cover against that attack."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 3,
+            "SV": 5,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Twisted Defence Force"
+            ],
+            "rule_names": [
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Damned",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Traitor Guardsmen Squad",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Cultist grenade launcher – krak",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "D3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Cultist sniper rifle",
+            "range": "36\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [
+              "Heavy",
+              "Precision"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Flamer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Lasgun",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Meltagun",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – standard",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Chainsword",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "4",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "1",
+            "BS": null,
+            "WS": "4",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Cultist grenade launcher – frag",
+            "range": "24\"",
+            "A": "D3",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power weapon",
+            "range": "Melee",
+            "A": "2",
+            "BS": null,
+            "WS": "4",
+            "S": 4,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Boltgun",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Corrupted pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – supercharge",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": 3,
+            "weapon_replaced": "Lasgun",
+            "replacement_weapon_name": "Cultist grenade launcher",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": 3,
+            "weapon_replaced": "Lasgun",
+            "replacement_weapon_name": "Flamer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": 3,
+            "weapon_replaced": "Lasgun",
+            "replacement_weapon_name": "Meltagun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": 3,
+            "weapon_replaced": "Lasgun",
+            "replacement_weapon_name": "plasma gun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": 3,
+            "weapon_replaced": "Lasgun",
+            "replacement_weapon_name": "Cultist sniper rifle",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Close combat weapon",
+            "replacement_weapon_name": "Chainsword",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Close combat weapon",
+            "replacement_weapon_name": "Power weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Corrupted pistol",
+            "replacement_weapon_name": "Boltgun",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 10,
+              "first_unit": 70,
+              "second_unit": 70,
+              "third_plus": 70
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004062",
+        "unit_name": "Dark Apostle",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Dark Zealotry": "While this unit is leading a unit and contains a DARK APOSTLE model, each time a model in that unit makes a melee attack, add 1 to the Wound roll.",
+          "Demagogue": "Once per battle, at the start of any phase, you can select one friendly HERETIC ASTARTES unit that is Battle-shocked and within 12\" of this unit’s DARK APOSTLE model. That unit is no longer Battle-shocked.",
+          "Malign Sacrifice": "At the start of the Fight phase, if this unit contains one or more Dark Disciple models, you can select one of those models and one enemy unit within Engagement Range of this unit, then roll one D6: on a 2-5, that enemy unit suffers 1 mortal wound; on a 6, that enemy unit suffers D3 mortal wounds. That Dark Disciple model is then destroyed."
+        },
+        "model_groups": [
+          {
+            "model_group": "DARK APOSTLE",
+            "M": "6\"",
+            "T": 4,
+            "SV": 3,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 5,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Accursed Cultists",
+              "Chosen",
+              "Cultist Mob",
+              "Legionaries"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Dark Zealotry",
+              "Demagogue",
+              "Malign Sacrifice"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          },
+          {
+            "model_group": "DARK DISCIPLE",
+            "M": "6\"",
+            "T": 4,
+            "SV": 6,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 1,
+            "LD": 7,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Accursed Cultists",
+              "Chosen",
+              "Cultist Mob",
+              "Legionaries"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Dark Zealotry",
+              "Demagogue",
+              "Malign Sacrifice"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Grenades",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "1",
+            "BS": null,
+            "WS": "4",
+            "S": 3,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Accursed crozius",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "2",
+            "S": 6,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 3,
+              "first_unit": 65,
+              "second_unit": 65,
+              "third_plus": 65
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004063",
+        "unit_name": "Havocs",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Stabilisation Talons": "Each time a model in this unit makes an attack with a ranged weapon, you can ignore any or all modifiers to the Hit roll and any or all modifiers to the Ballistic Skill characteristic of that weapon."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Stabilisation Talons"
+            ],
+            "rule_names": [
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Havocs",
+              "Infantry",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Power fist",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Astartes chainsword",
+            "range": "Melee",
+            "A": "5",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Boltgun",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Accursed weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – supercharge",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Meltagun",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc reaper chaincannon",
+            "range": "24\"",
+            "A": "8",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Flamer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc autocannon",
+            "range": "48\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc missile launcher – frag",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – standard",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc missile launcher – krak",
+            "range": "48\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Astartes chainsword",
+            "replacement_weapon_name": "Accursed weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Astartes chainsword",
+            "replacement_weapon_name": "Power fist",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Flamer",
+            "replacement_weapon_name": "Boltgun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Flamer",
+            "replacement_weapon_name": "Meltagun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Flamer",
+            "replacement_weapon_name": "plasma gun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Flamer",
+            "replacement_weapon_name": "plasma pistol",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Flamer",
+            "replacement_weapon_name": "Accursed weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Flamer",
+            "replacement_weapon_name": "Power fist",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Havoc autocannon or Havoc lascannon",
+            "replacement_weapon_name": "Havoc autocannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Havoc autocannon or Havoc lascannon",
+            "replacement_weapon_name": "Havoc heavy bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Havoc autocannon or Havoc lascannon",
+            "replacement_weapon_name": "Havoc lascannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Havoc autocannon or Havoc lascannon",
+            "replacement_weapon_name": "Havoc missile launcher",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Havoc autocannon or Havoc lascannon",
+            "replacement_weapon_name": "Havoc reaper chaincannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "C"
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 135
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004064",
+        "unit_name": "Legionaries",
+        "unit_type": "Battleline",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Veterans of the Long War": "Each time a model in this unit targets an enemy unit with a melee attack, re-roll a Wound roll of 1. If that enemy unit is within range of an objective marker, you can re-roll the Wound roll instead."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 2,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Veterans of the Long War"
+            ],
+            "rule_names": [
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Battleline",
+              "Chaos",
+              "Grenades",
+              "Infantry",
+              "Legionaries",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – supercharge",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Balefire tome",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Heavy melee weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Boltgun",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Flamer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Havoc autocannon",
+            "range": "48\"",
+            "A": "2",
+            "BS": "4",
+            "WS": null,
+            "S": 9,
+            "AP": -1,
+            "D": "3",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Heavy bolter",
+            "range": "36\"",
+            "A": "3",
+            "BS": "4",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [
+              "Heavy",
+              "Sustained Hits 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Meltagun",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Lascannon",
+            "range": "48\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 12,
+            "AP": -3,
+            "D": "D6+1",
+            "weapon_ability_names": [
+              "Heavy"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Missile launcher – frag",
+            "range": "48\"",
+            "A": "D6",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Blast",
+              "Heavy"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – standard",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Reaper chaincannon",
+            "range": "24\"",
+            "A": "8",
+            "BS": "4",
+            "WS": null,
+            "S": 5,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Heavy"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Accursed weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Astartes chainsword",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Missile launcher – krak",
+            "range": "48\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 9,
+            "AP": -2,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Heavy"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "plasma pistol*",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Accursed weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Astartes chainsword",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Heavy melee weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "A"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "plasma pistol*",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "Accursed weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "Astartes chainsword",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "Heavy melee weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": "Any",
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Astartes chainsword",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Heavy melee weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Balefire tome",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Flamer",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "G"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Havoc autocannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "G"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Heavy bolter",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "G"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Lascannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "G"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Meltagun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "G"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "missile launcher",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "G"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "plasma gun",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "G"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Boltgun",
+            "replacement_weapon_name": "Reaper chaincannon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "G"
+          }
+        ],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Chaos Icon",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test.",
+            "ability_name": "Chaos Icon",
+            "is_mutually_exclusive": false,
+            "exclusion_group": null
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 90,
+              "second_unit": 90,
+              "third_plus": 90
+            },
+            {
+              "size": 10,
+              "first_unit": 170,
+              "second_unit": 170,
+              "third_plus": 170
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004065",
+        "unit_name": "Master Of Possession",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Daemonkin (Psychic)": "While this model is leading a unit, add 1 to Advance and Charge rolls made for that unit.",
+          "Sacrificial Dagger": "Once per phase, when this model is selected to shoot or fight, it can use this ability. If it does, this model’s unit suffers 1 mortal wound and, until the end of the phase, each time this model makes a Psychic Attack, add 1 to the Hit roll and add 1 to the Wound roll."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "8\"",
+            "T": 4,
+            "SV": 3,
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Chosen",
+              "Legionaries",
+              "Possessed"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Daemonkin (Psychic)",
+              "Sacrificial Dagger"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Infantry",
+              "Master of Possession",
+              "Psyker",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Staff of possession",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Anti-Psyker 2+",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Rite of Possession – focused witchfire",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -3,
+            "D": "3",
+            "weapon_ability_names": [
+              "Anti-Psyker 2+",
+              "Hazardous",
+              "Pistol",
+              "Precision",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Rite of Possession – witchfire",
+            "range": "18\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Anti-Psyker 2+",
+              "Pistol",
+              "Precision",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004066",
+        "unit_name": "Possessed",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Unholy Bloodshed": "Once per battle, when this unit makes a Dark Pact, until the end of the phase, weapons equipped by models in this unit have the [DEVASTATING WOUNDS] ability."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "9\"",
+            "T": 6,
+            "SV": 3,
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 3,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Unholy Bloodshed"
+            ],
+            "rule_names": [
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Infantry",
+              "Possessed",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Hideous mutations",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -1,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Chaos Icon",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test.",
+            "ability_name": "Chaos Icon",
+            "is_mutually_exclusive": false,
+            "exclusion_group": null
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 120,
+              "second_unit": 120,
+              "third_plus": 130
+            },
+            {
+              "size": 10,
+              "first_unit": 250,
+              "second_unit": 250,
+              "third_plus": 260
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004067",
+        "unit_name": "Raptors",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Fearsome (Aura)": "While an enemy unit is within 6\" of this unit, each time that enemy unit takes a Battle-shock or Leadership test, subtract 1 from the result.",
+          "Terrifying Assault": "At the start of the Fight phase, each enemy unit within Engagement Range of one or more units with this ability must take a Battle-shock test."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 4,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Fearsome (Aura)",
+              "Terrifying Assault"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Fly",
+              "Grenades",
+              "Infantry",
+              "Jump Packs",
+              "Raptors",
+              "Shadow Legion",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – standard",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Flamer",
+            "range": "12\"",
+            "A": "D6",
+            "BS": "N/A",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Ignores Cover",
+              "Torrent"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Heavy melee weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 8,
+            "AP": -2,
+            "D": "2",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Close combat weapon",
+            "range": "Melee",
+            "A": "3",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Astartes chainsword",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 4,
+            "AP": -1,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Mutations",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – standard",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 7,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Accursed weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Meltagun",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 9,
+            "AP": -4,
+            "D": "D6",
+            "weapon_ability_names": [
+              "Melta 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma pistol – supercharge",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Plasma gun – supercharge",
+            "range": "24\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 8,
+            "AP": -3,
+            "D": "2",
+            "weapon_ability_names": [
+              "Hazardous",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "plasma pistol",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Astartes chainsword",
+            "replacement_weapon_name": "Accursed weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Astartes chainsword",
+            "replacement_weapon_name": "Heavy melee weapon",
+            "points_cost": null,
+            "is_choice": true,
+            "option_group": "B"
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Bolt pistol",
+            "replacement_weapon_name": "plasma pistol (these models’ Astartes chainswords cannot be replaced)",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          },
+          {
+            "model_group": "All",
+            "models_per_trigger": 5,
+            "max_substitutions_per_trigger": 2,
+            "weapon_replaced": "Astartes chainsword",
+            "replacement_weapon_name": "Heavy melee weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 110,
+              "second_unit": 110,
+              "third_plus": 120
+            },
+            {
+              "size": 10,
+              "first_unit": 210,
+              "second_unit": 210,
+              "third_plus": 220
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004068",
+        "unit_name": "Sorcerer",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Prescience (Psychic)": "While this model is leading a unit, each time an attack targets that unit, subtract 1 from the Hit roll.",
+          "Gift of Chaos (Psychic)": "Each time this model is selected to shoot or fight, after resolving its attacks, select one enemy unit hit by one or more of those attacks that had the [PSYCHIC] ability. That unit must take a Leadership test: if that test is failed, that unit suffers D3 mortal wounds."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "6\"",
+            "T": 4,
+            "SV": 3,
+            "INV": null,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 4,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Chosen",
+              "Legionaries"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Prescience (Psychic)",
+              "Gift of Chaos (Psychic)"
+            ],
+            "rule_names": [
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Grenades",
+              "Infantry",
+              "Psyker",
+              "Shadow Legion",
+              "Sorcerer",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Infernal Gaze – witchfire",
+            "range": "24\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Bolt pistol",
+            "range": "12\"",
+            "A": "1",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Pistol"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Force weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Infernal Gaze – focused witchfire",
+            "range": "24\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -2,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Hazardous",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 60,
+              "second_unit": 60,
+              "third_plus": 60
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004072",
+        "unit_name": "Sorcerer In Terminator Armour",
+        "unit_type": "Character",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Warptime (Psychic)": "While this model is leading a unit, you can re-roll Advance and Charge rolls made for that unit.",
+          "Death Hex (Psychic)": "At the start of your Shooting phase, one Psyker with this ability can use it. If it does, select one enemy unit within 12\" of and visible to that PSYKER and roll one D6: on a 1, that PSYKER ’s unit suffers D3 mortal wounds; on a 2+, until the start of your next Movement phase, each time an attack targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "5\"",
+            "T": 5,
+            "SV": 2,
+            "INV": 4,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 5,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": "Leader",
+            "leader_eligible_units": [
+              "Chaos Terminator Squad"
+            ],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Warptime (Psychic)",
+              "Death Hex (Psychic)"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Leader",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Character",
+              "Infantry",
+              "Psyker",
+              "Shadow Legion",
+              "Sorcerer in Terminator Armour",
+              "Terminator",
+              "Undivided",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Infernal Gaze – focused witchfire",
+            "range": "24\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 6,
+            "AP": -2,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Devastating Wounds",
+              "Hazardous",
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Force weapon",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 6,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-bolter",
+            "range": "24\"",
+            "A": "2",
+            "BS": "3",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Rapid Fire 2"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Combi-weapon",
+            "range": "24\"",
+            "A": "1",
+            "BS": "4",
+            "WS": null,
+            "S": 4,
+            "AP": 0,
+            "D": "1",
+            "weapon_ability_names": [
+              "Anti-Infantry 4+",
+              "Devastating Wounds",
+              "Rapid Fire 1"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": false,
+            "allegiance_condition": null
+          },
+          {
+            "model_group": "All",
+            "weapon_type": "Ranged",
+            "weapon_name": "Infernal Gaze – witchfire",
+            "range": "24\"",
+            "A": "D6",
+            "BS": "3",
+            "WS": null,
+            "S": 5,
+            "AP": -1,
+            "D": "D3",
+            "weapon_ability_names": [
+              "Psychic"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [
+          {
+            "model_group": "All",
+            "models_per_trigger": null,
+            "max_substitutions_per_trigger": null,
+            "weapon_replaced": "Combi-bolter",
+            "replacement_weapon_name": "Combi-weapon",
+            "points_cost": null,
+            "is_choice": false,
+            "option_group": null
+          }
+        ],
+        "other_options": [
+          {
+            "model_group": "All",
+            "option_name": "Chaos Familiar",
+            "points_cost": null,
+            "max_per_unit": 1,
+            "carrier_notes": "Once per battle, when an attack is allocated to the bearer, you can change the Damage characteristic to 0.",
+            "ability_name": "Chaos Familiar",
+            "is_mutually_exclusive": false,
+            "exclusion_group": null
+          }
+        ],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 1,
+              "first_unit": 80,
+              "second_unit": 80,
+              "third_plus": 80
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
+      },
+      {
+        "unit_id": "000004073",
+        "unit_name": "Warp Talons",
+        "unit_type": "Infantry",
+        "must_be_warlord": false,
+        "cannot_be_warlord": false,
+        "unit_ability_details": {
+          "Dark Pacts": "If your Army Faction is HERETIC ASTARTES , each time a unit with this ability is selected to shoot or fight, it can make a Dark Pact. If it does, it must first take a Leadership test before any effects of that Dark Pact are resolved; if that test is failed, that unit suffers D3 mortal wounds. Then, select one of the following abilities for that unit’s weapons to gain until the end of the phase: [LETHAL HITS]; [SUSTAINED HITS 1]",
+          "Warp Strike": "At the end of the Fight phase, if this unit destroyed one or more enemy units this phase and is not within Engagement Range of one or more enemy units, you can remove this unit from the battlefield and place it into Strategic Reserves."
+        },
+        "model_groups": [
+          {
+            "model_group": "All",
+            "M": "12\"",
+            "T": 4,
+            "SV": 3,
+            "INV": 5,
+            "INV_Condition": null,
+            "FNP": null,
+            "FNP_Condition": null,
+            "W": 2,
+            "LD": 6,
+            "OC": 1,
+            "leader_ability_name": null,
+            "leader_eligible_units": [],
+            "co_leader_eligible_with": [],
+            "co_leader_any": false,
+            "leader_restrictions": null,
+            "leader_footer": null,
+            "unit_ability_names": [
+              "Warp Strike"
+            ],
+            "rule_names": [
+              "Deep Strike",
+              "Dark Pacts"
+            ],
+            "keyword_names": [
+              "Chaos",
+              "Daemon",
+              "Fly",
+              "Grenades",
+              "Infantry",
+              "Jump Packs",
+              "Shadow Legion",
+              "Undivided",
+              "Warp Talons",
+              "Heretic Astartes",
+              "Legiones Daemonica"
+            ],
+            "faction_keyword_names": [],
+            "model_keyword_names": [],
+            "wargear_ability_names": [],
+            "bodyguard_stat_flags": []
+          }
+        ],
+        "weapons": [
+          {
+            "model_group": "All",
+            "weapon_type": "Melee",
+            "weapon_name": "Warp claws",
+            "range": "Melee",
+            "A": "4",
+            "BS": null,
+            "WS": "3",
+            "S": 5,
+            "AP": -2,
+            "D": "1",
+            "weapon_ability_names": [
+              "Twin-Linked"
+            ],
+            "weapon_keyword_names": [],
+            "is_base_equipment": true,
+            "allegiance_condition": null
+          }
+        ],
+        "wargear_options": [],
+        "other_options": [],
+        "bundled_swaps": null,
+        "points": {
+          "sizes": [
+            {
+              "size": 5,
+              "first_unit": 125,
+              "second_unit": 125,
+              "third_plus": 135
+            },
+            {
+              "size": 10,
+              "first_unit": 280,
+              "second_unit": 280,
+              "third_plus": 290
+            }
+          ]
+        },
+        "abilities": [],
+        "allied_group": "Shadow Legion Thralls"
       }
     ]
   },

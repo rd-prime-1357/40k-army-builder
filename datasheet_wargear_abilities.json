@@ -160,6 +160,21 @@
  "000003876": {
   "Voice Eater": "Enemy units (excluding <span class=\"kwb\">MONSTERS</span> and <span class=\"kwb\">VEHICLES</span>) cannot be targeted with Stratagems while they are within Engagement Range of the bearer’s unit."
  },
+ "000004044": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+ },
+ "000004046": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+ },
+ "000004064": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+ },
+ "000004066": {
+  "Chaos Icon": "Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test."
+ },
+ "000004072": {
+  "Chaos Familiar": "Once per battle, when an attack is allocated to the bearer, you can change the Damage characteristic to 0."
+ },
  "000004079": {
   "Icon of Excess": "At the end of your Shooting phase or the Fight phase, if the bearer’s unit destroyed one or more enemy units that phase, the bearer’s unit takes a Leadership test. If that test is passed, you gain 1CP."
  },

@@ -1,0 +1,19 @@
+﻿Army Name,Unit Name,Model Group,Option Name,Points Cost,Max Per Unit,Carrier Notes,Ability Name,Is Mutually Exclusive,Exclusion Group
+Chaos Daemons,Bloodletters,All,Daemonic Icon,,1,1 Bloodletter that is not equipped with an instrument of Chaos,Daemonic Icon,Yes,A
+Chaos Daemons,Bloodletters,All,Instrument of Chaos,,1,1 Bloodletter that is not equipped with a daemonic icon,Instrument of Chaos,Yes,A
+Chaos Daemons,Bloodcrushers,All,Daemonic Icon,,1,1 Bloodcrusher that is not equipped with an instrument of Chaos,Daemonic Icon,Yes,A
+Chaos Daemons,Bloodcrushers,All,Instrument of Chaos,,1,1 Bloodcrusher that is not equipped with a daemonic icon,Instrument of Chaos,Yes,A
+Chaos Daemons,Pink Horrors,Pink Horror,Daemonic Icon,,1,1 Pink Horror that is not equipped with an instrument of Chaos,Daemonic Icon,Yes,A
+Chaos Daemons,Pink Horrors,Pink Horror,Instrument of Chaos,,1,1 Pink Horror that is not equipped with a daemonic icon,Instrument of Chaos,Yes,A
+Chaos Daemons,Plaguebearers,All,Daemonic Icon,,1,1 Plaguebearer that is not equipped with an instrument of Chaos,Daemonic Icon,Yes,A
+Chaos Daemons,Plaguebearers,All,Instrument of Chaos,,1,1 Plaguebearer that is not equipped with a daemonic icon,Instrument of Chaos,Yes,A
+Chaos Daemons,Plague Drones,All,Daemonic Icon,,1,1 Plague Drone that is not equipped with an instrument of Chaos,Daemonic Icon,Yes,A
+Chaos Daemons,Plague Drones,All,Instrument of Chaos,,1,1 Plague Drone that is not equipped with a daemonic icon,Instrument of Chaos,Yes,A
+Chaos Daemons,Daemonettes,All,Daemonic Icon,,1,1 Daemonette that is not equipped with an instrument of Chaos,Daemonic Icon,Yes,A
+Chaos Daemons,Daemonettes,All,Instrument of Chaos,,1,1 Daemonette that is not equipped with a daemonic icon,Instrument of Chaos,Yes,A
+Chaos Daemons,Seekers,All,Daemonic Icon,,1,1 Seeker that is not equipped with an instrument of Chaos,Daemonic Icon,Yes,A
+Chaos Daemons,Seekers,All,Instrument of Chaos,,1,1 Seeker that is not equipped with a daemonic icon,Instrument of Chaos,Yes,A
+Chaos Daemons,Chosen,All,Chaos Icon,,1,"Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test.",Chaos Icon,No,
+Chaos Daemons,Legionaries,All,Chaos Icon,,1,"Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test.",Chaos Icon,No,
+Chaos Daemons,Possessed,All,Chaos Icon,,1,"Each time the bearer’s unit takes a Leadership test for the Dark Pacts ability, you can re-roll that test.",Chaos Icon,No,
+Chaos Daemons,Sorcerer In Terminator Armour,All,Chaos Familiar,,1,"Once per battle, when an attack is allocated to the bearer, you can change the Damage characteristic to 0.",Chaos Familiar,No,

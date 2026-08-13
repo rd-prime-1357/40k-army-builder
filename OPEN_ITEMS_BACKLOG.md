@@ -3,10 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S230 (unchanged from S229 — B114 build was attempted,
-found deeper than scoped, and re-scoped again rather than shipped; nothing else closed, nothing
-opened): B116, B114, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
+not here, it isn't open. **21 open** as of S231 (down from 22 — B114 closed; nothing else closed,
+nothing opened): B116, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
 E23, B67b, E12, B17.
+S231 (D325): B114 built and closed. Ran the pipeline scoped to the 21 Shadow Legion Thralls
+datasheet IDs, appended them into the Gen-1 Chaos Daemons root CSVs so the block stays
+source-reproducible, retargeted `detachment_effects.json` onto the allied_group mechanism
+(enforced: true), and pinned the 21-unit census as an executable assertion (E21a-7). See its
+Closed / Shipped pointer below and `B114_SHADOW_LEGION_SCOPE.md`.
 Scoping turn (D324): B114 build attempt at S230 found the S229 mechanism recommendation was right
 about the mechanism but wrong about the size of the work — the shipped allied_group precedents
 source each allied entry from its own real per-faction Wahapedia datasheet ID, not a copy of the
@@ -827,44 +831,6 @@ MFM v1.1 adoption arc (units-side, all factions; detachments-side, CSM/DG/TS S21
 CLOSED S213: detachments-side gap closed for the entire Adeptus Astartes group. Chaos Daemons'
 remaining detachments item split off as B112.
 
-### B114 — `detachment_effects.json`'s Chaos Daemons Shadow Legion HERETIC ASTARTES unlock is unenforced, and its stored target shape is unbuildable as-is — **NEW S221 (B112 finding); SCOPED S229 (D323); RE-SCOPED S230 (build attempt found it's a pipeline turn, not data-only); M**
-The existing `Chaos Daemons|SHADOW LEGION` row (D204 ruling 3) carries an `unlock` effect targeting
-the `HERETIC ASTARTES` keyword, `enforced: false`. Original premise ("nothing is reachable until CSM
-ships") went stale at S212/D307 when CSM shipped, but S229 found the real problem runs deeper: the
-stored `target: {"keyword": "HERETIC ASTARTES"}` shape has **no consuming engine code at all** —
-`index.html`'s `unlockedAlliedGroups`/`alliedPointsCap` only read `target.allied_group`. Flipping
-the flag today changes nothing. Full write-up in `B114_SHADOW_LEGION_SCOPE.md`.
-
-**Real unlockable set, pulled from the actual Wahapedia ability text** (`Detachment_abilities.csv`
-id `000009976`, "Thralls of the First Prince" — not the paraphrased `rule_text`/reference-doc
-summary, both of which omit it): 15 named items; one, "Damned units," is itself a 17-datasheet
-keyword group. Cross-checked against the shipped 58-unit CSM roster: **21 units buildable** (14
-named + 7 already-shipped "Damned" units, all CSM-Codex-sourced and priced); 10 more "Damned"
-datasheets are unbuilt and carry no CSM MFM pricing (different, shared Wahapedia source) —
-correctly out of scope already, not a new gap. Flagged: a bare "every HERETIC ASTARTES-keyword
-unit" filter would be over-permissive (CSM's Epic Heroes/named characters almost certainly carry
-that keyword and are not on the real unlock list) — the same failure shape B113 found in an
-unrelated mechanism. Independently re-derived this same 14/7/10 split at S230 build time, matching
-exactly.
-
-**S230: build attempt found the S229 mechanism plan was wrong about the size of the work.**
-Checked how the shipped precedents (Plague Legions, Scintillating Legions, Legions of Excess, Blood
-Legions) actually store their allied entries before touching `units.json` — they are not the native
-unit entry with a tag added. Each is its own record sourced from a separate, real Wahapedia
-datasheet ID: the destination faction's own book-variant of that unit, carrying faction-flavored
-ability text (Rotigus's Death-Guard-allied entry names "Plague Legions" explicitly; its native
-Chaos Daemons entry doesn't) and its own `unit_id`. Checked `Datasheets.csv` directly: a distinct
-`CD`-faction, `source_id 000000012` row exists for all 21 Shadow Legion units, none yet in
-`units.json`. The correct build is a pipeline run (`wahapedia_transform.py`, `loadout_parser.py`,
-`equipped_parser.py`, `convert_to_json.py`, `merge_factions.py`) against 21 new datasheet IDs to
-generate 21 new Chaos Daemons-block entries tagged `allied_group: "Shadow Legion Thralls"` — sized
-like a small faction-build turn, not a two-file data edit. Nothing hand-edited or shipped this
-session; stopped cleanly rather than hand-tag the wrong data shape. Still not a Ryan decision — the
-mechanism and the buildable set are both fully source-determined; this is purely a "how much work"
-correction. One checked difference from the Plague Legions precedent carries forward: Shadow
-Legion's ability has no Warlord-ban clause for its allied units — do not add a matching `warlord`
-effect. Ready to build as its own dedicated pipeline session whenever picked up.
-
 ### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon
 options) shipped; faction fully complete, 25/25 units, zero residual `_parser_flags`.
@@ -1261,6 +1227,23 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B114 — Chaos Daemons Shadow Legion Thralls allied unlock — **NEW S221 (B112 finding); SCOPED S229 (D323); RE-SCOPED S230 (D324); CLOSED S231 (D325)**
+The stored `Chaos Daemons|SHADOW LEGION` unlock effect (`target: {"keyword": "HERETIC ASTARTES"},
+enforced: false`) had no consuming engine code at all. S229 pulled the real 21-unit unlockable set
+from source (14 named + 7 already-shipped "Damned" units, all CSM-Codex-sourced) and recommended
+reusing the allied_group mechanism. S230 found the shipped precedents source each allied entry from
+a separate real Wahapedia datasheet ID, not a tag on the native entry, and re-scoped as a pipeline
+build. **Closed S231 (D325).** Built for real: ran the pipeline scoped to the 21 target datasheet
+IDs, and — the correction S230 missed — found those CD-faction rows are Wahapedia mistag duplicates
+(D131/D132), not real flavored book-variants; still had to be physically duplicated into the Chaos
+Daemons block regardless, since `resolveUnits` resolves a faction's roster strictly by army block.
+Also found neither Chaos Daemons' nor Chaos Space Marines' MFM prints a Shadow Legion points table
+(unlike the other three precedents), so the 21 units price off their CSM native points, pinned as an
+executable cross-check (E21a-7). Appended the 21 units into the Gen-1 Chaos Daemons root CSVs so the
+block stays source-reproducible; `units_repro_check.py`/`repro_check.py` both green.
+`detachment_effects.json` retargeted to `allied_group: "Shadow Legion Thralls", enforced: true` —
+zero engine change needed. Full write-up in `B114_SHADOW_LEGION_SCOPE.md`.
 
 ### B113 — Detachment enhancement `LEADER:` line discarded as parser noise — **NEW S217 (D311); RE-SCOPED S227 (D321); CLOSED S228 (D322)**
 `detachment_parser.py`'s `MFM_BLOCK_NOISE` regex matches and silently drops any `^LEADER:` line

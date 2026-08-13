@@ -78,7 +78,17 @@ WEB_PASSES = ['Space_Marines', 'Death_Guard', 'Black_Templars', 'Dark_Angels', '
 # unit_loadouts.json (confirmed by grep), matching the precedented UNMATCHED-and-left-alone shape
 # already shipped for Incursor Squad's Haywire Mine (000001159). The remaining 4 (000000650,
 # 000000663, 000000664, 000000665) are real weapon-swap gaps and are hand-authored below.
-FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK', 'EC', 'WE', 'DRU']
+# S231 (B114): CD added to FACTIONS. Not a Chaos Daemons native-roster change (CD's own 53
+# units are Gen-1 local: slugs, never reached by loadout_parser.py's Datasheets.csv-keyed
+# target_ids at all). This surfaces exactly the 21 Shadow Legion Thralls units -- real
+# Wahapedia CD-faction datasheet ids, now present in units.json's Chaos Daemons block --
+# so their loadout definitions regenerate from source instead of silently staying absent.
+# The Chosen/Legionaries/Raptors UNMATCHED flags this produces are identical, sentence-for-
+# sentence, to the ones already accepted on their CSM native counterparts; no new hand-
+# authoring needed. No WEB_PASSES entry needed either: the existing Chaos_Space_Marines
+# pass's scoped_name2id propagation (B68/B104) already carries CSM's per-model equipped-with
+# defaults across to the CD-block duplicates by design, confirmed this session.
+FACTIONS = ['SM', 'DG', 'CSM', 'TS', 'GK', 'EC', 'WE', 'DRU', 'CD']
 
 
 def _run(cmd, cwd):

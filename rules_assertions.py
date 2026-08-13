@@ -407,7 +407,13 @@ def e14_count(S):
     # Bomber's Voidraven missiles (add, max_total:1, unpriced; the auto-parser resolved
     # this cleanly with no hand-authoring). Verified by full per-army breakdown before
     # updating the literal: every non-DRU faction's count is unchanged at 108/75 -> 109/76.
-    return (len(q) == 109 and len(units) == 76), f'{len(q)} options across {len(units)} units'
+    # B114 Shadow Legion Thralls turn (S231): +4 qualifying free seeds across +4 Chaos
+    # Daemons-block units — Chosen's, Legionaries' and Possessed's Chaos Icon, and Sorcerer
+    # in Terminator Armour's Chaos Familiar — the same free-add shape already seeded on
+    # their Chaos Space Marines native counterparts. Verified by full per-army breakdown
+    # before updating the literal: every other army's count is unchanged (Chaos Space
+    # Marines stays at 12/12) -> 113/80.
+    return (len(q) == 113 and len(units) == 80), f'{len(q)} options across {len(units)} units'
 
 def b18_named_body(S):
     lines = [re.sub(r'<[^>]+>', ' ', r['description'])
@@ -1092,7 +1098,7 @@ ASSERTIONS = [
     ('E14-2',
      'The seeding rule is total, not a hand-picked list: an add qualifies iff it is '
      'type=add, has no requires_weapon, no pool_id, no per_n_models, max_total == 1, and '
-     'its item is unpriced. 98 options across 67 units qualify today.',
+     'its item is unpriced. 113 options across 80 units qualify today.',
      'unit_loadouts.json; wargear_points.json',
      lambda S: e14_count(S)),
 
@@ -1949,31 +1955,39 @@ ASSERTIONS = [
     # Legions carriers; these four now pin the tag's exact shape across both armies via
     # ALLIED_CARRIER_GROUPS rather than one Death-Guard-specific census.
     ('B61-1',
-     'Exactly the expected six units carry allied_group in each allied-carrier army: Death '
-     'Guard carries "Plague Legions" (Beasts of Nurgle, Great Unclean One, Nurglings, '
-     'Plaguebearers, Plague Drones, Rotigus); Thousand Sons carries "Scintillating Legions" '
-     '(Kairos Fateweaver, Lord of Change, Flamers, Screamers, Pink Horrors, Blue Horrors). No '
-     'other unit in either army carries the field at all — it is absent, not null, elsewhere.',
-     'MFM_Death_Guard_v1_0.txt PLAGUE LEGIONS section, MFM_Thousand_Sons_v1_0.txt SCINTILLATING '
-     'LEGIONS section; units.json Death Guard/Thousand Sons (B61, D208; TS added D248/E24)',
+     'Exactly the expected units carry allied_group in each allied-carrier army: Death '
+     'Guard carries "Plague Legions" (6 units), Thousand Sons carries "Scintillating '
+     'Legions" (6), Emperor\'s Children carries "Legions of Excess" (5), World Eaters '
+     'carries "Blood Legions" (5), and Chaos Daemons carries "Shadow Legion Thralls" (21, '
+     'the first group sourced from Chaos Space Marines rather than Chaos Daemons itself). '
+     'No other unit in any of these armies carries the field at all — it is absent, not '
+     'null, elsewhere.',
+     'MFM_Death_Guard_v1_0.txt PLAGUE LEGIONS section and siblings; units.json (B61, D208; '
+     'TS added D248/E24; EC added S210; WE added S218; CD/Shadow Legion Thralls added '
+     'S231/B114, sourced from Detachment_abilities.csv rather than an MFM allied section — '
+     'see B114_SHADOW_LEGION_SCOPE.md)',
      lambda S: b61_plague_legions_census(S)),
 
     ('B61-2',
      'No unit in any army block outside the allied-carrier armies (Death Guard, Thousand '
-     'Sons, Emperor\'s Children) carries allied_group. The tag is scoped to the sections '
-     'it was derived from and has not leaked into Space Marines, the chapter variants, '
-     'Chaos Space Marines, or Chaos Daemons\' own native copies of the same units.',
-     'units.json, all armies (B61, D208; TS added D248/E24; EC added S210)',
+     'Sons, Emperor\'s Children, World Eaters, Chaos Daemons) carries allied_group. The tag '
+     'is scoped to the sections it was derived from and has not leaked into Space Marines, '
+     'the chapter variants, or any other army\'s native copies of the same units.',
+     'units.json, all armies (B61, D208; TS added D248/E24; EC added S210; WE added S218; '
+     'CD added S231/B114)',
      lambda S: b61_no_other_army_carries_allied_group(S)),
 
     ('B61-3',
-     'Chaos Daemons carries its own native copy of every carrier unit under distinct unit_ids '
-     '(local:chaos-daemons:*), and none of those native copies carries allied_group. This is '
-     'the fact that makes each allied-carrier army\'s copies genuine duplicates rather than a '
-     'merge collision -- confirming Wahapedia\'s double-listing is intact on both sides of the '
-     'fix, for Death Guard, Thousand Sons, and now Emperor\'s Children.',
-     'units.json Chaos Daemons vs Death Guard/Thousand Sons/Emperor\'s Children (B61, D208; '
-     'TS added D248/E24; EC added S210)',
+     'Every allied-carrier group\'s donor army carries its own native copy of every carrier '
+     'unit under distinct unit_ids, and none of those native copies carries allied_group. '
+     'This is the fact that makes each allied-carrier army\'s copies genuine duplicates '
+     'rather than a merge collision. The donor is Chaos Daemons for Plague Legions/'
+     'Scintillating Legions/Legions of Excess/Blood Legions, and Chaos Space Marines for '
+     'Shadow Legion Thralls -- the first group where Chaos Daemons is the carrier rather '
+     'than the donor.',
+     'units.json Chaos Daemons vs Death Guard/Thousand Sons/Emperor\'s Children/World '
+     'Eaters; units.json Chaos Space Marines vs Chaos Daemons (B61, D208; TS added D248/E24; '
+     'EC added S210; WE added S218; Shadow Legion Thralls added S231/B114)',
      lambda S: b61_cd_native_copies_distinct(S)),
 
     ('B61-4',
@@ -2014,9 +2028,11 @@ ASSERTIONS = [
      'Allied-set targets resolve exactly when they claim to. Every enforced unlock or warlord '
      'effect targeting an allied_group matches at least one unit carrying that allied_group in '
      'the army\'s pool; every effect targeting a bare keyword instead of an allied_group is '
-     'enforced: false and carries an unenforced_reason. The unenforced inventory is exactly one '
-     'effect — Chaos Daemons SHADOW LEGION\'s HERETIC ASTARTES unlock — so the gap is counted '
-     'rather than invisible, and shrinks loudly when Chaos Space Marines is built.',
+     'enforced: false and carries an unenforced_reason. The unenforced inventory is exactly the '
+     'six HEADHUNTER TASK FORCE tank_ace rows (pool fully specified, awaiting the E23 engine '
+     'build turn), so the gap is counted rather than invisible. Chaos Daemons SHADOW LEGION\'s '
+     'unlock moved off this list at S231 (B114, D325) — re-shaped onto allied_group and flipped '
+     'to enforced.',
      'detachment_effects.json vs units.json allied_group (E21a, D203, D204, D209)',
      lambda S: e21a_allied_targets(S)),
 
@@ -2037,6 +2053,22 @@ ASSERTIONS = [
      'stops being covered, and this assertion is what says so.',
      'units.json Chaos Daemons Be\'Lakor; detachment_effects.json _meta.not_in_this_file (E21a, D209)',
      lambda S: e21a_belakor_warlord_covered(S)),
+
+    ('E21a-7',
+     'B114: Chaos Daemons\' Shadow Legion detachment allies in a pinned 21-unit set from Chaos '
+     'Space Marines — 14 units named directly on Detachment_abilities.csv id 000009976 (\'Thralls '
+     'of the First Prince\'), plus 7 of the 17 \'Damned\'-keyword datasheets that are actually '
+     'built in CSM\'s shipped roster (the other 10 carry no points in CSM\'s own MFM and are '
+     'correctly excluded). Checked against source, not just present: exactly 21 units.json '
+     'entries carry allied_group \'Shadow Legion Thralls\' in the Chaos Daemons block, their '
+     'unit_ids match the pinned real Wahapedia CD-faction datasheet ids exactly, and each one\'s '
+     'points match its Chaos Space Marines native counterpart exactly — the only source-grounded '
+     'price, since neither Chaos Daemons\' nor Chaos Space Marines\' own MFM file prints a '
+     'separate Shadow Legion points table (checked directly, unlike Plague Legions/Scintillating '
+     'Legions/Legions of Excess/Blood Legions, which do). A future MFM or Wahapedia regeneration '
+     'that silently drifts this set is caught here instead of shipping quietly.',
+     'units.json Chaos Daemons allied_group vs Chaos Space Marines native roster (B114, D325)',
+     lambda S: b114_shadow_legion_census(S)),
 
     ('E21b-1',
      'Chapter exclusivity holds structurally. 25 built detachments say the army may include '
@@ -2460,7 +2492,6 @@ def e21a_allied_targets(S):
             if not eff.get('unenforced_reason'):
                 bad.append(f'{key} [{eff["kind"]}]: enforced: false with no unenforced_reason')
     expect = sorted([
-        'Chaos Daemons|SHADOW LEGION/unlock',
         'Space Marines|HEADHUNTER TASK FORCE/tank_ace',
         'Black Templars|HEADHUNTER TASK FORCE/tank_ace',
         'Blood Angels|HEADHUNTER TASK FORCE/tank_ace',
@@ -2472,11 +2503,11 @@ def e21a_allied_targets(S):
         bad.append(f'unenforced inventory is {sorted(unenforced)}, expected {expect}')
     if bad:
         return False, '; '.join(bad)
-    return True, ('allied targets resolve; seven documented unenforced effects remain '
-                  '(Shadow Legion / HERETIC ASTARTES, awaiting Chaos Space Marines build; six '
-                  'HEADHUNTER TASK FORCE / tank_ace rows, pool fully specified, awaiting the E23 '
+    return True, ('allied targets resolve; six documented unenforced effects remain '
+                  '(HEADHUNTER TASK FORCE / tank_ace rows, pool fully specified, awaiting the E23 '
                   'engine build turn) — Changehost of Deceit flipped to enforced at Thousand Sons '
-                  'turn A (D248/E24)')
+                  'turn A (D248/E24); Shadow Legion flipped to enforced at S231 (B114, D325) onto '
+                  'the allied_group mechanism')
 
 
 def csm_roster_count(S):
@@ -3936,6 +3967,12 @@ E4B_KEYWORD_GAPS = {
     ('Chaos Space Marines', 'Dark Apostle'),         # CHARACTER sits on the DARK APOSTLE model
     ('Chaos Space Marines', 'Dark Commune'),         # CHARACTER sits on the CULT DEMAGOGUE model
     ('Chaos Space Marines', 'Traitor Enforcer'),     # CHARACTER sits on the TRAITOR ENFORCER model
+    # B114 (S231) — same three units, same underlying gap, duplicated into the Chaos Daemons
+    # block as Shadow Legion Thralls allied entries (allied_group carriers sourced from the
+    # same CD-faction datasheet content as their Chaos Space Marines native counterparts).
+    ('Chaos Daemons', 'Dark Apostle'),
+    ('Chaos Daemons', 'Dark Commune'),
+    ('Chaos Daemons', 'Traitor Enforcer'),
 }
 
 
@@ -4044,6 +4081,53 @@ def e4b_name_collision_census(S):
                        f'{len(pairs)} reachable same-army collisions across {len(names)} distinct '
                        f'names, {len(differing)} of them priced differently ({differing[0]}) — '
                        f'name-keyed duplicates and the stored detachment key are both still forced')
+
+
+def b114_shadow_legion_census(S):
+    """B114: pins the 21-unit Shadow Legion Thralls set (14 named + 7 built 'Damned') against
+    both units.json and the Chaos Space Marines native roster it prices off of. See
+    B114_SHADOW_LEGION_SCOPE.md and D325."""
+    EXPECTED_IDS = {
+        '000004036', '000004037', '000004038', '000004043', '000004044', '000004062',
+        '000004063', '000004064', '000004065', '000004066', '000004067', '000004068',
+        '000004072', '000004073', '000004045', '000004046', '000004047', '000004050',
+        '000004052', '000004053', '000004054',
+    }
+    armies = {a['army']: a for a in S.units()}
+    cd = armies.get('Chaos Daemons')
+    csm = armies.get('Chaos Space Marines')
+    if cd is None:
+        return False, 'Chaos Daemons army block not found'
+    if csm is None:
+        return False, 'Chaos Space Marines army block not found'
+
+    tagged = [u for u in cd['units'] if u.get('allied_group') == 'Shadow Legion Thralls']
+    got_ids = set(u['unit_id'] for u in tagged)
+    if got_ids != EXPECTED_IDS:
+        missing = EXPECTED_IDS - got_ids
+        extra = got_ids - EXPECTED_IDS
+        return False, (f'Shadow Legion Thralls census does not match the pinned 21: '
+                       f'{len(missing)} missing {sorted(missing)[:5]}, '
+                       f'{len(extra)} unexpected {sorted(extra)[:5]}')
+
+    csm_by_name = {u['unit_name'].strip().lower(): u for u in csm['units']}
+    bad = []
+    for u in tagged:
+        native = csm_by_name.get(u['unit_name'].strip().lower())
+        if native is None:
+            bad.append(f'{u["unit_name"]} ({u["unit_id"]}): no Chaos Space Marines native '
+                       f'counterpart found by name')
+            continue
+        pts_a = u.get('points')
+        pts_b = native.get('points')
+        if pts_a != pts_b:
+            bad.append(f'{u["unit_name"]} ({u["unit_id"]}): points {pts_a} do not match '
+                       f'Chaos Space Marines native {pts_b}')
+    if bad:
+        return False, '; '.join(bad)
+    return True, (f'{len(tagged)} Shadow Legion Thralls units found, unit_ids match the pinned '
+                  f'census exactly, and every one prices identically to its Chaos Space Marines '
+                  f'native counterpart')
 
 
 def b113_leader_line_census(S):
@@ -4346,6 +4430,27 @@ ALLIED_CARRIER_GROUPS = {
     # exactly) -- same B61/ALLIED_GROUP_HEADERS mechanism, no engine change needed.
     'World Eaters': ('Blood Legions', {'Skarbrand', 'Bloodthirster', 'Bloodletters',
                                         'Bloodcrushers', 'Flesh Hounds'}),
+    # S231 (B114): Shadow Legion Thralls, the first allied-carrier group where Chaos Daemons
+    # is the CARRIER rather than the donor -- the reverse of the other four entries here (all
+    # of which pull FROM Chaos Daemons INTO another army). NATIVE_ARMY_OVERRIDES below points
+    # b61_cd_native_copies_distinct at Chaos Space Marines for this one entry instead of the
+    # hardcoded Chaos Daemons default.
+    'Chaos Daemons': ('Shadow Legion Thralls', {
+        'Chaos Lord', 'Chaos Lord In Terminator Armour', 'Chaos Lord with Jump Pack',
+        'Chaos Terminator Squad', 'Chosen', 'Dark Apostle', 'Havocs', 'Legionaries',
+        'Master Of Possession', 'Possessed', 'Raptors', 'Sorcerer',
+        'Sorcerer In Terminator Armour', 'Warp Talons', 'Cultist Firebrand', 'Dark Commune',
+        'Traitor Enforcer', 'Cultist Mob', 'Accursed Cultists', 'Fellgor Beastmen',
+        'Traitor Guardsmen Squad',
+    }),
+}
+
+# B61-3's donor-side check defaults to Chaos Daemons (true for the first four groups above,
+# all of which pull Chaos Daemons units into another army). Shadow Legion Thralls reverses
+# the direction -- Chaos Daemons is the carrier, Chaos Space Marines is the donor -- so its
+# entry needs the actual donor army named explicitly rather than the hardcoded default.
+NATIVE_ARMY_OVERRIDES = {
+    'Chaos Daemons': 'Chaos Space Marines',
 }
 
 
@@ -4384,33 +4489,36 @@ def b61_no_other_army_carries_allied_group(S):
 
 
 def b61_cd_native_copies_distinct(S):
-    cd = next((a for a in S.units() if a['army'] == 'Chaos Daemons'), None)
-    if cd is None:
-        return False, 'Chaos Daemons army block not found'
     bad = []
     for army_name, (label, names) in ALLIED_CARRIER_GROUPS.items():
+        native_army_name = NATIVE_ARMY_OVERRIDES.get(army_name, 'Chaos Daemons')
+        native = next((a for a in S.units() if a['army'] == native_army_name), None)
+        if native is None:
+            bad.append(f'{native_army_name} army block not found')
+            continue
         army = next((a for a in S.units() if a['army'] == army_name), None)
         if army is None:
             bad.append(f'{army_name} army block not found')
             continue
-        cd_by_name = {u['unit_name']: u for u in cd['units'] if u['unit_name'] in names}
+        native_by_name = {u['unit_name']: u for u in native['units'] if u['unit_name'] in names}
         army_by_name = {u['unit_name']: u for u in army['units'] if u['unit_name'] in names}
         for n in sorted(names):
-            c, d = cd_by_name.get(n), army_by_name.get(n)
+            c, d = native_by_name.get(n), army_by_name.get(n)
             if c is None:
-                bad.append(f'{n}: missing from Chaos Daemons')
+                bad.append(f'{n}: missing from {native_army_name}')
                 continue
             if d is None:
                 bad.append(f'{n}: missing from {army_name}')
                 continue
             if c['unit_id'] == d['unit_id']:
-                bad.append(f'{n}: same unit_id in both {army_name} and Chaos Daemons '
+                bad.append(f'{n}: same unit_id in both {army_name} and {native_army_name} '
                             f'({c["unit_id"]})')
             if 'allied_group' in c:
-                bad.append(f'{n}: Chaos Daemons native copy unexpectedly carries allied_group')
+                bad.append(f'{n}: {native_army_name} native copy unexpectedly carries '
+                           f'allied_group')
     if bad:
         return False, '; '.join(bad)
-    return True, 'all carrier units exist as distinct, untagged native copies in Chaos Daemons'
+    return True, 'all carrier units exist as distinct, untagged native copies in their donor army'
 
 
 def b61_allied_group_headers_intact(S):
