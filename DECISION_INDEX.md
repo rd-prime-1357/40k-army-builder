@@ -984,3 +984,8 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   regen chain diff-guarded to exactly the two targeted records. Session-open reconciliation found
   **B108, B117, and B118 all already resolved** by Ryan pushing both repos ahead of this session —
   verified directly and closed all three. Full baseline 33/33.
+- **D329** — B99 scoped (S235), scoping-only. No engine path exists between an assigned
+  enhancement and any weapon characteristic; censused 57 unconditional bearer-weapon numeric
+  records + 17 ability-grant records (72 union) across 13 armies, banked Sets C/D as B119/B120,
+  corrected B99's "D0-adjacent" framing to display-fidelity, chose the B113 curated-table +
+  census-assertion mechanism. `B99_SCOPE.md` written. Six scope docs found unguarded → **B121**.

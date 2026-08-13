@@ -196,6 +196,7 @@ GUARDED = [
     'CSM_BUILD_SCOPE.md',
     'DECISION_INDEX.md',
     'E1_DETACHMENT_SCOPE.md',
+    'B99_SCOPE.md',
     'GREY_KNIGHTS_BUILD_SCOPE.md',
     'MFM_Chapter_Pass.md',
     'MFM_FW_Reconciliation.md',
@@ -287,6 +288,7 @@ GUARDED = [
     'SESSION_HANDOFF_232.md',
     'SESSION_HANDOFF_233.md',
     'SESSION_HANDOFF_234.md',
+    'SESSION_HANDOFF_235.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

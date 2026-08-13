@@ -13435,3 +13435,123 @@ Added a `SOURCE_TYPO_CORRECTIONS` dict in `equipped_parser.py`, keyed to the exa
 **Doc-hygiene note, not itself a ticket:** `DECISION_INDEX.md`'s entries for D320–D327 were left as multi-sentence paragraphs rather than true one-liners (D326's compression pass covered D324/D325 but not the surrounding entries). No content was at risk — the full detail already lives correctly in this log — so compressed them to one-liners in the same pass as this entry, matching D320's established length and style.
 
 Full baseline clean: 33/33 gates (`--fetch --data-turn`), both repro checks byte-for-byte, `rules_assertions.py --tier all` clean after the census fix. `repo_check` reports this session's own uncommitted changes as expected (four files differ from the last-pushed repo state — `equipped_parser.py`, `unit_loadouts.json`, `rules_assertions.py`, `pipeline_manifest.json` — pending upload, not a regression).
+
+### D329 — B99 scoped: enhancement-conferred weapon modifications censused, mechanism chosen, sets B/C/D banked (S235), scoping-only
+
+**Turn type: scoping-only.** No engine, data or tooling file was changed. Output is
+`B99_SCOPE.md` plus this entry, the index one-liner, and the backlog update.
+
+**Session open.** Read `SESSION_HANDOFF_234.md` and `NEXT_SESSION_PROMPT.md`, then
+`DECISION_INDEX.md` and `40K_Decision_Log.md` (the log again not present in the project-area
+mount; recovered by the fetch-overlay from the public repo, same as S233 and S234). Full
+baseline `--fetch --data-turn`: **34/34 gates pass**, both repro checks byte-for-byte,
+`rules_assertions.py --tier all` 125/125, `repo_check` green — Ryan's S234 push landed
+cleanly and nothing had drifted. Note the gate count is 34 here against 33 at S234 close: the
+extra gate is `source-fetch`, which only counts when the private-repo sources are not already
+resident, not a new check.
+
+**B99's original framing was wrong in one respect and is corrected here.** The backlog entry
+described it as a "live D0-adjacent gap". It is not. An enhancement's stat bonus changes no
+unit's points, no enhancement's cost, and no legality test — assignment eligibility is already
+enforced separately by E4b/B113 and is untouched by this. No illegal state is reachable
+because of B99 and fixing it makes none unreachable. B99 is a **display-fidelity** item: the
+app prints a characteristic the user's model does not have. Worth building on trust grounds,
+but it must be sequenced as fidelity work rather than as legality work, and the backlog wording
+has been corrected accordingly.
+
+**The gap is real and wider than the one reported enhancement.** There is no code path in
+`index.html` between an assigned enhancement and any rendered weapon characteristic at all.
+Censused across all 739 enhancement records (665 with a description; the 74 description-less
+records are a separate, pre-existing text-coverage gap and are not part of B99):
+
+- **Set A** — numeric change to the bearer's own weapons, unconditional: **57 records**,
+  32 distinct names, 13 of the 14 built armies (Chaos Daemons has none).
+- **Set A2** — weapon-ability grant to the bearer's own weapons, unconditional: **17 records**,
+  12 distinct names, 11 armies. Overlaps A on 2 records; the union is **72 records**.
+- **Set B** — bearer's own weapons, conditional only: 5 records.
+- **Set C** — bearer's own statline, unconditional: 10 records. Opened as **B119**.
+- **Set D** — weapons of other models in the bearer's unit: 19 records. Opened as **B120**.
+
+A further 11 records modify an incoming attack's characteristics (the *Adamantine Mantle*
+family) — defensive and per-attack, never a profile.
+
+**Method note worth keeping.** Descriptions had to be split at clause level, not sentence
+level: several records join an unconditional clause to a conditional one with a comma
+(*Slayer of Champions*, *Radiant Champion* both do), and a sentence-level split mis-files them
+as wholly conditional. The Set A figure of 57 was computed both ways and is stable; the Set A2
+figure is not — it moves from 14 to 17 under clause splitting, which is why the clause split
+is the one recorded.
+
+**Three traps found in the data, any one of which would ship a wrong number.** (1) `AP` is
+stored as a signed integer and "improve the Armour Penetration characteristic by 1" makes it
+*more negative* — `-1` becomes `-2` — while "improve" on Strength/Attacks/Damage means add;
+a generic "improve = +N" is wrong for the single most common modifier in Set A. (2) `A` and
+`D` are strings and not always numeric (`D6`, `D3`, `D6+3`, `2D6`); across the melee weapons of
+the 208 Character/Epic Hero units 3 rows have a variable `A` and 43 a variable `D`, so the
+correct treatment is string composition (`D6` +1 → `D6+1`, a shape already present 99 times in
+the data), not arithmetic. (3) Ten Character/Epic Hero units are loadout-defined with more than
+one model group, where the rollup table shows one row per weapon across models the bearer is
+not — writing a modified value there asserts something false about the other models. That third
+one is the D105/D112 problem already solved for the statline, and its three-way answer
+(all carriers → value, some → asterisk, none → nothing) should be reused rather than
+reinvented.
+
+**Two irregular texts** are the reason a naive text reader is unsafe: *Ancient Weapons* uses
+anaphora ("…of those weapons by 1"), and *Blades of Valour* (6 chapters) targets the bearer
+**and** Battleline models in the bearer's unit, making it simultaneously a Set A and a Set D
+record with only its bearer half in scope.
+
+**Mechanism chosen: a curated `index.html` table keyed `detachment_key + '::' + name`, plus a
+source-derived census assertion in `rules_assertions.py`.** This is exactly the B113 shape
+(`ENHANCEMENT_BEARER_RESTRICTIONS` + `b113_bearer_table_matches_source`), same key, already
+proven. Render-time text parsing in the engine was rejected — the clause shapes are regular
+enough that it would mostly work, which is the problem, since a miss is silent and the traps
+above are precisely where it would miss; the engine's existing `statOverrideFromText` handles
+only absolute "characteristic of N" sets, so this would be a new relative-delta reader, not an
+extension. A parser-emitted structured field on `detachments.json` was also rejected: it moves
+the same fragile parsing into the parser and rewrites all 739 enhancement records for 72
+records' worth of benefit. The census assertion is the part that matters and is the improvement
+over B113's bare table — it must fail if any record matches the Set A/A2 shape and has no table
+row, so a faction built later cannot silently introduce an unhandled enhancement.
+
+**Render sites confirmed, no plumbing needed.** Two separate weapon tables exist —
+`buildWeaponTable` (per-model-group) and `loWeaponTable` (the loadout rollup) — and both must
+be fed or the same unit shows a modified profile on one surface and the printed one on the
+other. `buildWeaponSections`' configured call already receives `entry`, its unconfigured call
+correctly does not (no list entry means no enhancement, so modified numbers can only appear in
+the configured pane), and `loadoutWeaponHtml` already receives `entry`. `entry.enhancement`
+resolves through the existing `enhancementRecord`.
+
+**Detachment rule text checked and ruled out.** 31 rule-text sentences carry the same modifier
+shapes, 7 of which read as unconditional. All 7 were read directly: every one is an in-battle
+grant or player choice (Creations of Bile's surgical enhancements, Spectacle of Spite's combat
+drugs, Wrathful Procession's in-battle rite), not an army-construction fact. Detachment rules
+are correctly outside B99 and should not be folded in later without re-reading them.
+
+**Build plan, two turns, not to be merged:** an engine turn (curated table, delta applier with
+the AP sign rule and string composition, the three-way carrier rule, both render sites, and a
+new `b99_check.js`), then a tooling turn (the `rules_assertions.py` census). Set A2 folds into
+the engine turn — same population, same table, same render path, different column — rather than
+being split off to touch the same code twice. That is a sequencing call, not a Ryan decision.
+
+**Decisions put to Ryan** (all reversible; the build proceeds on the recommendations unless he
+says otherwise): whether to change the printed numbers at all (recommend yes, Set A, configured
+surfaces only); the display idiom (recommend modified value in the cell, cell marked, legend
+naming the enhancement — the existing D89/D112 asterisk-and-legend idiom); whether conditional
+effects get a marker (recommend no — the full text already expands from the Enhancement
+section's eye control, and marking every conditional clause would mark most bearers without
+telling the user anything actionable); and whether he wants New Recruit's handling matched,
+which is unknown to me and which he has offered screenshots for.
+
+**Process finding, opened as B121.** Six scope documents are absent from `pipeline_manifest.py`'s
+GUARDED list — `B113_LEADER_RESTRICTION_SCOPE.md`, `B114_SHADOW_LEGION_SCOPE.md`,
+`DRUKHARI_BUILD_SCOPE.md`, `WORLD_EATERS_BUILD_SCOPE.md`, `THOUSAND_SONS_BUILD_SCOPE.md`,
+`EMPEROR_S_CHILDREN_BUILD_SCOPE.md` — while the four older ones (`CSM_BUILD_SCOPE.md`,
+`E1_DETACHMENT_SCOPE.md`, `GREY_KNIGHTS_BUILD_SCOPE.md`, `P4_ARCHITECTURE_SCOPE.md`) are
+present. The convention lapsed after the Grey Knights build. These documents are the
+authoritative spec a later build session reads — B113's and B114's builds both did — so an
+unguarded one can be replaced by a stale copy with no gate noticing, which is the exact failure
+class the manifest exists for. Registering six existing files is a tooling change and does not
+belong in a scoping turn; banked as **B121** with the file list above. This session's own two
+new documents (`SESSION_HANDOFF_235.md`, `B99_SCOPE.md`) are registered as part of the standard
+close, which is protocol rather than a tooling change.
