@@ -1047,3 +1047,8 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   content lost. Real finding left open: 6 GW-derived Gen-1 Chaos Daemons CSVs are committed to the
   public repo (`.gitignore`'s own `*.csv` rule notwithstanding) — logged as **B117**, Ryan action,
   same shape as B108. No engine/data change; tooling-only turn.
+- **D327** — GK §6/§7 confirmed already shipped (stale prompt recommendation); private
+  data-sources repo found to have never received B114's 21-unit append (first data-turn
+  baseline since S231 caught it); reconstructed and verified byte-identical, but could not
+  push — token is read-only in practice despite API permissions claiming otherwise. New Ryan
+  action opened as **B118** (S233), data.

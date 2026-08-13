@@ -3,7 +3,20 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S232 (up from 21 — B117 opened this session; nothing
+not here, it isn't open. **23 open** as of S233 (up from 22 — B118 opened this session; nothing
+closed): B118, B117, B116, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75,
+P2, P4, E23, B67b, E12, B17.
+Data-only turn (D327): first data-turn baseline since S231 found the private data-sources repo
+never received B114's 21-unit Shadow Legion Thralls append (local-only verification at S231 masked
+the gap). Reconstructed the six Gen-1 Chaos Daemons CSVs' correct content from the already-shipped
+`units.json`, verified byte-for-byte clean against every repro/assertion gate, updated
+`source_manifest.json`'s hashes ahead of the push so a stale private repo now fails loudly instead
+of silently. Could not push — the repo token is read-only in practice despite the GitHub API's
+permissions field claiming full access. Logged as B118 (Ryan action). Also confirmed GK §6/§7
+(carried in `NEXT_SESSION_PROMPT.md` for several sessions) was already fully shipped at S202/S203 —
+stale recommendation, not real open work.
+
+**22 open** as of S232 (up from 21 — B117 opened this session; nothing
 closed): B117, B116, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
 E23, B67b, E12, B17.
 Tooling-only turn (D326): session-open reconciliation found a real, verified custody violation —
@@ -560,6 +573,34 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
+
+### B118 — Private data-sources repo never received B114's 21-unit Shadow Legion Thralls append — **NEW S233 (D327); RYAN ACTION; CRITICAL (data integrity)**
+S231 (D325/B114) appended the 21 Shadow Legion Thralls units into *local* copies of the six Gen-1
+Chaos Daemons source CSVs and verified reproducibility against those local copies, but never pushed
+the change to the private `rd-prime-1357-data-sources` repo — the actual source-of-truth. This sat
+undetected because no session between S231 and S233 ran a data-turn baseline (the only mode that
+loads real GW sources); S233's data-turn run is the first since S231 and caught it immediately:
+`units_repro_check` failed, missing exactly 5 of the 21 units when sources were fetched fresh.
+Verified directly: the private repo's six files hash-matched `source_manifest.json`'s stale
+pre-B114 entries exactly — confirming the push never happened, not a partial/corrupted one.
+
+Reconstructed the correct content this session from the already-shipped, already-verified
+`units.json` (not from guesswork): `wahapedia_transform.py --faction CD` filtered to the pinned
+21-ID census (`rules_assertions.py`'s `b114_shadow_legion_census`), `Unit_Points.csv` rows built
+from the committed points data, one real format mismatch found and corrected (Keyword Names /
+Faction Keyword Names need merging into one column — the original Gen-1 schema has no split).
+Verified byte-for-byte: `units_repro_check.py`, `repro_check.py`, `detachments_repro_check.py`, and
+`rules_assertions.py --tier all` (125/125) all pass clean. `source_manifest.json` already updated
+to the six files' correct new hashes, so the next data-turn baseline will fail loudly with a clear
+hash-mismatch (not silently trust stale content) until the push happens.
+
+**Ryan action required (same boundary as B108/B117 — no push credential for this repo works from
+here despite the API's permissions field claiming full access; a real `git push` was rejected
+403):** push the six files delivered this session (`Unit_Stats.csv`, `Unit_Points.csv`,
+`Unit_Weapons.csv`, `Unit_Wargear_Options.csv`, `Unit_Other_Options.csv`,
+`Unit_Ability_Details.csv`) to `rd-prime-1357-data-sources`, replacing the current files of the
+same names. No committed output (`units.json` etc.) changes as a result — this only brings the
+private source-of-truth in line with what's already shipped.
 
 ### B117 — Six GW-derived Gen-1 Chaos Daemons CSVs committed to the public repo — **NEW S232 (D326); RYAN ACTION; CRITICAL (compliance)**
 `repo_check.py` at S232 open flagged `Unit_Stats.csv`, `Unit_Points.csv`, `Unit_Wargear_Options.csv`,
