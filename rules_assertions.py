@@ -4593,6 +4593,12 @@ P4_REFERENCED_SOURCES = {
     # cuts out the census block itself, stops flagging them.
     'Dark_Angels_web.txt', 'Space_Wolves_web.txt',
     'ArmyA_web.txt', 'ArmyB_web.txt', 'AliasForA_web.txt',
+    # Added S234 (B98), re-running the census per its own instruction. Thousand_Sons_web.txt:
+    # a real, already-required file (P4_REQUIRED_SOURCES), previously only covered by the
+    # generic '_web.txt' stub, now named literally for the first time in equipped_parser.py's
+    # SOURCE_TYPO_CORRECTIONS docstring comment (same shape as D299's Dark_Angels_web.txt /
+    # Space_Wolves_web.txt addition).
+    'Thousand_Sons_web.txt',
 }
 
 P4_SCANNED = [

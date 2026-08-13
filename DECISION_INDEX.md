@@ -955,100 +955,32 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   units, 0 removed, 0 existing changed. wargear_points.json rebuilt, exactly the 4 forecasted
   Drukhari items populate. E14 literal updated 108/75 → 109/76, verified by full per-army
   breakdown. Full baseline clean, zero regression.
-- **D320** — Drukhari detachments built (S226), data-only. Registered Drukhari in `detachment_
-  parser.py`'s three maps (deferred from S224). 9 detachments, DP 1–3, 30 enhancements, three
-  shared Unique tags, three `text_source: "none"` — all re-derived from a real parser run and
-  matching §5 exactly. B113 re-confirmed at 0 new instances. Diff-guarded against a clean repo
-  fetch: +9 detachments, 0 removed, 0 existing records changed. Real finding: Drukhari adds 2
-  same-army enhancement-name collisions (Towering Arrogance, Periapt of Torments), both
-  differently priced — precedented per §5, no engine change needed, `e4b_name_collision_census`
-  literal updated 30/6/1 → 32/8/3. Full baseline clean, zero regression. Drukhari's units,
-  loadouts, and detachments are now all shipped; only B116 remains open.
-
-- **D321** — B113 build stopped at open and re-scoped (S227), scoping (was typed engine-only).
-  `B113_LEADER_RESTRICTION_SCOPE.md` written (net-new); no engine/data/assertion change. Open-time
-  manifest reconciliation: S226 handoff hash one edit stale (committed handoff `eb4ac9ac4851` vs
-  manifest `ad9575270ad0`, a post-`--write` edit S226's freshness-check missed) — re-banked,
-  diff-guarded to one entry, baseline 34/34. Three source-derived findings: (1) census is **8, not
-  6** — Space Wolves' two instances (Wolf-touched, Grimnar's Mark) were missed everywhere since
-  S217; (2) the `LEADER:` line binds to the enhancement **immediately above** it (WE's case is
-  Disciple of Khorne, not the mis-recorded Icon of War); (3) decisively, `LEADER:` is an
-  attach-**enabler**, not an assignment restriction — the named units are bodyguards the bearer
-  can't normally lead (0 leaders can attach to 6 of 8 targets), so the prompt's "refuse unless
-  attached" gate would make these enhancements assignable to nobody, the opposite of D0. Real
-  restriction is the "X model only" bearer clause in prose, not the `LEADER:` line. Decision for
-  Ryan (lasting precedent): (A) enforce bearer restriction only [recommended], (B) full
-  attach-enablement, (C) capture-only defer. B113 stays open, re-scoped, decision-ready.
-
-- **D322** — B113 built and closed (S228), engine turn. Ryan chose option (A): enforce the bearer
-  restriction only, leave the `LEADER:` attach-enablement itself unenforced. Before building,
-  independently re-derived the 8-row `LEADER:` census straight from raw MFM (matched S227's D321
-  finding exactly) and pulled the actual GW keyword data (`Datasheets_keywords.csv`,
-  `faction_keyword_names`) to resolve two rows the prose alone didn't cleanly give: Butcher Lord's
-  "World Eaters Infantry model only" resolves to exactly two units (Master of Executions,
-  Slaughterbound — the other World Eaters Characters are Monster or Mounted, not Infantry), and
-  Wolf-touched's "Space Wolves model only" is a faction-keyword restriction, not a named unit,
-  matched via `faction_keyword_names` rather than a hardcoded list. Pact of Cursed Pinions
-  (Murdertalon Raiders) confirmed to carry no bearer text anywhere in the held sources — checked
-  directly against the MFM, the Wahapedia web export, and the raw CSVs — and left deliberately
-  unenforced rather than guessed from its sibling Sorrowscent Vulture, which shares the same
-  `LEADER:` target unit but is a different detachment.
-
-  Shipped: `index.html` (v6.20) — curated `ENHANCEMENT_BEARER_RESTRICTIONS` table (7 rows) inside
-  the E4b block, a new `bearer_restriction` reason in `canAssignEnhancement`, matching refusal
-  prose, and a `wrongBearer` flag-don't-drop entry in `enhancementArmyState` for a stale/imported
-  mismatch (same pattern as the existing `wrongType`). `e4b_check.js` extended with a dedicated
-  B113 section (named-unit allow/refuse, the keyword-kind restriction, the deliberately-unenforced
-  row staying assignable, and the stale-assignment flag-don't-drop path); `baseline.sh` updated to
-  pass `units.json` to the harness (needed for the keyword check). Two new pinned
-  `rules_assertions.py` checks (E4b-6, E4b-7): the MFM census, and the bearer table verified
-  against source rather than merely present — every named-unit row resolves in its army's real
-  unit pool, the keyword row is confirmed non-vacuous, and Butcher Lord's two-unit set is checked
-  against the raw keyword CSV. Negative-tested E4b-7 by deliberately corrupting a bearer unit name
-  and confirming the assertion fails correctly before relying on it. Full baseline clean: 124/124
-  assertions (was 121/124 before the manifest write), all repro checks byte-for-byte, zero
-  regression on the pre-existing 132-row E4b sweep.
-
-- **D323** — B114 scoped (S229), scoping-only. The B112/D204 "flip enforced:true once CSM ships"
-  premise assumed the flag only needed CSM to exist; it didn't — `target: {"keyword": "HERETIC
-  ASTARTES"}` has never had any consuming engine code, confirmed by reading `unlockedAlliedGroups`/
-  `alliedPointsCap` directly (both filter on `target.allied_group` only). Real unlockable set pulled
-  from the actual Wahapedia ability text (not the paraphrased summary): 15 named items, one of which
-  ("Damned units") is itself a 17-datasheet keyword group. Cross-checked against the shipped CSM
-  roster: 21 units buildable (14 named + 7 already-shipped "Damned" units), 10 more unbuilt and
-  unpriced under CSM's own MFM (different Wahapedia source, correctly out of scope already).
-  Recommended mechanism: reuse the existing `allied_group` machinery (Plague Legions/Scintillating
-  Legions precedent) rather than build new keyword-unlock logic — no new engine code needed.
-  Confirmed the Shadow Legion ability carries no Warlord-ban clause, unlike Plague Legions, so no
-  matching `warlord` effect should be added. Not a Ryan decision — mechanism reuse, fully
-  source-determined set. `B114_SHADOW_LEGION_SCOPE.md` written (net-new); no engine/data change.
-
-- **D324** — B114 build attempt stopped (S230), scoping. The S229 plan (D323) undercounted the
-  work: the four shipped allied_group precedents each source their allied entries from a real,
-  separate Wahapedia datasheet ID (the destination faction's own book-variant), not a tagged copy of
-  the native entry — confirmed directly against `Datasheets.csv`. Correct build is a pipeline run
-  against 21 new datasheet IDs, not a two-file data edit. Stopped cleanly, no hand-edit. Not a Ryan
-  decision — a "how it gets built" correction. `B114_SHADOW_LEGION_SCOPE.md` §6 added.
-- **D325** — B114 built and closed (S231), pipeline/data. D324's plan was right but its stated
-  reason was wrong: the CD-faction datasheet rows are Wahapedia mistag duplicates (D131/D132
-  pattern), not real book-variant reprints — confirmed by a byte-identical diff against CSM's native
-  Chaos Lord. Ran the scoped pipeline and appended the 21 units into the Gen-1 Chaos Daemons root
-  CSVs (not a `units.json` hand-patch), keeping Chaos Daemons source-reproducible.
-  `detachment_effects.json`'s Shadow Legion unlock retargeted onto the existing `allied_group`
-  mechanism, `enforced: true`, zero engine change. Five `rules_assertions.py` areas updated/added
-  (E21a-4, new E21a-7, `E4B_KEYWORD_GAPS`, `ALLIED_CARRIER_GROUPS`/`NATIVE_ARMY_OVERRIDES`, E14-2);
-  `e21c_check.js` S4 rewritten onto live behavior. Full detail in `40K_Decision_Log.md`.
-- **D326** — Session-open reconciliation (S232), tooling. Fixed `classify_tier`'s reachability
-  walker (stopped at the `Sources`-class boundary, so a tier-B assertion one call removed from a
-  module global misclassified as tier A and crashed under `--tier a` instead of skipping) — 83 A /
-  42 B after the fix, `--tier a` runs clean. Found and fixed a doc-integrity gap: D324/D325's full
-  entries had been written into `DECISION_INDEX.md` instead of `40K_Decision_Log.md`, leaving the
-  log itself stopped at D323; moved into the log, index entries compressed to proper one-liners, no
-  content lost. Real finding left open: 6 GW-derived Gen-1 Chaos Daemons CSVs are committed to the
-  public repo (`.gitignore`'s own `*.csv` rule notwithstanding) — logged as **B117**, Ryan action,
-  same shape as B108. No engine/data change; tooling-only turn.
+- **D320** — Drukhari detachments built (S226), data-only. 9 detachments, DP 1–3, 30 enhancements,
+  three shared Unique tags; Drukhari's units, loadouts, and detachments now all shipped, B116 the
+  only item left open.
+- **D321** — B113 build stopped at open and re-scoped (S227), scoping. `LEADER:` line is an
+  attach-enabler, not an assignment restriction; real bearer census is 8, not 6. Decision put to
+  Ryan; see `B113_LEADER_RESTRICTION_SCOPE.md`.
+- **D322** — B113 built and closed (S228), engine turn. Ryan chose option (A): bearer restriction
+  enforced, `LEADER:` attach-enablement left unenforced. `index.html` v6.20, two new pinned
+  assertions (E4b-6, E4b-7), full baseline clean.
+- **D323** — B114 scoped (S229), scoping-only. Shadow Legion's stored unlock target had no
+  consuming engine code; real unlockable set is 21 source-derived units. Recommended reusing the
+  `allied_group` mechanism. `B114_SHADOW_LEGION_SCOPE.md` written.
+- **D324** — B114 build attempt stopped (S230), scoping. Correct build is a pipeline run against 21
+  new datasheet IDs, not a two-file data edit — S229's plan undercounted the work. Stopped cleanly.
+- **D325** — B114 built and closed (S231), pipeline/data. CD-faction datasheet rows are Wahapedia
+  mistag duplicates, not book-variant reprints. 21 units appended into Gen-1 Chaos Daemons root
+  CSVs; `detachment_effects.json` retargeted onto `allied_group`, `enforced: true`.
+- **D326** — Session-open reconciliation (S232), tooling. Fixed `classify_tier`'s reachability gap;
+  restored a doc-integrity gap (D324/D325 full entries had landed only in this index, not the log).
+  Real finding logged as **B117** (6 GW-derived CSVs on the public repo), Ryan action.
 - **D327** — GK §6/§7 confirmed already shipped (stale prompt recommendation); private
-  data-sources repo found to have never received B114's 21-unit append (first data-turn
-  baseline since S231 caught it); reconstructed and verified byte-identical, but could not
-  push — token is read-only in practice despite API permissions claiming otherwise. New Ryan
-  action opened as **B118** (S233), data.
+  data-sources repo found to have never received B114's 21-unit append; reconstructed and
+  verified byte-identical, but could not push — token read-only in practice. Opened as **B118**
+  (S233), Ryan action.
+- **D328** — B98 closed (S234), data-only. Daemon Prince of Tzeentch "heliforged"/"Hellforged"
+  source typo fixed via a scoped `SOURCE_TYPO_CORRECTIONS` lookup in `equipped_parser.py`; full
+  regen chain diff-guarded to exactly the two targeted records. Session-open reconciliation found
+  **B108, B117, and B118 all already resolved** by Ryan pushing both repos ahead of this session —
+  verified directly and closed all three. Full baseline 33/33.

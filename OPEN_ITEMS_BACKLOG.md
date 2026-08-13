@@ -3,9 +3,15 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S233 (up from 22 — B118 opened this session; nothing
-closed): B118, B117, B116, B108, B99, B98, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75,
-P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **19 open** as of S234 (down from 23 — B98, B108, B117, B118 all closed
+this session; nothing new opened): B116, B99, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70,
+B75, P2, P4, E23, B67b, E12, B17.
+Data-only turn (D328): B98 built and closed — Daemon Prince of Tzeentch (both sizes) melee-weapon
+typo fixed via a scoped `SOURCE_TYPO_CORRECTIONS` lookup in `equipped_parser.py`, full regen chain
+diff-guarded to exactly the two targeted records. Session-open reconciliation also found B108,
+B117, and B118 all already resolved (Ryan pushed both repos ahead of this session) — verified
+directly via fresh clones/fetches, not assumed, and closed all three. See Closed / Shipped pointers
+below.
 Data-only turn (D327): first data-turn baseline since S231 found the private data-sources repo
 never received B114's 21-unit Shadow Legion Thralls append (local-only verification at S231 masked
 the gap). Reconstructed the six Gen-1 Chaos Daemons CSVs' correct content from the already-shipped
@@ -574,49 +580,6 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
-### B118 — Private data-sources repo never received B114's 21-unit Shadow Legion Thralls append — **NEW S233 (D327); RYAN ACTION; CRITICAL (data integrity)**
-S231 (D325/B114) appended the 21 Shadow Legion Thralls units into *local* copies of the six Gen-1
-Chaos Daemons source CSVs and verified reproducibility against those local copies, but never pushed
-the change to the private `rd-prime-1357-data-sources` repo — the actual source-of-truth. This sat
-undetected because no session between S231 and S233 ran a data-turn baseline (the only mode that
-loads real GW sources); S233's data-turn run is the first since S231 and caught it immediately:
-`units_repro_check` failed, missing exactly 5 of the 21 units when sources were fetched fresh.
-Verified directly: the private repo's six files hash-matched `source_manifest.json`'s stale
-pre-B114 entries exactly — confirming the push never happened, not a partial/corrupted one.
-
-Reconstructed the correct content this session from the already-shipped, already-verified
-`units.json` (not from guesswork): `wahapedia_transform.py --faction CD` filtered to the pinned
-21-ID census (`rules_assertions.py`'s `b114_shadow_legion_census`), `Unit_Points.csv` rows built
-from the committed points data, one real format mismatch found and corrected (Keyword Names /
-Faction Keyword Names need merging into one column — the original Gen-1 schema has no split).
-Verified byte-for-byte: `units_repro_check.py`, `repro_check.py`, `detachments_repro_check.py`, and
-`rules_assertions.py --tier all` (125/125) all pass clean. `source_manifest.json` already updated
-to the six files' correct new hashes, so the next data-turn baseline will fail loudly with a clear
-hash-mismatch (not silently trust stale content) until the push happens.
-
-**Ryan action required (same boundary as B108/B117 — no push credential for this repo works from
-here despite the API's permissions field claiming full access; a real `git push` was rejected
-403):** push the six files delivered this session (`Unit_Stats.csv`, `Unit_Points.csv`,
-`Unit_Weapons.csv`, `Unit_Wargear_Options.csv`, `Unit_Other_Options.csv`,
-`Unit_Ability_Details.csv`) to `rd-prime-1357-data-sources`, replacing the current files of the
-same names. No committed output (`units.json` etc.) changes as a result — this only brings the
-private source-of-truth in line with what's already shipped.
-
-### B117 — Six GW-derived Gen-1 Chaos Daemons CSVs committed to the public repo — **NEW S232 (D326); RYAN ACTION; CRITICAL (compliance)**
-`repo_check.py` at S232 open flagged `Unit_Stats.csv`, `Unit_Points.csv`, `Unit_Wargear_Options.csv`,
-`Unit_Other_Options.csv`, `Unit_Weapons.csv`, `Unit_Ability_Details.csv` as present in the public
-repo despite each matching the repo's own `.gitignore` `*.csv` pattern — meaning they were force-added
-or committed before the ignore rule existed, not a routine sync gap. Verified against a direct fetch
-of the public tarball (`codeload.github.com/rd-prime-1357/40k-army-builder/tar.gz/main`), not assumed
-from the project mount. Content is GW-derived by the standing constraint's own test (unit stats,
-points, wargear options, and ability text — the same class of material `Thousand_Sons_web.txt`/B108
-was flagged for), regardless of these being the project's own pipeline-adjacent root CSVs rather than
-a raw Wahapedia export. These are the same six files S231 (D325) appended the 21 Shadow Legion
-Thralls rows into. Ryan action required (public-repo push isn't in Claude's scope): remove all six
-from the public repo — at minimum from HEAD; ideally scrub git history given the content shouldn't
-have been public. Until this lands, `repo_check` will keep flagging CRITICAL on every session open,
-same as B108's still-outstanding pattern.
-
 ### B116 — Drukhari's Harlequins/Anhrathe allied-unit inclusion has no built-faction precedent — **NEW S222 (D316); product scope call; blocked on Ryan / on Aeldari being prioritized**
 Found while scoping Drukhari. Drukhari carries an army-wide rule ("Corsairs and Travelling
 Players") permitting Harlequins and Anhrathe (Corsair) units up to a points cap that scales with
@@ -638,22 +601,6 @@ allied inclusion generally.
 — **CLOSED S216 (D310); tooling half D309, data half D310**
 See Closed / Shipped for full history.
 
-### B108 — `Thousand_Sons_web.txt` committed to the public repo (GW-derived) AND still absent from the private source repo — **NEW S207 (D301); RYAN ACTION; CRITICAL (compliance)**
-`repo_check.py` at S207 open flagged `Thousand_Sons_web.txt` in the public repo. Verified against a
-direct fetch of the public tarball (`codeload.github.com/rd-prime-1357/40k-army-builder/tar.gz/main`):
-the file is genuinely in the repo. Content is verbatim GW datasheet material — unit profiles, weapons,
-abilities — the same class the standing constraint excludes ("faction web composition files"). Also
-verified against the private repo via the read-only token: the file is still not there,
-`source_manifest.json` still doesn't list it, so S206's Ryan action (push to the private repo) was
-not completed and the file appears to have gone to the public repo instead. Two distinct actions
-required, both by Ryan (private-repo token is read-only, public-repo push isn't in Claude's scope):
-(1) remove `Thousand_Sons_web.txt` from the public repo — at minimum from HEAD; ideally scrub git
-history via `git filter-repo` since the content shouldn't have been public; (2) push
-`Thousand_Sons_web.txt` to the private `rd-prime-1357-data-sources` repo and regenerate
-`source_manifest.json`. Until (1) lands, `repo_check` will keep flagging CRITICAL on every session
-open; until (2) lands, any data-turn `--fetch --data-turn` open will fall back on the same
-project-mount-only stopgap S206 and S207 both used.
-
 ### B99 — Enhancement "Eldritch Vortex of E'Taph" (+1 Strength/Damage to bearer's Psychic weapons) has no effect on displayed weapon stats — **NEW (Ryan-reported, pre-S194); engine/data; scope TBD; live D0-adjacent gap**
 Ryan-reported via screenshot (Daemon Prince of Tzeentch with Wings). Checked before logging:
 `detachments.json` confirms the enhancement's text is present and correctly captured — Thousand
@@ -668,23 +615,6 @@ similarly-shaped enhancement almost certainly shares the same gap. Needs a scopi
 how many built armies carry a stat-modifying enhancement, whether this becomes a new
 `detachment_effects.json` kind or its own table, and how the weapon-profile popup should read a
 live-computed value against the base printed one.
-
-### B98 — Daemon Prince of Tzeentch (both sizes): melee weapons don't render at all; a mismatched wargear label shows instead — **NEW (Ryan-reported, pre-S194); data; XS; root cause confirmed**
-Ryan-reported via screenshot (Daemon Prince of Tzeentch with Wings) and corrected my first pass at
-this ticket — the melee-weapons-as-table format is the app's normal, working pattern (Tzaangors'
-popup shows it correctly), so this was never a design question. Checked source directly: the unit
-does carry two melee weapon profiles in `units.json` — "Hellforged weapons – strike" and "Hellforged
-weapons – sweep" — but `unit_loadouts.json`'s `default_wargear` for this unit reads `"heliforged
-weapons"` (missing the second L, lower case, no "– strike"/"– sweep" suffix). That string doesn't
-match either weapon name, so nothing resolves to the MELEE WEAPONS table; instead the popup falls
-back to showing the unresolved string as a generic Other Wargear line, which is exactly the
-"Heliforged weapons ×1" line in the screenshot. Confirmed scope: exactly two records carry the typo
-— `000001036` (Daemon Prince of Tzeentch) and `000004120` (Daemon Prince of Tzeentch with Wings);
-the other four Hellforged-weapons-bearing records in `unit_loadouts.json` spell it correctly. **Fix
-is data-only**: correct both `default_wargear` entries to `"Hellforged weapons"` (or however the
-resolver expects multi-profile melee defaults to be named — check a correctly-working record, e.g.
-the non-Thousand-Sons Daemon Prince variants, for the exact convention before writing the fix) and
-re-verify against the parser, not hand-edited.
 
 ### B97 — Grand Coven detachment rule text renders as a run-on wall of text — **NEW (Ryan-reported, pre-S194); engine/UI or data; scope TBD**
 Ryan-reported via screenshot. Confirmed in `detachments.json`: the `Thousand Sons|GRAND COVEN`
@@ -1288,6 +1218,51 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B98 — Daemon Prince of Tzeentch (both sizes): melee weapons didn't render; a mismatched wargear label showed instead — **NEW (Ryan-reported, pre-S194); CLOSED S234 (D328)**
+Root cause confirmed pre-S194: `Thousand_Sons_web.txt`'s UNIT COMPOSITION lines for both size
+variants (`000001036`, `000004120`) read "heliforged weapons" (typo) where the datasheet's own
+wargear profiles, and its own ability text elsewhere in the same file, read "Hellforged weapons" —
+the misspelled token didn't resolve to either melee profile, so `equipped_parser.py` fell back to
+filing it as an unresolved `default_wargear` line rather than a real `default_weapons` entry.
+**Closed S234.** Added a `SOURCE_TYPO_CORRECTIONS` lookup in `equipped_parser.py`'s `resolve()`,
+keyed to the exact bad string only (B115 precedent — targeted fix, not a general auto-correct). Ran
+the full authoritative regen chain (`loadout_parser.py` seeded from hand-authored entries, then
+`equipped_parser.py` across all seven `WEB_PASSES`, then the final `--datasheets` pass) and
+diff-guarded the result against the previously-committed `unit_loadouts.json`: exactly the two
+targeted records changed, nothing else. Both now carry "Hellforged weapons" as a real
+`default_weapons` entry. Fixing the parser's docstring comment (which names
+`Thousand_Sons_web.txt` literally for the first time) tripped `p4_source_census`'s static scan —
+added the file to `P4_REFERENCED_SOURCES`, same shape as D299's Dark_Angels_web.txt/
+Space_Wolves_web.txt precedent (a real, already-required file, previously only covered by the
+generic `_web.txt` stub). Full baseline clean: 33/33 gates, both repro checks byte-for-byte.
+
+### B118 — Private data-sources repo never received B114's 21-unit Shadow Legion Thralls append — **NEW S233 (D327); RYAN ACTION; CLOSED S234 (confirmed pushed)**
+S231 (D325/B114) appended the 21 Shadow Legion Thralls units into local-only copies of the six
+Gen-1 Chaos Daemons source CSVs and never pushed to the private `rd-prime-1357-data-sources` repo.
+S233 caught the gap (first data-turn baseline since S231), reconstructed the correct content, and
+opened this as a Ryan action since the held token proved push-only-in-theory (real `git push`
+rejected 403 despite the API's permissions field claiming full access). **Closed S234**: a fresh
+data-turn baseline fetch of the private repo hash-matches `source_manifest.json` on all 85 tracked
+files with zero mismatches, and the five previously-missing Shadow Legion Thralls units (Chaos
+Lord, Chaos Lord in Terminator Armour, Chaos Lord with Jump Pack, Chaos Terminator Squad, Chosen)
+are present under the correct datasheet IDs. The private repo's commit history shows two uploads
+landing shortly before this session opened. `units_repro_check`/`repro_check`/`detachments_repro_check`
+all reproduce byte-for-byte against the now-current sources.
+
+### B117 — Six GW-derived Gen-1 Chaos Daemons CSVs committed to the public repo — **NEW S232 (D326); RYAN ACTION; CLOSED S234 (confirmed removed)**
+`repo_check.py` at S232 open flagged six Gen-1 Chaos Daemons root CSVs as present in the public
+repo despite matching its own `.gitignore` `*.csv` pattern. **Closed S234**: a fresh clone of the
+public repo (root listing, direct inspection) shows no `.csv` files at all and `repo_check.py`
+itself reports "no GW-derived material found" as part of this session's clean baseline run.
+
+### B108 — `Thousand_Sons_web.txt` committed to the public repo (GW-derived) AND still absent from the private source repo — **NEW S207 (D301); RYAN ACTION; CLOSED S234 (confirmed removed)**
+`repo_check.py` at S207 open flagged `Thousand_Sons_web.txt` in the public repo; the file was also
+confirmed absent from the private repo at the time (Ryan's S206 action not yet done). S233 found
+the public-repo half already resolved but didn't close from that session's evidence alone.
+**Closed S234**: a fresh clone of the public repo confirms `Thousand_Sons_web.txt` is not present
+anywhere in the tree, and the private repo's current `source_manifest.json`-verified copy is the
+one this session's regen chain used to build the B98 fix.
 
 ### B114 — Chaos Daemons Shadow Legion Thralls allied unlock — **NEW S221 (B112 finding); SCOPED S229 (D323); RE-SCOPED S230 (D324); CLOSED S231 (D325)**
 The stored `Chaos Daemons|SHADOW LEGION` unlock effect (`target: {"keyword": "HERETIC ASTARTES"},

@@ -309,7 +309,22 @@ def scoped_name2id(name_cands, army_blocks, composition_path,
     return out, prop
 
 
+# Known-bad literal strings in a source file that would otherwise fail to resolve
+# to any real weapon/wargear name. Keyed to the exact bad string (post-norm()), not
+# a general auto-correct — see B115 for the established precedent of a targeted fix
+# over broad generalization. B98: Thousand_Sons_web.txt UNIT COMPOSITION lines for
+# Daemon Prince of Tzeentch (both size variants, datasheet ids 000001036/000004120)
+# read "heliforged weapons" where the datasheet's own wargear profiles (and its own
+# ability text elsewhere in the same file) read "Hellforged weapons".
+SOURCE_TYPO_CORRECTIONS = {
+    'heliforged weapons': 'hellforged weapons',
+}
+
+
 def resolve(tok, ex, ba, g_ex, g_ba):
+    corrected = SOURCE_TYPO_CORRECTIONS.get(norm(tok))
+    if corrected is not None:
+        tok = corrected
     for cand in variants(tok):
         if cand in ex:
             return [ex[cand]]
