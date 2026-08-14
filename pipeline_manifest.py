@@ -199,6 +199,18 @@ GUARDED = [
     'E1_DETACHMENT_SCOPE.md',
     'B99_SCOPE.md',
     'GREY_KNIGHTS_BUILD_SCOPE.md',
+    # B121 (S237): six scope documents that were never added to GUARDED when they were
+    # written. Each verified present in the repo before appending — a GUARDED entry for
+    # an absent file turns this gate permanently red. Emperor's Children's filename
+    # carries a literal apostrophe in the repo (the project-area mount silently
+    # sanitises it to an underscore on upload); the apostrophe form is the real filename
+    # and is what belongs here.
+    'B113_LEADER_RESTRICTION_SCOPE.md',
+    'B114_SHADOW_LEGION_SCOPE.md',
+    'DRUKHARI_BUILD_SCOPE.md',
+    "EMPEROR'S_CHILDREN_BUILD_SCOPE.md",
+    'THOUSAND_SONS_BUILD_SCOPE.md',
+    'WORLD_EATERS_BUILD_SCOPE.md',
     'MFM_Chapter_Pass.md',
     'MFM_FW_Reconciliation.md',
     'MFM_Standalone_Pass.md',
@@ -291,6 +303,7 @@ GUARDED = [
     'SESSION_HANDOFF_234.md',
     'SESSION_HANDOFF_235.md',
     'SESSION_HANDOFF_236.md',
+    'SESSION_HANDOFF_237.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

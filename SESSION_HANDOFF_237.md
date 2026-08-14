@@ -1,0 +1,139 @@
+# SESSION HANDOFF 237
+
+**Turn type:** tooling-only. No data file changed; `repro_check`, `units_repro_check` and
+`detachments_repro_check` are all byte-for-byte unchanged. `index.html` untouched.
+
+## What happened
+
+1. **Open.** Read `NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_236.md` and `B99_SCOPE.md`. All
+   seven S236 file hashes verified against the handoff table and matched — including
+   `40K_Decision_Log.md`, absent from the project-area mount for a fifth session running but
+   recovered via the fetch overlay and already carrying D330, meaning S236's push had actually
+   landed despite `NEXT_SESSION_PROMPT.md`'s "repo is red" note. Full baseline `--fetch
+   --data-turn`: **35/35 gates pass**, both repro checks byte-for-byte, `rules_assertions.py
+   --tier all` 125/125, `repo_check` green.
+
+2. **B99's tooling half built: `B99-CENSUS`, a new `rules_assertions.py` assertion.** It
+   re-derives the Set A (unconditional numeric change to the bearer's own weapons) and Set A2
+   (unconditional weapon-ability grant) candidate population directly from every enhancement
+   description in `detachments.json`, independent of the curated `ENHANCEMENT_WEAPON_EFFECTS`
+   table, and fails if any candidate has no table row — the source → table direction, completing
+   what `b99_check.js` already covered in the other direction.
+
+3. **Method built and tested against the real text, not assumed from D330's prose.** Descriptions
+   split into clauses on sentence boundaries, `, and`, and `;` — except a `;` whose preceding
+   segment already carries a conditional marker is not a boundary (`Possessed Blade`'s "At the
+   start of the battle, select one melee weapon equipped by the bearer; add 1 to..." stays one
+   clause, governed by the "at the start of" that precedes the `;`, rather than splitting into a
+   conditional half and an orphaned unconditional-looking half). Same marker vocabulary D330
+   specified. An unconditional clause counts as Set A/A2 if it names the bearer's own weapon(s).
+
+4. **Two real regex bugs, found by testing against the shipped 78, not by eyeballing the pattern.**
+   A bare `\bbearer\b` match wrongly pulled in Set-D-only records ("weapons equipped by **models
+   in the bearer's unit**") as false positives, and wrongly missed the source's inconsistent
+   apostrophe-free spelling ("the **bearers** melee weapons") as false negatives — `\bbearer\b`
+   does not match inside "bearers" at all. Fixed with a pattern requiring "by the bearer" (direct
+   wielder) or a bearer-possessive not followed by "unit", covering both spellings. Separately, the
+   bracket-ability pattern excluded `+`, so grants like `[ANTI-VEHICLE 4+]` never matched — fixed.
+
+5. **Result matches D330 exactly: 57/32 Set A, 23/13 Set A2, 78/43 union**, including the same two
+   overlap records (*Cursed Fang*, *Furnace of Plagues*). Negative-tested by removing the
+   originally-reported case (*Eldritch Vortex of E'Taph*) from the curated table — the assertion
+   fails and names exactly that record, confirming it isn't a check that passes by construction.
+
+6. **Chaos Daemons' shorthand records (B122) are detected and reported skipped, not silently
+   passed.** Detection: description empty, or starts with the enhancement's own name — the shape
+   every one of the 29 takes and no record outside Chaos Daemons does. Confirmed by testing the
+   detector against the full 739-record population, not just the 29.
+
+7. **`B99_SCOPE.md` corrected in the same turn** (§1's table, and §7's build-plan prose) from the
+   stale 57/17/72/42 to the D330-corrected 57/23/78/43, so the document doesn't leave two figures
+   in circulation.
+
+8. **B121 folded in, tooling-only, and it caught a real filename trap.** Six scope documents
+   were missing from `pipeline_manifest.py`'s GUARDED list. All six checked against a fresh clone
+   of the real repo before appending — `EMPEROR_S_CHILDREN_BUILD_SCOPE.md` (underscore) is **not**
+   a real repo filename; the repo's actual file is `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` (literal
+   apostrophe), which the project-area mount silently sanitises to an underscore on upload
+   (content-identical, confirmed by diff). The apostrophe form is what went into GUARDED.
+
+9. **Close.** `SESSION_HANDOFF_237.md` registered in GUARDED before `--write`. Baseline re-run,
+   `--write`, then `--freshness-check` as the last command.
+
+## Shipped / changed
+
+- `rules_assertions.py`: new assertion `B99-CENSUS` (source-derived Set A/A2 census vs the curated
+  table), registered in `ASSERTIONS`. 125 → 126 assertions. Classifies as tier A (runs under
+  `--tier a`, no GW sources needed).
+- `B99_SCOPE.md`: §1's table corrected 57/17/72/42 → 57/23/78/43, with a note that D330 (S236)
+  superseded the original figures; §7's build-plan prose corrected to match.
+- `pipeline_manifest.py`: `SESSION_HANDOFF_237.md` and six previously-unguarded scope documents
+  appended to GUARDED (see B121 below). `pipeline_manifest.json`: regenerated by `--write` at
+  close.
+- `40K_Decision_Log.md`: D331 appended. `DECISION_INDEX.md`: D331 one-liner appended.
+- `OPEN_ITEMS_BACKLOG.md`: B99 and B121 both closed and moved to Closed/Shipped with full history;
+  header count 23 → 21.
+
+### Net New Files
+
+None. `SESSION_HANDOFF_237.md` is a rolling document, not net new. The six scope documents newly
+added to GUARDED already existed in the project and the repo — B121 was a registration gap, not
+missing content.
+
+## B121 — six files newly guarded (unchanged content, newly registered)
+
+`B113_LEADER_RESTRICTION_SCOPE.md`, `B114_SHADOW_LEGION_SCOPE.md`, `DRUKHARI_BUILD_SCOPE.md`,
+`EMPEROR'S_CHILDREN_BUILD_SCOPE.md`, `THOUSAND_SONS_BUILD_SCOPE.md`, `WORLD_EATERS_BUILD_SCOPE.md`.
+None of these six changed this session; their hashes below are for Ryan's own verification that
+the repo copy matches what's now guarded, not evidence of an edit.
+
+## Ryan action required
+
+- **Push this session's changed files** to the public repo. `repo_check` is red at close for the
+  files listed below, expected for unpushed work, not a regression.
+- **`EMPEROR_S_CHILDREN_BUILD_SCOPE.md` (underscore) sitting in the project area is a stale,
+  differently-named duplicate of `EMPEROR'S_CHILDREN_BUILD_SCOPE.md`.** It's an artifact of the
+  project-area upload stripping the apostrophe, not a second real file — no action needed unless
+  you want to delete the underscore copy for tidiness; it isn't guarded and isn't read by anything.
+
+## Decisions waiting on Ryan
+
+- **B99 display, four decisions** — unchanged from S236, all still reversible. New Recruit
+  screenshots would settle the idiom if you want it matched.
+- **B116** — unchanged. Drukhari's Harlequins/Anhrathe cross-book allied-inclusion mechanic
+  (`DRUKHARI_BUILD_SCOPE.md` §6). Blocks nothing shipped.
+- **Next faction** — unchanged; the documented priority order is fully built and none is queued.
+  Recommendation stands: clear the engine backlog first (B119 is the natural next pick — same
+  curated-table-plus-census pattern as B99, materially smaller).
+
+## Files (SHA-256, first 12)
+
+Verify these at S238 open.
+
+| file | sha256:12 | note |
+|------|-----------|------|
+| `rules_assertions.py` | `cc6009052506` | `B99-CENSUS` added, 126 assertions |
+| `pipeline_manifest.py` | `d5fbde744a92` | 7 files appended to GUARDED |
+| `B99_SCOPE.md` | `31f11a9a4e4f` | §1/§7 corrected to 57/23/78/43 |
+| `40K_Decision_Log.md` | `2af58d6acd06` | D331 appended |
+| `DECISION_INDEX.md` | `43566bf75d53` | D331 one-liner appended |
+| `OPEN_ITEMS_BACKLOG.md` | `c1974b5e012d` | B99, B121 closed; 23 → 21 |
+| `B113_LEADER_RESTRICTION_SCOPE.md` | `1c976fa1febd` | newly guarded, content unchanged |
+| `B114_SHADOW_LEGION_SCOPE.md` | `fe9415d31eba` | newly guarded, content unchanged |
+| `DRUKHARI_BUILD_SCOPE.md` | `8b51c59fd70a` | newly guarded, content unchanged |
+| `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` | `df09287b955b` | newly guarded, content unchanged |
+| `THOUSAND_SONS_BUILD_SCOPE.md` | `3e3877d78167` | newly guarded, content unchanged |
+| `WORLD_EATERS_BUILD_SCOPE.md` | `591c54f0869d` | newly guarded, content unchanged |
+| `pipeline_manifest.json` | (regen at close) | regenerated by `--write`; verified by its own gate |
+| `SESSION_HANDOFF_237.md` | (this file) | not self-referential; checked by `--freshness-check` |
+
+## Backlog
+
+23 open at S236 close; **21 open at S237 close** (B99 and B121 both closed; nothing opened).
+
+Beginning: B116, B99, B119, B120, B121, B122, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70,
+B75, P2, P4, E23, B67b, E12, B17 (23).
+Resolved: B99, B121 (2).
+Added: none (0).
+Ending: B116, B119, B120, B122, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4,
+E23, B67b, E12, B17 (21).

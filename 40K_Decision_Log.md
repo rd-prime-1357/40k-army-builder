@@ -13636,3 +13636,70 @@ source-first rule for the sake of three rows. This is a data/parser gap, not an 
 **Sets B, C and D remain out.** C and D are B119 and B120 with their populations already censused.
 The tooling turn that adds the `rules_assertions.py` census assertion is still owed and must not
 be folded into an engine session.
+
+## D331 — B99 tooling turn: source-derived census assertion, plus B121 (S237)
+
+**Tooling-only turn.** No data file, no `index.html`, changed. `repro_check`, `units_repro_check`
+and `detachments_repro_check` all byte-for-byte unchanged.
+
+**What shipped.** `B99-CENSUS`, a new `rules_assertions.py` assertion that re-derives the Set A /
+Set A2 candidate population directly from every enhancement description in `detachments.json`,
+independent of the curated `ENHANCEMENT_WEAPON_EFFECTS` table, and fails if any candidate has no
+table row. This is the source → table direction; `b99_check.js` already covered table → source.
+Without this, the curated table rots silently the moment a later faction lands an enhancement
+with an unhandled shape.
+
+**Method, built and tested against the real text, not assumed from D330's prose.** Descriptions
+split into clauses on sentence boundaries, `, and`, and `;` — except a `;` whose preceding segment
+already carries a conditional marker is not a boundary (*Possessed Blade*: "At the start of the
+battle, select one melee weapon equipped by the bearer; add 1 to the Attacks characteristic of
+that weapon" is one clause, not two — splitting on the `;` would strand the effect from the "at
+the start of the battle" condition governing it, and the effect alone carries no marker of its
+own). A clause is conditional if it carries any of D330's vocabulary (*once per*, *each time*,
+*while*, *until the end*, *at the start/end of*, *instead*, *when*, *after*, *if*, *is selected
+to*, *can use this Enhancement*). An unconditional clause is Set A if it names the bearer's own
+weapon(s) together with a Strength/Attacks/Armour Penetration/Damage characteristic and an
+"improve"/"add" verb; Set A2 if it grants a bracketed ability instead.
+
+**Two real bugs, found by testing against the shipped 78, not by eyeballing the regex.** First
+draft matched bare `\bbearer\b`, which wrongly pulled in Set-D-only records ("weapons equipped by
+**models in the bearer's unit**" — no "the bearer" as direct wielder) as false positives, and
+wrongly missed records using the source's inconsistent apostrophe-free spelling ("the **bearers**
+melee weapons", no `'`) as false negatives — `\bbearer\b` doesn't match inside "bearers" at all.
+Fixed with `by the bearer\b|bearer'?s(?!\s+unit)|\bthose weapons\b`: matches both spellings of the
+possessive, requires the possessive not be followed by "unit", and keeps the anaphoric "those
+weapons" case (*Ancient Weapons*) separately. Second bug: the bracket-ability regex excluded `+`,
+so `[ANTI-VEHICLE 4+]`-style grants (*Iron Artifice*, *Master Nemesine*) never matched at all.
+
+**Result matches D330 exactly, derived independently rather than reverse-engineered to fit.** Set
+A 57/32, Set A2 23/13, union 78/43, the same two overlap records (*Cursed Fang*, *Furnace of
+Plagues*). Negative-tested: removing the originally-reported case (*Eldritch Vortex of E'Taph*)
+from the curated table makes the assertion fail, naming exactly that record.
+
+**Chaos Daemons' 29 shorthand records (B122) are detected and reported skipped, not silently
+passed.** Detection: the description is empty, or (after stripping non-alphanumerics) starts with
+the enhancement's own name — the shape every one of the 29 takes ("Neverblade (Tzeentch Monster,
++2S, +1A, +1AP…)") and no record outside Chaos Daemons does. 5 are empty (the separate,
+pre-existing 74-record text-coverage gap); 24 carry the shorthand text itself and are named in the
+assertion's pass detail as skipped rather than counted as non-matches.
+
+**`B99_SCOPE.md` corrected in the same turn**, per the session prompt's instruction not to leave
+two numbers in circulation: §1's table and §7's build-plan prose both carried the stale
+57/17/72/42; both now read 57/23/78/43, with §1 noting the correction was made at D330 and this
+table reflects it.
+
+**B121 folded in, and it caught what it was written to guard against.** Six scope documents were
+missing from `pipeline_manifest.py`'s GUARDED list: `B113_LEADER_RESTRICTION_SCOPE.md`,
+`B114_SHADOW_LEGION_SCOPE.md`, `DRUKHARI_BUILD_SCOPE.md`, `EMPEROR'S_CHILDREN_BUILD_SCOPE.md`,
+`THOUSAND_SONS_BUILD_SCOPE.md`, `WORLD_EATERS_BUILD_SCOPE.md`. All six verified present in the
+real repo (a fresh clone, not the project-area mount) before appending. One did not verify clean
+on the first check: `EMPEROR_S_CHILDREN_BUILD_SCOPE.md` (underscore) is not a real repo filename —
+the project-area mount silently sanitises the apostrophe in `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` on
+upload, and the two are the same file (content-identical, confirmed by diff). The apostrophe form
+is what went into GUARDED; appending the sanitised name would have turned the gate permanently
+red exactly as the ticket warned.
+
+**Baseline at open:** 35/35 gates pass, `--fetch --data-turn`. All S236 hashes verified against
+the handoff table; `40K_Decision_Log.md` (absent from the mount, fifth session running) recovered
+from the repo and already carried D330 — S236's push had landed despite the stale "repo is red"
+note in `NEXT_SESSION_PROMPT.md`.

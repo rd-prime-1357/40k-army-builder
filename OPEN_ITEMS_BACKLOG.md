@@ -3,14 +3,15 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S236 (up from 22 — B122 opened this session; nothing
-closed, B99's engine half shipped but its tooling half is still owed): B116, B99, B119, B120,
-B121, B122, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
-Engine-only turn (D330): B99's engine half shipped — `index.html` v6.21 now applies an assigned
-enhancement's unconditional bearer-weapon effects to both weapon tables. The re-derived census
-corrects D329: the union is 78 records / 43 names, not 72. B99 stays open for its tooling turn
-(the `rules_assertions.py` census assertion). Chaos Daemons' enhancement descriptions were found
-to be shorthand summaries rather than rule text — banked as B122.
+not here, it isn't open. **21 open** as of S237 (down from 23 — B99 and B121 both closed this
+session; nothing opened): B116, B119, B120, B122, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17.
+Tooling-only turn (D331): B99's tooling half shipped and the ticket closes — a new
+`rules_assertions.py` assertion re-derives the Set A/A2 enhancement population from source and
+fails on any record with no curated-table row, matching D330's 57/23/78/43 exactly. B121 folded
+in and closed alongside it — six scope documents added to `pipeline_manifest.py`'s GUARDED list,
+each verified against a fresh repo clone first (one, Emperor's Children's, has a literal
+apostrophe in its real filename that the project-area mount strips to an underscore).
 Scoping-only turn (D329): B99 censused and re-scoped. No engine path exists between an assigned
 enhancement and any rendered weapon characteristic — 57 unconditional bearer-weapon numeric
 records plus 17 unconditional weapon-ability grants (72 union) across 13 of 14 built armies.
@@ -615,75 +616,6 @@ allied inclusion generally.
 — **CLOSED S216 (D310); tooling half D309, data half D310**
 See Closed / Shipped for full history.
 
-### B99 — No enhancement reaches the weapon table: 78 records confer an unconditional change the app never shows — **ENGINE HALF SHIPPED S236 (D330); TOOLING HALF STILL OPEN; see `B99_SCOPE.md`**
-Reported by Ryan via screenshot (Daemon Prince of Tzeentch with Wings, Thousand Sons | Grand
-Coven, *Eldritch Vortex of E'Taph* — "Add 1 to the Strength and Damage characteristics of Psychic
-weapons equipped by the bearer" — showing unmodified weapon stats). **S235 censused the whole
-population from `detachments.json` rather than treating it as one enhancement**: there is no code
-path in `index.html` between an assigned enhancement and any rendered weapon characteristic at
-all. Across the 739 enhancement records (665 with a description):
-
-- **Set A** — numeric change to the bearer's own weapons, unconditional: **57 records**, 32
-  distinct names, 13 of 14 built armies (Chaos Daemons has none).
-- **Set A2** — weapon-ability grant to the bearer's own weapons, unconditional: **17 records**,
-  12 names, 11 armies. Overlaps A on 2; union **72 records**.
-- Set B (5 records, conditional-only), Set C (10, bearer statline → **B119**), Set D (19,
-  other models' weapons → **B120**) are all out of this build's scope.
-
-**Framing corrected.** The original entry called this "D0-adjacent". It is not: no unit's points,
-no enhancement cost, and no legality test changes, and assignment eligibility is already enforced
-separately by E4b/B113. This is display fidelity — the app prints a characteristic the user's
-model does not have.
-
-**Mechanism decided (dev-manager call, not Ryan's):** a curated table in `index.html` keyed
-`detachment_key + '::' + name`, exactly the B113 `ENHANCEMENT_BEARER_RESTRICTIONS` shape, plus a
-source-derived census assertion in `rules_assertions.py` that fails if any record matches the Set
-A/A2 shape and has no table row — without that, the table rots the moment a new faction lands.
-Render-time text parsing in the engine and a parser-emitted `detachments.json` field were both
-considered and rejected; reasons in `B99_SCOPE.md` §5.
-
-**Three traps the build must handle** (§4): "improve" on Armour Penetration means *more negative*
-(`-1` → `-2`) while on S/A/D it means add; `A` and `D` are strings and not always numeric, so a
-variable value composes (`D6` +1 → `D6+1`) rather than computing; and 10 Character/Epic Hero units
-are loadout-defined with more than one model group, where the rollup row spans models the bearer
-is not — reuse D105/D112's three-way rule (all carriers → value, some → asterisk, none → nothing)
-rather than writing a false value.
-
-**Build plan, two turns, not to be merged:** engine turn (curated table, delta applier, three-way
-carrier rule, both render sites — `buildWeaponTable` and `loWeaponTable`, which are separate code
-and must agree — plus a new `b99_check.js`), then a tooling turn for the census assertion. Set A2
-folds into the engine turn.
-
-**S236 — engine half shipped (D330).** `index.html` v6.21: curated `ENHANCEMENT_WEAPON_EFFECTS`
-table (78 rows), delta applier, bearer-attribution rule, both render sites, new `b99_check.js`
-(48 checks). Three corrections to the numbers and the plan above, all re-derived from source this
-session:
-
-- **Set A2 is 23 records / 13 names, not 17 / 12; the union is 78 / 43, not 72.** *Eye of the
-  Primarch* targets "the bearer **and** Battleline models in the bearer's unit" — the identical
-  shape to *Blades of Valour*, which S235 counted into Set A. Both are now in.
-- **Set A's 57 / 32 is confirmed exactly.** *Possessed Blade* reads unconditional only because the
-  clause split on `;` orphans it from its governing "At the start of the battle, select one melee
-  weapon"; it modifies one player-chosen weapon and is correctly out.
-- **Trap 3's test was wrong and is not what shipped.** Epic Heroes can never bear an enhancement,
-  so three of the ten units listed are not at risk; and the statline-group test misses *Ravenwing
-  Command Squad*, which has one statline group but three loadout groups and three models. The
-  shipped test is on loadout groups and live model counts.
-
-**Still open: the tooling turn.** The `rules_assertions.py` census assertion (`B99_SCOPE.md` §5),
-pinning **57 / 23 / 78** and failing on any Set A/A2 record with no table row. Without it the
-curated table rots the moment a new faction lands. Must not be folded into an engine session.
-
-**Ryan's four display decisions were unanswered at build time**, so the build proceeded on
-`B99_SCOPE.md` §6's recommendations, as agreed. All four remain reversible; New Recruit
-screenshots would still settle the idiom.
-
-**Open for Ryan** (all reversible; build proceeds on the recommendation otherwise): change the
-printed numbers at all (recommend yes, Set A, configured surfaces only); the display idiom
-(recommend the D89/D112 asterisk-and-legend idiom — modified value in the cell, cell marked,
-legend naming the enhancement); whether conditional effects get a marker (recommend no); and
-whether he wants New Recruit's handling matched, which he has offered screenshots for.
-
 ### B119 — Enhancement-conferred bearer statline changes never reach the stat table — **NEW S235 (D329); engine; S; split out of B99**
 Set C of B99's census: 10 enhancement records across 8 armies, 6 distinct names (*Brazen Form*,
 *Disciple of Rhetoricus*, *Iron Laurel*, *Living Carapace*, *Master Artisan*, *Rites of War*)
@@ -715,21 +647,6 @@ easy one; and where the bearer leads an attached unit, the effect lands on a **d
 entry's** popup, and the engine has no cross-entry render path — the right panel renders one
 entry's `raw` at a time. *Blades of Valour* (6 chapters) is in both Set A and Set D, so B99 ships
 its bearer half and this ticket completes it. Needs its own scoping turn before build.
-
-### B121 — Six scope documents are absent from the manifest's GUARDED list — **NEW S235 (D329); tooling; XS**
-`pipeline_manifest.py`'s GUARDED list carries `CSM_BUILD_SCOPE.md`, `E1_DETACHMENT_SCOPE.md`,
-`GREY_KNIGHTS_BUILD_SCOPE.md` and `P4_ARCHITECTURE_SCOPE.md`, but not
-`B113_LEADER_RESTRICTION_SCOPE.md`, `B114_SHADOW_LEGION_SCOPE.md`, `DRUKHARI_BUILD_SCOPE.md`,
-`WORLD_EATERS_BUILD_SCOPE.md`, `THOUSAND_SONS_BUILD_SCOPE.md` or
-`EMPEROR_S_CHILDREN_BUILD_SCOPE.md`. The convention lapsed after the Grey Knights build.
-
-These are the authoritative spec a later build session reads — B113's and B114's builds both read
-theirs — so an unguarded one can be replaced by a stale copy with no gate noticing, which is the
-failure class the manifest exists for. Fix is to append the six names and re-run `--write`;
-verify each is actually present in the repo first, since GUARDED entries for absent files turn the
-gate permanently red. Not done at S235 because registering existing files is a tooling change and
-S235 was scoping-only. `B99_SCOPE.md` and `SESSION_HANDOFF_235.md` were registered at S235 close as
-part of the standard session-close protocol, so this ticket covers the six older files only.
 
 ### B122 — Chaos Daemons enhancement descriptions are shorthand summaries, not rule text — **NEW S236 (D330); data/parser; M**
 Found during the B99 engine build. All 29 Chaos Daemons enhancement records in
@@ -1359,6 +1276,60 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B99 — No enhancement reaches the weapon table: 78 records confer an unconditional change the app never shows — **NEW (Ryan-reported, pre-S194); CLOSED S237 (D331); engine half D330, tooling half D331; see `B99_SCOPE.md`**
+Reported by Ryan via screenshot (Daemon Prince of Tzeentch with Wings, Thousand Sons | Grand
+Coven, *Eldritch Vortex of E'Taph* — "Add 1 to the Strength and Damage characteristics of Psychic
+weapons equipped by the bearer" — showing unmodified weapon stats). **S235 censused the whole
+population from `detachments.json` rather than treating it as one enhancement**: there was no code
+path in `index.html` between an assigned enhancement and any rendered weapon characteristic at
+all. Across the 739 enhancement records (665 with a description), the in-scope population settled
+at **Set A** (numeric change to the bearer's own weapons, unconditional) 57 records / 32 names /
+13 armies, and **Set A2** (weapon-ability grant to the bearer's own weapons, unconditional) 23
+records / 13 names / 11 armies, overlapping on 2, union **78 records / 43 names**. Set B (5,
+conditional-only), Set C (10, bearer statline → **B119**) and Set D (19, other models' weapons →
+**B120**) were split out as their own tickets. Framing corrected from the original "D0-adjacent":
+no points, enhancement cost, or legality test is affected — this was display fidelity, not
+legality.
+
+**S236 — engine half shipped (D330).** `index.html` v6.21: a curated `ENHANCEMENT_WEAPON_EFFECTS`
+table (78 rows, keyed on the B113 `ENHANCEMENT_BEARER_RESTRICTIONS` shape), a delta applier (AP's
+"improve" sign-inverted against S/A/D, variable A/D composed as strings rather than computed), a
+bearer-attribution rule reusing the D105/D112 three-way carrier pattern for the ten
+multi-model-group Character units, and both weapon-render sites (`buildWeaponTable`,
+`loWeaponTable`) fed from one shared cell builder so they cannot drift. New `b99_check.js` (48
+checks). Re-derivation at build time corrected S235's own count: Set A2 is 23/13 not 17/12 (*Eye
+of the Primarch* straddles Set A/A2 and Set D exactly like *Blades of Valour*, which S235 had
+already put in Set A without noticing its twin), so the union is 78/43 not 72. Chaos Daemons'
+enhancement text was found to be shorthand summaries rather than rule text — banked as **B122**.
+
+**S237 — tooling half shipped (D331), closing the ticket.** New `rules_assertions.py` assertion
+`B99-CENSUS`: re-derives the Set A/A2 candidate population directly from `detachments.json`
+descriptions, independent of the curated table, and fails if any candidate has no table row — the
+source → table direction, complementing `b99_check.js`'s table → source checks. Matches D330
+exactly (57/32, 23/13, 78/43), built and validated against the real text rather than assumed from
+prior-session prose — two real parsing bugs were found and fixed along the way (a bare "bearer"
+match both over- and under-matching against the source's inconsistent phrasing, and a bracket-
+ability regex that excluded `+` and so missed grants like `[ANTI-VEHICLE 4+]`). Chaos Daemons'
+shorthand records are detected and reported skipped rather than silently passed. `B99_SCOPE.md`
+§1/§7 corrected to the final 57/23/78/43 in the same turn.
+
+### B121 — Six scope documents are absent from the manifest's GUARDED list — **NEW S235 (D329); CLOSED S237 (D331)**
+`pipeline_manifest.py`'s GUARDED list carried `CSM_BUILD_SCOPE.md`, `E1_DETACHMENT_SCOPE.md`,
+`GREY_KNIGHTS_BUILD_SCOPE.md` and `P4_ARCHITECTURE_SCOPE.md`, but not
+`B113_LEADER_RESTRICTION_SCOPE.md`, `B114_SHADOW_LEGION_SCOPE.md`, `DRUKHARI_BUILD_SCOPE.md`,
+`WORLD_EATERS_BUILD_SCOPE.md`, `THOUSAND_SONS_BUILD_SCOPE.md` or
+`EMPEROR_S_CHILDREN_BUILD_SCOPE.md` — the convention had lapsed after the Grey Knights build. These
+are the authoritative spec a later build session reads, so an unguarded one could be replaced by a
+stale copy with no gate noticing.
+
+**Closed S237.** All six verified present in a fresh clone of the real repo before appending, not
+assumed from the project-area mount. One did not verify clean: `EMPEROR_S_CHILDREN_BUILD_SCOPE.md`
+(underscore) is not the repo's real filename — the project-area mount silently sanitises the
+literal apostrophe in `EMPEROR'S_CHILDREN_BUILD_SCOPE.md` to an underscore on upload, and the two
+are the same file (content-identical). The apostrophe form went into GUARDED; appending the
+sanitised name would have turned the gate permanently red, exactly the failure this ticket named
+as the risk.
 
 ### B98 — Daemon Prince of Tzeentch (both sizes): melee weapons didn't render; a mismatched wargear label showed instead — **NEW (Ryan-reported, pre-S194); CLOSED S234 (D328)**
 Root cause confirmed pre-S194: `Thousand_Sons_web.txt`'s UNIT COMPOSITION lines for both size

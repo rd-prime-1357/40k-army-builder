@@ -21,15 +21,25 @@ text-coverage gap, not part of this):
 | set | shape | records | distinct names | armies |
 |-----|-------|--------:|---------------:|-------:|
 | **A** | numeric change to the **bearer's own** weapons, **unconditional** | **57** | 32 | 13 |
-| **A2** | weapon-**ability** grant to the bearer's own weapons, unconditional | **17** | 12 | 11 |
+| **A2** | weapon-**ability** grant to the bearer's own weapons, unconditional | **23** | 13 | 11 |
 | B | bearer's own weapons, **conditional only** (no always-on part) | 5 | 5 | 4 |
 | C | bearer's own **statline** (T/W/OC/Sv/Ld/M), unconditional | 10 | 6 | 8 |
 | D | weapons of **other models** in the bearer's unit | 19 | 10 | 8 |
 
+**Corrected at D330 (S236), superseding the figures above as first written.** The original
+57 / 17 / 72 undercounted Set A2 by *Eye of the Primarch* (6 records): it targets "…equipped
+by the bearer **and** Battleline models in the bearer's unit", word-for-word the same shape
+as *Blades of Valour*, which this table's first draft put in Set A. Including one and
+excluding the other was arbitrary; both are in Set A/A2 for their bearer half. The Set A
+figure was unaffected — it was already correct at 57 / 32. The table above carries the
+corrected 23 / 13 for Set A2; the union below carries the corrected total.
+
 Sets A and A2 overlap on 2 records (*Cursed Fang*, *Furnace of Plagues*, which do both);
-their union is **72 records**. Chaos Daemons is the only built army with no record in either
-set. A further 11 records modify *an incoming attack's* characteristics (the *Adamantine
-Mantle* family) — defensive, per-attack, and not a profile at all.
+their union is **78 records / 43 names**. Chaos Daemons is the only built army with no
+record in either set — its 29 enhancement records carry shorthand summaries rather than
+rule text (B122) and cannot be curated from source. A further 11 records modify *an
+incoming attack's* characteristics (the *Adamantine Mantle* family) — defensive, per-attack,
+and not a profile at all.
 
 **Method.** Descriptions were split into clauses (sentence boundaries plus `, and` / `;`,
 because several records join an unconditional clause to a conditional one with a comma —
@@ -152,9 +162,9 @@ expensive to reverse.
    *Recommend no marker.* The enhancement's full text already expands from the eye control in
    the Enhancement section, and asterisking every conditional clause would mark most bearers'
    tables without telling the user anything actionable.
-4. **Weapon-ability grants (Set A2).** *Recommend folding into the same build* — same 72-record
-   population, same curated table, same render path, different column (Abilities rather than a
-   number). Splitting it means touching the same code twice.
+4. **Weapon-ability grants (Set A2).** *Recommend folding into the same build* — same 78-record
+   union population, same curated table, same render path, different column (Abilities rather
+   than a number). Splitting it means touching the same code twice.
 5. **How New Recruit handles this** is unknown to me and would usefully inform decision 2. Ryan
    has offered screenshots; worth one before the build turn if he wants the idiom matched.
 
@@ -162,14 +172,15 @@ expensive to reverse.
 
 Two turns, in order. Do not merge them.
 
-1. **Engine turn.** The curated `ENHANCEMENT_WEAPON_EFFECTS` table (72 records, 42 distinct
-   names), the delta applier (with the AP sign rule and string composition for variable `A`/`D`),
-   the three-way carrier rule for multi-model-group bearers, and both render sites. Plus a new
-   `b99_check.js` harness pinning: the AP sign, a variable-`D` composition, a
-   multi-model-group bearer getting an asterisk rather than a value, the unconfigured view
-   staying unmodified, and both render surfaces agreeing.
+1. **Engine turn.** The curated `ENHANCEMENT_WEAPON_EFFECTS` table (78 records, 43 distinct
+   names — corrected at D330; see §1's note), the delta applier (with the AP sign rule and
+   string composition for variable `A`/`D`), the three-way carrier rule for multi-model-group
+   bearers, and both render sites. Plus a new `b99_check.js` harness pinning: the AP sign, a
+   variable-`D` composition, a multi-model-group bearer getting an asterisk rather than a
+   value, the unconfigured view staying unmodified, and both render surfaces agreeing.
 2. **Tooling turn.** The `rules_assertions.py` census assertion described in §5, driven off
-   `detachments.json`, pinning the 57 / 17 / 72 figures and failing on an unhandled record.
+   `detachments.json`, pinning the corrected 57 / 23 / 78 figures and failing on an unhandled
+   record. Shipped at D331 (S237) as `B99-CENSUS`.
 
 Sets B, C and D are **not** in this build. C and D are banked as their own tickets (B119, B120)
 with their populations already censused above.

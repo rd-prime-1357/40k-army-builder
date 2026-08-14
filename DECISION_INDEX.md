@@ -997,3 +997,14 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   the union is **78 records / 43 names**, not 72. D329's trap-3 test was on statline groups and
   missed *Ravenwing Command Squad*; shipped test is on loadout groups and live model counts.
   Chaos Daemons enhancement text is shorthand, not rule text → **B122**.
+- **D331** — B99 tooling turn shipped (S237), tooling-only. New `rules_assertions.py` assertion
+  `B99-CENSUS`: re-derives the Set A/A2 candidate population from `detachments.json` descriptions
+  independently of the curated table and fails on any unhandled record (source → table direction).
+  Matches D330 exactly (57/32, 23/13, 78/43), found and fixed two real regex bugs along the way
+  (bare "bearer" over/under-matching, `+` missing from the bracket-ability pattern), and reports
+  Chaos Daemons' 29 shorthand records (B122) as skipped rather than silent non-matches.
+  `B99_SCOPE.md` §1/§7 corrected to 57/23/78/43, closing out the stale 72 figure. **B121** folded
+  in: six scope docs added to GUARDED, all verified against a fresh repo clone first — one
+  (`EMPEROR'S_CHILDREN_BUILD_SCOPE.md`) has a literal apostrophe in its real filename that the
+  project-area mount silently strips to an underscore; the sanitised name would have gone in
+  GUARDED wrong and turned the gate permanently red.

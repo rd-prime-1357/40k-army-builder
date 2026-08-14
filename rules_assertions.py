@@ -2358,6 +2358,22 @@ ASSERTIONS = [
      'equipped_parser.py scoped_name2id synthetic fixture (B104, D298)',
      lambda S: b104_scoped_name2id_deterministic(S)),
 
+    # ── B99-CENSUS (D330/S237). The engine half (D330) shipped a curated
+    # ENHANCEMENT_WEAPON_EFFECTS table and b99_check.js's table -> source check; this is
+    # the source -> table direction the scope doc called the improvement that matters —
+    # without it the table rots silently the moment a new faction lands an unhandled
+    # enhancement.
+    ('B99-CENSUS',
+     "Every enhancement record in detachments.json whose description carries an "
+     "unconditional numeric change or ability grant to the bearer's own weapons (Set A / "
+     "Set A2, D330's method) has a row in ENHANCEMENT_WEAPON_EFFECTS. The source-derived "
+     "population is exactly 57 Set A records (32 names), 23 Set A2 records (13 names), "
+     "78 in their union (43 names) — matching D330 exactly, not S235's stale 57/17/72. "
+     "Chaos Daemons' shorthand-summary enhancement records (B122) are skipped with a "
+     "stated reason rather than silently read as non-matches.",
+     'detachments.json enhancement descriptions vs index.html ENHANCEMENT_WEAPON_EFFECTS (B99-CENSUS, D330)',
+     lambda S: b99_source_census_matches_curated_table(S)),
+
 ]
 
 
@@ -4260,6 +4276,134 @@ def b113_bearer_table_matches_source(S):
                   f'resolves in its army pool, the Space Wolves keyword matches {len(sw_chars_with_kw)} real '
                   f"Character(s), and Butcher Lord's set matches the source-derived Infantry-keyword "
                   f'Characters exactly ({curated_butcher})')
+
+
+def b99_source_census_matches_curated_table(S):
+    """B99 tooling turn (S237, D330 — supersedes B99_SCOPE.md §1's stale 57/17/72 figures with
+    the corrected 57/23/78/43). Source -> table direction, the complement of b99_check.js's
+    table -> source checks: re-derives the Set A (unconditional numeric change to the bearer's
+    own weapons) and Set A2 (unconditional weapon-ability grant to the bearer's own weapons)
+    candidate population from every enhancement description in detachments.json, independently
+    of the curated ENHANCEMENT_WEAPON_EFFECTS table, and fails if any candidate has no row —
+    so a faction built later cannot silently introduce an unhandled enhancement.
+
+    Method (B99_SCOPE.md §1, refined this session against the real text, not assumed from it):
+      - Descriptions split into clauses on sentence boundaries, ', and', and ';' — except a ';'
+        whose preceding segment already carries a conditional marker is NOT a boundary.
+        Possessed Blade is the case: "At the start of the battle, select one melee weapon
+        equipped by the bearer; add 1 to the Attacks characteristic of that weapon" is ONE
+        clause, not two — splitting on the ';' would orphan the effect from the "at the start
+        of the battle" condition that governs it, and the effect alone carries no marker of
+        its own, so a naive splitter reads it as unconditional and demands a table row for it.
+      - A clause is conditional (dropped) if it carries any of: once per, each time, while,
+        until the end, at the start/end of, instead, when, after, if, is selected to, can use
+        this Enhancement.
+      - An unconditional clause is Set A if it names the bearer's own weapon(s) — "by the
+        bearer", a possessive of "bearer" not followed by "unit", or the anaphoric "those
+        weapons" — together with a Strength/Attacks/Armour Penetration/Damage characteristic
+        and an "improve"/"add" verb; Set A2 if it grants a bracketed ability instead. The
+        source spells the bearer's possessive both "bearer's" and "bearers" (no apostrophe)
+        inconsistently, and both must match. "equipped by models in the bearer's unit" (no
+        "by the bearer", and the possessive IS followed by "unit") is Set D only and must not
+        match — bare unqualified "bearer" matching would wrongly pull in Set-D-only records
+        like Spy-skull Data Link and wrongly miss "bearers" (no apostrophe) records like
+        Blade of Endless Bloodshed; both were caught by testing against the real 78, not by
+        eyeballing the regex.
+      - Chaos Daemons carries enhancement records that are shorthand summaries, not rule text
+        (B122) — detected by the description starting with the enhancement's own name (or
+        being empty) — and are reported as skipped rather than silently read as non-matches,
+        so the gap stays visible instead of passing by accident.
+    """
+    dets = S.detachments().get('detachments', {})
+    ix = S.index_html()
+    m = re.search(r'const ENHANCEMENT_WEAPON_EFFECTS = \{(.*?)\n  \};', ix, re.S)
+    if not m:
+        return False, 'ENHANCEMENT_WEAPON_EFFECTS is no longer locatable in index.html'
+    table_keys = set(re.findall(r'"([^"]+::[^"]+)":', m.group(1)))
+
+    marker_re = re.compile(
+        r'\b(once per|each time|while|until the end|at the start of|at the end of|'
+        r'instead|when|after|if|is selected to|can use this Enhancement)\b', re.I)
+    charword_re = re.compile(r'\b(strength|attacks|armour penetration|damage)\b', re.I)
+    verb_re = re.compile(r'\b(improve|add)\b', re.I)
+    bearer_re = re.compile(r"by the bearer\b|bearer'?s(?!\s+unit)|\bthose weapons\b", re.I)
+    weapon_re = re.compile(r'\bweapons?\b', re.I)
+    grant_re = re.compile(r'\[([a-z0-9 +\-]+)\]', re.I)
+
+    def norm(s):
+        return re.sub(r'[^a-z0-9]', '', s.lower())
+
+    def split_clauses(text):
+        clauses = []
+        for sent in re.split(r'\.\s+', text.strip()):
+            sent = sent.strip().rstrip('.')
+            if not sent:
+                continue
+            for part in re.split(r',\s+and\s+', sent):
+                if ';' in part:
+                    subparts = re.split(r';\s*', part)
+                    merged = [subparts[0]]
+                    for sp in subparts[1:]:
+                        if marker_re.search(merged[-1]):
+                            merged[-1] = merged[-1] + '; ' + sp
+                        else:
+                            merged.append(sp)
+                    clauses.extend(merged)
+                else:
+                    clauses.append(part)
+        return clauses
+
+    def classify(desc):
+        a = a2 = False
+        for clause in split_clauses(desc):
+            if marker_re.search(clause):
+                continue
+            if not bearer_re.search(clause) or not weapon_re.search(clause):
+                continue
+            if charword_re.search(clause) and verb_re.search(clause):
+                a = True
+            if grant_re.search(clause):
+                a2 = True
+        return a, a2
+
+    set_a, set_a2, skipped_cd = set(), set(), []
+    for key, det in dets.items():
+        army = key.split('|')[0]
+        for e in det.get('enhancements', []):
+            desc = (e.get('description') or '').strip()
+            name = e.get('name', '')
+            if not desc:
+                continue
+            if army == 'Chaos Daemons' and norm(desc).startswith(norm(name)):
+                skipped_cd.append(f'{key}::{name}')
+                continue
+            a, a2 = classify(desc)
+            if a:
+                set_a.add(f'{key}::{name}')
+            if a2:
+                set_a2.add(f'{key}::{name}')
+
+    union = set_a | set_a2
+    missing = sorted(union - table_keys)
+    if missing:
+        return False, (f'{len(missing)} record(s) match the Set A / A2 shape but have no '
+                       f'ENHANCEMENT_WEAPON_EFFECTS row: {missing[:5]}')
+
+    a_names = {k.split('::', 1)[1] for k in set_a}
+    a2_names = {k.split('::', 1)[1] for k in set_a2}
+    union_names = {k.split('::', 1)[1] for k in union}
+    got = (len(set_a), len(a_names), len(set_a2), len(a2_names), len(union), len(union_names))
+    want = (57, 32, 23, 13, 78, 43)
+    if got != want:
+        return False, (f'census drifted from the D330-pinned figures: got Set A '
+                       f'{got[0]}/{got[1]}, Set A2 {got[2]}/{got[3]}, union {got[4]}/{got[5]} '
+                       f'(skipped {len(skipped_cd)} Chaos Daemons shorthand record(s)); '
+                       f'want 57/32, 23/13, 78/43')
+
+    return True, (f'source-derived census matches the curated table exactly: Set A '
+                  f'{got[0]}/{got[1]}, Set A2 {got[2]}/{got[3]}, union {got[4]}/{got[5]}; '
+                  f'{len(skipped_cd)} Chaos Daemons shorthand record(s) skipped (B122, cannot '
+                  f'match the shape) rather than silently counted as a pass')
 
 
 def e4b_engine_functions_defined_once(S):
