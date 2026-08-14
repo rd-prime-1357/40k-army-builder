@@ -1008,3 +1008,17 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   (`EMPEROR'S_CHILDREN_BUILD_SCOPE.md`) has a literal apostrophe in its real filename that the
   project-area mount silently strips to an underscore; the sanitised name would have gone in
   GUARDED wrong and turned the gate permanently red.
+- **D332** — B119 engine turn shipped (S238), engine-only. `index.html` v6.22: curated
+  `ENHANCEMENT_BEARER_STATS` (10 records / 6 names / 8 armies, re-derived from source at build
+  time and matching D329 exactly), a delta applier, a per-statline-group bearer-mode resolver, and
+  T/OC override support in `buildStatTable`. New harness `b119_check.js`. Four things settled
+  against the data rather than the ticket: the delta lands on a SET value not the printed one;
+  T/W/OC compute rather than compose (integers everywhere, re-checked each run); a retinue
+  statline group gets nothing rather than an asterisk, while *Ravenwing Command Squad* gets the
+  asterisk and never a value; Save/Leadership/Movement deliberately unimplemented with a gate
+  rather than a guessed sign. Legend wording factored into one shared `enhModLegend`. Two
+  populations D329 never censused, both banked: **B123** (25 records that SET a bearer statline
+  value or grant Feel No Pain — held back on a display-precedence decision, not on mechanism) and
+  **B124** (*Master Artisan*'s unit-wide Toughness half, in neither B119 nor B120). All six names
+  also carry an unenforced "X model only" bearer restriction → corroborates **B93**, raising its
+  priority. B119's tooling half (a `B99-CENSUS`-shaped assertion) remains open.

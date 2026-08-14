@@ -1,86 +1,92 @@
-# NEXT SESSION PROMPT — Session 238
+# NEXT SESSION PROMPT — Session 239
 
-## Recommended pick: B119 (Set C, bearer statline). Engine-only.
+## Recommended pick: B119's tooling half. Tooling-only.
 
-B99 closed at S237 (D331) — both its engine and tooling halves are shipped. B119 is the natural
-next pick: same curated-table-plus-census pattern B99 and B113 already proved, and D329's census
-(`B99_SCOPE.md` §1, Set C) already did the scoping work — 10 enhancement records across 8 armies,
-6 distinct names (*Brazen Form*, *Disciple of Rhetoricus*, *Iron Laurel*, *Living Carapace*,
-*Master Artisan*, *Rites of War*), an unconditional change to the bearer's own statline
-(Toughness, Wounds, Objective Control, Save) that never reaches `buildStatTable`.
+B119's engine half shipped at S238 (D332); the ticket does not close until the census assertion
+lands. Same shape as `B99-CENSUS` (D331) and for the same reason: without a source → table check,
+the curated `ENHANCEMENT_BEARER_STATS` rots silently the moment a later faction lands an
+enhancement with an unhandled shape. `b119_check.js` already covers table → source.
 
-Materially cheaper than B99: `conferredStats`, `activeStatOverrides` and
-`activeOtherOptionOverrides` already merge overrides into the stat table and already render an
-asterisk-and-legend. `statOverrideFromText` handles only absolute "characteristic of N" sets, so it
-needs a delta path alongside the set path — read the B99-CENSUS clause-splitting logic in
-`rules_assertions.py` before writing a new one; the marker vocabulary and the bearer-possessive
-regex (`by the bearer\b|bearer'?s(?!\s+unit)|\bthose weapons\b`, tested against the real source
-text at S237) are directly reusable, not something to re-derive from scratch.
+**Do not re-derive the method from scratch.** `b99_source_census_matches_curated_table` in
+`rules_assertions.py` already has the clause splitter, the conditional-marker vocabulary and the
+bearer-possessive regex, all tested against real source text at S237. What B119's version needs
+on top of it:
+
+- A **statline** characteristic vocabulary (Toughness / Wounds / Objective Control / Save /
+  Leadership / Movement) instead of the weapon one, paired with an add/improve verb.
+- The bearer-self regex must exclude the possessive form: `\bthe bearer\b(?!'?s\s+unit)` —
+  a bare `\bthe bearer\b` wrongly matches "models in **the bearer**'s unit" and pulls Set D
+  records in as false positives. Found at S238 by testing against the real 10, exactly the way
+  S237 found its two.
+- Pin **10 records / 6 names / 8 armies** and fail on any candidate with no
+  `ENHANCEMENT_BEARER_STATS` row.
+- Negative-test it: remove one row from the curated table and confirm the assertion fails naming
+  exactly that record. A census that passes by construction is worth nothing.
+
+**Worth folding in, and cheap:** the same assertion can also pin **B123's** 25-record absolute /
+Feel No Pain population as a *known and deliberately unhandled* set, rather than letting those
+records read as ordinary non-matches. That is the same treatment `B99-CENSUS` gives Chaos
+Daemons' 29 shorthand records, and it keeps the gap visible instead of silent.
 
 ## Ryan action required
 
-- **Push S237's changed files** to the public repo. `repo_check` is red at S237 close for
-  `rules_assertions.py`, `pipeline_manifest.py`, `B99_SCOPE.md`, `40K_Decision_Log.md`,
-  `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, the six newly-guarded scope docs, and
-  `SESSION_HANDOFF_237.md` — expected for unpushed work, not a regression. Reconcile at open.
-
-## The B119 engine turn
-
-Engine-only. A curated table (same key shape as `ENHANCEMENT_WEAPON_EFFECTS` and
-`ENHANCEMENT_BEARER_RESTRICTIONS`: `detachment_key + '::' + name`) mapping each of the 6 names to
-its statline delta, a delta applier feeding `activeStatOverrides` (or the equivalent path
-`buildStatTable` already reads), and a `b119_check.js` harness. Re-verify the 10/6/8 population
-against source at build time rather than trusting D329's number carried forward — B99's own
-experience (D330 corrected D329's Set A2 count) is the reason for that discipline, not a formality.
-
-Two things worth checking directly rather than assuming from the Set C label:
-- Confirm none of the 6 names' statline deltas are conditional-only or share a record with a
-  Set A/A2/B/D effect already in `ENHANCEMENT_WEAPON_EFFECTS` — if one does, the render needs to
-  compose rather than overwrite.
-- Confirm the bearer-attribution question (D105/D112/B99's three-way rule) applies the same way to
-  a statline row as it does to a weapon row for any of the 6 names' bearer units, or state plainly
-  if none of them hit a multi-model-group Character and the question doesn't arise this ticket.
-
-**Tooling half.** A `rules_assertions.py` census assertion in B99-CENSUS's shape, in its own
-session, not folded into the engine turn — B99's own turn-typing violation risk was exactly this.
+- **Push S238's changed files** to the public repo. `repo_check` is red at S238 close for
+  `index.html`, `baseline.sh`, `pipeline_manifest.py`, `b119_check.js`, `40K_Decision_Log.md`,
+  `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md` and `SESSION_HANDOFF_238.md` — expected for
+  unpushed work, not a regression. Reconcile at open.
+- **Eyeball the B119 render.** I cannot see the DOM. One bearer of *Rites of War* (OC highlighted,
+  "Modified by Rites of War" beneath the table) and one *Ravenwing Command Squad* (OC asterisked,
+  printed value kept, "* bearer only — Rites of War").
 
 ## Open, at your discretion
 
-21 open: B116 (decision-blocked), B119, B120, B122, B97, B103, E28, B93, B90, B94, B85, B86, B69,
-B70, B75, P2, P4, E23, B67b, E12, B17.
+23 open: B116 (decision-blocked), B119 (tooling half), B120, B122, B123 (decision-blocked), B124,
+B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
-B120 (Set D, other models' weapons) needs its own scoping turn before build — Set D effects apply
-uniformly to every model in the unit, so unlike B99/B119 they can be written into a rollup row
-without the three-way rule; worth establishing that in scoping rather than discovering it in the
-build. B122 needs a scoping turn that answers a source question first: does the held Chaos
-Daemons material contain the real enhancement text at all? If yes it is a `detachment_parser.py`
-bug; if no it is a source-acquisition item.
+- **B93 deserves a look ahead of more display work.** S238 read all ten Set C descriptions in full
+  and every one of the six names carries a bearer restriction in its own text ("World Eaters
+  Monster model only", "Haemonculus model only", "Chaos Lord model only", "Adeptus Astartes
+  Terminator model only"). None is enforced — B113's table was scoped to enhancements carrying a
+  `LEADER:` line. So the "model only" form is the norm rather than the exception, and B119 will
+  now render a modified statline on a bearer the rules do not allow. That is a live D0 gap and the
+  display work keeps making it more visible. It needs an analysis turn across all 739 records
+  before a mechanism is chosen; that turn is the sensible next big item after B119 closes.
+- **B120** still needs its own scoping turn before build, and that turn should now widen its
+  census from Set D *weapons* to Set D effects generally, so **B124** (*Master Artisan*'s
+  unit-wide Toughness half) lands inside it rather than staying orphaned.
+- **B122** needs a scoping turn that answers a source question first: does the held Chaos Daemons
+  material contain the real enhancement text at all? If yes it is a `detachment_parser.py` bug;
+  if no it is a source-acquisition item.
+- **B123** is blocked on Ryan's display-precedence call and should not be started before it.
 
 ## Standing reminders
 
-- Keep running a data-turn baseline periodically even on non-data sessions.
-- `40K_Decision_Log.md` has now been absent from the project-area mount for **five** sessions
-  running and is recovered from the repo each time — this recovered copy already had D330 at
-  S237 open, meaning the mount's absence does not imply the repo is behind. Worth re-uploading if
-  convenient, but not a signal of anything wrong on its own.
+- Keep running a data-turn baseline periodically even on non-data sessions. S238 was `--fetch`
+  only; the last full `--fetch --data-turn` was S237.
+- `40K_Decision_Log.md` has now been absent from the project-area mount for **six** sessions
+  running and is recovered from the repo each time. Not a signal of anything wrong on its own.
 - Do not trust the GitHub API's repo `permissions` field for either repo as evidence of push
   access — verify with a real write attempt.
-- The project-area file mount silently strips apostrophes from filenames on upload
-  (`EMPEROR'S_CHILDREN_BUILD_SCOPE.md` → `EMPEROR_S_CHILDREN_BUILD_SCOPE.md` was the case found
-  at S237). Before trusting a project-area filename as the real repo filename, especially for
-  anything going into GUARDED, check a fresh clone.
-- Turn typing stays strict.
+- The project-area file mount silently strips apostrophes from filenames on upload. Before
+  trusting a project-area filename as the real repo filename, especially for anything going into
+  GUARDED, check a fresh clone.
+- Turn typing stays strict. B119's two halves were split for exactly this reason; do not fold the
+  census assertion into an engine session.
 
 ## Decisions waiting on Ryan
 
-- **B99 display** — four, shipped on their recommendations at S236 and all still reversible. New
-  Recruit screenshots would settle the idiom.
+- **B123 display precedence — new, and it blocks 25 records.** When an Enhancement and equipped
+  wargear both set the same statline cell (Save, Feel No Pain), does the app show the better
+  value, the Enhancement's value, or an asterisk? Recommendation: the better of the two, cell
+  marked.
+- **B99 display, four decisions** — unchanged since S236, all still reversible. B119 followed the
+  same idiom, so a change of mind now moves both.
 - **B116** — unchanged. `DRUKHARI_BUILD_SCOPE.md` §6. Blocks nothing.
 - **Next faction after Drukhari** — the documented priority order is fully built; none is queued.
   Recommendation stands: clear the engine backlog first.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_238.md` in `pipeline_manifest.py`'s GUARDED
+Produce the four documents, register `SESSION_HANDOFF_239.md` in `pipeline_manifest.py`'s GUARDED
 list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
 command.

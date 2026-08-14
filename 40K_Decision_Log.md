@@ -13703,3 +13703,98 @@ red exactly as the ticket warned.
 the handoff table; `40K_Decision_Log.md` (absent from the mount, fifth session running) recovered
 from the repo and already carried D330 — S236's push had landed despite the stale "repo is red"
 note in `NEXT_SESSION_PROMPT.md`.
+
+## D332 — B119 engine turn: enhancement-conferred bearer statline modifications reach the stat table (S238)
+
+**Engine-only turn.** `index.html` (v6.21 → v6.22), `baseline.sh` and `pipeline_manifest.py`
+changed, plus one net-new harness. No data file touched; every JSON output byte-identical.
+
+**What shipped.** B119's engine half. An assigned enhancement whose text confers an unconditional
+change to the **bearer's own statline** now reaches `buildStatTable`. Curated
+`ENHANCEMENT_BEARER_STATS` on the same `detachment_key + '::' + name` key as
+`ENHANCEMENT_WEAPON_EFFECTS` and `ENHANCEMENT_BEARER_RESTRICTIONS`, a delta applier
+(`b119Compose`), a per-statline-group bearer-mode resolver (`b119BearerStatMode`), a context
+builder (`b119StatCtx`), and the `buildStatTable` changes that let the T and OC cells carry an
+override at all. New harness `b119_check.js`, registered in `baseline.sh` and GUARDED.
+
+**The census was re-derived at build time, not carried forward, and it confirms D329 exactly:
+10 records / 6 names / 8 armies** — *Brazen Form* (T+1), *Living Carapace* (W+1), *Master
+Artisan* (W+1), and *Rites of War* / *Disciple of Rhetoricus* / *Iron Laurel* (OC+1 each). D330
+having had to correct D329's Set A2 figure is the reason for that discipline; this time the
+number held.
+
+**No overlap with B99's table.** None of the 10 keys is in `ENHANCEMENT_WEAPON_EFFECTS`, so
+nothing has to compose across the two tables. Checked, not assumed.
+
+**Seven of the ten carry a second, conditional clause.** The *Rites of War* family reads
+"Improve the Objective Control characteristic of the bearer by 1. Once per battle, at the start
+of any phase, the bearer can use this Enhancement. If it does, until the end of the phase, add 1
+to the Objective Control characteristic of all other models in the bearer's unit as well." The
+first clause is unconditional and bearer-self and is what ships; the second is Set B and
+unit-scope and is not rendered. `b119_check` therefore tests that a qualifying clause *exists*,
+not that every clause qualifies — its first draft tested the latter and failed all seven, which
+is how the shape was found.
+
+**Four decisions inside the build, each checked against the shipped data rather than reasoned
+from the ticket:**
+
+1. **The delta lands on a SET value, not the printed one.** 40K applies modifiers after
+   characteristics that are set, so a wargear-set Wounds of 6 plus a +1 enhancement reads 7. The
+   applier runs after `conferredStats`, `activeStatOverrides` and `activeOtherOptionOverrides`
+   have merged, and reads the merged value as its base. Pinned.
+2. **T, W and OC compute; they do not compose.** This is the opposite of B99's A and D. Every
+   T/W/OC value on every model group in `units.json` is a plain integer — checked, and re-checked
+   by the harness each run, so the assumption cannot rot. A non-integer is not moved at all
+   rather than concatenated into something that looks like a characteristic.
+3. **Bearer attribution is answerable more precisely for a statline than for a weapon.** The stat
+   table already renders one table per **statline group**, so a retinue group is simply not the
+   bearer and gets **nothing** — not the asterisk a weapon row would take. Statline group 0 is
+   the CHARACTER on every multi-statline-group Character unit in the data, the same reading
+   `b99BearerScope` already rests on and pins. *Dark Apostle*, *Dark Commune* and *Traitor
+   Enforcer* write to group 0 and nothing to group 1; *Ravenwing Command Squad* — one statline
+   group, three models, only one of them the CHARACTER — takes the asterisk and never a value.
+   Both readings are exercised by real units in the harness, not by fixtures.
+4. **Save, Leadership and Movement are deliberately unimplemented.** No source record confers a
+   delta on any of them. Save in particular would need the AP sign rule's mirror image ("improve
+   the Save characteristic" means a *lower* number), and `b119_check` fails if a record ever names
+   a characteristic the applier does not implement — a gate rather than a guess.
+
+**Legend wording factored into one function.** `enhModLegend` now owns the "* bearer only — X" /
+"Modified by X" wording, and both `b99Legend` and the stat table call it. The weapon table and
+the stat table must say the same thing in the same words, and one function is the only way to
+guarantee that. `b99Legend`'s output is unchanged.
+
+**Two populations D329's census never covered, both found here and both banked.**
+
+- **B123 — 25 records / 11 names / 10 armies** that SET the bearer's statline to an absolute
+  value or grant it Feel No Pain: *Artificer Armour*, *Armour of Antoninus*, *Artisan of War*,
+  *Blood-Forged Armour*, *Leechbite Plate*, *Flowing Flesh*, *Iron Resolve*, *The Flesh Is Weak*,
+  *Intoxicating Elixir*, *Revolting Regeneration*, *Fenrisian Grit*. `B99_SCOPE.md` §1's five-row
+  table has no row for this shape. **Deliberately not folded into B119** despite needing no new
+  render machinery: these land on the SV and FNP cells that wargear already writes, which raises
+  a precedence question Set C's T/W/OC deltas do not — what shows when a storm shield and an
+  Enhancement both speak to the same cell. That is a display decision for Ryan, not a mechanism
+  call, so the applier takes deltas only and no absolute path is stubbed. An untested code path
+  is worse than an absent one.
+- **B124 — *Master Artisan*'s second half.** "Add 1 to the bearers Wounds characteristic **and
+  add 1 to the Toughness characteristic of models in the bearer's unit**". The bearer's Wounds
+  half ships here; the unit-wide Toughness half is a Set D **statline** effect, and B120 is
+  scoped to Set D **weapons**, so it belongs to neither ticket. B120's scoping turn should widen
+  its census from Set D weapons to Set D effects generally.
+
+**Consequence stated plainly:** three of the ten shipped rows (*Brazen Form*, *Living Carapace*,
+*Master Artisan*) now carry a legend naming an enhancement that has done less than its full text
+says, because their second halves are B123 and B124. The full description remains one click away
+in the Enhancement section, which is where the unrepresented part lives.
+
+**B93 corroborated, not newly found.** All six B119 names carry a bearer restriction in their own
+text — "World Eaters Monster model only", "Haemonculus model only", "Chaos Lord model only",
+"Adeptus Astartes Terminator model only" — and none is in `ENHANCEMENT_BEARER_RESTRICTIONS`,
+which B113 scoped to enhancements carrying a `LEADER:` line. The restriction class is wider than
+B113's scope assumed and the "model only" form is the norm rather than the exception. This raises
+B93's priority: B119 will render a modified statline on a bearer the rules do not allow. Logged
+against B93 rather than opened as a duplicate.
+
+**Still open on B119: the tooling half** — a `rules_assertions.py` census assertion in
+`B99-CENSUS`'s shape, source → table, in its own session. The ticket does not close until it
+lands.

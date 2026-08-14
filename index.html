@@ -2222,7 +2222,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.21';
+  const VERSION = '6.22';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3397,15 +3397,104 @@
     return out;
   }
 
-  // One line under the table naming the cause, so a highlighted cell or an
+  // One line under a table naming the cause, so a highlighted cell or an
   // asterisk is never unexplained. Asterisk wording wins when both are present.
-  function b99Legend(eff, sawStar, sawWrite, name) {
-    if (!eff || (!sawStar && !sawWrite)) return '';
+  // Shared with B119's statline table (below) rather than written twice — the
+  // weapon table and the stat table must say the same thing in the same words,
+  // and the only way to guarantee that is one function.
+  function enhModLegend(sawStar, sawWrite, name) {
+    if (!sawStar && !sawWrite) return '';
     const n = escHtml(name || 'an Enhancement');
     const t = sawStar ? ('* bearer only \u2014 ' + n) : ('Modified by ' + n);
     return '<div class="stat-asterisk-legend">' + t + '</div>';
   }
+
+  function b99Legend(eff, sawStar, sawWrite, name) {
+    if (!eff) return '';
+    return enhModLegend(sawStar, sawWrite, name);
+  }
   // ── B99 END ───────────────────────────────────────────────────────────────
+
+  // ── B119 BEGIN: enhancement-conferred BEARER STATLINE modifications ───────
+  //
+  // B99's sibling. An assigned enhancement whose text changes the BEARER'S OWN
+  // statline, unconditionally — Set C of the D329/D330 census, re-derived from
+  // detachments.json at build time rather than carried forward: 10 records /
+  // 6 names / 8 armies, every one of them an "add 1" or "improve … by 1" on
+  // Toughness, Wounds or Objective Control.
+  //
+  // Same key shape and same discipline as ENHANCEMENT_WEAPON_EFFECTS and
+  // ENHANCEMENT_BEARER_RESTRICTIONS, deliberately.
+  //
+  // WHAT IS DELIBERATELY NOT HERE (B123, banked): the 25 further records / 11
+  // further names that set the bearer's statline to an ABSOLUTE value or grant
+  // it a Feel No Pain ability — "The bearer has a Save characteristic of 2+",
+  // "…the Feel No Pain 5+ ability". Those are equally unrendered today and were
+  // never censused by D329, but they land on the same SV/FNP cells that wargear
+  // already writes, so they raise a precedence question this table does not:
+  // which value shows when a storm shield and an Enhancement both speak to the
+  // same cell. The applier below takes DELTAS ONLY for that reason; an absolute
+  // path is not stubbed here because an untested code path is worse than an
+  // absent one.
+  //
+  // Three of these 10 records carry a second effect that is NOT rendered: Brazen
+  // Form and Living Carapace also grant Feel No Pain 5+ (B123), and Master
+  // Artisan also adds 1 to the Toughness of OTHER models in the bearer's unit
+  // (Set D statline — neither B119 nor B120, which is Set D weapons; banked as
+  // B124). The legend on those three therefore names an enhancement that has
+  // done less than its full text says; the enhancement's own description is one
+  // click away in the Enhancement section, which is where the rest of it lives.
+  //
+  // Movement, Leadership and Save carry no delta record in the whole source set.
+  // Save in particular would need the AP sign rule's mirror image ("improve the
+  // Save characteristic" means a LOWER number), so it is left unimplemented and
+  // b119_check fails if a record ever needs it.
+  const ENHANCEMENT_BEARER_STATS = {
+    "Blood Angels|1ST COMPANY TASK FORCE::Rites of War":
+      { mod: { OC: 1 } },
+    "Chaos Space Marines|CREATIONS OF BILE::Living Carapace":
+      { mod: { W: 1 } },
+    "Dark Angels|1ST COMPANY TASK FORCE::Rites of War":
+      { mod: { OC: 1 } },
+    "Deathwatch|1ST COMPANY TASK FORCE::Rites of War":
+      { mod: { OC: 1 } },
+    "Drukhari|COVENITE COTERIE::Master Artisan":
+      { mod: { W: 1 } },
+    "Space Marines|1ST COMPANY TASK FORCE::Rites of War":
+      { mod: { OC: 1 } },
+    "Space Marines|EMPEROR'S SHIELD::Disciple of Rhetoricus":
+      { mod: { OC: 1 } },
+    "Space Marines|HAMMER OF AVERNII::Iron Laurel":
+      { mod: { OC: 1 } },
+    "Space Wolves|1ST COMPANY TASK FORCE::Rites of War":
+      { mod: { OC: 1 } },
+    "World Eaters|CULT OF BLOOD::Brazen Form":
+      { mod: { T: 1 } }
+  };
+
+  // An assignment whose record no longer resolves contributes nothing, exactly
+  // as enhancementWeaponEffect and enhancementPoints read it: the effect is a
+  // property of a record we no longer hold, and inventing one shows a number the
+  // player can neither explain nor fix.
+  function enhancementBearerStatEffect(entry) {
+    const a = entry && entry.enhancement;
+    if (!a || !a.name) return null;
+    if (!enhancementRecord(a.name, a.detachment_key)) return null;
+    return ENHANCEMENT_BEARER_STATS[a.detachment_key + '::' + a.name] || null;
+  }
+
+  // T, W and OC are plain integers in every row of units.json (checked, not
+  // assumed — b119_check re-checks it against the shipped data each run), so
+  // this computes rather than composes, which is the opposite of B99's A and D.
+  // A value that is not an integer is not moved at all and reports so, rather
+  // than being concatenated into something that looks like a characteristic.
+  function b119Compose(val, delta) {
+    if (val == null) return null;
+    const s = String(val).trim();
+    if (!/^-?\d+$/.test(s)) return null;
+    return String(Number(s) + delta);
+  }
+  // ── B119 END ──────────────────────────────────────────────────────────────
 
   // A stored assignment is {name, detachment_key}. The key is carried because
   // the name alone does not determine the price: Deathwing Assault is 30 pts in
@@ -6606,6 +6695,52 @@
   }
   // ── B99 MODE END ──────────────────────────────────────────────────────────
 
+  // ── B119 MODE BEGIN: which statline row may carry a modified value ────────
+  //
+  // The statline table already renders one table per STATLINE group, which makes
+  // the bearer question easier here than it is for weapons: a retinue group is
+  // simply not the bearer and gets nothing at all, rather than an asterisk.
+  //
+  // Group 0 is the CHARACTER on every multi-statline-group Character unit in the
+  // shipped data — the same reading b99BearerScope already rests on, and pinned
+  // there against every unit that could exercise it, not against the three we
+  // happen to know about (Dark Apostle, Dark Commune, Traitor Enforcer).
+  //
+  // The case that must never be written is the other one: Ravenwing Command
+  // Squad has ONE statline group and THREE models, only one of which is the
+  // CHARACTER, and nothing in the data says which. Its row takes the asterisk.
+  function b119BearerStatMode(raw, mg, mgIndex, entry) {
+    if (mgIndex > 0) return 'none';
+    const def = loadoutDefs[raw.unit_id];
+    // No loadout definition: the unit is statline-only, so fall back to the same
+    // single-model reading buildWeaponTable uses.
+    if (!def) return isSingleModelGroup(raw) ? 'all' : 'some';
+    const size   = loadoutSize(entry, def);
+    const counts = loGroupCounts(def, size, loOptCounts(def, entry));
+    let total = 0;
+    for (const g of (def.model_groups || [])) total += counts[g.name] || 0;
+    if (total === 1) return 'all';          // one model in the build: it is the bearer
+    const scopes = statGroupScopes(raw, mg, def);
+    if (!scopes) return 'some';             // cannot pin this statline group at all
+    let n = 0;
+    for (const g of scopes) n += counts[g] || 0;
+    return n === 1 ? 'all' : 'some';
+  }
+
+  // Everything the statline table needs to render one entry's enhancement, or
+  // null when there is nothing to render. Computed per statline group, because
+  // the answer differs between the CHARACTER's group and its retinue's.
+  function b119StatCtx(raw, mg, mgIndex, entry) {
+    const eff = enhancementBearerStatEffect(entry);
+    if (!eff) return null;
+    return {
+      mod:  eff.mod || {},
+      name: entry.enhancement.name,
+      mode: b119BearerStatMode(raw, mg, mgIndex, entry)
+    };
+  }
+  // ── B119 MODE END ─────────────────────────────────────────────────────────
+
   // Unit Options UI for loadout-defined units.
   function buildLoadoutHtml(entry, def, raw) {
     const size = loadoutSize(entry, def);
@@ -7428,7 +7563,11 @@
 
       // B7b: aura flags apply only to the first model group (Character panel).
       const auraForThisMg = (i === 0 && auraFlags && auraFlags.length) ? auraFlags : null;
-      html += buildStatTable(mg, overrides, cs.flags, auraForThisMg);
+      // B119: the assigned enhancement's change to the bearer's own statline.
+      // Only reachable here — buildModalFull passes no entry, and an
+      // unconfigured browse view has no enhancement to apply.
+      html += buildStatTable(mg, overrides, cs.flags, auraForThisMg,
+                             b119StatCtx(raw, mg, i, entry));
       cs.inert.forEach(n => inertWA.add(n));
       html += `</div>`;
 
@@ -7579,9 +7718,26 @@
 
   // ── Shared modal helpers ───────────────────────────────────────────────────
 
-  function buildStatTable(mg, overrides, flags, auraFlags) {
-    const ov  = overrides || {};
+  function buildStatTable(mg, overrides, flags, auraFlags, enh) {
+    // Cloned, not aliased: B119 writes into this and the caller's object is
+    // built once per model group and must not accumulate another group's delta.
+    const ov  = Object.assign({}, overrides || {});
     const fl  = flags || {};
+    // B119: an assigned enhancement's unconditional change to the BEARER'S OWN
+    // statline, applied AFTER the set-value overrides above — 40K applies
+    // modifiers after characteristics that are set, so a wargear-set Wounds of 6
+    // plus a +1 Enhancement reads 7 and not 6. 'some' means the bearer cannot be
+    // told apart from the other models counted in this row, so the printed value
+    // stays and the cell takes an asterisk (D89/D112, same as B99's weapons).
+    const eMod  = (enh && enh.mode !== 'none') ? (enh.mod || {}) : {};
+    const eStar = {};
+    let enhWrote = false, enhStar = false;
+    for (const k of Object.keys(eMod)) {
+      if (enh.mode === 'some') { eStar[k] = true; enhStar = true; continue; }
+      const base = (ov[k] !== undefined && ov[k] !== null) ? ov[k] : mg[k];
+      const v = b119Compose(base, eMod[k]);
+      if (v !== null && String(v) !== String(base)) { ov[k] = v; enhWrote = true; }
+    }
     // B7b: aura flags come from attached-leader `bodyguard_stat_flags` unioned
     // at combined-popup time. The set may include INV, FNP, LD, T, M, OC (D157
     // markable-stat list) and rarely W or SV. Aura stars use the same * symbol
@@ -7608,17 +7764,20 @@
     const invStar = (!invOv && (fl.INV || aura.INV)) ? '<sup class="stat-asterisk">*</sup>' : '';
     const fnpStar = (!fnpOv && (fl.FNP || aura.FNP)) ? '<sup class="stat-asterisk">*</sup>' : '';
     // B15: W and SV take the same asterisk when some — but not all — models carry
-    // the item that would set them.
+    // the item that would set them. B119 adds a third source on W, T and OC.
     const wOv     = ov.W  !== undefined && ov.W  !== null;
     const svOv    = ov.SV !== undefined && ov.SV !== null;
-    const wStar   = (!wOv  && (fl.W  || aura.W))  ? '<sup class="stat-asterisk">*</sup>' : '';
-    const svStar  = (!svOv && (fl.SV || aura.SV)) ? '<sup class="stat-asterisk">*</sup>' : '';
+    const wStar   = (!wOv  && (fl.W  || aura.W  || eStar.W))  ? '<sup class="stat-asterisk">*</sup>' : '';
+    const svStar  = (!svOv && (fl.SV || aura.SV || eStar.SV)) ? '<sup class="stat-asterisk">*</sup>' : '';
     // B7b: LD, T, M, OC gain aura-only asterisk support (no wargear-flag or
     // override machinery today; conferralStats has never targeted these cells).
+    // B119: T and OC now also take an Enhancement value or an Enhancement star.
+    const tOv     = ov.T  !== undefined && ov.T  !== null;
+    const ocOv    = ov.OC !== undefined && ov.OC !== null;
     const ldStar  = aura.LD ? '<sup class="stat-asterisk">*</sup>' : '';
-    const tStar   = aura.T  ? '<sup class="stat-asterisk">*</sup>' : '';
+    const tStar   = (!tOv  && (aura.T  || eStar.T))  ? '<sup class="stat-asterisk">*</sup>' : '';
     const mStar   = aura.M  ? '<sup class="stat-asterisk">*</sup>' : '';
-    const ocStar  = aura.OC ? '<sup class="stat-asterisk">*</sup>' : '';
+    const ocStar  = (!ocOv && (aura.OC || eStar.OC)) ? '<sup class="stat-asterisk">*</sup>' : '';
     const inv = invOv ? `<span class="stat-override">${cleanPlus(ov.INV)}+</span>` : (mg.INV ? `${mg.INV}+` : '\u2014');
     const fnp = fnpOv ? `<span class="stat-override">${cleanPlus(ov.FNP)}+</span>` : (mg.FNP ? `${mg.FNP}+` : '\u2014');
     const invCond = (!invOv && mg.INV_Condition) ? ` <span style="font-size:0.6rem;color:#666;">(${mg.INV_Condition})</span>` : '';
@@ -7639,8 +7798,9 @@
     let legendText = '';
     if (hasAuraStar) legendText = '* see Abilities';
     else if (hasWargearStar) legendText = '* see Wargear Abilities';
-    const legend = legendText
-      ? `<div class="stat-asterisk-legend">${legendText}</div>` : '';
+    const legend = (legendText
+      ? `<div class="stat-asterisk-legend">${legendText}</div>` : '')
+      + enhModLegend(enhStar, enhWrote, enh && enh.name);
 
     return `<table class="stat-table">
       <thead>
@@ -7651,13 +7811,13 @@
       <tbody>
         <tr>
           <td>${mg.M}${mStar}</td>
-          <td>${mg.T}${tStar}</td>
+          <td>${ovCell('T', mg.T)}${tStar}</td>
           <td>${svDisplay}${svStar}</td>
           <td class="inv-cell">${inv}${invStar}${invCond}</td>
           <td class="fnp-cell">${fnp}${fnpStar}${fnpCond}</td>
           <td>${wDisplay}${wStar}</td>
           <td>${cleanPlus(mg.LD)}+${ldStar}</td>
-          <td>${mg.OC}${ocStar}</td>
+          <td>${ovCell('OC', mg.OC)}${ocStar}</td>
         </tr>
       </tbody>
     </table>${legend}`;

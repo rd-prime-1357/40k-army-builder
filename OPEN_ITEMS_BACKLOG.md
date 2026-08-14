@@ -3,9 +3,17 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **21 open** as of S237 (down from 23 — B99 and B121 both closed this
-session; nothing opened): B116, B119, B120, B122, B97, B103, E28, B93, B90, B94, B85, B86, B69,
-B70, B75, P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **23 open** as of S238 (up from 21 — B123 and B124 opened this session;
+nothing closed, B119's tooling half still outstanding): B116, B119, B120, B122, B123, B124, B97,
+B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+Engine-only turn (D332): B119's engine half shipped — an assigned enhancement's unconditional
+change to the bearer's own statline now reaches `buildStatTable` (10 records / 6 names / 8 armies,
+re-derived from source at build time and matching D329 exactly). `index.html` v6.22, new
+`b119_check.js`. Two populations D329's census never covered were found and banked: B123 (25
+records that SET a bearer statline value or grant Feel No Pain, blocked on a display-precedence
+decision) and B124 (*Master Artisan*'s unit-wide Toughness half, which belongs to neither B119 nor
+B120). All six B119 names also carry an unenforced "X model only" bearer restriction — that is
+B93, already open, now corroborated rather than newly found.
 Tooling-only turn (D331): B99's tooling half shipped and the ticket closes — a new
 `rules_assertions.py` assertion re-derives the Set A/A2 enhancement population from source and
 fails on any record with no curated-table row, matching D330's 57/23/78/43 exactly. B121 folded
@@ -616,7 +624,41 @@ allied inclusion generally.
 — **CLOSED S216 (D310); tooling half D309, data half D310**
 See Closed / Shipped for full history.
 
-### B119 — Enhancement-conferred bearer statline changes never reach the stat table — **NEW S235 (D329); engine; S; split out of B99**
+### B119 — Enhancement-conferred bearer statline changes never reach the stat table — **NEW S235 (D329); ENGINE HALF SHIPPED S238 (D332); engine; S; split out of B99; tooling half open**
+
+**S238 (D332), engine half shipped.** Census re-derived from `detachments.json` at build time
+rather than carried forward from D329, and it confirms D329 exactly: **10 records / 6 names /
+8 armies**, every one an "add 1" or "improve … by 1" on Toughness, Wounds or Objective Control.
+`ENHANCEMENT_BEARER_STATS` (curated, B113/B99 key shape), `b119Compose`, `b119BearerStatMode`,
+`b119StatCtx` and the `buildStatTable` changes shipped in `index.html` v6.22, with a new
+`b119_check.js` harness. **Still open: the tooling half** — a `rules_assertions.py` census
+assertion in `B99-CENSUS`'s shape, source → table, in its own session.
+
+What the build settled, none of it assumed:
+- **No overlap with `ENHANCEMENT_WEAPON_EFFECTS`.** None of the 10 keys is in B99's table, so
+  nothing composes.
+- **Seven of the ten carry a second, conditional clause** handing the same +1 Objective Control
+  to the rest of the unit once per battle. The bearer half is unconditional and is rendered; the
+  once-per-battle half is Set B and is not.
+- **T, W and OC are plain integers on every model group in the shipped data**, so the applier
+  computes where B99's composes. Re-checked by the harness each run rather than trusted.
+- **The delta lands on a SET value, not the printed one** — 40K applies modifiers after
+  characteristics that are set, so a wargear-set Wounds of 6 plus a +1 enhancement reads 7.
+- **Bearer attribution is answerable more precisely here than for weapons.** The stat table
+  renders one table per statline group, so a retinue group gets *nothing* rather than an
+  asterisk. Dark Apostle, Dark Commune and Traitor Enforcer write to statline group 0 and
+  nothing to group 1; Ravenwing Command Squad — one statline group, three models, one of them
+  the Character — takes the asterisk and never a value.
+- **Save, Leadership and Movement carry no delta record anywhere in the source**, so the applier
+  implements T/W/OC only. Save in particular would need the AP sign rule's mirror image
+  ("improve the Save characteristic" means a *lower* number); `b119_check` fails if a record ever
+  needs a characteristic the applier does not implement, rather than guessing the sign.
+- **All six names are also B93 instances** — every one carries a bearer restriction in its own
+  text ("World Eaters Monster model only", "Haemonculus model only", "Chaos Lord model only",
+  "Adeptus Astartes Terminator model only") and none is in `ENHANCEMENT_BEARER_RESTRICTIONS`,
+  which B113 scoped to enhancements carrying a `LEADER:` line. Pre-existing, logged under B93,
+  not created by B119.
+
 Set C of B99's census: 10 enhancement records across 8 armies, 6 distinct names (*Brazen Form*,
 *Disciple of Rhetoricus*, *Iron Laurel*, *Living Carapace*, *Master Artisan*, *Rites of War*)
 confer an unconditional change to the bearer's own statline — Toughness, Wounds, Objective
@@ -647,6 +689,42 @@ easy one; and where the bearer leads an attached unit, the effect lands on a **d
 entry's** popup, and the engine has no cross-entry render path — the right panel renders one
 entry's `raw` at a time. *Blades of Valour* (6 chapters) is in both Set A and Set D, so B99 ships
 its bearer half and this ticket completes it. Needs its own scoping turn before build.
+
+### B123 — Bearer statline changes that SET a value or grant Feel No Pain are uncensused and unrendered — **NEW S238 (D332); engine; S–M; decision-blocked on display precedence**
+Found during B119's build. `B99_SCOPE.md` §1's census table has five rows — Sets A, A2, B, C, D —
+and none of them covers an enhancement that sets the bearer's own statline to an **absolute**
+value or grants it an ability. **25 records / 11 names / 10 armies** take that shape and are as
+unrendered today as Set C was: *Artificer Armour* and *Armour of Antoninus* ("Save characteristic
+of 2+" plus Feel No Pain 5+), *Artisan of War*, *Blood-Forged Armour*, *Leechbite Plate* (Save
+sets), *Flowing Flesh* ("Wounds characteristic of 5" plus Feel No Pain 4+), and *Iron Resolve*,
+*The Flesh Is Weak*, *Intoxicating Elixir*, *Revolting Regeneration*, *Fenrisian Grit* (Feel No
+Pain grants only). Derived this session from `detachments.json`, not carried forward.
+
+Deliberately excluded from B119 rather than folded in, despite landing on the same
+`buildStatTable` cells and needing no new render machinery. **The reason is a decision, not a
+mechanism:** unlike Set C's T/W/OC deltas, these land on the SV and FNP cells that wargear
+already writes via `statOverrideFromText`, so they raise a precedence question B119 did not —
+what shows when a storm shield and an Enhancement both speak to the same cell. B119's applier
+therefore takes deltas only, with no absolute path stubbed, on the grounds that an untested code
+path is worse than an absent one.
+
+**Decision needed before build:** when an Enhancement and equipped wargear both set the same
+statline cell, does the app show the better value, the Enhancement's value, or an asterisk?
+Recommendation: show the better of the two and mark the cell, since by rule a model has one Save
+and one Feel No Pain and uses the best available — but this sets a lasting display precedent and
+is worth Ryan's call rather than mine.
+
+### B124 — *Master Artisan*'s unit-wide Toughness half belongs to no ticket — **NEW S238 (D332); engine; XS; folds into B120's scoping turn**
+Found during B119's build. Drukhari's *Master Artisan* (COVENITE COTERIE) reads "Add 1 to the
+bearers Wounds characteristic **and add 1 to the Toughness characteristic of models in the
+bearer's unit**". B119 ships the bearer's Wounds half. The second half is a **Set D statline**
+effect — other models in the unit — and B120 is scoped to Set D *weapons*, so it currently sits
+in neither ticket.
+
+Almost certainly not its own build: it is one record, and it is the same
+attribute-to-other-models problem B120 already has to solve. The right home is B120's scoping
+turn, which should widen its census from Set D weapons to Set D effects generally rather than
+leave a single record orphaned. Logged separately only so the gap is visible if B120 slips.
 
 ### B122 — Chaos Daemons enhancement descriptions are shorthand summaries, not rule text — **NEW S236 (D330); data/parser; M**
 Found during the B99 engine build. All 29 Chaos Daemons enhancement records in
@@ -720,6 +798,17 @@ session should confirm whether per-unit enhancement assignment (unaffected by th
 UI adjustment once Detachments get their own detail view.
 
 ### B93 — Enhancement/Upgrade eligibility: engine checks Character-vs-not, not the Enhancement's own qualification requirement — **NEW S188 (D281); Ryan-flagged; engine+data; L; spans sessions; live D0 gap**
+
+**S238 corroboration (D332).** B119's build read all ten Set C descriptions in full, and every
+one of the six names carries a bearer restriction in its own text — *Brazen Form* "World Eaters
+**Monster** model only", *Master Artisan* "**Haemonculus** model only", *Living Carapace* "**Chaos
+Lord** model only", *Rites of War* / *Disciple of Rhetoricus* "Adeptus Astartes **Terminator**
+model only", *Iron Laurel* "Adeptus Astartes model only". None is in
+`ENHANCEMENT_BEARER_RESTRICTIONS`, because B113 scoped that table to enhancements carrying a
+`LEADER:` line in the MFM. So the restriction class is wider than B113's scope assumed, and the
+"model only" form is not rare — it is the norm. Nothing new in kind, but it raises this ticket's
+priority: B119 will now render a modified statline on a bearer the rules do not allow.
+
 Ryan's report: every Enhancement's description begins with the specific unit/keyword requirement to
 take it (e.g. a Phobos-armoured Character, "any Adeptus Astartes Character," "any Adeptus Astartes
 Vehicle"), and by rule an Enhancement can only be taken by a Character unless stated otherwise.

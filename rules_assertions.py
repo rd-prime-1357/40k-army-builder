@@ -3064,8 +3064,12 @@ def b7b_combined_popup(S):
         return False, 'openModalCombined not defined in index.html'
     if 'function buildModalCombined(' not in txt:
         return False, 'buildModalCombined not defined in index.html'
-    if 'function buildStatTable(mg, overrides, flags, auraFlags)' not in txt:
-        return False, 'buildStatTable signature does not include auraFlags parameter'
+    # B119 (S238/D332) added a fifth parameter carrying the assigned enhancement's
+    # bearer-statline delta. The pin stays exact rather than loosening to a substring
+    # match — an exact pin is what surfaced the change in the first place, which is
+    # the behaviour wanted, not a nuisance to design away.
+    if 'function buildStatTable(mg, overrides, flags, auraFlags, enh)' not in txt:
+        return False, 'buildStatTable signature does not include auraFlags/enh parameters'
     if 'function buildModalConfigured(raw, entry, auraFlags, idScope)' not in txt:
         return False, 'buildModalConfigured signature does not include auraFlags/idScope parameters'
 
