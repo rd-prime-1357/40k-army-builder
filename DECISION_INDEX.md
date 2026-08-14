@@ -1022,3 +1022,10 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   **B124** (*Master Artisan*'s unit-wide Toughness half, in neither B119 nor B120). All six names
   also carry an unenforced "X model only" bearer restriction → corroborates **B93**, raising its
   priority. B119's tooling half (a `B99-CENSUS`-shaped assertion) remains open.
+- **D333** — B119 tooling turn shipped (S239), tooling-only; ticket closes. New `rules_assertions.py`
+  assertion `B119-CENSUS` re-derives the bearer-statline-delta population from source
+  (`detachments.json`), independent of `ENHANCEMENT_BEARER_STATS`, matching D332's 10/6 exactly
+  and negative-tested. B123's absolute/Feel-No-Pain population pinned in the same assertion as a
+  known, deliberately unhandled gap (B99-CENSUS's Chaos-Daemons-shorthand idiom) — re-derived at
+  25 records / 11 names, matching the banked figures, but **11 armies, not 10**; `B123`'s
+  `OPEN_ITEMS_BACKLOG.md` entry corrected.

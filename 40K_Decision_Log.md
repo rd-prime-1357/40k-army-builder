@@ -13798,3 +13798,55 @@ against B93 rather than opened as a duplicate.
 **Still open on B119: the tooling half** — a `rules_assertions.py` census assertion in
 `B99-CENSUS`'s shape, source → table, in its own session. The ticket does not close until it
 lands.
+
+## D333 — B119 tooling turn: source-derived census assertion, plus B123's population pinned (S239)
+
+**Tooling-only turn.** No data file, no `index.html`, changed. `repro_check`, `units_repro_check`
+and `detachments_repro_check` all untouched (tier B, sources not loaded this session).
+
+**What shipped.** `B119-CENSUS`, a new `rules_assertions.py` assertion that re-derives the
+bearer-statline-delta candidate population directly from every enhancement description in
+`detachments.json`, independent of the curated `ENHANCEMENT_BEARER_STATS` table, and fails if any
+candidate has no table row. This is the source → table direction; `b119_check.js` already covered
+table → source. The ticket closes with this turn.
+
+**Method reuses B99-CENSUS's clause splitter and conditional-marker vocabulary unchanged** — both
+were built and tested against real source text and there was no reason to re-derive them. Two
+things swapped for the statline case: the characteristic vocabulary (Toughness / Wounds /
+Objective Control / Save / Leadership / Movement, paired with the same add/improve verbs), and the
+bearer-self regex, which cannot reuse B99's as-is because B99's also requires the record to name
+"weapon(s)". A bare "the bearer" wrongly matches "models in **the bearer's unit**" (Master
+Artisan's own text), which would pull a Set D record in as a false positive — found by testing
+against the real 10, the same way S237 found its two. Fixed by requiring the bare form not be
+followed by an `'s unit` suffix, and matching the possessive form the same way with the apostrophe
+made optional, which also catches the source's undotted "bearers" typo (Master Artisan) without a
+second literal.
+
+**Master Artisan's own text is why clauses are not required to be pure.** "Add 1 to the bearers
+Wounds characteristic and add 1 to the Toughness characteristic of models in the bearer's unit"
+carries no comma before its "and", so the splitter (correctly, per its own documented behaviour)
+keeps it as one clause. The bearer-self match fires inside it ("bearers Wounds"), so the record is
+correctly flagged; the Set D half riding along in the same clause is B124's concern and does not
+need separating out here.
+
+**Result matches D332 exactly: 10 records / 6 names.** Negative-tested: removing *Brazen Form*
+from the curated table makes the assertion fail, naming exactly that record.
+
+**B123's population pinned in the same assertion, following B99-CENSUS's Chaos-Daemons-shorthand
+idiom** — a second, real population that instead SETS the bearer's statline to an absolute value
+or grants Feel No Pain is derived and counted, not silently read as "no match", because it is a
+known and deliberately unhandled gap (B123, blocked on Ryan's display-precedence call) rather than
+an absence of source content. *Living Carapace* and *Brazen Form* match this shape too (both also
+grant Feel No Pain) but already carry an `ENHANCEMENT_BEARER_STATS` row from the delta population,
+so they are excluded from the B123 count — counting them again would double-book a record that is
+only partially unhandled.
+
+**Re-derived count: 25 records / 11 names, matching B123's banked figures — but 11 armies, not
+the 10 recorded in `OPEN_ITEMS_BACKLOG.md`'s B123 entry.** Every army in the B123 set also carries
+an unrelated record from the delta population, so removing the two Set-C overlaps drops no army
+from the list. `OPEN_ITEMS_BACKLOG.md`'s B123 entry corrected from 10 to 11 armies in this turn —
+the same kind of correction D330 made to D329's Set A2 count, source-first rather than carried
+forward.
+
+**Baseline at open:** 30/30 gates pass (5 tier-B skipped), `--fetch`. All nine S238 hashes
+verified against the handoff table, against a freshly fetched repo.

@@ -3,9 +3,15 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S238 (up from 21 — B123 and B124 opened this session;
-nothing closed, B119's tooling half still outstanding): B116, B119, B120, B122, B123, B124, B97,
-B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **22 open** as of S239 (down from 23 — B119's tooling half shipped and
+the ticket closes; nothing added): B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94,
+B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+Tooling-only turn (D333): B119's tooling half shipped and the ticket closes — a new
+`rules_assertions.py` assertion (`B119-CENSUS`) re-derives the bearer-statline-delta population
+from source, independent of `ENHANCEMENT_BEARER_STATS`, matching D332's 10/6 exactly and
+negative-tested. B123's absolute/Feel-No-Pain population pinned in the same assertion as a known,
+deliberately unhandled gap; re-derivation found it is 25 records / 11 names / 11 armies, not the
+10 armies originally recorded — B123's entry corrected.
 Engine-only turn (D332): B119's engine half shipped — an assigned enhancement's unconditional
 change to the bearer's own statline now reaches `buildStatTable` (10 records / 6 names / 8 armies,
 re-derived from source at build time and matching D329 exactly). `index.html` v6.22, new
@@ -624,56 +630,6 @@ allied inclusion generally.
 — **CLOSED S216 (D310); tooling half D309, data half D310**
 See Closed / Shipped for full history.
 
-### B119 — Enhancement-conferred bearer statline changes never reach the stat table — **NEW S235 (D329); ENGINE HALF SHIPPED S238 (D332); engine; S; split out of B99; tooling half open**
-
-**S238 (D332), engine half shipped.** Census re-derived from `detachments.json` at build time
-rather than carried forward from D329, and it confirms D329 exactly: **10 records / 6 names /
-8 armies**, every one an "add 1" or "improve … by 1" on Toughness, Wounds or Objective Control.
-`ENHANCEMENT_BEARER_STATS` (curated, B113/B99 key shape), `b119Compose`, `b119BearerStatMode`,
-`b119StatCtx` and the `buildStatTable` changes shipped in `index.html` v6.22, with a new
-`b119_check.js` harness. **Still open: the tooling half** — a `rules_assertions.py` census
-assertion in `B99-CENSUS`'s shape, source → table, in its own session.
-
-What the build settled, none of it assumed:
-- **No overlap with `ENHANCEMENT_WEAPON_EFFECTS`.** None of the 10 keys is in B99's table, so
-  nothing composes.
-- **Seven of the ten carry a second, conditional clause** handing the same +1 Objective Control
-  to the rest of the unit once per battle. The bearer half is unconditional and is rendered; the
-  once-per-battle half is Set B and is not.
-- **T, W and OC are plain integers on every model group in the shipped data**, so the applier
-  computes where B99's composes. Re-checked by the harness each run rather than trusted.
-- **The delta lands on a SET value, not the printed one** — 40K applies modifiers after
-  characteristics that are set, so a wargear-set Wounds of 6 plus a +1 enhancement reads 7.
-- **Bearer attribution is answerable more precisely here than for weapons.** The stat table
-  renders one table per statline group, so a retinue group gets *nothing* rather than an
-  asterisk. Dark Apostle, Dark Commune and Traitor Enforcer write to statline group 0 and
-  nothing to group 1; Ravenwing Command Squad — one statline group, three models, one of them
-  the Character — takes the asterisk and never a value.
-- **Save, Leadership and Movement carry no delta record anywhere in the source**, so the applier
-  implements T/W/OC only. Save in particular would need the AP sign rule's mirror image
-  ("improve the Save characteristic" means a *lower* number); `b119_check` fails if a record ever
-  needs a characteristic the applier does not implement, rather than guessing the sign.
-- **All six names are also B93 instances** — every one carries a bearer restriction in its own
-  text ("World Eaters Monster model only", "Haemonculus model only", "Chaos Lord model only",
-  "Adeptus Astartes Terminator model only") and none is in `ENHANCEMENT_BEARER_RESTRICTIONS`,
-  which B113 scoped to enhancements carrying a `LEADER:` line. Pre-existing, logged under B93,
-  not created by B119.
-
-Set C of B99's census: 10 enhancement records across 8 armies, 6 distinct names (*Brazen Form*,
-*Disciple of Rhetoricus*, *Iron Laurel*, *Living Carapace*, *Master Artisan*, *Rites of War*)
-confer an unconditional change to the bearer's own statline — Toughness, Wounds, Objective
-Control, Save — and none of it reaches `buildStatTable`. Same root cause as B99 (no path from an
-assigned enhancement to any rendered characteristic), different target.
-
-Materially cheaper than B99 because the machinery already exists: `conferredStats`,
-`activeStatOverrides` and `activeOtherOptionOverrides` already merge overrides into the stat
-table, and `buildStatTable` already renders an asterisk-and-legend. The one real difference is
-that the existing reader (`statOverrideFromText`) handles only **absolute** "characteristic of N"
-sets, while these are **relative** "+1" deltas, so it needs a delta path alongside the set path.
-Deliberately not folded into B99's engine turn: B99 is already a full turn, and mixing a stat-table
-change into a weapon-table change makes bisection harder for no gain. Build after B99 so it can
-reuse the same curated table.
-
 ### B120 — Enhancements that modify other models' weapons in the bearer's unit — **NEW S235 (D329); engine; L; split out of B99**
 Set D of B99's census: 19 records across 8 armies, 10 distinct names (*Arcane Might*, *Blades of
 Valour*, *Champion of the Feast*, *Elder's Guidance*, *Immolator*, *Incendiary Animus*,
@@ -693,12 +649,16 @@ its bearer half and this ticket completes it. Needs its own scoping turn before 
 ### B123 — Bearer statline changes that SET a value or grant Feel No Pain are uncensused and unrendered — **NEW S238 (D332); engine; S–M; decision-blocked on display precedence**
 Found during B119's build. `B99_SCOPE.md` §1's census table has five rows — Sets A, A2, B, C, D —
 and none of them covers an enhancement that sets the bearer's own statline to an **absolute**
-value or grants it an ability. **25 records / 11 names / 10 armies** take that shape and are as
+value or grants it an ability. **25 records / 11 names / 11 armies** take that shape and are as
 unrendered today as Set C was: *Artificer Armour* and *Armour of Antoninus* ("Save characteristic
 of 2+" plus Feel No Pain 5+), *Artisan of War*, *Blood-Forged Armour*, *Leechbite Plate* (Save
 sets), *Flowing Flesh* ("Wounds characteristic of 5" plus Feel No Pain 4+), and *Iron Resolve*,
 *The Flesh Is Weak*, *Intoxicating Elixir*, *Revolting Regeneration*, *Fenrisian Grit* (Feel No
-Pain grants only). Derived this session from `detachments.json`, not carried forward.
+Pain grants only). Derived this session from `detachments.json`, not carried forward. Army count
+corrected from 10 to 11 at S239 (D333): re-derivation for `B119-CENSUS` found every one of the 11
+armies also carries an unrelated record from B119's own delta population, so no army drops out
+even after excluding *Living Carapace* and *Brazen Form* (which match this shape too but already
+have an `ENHANCEMENT_BEARER_STATS` row and are not double-booked here).
 
 Deliberately excluded from B119 rather than folded in, despite landing on the same
 `buildStatTable` cells and needing no new render machinery. **The reason is a decision, not a
@@ -1402,6 +1362,40 @@ match both over- and under-matching against the source's inconsistent phrasing, 
 ability regex that excluded `+` and so missed grants like `[ANTI-VEHICLE 4+]`). Chaos Daemons'
 shorthand records are detected and reported skipped rather than silently passed. `B99_SCOPE.md`
 §1/§7 corrected to the final 57/23/78/43 in the same turn.
+
+### B119 — Enhancement-conferred bearer statline changes never reach the stat table — **NEW S235 (D329); CLOSED S239 (D333); engine half D332, tooling half D333; split out of B99**
+
+Set C of B99's census: 10 enhancement records across 8 armies, 6 distinct names (*Brazen Form*,
+*Disciple of Rhetoricus*, *Iron Laurel*, *Living Carapace*, *Master Artisan*, *Rites of War*)
+confer an unconditional change to the bearer's own statline — Toughness, Wounds, Objective
+Control — and none of it reached `buildStatTable`. Same root cause as B99, different target.
+
+**S238 — engine half shipped (D332).** Census re-derived from `detachments.json` at build time
+rather than carried forward from D329, and it confirmed D329 exactly: 10 records / 6 names / 8
+armies, every one an "add 1" or "improve … by 1". `ENHANCEMENT_BEARER_STATS` (curated, B113/B99
+key shape), `b119Compose`, `b119BearerStatMode`, `b119StatCtx` and the `buildStatTable` changes
+shipped in `index.html` v6.22, with new harness `b119_check.js`. The delta lands on a SET value,
+not the printed one; T/W/OC compute rather than compose (plain integers throughout, re-checked by
+the harness each run); a retinue statline group gets nothing rather than an asterisk, while
+*Ravenwing Command Squad* gets the asterisk and never a value; Save/Leadership/Movement
+deliberately unimplemented with a gate rather than a guessed sign. Two populations D329 never
+censused were found and banked: **B123** (25 records that SET a bearer statline value or grant
+Feel No Pain) and **B124** (*Master Artisan*'s unit-wide Toughness half). All six names also carry
+an unenforced "X model only" bearer restriction, corroborating **B93** rather than creating a new
+finding.
+
+**S239 — tooling half shipped (D333), closing the ticket.** New `rules_assertions.py` assertion
+`B119-CENSUS`: re-derives the bearer-statline-delta population directly from `detachments.json`
+descriptions, independent of the curated table, and fails if any candidate has no table row — the
+source → table direction, complementing `b119_check.js`'s table → source checks. Matches D332
+exactly (10/6), negative-tested by removing *Brazen Form* from the table. Reuses B99-CENSUS's
+clause splitter and conditional-marker vocabulary unchanged; the bearer-self regex could not reuse
+B99's as-is (B99's also requires the clause to name a weapon), so a bare "the bearer" wrongly
+matching "models in **the bearer's unit**" (Master Artisan's own Set D half) was excluded by
+requiring the bare form not be followed by an `'s unit` suffix. B123's absolute/Feel-No-Pain
+population pinned in the same assertion as a known, deliberately unhandled gap, following B99's
+Chaos-Daemons-shorthand idiom — re-derived at 25 records / 11 names, matching the banked figures,
+but **11 armies, not the 10 originally recorded**; B123's backlog entry corrected.
 
 ### B121 — Six scope documents are absent from the manifest's GUARDED list — **NEW S235 (D329); CLOSED S237 (D331)**
 `pipeline_manifest.py`'s GUARDED list carried `CSM_BUILD_SCOPE.md`, `E1_DETACHMENT_SCOPE.md`,

@@ -2374,6 +2374,22 @@ ASSERTIONS = [
      'detachments.json enhancement descriptions vs index.html ENHANCEMENT_WEAPON_EFFECTS (B99-CENSUS, D330)',
      lambda S: b99_source_census_matches_curated_table(S)),
 
+    # ── B119-CENSUS (S239). B119's engine half (D332, S238) shipped a curated
+    # ENHANCEMENT_BEARER_STATS table; this is the source -> table direction, same
+    # reason as B99-CENSUS: without it the table rots silently the moment a later
+    # faction lands an enhancement with an unhandled bearer-statline shape.
+    ('B119-CENSUS',
+     'Every enhancement record in detachments.json whose description carries an '
+     "unconditional numeric delta to the bearer's own Toughness / Wounds / Objective "
+     'Control / Save / Leadership / Movement has a row in ENHANCEMENT_BEARER_STATS. The '
+     'source-derived population is exactly 10 records (6 names, 8 armies) — matching '
+     "D332 exactly. The 25-record population that instead SETS the bearer's statline to "
+     'an absolute value or grants it Feel No Pain (B123, decision-blocked, deliberately '
+     'unhandled) is pinned separately so it reads as a known and counted gap rather than '
+     'silently passing as a non-match.',
+     'detachments.json enhancement descriptions vs index.html ENHANCEMENT_BEARER_STATS (B119-CENSUS, D332)',
+     lambda S: b119_source_census_matches_curated_table(S)),
+
 ]
 
 
@@ -4408,6 +4424,145 @@ def b99_source_census_matches_curated_table(S):
                   f'{got[0]}/{got[1]}, Set A2 {got[2]}/{got[3]}, union {got[4]}/{got[5]}; '
                   f'{len(skipped_cd)} Chaos Daemons shorthand record(s) skipped (B122, cannot '
                   f'match the shape) rather than silently counted as a pass')
+
+
+def b119_source_census_matches_curated_table(S):
+    """B119 tooling turn (S239). Source -> table direction, the complement of b119_check.js's
+    table -> source check: re-derives the bearer-statline-delta candidate population from every
+    enhancement description in detachments.json, independently of the curated
+    ENHANCEMENT_BEARER_STATS table, and fails if any candidate has no row — so a faction built
+    later cannot silently introduce an unhandled bearer statline delta.
+
+    Method, reusing B99-CENSUS's clause splitter and conditional-marker vocabulary unchanged
+    (both tested against real source text; no reason to re-derive them), with two things swapped
+    for the statline case:
+      - Characteristic vocabulary is Toughness / Wounds / Objective Control / Save / Leadership /
+        Movement (not Strength/Attacks/AP/Damage), paired with the same add/improve verb pair.
+      - The bearer-self regex cannot reuse B99's bearer_re unchanged: B99's needs the record to
+        also name "weapon(s)", which statline deltas never do, and a bare "the bearer" wrongly
+        matches "models in the bearer's unit" (Master Artisan's own text), pulling a Set D record
+        in as a false positive. Found at S238 by testing against the real 10, exactly the way S237
+        found its two: the bare form ("... of the bearer by 1") is matched only when not followed
+        by an ('s )unit suffix, and the possessive form is matched the same way — apostrophe made
+        optional, which also catches the source's undotted "bearers" typo (Master Artisan) the
+        same way B99's alternation did, without needing a second literal.
+
+    Master Artisan's own text is the reason clauses are not required to be pure: "Add 1 to the
+    bearers Wounds characteristic and add 1 to the Toughness characteristic of models in the
+    bearer's unit" has no comma before its "and", so the splitter (correctly, per B99-CENSUS's own
+    documented behaviour) keeps it as one clause. The bearer-self alternative matches inside it
+    ("bearers Wounds"), so the record is correctly flagged — the Set D half riding along in the
+    same clause is B124's concern, not this assertion's, and does not need separating out here.
+
+    A second population — enhancement records that instead SET the bearer's statline to an
+    absolute value, or grant it Feel No Pain, rather than applying a delta — is real source
+    content of the same general shape and is deliberately unhandled (B123, blocked on Ryan's
+    display-precedence call). Following B99-CENSUS's Chaos Daemons-shorthand idiom, that
+    population is derived and counted here too, so the gap is visible and pinned rather than
+    silently read as "no match". Two of its matches — Living Carapace and Brazen Form — also
+    carry an unconditional delta clause and so already have an ENHANCEMENT_BEARER_STATS row from
+    the first population; they are excluded from the B123 count to avoid double-booking a record
+    that is only partially unhandled (its delta ships, its Feel No Pain grant does not).
+
+    Re-deriving this population this session (source-first verification, not carried forward)
+    found 25 records / 11 names matching B123's banked figures exactly, but **11 armies, not the
+    10 recorded in `OPEN_ITEMS_BACKLOG.md`'s B123 entry** — every B123 army also carries an
+    unrelated record from the first population, so no army drops out when the two Set-C overlaps
+    are excluded. Flagged as a correction to the banked ticket text, the same way D330 corrected
+    D329's Set A2 count; it does not block this build.
+    """
+    dets = S.detachments().get('detachments', {})
+    ix = S.index_html()
+    m = re.search(r'const ENHANCEMENT_BEARER_STATS = \{(.*?)\n  \};', ix, re.S)
+    if not m:
+        return False, 'ENHANCEMENT_BEARER_STATS is no longer locatable in index.html'
+    table_keys = set(re.findall(r'"([^"]+::[^"]+)":', m.group(1)))
+
+    marker_re = re.compile(
+        r'\b(once per|each time|while|until the end|at the start of|at the end of|'
+        r'instead|when|after|if|is selected to|can use this Enhancement)\b', re.I)
+    statword_re = re.compile(r'\b(toughness|wounds|objective control|save|leadership|movement)\b', re.I)
+    verb_re = re.compile(r'\b(improve|add)\b', re.I)
+    bearer_re = re.compile(r"\bthe bearer\b(?!'?s\s+unit)|\bbearer'?s\b(?!\s+unit)", re.I)
+    absolute_re = re.compile(r'characteristic of \d', re.I)
+    fnp_re = re.compile(r'feel no pain \d\+', re.I)
+
+    def norm(s):
+        return re.sub(r'[^a-z0-9]', '', s.lower())
+
+    def split_clauses(text):
+        clauses = []
+        for sent in re.split(r'\.\s+', text.strip()):
+            sent = sent.strip().rstrip('.')
+            if not sent:
+                continue
+            for part in re.split(r',\s+and\s+', sent):
+                if ';' in part:
+                    subparts = re.split(r';\s*', part)
+                    merged = [subparts[0]]
+                    for sp in subparts[1:]:
+                        if marker_re.search(merged[-1]):
+                            merged[-1] = merged[-1] + '; ' + sp
+                        else:
+                            merged.append(sp)
+                    clauses.extend(merged)
+                else:
+                    clauses.append(part)
+        return clauses
+
+    def classify(desc):
+        delta = absolute_or_fnp = False
+        for clause in split_clauses(desc):
+            if marker_re.search(clause):
+                continue
+            if not bearer_re.search(clause):
+                continue
+            if statword_re.search(clause) and verb_re.search(clause):
+                delta = True
+            if (statword_re.search(clause) and absolute_re.search(clause)) or fnp_re.search(clause):
+                absolute_or_fnp = True
+        return delta, absolute_or_fnp
+
+    delta_set, b123_set, skipped_cd = set(), set(), []
+    for key, det in dets.items():
+        army = key.split('|')[0]
+        for e in det.get('enhancements', []):
+            desc = (e.get('description') or '').strip()
+            name = e.get('name', '')
+            if not desc:
+                continue
+            if army == 'Chaos Daemons' and norm(desc).startswith(norm(name)):
+                skipped_cd.append(f'{key}::{name}')
+                continue
+            delta, absolute_or_fnp = classify(desc)
+            fullkey = f'{key}::{name}'
+            if delta:
+                delta_set.add(fullkey)
+            if absolute_or_fnp:
+                b123_set.add(fullkey)
+
+    missing = sorted(delta_set - table_keys)
+    if missing:
+        return False, (f'{len(missing)} record(s) match the bearer-statline-delta shape but '
+                       f'have no ENHANCEMENT_BEARER_STATS row: {missing[:5]}')
+
+    b123_only = b123_set - delta_set
+    delta_names = {k.split('::', 1)[1] for k in delta_set}
+    b123_names = {k.split('::', 1)[1] for k in b123_only}
+    b123_armies = {k.split('|')[0] for k in b123_only}
+    got = (len(delta_set), len(delta_names), len(b123_only), len(b123_names), len(b123_armies))
+    want = (10, 6, 25, 11, 11)
+    if got != want:
+        return False, (f'census drifted from the D332-pinned figures: got delta '
+                       f'{got[0]}/{got[1]}, B123 {got[2]}/{got[3]}/{got[4]} armies '
+                       f'(skipped {len(skipped_cd)} Chaos Daemons shorthand record(s)); '
+                       f'want delta 10/6, B123 25/11/11 armies')
+
+    return True, (f'source-derived census matches the curated table exactly: bearer-statline '
+                  f'delta {got[0]}/{got[1]}; B123 absolute/Feel-No-Pain population '
+                  f'{got[2]}/{got[3]}/{got[4]} armies (decision-blocked, deliberately unhandled), '
+                  f'{len(skipped_cd)} Chaos Daemons shorthand record(s) skipped rather than '
+                  f'silently counted as a pass')
 
 
 def e4b_engine_functions_defined_once(S):
