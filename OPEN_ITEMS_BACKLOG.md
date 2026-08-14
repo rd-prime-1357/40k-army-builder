@@ -3,9 +3,14 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S235 (up from 19 — B119, B120, B121 all opened this
-session; nothing closed): B116, B99, B119, B120, B121, B97, B103, E28, B93, B90, B94, B85, B86,
-B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **23 open** as of S236 (up from 22 — B122 opened this session; nothing
+closed, B99's engine half shipped but its tooling half is still owed): B116, B99, B119, B120,
+B121, B122, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+Engine-only turn (D330): B99's engine half shipped — `index.html` v6.21 now applies an assigned
+enhancement's unconditional bearer-weapon effects to both weapon tables. The re-derived census
+corrects D329: the union is 78 records / 43 names, not 72. B99 stays open for its tooling turn
+(the `rules_assertions.py` census assertion). Chaos Daemons' enhancement descriptions were found
+to be shorthand summaries rather than rule text — banked as B122.
 Scoping-only turn (D329): B99 censused and re-scoped. No engine path exists between an assigned
 enhancement and any rendered weapon characteristic — 57 unconditional bearer-weapon numeric
 records plus 17 unconditional weapon-ability grants (72 union) across 13 of 14 built armies.
@@ -610,7 +615,7 @@ allied inclusion generally.
 — **CLOSED S216 (D310); tooling half D309, data half D310**
 See Closed / Shipped for full history.
 
-### B99 — No enhancement reaches the weapon table: 72 records confer an unconditional change the app never shows — **NEW (Ryan-reported, pre-S194); SCOPED S235 (D329); engine + tooling; M; see `B99_SCOPE.md`**
+### B99 — No enhancement reaches the weapon table: 78 records confer an unconditional change the app never shows — **ENGINE HALF SHIPPED S236 (D330); TOOLING HALF STILL OPEN; see `B99_SCOPE.md`**
 Reported by Ryan via screenshot (Daemon Prince of Tzeentch with Wings, Thousand Sons | Grand
 Coven, *Eldritch Vortex of E'Taph* — "Add 1 to the Strength and Damage characteristics of Psychic
 weapons equipped by the bearer" — showing unmodified weapon stats). **S235 censused the whole
@@ -648,6 +653,30 @@ rather than writing a false value.
 carrier rule, both render sites — `buildWeaponTable` and `loWeaponTable`, which are separate code
 and must agree — plus a new `b99_check.js`), then a tooling turn for the census assertion. Set A2
 folds into the engine turn.
+
+**S236 — engine half shipped (D330).** `index.html` v6.21: curated `ENHANCEMENT_WEAPON_EFFECTS`
+table (78 rows), delta applier, bearer-attribution rule, both render sites, new `b99_check.js`
+(48 checks). Three corrections to the numbers and the plan above, all re-derived from source this
+session:
+
+- **Set A2 is 23 records / 13 names, not 17 / 12; the union is 78 / 43, not 72.** *Eye of the
+  Primarch* targets "the bearer **and** Battleline models in the bearer's unit" — the identical
+  shape to *Blades of Valour*, which S235 counted into Set A. Both are now in.
+- **Set A's 57 / 32 is confirmed exactly.** *Possessed Blade* reads unconditional only because the
+  clause split on `;` orphans it from its governing "At the start of the battle, select one melee
+  weapon"; it modifies one player-chosen weapon and is correctly out.
+- **Trap 3's test was wrong and is not what shipped.** Epic Heroes can never bear an enhancement,
+  so three of the ten units listed are not at risk; and the statline-group test misses *Ravenwing
+  Command Squad*, which has one statline group but three loadout groups and three models. The
+  shipped test is on loadout groups and live model counts.
+
+**Still open: the tooling turn.** The `rules_assertions.py` census assertion (`B99_SCOPE.md` §5),
+pinning **57 / 23 / 78** and failing on any Set A/A2 record with no table row. Without it the
+curated table rots the moment a new faction lands. Must not be folded into an engine session.
+
+**Ryan's four display decisions were unanswered at build time**, so the build proceeded on
+`B99_SCOPE.md` §6's recommendations, as agreed. All four remain reversible; New Recruit
+screenshots would still settle the idiom.
 
 **Open for Ryan** (all reversible; build proceeds on the recommendation otherwise): change the
 printed numbers at all (recommend yes, Set A, configured surfaces only); the display idiom
@@ -701,6 +730,32 @@ verify each is actually present in the repo first, since GUARDED entries for abs
 gate permanently red. Not done at S235 because registering existing files is a tooling change and
 S235 was scoping-only. `B99_SCOPE.md` and `SESSION_HANDOFF_235.md` were registered at S235 close as
 part of the standard session-close protocol, so this ticket covers the six older files only.
+
+### B122 — Chaos Daemons enhancement descriptions are shorthand summaries, not rule text — **NEW S236 (D330); data/parser; M**
+Found during the B99 engine build. All 29 Chaos Daemons enhancement records in
+`detachments.json` carry a paraphrase in place of the GW rule text: *Neverblade* reads
+"Neverblade (Tzeentch Monster, +2S, +1A, +1AP on melee weapons, +1 Hit roll)", *A'rgath, the King
+of Blades* reads "(Khorne, melee weapon buffs)", *The Everstave* "(Tzeentch, ranged weapon
+buffs)", *Font of Spores* "(Nurgle Monster, friendly Nurgle units within 6\" improve AP of weapons
+by 1)"; four more (*Apocalyptic Steeds*, *Soul-shattering Charge*, *Swollen with Power*,
+*Bane-forged Weapons*, *Soul-hungry Slaughterers*) are empty strings, and the four SHADOW LEGION
+entries carry only their own names.
+
+**Why it matters beyond B99.** D329 recorded Chaos Daemons as the only built army with no Set A
+or Set A2 record. That is an artefact of the text, not of the army — at least three of these are
+genuine unconditional bearer-weapon effects. The same gap will defeat B119 and B120's censuses,
+and it silently weakens any future source-derived assertion that reads enhancement descriptions:
+a shorthand record cannot fail a shape test it can never match.
+
+**Not fixed in B99.** Nothing was curated from the summaries. *Neverblade*'s paraphrase does carry
+numbers, but encoding them would take a rules fact from a secondary paraphrase rather than from
+source, which is exactly what the source-first rule exists to prevent.
+
+**Shape of the fix.** A source question first, not a parser one: establish whether the held Chaos
+Daemons material (MFM, faction pack, Wahapedia export) contains the real enhancement text at all.
+If it does, this is a `detachment_parser.py` text-source selection bug on the same ground as the
+`text_source` / `description_source` machinery already in `_meta`. If it does not, it is a source
+acquisition item and should be sized as one. A scoping turn should answer that before any build.
 
 ### B97 — Grand Coven detachment rule text renders as a run-on wall of text — **NEW (Ryan-reported, pre-S194); engine/UI or data; scope TBD**
 Ryan-reported via screenshot. Confirmed in `detachments.json`: the `Thousand Sons|GRAND COVEN`

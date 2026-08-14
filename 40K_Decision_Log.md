@@ -13555,3 +13555,84 @@ class the manifest exists for. Registering six existing files is a tooling chang
 belong in a scoping turn; banked as **B121** with the file list above. This session's own two
 new documents (`SESSION_HANDOFF_235.md`, `B99_SCOPE.md`) are registered as part of the standard
 close, which is protocol rather than a tooling change.
+
+---
+
+## D330 — B99 engine turn: enhancement-conferred weapon modifications reach both weapon tables (S236)
+
+**Engine-only turn.** `index.html` v6.20 → v6.21, plus one new harness. No data file changed;
+`repro_check`, `units_repro_check` and `detachments_repro_check` are all byte-for-byte unchanged.
+
+**What shipped.** A curated `ENHANCEMENT_WEAPON_EFFECTS` table keyed `detachment_key + '::' + name`
+— the B113 `ENHANCEMENT_BEARER_RESTRICTIONS` key and shape, deliberately — a delta applier, a
+bearer-attribution rule, and both weapon render sites fed from one shared cell builder. The
+reported case (Thousand Sons | Grand Coven, *Eldritch Vortex of E'Taph* on a Daemon Prince of
+Tzeentch) now shows S+1 and D+1 on the bearer's Psychic weapons.
+
+**The census differs from S235's in one place, and the S235 figure was wrong.** Re-derived from
+`detachments.json` this session rather than carried forward: Set A is **57 records / 32 names**,
+which matches D329 exactly. Set A2 is **23 records / 13 names**, not 17 / 12. The whole difference
+is *Eye of the Primarch* (6 records). D329 counted *Blades of Valour* into Set A and *Eye of the
+Primarch* into Set D only, but the two have identical targeting — "…equipped by the bearer **and
+Battleline models in the bearer's unit**" — and D329's own §4 flags *Blades of Valour* as a
+Set A / Set D straddle without noticing its twin. Including one and excluding the other would be
+arbitrary, so both are in, and the union is **78 records / 43 names**, not 72. The tooling turn's
+census assertion must pin 57 / 23 / 78.
+
+**Set A's boundary was also re-checked, not assumed.** *Possessed Blade* (Emperor's Children |
+Carnival of Excess) reads as unconditional under D329's clause-splitting rule only because the
+split on `;` separates "add 1 to the Attacks characteristic of that weapon" from the "At the start
+of the battle, select one melee weapon" that governs it. It modifies **one player-chosen weapon**,
+which is not knowable at list-building time, and is correctly out. That leaves 32 Set A names,
+which is the figure D329 reported — the two errors happened not to compound.
+
+**Trap 3 was scoped on the wrong test, and the build does not follow it.** D329 §4 says the
+at-risk population is "ten Character/Epic Hero units … loadout-defined with more than one model
+group". Two things are wrong with that as a build instruction. First, **Epic Heroes can never bear
+an enhancement** (`enhancementTypeEligible`), so *Chaplain Grimaldus*, *Fabius Bile* and *Wardens
+of Ultramar* are not at risk at all; the real multi-statline-group Character population is six
+records — *Dark Apostle*, *Dark Commune* and *Traitor Enforcer*, each duplicated across Chaos Space
+Marines and Chaos Daemons. Second, and worse, the statline-group test **misses the one unit that
+actually needs the rule**: *Ravenwing Command Squad* has ONE statline group — `isSingleModelGroup`
+returns true for it — but three loadout groups and three models, only one of which is the
+CHARACTER, and nothing in the data says which. A build following §4 literally would have written a
+modified profile onto all three models. The shipped test is therefore on **loadout groups and live
+model counts**, not statline groups: one model in the build → the bearer; otherwise resolve the
+CHARACTER's statline group through the existing `statGroupScopes` and require it to land on
+exactly one model; otherwise refuse to attribute. `b99_check` pins all three readings against the
+shipped data, including that statline group 0 is the CHARACTER on every multi-group Character unit.
+
+**Display, on D329 §6's recommendations** (Ryan had not answered; all four are reversible). Set A
+numbers change; the idiom is the existing D89/D112 one — the modified value written in gold in the
+cell, no asterisk on a written value, an asterisk instead of a value wherever the row spans models
+the bearer is not, and a legend line beneath the table naming the enhancement; conditional clauses
+get no marker; Set A2 grants ride the same table into the Abilities column.
+
+**Both surfaces cannot drift.** `buildWeaponTable` and `loWeaponTable` are separate code and the
+project has already paid once for that divergence. Rather than police it, both now call one
+function — `b99Cells` — and compute nothing of their own. `b99_check` renders the same weapon
+through both and compares the cells.
+
+**Three engine reading calls, all conservative and all noted rather than referred:**
+- An assignment whose record no longer resolves modifies nothing, matching `enhancementPoints`'s
+  reading — the effect is a property of a record we no longer hold.
+- A `not_offered` assignment (record resolves, detachment deselected) still modifies, because it
+  still costs points. Points and profile stay consistent with each other.
+- A characteristic stored as `'None'` is a real value meaning the weapon has no such
+  characteristic, and is never modified.
+
+**A grant the weapon already carries is not added twice**, and an effect that ends up changing
+nothing renders as no change at all rather than as an empty highlight.
+
+**New finding, opened as B122.** Chaos Daemons' 29 enhancement records carry shorthand summaries
+in place of rule text — *Neverblade* reads "(Tzeentch Monster, +2S, +1A, +1AP on melee weapons, +1
+Hit roll)", *A'rgath, the King of Blades* reads "(Khorne, melee weapon buffs)", *The Everstave*
+"(Tzeentch, ranged weapon buffs)", and four more are empty strings. At least three are genuine Set
+A records that cannot be curated from source, which is why D329 recorded Chaos Daemons as the one
+army with no record in either set — the army has them, our data does not carry the text. Nothing
+was curated from the summaries; encoding numbers from a secondary paraphrase would break the
+source-first rule for the sake of three rows. This is a data/parser gap, not an engine one.
+
+**Sets B, C and D remain out.** C and D are B119 and B120 with their populations already censused.
+The tooling turn that adds the `rules_assertions.py` census assertion is still owed and must not
+be folded into an engine session.

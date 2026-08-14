@@ -989,3 +989,11 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   records + 17 ability-grant records (72 union) across 13 armies, banked Sets C/D as B119/B120,
   corrected B99's "D0-adjacent" framing to display-fidelity, chose the B113 curated-table +
   census-assertion mechanism. `B99_SCOPE.md` written. Six scope docs found unguarded → **B121**.
+- **D330** — B99 engine turn shipped (S236), engine-only. `index.html` v6.21: curated
+  `ENHANCEMENT_WEAPON_EFFECTS` table on the B113 key, delta applier (AP sign inverted, variable
+  A/D composed as strings), bearer-attribution rule on the D105/D112 three-way pattern, both
+  weapon tables fed from one shared cell builder, new `b99_check.js`. Re-derived census corrects
+  D329: Set A2 is 23/13 not 17/12 (*Eye of the Primarch* straddles like *Blades of Valour*), so
+  the union is **78 records / 43 names**, not 72. D329's trap-3 test was on statline groups and
+  missed *Ravenwing Command Squad*; shipped test is on loadout groups and live model counts.
+  Chaos Daemons enhancement text is shorthand, not rule text → **B122**.

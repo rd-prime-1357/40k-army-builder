@@ -2222,7 +2222,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.20';
+  const VERSION = '6.21';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3097,6 +3097,315 @@
     }
     return true;
   }
+
+
+  // ── B99 BEGIN: enhancement-conferred weapon modifications ─────────────────
+  //
+  // An assigned enhancement whose text changes the BEARER'S OWN weapon profile,
+  // unconditionally. 78 records / 43 names across 14 armies, censused from
+  // detachments.json this session. Two shapes, both handled here:
+  //   Set A  — a numeric change to a characteristic   (57 records / 32 names)
+  //   Set A2 — a weapon-ability grant                 (23 records / 13 names)
+  // Cursed Fang and Furnace of Plagues do both, hence 78 and not 80.
+  //
+  // WHY A CURATED TABLE and not a render-time text reader: B99_SCOPE.md §5. The
+  // clause shapes are regular enough that a reader would work for most records
+  // and miss silently on the rest, and the misses are the dangerous ones — the
+  // AP sign rule below, the variable A/D values, Ancient Weapons' anaphora
+  // ("…of those weapons"), and Blades of Valour / Eye of the Primarch, which
+  // name the bearer AND other models in one clause. The key shape is B113's
+  // ENHANCEMENT_BEARER_RESTRICTIONS, deliberately: same key, same discipline.
+  //
+  // OUT OF SCOPE, banked: conditional effects (Set B); the bearer's own statline
+  // (Set C, B119); other models' weapons (Set D, B120). Chaos Daemons carries
+  // real bearer weapon buffs — Neverblade, A'rgath, The Everstave — but its
+  // enhancement descriptions are shorthand summaries rather than rule text, so
+  // no record of theirs can be curated from source (B122).
+  //
+  // `mod` values are IMPROVEMENT MAGNITUDES exactly as the rule text writes them.
+  // On S, A and D "improve" and "add" both mean add. On Armour Penetration
+  // "improve by 1" means MORE NEGATIVE (-1 becomes -2), so the applier subtracts.
+  // No source record pairs "add" with Armour Penetration; b99_check pins that, so
+  // a future one fails a gate instead of rendering with the sign backwards.
+  const ENHANCEMENT_WEAPON_EFFECTS = {
+    "Black Templars|BASTION TASK FORCE::Blades of Valour":
+      { sel: "melee", mod: { AP: 1 } },
+    "Black Templars|BASTION TASK FORCE::Eye of the Primarch":
+      { sel: "ranged", gr: ["Precision"] },
+    "Black Templars|FIRESTORM ASSAULT FORCE::War-tempered Artifice":
+      { sel: "melee", mod: { S: 3 } },
+    "Black Templars|GLADIUS TASK FORCE::The Honour Vehement":
+      { sel: "melee", mod: { A: 1, S: 1 } },
+    "Black Templars|GODHAMMER ASSAULT FORCE::Paragon of Fury":
+      { sel: "melee", mod: { S: 2 } },
+    "Black Templars|HEADHUNTER TASK FORCE::Firestorm Coordinators":
+      { sel: "ranged", gr: ["Sustained Hits 1"] },
+    "Black Templars|STORMLANCE TASK FORCE::Fury of the Storm":
+      { sel: "melee", mod: { S: 1, AP: 1 } },
+    "Black Templars|WRATHFUL PROCESSION::Benediction of Fury":
+      { sel: "melee", gr: ["Devastating Wounds"] },
+    "Blood Angels|1ST COMPANY TASK FORCE::The Imperium's Sword":
+      { sel: "melee", mod: { A: 1 } },
+    "Blood Angels|BASTION TASK FORCE::Blades of Valour":
+      { sel: "melee", mod: { AP: 1 } },
+    "Blood Angels|BASTION TASK FORCE::Eye of the Primarch":
+      { sel: "ranged", gr: ["Precision"] },
+    "Blood Angels|FIRESTORM ASSAULT FORCE::War-tempered Artifice":
+      { sel: "melee", mod: { S: 3 } },
+    "Blood Angels|GLADIUS TASK FORCE::The Honour Vehement":
+      { sel: "melee", mod: { A: 1, S: 1 } },
+    "Blood Angels|HEADHUNTER TASK FORCE::Firestorm Coordinators":
+      { sel: "ranged", gr: ["Sustained Hits 1"] },
+    "Blood Angels|STORMLANCE TASK FORCE::Fury of the Storm":
+      { sel: "melee", mod: { S: 1, AP: 1 } },
+    "Blood Angels|THE ANGELIC HOST::Archangel's Shard":
+      { sel: "melee", gr: ["Anti-Chaos 5+", "Lance"] },
+    "Blood Angels|THE ANGELIC HOST::Artisan of War":
+      { sel: "all", mod: { AP: 1 } },
+    "Chaos Space Marines|CREATIONS OF BILE::Prime Test Subject":
+      { sel: "melee", mod: { D: 1 } },
+    "Chaos Space Marines|CREATIONS OF BILE::Surgical Precision":
+      { sel: "melee", gr: ["Precision"] },
+    "Chaos Space Marines|DECEPTORS::Cursed Fang":
+      { sel: "melee", mod: { AP: 1 }, gr: ["Precision"] },
+    "Chaos Space Marines|FELLHAMMER SIEGE-HOST::Iron Artifice":
+      { sel: "all", gr: ["Anti-Vehicle 4+", "Anti-Fortification 4+"] },
+    "Chaos Space Marines|PACTBOUND ZEALOTS::Talisman of Burning Blood":
+      { sel: "melee", mod: { A: 1, S: 1 } },
+    "Chaos Space Marines|WARPSTRIKE CHAMPIONS::Tzagulla":
+      { sel: "all", mod: { A: 1, S: 1, AP: 1 } },
+    "Dark Angels|1ST COMPANY TASK FORCE::The Imperium's Sword":
+      { sel: "melee", mod: { A: 1 } },
+    "Dark Angels|BASTION TASK FORCE::Blades of Valour":
+      { sel: "melee", mod: { AP: 1 } },
+    "Dark Angels|BASTION TASK FORCE::Eye of the Primarch":
+      { sel: "ranged", gr: ["Precision"] },
+    "Dark Angels|COMPANY OF HUNTERS::Master-crafted Weapon":
+      { sel: "melee", gr: ["Precision"] },
+    "Dark Angels|FIRESTORM ASSAULT FORCE::War-tempered Artifice":
+      { sel: "melee", mod: { S: 3 } },
+    "Dark Angels|GLADIUS TASK FORCE::The Honour Vehement":
+      { sel: "melee", mod: { A: 1, S: 1 } },
+    "Dark Angels|HEADHUNTER TASK FORCE::Firestorm Coordinators":
+      { sel: "ranged", gr: ["Sustained Hits 1"] },
+    "Dark Angels|INNER CIRCLE TASK FORCE::Champion of the Deathwing":
+      { sel: "melee", gr: ["Lethal Hits"] },
+    "Dark Angels|LION'S BLADE TASK FORCE::Calibanite Armaments":
+      { sel: "melee", mod: { D: 1 } },
+    "Dark Angels|STORMLANCE TASK FORCE::Fury of the Storm":
+      { sel: "melee", mod: { S: 1, AP: 1 } },
+    "Dark Angels|UNFORGIVEN TASK FORCE::Weapons of the First Legion":
+      { sel: "melee", mod: { A: 1, S: 1, D: 1 } },
+    "Dark Angels|WRATH OF THE ROCK::Ancient Weapons":
+      { sel: "melee", mod: { S: 2, AP: 1, D: 1 } },
+    "Death Guard|TALLYBAND SUMMONERS::Fell Harvester":
+      { sel: "melee", mod: { A: 2 } },
+    "Death Guard|VIRULENT VECTORIUM::Furnace of Plagues":
+      { sel: "melee", mod: { S: 1, A: 1 }, gr: ["Devastating Wounds"] },
+    "Deathwatch|1ST COMPANY TASK FORCE::The Imperium's Sword":
+      { sel: "melee", mod: { A: 1 } },
+    "Deathwatch|BASTION TASK FORCE::Blades of Valour":
+      { sel: "melee", mod: { AP: 1 } },
+    "Deathwatch|BASTION TASK FORCE::Eye of the Primarch":
+      { sel: "ranged", gr: ["Precision"] },
+    "Deathwatch|BLACK SPEAR TASK FORCE::Thief of Secrets":
+      { sel: "melee", mod: { S: 1, D: 1, AP: 1 } },
+    "Deathwatch|FIRESTORM ASSAULT FORCE::War-tempered Artifice":
+      { sel: "melee", mod: { S: 3 } },
+    "Deathwatch|GLADIUS TASK FORCE::The Honour Vehement":
+      { sel: "melee", mod: { A: 1, S: 1 } },
+    "Deathwatch|HEADHUNTER TASK FORCE::Firestorm Coordinators":
+      { sel: "ranged", gr: ["Sustained Hits 1"] },
+    "Deathwatch|STORMLANCE TASK FORCE::Fury of the Storm":
+      { sel: "melee", mod: { S: 1, AP: 1 } },
+    "Drukhari|COVENITE COTERIE::Master Nemesine":
+      { sel: "all", gr: ["Anti-Beast 2+", "Anti-Monster 4+"] },
+    "Drukhari|REALSPACE RAIDERS::Eye of Spite":
+      { sel: "melee", mod: { A: 1, AP: 1 } },
+    "Drukhari|SPECTACLE OF SPITE::Morghenna's Curse":
+      { sel: "melee", mod: { AP: 1, D: 1 } },
+    "Emperor's Children|COURT OF THE PHOENICIAN::Spiritsliver":
+      { sel: "melee", mod: { S: 1, A: 1 } },
+    "Emperor's Children|PEERLESS BLADESMEN::Distortion":
+      { sel: "melee", mod: { A: 1, D: 1 } },
+    "Emperor's Children|SLAANESH'S CHOSEN::Slayer of Champions":
+      { sel: "melee", gr: ["Precision"] },
+    "Grey Knights|HALLOWED CONCLAVE::Sanctic Reaper":
+      { sel: "melee", mod: { A: 3 } },
+    "Grey Knights|WARPBANE TASK FORCE::Radiant Champion":
+      { sel: "melee", gr: ["Precision"] },
+    "Space Marines|1ST COMPANY TASK FORCE::The Imperium's Sword":
+      { sel: "melee", mod: { A: 1 } },
+    "Space Marines|BASTION TASK FORCE::Blades of Valour":
+      { sel: "melee", mod: { AP: 1 } },
+    "Space Marines|BASTION TASK FORCE::Eye of the Primarch":
+      { sel: "ranged", gr: ["Precision"] },
+    "Space Marines|BLADE OF ULTRAMAR::Oath of Macragge":
+      { sel: "melee", mod: { A: 1, S: 1 } },
+    "Space Marines|EMPEROR'S SHIELD::Champion of the Feast":
+      { sel: "melee", mod: { A: 1 } },
+    "Space Marines|FIRESTORM ASSAULT FORCE::War-tempered Artifice":
+      { sel: "melee", mod: { S: 3 } },
+    "Space Marines|FORGEFATHER'S SEEKERS::War-tempered Artifice":
+      { sel: "melee", mod: { S: 3 } },
+    "Space Marines|GLADIUS TASK FORCE::The Honour Vehement":
+      { sel: "melee", mod: { A: 1, S: 1 } },
+    "Space Marines|HAMMER OF AVERNII::Spiritus Ferrum":
+      { sel: "melee", mod: { A: 1 } },
+    "Space Marines|HEADHUNTER TASK FORCE::Firestorm Coordinators":
+      { sel: "ranged", gr: ["Sustained Hits 1"] },
+    "Space Marines|SPEARPOINT TASK FORCE::Spearpoint Paragon":
+      { sel: "melee", mod: { S: 1, AP: 1 } },
+    "Space Marines|STORMLANCE TASK FORCE::Fury of the Storm":
+      { sel: "melee", mod: { S: 1, AP: 1 } },
+    "Space Wolves|1ST COMPANY TASK FORCE::The Imperium's Sword":
+      { sel: "melee", mod: { A: 1 } },
+    "Space Wolves|BASTION TASK FORCE::Blades of Valour":
+      { sel: "melee", mod: { AP: 1 } },
+    "Space Wolves|BASTION TASK FORCE::Eye of the Primarch":
+      { sel: "ranged", gr: ["Precision"] },
+    "Space Wolves|FIRESTORM ASSAULT FORCE::War-tempered Artifice":
+      { sel: "melee", mod: { S: 3 } },
+    "Space Wolves|GLADIUS TASK FORCE::The Honour Vehement":
+      { sel: "melee", mod: { A: 1, S: 1 } },
+    "Space Wolves|HEADHUNTER TASK FORCE::Firestorm Coordinators":
+      { sel: "ranged", gr: ["Sustained Hits 1"] },
+    "Space Wolves|SAGA OF THE BOLD::Braggart's Steel":
+      { sel: "melee", mod: { S: 2 } },
+    "Space Wolves|SAGA OF THE HUNTER::Feral Rage":
+      { sel: "melee", mod: { A: 1 } },
+    "Space Wolves|STORMLANCE TASK FORCE::Fury of the Storm":
+      { sel: "melee", mod: { S: 1, AP: 1 } },
+    "Thousand Sons|GRAND COVEN::Eldritch Vortex of E'Taph":
+      { sel: "psychic", mod: { S: 1, D: 1 } },
+    "World Eaters|BERZERKER WARBAND::Berzerker Glaive":
+      { sel: "melee_no_extra", mod: { A: 1, D: 1 } },
+    "World Eaters|KHORNE DAEMONKIN::Blade of Endless Bloodshed":
+      { sel: "melee", mod: { A: 1, S: 1, D: 1 } },
+    "World Eaters|VESSELS OF WRATH::Archslaughterer":
+      { sel: "melee", mod: { AP: 1 } },
+  };
+
+  // The assignment stored on an entry is {name, detachment_key}. An assignment
+  // whose record no longer resolves contributes nothing — the same reading
+  // enhancementPoints takes, and for the same reason: the effect is a property of
+  // a record we no longer hold, and inventing one shows a number the player can
+  // neither explain nor fix.
+  function enhancementWeaponEffect(entry) {
+    const a = entry && entry.enhancement;
+    if (!a || !a.name) return null;
+    if (!enhancementRecord(a.name, a.detachment_key)) return null;
+    return ENHANCEMENT_WEAPON_EFFECTS[a.detachment_key + '::' + a.name] || null;
+  }
+
+  // Which of the bearer's weapons an effect reaches. Every selector the source
+  // set uses answers from data already held: weapon_type is Ranged or Melee, and
+  // Psychic and Extra Attacks are weapon_ability_names entries.
+  function b99Selects(sel, w) {
+    if (!w) return false;
+    const ab = w.weapon_ability_names || [];
+    if (sel === 'all')     return true;
+    if (sel === 'melee')   return w.weapon_type === 'Melee';
+    if (sel === 'ranged')  return w.weapon_type === 'Ranged';
+    if (sel === 'psychic') return ab.indexOf('Psychic') >= 0;
+    if (sel === 'melee_no_extra')
+      return w.weapon_type === 'Melee' && ab.indexOf('Extra Attacks') < 0;
+    return false;
+  }
+
+  // A characteristic that is not a number is composed, not computed. A and D hold
+  // dice expressions (D6, D3+1, 2D6+2, 3D3) as strings: D6 improved by 1 is
+  // "D6+1" — a shape already present in the data — and never 7. A trailing
+  // constant is folded rather than chained, so D6+3 improved by 1 reads D6+4.
+  // 'None' is a real stored value meaning the weapon has no such characteristic,
+  // and is never touched.
+  function b99Compose(val, delta) {
+    if (val == null) return val;
+    const s = String(val).trim();
+    if (s === '' || s === 'None') return val;
+    if (/^-?\d+$/.test(s)) return String(Number(s) + delta);
+    const m = s.match(/^(.*[^+\-\s])\s*([+-])\s*(\d+)$/);
+    if (m) {
+      const n = (m[2] === '-' ? -Number(m[3]) : Number(m[3])) + delta;
+      if (n === 0) return m[1];
+      return m[1] + (n > 0 ? '+' : '-') + Math.abs(n);
+    }
+    if (delta === 0) return s;
+    return s + (delta > 0 ? '+' : '-') + Math.abs(delta);
+  }
+
+  // Armour Penetration is stored as a signed integer (0, -1 … -4) and "improve by
+  // N" makes it MORE negative. This function is the only place that sign lives.
+  function b99ApplyAp(val, imp) {
+    if (val == null) return val;
+    const s = String(val).trim();
+    if (!/^-?\d+$/.test(s)) return val;
+    return String(Number(s) - imp);
+  }
+
+  // The modified profile for one weapon under one effect: only the characteristics
+  // the effect actually moves, plus the abilities it grants that the weapon does
+  // not already carry. Both weapon tables route through this and compute nothing
+  // of their own, so the two surfaces cannot drift apart.
+  function b99WeaponMods(w, eff) {
+    if (!eff || !w || !b99Selects(eff.sel, w)) return null;
+    const mod = eff.mod || {};
+    const vals = {};
+    if (mod.S  != null) vals.S  = b99Compose(w.S, mod.S);
+    if (mod.A  != null) vals.A  = b99Compose(w.A, mod.A);
+    if (mod.D  != null) vals.D  = b99Compose(w.D, mod.D);
+    if (mod.AP != null) vals.AP = b99ApplyAp(w.AP, mod.AP);
+    // A characteristic the applier could not move ('None') is not a change.
+    for (const k of Object.keys(vals))
+      if (String(vals[k]) === String(w[k])) delete vals[k];
+    const have = (w.weapon_ability_names || []).map(x => String(x).toLowerCase());
+    const gr = [];
+    for (const g of (eff.gr || []))
+      if (have.indexOf(String(g).toLowerCase()) < 0) gr.push(g);
+    if (!Object.keys(vals).length && !gr.length) return null;
+    return { vals: vals, gr: gr };
+  }
+
+  // The D89/D112 idiom, unchanged: a value true of every model counted in the row
+  // is written and highlighted; a value true of only some of them is never
+  // written — the cell takes an asterisk and a legend beneath the table names the
+  // cause. `mode` is 'all' | 'some' | 'none'; b99RollupCtx decides it.
+  function b99Cells(w, eff, mode) {
+    const out = {
+      A: w.A, S: w.S, AP: w.AP, D: w.D,
+      ab: (w.weapon_ability_names && w.weapon_ability_names.length)
+          ? w.weapon_ability_names.join(', ') : '\u2014',
+      star: false, wrote: false
+    };
+    if (!eff || mode === 'none') return out;
+    const m = b99WeaponMods(w, eff);
+    if (!m) return out;
+    if (mode === 'some') {
+      const star = '<sup class="stat-asterisk">*</sup>';
+      for (const k of Object.keys(m.vals)) out[k] = String(w[k]) + star;
+      if (m.gr.length) out.ab = out.ab + star;
+      out.star = true;
+      return out;
+    }
+    for (const k of Object.keys(m.vals))
+      out[k] = '<span class="stat-override">' + m.vals[k] + '</span>';
+    if (m.gr.length) {
+      const add = m.gr.map(g => '<span class="stat-override">' + escHtml(g) + '</span>').join(', ');
+      out.ab = (out.ab === '\u2014') ? add : out.ab + ', ' + add;
+    }
+    out.wrote = true;
+    return out;
+  }
+
+  // One line under the table naming the cause, so a highlighted cell or an
+  // asterisk is never unexplained. Asterisk wording wins when both are present.
+  function b99Legend(eff, sawStar, sawWrite, name) {
+    if (!eff || (!sawStar && !sawWrite)) return '';
+    const n = escHtml(name || 'an Enhancement');
+    const t = sawStar ? ('* bearer only \u2014 ' + n) : ('Modified by ' + n);
+    return '<div class="stat-asterisk-legend">' + t + '</div>';
+  }
+  // ── B99 END ───────────────────────────────────────────────────────────────
 
   // A stored assignment is {name, detachment_key}. The key is carried because
   // the name alone does not determine the price: Deathwing Assault is 30 pts in
@@ -6229,6 +6538,74 @@
     return { weapons, equipment, overAllocated, pools: poolsOut };
   }
 
+
+  // ── B99 MODE BEGIN: which weapon rows may carry a modified value ───────────
+  //
+  // The rollup table shows one row per weapon with a count spanning every model
+  // that holds it. An enhancement reaches ONE model — the bearer — so writing a
+  // modified number into a row that spans other models asserts something false
+  // about them. This is the problem D105/D112 already solved for the statline,
+  // and it takes the same three-way answer:
+  //
+  //   'all'  — every model counted in the row is the bearer: write the value
+  //   'some' — the row spans the bearer and others, or the bearer cannot be
+  //            pinned to a loadout group: asterisk, never a value
+  //   'none' — the bearer holds no copy of this weapon: leave the row alone
+  //
+  // The test is on LOADOUT groups and live model counts, not on statline groups.
+  // Ravenwing Command Squad is why: it has one statline group — isSingleModelGroup
+  // calls it single — but three loadout groups and three models, only one of which
+  // is the CHARACTER, and nothing in the data says which. It therefore resolves to
+  // 'some' on every row rather than writing a value onto all three models.
+  // The other side of that coin is Dark Apostle / Dark Commune / Traitor Enforcer,
+  // which DO carry a second statline group: there the CHARACTER is statline group
+  // 0 and statGroupScopes maps it to its loadout group, so bearer-only rows still
+  // get their value. b99_check pins both readings against the shipped data.
+  function b99BearerScope(raw, def, entry) {
+    const size   = loadoutSize(entry, def);
+    const counts = loGroupCounts(def, size, loOptCounts(def, entry));
+    const names  = (def.model_groups || []).map(g => g.name);
+    let total = 0;
+    for (const n of names) total += counts[n] || 0;
+    // One model in the whole build: it is the bearer, and every row is its own.
+    // Answered before carrier counting so a bundle-swapped weapon — which the
+    // rollup adds outside loCarriers — is not read as "the bearer has no copy".
+    if (total === 1) return { single: true, scope: names };
+    if ((raw.model_groups || []).length > 1) {
+      const scopes = statGroupScopes(raw, raw.model_groups[0], def);
+      if (scopes) {
+        let n = 0;
+        for (const g of scopes) n += counts[g] || 0;
+        if (n === 1) return { single: false, scope: scopes };
+      }
+    }
+    return null;   // cannot pin the bearer to a group
+  }
+
+  // Everything the rollup table needs to render one entry's enhancement, or null
+  // when there is nothing to render. `modeFor` takes the weapon and the row's own
+  // count, because the row count already folds in bundle adds and swaps.
+  function b99RollupCtx(raw, def, entry) {
+    const eff = enhancementWeaponEffect(entry);
+    if (!eff) return null;
+    const bs   = b99BearerScope(raw, def, entry);
+    const size = loadoutSize(entry, def);
+    const sel  = loadoutSelections(entry, def);
+    return {
+      eff:  eff,
+      name: entry.enhancement.name,
+      modeFor: function (w, rowCount) {
+        if (!bs) return 'some';
+        if (bs.single) return 'all';
+        let c = 0;
+        for (const g of bs.scope) c += loCarriers(def, size, sel, g, w.weapon_name);
+        if (c <= 0) return 'none';
+        return c >= rowCount ? 'all' : 'some';
+      }
+    };
+  }
+  // ── B99 MODE END ──────────────────────────────────────────────────────────
+
   // Unit Options UI for loadout-defined units.
   function buildLoadoutHtml(entry, def, raw) {
     const size = loadoutSize(entry, def);
@@ -6646,26 +7023,34 @@
     const bd = activeBundleWeaponDelta(entry, raw);
     for (const r of bd.removes) delete cmap[weaponBase(r)];
     for (const a of bd.adds) cmap[weaponBase(a)] = (cmap[weaponBase(a)] || 0) + 1;
-    html += loWeaponTable('Ranged Weapons', raw.weapons.filter(w => w.weapon_type === 'Ranged'), cmap);
-    html += loWeaponTable('Melee Weapons', raw.weapons.filter(w => w.weapon_type === 'Melee'), cmap);
+    // B99: an assigned enhancement that changes the bearer's own weapon profile.
+    // Built once and passed to both tables so Ranged and Melee cannot disagree.
+    const b99 = b99RollupCtx(raw, def, entry);
+    html += loWeaponTable('Ranged Weapons', raw.weapons.filter(w => w.weapon_type === 'Ranged'), cmap, b99);
+    html += loWeaponTable('Melee Weapons', raw.weapons.filter(w => w.weapon_type === 'Melee'), cmap, b99);
     if (roll.equipment.size) {
       const items = [...roll.equipment.entries()].map(kv => `${kv[0]} \u00d7${kv[1]}`).join(', ');
       html += `<div class="weapon-section"><div class="weapon-section-label">Other wargear</div><div class="lo-makeup">${items}</div></div>`;
     }
     return html;
   }
-  function loWeaponTable(label, weapons, cmap) {
+  function loWeaponTable(label, weapons, cmap, b99) {
     const rows = weapons.map(w => ({ w, n: cmap[weaponBase(w.weapon_name)] || 0 })).filter(x => x.n > 0);
     if (!rows.length) return '';
     let html = `<div class="weapon-section"><div class="weapon-section-label">${label}</div>
       <table class="weapon-table"><thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>BS/WS</th><th>S</th><th>AP</th><th>D</th><th>Abilities</th></tr></thead><tbody>`;
+    let sawStar = false, sawWrite = false;
     for (const r of rows) {
       const w = r.w;
       const bsws = w.BS || w.WS || '\u2014';
-      const ab = (w.weapon_ability_names && w.weapon_ability_names.length) ? w.weapon_ability_names.join(', ') : '\u2014';
-      html += `<tr><td class="weapon-name-cell">${w.weapon_name} <span class="lo-wcount">\u00d7${r.n}</span></td><td>${w.range}</td><td>${w.A}</td><td>${bsws}</td><td>${w.S}</td><td>${w.AP}</td><td>${w.D}</td><td class="weapon-abilities-cell">${ab}</td></tr>`;
+      // B99: one shared cell builder for both weapon tables — see b99Cells.
+      const c = b99Cells(w, b99 && b99.eff, b99 ? b99.modeFor(w, r.n) : 'none');
+      if (c.star)  sawStar  = true;
+      if (c.wrote) sawWrite = true;
+      html += `<tr><td class="weapon-name-cell">${w.weapon_name} <span class="lo-wcount">\u00d7${r.n}</span></td><td>${w.range}</td><td>${c.A}</td><td>${bsws}</td><td>${c.S}</td><td>${c.AP}</td><td>${c.D}</td><td class="weapon-abilities-cell">${c.ab}</td></tr>`;
     }
-    return html + `</tbody></table></div>`;
+    return html + `</tbody></table>` +
+      b99Legend(b99 && b99.eff, sawStar, sawWrite, b99 && b99.name) + `</div>`;
   }
 
   // ── B47: inline detail expanders + info buttons ───────────────────────────
@@ -7296,6 +7681,16 @@
   }
 
   function buildWeaponTable(label, weapons, mode, wargearState, raw, entry) {
+    // B99: a modified profile can only ever appear in the CONFIGURED pane. The
+    // full/browse call has no list entry, therefore no enhancement, therefore
+    // nothing to modify — which is the correct reading of an unconfigured view.
+    // This table is reached only for units with no loadout definition, so its
+    // rows are per statline model group; a group that is not a confident single
+    // model cannot be told apart from the bearer and takes the asterisk instead.
+    const b99eff  = (mode === 'configured') ? enhancementWeaponEffect(entry) : null;
+    const b99mode = b99eff ? (isSingleModelGroup(raw) ? 'all' : 'some') : 'none';
+    let sawStar = false, sawWrite = false;
+
     let html = `<div class="weapon-section">
       <div class="weapon-section-label">${label}</div>
       <table class="weapon-table">
@@ -7313,23 +7708,25 @@
 
       const rowClass = dimmed ? ' class="weapon-dimmed"' : '';
       const bsws = w.BS || w.WS || '—';
-      const abilities = w.weapon_ability_names && w.weapon_ability_names.length > 0
-        ? w.weapon_ability_names.join(', ')
-        : '—';
+      const c = b99Cells(w, b99eff, b99mode);
+      if (c.star)  sawStar  = true;
+      if (c.wrote) sawWrite = true;
 
       html += `<tr${rowClass}>
         <td class="weapon-name-cell">${w.weapon_name}</td>
         <td>${w.range}</td>
-        <td>${w.A}</td>
+        <td>${c.A}</td>
         <td>${bsws}</td>
-        <td>${w.S}</td>
-        <td>${w.AP}</td>
-        <td>${w.D}</td>
-        <td class="weapon-abilities-cell">${abilities}</td>
+        <td>${c.S}</td>
+        <td>${c.AP}</td>
+        <td>${c.D}</td>
+        <td class="weapon-abilities-cell">${c.ab}</td>
       </tr>`;
     }
 
-    html += `</tbody></table></div>`;
+    html += `</tbody></table>` +
+      b99Legend(b99eff, sawStar, sawWrite, entry && entry.enhancement && entry.enhancement.name) +
+      `</div>`;
     return html;
   }
 

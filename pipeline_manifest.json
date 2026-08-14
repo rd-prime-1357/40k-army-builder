@@ -1,7 +1,7 @@
 {
  "_note": "SHA-256 of every guarded pipeline file. Regenerated at session close (python3 pipeline_manifest.py --write). manifest_check verifies it at baseline; a mismatch names the file that arrived as the wrong copy.",
  "files": {
-  "index.html": "1f506b77f20db50a31023c5f0e5d4da4e847218e5983f7cff5c3a080e9af71f1",
+  "index.html": "e7323a6d2e3e090a474e96abec3d35243ac50191e81852a2049b2d97bb999eab",
   "list_store.js": "5d7890b695f5a95eaf6cdb9cdb6ce2fcc27b51647c8e3ed52ad8d161b858b4a0",
   "units.json": "ff15575b716b2dc8e48d85a946b52cdc8112a9e443360804a78db21353d1fddf",
   "unit_loadouts.json": "109669601e8b1ad49b19f6ebaaeb7b7484df38f58408566ac382021a5db5881c",
@@ -24,7 +24,7 @@
   "units_repro_check.py": "ad482eeed6d281365fc8d8df48147ff4167be4f13983c0645874b9fea6c64e80",
   "detachments_repro_check.py": "94bb9f2f223853f75b6788bf6cbff0f4eb1ad19c845189b0cc3545dcf35f927b",
   "integrity_check.py": "7084a604f0b15a2fd8440c9b61660edbad6d1d16ce7277a989f5ab3e924e83a1",
-  "pipeline_manifest.py": "eac197f70263934a1a10946ccb664a5a59e36ec73a3ce01ac766cc872b0ab0f6",
+  "pipeline_manifest.py": "fd1038602890376b03d8d2213e37293cc674226b115a6158ed878dec6a75870f",
   "pts_check.js": "d1ca62181a6f511214391323e80107cf2acee834b40784409b3eedd902e7d263",
   "stat_check.js": "c240c643896de60d212f62d220722d58994b4afd9a5dc3440d1ae81d45a502ab",
   "bundle_check.js": "40e08552f38aa9dfdbe7c1106b7d0e3ff9623ed6e0a47eb5a85d24e43faa3154",
@@ -51,9 +51,10 @@
   "b88_check.js": "18455c7419dde4e4de3f7a2c6cca5264a48a55146bd2e767a85b40cb4951f9f3",
   "b101_check.js": "7dcc24bfa39d2529a7e0db3d044939f76033c615dd0de695380bcb7012e1116a",
   "b106_check.js": "15b04736aff018e888e9b491e441834519c54d845e7ecda30784f36cd52d2c8f",
+  "b99_check.js": "9155bf36d7a81ce2faa80c6155ff064a5ceebf646a8913e555feb677ba641a1a",
   "harness.js": "9b1fe974df88860e4cc07886f7b1f72f817ed12030feb9dbb3767060c37ac047",
   "sweep.js": "16120ae7cb59274c0e81c44d864275688389b2f9a3417fe3281d95489ede7972",
-  "baseline.sh": "9b1788793b19a44d07bc5ca0dd82848b6b0286c18b8c872b9b0ed85ee9370c9d",
+  "baseline.sh": "f8dae08da4e30d193cdcd77869cb7ff167fcda20af159cc06338f456eeb5d073",
   "repo_check.py": "4347d8c8ee8017c1c321424a9fd0b98aebaafc06621c284a735085fcd70f260d",
   "add_bodyguard_stat_flags.py": "dbfe13fe7ea586a279755f1a13096c709c5ce3e36851cf3e2637eaf388041908",
   "add_chapter_point_overrides.py": "d674545bd261b3e606019f60ca2f807433e23c56343f8ebded9abb3fe20aa2d8",
@@ -72,11 +73,11 @@
   "40K_Architecture_Overview.md": "197c79eaac21e9653c029f33a3d75484f71ac69fa25f84c47c0f6a90bbd47092",
   "40K_Data_Dictionary.md": "455953e908529538b6cd2b6e6a3820b50507c06633dae5b81807ff500c69f7a5",
   "40K_Data_Pipeline_Process.md": "940b9269a7a33b60315e432b90d4122fa52ed869bd2d5959c7a7c4145a36e50a",
-  "40K_Decision_Log.md": "9b5e2e5f57b9f8e59cb24d2e2c6d96e1f15d127d08d10f73b4f33e28c7a68f8f",
+  "40K_Decision_Log.md": "a640bd75bbf9529bf5f511d3a6f643e6c0ce774a7006e12fa9dc704064c8579c",
   "40K_Functional_Spec.md": "1d57cabc2d8cf8757403476f462d8a16be3c17311a98afd96426e40051d21b49",
   "BACKLOG_ARCHIVE.md": "b1b87709438d55646cb03fd1d3e1d0225f402b28623d25bcdc0dba87b5576298",
   "CSM_BUILD_SCOPE.md": "53c4828c1853e57741fb028b97efc31a1ba880a06e2495933541599fade3733d",
-  "DECISION_INDEX.md": "12e59c4a502e549ba1772739529e46c35b97a44fe8e3ab0961dc7ca41b0b51fa",
+  "DECISION_INDEX.md": "51ba36b2fe612f5c9513bbf92fcb7805524819ec6f5ca049ee08ab5f5363b0d7",
   "E1_DETACHMENT_SCOPE.md": "bd46666245f734b2f5b24a4230df0144a9881b1eaaae9d70c23621fd3b796e5a",
   "B99_SCOPE.md": "bcfefdcb90a1935bc8afa4c21f5fbf1bafdd89ac48e837de36939bbf29280e8f",
   "GREY_KNIGHTS_BUILD_SCOPE.md": "4108c81f5a571b70129fd2b1c14bf70bab826e2cbac812d9904dcb81483a1416",
@@ -84,7 +85,7 @@
   "MFM_FW_Reconciliation.md": "6c783bdd3336f80191572a36192535e654d703afef4d8c7c565b2666415fd3db",
   "MFM_Standalone_Pass.md": "fd81918dd611a39aed3e8bcac93392b9457343afc2e1341ecfdd9be2cd40b35e",
   "MFM_v1_1_Reconciliation.md": "5ebd959dd5b3ab30a06c7cf22199016fa8506cd4987b281ce796a01ee7566f45",
-  "OPEN_ITEMS_BACKLOG.md": "66451dbf00d9e866c020201f3297645f6113c35e1dda764daf26f27d7cf42855",
+  "OPEN_ITEMS_BACKLOG.md": "659c69fcbd853ee2c7f8463f9793623b7a875995d1e6f40fbbea7c37c0dab912",
   "OUTPUT_FORMAT_SPEC_for_project_instructions.md": "b7a22f6e9398468dfae577417b318b4e7730fc9f1e23a6b10d7f76bb1177ab19",
   "P4_ARCHITECTURE_SCOPE.md": "e94b0d6c402fd66d843d757450106b44cf9f2cfb7ad550f0101720eb460a5c9a",
   "PROCESS_IMPROVEMENT_PLAN.md": "c8fa79972a8b33ec52668e5b1d95be2ccfd7dbb4c0a3acc3f0853f92c7d99a8a",
@@ -197,6 +198,7 @@
   "SESSION_HANDOFF_232.md": "a3573570678b86a49f82d8398f1d932a50e71f9b9c92cfaffb1b7ec0d02c8aa4",
   "SESSION_HANDOFF_233.md": "369bc767aada50b98ea84dfd1fbdd1254954597652865e45cf40d1585c7f91bd",
   "SESSION_HANDOFF_234.md": "ea7953094da6c9a46898a0457ccf63dc444c2616f85d571375b50cb08ef56b9c",
-  "SESSION_HANDOFF_235.md": "e2c9ef117fc4141797cb37ebaadbe7c4d2b396935019599443cb88d3a02cab04"
+  "SESSION_HANDOFF_235.md": "e2c9ef117fc4141797cb37ebaadbe7c4d2b396935019599443cb88d3a02cab04",
+  "SESSION_HANDOFF_236.md": "716585e54a2133bfc71a9e3068f57277b4f2b685e17271509ef41f994c7d1dee"
  }
 }
