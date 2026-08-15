@@ -1,50 +1,54 @@
 # NEXT SESSION PROMPT — Session 241
 
-## Recommended pick: B123, statline precedence build. Engine-only.
-## Flag before starting: mechanical — the decision is made, the population is pinned, the render idiom already exists.
+## Recommended pick: B129, documentation and census-coverage tooling. Tooling-only.
+## Flag before starting: mechanical throughout — describing fields that exist and writing one gate.
 
-B123 was decision-blocked until S240 and is now the cheapest buildable item in the backlog. Ryan's
-call (D335): **show the best unconditional value; if a conditional value would be better, show the
-unconditional one and mark the cell.** 25 records / 11 names / 11 armies, re-derive from
-`detachments.json` at build time rather than trusting that figure.
+This is the fix for D334, and D336 explains why it is a documentation problem rather than a
+carefulness problem. `40K_Data_Dictionary.md` stops at Session 19 addenda and **has no entry for
+`detachments.json` at all** — 211 records, nine fields each, undocumented. The B93 census read
+`description` and `restrictions` and never read `rule_text`, where Headhunter Task Force states
+that up to three Vehicles gain CHARACTER at muster. Wrong legality decision, survived a session.
 
-The render idiom exists — `enhModLegend` is already shared between the weapon table and the stat
-table, and `statOverrideFromText` already writes the wargear side of these cells. What is new is
-the precedence rule where both speak to the same cell, plus the absolute-value path B119
-deliberately did not stub. Ship a `b123_check.js` pinning: an Enhancement absolute beating an
-unconditional wargear value, an unconditional wargear value beating a conditional Enhancement one
-(unconditional shown, cell marked), a Feel No Pain grant where no wargear speaks to the cell, and
-the legend wording agreeing with B99's and B119's.
+Three parts, one turn:
 
-Do **not** fold B124 in. Do **not** fold in B93 work of any kind.
+1. **Document the undocumented outputs, field by field.** `detachments.json` first — every field on
+   a detachment record and on an enhancement record. Then `detachment_effects.json`,
+   `datasheet_wargear_abilities.json`, `wargear_points.json`, and anything else that has grown
+   without an entry. Check the actual JSON for fields rather than working from the parser, since
+   the parser is what would have carried the omission forward. For each field: what it carries, and
+   a flag for **free text that can contain rules**. That flag is the whole point — `rule_text` and
+   `restrictions` both carry rules, and a census reading one but not the other is then visibly
+   wrong instead of invisibly wrong.
+2. **Field-coverage convention.** Write it into the data dictionary's front matter: a census states
+   every field on the record type and marks each read or not-read, with a reason for each
+   not-read. Ten mechanical lines at the head of the work, no judgment involved.
+3. **The gate.** A `rules_assertions.py` assertion failing when any enhancement resolves to no
+   eligible bearer without a named, commented exemption. Today's exemption list is the 24 Vehicle
+   (B128), 6 Deathwing (B125) and 4 Marks (B126) records — re-derive that set rather than pinning
+   these numbers from this prompt. Negative-test it: remove one exemption and confirm the assertion
+   names that record.
 
-## Then: B125, chapter-keyword census across all twelve Adeptus Astartes chapters. Scoping-only, analysis-grade — flag before starting.
+Do not fold B123 in. Do not touch `index.html`.
 
-B93's census (D334, `B93_SCOPE.md`) found that chapter-specific keywords are stripped from the
-generic `Adeptus Astartes` block and never re-added by the delta-shaped chapter blocks, so the union
-roster serves stripped records. Dark Angels' `Deathwing model only` enhancements resolve to **zero**
-eligible Characters as a result. Measured over the Dark Angels union pool: Deathwing 8 units held
-against 27 the source would give (5 Characters lost); Ravenwing 7 against 16 (1 Character lost).
+## Then: B123, statline precedence build. Engine-only, mechanical.
 
-This is a prerequisite. **B93 cannot be built before it is at least scoped** — enforcing bearer
-restrictions on today's roster data would refuse legal Dark Angels lists, which is worse than the
-current over-admission.
+Decided at D335 — show the best **unconditional** value; if a conditional value would be better,
+show the unconditional one and mark the cell. 25 records / 11 names / 11 armies, re-derived at build
+time. `enhModLegend` is already shared between the weapon and stat tables and
+`statOverrideFromText` already writes the wargear side of these cells; what is new is the
+precedence rule and the absolute-value path B119 deliberately left unstubbed. Ship a
+`b123_check.js` pinning: an Enhancement absolute beating an unconditional wargear value; an
+unconditional wargear value beating a conditional Enhancement one (unconditional shown, cell
+marked); a Feel No Pain grant where no wargear speaks to the cell; and the legend wording agreeing
+with B99's and B119's.
 
-**Do not carry the Dark Angels numbers forward as the population.** They are one chapter, found
-incidentally. Census across all twelve chapters: for each, compare the keyword set the chapter's
-union pool actually carries against what `Datasheets_keywords.csv` gives the same datasheet, and
-report which keywords are lost and which units lose them. Then answer the design question, which is
-the reason this is analysis-grade: the stripping is *correct* for the generic block, so the fix is
-either (a) chapter blocks re-add their own keywords to the generic datasheets they inherit, or (b)
-the union resolver applies a chapter-keyword overlay at selection time. Both interact with B90's
-pending `union` to `complete` roster-mode flip, so B90's state has to be established first rather
-than assumed. Produce `B125_SCOPE.md` with the population, the two mechanisms compared, and a
-recommendation — **do not build this session.**
+## Then: B125, chapter-keyword census across all twelve chapters. Scoping-only, analysis-grade — flag before starting.
 
 ## Other open, at your discretion
 
-26 open: B125, B126, B127, B128, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94, B85,
-B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. **Nothing is decision-blocked any more.**
+27 open: B125, B126, B127, B128, B129, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90,
+B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. **Nothing is decision-blocked any
+more.**
 
 - **B128** (muster-time detachment keyword conferral) is new and is the prerequisite for B93's 24
   Vehicle records specifically. 28 detachments confer keywords, 35 conferrals; only Headhunter Task
@@ -78,16 +82,23 @@ B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. **Nothing is decision-blocked a
 - **Census hygiene, learned twice now.** Split description sentences on `[.?!]`, not `.` — the first
   pass of S240's census lost *Unravelled Fates* and reported 640 instead of 641. And when a count
   comes out wrong, re-derive it; do not patch the number.
-- **Read `rule_text`, not just `restrictions`.** D334 was wrong for one session because the B93
-  census read enhancement descriptions and the `restrictions` field (null for the detachment in
-  question) and never read `rule_text`, where Headhunter Task Force states plainly that up to three
-  Vehicles become Characters at muster. Any question about what a detachment permits must read
-  `rule_text` — `restrictions` is a partial extraction of it, not a substitute.
+- **Read `rule_text`, not just `restrictions`.** `restrictions` is a partial extraction of
+  `rule_text`, not a substitute, and is `null` on plenty of detachments that do carry rules.
+- **An impossible result means widen the read, never explain the result.** No inference about what
+  GW must have intended while any field is still unread. This is the D334 lesson and it generalises
+  past detachments (D336).
 - Turn typing stays strict. B125 is a scoping turn; do not fold a mechanism build into it even if
   the population turns out small.
 
 ## Ryan action required
 
+- **Add two lines to the project instructions**, so they are read at the top of every session
+  rather than living only in the decision log:
+  - "An impossible result — an enhancement no model can take, a unit no rule permits — means a
+    source field has not been read. Widen the read. Never explain an impossible result by inference
+    about what GW must have intended."
+  - "Before censusing a data file, state every field on the record type and mark each one read or
+    not-read, with a reason for each not-read."
 - **Push S240's changed files** to the public repo: `B93_SCOPE.md`, `pipeline_manifest.py`,
   `40K_Decision_Log.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_240.md`,
   `NEXT_SESSION_PROMPT.md`. `repo_check` is red at S240 close for these — expected, not a

@@ -1056,3 +1056,12 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   conditional one is better) — unblocked. **B99's four display decisions closed as already shipped**
   at D330/D332, having been carried forward as open in error. **B116 reclassified** as required
   before production rather than indefinitely deferrable.
+- **D336** — D334 post-mortem (S240). Root cause is documentary: **`detachments.json` has never been
+  documented** — `40K_Data_Dictionary.md` stops at Session 19 addenda and has no detachment entry,
+  so a census reads only the fields it already knows. Second, separate failure: 24 enhancements
+  with zero legal bearers was explained by an inference about designer intent rather than treated
+  as evidence of an unread field. **B129 opened** — document the undocumented outputs field by
+  field (flagging free text that can carry rules), require a field-coverage statement at the head
+  of every census, and add a `rules_assertions.py` gate failing on any enhancement with no eligible
+  bearer absent a named exemption. Standing rule: **an impossible result means widen the read,
+  never explain the result.** S241 retasked from B123 to B129; B123 follows.

@@ -3,9 +3,10 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **26 open** as of S240 (up from 22 — B93's census opened four new
-tickets; nothing closed): B125, B126, B127, B128, B116, B120, B122, B123, B124, B97, B103, E28,
-B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **27 open** as of S240 (up from 22 — B93's census opened four new
+tickets and its post-mortem a fifth; nothing closed): B125, B126, B127, B128, B129, B116, B120,
+B122, B123, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12,
+B17.
 Scoping-only turn (D334): B93 censused across all 739 enhancement records and re-scoped. The
 bearer-restriction population is **641 records / 363 names / 173 detachments / 13 armies**, not
 the six D332 found incidentally — 87% of all enhancement records carry an "X model only" clause,
@@ -781,6 +782,42 @@ selection state distinguishing "a unit is selected" from "the Detachments group 
 a render branch in the right-panel path. Comparable in size to E1c's original build. A scoping
 session should confirm whether per-unit enhancement assignment (unaffected by this move) needs any
 UI adjustment once Detachments get their own detail view.
+
+### B129 — `detachments.json` is undocumented; no field-coverage discipline on censuses — **NEW S240 (D336); tooling; S; root cause of D334**
+
+Post-mortem on D334. The B93 census read each enhancement's `description` and the detachment's
+`restrictions` field and never read `rule_text`, where Headhunter Task Force states plainly that up
+to three Vehicles gain CHARACTER at muster. That produced a wrong legality decision that survived
+one session.
+
+**The root cause is documentary, not attentional.** `40K_Data_Dictionary.md` covers unit stats,
+weapons, wargear options, points, keywords, abilities and `unit_loadouts.json`, and stops. Its last
+addendum is Session 19; the project is at Session 240. **`detachments.json` has never been
+documented at all** — 211 records, nine fields per record, built across dozens of sessions, with no
+entry anywhere saying what those fields are. A census reads the fields it already knows about, and
+there is nothing to check that against.
+
+Three parts, all one tooling turn:
+
+1. **Document the undocumented outputs, field by field** — `detachments.json` first, then
+   `detachment_effects.json`, `datasheet_wargear_abilities.json`, `wargear_points.json` and
+   anything else that has grown without an entry. For each field: what it carries, and a flag for
+   **free text that can contain rules**. That flag is the part that would have caught D334 —
+   `rule_text` and `restrictions` both carry rules, and a census reading one but not the other is
+   then visibly wrong rather than invisibly wrong.
+2. **Field-coverage statement at the top of every census.** Enumerate every field on the record
+   type, mark each read or not-read, give a reason for each not-read. Ten mechanical lines, no
+   judgment. Written down, "reading `description`, not reading `rule_text`" has no defensible
+   reason and gets caught in the writing.
+3. **Make the anomaly a gate.** A `rules_assertions.py` check that fails when any enhancement
+   resolves to no eligible bearer without a named, commented exemption. This is the one that
+   matters most: the miss surfaced as 24 enhancements with zero legal bearers, and that was
+   explained by an inference about designer intent instead of treated as evidence of an unread
+   field. Per D107, the reasoning does not hold unless it is executable.
+
+**Standing rule this establishes: an impossible result means widen the read, never explain the
+result.** No inference about what GW must have intended while any field is still unread. Belongs in
+the project instructions, not only here — Ryan to add.
 
 ### B128 — Detachment-conferred keywords at muster time are not modelled, including a capped player choice — **NEW S240 (D335); data + engine; M; live D0 gap**
 
@@ -2308,9 +2345,9 @@ opened by B93's census; nothing closed).
 Beginning: B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75,
 P2, P4, E23, B67b, E12, B17 (22).
 Resolved: none (0).
-Added: B125, B126, B127, B128 (4).
-Ending: B125, B126, B127, B128, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94, B85,
-B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17 (26).
+Added: B125, B126, B127, B128, B129 (5).
+Ending: B125, B126, B127, B128, B129, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94,
+B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17 (27).
 
 D334 was recorded and reversed within the session (D335) with nothing built on it. B123 was decided
 by Ryan and is unblocked. B99's four display decisions were found to have shipped at D330/D332 and

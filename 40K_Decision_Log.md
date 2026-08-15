@@ -14032,3 +14032,42 @@ the Abilities column via the same table's `gr` key) shipped in the same turn; de
 Drukhari's Harlequins/Anhrathe allied inclusion may stay deferred for now, but it must ship before
 the product is production-ready. Recorded on the ticket so the deferral cannot quietly become
 permanent.
+
+## D336 — D334 post-mortem: the root cause is an undocumented data file, and B129 opened (S240)
+
+Ryan asked how to stop this recurring, having now caught the same class of error more than once.
+The answer is not "read more carefully."
+
+**`detachments.json` has never been documented.** `40K_Data_Dictionary.md` covers Unit_Stats,
+Unit_Weapons, Unit_Wargear_Options, Unit_Points, Rules, Keywords, Weapon_Abilities, Unit_Abilities,
+Unit_Other_Options, `unit_loadouts.json` and `core_glossary.json`, plus addenda through Session 19.
+The project is at Session 240. There is no entry anywhere describing a detachment record's nine
+fields. A census therefore reads the fields it already happens to know about, with nothing to check
+that against — which is exactly how `rule_text` went unread through the entire B93 census.
+
+**The second failure is separate and worse.** Twenty-four enhancements resolving to zero legal
+bearers is not a finding, it is the data reporting that something has not been read. It was
+explained instead, by an inference about what GW must have intended, and the inference was coherent
+enough to feel like an answer. Coherence is not completeness, and an anomaly resolved by inference
+about designer intent is an unread field wearing a hat.
+
+**B129 opened** — one tooling turn, three parts: document the undocumented outputs field by field
+with an explicit flag for free text that can carry rules; require a field-coverage statement at the
+head of every census (every field marked read or not-read, with a reason for each not-read); and a
+`rules_assertions.py` gate that fails on any enhancement with no eligible bearer absent a named,
+commented exemption. Part three is the one that generalises, and it is D107 applied to a class of
+reasoning rather than to a fact: the inference does not hold unless it is executable.
+
+**Standing rule: an impossible result means widen the read, never explain the result.** No
+inference about designer intent while any field is unread. This belongs in the project instructions
+rather than only in this log, since it has to be read at the top of every session to work; Ryan to
+add it, wording supplied.
+
+**Deliberately not adopted: a promise to read more.** There is more source than any session can
+read exhaustively, so a rule that depends on being careful at the right moment will fail at the
+moment it is needed. Every part of B129 is mechanical — a list, a checklist line, a gate — and none
+depends on judgment being applied at the right time.
+
+**S241 retasked from B123 to B129.** B123 is decided, unblocked and cheap, but it is a build turn
+that reads `detachments.json`, and it is better read from a documented file. B129 is one tooling
+turn and B123 follows it.
