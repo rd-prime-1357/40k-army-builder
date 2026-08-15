@@ -1,123 +1,112 @@
-# NEXT SESSION PROMPT — Session 241
+# NEXT SESSION PROMPT — Session 242
 
-## Recommended pick: B129, documentation and census-coverage tooling. Tooling-only.
-## Flag before starting: mechanical throughout — describing fields that exist and writing one gate.
-
-This is the fix for D334, and D336 explains why it is a documentation problem rather than a
-carefulness problem. `40K_Data_Dictionary.md` stops at Session 19 addenda and **has no entry for
-`detachments.json` at all** — 211 records, nine fields each, undocumented. The B93 census read
-`description` and `restrictions` and never read `rule_text`, where Headhunter Task Force states
-that up to three Vehicles gain CHARACTER at muster. Wrong legality decision, survived a session.
-
-Three parts, one turn:
-
-1. **Document the undocumented outputs, field by field.** `detachments.json` first — every field on
-   a detachment record and on an enhancement record. Then `detachment_effects.json`,
-   `datasheet_wargear_abilities.json`, `wargear_points.json`, and anything else that has grown
-   without an entry. Check the actual JSON for fields rather than working from the parser, since
-   the parser is what would have carried the omission forward. For each field: what it carries, and
-   a flag for **free text that can contain rules**. That flag is the whole point — `rule_text` and
-   `restrictions` both carry rules, and a census reading one but not the other is then visibly
-   wrong instead of invisibly wrong.
-2. **Field-coverage convention.** Write it into the data dictionary's front matter: a census states
-   every field on the record type and marks each read or not-read, with a reason for each
-   not-read. Ten mechanical lines at the head of the work, no judgment involved.
-3. **The gate.** A `rules_assertions.py` assertion failing when any enhancement resolves to no
-   eligible bearer without a named, commented exemption. Today's exemption list is the 24 Vehicle
-   (B128), 6 Deathwing (B125) and 4 Marks (B126) records — re-derive that set rather than pinning
-   these numbers from this prompt. Negative-test it: remove one exemption and confirm the assertion
-   names that record.
-
-Do not fold B123 in. Do not touch `index.html`.
-
-## Then: B123, statline precedence build. Engine-only, mechanical.
+## Recommended pick: B123, statline precedence build. Engine-only, mechanical.
+## Flag before starting: mechanical — the rule is decided (D335), the fields are documented (S241).
 
 Decided at D335 — show the best **unconditional** value; if a conditional value would be better,
-show the unconditional one and mark the cell. 25 records / 11 names / 11 armies, re-derived at build
-time. `enhModLegend` is already shared between the weapon and stat tables and
-`statOverrideFromText` already writes the wargear side of these cells; what is new is the
-precedence rule and the absolute-value path B119 deliberately left unstubbed. Ship a
-`b123_check.js` pinning: an Enhancement absolute beating an unconditional wargear value; an
-unconditional wargear value beating a conditional Enhancement one (unconditional shown, cell
-marked); a Feel No Pain grant where no wargear speaks to the cell; and the legend wording agreeing
-with B99's and B119's.
+show the unconditional one and mark the cell. 25 records / 11 names / 11 armies, re-derive at
+build time rather than pinning these from this prompt. `enhModLegend` is already shared between
+the weapon and stat tables and `statOverrideFromText` already writes the wargear side of these
+cells; what is new is the precedence rule and the absolute-value path B119 deliberately left
+unstubbed. Ship a `b123_check.js` pinning: an Enhancement absolute beating an unconditional
+wargear value; an unconditional wargear value beating a conditional Enhancement one (unconditional
+shown, cell marked); a Feel No Pain grant where no wargear speaks to the cell; and the legend
+wording agreeing with B99's and B119's.
+
+`40K_Data_Dictionary.md` now documents `detachments.json`'s enhancement `description` field and
+flags it as rules-bearing — read that section before writing the census this build needs, rather
+than re-deriving field coverage from scratch.
 
 ## Then: B125, chapter-keyword census across all twelve chapters. Scoping-only, analysis-grade — flag before starting.
 
-## Other open, at your discretion
+Still the right next scoping turn regardless of S241's Deathwing finding (D338) — that finding was
+about whether 6 specific enhancement records are zero-admit, not about whether chapter keywords are
+correctly modelled generally. B125's own census should determine the actual scope independently;
+do not assume D338 narrows or closes it.
 
-27 open: B125, B126, B127, B128, B129, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90,
-B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17. **Nothing is decision-blocked any
-more.**
+**Read D338 first.** S241 found the 6 Deathwing enhancement records are NOT zero-admit under a
+direct `Datasheets_keywords.csv` read (`S.all_keywords()`), contradicting `B93_SCOPE.md` §4.2.
+Two live possibilities, and B125's scoping turn should settle which:
+- The engine's actual bearer-assignment logic reads a different, pipeline-derived per-unit
+  keyword field (candidate: `model_groups[*].faction_keyword_names`, referenced in
+  `b113_bearer_table_matches_source`) that IS stripped for chapter-specific keywords, in which
+  case the original B93 census was right about the *live* behaviour and D338's gate is checking
+  the wrong representation — B129's gate would need a follow-up fix to read the same field the
+  engine does.
+- Or the original gap was narrower than `B93_SCOPE.md` stated and B125's scope is smaller than
+  the "8 units vs 27 the source would give" table implied.
 
-- **B128** (muster-time detachment keyword conferral) is new and is the prerequisite for B93's 24
-  Vehicle records specifically. 28 detachments confer keywords, 35 conferrals; only Headhunter Task
-  Force's is a capped player choice (up to three Tank Ace units gain CHARACTER, one may be
-  Warlord), and that one is legality-critical. Its scoping turn should also check whether any rule
-  *removes* a keyword — the census only looked for grants.
+Either way, census which representation `resolveUnits()`/the enhancement-assignment path in
+`index.html` actually consults, not just what `Datasheets_keywords.csv` says in isolation — that
+distinction is exactly what this session's two methodologies diverged on.
 
+## Also open, at your discretion — 26 tickets
+
+B125, B126, B127, B128, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+B69, B70, B75, P2, P4, E23, B67b, E12, B17. **Nothing is decision-blocked.**
+
+- **B128** (muster-time detachment keyword conferral) — **re-scoped smaller by D339.**
+  `detachment_effects.json` already models 7 `battleline` effects (`enforced: true`, live) and
+  Headhunter Task Force's `tank_ace` (scoped since D273/S182). Read that file's `_meta` before
+  re-censusing `rule_text` — most of the scoping work for the automatic conferrals is very likely
+  already done; the genuine remaining gap is Headhunter's player-choice-with-a-cap mechanism.
 - **B126** (Marks of Chaos) is a feature, not a fix — mark selection, list persistence, plus two
-  unenforced D0 rules of its own (attachment and Transport must share a mark). It needs its own
-  scoping turn and does not block B125. Note it is the same *shape* as B128: a muster-time
-  selection that changes a unit's keywords. Worth scoping them close together, or at least reading
-  B128's scope before writing B126's, so the two do not invent different mechanisms for the same
-  problem.
-- **B127** (74 records with no rule text in any held source) needs nothing from Claude until source
-  exists. It is a Ryan-side acquisition item, listed here so it is not forgotten.
-- **B120** still needs its own scoping turn before build, and per S238's note that turn should widen
-  its census from Set D *weapons* to Set D effects generally so **B124** lands inside it.
-- **B122** needs a scoping turn that answers a source question first: does the held Chaos Daemons
-  material contain the real enhancement text at all? Note this is now clearly distinct from B127 —
-  B122's 24 records have text of a kind (shorthand summaries), B127's 74 have none.
+  unenforced D0 rules of its own (attachment and Transport must share a mark). Same shape as B128:
+  a muster-time selection that changes a unit's keywords. Worth reading B128's re-scoped entry
+  before writing B126's, so the two do not invent different mechanisms for the same problem.
+- **B127** (74 records with no rule text in any held source) needs nothing from Claude until
+  source exists — a Ryan-side acquisition item.
+- **B120** still needs its own scoping turn before build; per S238's note, widen its census from
+  Set D *weapons* to Set D effects generally so **B124** lands inside it.
+- **B122** needs a scoping turn answering a source question first: does the held Chaos Daemons
+  material contain the real enhancement text at all, or only shorthand summaries (distinct from
+  B127's 74 records, which have none at all)?
 
 ## Standing reminders
 
-- The last full `--fetch --data-turn` was **this session (S240)** and it was clean at 36/36. Keep
-  running one periodically even on non-data sessions.
-- Do not trust the GitHub API's repo `permissions` field for either repo as evidence of push access
-  — verify with a real write attempt.
+- The last full `--fetch --data-turn` was **S240**, clean at 36/36. S241 was tooling-only and ran
+  with only `Datasheets.csv`/`Datasheets_keywords.csv` loaded (sufficient for the B129 gate, not a
+  full data-turn baseline). Run a full `--fetch --data-turn` at the next data or engine session.
+- Do not trust the GitHub API's repo `permissions` field for either repo as evidence of push
+  access — verify with a real write attempt.
+- **Manifest pushes need a real diff check going forward (D337).** S240's handoff claimed
+  `pipeline_manifest.py` was registered correctly and the pushed copy did not match. Before
+  trusting a handoff's Files table at session open, verify the actual pushed file's hash against
+  the table, not just that the file exists.
 - The project-area file mount silently strips apostrophes from filenames on upload. Before trusting
   a project-area filename as the real repo filename, especially for anything going into GUARDED,
   check a fresh clone.
-- **Census hygiene, learned twice now.** Split description sentences on `[.?!]`, not `.` — the first
-  pass of S240's census lost *Unravelled Fates* and reported 640 instead of 641. And when a count
-  comes out wrong, re-derive it; do not patch the number.
 - **Read `rule_text`, not just `restrictions`.** `restrictions` is a partial extraction of
-  `rule_text`, not a substitute, and is `null` on plenty of detachments that do carry rules.
+  `rule_text`, not a substitute, and is `null` on plenty of detachments that do carry rules. Both
+  are now documented in `40K_Data_Dictionary.md`'s S241 addendum.
 - **An impossible result means widen the read, never explain the result.** No inference about what
-  GW must have intended while any field is still unread. This is the D334 lesson and it generalises
-  past detachments (D336).
+  GW must have intended while any field is still unread (D334/D336).
+- **Field-coverage convention is now written into `40K_Data_Dictionary.md`'s front matter (S241).**
+  State every field on a record type and mark read/not-read, with a reason for each not-read,
+  before censusing that file for a legality question.
 - Turn typing stays strict. B125 is a scoping turn; do not fold a mechanism build into it even if
   the population turns out small.
 
 ## Ryan action required
 
-- **Add two lines to the project instructions**, so they are read at the top of every session
-  rather than living only in the decision log:
-  - "An impossible result — an enhancement no model can take, a unit no rule permits — means a
-    source field has not been read. Widen the read. Never explain an impossible result by inference
-    about what GW must have intended."
-  - "Before censusing a data file, state every field on the record type and mark each one read or
-    not-read, with a reason for each not-read."
-- **Push S240's changed files** to the public repo: `B93_SCOPE.md`, `pipeline_manifest.py`,
-  `40K_Decision_Log.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_240.md`,
-  `NEXT_SESSION_PROMPT.md`. `repo_check` is red at S240 close for these — expected, not a
-  regression. S238's and S239's sets are now both landed.
+- **Push S241's changed files** to the public repo: `40K_Data_Dictionary.md`, `rules_assertions.py`,
+  `pipeline_manifest.py`, `40K_Decision_Log.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`,
+  `SESSION_HANDOFF_241.md`, `NEXT_SESSION_PROMPT.md`. Given D337, please verify
+  `pipeline_manifest.py` specifically lands as edited.
 
 ## Decisions waiting on Ryan
 
-**Resolved at S240, listed so they are not re-asked:** D334 reversed by D335 (the clause narrows);
-B123 decided (best unconditional value, mark the cell when a conditional one is better); B99's four
-display decisions found to have shipped at D330/D332 and closed — they had been carried forward as
-open in error since S236; B116 reclassified as required before production.
+**Resolved at S241, listed so they are not re-asked:** D337 (manifest reconciliation, mechanical
+fix, no product call); D338 (B129 gate built, exemption population re-derived to 30); D339 (B128
+re-scoped smaller, not re-decided — still needs its own scoping turn).
 
-- **Next faction after Drukhari** — the documented priority order is fully built and none is queued.
-  Recommendation stands: clear the engine backlog first. But B116's reclassification means
-  **Aeldari is now a production dependency** even though it is not in the priority order, and that
-  belongs on a release plan rather than being rediscovered later.
+- **Next faction after Drukhari** — unchanged since S240. Recommendation stands: clear the engine
+  backlog first. B116's reclassification means **Aeldari is now a production dependency** even
+  though it is not in the priority order, and belongs on a release plan rather than being
+  rediscovered later.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_241.md` in `pipeline_manifest.py`'s GUARDED
+Produce the four documents, register `SESSION_HANDOFF_242.md` in `pipeline_manifest.py`'s GUARDED
 list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
 command.

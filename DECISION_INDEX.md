@@ -1065,3 +1065,13 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   of every census, and add a `rules_assertions.py` gate failing on any enhancement with no eligible
   bearer absent a named exemption. Standing rule: **an impossible result means widen the read,
   never explain the result.** S241 retasked from B123 to B129; B123 follows.
+- **D337** — S241 open: `pipeline_manifest.py` pushed at S240 close did not contain the GUARDED
+  entries its own handoff said were registered before `--write`. Reconciled, both re-added,
+  verified against a fresh clone.
+- **D338** — B129 zero-bearer gate built. Re-derived exemption set is **30, not 34**: the 6
+  Deathwing records do not hold up against a direct `Datasheets_keywords.csv` read (5 eligible DA
+  Characters found); left out of the gate, flagged for B125 to reconcile. Spawn's true cause is a
+  cross-faction keyword homonym, not a unit-type gap.
+- **D339** — B128's "None is modelled" does not hold against `detachment_effects.json`, which
+  already carries 7 enforced `battleline` effects and Headhunter's fully-scoped (D273/S182)
+  `tank_ace` effect. B128's scoping turn should start there, not re-census `rule_text` from zero.

@@ -198,6 +198,7 @@ GUARDED = [
     'CSM_BUILD_SCOPE.md',
     'DECISION_INDEX.md',
     'E1_DETACHMENT_SCOPE.md',
+    'B93_SCOPE.md',
     'B99_SCOPE.md',
     'GREY_KNIGHTS_BUILD_SCOPE.md',
     # B121 (S237): six scope documents that were never added to GUARDED when they were
@@ -307,6 +308,8 @@ GUARDED = [
     'SESSION_HANDOFF_237.md',
     'SESSION_HANDOFF_238.md',
     'SESSION_HANDOFF_239.md',
+    'SESSION_HANDOFF_240.md',
+    'SESSION_HANDOFF_241.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

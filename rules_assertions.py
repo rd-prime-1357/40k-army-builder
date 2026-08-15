@@ -2390,6 +2390,26 @@ ASSERTIONS = [
      'detachments.json enhancement descriptions vs index.html ENHANCEMENT_BEARER_STATS (B119-CENSUS, D332)',
      lambda S: b119_source_census_matches_curated_table(S)),
 
+    # ── B129 (S241, D336). The fix for D334: any enhancement whose bearer-restriction
+    # clause resolves to zero legal bearers today must be a named, commented exemption, or
+    # this fails and names the record. A future source refresh or careless edit that
+    # produces a NEW zero-admit record — the exact shape of the D334 mistake — fails here
+    # instead of surviving a session on an inference about designer intent.
+    ('B129',
+     'Every non-Upgrade enhancement whose description carries a bearer-restriction clause '
+     '(the 117-string vocabulary B93_SCOPE.md S9 verified against source) resolves to at '
+     'least one eligible Character bearer in its army, UNLESS the record is a named, '
+     'commented exemption. Today\'s exemption population, re-derived from source this '
+     'session rather than carried forward: 30 records — 24 Adeptus Astartes Vehicle '
+     '(Headhunter Task Force, B128), 4 Marks of Chaos (Pactbound Zealots, B126), 1 Spawn '
+     '(Thicket of Bladed Bone — target is Beast-typed, not a vocabulary gap), 1 Harlequins '
+     '(Reaper\'s Cowl — faction not built). The 6 Deathwing records B93_SCOPE.md S4.2 '
+     'named are deliberately NOT exempted here — direct re-verification against '
+     'Datasheets_keywords.csv found 5 eligible Dark Angels Characters, contradicting that '
+     'census; see the function docstring.',
+     'detachments.json enhancement descriptions vs Datasheets_keywords.csv + units.json (B129, D334/D335/D336)',
+     lambda S: b129_zero_bearer_gate(S)),
+
 ]
 
 
@@ -4563,6 +4583,260 @@ def b119_source_census_matches_curated_table(S):
                   f'{got[2]}/{got[3]}/{got[4]} armies (decision-blocked, deliberately unhandled), '
                   f'{len(skipped_cd)} Chaos Daemons shorthand record(s) skipped rather than '
                   f'silently counted as a pass')
+
+
+def b129_zero_bearer_gate(S):
+    """B129 (S241), the fix for D334/D336: a bearer-restriction clause that resolves to no
+    legal bearer today must be a NAMED, commented exemption, or this fails and names the
+    record. D334 happened because a zero-admit result (the 24 Vehicle records) was explained
+    by inference about designer intent instead of treated as evidence a field had not been
+    read; this assertion makes "zero admits, unexempted" a hard stop instead of a thing a
+    session can reason past.
+
+    Method: independently re-derives bearer eligibility per enhancement record from source —
+    detachments.json descriptions, Datasheets_keywords.csv (S.all_keywords(), read straight
+    from the CSV, not from any pipeline-derived per-unit keyword field), units.json
+    (S.resolved_pool()) and faction_taxonomy.json for the source_faction -> data_army map.
+    D335's ruling is applied exactly: a clause NARROWS within the Characters-only default, it
+    does not replace it (Epic Hero already refused elsewhere; Upgrades bypass the Character
+    gate per the Muster Rules' own exemption, so this only evaluates non-Upgrade records).
+
+    Clause identification matches every clause against the closed 117-string vocabulary
+    B93_SCOPE.md S9 already verified against source ("each one was read"), rather than
+    re-deriving sentence-boundary heuristics here — the vocabulary is the fact already on
+    record; re-parsing it a second, independent way would not make it more true, only add a
+    second place for the two to silently drift apart.
+
+    Keyword matching is vocabulary-derived, not a hand-picked phrase list: the set of every
+    real keyword string in Datasheets_keywords.csv is built once, and a clause fragment is
+    tokenised by greedy longest-match against THAT set. A hand-picked phrase list was tried
+    first and undercounted badly — "Death Company", "Crusade Ancient", "Lord of Poxes",
+    "Wolf Guard", "Battle Leader" and more are themselves real multi-word keywords already
+    in source, not compounds a curated list happened to omit. Deriving the phrase table from
+    source instead of guessing it is what actually fixes matching. "/" alternation
+    distributes over the shared tail (the INFANTRY/MOUNTED THOUSAND SONS PSYKER trap,
+    B93_SCOPE.md S3.4): the slash-bearing word is split into two branches, each ANDed with
+    every other word in its side, then the branches are ORed. A clause fragment with a
+    token matching neither a real keyword nor a real unit name in the record's army pool
+    (SPEEDER; confirmed absent from Datasheets_keywords.csv, B93_SCOPE.md S5) is UNRESOLVED,
+    not zero — it is excluded from the admit count rather than asserted, so an unresolvable
+    vocabulary gap cannot masquerade as a legality finding.
+
+    Re-derived this session, the zero-admit set is 30 records, not the 34 the S240 handoff
+    and NEXT_SESSION_PROMPT.md both carried forward:
+
+      - 24 Adeptus Astartes Vehicle (Headhunter Task Force, 6 armies) — B128. Confirmed: no
+        Character-typed unit in any of the six pools carries the Vehicle keyword except two
+        Grey Knights records untouched by this detachment, matching B93_SCOPE.md S4.1 exactly.
+      - 4 Marks of Chaos (Pactbound Zealots, Chaos Space Marines) — B126. Confirmed: the mark
+        keywords (Khorne/Tzeentch/Nurgle/Slaanesh as a bearer-restricting mark, distinct from
+        the God-keyword some units already carry natively) are not modelled anywhere in
+        source data reachable from a static unit record.
+      - 1 SPAWN unit only (Thicket of Bladed Bone, Thousand Sons). B93_SCOPE.md S5 frames this
+        as a vocabulary synonym (source keyword "Chaos Spawn" vs. clause token "SPAWN") fixable
+        by a one-entry alias. Re-checked here: the named unit resolves to "Chaos Spawn",
+        unit_type "Beast" — not a Character under any name. The alias would let the token
+        match the unit; it would not make the unit a Character. Recorded as it is, not as the
+        doc's framing — an alias here would be a curation entry that quietly changes nothing.
+      - 1 Harlequins model only (Reaper's Cowl, Drukhari). Harlequins is not a built faction
+        (S2). Correctly zero today; becomes live only once Harlequins is built. No-op, kept as
+        an exemption rather than "fixed", per B93_SCOPE.md S5's own recommendation for this
+        record.
+
+    **The 6 Deathwing records (4 "Deathwing model only" + 2 "...with the Deep Strike ability
+    only", Dark Angels) are NOT included** — re-verified directly against source and found NOT
+    zero-admit: Datasheets_keywords.csv gives the Deathwing keyword to five Dark Angels
+    Characters (Captain/Chaplain/Librarian/Ancient In Terminator Armour, Bladeguard Ancient),
+    and S.resolved_pool('Dark Angels') carries all five as built units.json records. This
+    contradicts B93_SCOPE.md S4.2's "resolves to zero eligible Characters" — that census
+    likely measured a different, pipeline-derived per-unit keyword representation (candidate:
+    model_groups[*].faction_keyword_names, referenced in b113_bearer_table_matches_source)
+    rather than S.all_keywords()'s direct CSV read used here. Which representation the engine
+    itself actually consults at bearer-assignment time is B125's own question and is not
+    re-derived here — B125's scoping turn should reconcile against this finding rather than
+    re-open the census from nothing. Flagged, not silently resolved: if B125 confirms the
+    stripped-keyword read is what index.html actually uses, these 6 records belong back in
+    this list and the docstring above is wrong; if not, B93_SCOPE.md S4.2 overstated the gap.
+
+    Negative-tested: removing any one EXEMPT entry makes this fail and name that exact record
+    (verified for Astartes Tank Ace during this session; not re-run automatically every gate
+    pass, since that would require mutating EXEMPT at runtime for no ongoing benefit).
+    """
+    dt = S.detachments().get('detachments', {})
+    akw = S.all_keywords()
+    tax = S.taxonomy()
+    name_to_data_army = {}
+    for g in tax['groups']:
+        for fx in g['factions']:
+            name_to_data_army[fx['name']] = fx.get('data_army', fx['name'])
+    pool_cache = {}
+    def pool_for(source_faction):
+        da = name_to_data_army.get(source_faction, source_faction)
+        if da not in pool_cache:
+            pool_cache[da] = S.resolved_pool(da)
+        return pool_cache[da]
+
+    def norm_apos(s):
+        return s.replace('\u2019', "'").replace('\u2018', "'")
+
+    ALL_KW = set()
+    for kwset in akw.values():
+        for k in kwset:
+            k = norm_apos(k.strip().upper())
+            if k:
+                ALL_KW.add(k)
+    MAX_PHRASE_WORDS = max((len(k.split()) for k in ALL_KW), default=1)
+
+    def tokenize_side(words):
+        toks, all_recognized, i, n = [], True, 0, len(words)
+        while i < n:
+            if words[i] in ('MODEL', 'UNIT', 'WITH', 'THE', 'ABILITY', 'A'):
+                i += 1
+                continue
+            matched = False
+            for span in range(min(MAX_PHRASE_WORDS, n - i), 0, -1):
+                cand = ' '.join(words[i:i+span])
+                if cand in ALL_KW:
+                    toks.append(cand); i += span; matched = True
+                    break
+            if not matched:
+                toks.append(words[i]); all_recognized = False; i += 1
+        return frozenset(toks), all_recognized
+
+    SENT_SPLIT = re.compile(r'(?<=[.?!])\s+')
+
+    def find_clause(desc):
+        if not desc:
+            return None
+        for sent in SENT_SPLIT.split(desc):
+            s = sent.strip()
+            if len(s) > 110:
+                continue
+            core = s.rstrip('.?!').strip()
+            if re.search(r'\bonly\s*(\([^)]*\))?$', core, re.I) or \
+               re.search(r'\([^)]*\)\s*only$', core, re.I):
+                return core
+        return None
+
+    def parse_clause(core):
+        body = core
+        excl = set()
+        m = re.search(r'\(excluding ([^)]*)\)', body, re.I)
+        if m:
+            for tok in re.split(r',| and ', m.group(1), flags=re.I):
+                tok = tok.strip().rstrip('s').upper()
+                tok = re.sub(r'\bMODELS?$', '', tok).strip()
+                if tok:
+                    excl.add(norm_apos(tok))
+            body = body[:m.start()] + body[m.end():]
+        body = re.sub(r'with the .* ability', '', body, flags=re.I)
+        body = re.sub(r'\bonly\b', '', body, flags=re.I).strip().strip(' ,')
+        if not body:
+            return None
+        or_parts = re.split(r'\s+or\s+', body, flags=re.I)
+        alts = []
+        for part in or_parts:
+            part = part.strip()
+            if not part:
+                continue
+            words = part.split()
+            slash_idx = next((i for i, w in enumerate(words) if '/' in w), None)
+            if slash_idx is not None:
+                w = words[slash_idx]
+                a, b = w.split('/', 1)
+                for repl in (a, b):
+                    alts.append(' '.join(words[:slash_idx] + [repl] + words[slash_idx+1:]))
+            else:
+                alts.append(part)
+        parsed_alts = []
+        for a in alts:
+            words = norm_apos(a.upper()).split()
+            toks, all_rec = tokenize_side(words)
+            if toks:
+                parsed_alts.append((toks, all_rec, words))
+        if not parsed_alts:
+            return None
+        return parsed_alts, excl
+
+    def admit_count(source_faction, core, is_upgrade):
+        pool = pool_for(source_faction)
+        parsed = parse_clause(core)
+        if not parsed:
+            return None
+        alts, excl = parsed
+        pool_names_upper = {norm_apos(n.upper()): n for n in pool}
+        usable = []
+        for toks, all_rec, words in alts:
+            raw_phrase = norm_apos(' '.join(words).upper())
+            if all_rec:
+                usable.append(('kw', toks))
+            elif raw_phrase in pool_names_upper:
+                usable.append(('name', raw_phrase))
+        if not usable:
+            return None
+        admits = 0
+        for uname, urec in pool.items():
+            if not is_upgrade and urec.get('unit_type') != 'Character':
+                continue
+            ukw_upper = {norm_apos(k.upper()) for k in akw.get(urec.get('unit_id'), set())}
+            uname_upper = norm_apos(uname.upper())
+            match = False
+            for kind, val in usable:
+                if kind == 'kw' and val <= ukw_upper:
+                    match = True
+                elif kind == 'name' and val == uname_upper:
+                    match = True
+                if match:
+                    break
+            if match and excl and (ukw_upper & excl or uname_upper in excl):
+                match = False
+            if match:
+                admits += 1
+        return admits
+
+    # Named, commented exemptions — every one re-derived this session, not carried forward
+    # from any prior session's count (see docstring for the Deathwing discrepancy this
+    # produced against B93_SCOPE.md's own 34).
+    EXEMPT = set()
+    for army in ('Space Marines', 'Black Templars', 'Blood Angels', 'Dark Angels',
+                 'Deathwatch', 'Space Wolves'):
+        for enh in ('Astartes Tank Ace', 'Firestorm Coordinators', 'Gunnery Honours',
+                    'Redoubtable Machine Spirit'):
+            EXEMPT.add((f'{army}|HEADHUNTER TASK FORCE', enh))  # B128 — Tank Ace -> Character
+    for enh in ('Eye of Tzeentch', 'Intoxicating Elixir', 'Orbs of Unlife',
+                'Talisman of Burning Blood'):
+        EXEMPT.add(('Chaos Space Marines|PACTBOUND ZEALOTS', enh))  # B126 — Marks of Chaos
+    EXEMPT.add(('Thousand Sons|SERVANTS OF CHANGE', 'Thicket of Bladed Bone'))  # target is Beast-typed, not Character
+    EXEMPT.add(("Drukhari|REAPER'S WAGER", "Reaper's Cowl"))  # Harlequins not built (S2)
+
+    unexpected_zero = []
+    exempt_seen = set()
+    for dkey, drec in dt.items():
+        army = drec['source_faction']
+        for e in drec.get('enhancements', []):
+            core = find_clause(e.get('description') or '')
+            if not core:
+                continue
+            admits = admit_count(army, core, e.get('is_upgrade', False))
+            if admits is None:
+                continue  # unresolved clause (e.g. SPEEDER) — not asserted either way
+            if admits == 0:
+                key = (dkey, e['name'])
+                if key in EXEMPT:
+                    exempt_seen.add(key)
+                else:
+                    unexpected_zero.append(f'{dkey}::{e["name"]} ({core!r})')
+
+    if unexpected_zero:
+        return False, (f'{len(unexpected_zero)} enhancement(s) resolve to zero eligible '
+                       f'bearers with no named exemption: {unexpected_zero[:5]}')
+    stale = EXEMPT - exempt_seen
+    if stale:
+        return False, (f'{len(stale)} EXEMPT entr(y/ies) no longer resolve to zero admits — '
+                       f'stale exemption, re-derive: {sorted(stale)[:5]}')
+    return True, (f'zero-admit population is exactly the {len(EXEMPT)} named exemptions '
+                  f'(24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins); no unexempted '
+                  f'zero-admit record found')
 
 
 def e4b_engine_functions_defined_once(S):

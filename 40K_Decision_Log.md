@@ -14071,3 +14071,61 @@ depends on judgment being applied at the right time.
 **S241 retasked from B123 to B129.** B123 is decided, unblocked and cheap, but it is a build turn
 that reads `detachments.json`, and it is better read from a documented file. B129 is one tooling
 turn and B123 follows it.
+
+## D337 — Manifest reconciliation: S240's pushed `pipeline_manifest.py` did not match its own handoff
+
+S241 open. `SESSION_HANDOFF_240.md` states `B93_SCOPE.md` and `SESSION_HANDOFF_240.md` were
+registered in GUARDED before `--write` ran. `pipeline_manifest.json` (the regenerated artifact)
+confirms this happened — both entries are present with correct hashes. The pushed
+`pipeline_manifest.py` (the source of truth GUARDED lives in) does not contain either entry, and
+its own hash does not match S240's handoff table (`f2978945ce7f` on disk vs `20a81522f42a`
+recorded). The edited `.py` and the pushed `.py` are two different files; which upload step lost
+the difference is not established and does not need to be to fix it.
+
+Reconciled per the session-open protocol (gate failure, fix before starting assigned work): both
+entries re-added to GUARDED, verified against a fresh clone before appending (B121's own stated
+practice). This is the same failure class the manifest's own design note calls out — "manifest
+work was reverted twice without anyone noticing" — caught this time by session-open verification
+rather than discovered later.
+
+## D338 — B129: zero-bearer gate built; re-derived exemption set is 30, not 34
+
+The `rules_assertions.py` B129 gate closes D334/D336's gap: any non-Upgrade enhancement whose
+bearer-restriction clause resolves to zero eligible Characters must be a named, commented
+exemption or the gate fails and names the record.
+
+Building it required an actual clause resolver (vocabulary-derived keyword tokenisation, "/"
+slash-distribution per the INFANTRY/MOUNTED trap, D335's narrow-within-Character rule), not a
+restatement of B93_SCOPE.md's counts. Re-deriving surfaced two corrections to that document:
+
+- **The 6 Deathwing records are not zero-admit.** Direct read of `Datasheets_keywords.csv`
+  (`S.all_keywords()`, bypassing any pipeline-derived per-unit field) finds 5 Dark Angels
+  Characters carrying the Deathwing keyword, all present in `units.json`. B93_SCOPE.md §4.2's
+  "resolves to zero eligible Characters" does not hold against this read. Left out of the gate's
+  exemption list on that basis; B125's scoping turn should reconcile against this rather than
+  re-open the census from a blank page — either B125 confirms the engine actually consults a
+  different, stripped keyword representation at bearer-assignment time (in which case these 6
+  belong back in B129's exemption list and this decision is wrong), or B93_SCOPE.md's gap was
+  narrower than stated.
+- **The Spawn record's cause is a cross-faction homonym, not a unit-type gap.** Thousand Sons'
+  own "Chaos Spawn" datasheet does not carry the bare `Spawn` keyword; a different, unrelated
+  World Eaters datasheet of the same display name does. It does carry the compound keyword
+  `Chaos Spawn`, which the enhancement's own army does have — an alias mapping `SPAWN` to the
+  compound (as §5 recommended) would in fact resolve it. Not built here — a curation entry is a
+  data-turn decision, and B129 is tooling-only — but the record's true cause is corrected in the
+  gate's own docstring rather than left as the doc's original framing.
+
+Final exemption population: 24 Adeptus Astartes Vehicle (Headhunter Task Force, B128), 4 Marks of
+Chaos (Pactbound Zealots, B126), 1 Spawn (Thicket of Bladed Bone), 1 Harlequins (Reaper's Cowl,
+faction not built). Negative-tested during build: removing the Vehicle exemption for Astartes Tank
+Ace made the gate fail and name that exact record.
+
+## D339 — B128's premise does not hold against `detachment_effects.json`
+
+While documenting `detachment_effects.json` for B129, found it already carries 7 `battleline`
+effects with `enforced: true` (live in the engine today) and Headhunter Task Force's `tank_ace`
+effect across all 6 eligible armies, fully scoped — pool, cap, source citation — at **D273 (S182)**
+and re-verified S187. S240's B128 census states "None is modelled," which this file directly
+contradicts for at least 8 of its 35 counted conferrals. Not resolving B128 here — its own
+scoping turn should start from this file's `_meta` rather than re-censusing `rule_text` from
+zero, which is very likely most of the remaining scoping work already done.
