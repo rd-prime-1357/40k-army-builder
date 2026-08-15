@@ -14172,3 +14172,41 @@ the keyword back onto the 6 named shared records. Six units, one chapter — a d
 **Banked as B130** (the restore fix) and **B131** (B129 gate/docstring correction — small, should
 ship together with B130's census correction rather than separately). Full census, method, and the
 table of affected units in `B93_SCOPE.md` §12.
+
+## D341 — B131: B129's zero-bearer gate had the same raw-CSV-vs-built-data gap as the census it was policing; fixed in the gate mechanism, not just the exemption list
+
+S244, tooling-only. B131 was scoped as a small addition — 6 records into `b129_zero_bearer_gate`'s
+`EXEMPT` set, plus a docstring correction, per B125/D340's finding (S243). Attempting the scoped
+change alone did not work: the gate's own `admit_count` helper reads per-unit keyword membership
+from `S.all_keywords()`, a raw per-datasheet-ID CSV row — the exact representation D338/D340 had
+already found more permissive than `units.json`'s own built keyword field, because a chapter-
+specific datasheet ID is shared with a same-named generic-pool record. Adding the 6 Deathwing
+records to `EXEMPT` without fixing this made the gate fail immediately, flagging them "stale" —
+its own admit-count still credited nonzero eligible bearers via the raw CSV path, directly
+contradicting the units.json-based finding used to justify exempting them.
+
+**Fix: `admit_count`'s per-unit membership check now reads a unit's own built keyword fields**
+(`model_groups[*].keyword_names` / `faction_keyword_names` / `model_keyword_names`) instead of
+the raw CSV row for that unit's `unit_id`. The clause-tokenization vocabulary (`ALL_KW`) is
+deliberately left sourced from the full raw CSV — it still needs the complete keyword list,
+including keywords belonging to not-yet-built factions (e.g. Harlequins, referenced in Reaper's
+Cowl's clause), to tokenize enhancement clause text correctly. Only per-unit membership changed.
+
+Verified before shipping: the built-keyword-source version zeroes all 6 Deathwing-family records
+(matching B125/D340 exactly) and does not disturb any of the other 30 pre-existing exemptions —
+checked individually, not just "gate still passes." An earlier, cruder attempt that swapped the
+vocabulary source too (not just membership) incorrectly destabilized the Harlequins/Reaper's Cowl
+exemption; the surgical, membership-only version does not.
+
+`b129_zero_bearer_gate` now passes at 36 named exemptions (24 Vehicle/B128, 4 Marks/B126, 1 Spawn,
+1 Harlequins, 6 Deathwing/B131). **B130 remains the real fix** — restoring the Deathwing/Ravenwing
+keyword onto the 6 named records when the Dark Angels union pool is resolved. Once B130 ships,
+this EXEMPT block becomes stale and should be removed in its own small tooling follow-up.
+
+**Separately, session-open baseline caught a stale `pipeline_manifest.json`** (D337's exact
+concern, now confirmed live): S243's `--write` output was not among the files Ryan was asked to
+push, so the committed `pipeline_manifest.json` still carried S242-era hashes for the five files
+S243 changed. Reconciled this session by regenerating it via `--write` against the current,
+hash-verified repo state plus this session's `rules_assertions.py`/`pipeline_manifest.py` changes
+— see Ryan action required in `SESSION_HANDOFF_244.md`. **`pipeline_manifest.json` must be
+included in every push going forward**, not just the files a session's prose lists as changed.

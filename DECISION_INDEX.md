@@ -1084,3 +1084,12 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   credited units without checking their own built keyword field. **B129's exemption list and
   docstring need a follow-up fix (B131)**; the underlying keyword-restore mechanism banked as
   **B130**. See `B93_SCOPE.md` §12.
+- **D341** — **B131 shipped, but not as scoped.** The zero-bearer gate's own `admit_count` read
+  per-unit keywords from the same raw-CSV representation D338/D340 had already found more
+  permissive than `units.json` — adding the 6 Deathwing records to EXEMPT without fixing this made
+  the gate fail immediately. Fixed by switching per-unit membership to the unit's own built
+  keyword fields (vocabulary tokenization left on the raw CSV, still needed for not-yet-built
+  factions). Verified: zeroes all 6 Deathwing records, disturbs none of the other 30 exemptions.
+  Gate passes at 36. Separately, session-open baseline caught `pipeline_manifest.json` stale since
+  S243 (D337's exact concern, now confirmed live) — S243's `--write` output was never pushed.
+  Reconciled this session; must be included in every push going forward.

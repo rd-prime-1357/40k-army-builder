@@ -4622,8 +4622,10 @@ def b129_zero_bearer_gate(S):
     not zero — it is excluded from the admit count rather than asserted, so an unresolvable
     vocabulary gap cannot masquerade as a legality finding.
 
-    Re-derived this session, the zero-admit set is 30 records, not the 34 the S240 handoff
-    and NEXT_SESSION_PROMPT.md both carried forward:
+    Re-derived at S241, the zero-admit set was 30 records, not the 34 the S240 handoff and
+    NEXT_SESSION_PROMPT.md both carried forward. B131 (S244) adds the 6 Deathwing-family
+    records below, bringing the total to 36 — see the paragraph after this list for why that
+    also required a mechanism fix, not just an EXEMPT addition:
 
       - 24 Adeptus Astartes Vehicle (Headhunter Task Force, 6 armies) — B128. Confirmed: no
         Character-typed unit in any of the six pools carries the Vehicle keyword except two
@@ -4644,23 +4646,33 @@ def b129_zero_bearer_gate(S):
         record.
 
     **The 6 Deathwing records (4 "Deathwing model only" + 2 "...with the Deep Strike ability
-    only", Dark Angels) are NOT included** — re-verified directly against source and found NOT
-    zero-admit: Datasheets_keywords.csv gives the Deathwing keyword to five Dark Angels
-    Characters (Captain/Chaplain/Librarian/Ancient In Terminator Armour, Bladeguard Ancient),
-    and S.resolved_pool('Dark Angels') carries all five as built units.json records. This
-    contradicts B93_SCOPE.md S4.2's "resolves to zero eligible Characters" — that census
-    likely measured a different, pipeline-derived per-unit keyword representation (candidate:
-    model_groups[*].faction_keyword_names, referenced in b113_bearer_table_matches_source)
-    rather than S.all_keywords()'s direct CSV read used here. Which representation the engine
-    itself actually consults at bearer-assignment time is B125's own question and is not
-    re-derived here — B125's scoping turn should reconcile against this finding rather than
-    re-open the census from nothing. Flagged, not silently resolved: if B125 confirms the
-    stripped-keyword read is what index.html actually uses, these 6 records belong back in
-    this list and the docstring above is wrong; if not, B93_SCOPE.md S4.2 overstated the gap.
+    only", Dark Angels, all in INNER CIRCLE TASK FORCE, LION'S BLADE TASK FORCE and WRATH OF THE
+    ROCK) ARE included, as of B131 (S244).** B125 (S243) closed this: cross-checked against the
+    actual built units.json, not either prior side's raw-CSV read. keyword_names carries
+    Deathwing on 8 Dark Angels units (5 Epic Hero, 3 Infantry — zero Characters) and none of the
+    generic-pool Characters that should carry it when fielded in a Dark Angels list actually do
+    (5 records: Captain/Chaplain/Librarian In Terminator Armour, Ancient In Terminator Armour,
+    Bladeguard Ancient — full derivation in B93_SCOPE.md S12 and Decision Log D340).
+
+    B131 (S244) found this couldn't just be an EXEMPT addition: admit_count's own per-unit
+    membership check (ukw_upper, just below) was still reading the same raw per-datasheet-ID
+    CSV row D338/D340 had already found more permissive than the built data — the shared
+    datasheet ID lets a generic-pool Character read as carrying Deathwing even though its own
+    built model_groups keyword field does not. Fixed by reading built_kw_for_unit(urec) (the
+    unit's own built keyword_names/faction_keyword_names/model_keyword_names) for per-unit
+    membership instead, while leaving ALL_KW's vocabulary sourced from the full raw CSV (needed
+    to tokenize clause text for not-yet-built factions, e.g. Harlequins in Reaper's Cowl below).
+    Verified this change alone zeroes the 6 Deathwing records and changes nothing else: all 30
+    pre-existing exemptions (24 Vehicle, 4 Marks, 1 Spawn, 1 Harlequins) still resolve exactly
+    as before. **B130 is the real fix** (restores the Deathwing/Ravenwing keyword onto these
+    named records when the Dark Angels union pool is resolved); once B130 ships, this EXEMPT
+    block becomes stale and should be removed as its own small tooling follow-up (do not leave
+    a live gate depending on a dead exemption).
 
     Negative-tested: removing any one EXEMPT entry makes this fail and name that exact record
-    (verified for Astartes Tank Ace during this session; not re-run automatically every gate
-    pass, since that would require mutating EXEMPT at runtime for no ongoing benefit).
+    (verified for Astartes Tank Ace and, this session, for Champion of the Deathwing; not
+    re-run automatically every gate pass, since that would require mutating EXEMPT at runtime
+    for no ongoing benefit).
     """
     dt = S.detachments().get('detachments', {})
     akw = S.all_keywords()
@@ -4678,6 +4690,32 @@ def b129_zero_bearer_gate(S):
 
     def norm_apos(s):
         return s.replace('\u2019', "'").replace('\u2018', "'")
+
+    # B131 (S244): per-unit bearer membership must read the unit's own BUILT keyword fields
+    # (units.json model_groups), not a raw per-datasheet-ID CSV row. The raw CSV is keyed by
+    # source datasheet ID, so a chapter-specific unit (e.g. a Deathwing-only datasheet) and a
+    # same-named generic-pool unit that happens to share that ID both read as carrying the
+    # restrictive keyword — even when the pipeline's own built record for the generic-pool
+    # unit does not carry it. This is the exact CSV-vs-built-data gap B125/D340 diagnosed for
+    # the manual census; it turns out to be baked into this gate's own admit_count, not just
+    # the earlier hand read. Verified (S244): swapping only this per-unit lookup to built data
+    # correctly zeroes the 6 Deathwing-family records below and disturbs none of the other 30
+    # exemptions. The vocabulary set (ALL_KW, just below) is deliberately left sourced from the
+    # raw CSV — it needs the full keyword list including not-yet-built factions (e.g.
+    # Harlequins) to tokenize clause text correctly; only per-unit membership changes.
+    def built_kw_for_unit(urec):
+        kws = set()
+        for m in urec.get('model_groups', []):
+            for f in ('keyword_names', 'faction_keyword_names'):
+                for k in (m.get(f) or []):
+                    if isinstance(k, str):
+                        kws.add(k)
+            for entry in (m.get('model_keyword_names') or []):
+                if isinstance(entry, dict):
+                    for k in entry.get('keywords', []):
+                        if isinstance(k, str):
+                            kws.add(k)
+        return kws
 
     ALL_KW = set()
     for kwset in akw.values():
@@ -4778,7 +4816,7 @@ def b129_zero_bearer_gate(S):
         for uname, urec in pool.items():
             if not is_upgrade and urec.get('unit_type') != 'Character':
                 continue
-            ukw_upper = {norm_apos(k.upper()) for k in akw.get(urec.get('unit_id'), set())}
+            ukw_upper = {norm_apos(k.upper()) for k in built_kw_for_unit(urec)}
             uname_upper = norm_apos(uname.upper())
             match = False
             for kind, val in usable:
@@ -4808,6 +4846,15 @@ def b129_zero_bearer_gate(S):
         EXEMPT.add(('Chaos Space Marines|PACTBOUND ZEALOTS', enh))  # B126 — Marks of Chaos
     EXEMPT.add(('Thousand Sons|SERVANTS OF CHANGE', 'Thicket of Bladed Bone'))  # target is Beast-typed, not Character
     EXEMPT.add(("Drukhari|REAPER'S WAGER", "Reaper's Cowl"))  # Harlequins not built (S2)
+    for dkey, enh in (
+        ('Dark Angels|INNER CIRCLE TASK FORCE', 'Champion of the Deathwing'),
+        ('Dark Angels|INNER CIRCLE TASK FORCE', 'Deathwing Assault'),
+        ('Dark Angels|INNER CIRCLE TASK FORCE', 'Eye of the Unseen'),
+        ('Dark Angels|INNER CIRCLE TASK FORCE', 'Singular Will'),
+        ("Dark Angels|LION'S BLADE TASK FORCE", 'Fulgus Magna'),
+        ('Dark Angels|WRATH OF THE ROCK', 'Deathwing Assault'),
+    ):
+        EXEMPT.add((dkey, enh))  # B125/D340/B131 — Deathwing keyword missing from generic-pool Characters; B130 is the real fix
 
     unexpected_zero = []
     exempt_seen = set()
@@ -4835,8 +4882,8 @@ def b129_zero_bearer_gate(S):
         return False, (f'{len(stale)} EXEMPT entr(y/ies) no longer resolve to zero admits — '
                        f'stale exemption, re-derive: {sorted(stale)[:5]}')
     return True, (f'zero-admit population is exactly the {len(EXEMPT)} named exemptions '
-                  f'(24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins); no unexempted '
-                  f'zero-admit record found')
+                  f'(24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins, 6 Deathwing/B131); '
+                  f'no unexempted zero-admit record found')
 
 
 def e4b_engine_functions_defined_once(S):

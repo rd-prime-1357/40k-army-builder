@@ -1,0 +1,122 @@
+# SESSION HANDOFF 244
+
+**Turn type:** tooling-only. `rules_assertions.py` and `pipeline_manifest.py` changed (code/gate
+logic and GUARDED registration only). `40K_Decision_Log.md`, `DECISION_INDEX.md`,
+`OPEN_ITEMS_BACKLOG.md` changed (rolling docs). No data file (`units.json`, `detachments.json`,
+etc.) or `index.html` touched.
+
+## What happened
+
+1. **Open — repo verified clean, but the manifest gate failed.** All five of S243's changed-file
+   hashes matched the pushed copies exactly (`B93_SCOPE.md`, `40K_Decision_Log.md`,
+   `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `pipeline_manifest.py`). Baseline ran with
+   sources loaded: 32/34 gates passed; `rules_assertions` and `pipeline_manifest` both failed with
+   the same root cause — the committed `pipeline_manifest.json` still carried S242-era hashes for
+   the five files S243 changed, because S243's `--write` output was never among the files pushed.
+   This is D337's exact concern, now confirmed live rather than theoretical. Reconciled at close
+   (see item 4).
+
+2. **B131 attempted as scoped, found deeper.** The plan was to add the 6 Deathwing-family records
+   to `b129_zero_bearer_gate`'s `EXEMPT` set and correct its docstring — small, per
+   `NEXT_SESSION_PROMPT.md`. Doing only that made the gate fail: `admit_count`'s per-unit
+   membership check reads `S.all_keywords()`, a raw per-datasheet-ID CSV row — the same
+   representation D338/D340 already found more permissive than `units.json`'s own built keyword
+   field (a chapter-specific datasheet ID is shared with a same-named generic-pool record). The
+   gate's own admit-count still credited the 6 records with nonzero eligible bearers via that raw
+   path, contradicting the units.json-based finding used to justify exempting them.
+
+3. **B131 shipped correctly — mechanism fix, not just a list addition.** `admit_count` now reads
+   a unit's own built keyword fields (`model_groups[*].keyword_names` /
+   `faction_keyword_names` / `model_keyword_names`) for per-unit membership, instead of the raw
+   CSV row. The clause-tokenization vocabulary (`ALL_KW`) stays sourced from the full raw CSV —
+   it still needs the complete keyword list, including not-yet-built factions (Harlequins, via
+   Reaper's Cowl's clause), to tokenize correctly. Verified before shipping: this zeroes all 6
+   Deathwing records and disturbs none of the other 30 pre-existing exemptions — checked
+   individually, not just "gate still passes." An earlier, cruder attempt (swapping the vocabulary
+   source too) incorrectly destabilized the Harlequins exemption; the surgical version does not.
+   Gate now passes: 36 named exemptions (24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins,
+   6 Deathwing/B131).
+
+4. **Manifest reconciled.** `SESSION_HANDOFF_244.md` registered in `pipeline_manifest.py`'s
+   GUARDED list before `--write` ran. `--write` then regenerated `pipeline_manifest.json` against
+   the current, hash-verified repo state (S243's five files, unchanged content, now correctly
+   hashed) plus this session's two changed files. `--freshness-check` ran clean after.
+
+5. **Close.** Full baseline re-run after the fix: 34/34 gates pass.
+
+## Decisions needed
+
+None. The gate-mechanism fix follows directly from B125/D340's already-established finding; no
+new product or legality call was made.
+
+## Shipped / changed
+
+- **`rules_assertions.py`** — `b129_zero_bearer_gate`: added `built_kw_for_unit()` helper; swapped
+  per-unit keyword membership from raw-CSV (`akw.get(unit_id)`) to built `units.json` data; added
+  the 6 Deathwing-family records to `EXEMPT` (30 → 36); corrected the docstring's D338/D340
+  paragraph and the zero-admit population summary message.
+- **`pipeline_manifest.py`** — `SESSION_HANDOFF_244.md` added to GUARDED (handoff group) before
+  `--write` ran.
+- **`40K_Decision_Log.md`** — D341 added: B131's gate-mechanism fix, verification method, and the
+  stale-manifest reconciliation.
+- **`DECISION_INDEX.md`** — D341 summary appended.
+- **`OPEN_ITEMS_BACKLOG.md`** — B131 moved from Open Items to Closed/Shipped with a "SHIPPED S244"
+  addendum documenting the deeper-than-scoped finding; S244 ledger appended; 26 → 25.
+- **`NEXT_SESSION_PROMPT.md`** — rewritten for S245.
+
+### Net New Files
+
+None. All changed files are existing rolling/reference documents or existing code files; no new
+file type or role was introduced this session.
+
+## Files (SHA-256, first 12)
+
+Verify these at S245 open.
+
+| file | sha256:12 | note |
+|------|-----------|------|
+| `rules_assertions.py` | `2398369e783e` | b129_zero_bearer_gate mechanism fix + 6 Deathwing EXEMPT entries |
+| `pipeline_manifest.py` | `05fac379f83c` | `SESSION_HANDOFF_244.md` registered |
+| `40K_Decision_Log.md` | `b778375b9dce` | D341 appended |
+| `DECISION_INDEX.md` | `136b07ea2feb` | D341 summary appended |
+| `OPEN_ITEMS_BACKLOG.md` | `6af95bf1f064` | B131 shipped; 26 -> 25 |
+| `pipeline_manifest.json` | (regen at close) | regenerated by `--write`; verified by its own gate |
+| `NEXT_SESSION_PROMPT.md` | (never guarded) | documented exclusion, D231 |
+| `SESSION_HANDOFF_244.md` | (this file) | not self-referential; checked by `--freshness-check` |
+
+Hashes taken from the on-disk copies after `--write`/`--freshness-check` both ran clean.
+
+## Ryan action required
+
+- **Push this session's changed files** to the public repo: `rules_assertions.py`,
+  `pipeline_manifest.py`, `pipeline_manifest.json`, `40K_Decision_Log.md`, `DECISION_INDEX.md`,
+  `OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_244.md`, `NEXT_SESSION_PROMPT.md`.
+- **`pipeline_manifest.json` must be pushed this time.** S243's push omitted it, which is exactly
+  what caused this session's manifest-gate failure at open. It is not optional cosmetic output —
+  the next session's baseline depends on it matching the actual committed files.
+
+## Decisions resolved this session
+
+D341 (B131's gate mechanism fixed, not just its exemption list; stale `pipeline_manifest.json`
+reconciled) — a technical/mechanism call, not a product one; nothing here required Ryan's input.
+
+## Decisions waiting on Ryan
+
+- **Next faction after Drukhari** — unchanged since S240. Recommendation stands: clear the engine
+  backlog first; B116's Aeldari dependency belongs on a release plan.
+
+## Backlog
+
+26 open at S243 close; **25 open at S244 close** (B131 shipped; nothing new opened).
+
+Beginning: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B130, B131 (26).
+Resolved: B131 (1).
+Added: none (0).
+Ending: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B130 (25).
+
+Nothing is decision-blocked. B130 (the real Deathwing/Ravenwing keyword-restoration fix,
+data-sized) is the recommended next pick — it's what makes B131's EXEMPT block removable, and it's
+been next-in-line since S243. Recall B130 needs a full `--fetch --data-turn` baseline (last one
+was S240); flag that at the start of whichever session builds it.

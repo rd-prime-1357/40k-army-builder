@@ -1447,6 +1447,26 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+### B131 — B129's zero-bearer gate wrongly excludes the 6 Deathwing-family records; docstring wrong — **NEW S243 (D340); tooling; SHIPPED S244 (D341)**
+
+D338 found these 6 records "not zero-admit" via a raw-CSV read (`S.all_keywords()`) that credits a
+same-named resolved-pool record without checking whether that record's own **built** keyword field
+carries the restriction. B125 confirmed `units.json` itself gives zero eligible Characters for all
+6 today.
+
+**Turned out deeper than scoped.** Adding the 6 records to the gate's `EXEMPT` set alone did not
+work — `admit_count`'s per-unit membership check used the same raw-CSV representation D338/D340
+had already found too permissive, so the gate immediately flagged the new entries as stale. Fixed
+by switching per-unit membership to the unit's own built keyword fields (`model_groups[*]
+.keyword_names`/`faction_keyword_names`/`model_keyword_names`), leaving the clause-tokenization
+vocabulary on the full raw CSV (still needed for not-yet-built factions, e.g. Harlequins in
+Reaper's Cowl). Verified before shipping: zeroes all 6 Deathwing records, does not disturb any of
+the other 30 pre-existing exemptions (checked individually). Gate passes at 36 named exemptions.
+
+**B130 remains open** — the actual keyword-restoration fix (data turn). Once B130 ships, this
+EXEMPT block becomes stale and should be removed in its own small tooling follow-up; noted so it
+isn't forgotten.
+
 ### B123 — Bearer statline changes that SET a value or grant Feel No Pain are uncensused and unrendered — **NEW S238 (D332); engine; S–M; SHIPPED S242**
 
 Found during B119's build. `B99_SCOPE.md` §1's census table has five rows — Sets A, A2, B, C, D —
@@ -1524,18 +1544,6 @@ Chaplain On Bike (Ravenwing). Recommended shape: a small restoration map, struct
 of `SUBFACTION_KEYWORD_ARMY` (which strips), applied when the Dark Angels union pool is resolved —
 add the keyword back onto these 6 records for that one consuming army rather than change how the
 shared generic record is stored. Six units, one chapter, no new mechanism class.
-
-### B131 — B129's zero-bearer gate wrongly excludes the 6 Deathwing-family records; docstring is wrong — **NEW S243 (D340); tooling; XS; pairs with B130**
-
-D338 found these 6 records "not zero-admit" via a raw-CSV read (`S.all_keywords()`) that credits a
-same-named resolved-pool record without checking whether that record's own **built** keyword field
-carries the restriction. B125 confirmed `units.json` itself gives zero eligible Characters for all
-6 today. The gate's exemption list needs these 6 added back (making the exemption count 36, not
-30), and `b129_zero_bearer_gate`'s docstring needs its D338 paragraph corrected. Small, tooling-
-only — a different turn type from B130's data fix, so the two must ship in separate sessions, not
-combined. Recommended order: this ticket first (matches today's actual data), B130 later (the real
-fix), then a third small tooling pass removing this ticket's exemption once B130 lands — note that
-dependency in whichever session ships B130.
 
 ### B129 — `detachments.json` is undocumented; no field-coverage discipline on censuses — **NEW S240 (D336); tooling; S; root cause of D334**
 
@@ -2470,3 +2478,22 @@ Dark Angels-only (Death Company, Wulfen checked clean; Grey Knights structurally
 D338 reconciled against the gate — `units.json` itself confirms zero eligible Characters for the
 6 Deathwing-family records today. No code touched this session (scoping-only); B130 (data fix)
 and B131 (gate correction) banked for a future tooling/data turn.
+## S244 ledger
+
+Tooling-only turn (B131, D341). **26 open at S243 close; 25 open at S244 close** (B131 shipped;
+nothing new opened).
+
+Beginning: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B130, B131 (26).
+Resolved: B131 (1).
+Added: none (0).
+Ending: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B130 (25).
+
+Repo verified clean at open: all five S243-changed files matched the S243 handoff table's hashes
+exactly. Session-open baseline caught a stale `pipeline_manifest.json` (D337's exact concern,
+confirmed live) — S243's `--write` output had never been pushed, so the committed manifest still
+carried S242-era hashes for S243's five changed files; reconciled by regenerating at this
+session's close. B131 turned out deeper than scoped — see D341 — but stayed tooling-only
+throughout (`rules_assertions.py` gate mechanism fix, no data or engine files touched). B130 (the
+real Deathwing/Ravenwing keyword-restoration fix, data-sized) remains next.
