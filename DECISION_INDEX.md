@@ -1093,3 +1093,15 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   Gate passes at 36. Separately, session-open baseline caught `pipeline_manifest.json` stale since
   S243 (D337's exact concern, now confirmed live) — S243's `--write` output was never pushed.
   Reconciled this session; must be included in every push going forward.
+- **D342** — **B130 data half shipped; the restoration set is 28 units, not 6.** §12's "5 and 1"
+  counted only generic-pool *Characters* (B93 is a bearer arc); the underlying data defect is 28
+  generic units carrying a stripped Deathwing (18) or Ravenwing (10) keyword. Re-derived from the
+  raw exports using `wahapedia_transform.py`'s own constants and exclusion rule, then verified
+  against the composition sources: `Dark_Angels_web.txt` carries the keyword on all 28;
+  `Space_Marines_web.txt`, `Black_Templars_web.txt` and `Space_Wolves_web.txt` carry zero. Emitted
+  as a per-army `chapter_keyword_additions` map on the generic unit — the shared record cannot hold
+  a keyword that applies to only one consuming chapter. Structurally mirrors
+  `chapter_point_overrides` (B56c/D167) and follows the same two-turn split: **B130 re-scoped to
+  the data half; B132 opened for the engine half** (`resolveUnits` consumption). Field is inert
+  until B132. Policed by the `units_repro_check.py` fixed point rather than a new assertion, matching
+  how the override map is policed. **B131's EXEMPT block goes stale when B132 ships, not B130.**

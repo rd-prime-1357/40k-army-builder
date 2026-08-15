@@ -14210,3 +14210,80 @@ S243 changed. Reconciled this session by regenerating it via `--write` against t
 hash-verified repo state plus this session's `rules_assertions.py`/`pipeline_manifest.py` changes
 — see Ryan action required in `SESSION_HANDOFF_244.md`. **`pipeline_manifest.json` must be
 included in every push going forward**, not just the files a session's prose lists as changed.
+
+## D342 — B130 data half: the Deathwing/Ravenwing restoration set is 28 units, not 6, and the fix splits across two turn types
+
+**Turn type: data-only.** Session 245.
+
+### The population is 28, not 6
+
+`B93_SCOPE.md` §12 (B125/S243) put the gap at 6 named generic-pool Characters — Captain, Chaplain
+and Librarian In Terminator Armour, Ancient In Terminator Armour, Bladeguard Ancient (Deathwing)
+and Chaplain On Bike (Ravenwing). That figure is correct **for what §12 was counting**: B93 is an
+enhancement-bearer arc, enhancements go on Characters, and §12's table is headed "generic-pool
+Characters missing it". It was never a count of the underlying data defect.
+
+Re-derived this session from the raw exports (`Datasheets_keywords.csv`, `Datasheets.csv`,
+`Source.csv`), applying `wahapedia_transform.py`'s own `KNOWN_CHAPTERS`, its own
+`SUBFACTION_KEYWORD_ARMY` and its own `source_is_excluded()` rather than re-implementing any of
+them: **28 generic-pool units carry a stripped sub-faction keyword — 18 Deathwing, 10 Ravenwing.**
+All 28 resolve to the generic Adeptus Astartes army, all 28 are present in the shipped generic
+block of `units.json`, and all 28 carry the keyword as an all-models, non-faction keyword row (no
+model-scoped rows exist in this population; the script fails loudly if one ever appears rather than
+flattening it onto the whole unit).
+
+Beyond §12's six Characters, the set adds: Terminator Squad, Terminator Assault Squad, Bladeguard
+Veteran Squad, Sternguard Veteran Squad, Vanguard Veteran Squad With Jump Packs, Dreadnought,
+Ballistus/Brutalis/Redemptor Dreadnought, Land Raider, Land Raider Crusader, Land Raider Redeemer,
+Repulsor, Repulsor Executioner (Deathwing); Outrider Squad, Invader ATV, Storm Speeder
+Hailstrike/Hammerstrike/Thunderstrike, Stormhawk Interceptor, Stormraven Gunship, Stormtalon
+Gunship (Ravenwing).
+
+### Verified against the composition sources, not only the raw CSV
+
+Per the standing "widen the read" rule, the raw keyword export was not treated as sufficient on its
+own. Checked against the held army-composition files:
+
+- `Dark_Angels_web.txt` carries the keyword on the `KEYWORDS:` line of **every one of the 28**.
+- `Space_Marines_web.txt` carries **zero** Deathwing/Ravenwing mentions of any kind.
+- `Black_Templars_web.txt` and `Space_Wolves_web.txt` likewise **zero**, consistent with
+  `SUBFACTION_KEYWORD_ARMY` naming exactly one owning chapter for both keywords.
+
+So the transform's strip is right for the generic pool and wrong for the Dark Angels view. This is
+the same conclusion §12 reached, at the true population size.
+
+### The restoration cannot live on the shared record
+
+The generic record is one object that every union-mode chapter's roster pulls in at selection time
+(`resolveUnits`, D276/B90). Writing Deathwing onto its own `keyword_names` would hand an
+Ultramarines list a DEATHWING Terminator Squad. The keyword is conditional on the consuming army,
+so it is emitted as a per-army map on the unit and applied at consumption:
+
+    "chapter_keyword_additions": { "<Chapter Army Name>": ["<Keyword>", ...] }
+
+This is structurally the mirror of `chapter_point_overrides` (B56c/D167) and deliberately reuses
+that shape rather than inventing a second per-army mechanism class.
+
+### Split across two turns, following B56c/B56d exactly
+
+Emitting the map is data; consuming it in `resolveUnits` is engine. Turn typing forbids mixing, and
+the project already has the precedent: **B56c** shipped the point-override map as inert data and
+**B56d** taught the engine to read it. **B130 is hereby re-scoped to the data half only** and
+**B132 is opened for the engine half**. Until B132 ships the field is inert — nothing reads it and
+no rendered behaviour changes.
+
+### Why no new `rules_assertions.py` entry
+
+The map is derived fresh from source inside the `units_repro_check.py` fixed point: the rebuild
+chain runs the post-processor and compares `units.json` byte-for-byte, so a source change that
+alters the population fails the gate. That is an executable check under D107, and it matches how
+`chapter_point_overrides` is policed (no assertion; repro plus `b90_check.js` for the engine side).
+Adding a gate assertion this session would also have made a data turn part-tooling. B132's engine
+gate covers consumption.
+
+### Consequence for B131
+
+B131's `EXEMPT` block in the zero-bearer gate reflects today's data, where the 6 Deathwing-family
+records have zero eligible bearers. That stays true through this session — the field is inert. It
+becomes stale only when **B132** ships, not when B130 did. The follow-up tooling pass is now gated
+on B132.

@@ -626,6 +626,32 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
+### B132 — Consume `chapter_keyword_additions` in `resolveUnits` (engine half of B130) — **NEW S245 (D342); engine; S; unblocks the 6 Deathwing-family B93 records**
+
+B130 (S245) shipped the data: 28 generic Adeptus Astartes units now carry a
+`chapter_keyword_additions` map (`{"Dark Angels": ["Deathwing"|"Ravenwing"]}`). Nothing reads it
+yet, so the field is inert and no behaviour has changed.
+
+This ticket is the engine half, and it is the direct analogue of **B56d** — read B56d and
+`applyChapterPointOverrides()` before writing anything new. Same shape: at the point `resolveUnits`
+resolves a union-mode chapter's pool, for each unit carrying the map under that chapter's army
+name, add the listed keywords to every model group's `keyword_names`. **Never mutate the shared
+generic unit object** — it is the same object reference across every chapter's resolved set, so an
+in-place edit would leak Deathwing into Ultramarines. Return a fresh object only where an addition
+actually applies, exactly as the point-override path does. The keywords are all-models on every one
+of the 28 records (verified at D342), so a per-model-group carve-out is not needed.
+
+Ordering against the override map does not matter (disjoint fields), but keep the new step beside
+`applyChapterPointOverrides` rather than scattering a second per-army transform elsewhere.
+
+Needs its own gate on the `b90_check.js` model — a synthetic fixture chapter proving (a) the
+keywords land for the owning chapter, (b) they do not land for any other chapter's resolved pool,
+and (c) the generic Space Marines pool is unchanged.
+
+**Follow-on:** once this ships, B131's `EXEMPT` block in the zero-bearer gate goes stale — the 6
+Deathwing-family enhancement records gain real eligible bearers — and must be removed in a separate
+tooling pass. That pass is gated on this ticket, not on B130.
+
 ### B116 — Drukhari's Harlequins/Anhrathe allied-unit inclusion has no built-faction precedent — **NEW S222 (D316); product scope call; REQUIRED BEFORE PRODUCTION (Ryan, S240/D335); gated on Aeldari being built**
 **S240 (D335): reclassified by Ryan.** Deferral is fine for now, but this must ship before the
 product is production-ready — it is not indefinitely deferrable, and the ticket is no longer
@@ -1536,14 +1562,33 @@ Also reconciled D338 in this document's favor — see `B93_SCOPE.md` §12 and D3
 B130** (a 6-unit keyword-restoration map, data-turn-sized, not a general rework); **gate/docstring
 correction banked as B131**.
 
-### B130 — Restore Deathwing/Ravenwing keywords onto the 6 generic-pool Characters when consumed by Dark Angels — **NEW S243 (D340); data; S; unblocks the 6 Deathwing-family B93 records**
+### B130 — Emit the Deathwing/Ravenwing per-army keyword-restoration map (data half) — **NEW S243 (D340); data; SHIPPED S245 (D342); engine half is B132**
 
-B125's census (`B93_SCOPE.md` §12) found the gap is exactly 6 named units: Captain/Chaplain/
-Librarian In Terminator Armour, Ancient In Terminator Armour, Bladeguard Ancient (Deathwing) and
-Chaplain On Bike (Ravenwing). Recommended shape: a small restoration map, structurally the mirror
-of `SUBFACTION_KEYWORD_ARMY` (which strips), applied when the Dark Angels union pool is resolved —
-add the keyword back onto these 6 records for that one consuming army rather than change how the
-shared generic record is stored. Six units, one chapter, no new mechanism class.
+B125's census (`B93_SCOPE.md` §12) put the gap at 6 named units: Captain/Chaplain/Librarian In
+Terminator Armour, Ancient In Terminator Armour, Bladeguard Ancient (Deathwing) and Chaplain On
+Bike (Ravenwing). Recommended shape: a small restoration map, structurally the mirror of
+`SUBFACTION_KEYWORD_ARMY` (which strips), applied when the Dark Angels union pool is resolved — add
+the keyword back for that one consuming army rather than change how the shared generic record is
+stored.
+
+**Re-derived at build time, the population is 28, not 6 (D342).** §12's figure counted only
+generic-pool *Characters*, which is what B93's bearer arc needs; the underlying data defect is
+larger. 18 Deathwing + 10 Ravenwing, all all-models non-faction keyword rows, all present in the
+shipped generic block. Beyond §12's six: Terminator Squad, Terminator Assault Squad, Bladeguard
+Veteran Squad, Sternguard Veteran Squad, Vanguard Veteran Squad With Jump Packs, Dreadnought,
+Ballistus/Brutalis/Redemptor Dreadnought, the three Land Raiders, Repulsor, Repulsor Executioner;
+Outrider Squad, Invader ATV, the three Storm Speeders, Stormhawk, Stormraven, Stormtalon.
+Cross-checked against the composition sources, not just the raw export: `Dark_Angels_web.txt`
+carries the keyword on all 28; `Space_Marines_web.txt`, `Black_Templars_web.txt` and
+`Space_Wolves_web.txt` carry zero.
+
+**SHIPPED S245 — data half only.** New post-processor `add_chapter_keyword_additions.py` derives
+the map fresh from the raw exports every build, importing `wahapedia_transform.py`'s own
+`SUBFACTION_KEYWORD_ARMY`, `KNOWN_CHAPTERS` and `source_is_excluded()` so the two cannot drift, and
+stamps `chapter_keyword_additions` onto the 28 generic records. Wired into `units_repro_check.py`'s
+rebuild chain and `REQUIRED` list, so the derivation sits inside the byte-for-byte fixed point
+(D107) — no separate assertion, matching how `chapter_point_overrides` is policed. Field is inert
+until **B132** consumes it.
 
 ### B129 — `detachments.json` is undocumented; no field-coverage discipline on censuses — **NEW S240 (D336); tooling; S; root cause of D334**
 
@@ -2497,3 +2542,23 @@ carried S242-era hashes for S243's five changed files; reconciled by regeneratin
 session's close. B131 turned out deeper than scoped — see D341 — but stayed tooling-only
 throughout (`rules_assertions.py` gate mechanism fix, no data or engine files touched). B130 (the
 real Deathwing/Ravenwing keyword-restoration fix, data-sized) remains next.
+
+## S245 ledger
+
+Data-only turn (B130 data half, D342). **25 open at S244 close; 25 open at S245 close** (B130
+shipped; B132 opened).
+
+Beginning: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B130 (25).
+Resolved: B130 (1).
+Added: B132 (1).
+Ending: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B132 (25).
+
+Repo verified clean at open: all six S244-changed files matched the S244 handoff table's hashes
+exactly, `pipeline_manifest.json` included this time — S243's omission did not recur. Session-open
+baseline ran a full `--fetch --data-turn` and passed 37/37 with 85 source files verified. B130's
+population was re-derived from raw source rather than taken from `B93_SCOPE.md` §12, and came back
+**28, not 6** — §12 had counted only generic-pool Characters. Cross-checked against the
+army-composition sources before building. The fix needs both a data emitter and an engine consumer,
+so it was split on the B56c/B56d precedent: data half shipped here, engine half banked as B132.

@@ -106,6 +106,10 @@ REQUIRED = [
     'wahapedia_transform.py', 'mfm_points_parser.py', 'convert_to_json.py',
     'merge_factions.py', 'add_loadout_groups.py', 'add_co_leader.py',
     'add_bodyguard_stat_flags.py', 'add_chapter_point_overrides.py',
+    # B130 (D342): the per-chapter sub-faction keyword restoration map. Same class
+    # of input as the override map above -- derived fresh from the raw keyword
+    # export every run, so it belongs inside the fixed point, not outside it.
+    'add_chapter_keyword_additions.py',
     'units.json', 'unit_loadouts.json',
     'bundled_swaps.json', 'faction_taxonomy.json',
     'MFM_Space_Marines_v1.1.txt',
@@ -503,6 +507,17 @@ def repro(dir_):
                         '--mfm-dir', dir_], cwd=dir_)
         if rc != 0:
             return False, 'add_chapter_point_overrides.py failed:\n' + out[-600:]
+
+        # --- B130 (D342): derive and stamp the per-chapter sub-faction keyword
+        # restoration map onto the matching generic (Adeptus Astartes) units. Reads
+        # the raw Wahapedia keyword export directly and imports the transform's own
+        # SUBFACTION_KEYWORD_ARMY / exclusion rule, so it is the exact inverse of
+        # the strip the transform performed earlier in this same chain. ---
+        rc, out = _run([sys.executable, 'add_chapter_keyword_additions.py',
+                        '--units', os.path.join(deploy, 'units.json'),
+                        '--csv-dir', dir_], cwd=dir_)
+        if rc != 0:
+            return False, 'add_chapter_keyword_additions.py failed:\n' + out[-600:]
 
         rebuilt_path = os.path.join(deploy, 'units.json')
         a = open(rebuilt_path, 'rb').read()

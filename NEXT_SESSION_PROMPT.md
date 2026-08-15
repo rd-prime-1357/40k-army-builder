@@ -1,34 +1,44 @@
-# NEXT SESSION PROMPT — Session 245
+# NEXT SESSION PROMPT — Session 246
 
-## Recommended pick: B130, restore Deathwing/Ravenwing keywords onto the 6 generic-pool Characters when consumed by Dark Angels. Data turn — needs a full `--fetch --data-turn` baseline.
+## Recommended pick: B132, consume `chapter_keyword_additions` in `resolveUnits`. Engine turn — a plain `--fetch` baseline is enough (no sources needed).
 
-B131 (S244) fixed `b129_zero_bearer_gate`'s bearer-eligibility check and added the 6 Deathwing-
-family records to its exemption list — the gate now correctly reflects that these records
-currently have zero eligible bearers. **B130 is the actual product fix**: restore the Deathwing
-keyword onto 5 named units and Ravenwing onto 1, for the specific case of a Dark Angels list,
-without changing the shared generic-pool record's own keywords. Recommended shape (from
-`B93_SCOPE.md` §12): a small restoration map, structurally the mirror of `SUBFACTION_KEYWORD_ARMY`
-(which strips a sub-faction keyword when `army_of != owner`) — add the keyword back onto these 6
-records at the point the Dark Angels union pool is resolved.
+B130 (S245) shipped the data half: 28 generic Adeptus Astartes units in `units.json` now carry
+`chapter_keyword_additions`, a per-army map of the form `{"Dark Angels": ["Deathwing"]}`. **Nothing
+reads it yet.** B132 is the engine half and finishes the fix.
 
-The 6 named units: Captain/Chaplain/Librarian In Terminator Armour, Ancient In Terminator Armour,
-Bladeguard Ancient (Deathwing); Chaplain On Bike (Ravenwing). Full derivation already on record —
-`B93_SCOPE.md` §12 and Decision Log D340 — this should not need a re-derivation from source.
+This is the direct analogue of **B56d**. Read `applyChapterPointOverrides()` in `index.html` before
+writing anything — same problem, same solution shape, and the comment above it already states the
+one thing that must not go wrong: **never mutate the shared generic unit object.** It is the same
+object reference across every chapter's resolved set, so an in-place keyword push would leak
+Deathwing into Ultramarines. Return a fresh object only where an addition actually applies.
 
-**After B130 ships, B131's EXEMPT block becomes stale and should be removed** — a small follow-up
-tooling pass. Note that dependency when scoping B130's session so it isn't forgotten.
+The keywords are all-models on every one of the 28 records (verified at D342), so they go onto every
+model group's `keyword_names` and no per-model-group carve-out is needed. Ordering against the
+point-override step does not matter — the two touch disjoint fields — but keep the new step beside
+it rather than scattering a second per-army transform elsewhere in the file.
+
+Needs its own gate, on the `b90_check.js` model: a synthetic fixture proving (a) the keywords land
+for the owning chapter, (b) they do **not** land in any other chapter's resolved pool, and (c) the
+generic Space Marines pool is unchanged. (b) is the one that matters.
+
+**After B132 ships, B131's `EXEMPT` block in the zero-bearer gate goes stale** — the 6
+Deathwing-family enhancement records gain real eligible bearers — and must be removed in a separate
+tooling pass. That follow-up is gated on B132, **not** on B130; S244's note said B130 and is now
+superseded.
 
 ## Also open, at your discretion — 25 tickets
 
 B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75,
-P2, P4, E23, B67b, E12, B17. **Nothing is decision-blocked.**
+P2, P4, E23, B67b, E12, B17, B132. **Nothing is decision-blocked.**
 
 - **B126** (Marks of Chaos) is a feature, not a fix — mark selection, list persistence, plus two
   unenforced D0 rules of its own (attachment and Transport must share a mark). Same shape as B128:
   a muster-time selection that changes a unit's keywords. Worth reading B128's re-scoped entry
-  before writing B126's, so the two do not invent different mechanisms for the same problem.
-- **B127** (74 records with no rule text in any held source) needs nothing from Claude until
-  source exists — a Ryan-side acquisition item.
+  before writing B126's, so the two do not invent different mechanisms for the same problem. Note
+  that B132 will have just built a third variant of "a unit's keywords depend on context" — read it
+  too before designing either.
+- **B127** (74 records with no rule text in any held source) needs nothing from Claude until source
+  exists — a Ryan-side acquisition item.
 - **B120** still needs its own scoping turn before build; per S238's note, widen its census from
   Set D *weapons* to Set D effects generally so **B124** lands inside it.
 - **B122** needs a scoping turn answering a source question first: does the held Chaos Daemons
@@ -36,66 +46,60 @@ P2, P4, E23, B67b, E12, B17. **Nothing is decision-blocked.**
   B127's 74 records, which have none at all)?
 - **B128** (muster-time detachment keyword conferral) — re-scoped smaller by D339 (S241).
   `detachment_effects.json` already models 7 `battleline` effects (`enforced: true`, live) and
-  Headhunter Task Force's `tank_ace` (scoped since D273/S182). Read that file's `_meta` before
-  re-censusing `rule_text` — most of the scoping work for the automatic conferrals is very likely
-  already done; the genuine remaining gap is Headhunter's player-choice-with-a-cap mechanism.
+  Headhunter Task Force's `tank_ace`. Read that file's `_meta` before re-censusing `rule_text`; the
+  genuine remaining gap is Headhunter's player-choice-with-a-cap mechanism.
 
 ## Standing reminders
 
-- The last full `--fetch --data-turn` was **S240**, clean at 36/36. S241–S244 were tooling/engine/
-  scoping turns and ran with only what each needed loaded. Run a full `--fetch --data-turn` at the
-  next real data session — **B130 qualifies and should get one.**
+- The last full `--fetch --data-turn` was **S245**, clean at 37/37 with 85 source files verified.
+  B132 is engine-only and does not need sources.
+- **Do not trust a scope document's population figure — re-derive it.** S245 is the second case in
+  three sessions where a prior session's count was correct only for what it was counting.
+  `B93_SCOPE.md` §12 said 6; the real defect was 28, because §12 counted only the Characters B93
+  needed. The prompt explicitly said this "should not need a re-derivation from source." It did.
+  Re-derive anyway, every time, and check the derivation against a second source before building on
+  it — the raw Wahapedia export alone would have been enough to get 28, but only the composition
+  files confirm 28 is *right*.
+- **A ticket sized as one turn can turn out to need two turn types.** B130 needed a data emitter and
+  an engine consumer. Split it rather than mixing; the project already had the precedent in
+  B56c/B56d. Check for a per-army mechanism precedent before inventing one.
 - Do not trust the GitHub API's repo `permissions` field for either repo as evidence of push
   access — verify with a real write attempt.
-- **Manifest pushes need a real diff check going forward (D337) — this bit S244 for real.**
-  S243's `--write` output (`pipeline_manifest.json`) was never pushed, so S244's session-open
-  baseline failed both `rules_assertions` and `pipeline_manifest` on a stale manifest before any
-  new work started. Before trusting a handoff's Files table at session open, verify the actual
-  pushed file's hash against the table — and confirm `pipeline_manifest.json` itself is among
-  what actually landed, not just the files a session's prose lists as "changed."
+- **Manifest pushes need a real diff check (D337).** Verify the actual pushed file's hash against the
+  handoff table at session open, and confirm `pipeline_manifest.json` itself is among what landed.
+  S244 and S245 both got this right; S243 did not.
 - The project-area file mount silently strips apostrophes from filenames on upload. Before trusting
   a project-area filename as the real repo filename, especially for anything going into GUARDED,
   check a fresh clone.
 - **Read `rule_text`, not just `restrictions`.** `restrictions` is a partial extraction of
-  `rule_text`, not a substitute, and is `null` on plenty of detachments that do carry rules. Both
-  are documented in `40K_Data_Dictionary.md`'s S241 addendum.
-- **An impossible result means widen the read, never explain the result.** No inference about what
-  GW must have intended while any field is still unread (D334/D336). S244 extended this principle
-  one level deeper: a *gate script's own internal logic* can carry the same read-the-wrong-field
-  bug as a manual census. When a gate's own re-derivation contradicts a hash-verified prior
-  finding, check what the gate is actually reading before trusting either side.
-- **Field-coverage convention is written into `40K_Data_Dictionary.md`'s front matter (S241).**
-  State every field on a record type and mark read/not-read, with a reason for each not-read,
-  before censusing that file for a legality question.
+  `rule_text`, not a substitute, and is `null` on plenty of detachments that do carry rules.
+- **An impossible result means widen the read, never explain the result** (D334/D336/D341).
+- **Field-coverage convention is in `40K_Data_Dictionary.md`'s front matter (S241).** State every
+  field on a record type and mark read/not-read, with a reason for each not-read, before censusing.
 - **B123's precedence mechanism (D335) has no known live collision case yet.** If a future census
-  (B120, B122, or a new faction build) turns up a record where wargear and an Enhancement really
-  do compete for the same SV/FNP/W cell, `enh.condAbs` and the comparator (`B123_BETTER`) are
-  already built and tested — extend the curated table, don't re-derive the mechanism.
-- **A ticket scoped as small can still turn out deeper (S244, B131).** When that happens: verify
-  the deeper fix doesn't disturb anything already working (check individually, not just "gate
-  still passes"), then ship it in full rather than a half-fix that fails its own gate — a
-  stopped-and-reverted broken change was tried first this session and correctly not shipped.
+  turns one up, `enh.condAbs` and `B123_BETTER` are already built — extend the curated table.
 
 ## Ryan action required
 
-- **Push S244's changed files** to the public repo: `rules_assertions.py`, `pipeline_manifest.py`,
-  `pipeline_manifest.json`, `40K_Decision_Log.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`,
-  `SESSION_HANDOFF_244.md`, `NEXT_SESSION_PROMPT.md`.
-- **`pipeline_manifest.json` must be included this time.** Its omission from S243's push is what
-  caused S244's baseline to fail at open. Please double-check it specifically lands as edited.
+- **Push S245's changed files** to the public repo: `add_chapter_keyword_additions.py`,
+  `units.json`, `units_repro_check.py`, `pipeline_manifest.py`, `pipeline_manifest.json`,
+  `40K_Decision_Log.md`, `DECISION_INDEX.md`, `OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_245.md`,
+  `NEXT_SESSION_PROMPT.md`.
+- `add_chapter_keyword_additions.py` is **net new** — it must be added, not just updated.
 
 ## Decisions waiting on Ryan
 
-**Resolved at S244, listed so they are not re-asked:** none new needing Ryan — D341 (B131's gate
-mechanism fixed, stale manifest reconciled) was a technical call, not a product one.
+**Resolved at S245, listed so they are not re-asked:** none new needing Ryan. D342 (population
+28-not-6, the per-army map shape, the B130/B132 split, no new assertion) was technical and scoping,
+not product.
 
 - **Next faction after Drukhari** — unchanged since S240. Recommendation stands: clear the engine
-  backlog first. B116's reclassification means **Aeldari is now a production dependency** even
-  though it is not in the priority order, and belongs on a release plan rather than being
-  rediscovered later.
+  backlog first. B116's reclassification means **Aeldari is a production dependency** even though it
+  is not in the priority order, and belongs on a release plan rather than being rediscovered later.
+- **Grey Knights detachments** were never built despite its units being complete — still outstanding.
 
 ## Close
 
-Produce the four documents, register `SESSION_HANDOFF_245.md` in `pipeline_manifest.py`'s GUARDED
+Produce the four documents, register `SESSION_HANDOFF_246.md` in `pipeline_manifest.py`'s GUARDED
 list **before** running `--write`, and run `pipeline_manifest.py --freshness-check` as the **last**
 command.

@@ -172,6 +172,7 @@ GUARDED = [
 
     # Additional parsers/transforms (repo-only, same treatment as the group above).
     'add_bodyguard_stat_flags.py',
+    'add_chapter_keyword_additions.py',
     'add_chapter_point_overrides.py',
     'add_co_leader.py',
     'build_cd_ability_details.py',
@@ -314,6 +315,7 @@ GUARDED = [
     'SESSION_HANDOFF_242.md',
     'SESSION_HANDOFF_243.md',
     'SESSION_HANDOFF_244.md',
+    'SESSION_HANDOFF_245.md',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

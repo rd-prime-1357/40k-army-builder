@@ -349,7 +349,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000066",
@@ -560,7 +565,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000068",
@@ -1563,6 +1573,11 @@
               }
             ]
           }
+        },
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
         }
       },
       {
@@ -2284,7 +2299,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000083",
@@ -2799,7 +2819,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
+        }
       },
       {
         "unit_id": "000000086",
@@ -3161,7 +3186,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000094",
@@ -3286,7 +3316,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
+        }
       },
       {
         "unit_id": "000000097",
@@ -4100,7 +4135,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
+        }
       },
       {
         "unit_id": "000000115",
@@ -4226,7 +4266,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000117",
@@ -4519,7 +4564,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000118",
@@ -4632,7 +4682,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000119",
@@ -4926,7 +4981,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
+        }
       },
       {
         "unit_id": "000000125",
@@ -5765,7 +5825,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000136",
@@ -5974,7 +6039,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000000140",
@@ -6402,6 +6472,11 @@
               }
             ]
           }
+        },
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
         }
       },
       {
@@ -7132,7 +7207,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
+        }
       },
       {
         "unit_id": "000001159",
@@ -7732,7 +7812,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000001172",
@@ -8465,7 +8550,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000001188",
@@ -8848,7 +8938,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
+        }
       },
       {
         "unit_id": "000001191",
@@ -9170,7 +9265,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
+        }
       },
       {
         "unit_id": "000001193",
@@ -10266,7 +10366,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
+        }
       },
       {
         "unit_id": "000001667",
@@ -11363,7 +11468,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000002202",
@@ -12168,7 +12278,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000002266",
@@ -13237,7 +13352,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000002701",
@@ -14121,6 +14241,11 @@
               }
             ]
           }
+        },
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Ravenwing"
+          ]
         }
       },
       {
@@ -14818,7 +14943,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000002718",
@@ -15211,7 +15341,12 @@
             }
           ]
         },
-        "abilities": []
+        "abilities": [],
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
+        }
       },
       {
         "unit_id": "000002722",
@@ -15534,6 +15669,11 @@
               }
             ]
           }
+        },
+        "chapter_keyword_additions": {
+          "Dark Angels": [
+            "Deathwing"
+          ]
         }
       },
       {
