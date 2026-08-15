@@ -1029,3 +1029,30 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   known, deliberately unhandled gap (B99-CENSUS's Chaos-Daemons-shorthand idiom) — re-derived at
   25 records / 11 names, matching the banked figures, but **11 armies, not 10**; `B123`'s
   `OPEN_ITEMS_BACKLOG.md` entry corrected.
+- **D334** — B93 censused and re-scoped (S240), scoping-only; nothing built. The bearer-restriction
+  population is **641 of 739 enhancement records** (363 names, 173 detachments, 13 armies), not the
+  six D332 found incidentally; **369 over-admit today** (237 names, 13 armies, mean 9.2 illegal
+  bearers each), including 12 of the 25 clause-bearing Upgrades, which carry no restriction at all.
+  Core rule re-read from `Army_Muster_Rules.txt`: Characters-only "unless otherwise stated".
+  **Decision: the clause REPLACES the Character default, not narrows it** — otherwise the 24
+  `Adeptus Astartes Vehicle model only` records become assignable to nobody; Epic Hero stays an
+  unconditional refusal. Four blockers found: chapter keywords stripped from union rosters
+  (**B125**, prerequisite — Dark Angels Deathwing resolves to zero), Marks of Chaos not modelled
+  (**B126**, a feature carrying two further unenforced D0 rules), D199's keyword-sparseness
+  caution, and 74 records with no rule text in any held source (**B127**). Mechanism recommended —
+  a total resolver over a closed 117-string vocabulary, data turn then engine turn then
+  `B93-CENSUS` — but gated on B125. See `B93_SCOPE.md`.
+- **D335** — **D334 reversed, same session, nothing built on it.** Headhunter Task Force's
+  `rule_text` (present in our data, unread by the census) confers **Tank Ace** on qualifying
+  Adeptus Astartes Vehicles and lets the player **select up to three to gain CHARACTER at muster**,
+  with a Designer's Note saying that is what lets them take Enhancements. So an enhancement's "X
+  model only" clause **narrows within** the Characters-only default rather than replacing it; Epic
+  Hero stays an unconditional refusal. Lesson: bearer eligibility cannot be answered from
+  enhancement text alone — the detachment can change who counts as a Character. Tested across the
+  whole population: narrowing strands only the 24 Vehicle (B128), 6 Deathwing (B125) and 4 Marks
+  (B126) records, all already ticketed. **B128 opened** — 28 detachments confer keywords at muster
+  (35 conferrals); Headhunter's is the only player choice and the only one with a hard cap, so the
+  only one that is legality-critical. **B123 decided** (best unconditional value, asterisk when a
+  conditional one is better) — unblocked. **B99's four display decisions closed as already shipped**
+  at D330/D332, having been carried forward as open in error. **B116 reclassified** as required
+  before production rather than indefinitely deferrable.

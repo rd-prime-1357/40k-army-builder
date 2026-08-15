@@ -13850,3 +13850,185 @@ forward.
 
 **Baseline at open:** 30/30 gates pass (5 tier-B skipped), `--fetch`. All nine S238 hashes
 verified against the handoff table, against a freshly fetched repo.
+
+## D334 — B93 census and re-scope: enhancement bearer eligibility (S240)
+
+**Scoping-only turn. Nothing built.** No data file, no `index.html`, no parser changed. One new
+reference document (`B93_SCOPE.md`), the four rolling documents, and `pipeline_manifest.py`'s
+GUARDED list.
+
+**Baseline at open:** `--fetch --data-turn`, **36/36 gates pass**, no tier-B skips. All five S239
+handoff hashes verified. `repo_check` green — S238's and S239's unpushed sets have both landed, so
+that carried Ryan action is closed.
+
+**The population is 641 records, not six.** D332 found six names carrying an unenforced "X model
+only" clause as a side effect of B119's build, and S238's own note said the real number was
+probably much larger. It is. Censused across all 739 enhancement records in `detachments.json`:
+**641 carry a bearer-restriction clause** — 363 distinct names, 173 detachments, 13 of 14 armies,
+87% of the population. B113's curated `ENHANCEMENT_BEARER_RESTRICTIONS` holds seven rows. That
+table was correctly scoped to enhancements carrying a `LEADER:` line; the restriction class is
+about a hundred times wider than that scope.
+
+**369 records over-admit today**, measured against each record's own clause over each army's real
+unit pool resolved through `faction_taxonomy.json` — 237 distinct names, 13 armies, mean 9.2
+illegal bearers per record. 257 are no-ops the existing Character filter already covers. 12 of the
+25 clause-bearing Upgrade records over-admit, confirming the half of Ryan's original report
+described as live and reachable today: `enhancementTypeEligible()` applies no restriction at all
+to Upgrades.
+
+**The rule was read from the source, not remembered.** `Army_Muster_Rules.txt` (11e core, Select
+Enhancements) states, "unless otherwise stated," that only Character units may be given
+enhancements, that Epic Heroes may not, that an army may not include duplicates, and that Upgrades
+are exempt from the first and may be taken up to three times. Three of the four are already
+enforced correctly in `index.html`. The gap is the phrase "unless otherwise stated" — nearly every
+enhancement states otherwise, in its own description, and the engine does not read that statement.
+
+**D334 decision: "unless otherwise stated" is read as REPLACEMENT, not narrowing.** 24 records read
+`Adeptus Astartes Vehicle model only` and are not tagged Upgrade. Only two Character-typed units in
+the whole dataset carry the Vehicle keyword, both Grey Knights. Under the current engine those 24
+are offered on any Character (wrong) and refused on every tank (also wrong); if the clause were
+merely AND-ed onto the Character check they would become assignable to nobody. So an enhancement's
+own clause supersedes the Characters-only default when it names a target that default excludes.
+Epic Hero stays an unconditional refusal — that one carries no "unless otherwise stated." Surfaced
+to Ryan as a lasting legality precedent; proceeded on the recommendation rather than blocking, per
+the standing bias. Reversible at zero cost until an engine turn ships.
+
+**Four blockers found, three of them new tickets. This is why nothing was built and why the next
+session should not build either.**
+
+1. **Chapter keywords are stripped from union rosters (B125).** Dark Angels'
+   `Deathwing model only` resolves to zero eligible Characters. Not the clause's fault:
+   `Datasheets_keywords.csv` gives Deathwing to Captain/Chaplain/Librarian/Ancient In Terminator
+   Armour and Bladeguard Ancient, our pipeline correctly strips chapter keywords from the generic
+   `Adeptus Astartes` block, and the Dark Angels block is delta-shaped so never adds them back.
+   Measured over the Dark Angels union pool: Deathwing 8 units held vs 27 in source (5 Characters
+   lost); Ravenwing 7 vs 16 (1 Character lost). Wrong for every keyword consumer, not only B93.
+   Very likely the same shape for the other chapters and interacts with B90's roster-mode flip, so
+   B125 needs its own census across all chapters rather than assuming Dark Angels is unique.
+
+2. **Marks of Chaos are chosen at mustering and are not modelled (B126).** Pactbound Zealots'
+   `rule_text`, read this session, requires every non-Epic-Hero Heretic Astartes unit to be
+   assigned Khorne, Tzeentch, Nurgle, Slaanesh or Chaos Undivided when the army is mustered. Four
+   enhancements restrict on the result. The same detachment's `restrictions` field carries two
+   further hard legality rules that depend on the mark — a Character may only attach to a unit
+   sharing its mark, and a unit may only embark in a Transport sharing its mark — neither of which
+   is enforced and neither of which can be until marks exist. Sized as a feature, not as part of
+   B93.
+
+3. **D199 stands directly in the way.** `enhancementTypeEligible()` deliberately keys off
+   `unit_type` and not keywords because keyword lists are unevenly populated. Re-verified: 8
+   Character-typed units carry no Character keyword at all (Rendmaster on Blood Throne has the
+   single keyword "Deep Strike"), and 6 Character units have more than one model group. B93 has no
+   alternative to reading keywords, so its mechanism must be able to say "cannot be evaluated
+   against this unit's data" and fall through to permissive — refusing on absent data is how a
+   legal pick gets blocked. E4b-2 is the right place to police that fallthrough set so it cannot
+   grow silently.
+
+4. **74 records carry no rule text in any held source (B127).** Checked, not assumed: 70 of the 74
+   have no name match at all in `Enhancements.csv`; the 4 that do match under a *10th-edition*
+   detachment name that 11th renamed, and in every one of those four cases the same enhancement
+   name also appears under its 11th-edition detachment with full text and resolves normally. So
+   `detachment_parser.py` is right to refuse cross-matching on name alone and loosening it would be
+   a mistake. Source acquisition. Caps B93, B99, B119 and B123 alike.
+
+**Clause grammar is a closed vocabulary of 117 strings**, listed in full in `B93_SCOPE.md` §9, with
+six documented traps. Three are worth restating here because each one silently loses records rather
+than failing: the clause is **not** reliably the first sentence (position 0 for 439 records, 1 for
+183, 2 for 19 — a first-sentence heuristic misses 27% of the population); sentence splitting on `.`
+alone loses Thousand Sons' *Unravelled Fates*, whose flavour sentence ends in `?`, and the first
+pass of this census reported 640 instead of 641 for exactly that reason; and the slash distributes
+over the shared tail, so `INFANTRY/MOUNTED THOUSAND SONS PSYKER model only` means (Infantry or
+Mounted) and Thousand Sons and Psyker, not "Infantry" or "Mounted Thousand Sons Psyker".
+
+**Two tokens cannot be resolved against anything held, both checked against raw source rather than
+inferred.** `SPEEDER` (12 records, all Upgrades, six SM-family armies): there is no SPEEDER keyword
+anywhere in `Datasheets_keywords.csv` — 1,423 distinct keywords, checked directly — and the ten
+speeder datasheets carry only their own names plus Vehicle/Fly/Imperium/Ravenwing. Needs a curated
+unit-name list, the same shape as B113's Pact of Cursed Pinions. `Harlequins` (3 Drukhari records):
+an unbuilt faction, harmless today, live when Harlequins is built. `SPAWN unit only` is a third and
+different case — the datasheet keyword is `Chaos Spawn` and the unit is `Chaos Spawn Beast`, a
+synonym resolvable by one alias entry.
+
+**Mechanism recommended, not built: a resolver, not a curated table.** 641 records against B113's
+7 is the first population in the project large enough that curation is the wrong answer, and the
+vocabulary being closed at 117 strings means a resolver can be *total* — every clause either
+resolves or is named unresolvable, nothing in between. Sequence: data turn writing a structured
+restriction into `detachments.json` (so the parse is diff-guarded under
+`detachments_repro_check.py` rather than hand-held in `index.html`), then an engine turn extending
+the existing `enhancementBearerEligible()` branch and demoting `enhancementTypeEligible()` from
+gate to default, then a `B93-CENSUS` assertion on the B99-CENSUS/B119-CENSUS pattern pinning
+641/626/15/74/24 plus the 35 zero-admit and 73 one-admit records. Four sessions including B125's
+scoping, strictly typed. Gated on B125 — enforcing on today's roster data would break legal Dark
+Angels lists.
+
+## D335 — D334 reversed: the bearer clause narrows, it does not replace; muster-time keyword conferral banked (S240)
+
+**Same session as D334, correcting it before anything was built on it.** Still scoping-only.
+
+**D334 was wrong, and the evidence against it was in `detachments.json` the whole time.** Ryan
+supplied the Headhunter Task Force detachment rule; it is present in our own data, in
+`rule_text`, and reads: Adeptus Astartes Vehicle units from your army (excluding Fortifications,
+Drop Pods, Walkers and units that can Fly) have the **Tank Ace** keyword; **in the Muster Armies
+step, you can select up to three Tank Ace units from your army to gain the CHARACTER keyword**;
+Designer's Note — this means the selected units can be given Enhancements, and one of them can be
+selected as your Warlord.
+
+So the 24 `Adeptus Astartes Vehicle model only` enhancements do go to Characters. They go to
+Characters the *detachment* creates during mustering. The core rule's "unless otherwise stated" is
+not doing the work D334 assigned to it.
+
+**D335: an enhancement's own "X model only" clause NARROWS within the Characters-only default. It
+does not replace it.** Epic Hero remains an unconditional refusal. Where a clause names something
+that is not normally a Character, the answer is a conferral rule somewhere else, not a suspended
+default.
+
+**Why D334 happened, stated plainly because the lesson is worth more than the decision.** The
+census read each enhancement's `description` and the detachment's `restrictions` field — which is
+`null` for Headhunter Task Force — and did not read `rule_text`. D334's whole case rested on a
+single population, the 24 Vehicle records, and on the inference that GW would not print an
+enhancement no model could take. The inference was reasonable and wrong. A bearer-eligibility
+question cannot be answered from enhancement text alone, because the detachment can change who
+counts as a Character. Reversed at zero cost: nothing was built on D334, which is the entire
+reason the standing rule is to record and proceed rather than to build on an unconfirmed reading.
+
+**D335 tested against the whole population, not just the case that broke D334.** Under the
+narrowing reading the only non-Upgrade records left with no legal bearer are the 24 Vehicle
+(explained by Tank Ace conferral, B128), the 6 Deathwing (B125's chapter-keyword data gap) and the
+4 Marks of Chaos (B126). Every other clause naming a non-Character-sounding target resolves
+cleanly — `GREY KNIGHTS WALKER model only` admits 2 (Venerable Dreadnought, Grand Master in
+Nemesis Dreadknight, both genuine Character vehicles) and `World Eaters Monster model only` admits
+2. Narrowing strands nothing that is not already a known, ticketed gap.
+
+**B128 opened: detachment-conferred keywords at muster time.** Censused across all 211
+detachments' `rule_text` after the reversal: **28 detachments confer a keyword during mustering,
+35 conferrals in total** — Character (1, Headhunter, player-selected, capped at three), Tank Ace
+(6), Heavy Transport (6, Armoured Speartip, Transports with W14+ excluding Fly), Entrenched (6,
+Ceramite Sentinels), Battleline (6, each naming specific datasheets — Lost Brethren, Company of
+Hunters, Shamblerot Vectorium, Chaos Cult, Warpmeld Pact, Cult of Blood), Faction keywords (3) and
+Daemon/Soul Forge (2, Cult of the Arkifane). Headhunter's is the only conferral that is a player
+choice with a hard cap, and therefore the only one that is legality-critical in the D0 sense: a
+list with four Character Tank Aces is illegal and must be unreachable. B128 is a prerequisite for
+those 24 records specifically, not for B93 as a whole — the other 617 do not depend on it.
+
+**B123 decided (Ryan, S240): show the best UNCONDITIONAL value; if a conditional value would be
+better, show the unconditional one and mark the cell.** This is a better rule than the
+recommendation it replaces ("show the better of the two"), because "better" is not well defined
+when one of the two is contingent — a 2+ Save that applies only against ranged attacks is not
+comparable to an unconditional 3+. The app prints what is always true and flags what is sometimes
+better, and never prints a number the player only sometimes has. Generalises past B123 to the
+whole statline; B123's build turn is unblocked.
+
+**B99's four display decisions were stale and are now closed as already shipped.** Carried forward
+as open since S236 and re-listed at S239 and in this session's first close; that was wrong, and
+`index.html` was read this session to confirm it. Decision 1 (write the modified number) and 2 (the
+D89/D112 idiom — modified value in the cell, cell highlighted, legend beneath naming the
+enhancement, and an asterisk with the base value where only some models in the row carry the
+effect) shipped at D330; decision 4 (weapon-ability grants folded into the same build, landing in
+the Abilities column via the same table's `gr` key) shipped in the same turn; decision 3
+(conditional effects get no marker) shipped by omission. `b99Cells` and `enhModLegend` in
+`index.html` are the implementation. Ryan can still change any of them, but none blocks a build.
+
+**B116 reclassified (Ryan, S240): required before production, not indefinitely deferrable.**
+Drukhari's Harlequins/Anhrathe allied inclusion may stay deferred for now, but it must ship before
+the product is production-ready. Recorded on the ticket so the deferral cannot quietly become
+permanent.

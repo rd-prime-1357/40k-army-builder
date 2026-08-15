@@ -3,9 +3,25 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **22 open** as of S239 (down from 23 — B119's tooling half shipped and
-the ticket closes; nothing added): B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94,
-B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **26 open** as of S240 (up from 22 — B93's census opened four new
+tickets; nothing closed): B125, B126, B127, B128, B116, B120, B122, B123, B124, B97, B103, E28,
+B93, B90, B94, B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+Scoping-only turn (D334): B93 censused across all 739 enhancement records and re-scoped. The
+bearer-restriction population is **641 records / 363 names / 173 detachments / 13 armies**, not
+the six D332 found incidentally — 87% of all enhancement records carry an "X model only" clause,
+against B113's seven curated rows. **369 records over-admit today** (mean 9.2 illegal bearers
+each), including 12 of the 25 clause-bearing Upgrades, which the engine restricts not at all.
+Core rule re-read from `Army_Muster_Rules.txt`. **D334 decided the clause REPLACES the
+Characters-only default; D335 REVERSED that in the same session** — Headhunter Task Force's
+`rule_text` confers Tank Ace on qualifying Vehicles and lets the player select up to three to gain
+CHARACTER at muster, so the clause **narrows within** the default after all. Nothing was built on
+D334. Nothing built — B93 is gated on four new tickets: **B125** (chapter keywords stripped from union rosters — Dark Angels
+Deathwing resolves to zero eligible Characters), **B126** (Marks of Chaos unmodelled, carrying two
+further unenforced D0 rules of its own), **B127** (74 records with no rule text in any held
+source) and **B128** (muster-time detachment keyword conferral — 28 detachments, 35 conferrals).
+**B123 decided by Ryan this session** and unblocked; **B99's four display decisions closed as
+already shipped**, having been carried forward as open in error since S236; **B116 reclassified**
+as required before production. See `B93_SCOPE.md`.
 Tooling-only turn (D333): B119's tooling half shipped and the ticket closes — a new
 `rules_assertions.py` assertion (`B119-CENSUS`) re-derives the bearer-statline-delta population
 from source, independent of `ENHANCEMENT_BEARER_STATS`, matching D332's 10/6 exactly and
@@ -609,7 +625,14 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
-### B116 — Drukhari's Harlequins/Anhrathe allied-unit inclusion has no built-faction precedent — **NEW S222 (D316); product scope call; blocked on Ryan / on Aeldari being prioritized**
+### B116 — Drukhari's Harlequins/Anhrathe allied-unit inclusion has no built-faction precedent — **NEW S222 (D316); product scope call; REQUIRED BEFORE PRODUCTION (Ryan, S240/D335); gated on Aeldari being built**
+**S240 (D335): reclassified by Ryan.** Deferral is fine for now, but this must ship before the
+product is production-ready — it is not indefinitely deferrable, and the ticket is no longer
+"blocked on Ryan." The precedent question is answered: the tool will support cross-book allied
+inclusion. What remains is sequencing, and it now carries a real dependency — Aeldari has to be
+built far enough to price these 14 units before B116 can be built at all. That belongs on the
+release plan, not just the backlog.
+
 Found while scoping Drukhari. Drukhari carries an army-wide rule ("Corsairs and Travelling
 Players") permitting Harlequins and Anhrathe (Corsair) units up to a points cap that scales with
 battle size (250/500/750), and the Reaper's Wager detachment's own ability ("Callous Competition")
@@ -668,11 +691,13 @@ what shows when a storm shield and an Enhancement both speak to the same cell. B
 therefore takes deltas only, with no absolute path stubbed, on the grounds that an untested code
 path is worse than an absent one.
 
-**Decision needed before build:** when an Enhancement and equipped wargear both set the same
-statline cell, does the app show the better value, the Enhancement's value, or an asterisk?
-Recommendation: show the better of the two and mark the cell, since by rule a model has one Save
-and one Feel No Pain and uses the best available — but this sets a lasting display precedent and
-is worth Ryan's call rather than mine.
+**DECIDED S240 (Ryan, D335) — unblocked.** Show the best **unconditional** value. If a conditional
+value would be better, show the unconditional one and mark the cell so the player knows something
+else is in play. This is a better rule than the recommendation it replaced ("show the better of the
+two"), because "better" is not well defined when one of the pair is contingent — a 2+ Save that
+applies only against ranged attacks is not comparable to an unconditional 3+. The app prints what
+is always true and flags what is sometimes better, and never prints a number the player only
+sometimes has. Generalises past B123 to the whole statline. Ready to build; no decision outstanding.
 
 ### B124 — *Master Artisan*'s unit-wide Toughness half belongs to no ticket — **NEW S238 (D332); engine; XS; folds into B120's scoping turn**
 Found during B119's build. Drukhari's *Master Artisan* (COVENITE COTERIE) reads "Add 1 to the
@@ -757,6 +782,85 @@ a render branch in the right-panel path. Comparable in size to E1c's original bu
 session should confirm whether per-unit enhancement assignment (unaffected by this move) needs any
 UI adjustment once Detachments get their own detail view.
 
+### B128 — Detachment-conferred keywords at muster time are not modelled, including a capped player choice — **NEW S240 (D335); data + engine; M; live D0 gap**
+
+Found by D335, after Ryan supplied the Headhunter Task Force rule text and it turned out to be
+present in our own `detachments.json` all along, in `rule_text` — a field the B93 census did not
+read.
+
+Censused across all 211 detachments: **28 confer a keyword during mustering, 35 conferrals in
+total.** None is modelled.
+
+| conferred keyword | detachments | shape |
+|---|--:|---|
+| Character | 1 | Headhunter Task Force — **player selects up to three** Tank Ace units |
+| Tank Ace | 6 | automatic, on qualifying Adeptus Astartes Vehicles |
+| Heavy Transport | 6 | automatic — Armoured Speartip; Transports with W14+, excluding Fly |
+| Entrenched | 6 | Ceramite Sentinels |
+| Battleline | 6 | Lost Brethren, Company of Hunters, Shamblerot Vectorium, Chaos Cult, Warpmeld Pact, Cult of Blood — each names specific datasheets |
+| Faction keyword | 3 | Tallyband Summoners, Carnival of Excess, Thousand Sons equivalent |
+| Daemon, Soul Forge | 2 | Cult of the Arkifane |
+
+**Headhunter's is the only one that is legality-critical**, and it is the reason this is a D0
+ticket rather than a display one. It is a player choice with a hard cap — "up to three" — and one
+of the three may be Warlord. A list with four Character Tank Aces is illegal and must be
+unreachable, which means the selection has to be a real, capped, persisted list-building step, not
+a derived flag. The rest are automatic and are eligibility or display inputs.
+
+Prerequisite for the 24 `Adeptus Astartes Vehicle model only` enhancement records specifically
+(Headhunter Task Force, six armies), **not** for B93 as a whole — the other 617 clause-bearing
+records do not depend on it. Also the reason B93's resolver must treat Character membership as
+detachment-dependent rather than a fixed property of a datasheet.
+
+Worth checking during its scoping turn whether any conferral runs the other way — a rule that
+*removes* a keyword — since the census only looked for grants.
+
+### B125 — Chapter-specific keywords stripped from union rosters, never re-added by the chapter block — **NEW S240 (D334); data; scoping first; M; prerequisite for B93**
+
+Found while censusing B93. Dark Angels' `Deathwing model only` enhancements resolve to **zero**
+eligible Characters. The clause is not at fault. `Datasheets_keywords.csv` gives Deathwing to
+`Captain In Terminator Armour`, `Chaplain In Terminator Armour`, `Librarian In Terminator Armour`,
+`Ancient In Terminator Armour` and `Bladeguard Ancient`. The pipeline correctly strips
+chapter-specific keywords from the generic `Adeptus Astartes` block — an Ultramarines Captain in
+Terminator Armour is genuinely not Deathwing — but the Dark Angels block is delta-shaped and never
+adds them back, and the union roster serves the stripped generic record.
+
+Measured over the Dark Angels union pool this session:
+
+| keyword | in `units.json` | source would give | Characters lost |
+|---|--:|--:|--:|
+| Deathwing | 8 | 27 | 5 |
+| Ravenwing | 7 | 16 | 1 |
+
+Wrong for every keyword consumer, not only B93 — B93 is simply the first that would break visibly.
+Almost certainly the same shape for the other chapters, and it interacts with B90's roster-mode
+flip from `union` to `complete`, so the scoping turn must census across all twelve chapters rather
+than assume Dark Angels is the only case. **B93 cannot be enforced before this is at least scoped**
+— enforcement on today's roster data would refuse legal Dark Angels lists.
+
+### B126 — Marks of Chaos not modelled: mark keyword, attachment restriction and Transport restriction all unenforced — **NEW S240 (D334); data + engine; L; live D0 gap**
+
+Found while censusing B93. Chaos Space Marines' Pactbound Zealots detachment rule (`rule_text` in
+`detachments.json`, read this session) requires that when mustering the army, every
+`HERETIC ASTARTES` unit that is not an `EPIC HERO` and does not already carry one be assigned one
+of `KHORNE`, `TZEENTCH`, `NURGLE`, `SLAANESH` or `CHAOS UNDIVIDED`, noted on the army roster. The
+app does not model this at all: there is no mark selection, no persistence of it in the saved list,
+and no keyword to test against.
+
+Four enhancements restrict on the resulting keyword (`Heretic Astartes Khorne/Tzeentch/Nurgle/
+Slaanesh model only`, all Pactbound Zealots) and are unenforceable without it. But the mark is a
+much larger gap than those four records — the same detachment's `restrictions` field carries two
+hard legality rules that also depend on it, neither enforced:
+
+- a `CHARACTER` unit can only be attached to a unit if both share the same mark;
+- a unit can only embark within (or begin embarked within) a `TRANSPORT` if both share the same
+  mark.
+
+There is a third restriction on the same rule — the `KHORNE` keyword cannot be selected for a
+`PSYKER` unit — which is a constraint on the selection itself. Sized as a feature in its own right:
+data (mark vocabulary and eligibility), engine (selection UI, attachment and embark checks), and
+list persistence. Not part of B93.
+
 ### B93 — Enhancement/Upgrade eligibility: engine checks Character-vs-not, not the Enhancement's own qualification requirement — **NEW S188 (D281); Ryan-flagged; engine+data; L; spans sessions; live D0 gap**
 
 **S238 corroboration (D332).** B119's build read all ten Set C descriptions in full, and every
@@ -797,6 +901,66 @@ follow this shape), and two records currently carry no usable qualification text
 `Chaos Daemons | SHADOW LEGION | Leaping Shadows`'s description is just the enhancement's own name
 repeated, with no rule text. A first-sentence parsing heuristic would misfire on real records today
 — a source pass across all 607 is needed before either gap is built.
+
+**S240 census (D334) — supersedes every figure above.** The source pass was run across all **739**
+records (the 607 figure predates later faction builds). Findings, all re-derived this session:
+
+- **641 records carry a bearer-restriction clause** — 363 distinct names, 173 detachments, 13 of
+  14 armies, 87% of the population. B113's `ENHANCEMENT_BEARER_RESTRICTIONS` holds seven rows.
+- **369 over-admit today** — 237 names, 13 armies, mean 9.2 illegal bearers per record. 257 are
+  no-ops the existing Character filter already covers.
+- **12 of the 25 clause-bearing Upgrades over-admit**, confirming gap (1) above as live.
+- **The clause is not reliably the first sentence** — position 0 for 439 records, 1 for 183, 2 for
+  19. The correction noted above is right, and the heuristic would miss 27% of the population.
+- The vocabulary is **closed at 117 distinct strings**, with six documented traps (`B93_SCOPE.md`
+  §3). Two silently lose records rather than failing: splitting sentences on `.` alone loses
+  *Unravelled Fates*, whose flavour sentence ends in `?`; and the slash distributes over the shared
+  tail, so `INFANTRY/MOUNTED THOUSAND SONS PSYKER model only` means (Infantry or Mounted) and
+  Thousand Sons and Psyker.
+- **15 records are unresolvable against held data**: `SPEEDER` (12 — no such keyword exists
+  anywhere in `Datasheets_keywords.csv`, checked directly across 1,423 distinct keywords) and
+  `Harlequins` (3 — unbuilt faction). `SPAWN unit only` is a separate synonym case (`Chaos Spawn`).
+- **35 records would resolve to zero legal bearers** if the clause were AND-ed onto the Character
+  check, and **73 resolve to exactly one** — the latter are the right regression set.
+
+**D334 decision: the clause REPLACES the Characters-only default, it does not narrow within it.**
+`Army_Muster_Rules.txt` says Characters only "unless otherwise stated"; nearly every enhancement
+states otherwise. Under the narrowing reading the 24 `Adeptus Astartes Vehicle model only` records
+have no legal bearer at all. Epic Hero stays an unconditional refusal — that carries no "unless
+otherwise stated". Surfaced to Ryan as a lasting legality precedent, proceeded on rather than
+blocked; reversible until an engine turn ships.
+
+**Mechanism recommended: a total resolver, not a curated table** — 641 records against B113's 7 is
+where curation stops being the right answer, and a closed 117-string vocabulary means every clause
+either resolves or is named unresolvable. Sequence: data turn writing a structured restriction into
+`detachments.json` (diff-guarded under `detachments_repro_check.py` rather than hand-held in
+`index.html`), then an engine turn extending the existing `enhancementBearerEligible()` branch and
+demoting `enhancementTypeEligible()` from gate to default, then a `B93-CENSUS` assertion on the
+B99-CENSUS/B119-CENSUS pattern. **Gated on B125** — enforcement on today's roster data would refuse
+legal Dark Angels lists. D199's caution applies throughout: 8 Character-typed units carry no
+Character keyword and 6 have multiple model groups, so an unevaluable restriction must fall through
+to permissive, not refuse. Full detail in `B93_SCOPE.md`.
+
+### B127 — 74 enhancement records have no rule text in any held source — **NEW S240 (D334); source acquisition; blocks B93/B99/B119/B123**
+
+74 of 739 enhancement records carry `description_source: "none"` and an empty description, spread
+across all 14 armies (Blood Angels, Space Wolves and Grey Knights 9 each; Black Templars,
+Emperor's Children and Drukhari 6 each; the rest fewer). Without rule text there is no bearer
+restriction to parse, no weapon or statline effect to apply, and nothing for any of the display or
+legality tickets to work with.
+
+Checked this session, not assumed: **70 of the 74 have no name match at all** in `Enhancements.csv`,
+the Wahapedia enhancement export. The four that do match (*Swollen with Power*, *Rejuvenating
+Swarm*, *Periapt of Torments*, *Towering Arrogance*) match under a **10th-edition detachment name
+that 11th renamed** — and in every one of those four cases the same enhancement name also appears
+in `detachments.json` under its 11th-edition detachment **with** full text, resolving normally. So
+`detachment_parser.py` is behaving correctly by refusing to cross-match on name alone, and
+loosening it would introduce wrong text rather than recover missing text.
+
+This is source acquisition: the faction packs and the Wahapedia export between them do not carry
+these 74. Separate from B122 (Chaos Daemons' 24 shorthand-summary records, which have text of a
+kind — just not rule text). Nothing to build until source exists.
+
 
 **Not scoped for build.** This needs an analysis turn across the full record set before a
 mechanism is chosen — likely a new structured field (qualification keyword/unit-type/unit-name,
@@ -2133,3 +2297,22 @@ appending to it, and hand the updated file back for Ryan to commit.
   wrong rule text is worse than a missing feature), then the quick UI wins
   (E3, E7, E2, E5), then the detachment foundation (E1→E4→E6), with the
   combinatorial-swap and leader-system clusters slotted per your priority.
+
+---
+
+## S240 ledger
+
+Scoping-only turn (D334). **22 open at S239 close; 25 open at S240 close** (B125, B126 and B127
+opened by B93's census; nothing closed).
+
+Beginning: B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69, B70, B75,
+P2, P4, E23, B67b, E12, B17 (22).
+Resolved: none (0).
+Added: B125, B126, B127, B128 (4).
+Ending: B125, B126, B127, B128, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94, B85,
+B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17 (26).
+
+D334 was recorded and reversed within the session (D335) with nothing built on it. B123 was decided
+by Ryan and is unblocked. B99's four display decisions were found to have shipped at D330/D332 and
+had been carried forward as open in error since S236 — corrected, not a ticket. B116 reclassified
+from indefinitely deferrable to required before production.
