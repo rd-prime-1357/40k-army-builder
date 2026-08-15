@@ -1075,3 +1075,12 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
 - **D339** — B128's "None is modelled" does not hold against `detachment_effects.json`, which
   already carries 7 enforced `battleline` effects and Headhunter's fully-scoped (D273/S182)
   `tank_ace` effect. B128's scoping turn should start there, not re-census `rule_text` from zero.
+- **D340** — **B125 closed: §4.2's chapter-keyword gap is Dark Angels-only, not general.** Checked
+  every SM keyword for the Deathwing/Ravenwing shape; only those two have it (Death Company, Wulfen
+  checked clean; Grey Knights structurally exempt, separate faction with no shared pool). **D338
+  reconciled against the gate, for the original census**: `units.json` itself confirms zero
+  eligible Characters for Deathwing (8 units carry it, none Character-typed) and only 1 for
+  Ravenwing missing (Chaplain On Bike) — matches §4.2's original 5-and-1. D338's raw-CSV read
+  credited units without checking their own built keyword field. **B129's exemption list and
+  docstring need a follow-up fix (B131)**; the underlying keyword-restore mechanism banked as
+  **B130**. See `B93_SCOPE.md` §12.

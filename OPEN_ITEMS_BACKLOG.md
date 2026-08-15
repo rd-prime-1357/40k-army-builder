@@ -795,29 +795,6 @@ detachment-dependent rather than a fixed property of a datasheet.
 Worth checking during its scoping turn whether any conferral runs the other way — a rule that
 *removes* a keyword — since the census only looked for grants.
 
-### B125 — Chapter-specific keywords stripped from union rosters, never re-added by the chapter block — **NEW S240 (D334); data; scoping first; M; prerequisite for B93**
-
-Found while censusing B93. Dark Angels' `Deathwing model only` enhancements resolve to **zero**
-eligible Characters. The clause is not at fault. `Datasheets_keywords.csv` gives Deathwing to
-`Captain In Terminator Armour`, `Chaplain In Terminator Armour`, `Librarian In Terminator Armour`,
-`Ancient In Terminator Armour` and `Bladeguard Ancient`. The pipeline correctly strips
-chapter-specific keywords from the generic `Adeptus Astartes` block — an Ultramarines Captain in
-Terminator Armour is genuinely not Deathwing — but the Dark Angels block is delta-shaped and never
-adds them back, and the union roster serves the stripped generic record.
-
-Measured over the Dark Angels union pool this session:
-
-| keyword | in `units.json` | source would give | Characters lost |
-|---|--:|--:|--:|
-| Deathwing | 8 | 27 | 5 |
-| Ravenwing | 7 | 16 | 1 |
-
-Wrong for every keyword consumer, not only B93 — B93 is simply the first that would break visibly.
-Almost certainly the same shape for the other chapters, and it interacts with B90's roster-mode
-flip from `union` to `complete`, so the scoping turn must census across all twelve chapters rather
-than assume Dark Angels is the only case. **B93 cannot be enforced before this is at least scoped**
-— enforcement on today's roster data would refuse legal Dark Angels lists.
-
 ### B126 — Marks of Chaos not modelled: mark keyword, attachment restriction and Transport restriction all unenforced — **NEW S240 (D334); data + engine; L; live D0 gap**
 
 Found while censusing B93. Chaos Space Marines' Pactbound Zealots detachment rule (`rule_text` in
@@ -1512,6 +1489,53 @@ unrendered, same discipline as B119's own once-per-battle OC extensions). Buildi
 one stale assertion in `b119_check.js` itself — Iron Resolve now resolves to a row (via the new
 abs table) where before it resolved to nothing — fixed by swapping the fixture to an unrelated
 enhancement in the same detachment. `index.html` v6.23.
+
+### B125 — Chapter-specific keywords stripped from union rosters, never re-added by the chapter block — **NEW S240 (D334); data; scoping first; M; prerequisite for B93; CLOSED S243 (D340)**
+
+Found while censusing B93. Dark Angels' `Deathwing model only` enhancements resolve to **zero**
+eligible Characters. The clause is not at fault. `Datasheets_keywords.csv` gives Deathwing to
+`Captain In Terminator Armour`, `Chaplain In Terminator Armour`, `Librarian In Terminator Armour`,
+`Ancient In Terminator Armour` and `Bladeguard Ancient`. The pipeline correctly strips
+chapter-specific keywords from the generic `Adeptus Astartes` block — an Ultramarines Captain in
+Terminator Armour is genuinely not Deathwing — but the Dark Angels block is delta-shaped and never
+adds them back, and the union roster serves the stripped generic record.
+
+**Census closed S243.** Re-derived from raw source (`Datasheets_keywords.csv`, `Datasheets.csv`,
+`Source.csv`, hash-verified) and cross-checked against the actual built `units.json`, not just the
+raw CSV. **This is Dark Angels-only, not general** — every non-faction SM keyword was checked for
+the same span pattern; only Deathwing/Ravenwing have it. Death Company (Blood Angels) and Wulfen
+(Space Wolves) checked clean. Grey Knights is a separate `faction_id` with no shared generic pool,
+so the union mechanism that causes this bug cannot apply there at all — it was never at risk.
+
+| keyword | in `units.json` | Characters lost |
+|---|--:|--:|
+| Deathwing | 8 (0 Character-typed) | 5 |
+| Ravenwing | 7 (0 of the missing ones) | 1 |
+
+Also reconciled D338 in this document's favor — see `B93_SCOPE.md` §12 and D340. **Fix banked as
+B130** (a 6-unit keyword-restoration map, data-turn-sized, not a general rework); **gate/docstring
+correction banked as B131**.
+
+### B130 — Restore Deathwing/Ravenwing keywords onto the 6 generic-pool Characters when consumed by Dark Angels — **NEW S243 (D340); data; S; unblocks the 6 Deathwing-family B93 records**
+
+B125's census (`B93_SCOPE.md` §12) found the gap is exactly 6 named units: Captain/Chaplain/
+Librarian In Terminator Armour, Ancient In Terminator Armour, Bladeguard Ancient (Deathwing) and
+Chaplain On Bike (Ravenwing). Recommended shape: a small restoration map, structurally the mirror
+of `SUBFACTION_KEYWORD_ARMY` (which strips), applied when the Dark Angels union pool is resolved —
+add the keyword back onto these 6 records for that one consuming army rather than change how the
+shared generic record is stored. Six units, one chapter, no new mechanism class.
+
+### B131 — B129's zero-bearer gate wrongly excludes the 6 Deathwing-family records; docstring is wrong — **NEW S243 (D340); tooling; XS; pairs with B130**
+
+D338 found these 6 records "not zero-admit" via a raw-CSV read (`S.all_keywords()`) that credits a
+same-named resolved-pool record without checking whether that record's own **built** keyword field
+carries the restriction. B125 confirmed `units.json` itself gives zero eligible Characters for all
+6 today. The gate's exemption list needs these 6 added back (making the exemption count 36, not
+30), and `b129_zero_bearer_gate`'s docstring needs its D338 paragraph corrected. Small, tooling-
+only — a different turn type from B130's data fix, so the two must ship in separate sessions, not
+combined. Recommended order: this ticket first (matches today's actual data), B130 later (the real
+fix), then a third small tooling pass removing this ticket's exemption once B130 lands — note that
+dependency in whichever session ships B130.
 
 ### B129 — `detachments.json` is undocumented; no field-coverage discipline on censuses — **NEW S240 (D336); tooling; S; root cause of D334**
 
@@ -2424,3 +2448,25 @@ B69, B70, B75, P2, P4, E23, B67b, E12, B17 (25).
 Repo verified clean at open: all S241 file hashes matched the pushed copies, D337's GUARDED
 registration held this time (no reconciliation needed). B123 built exactly as scoped by D335 —
 no new product or legality decision needed this session.
+
+## S243 ledger
+
+Scoping-only turn (B125, D340). **25 open at S242 close; 26 open at S243 close** (B125 closed;
+B130, B131 opened).
+
+Beginning: B125, B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85,
+B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17 (25).
+Resolved: B125 (1).
+Added: B130, B131 (2).
+Ending: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B130, B131 (26).
+
+Repo verified clean at open: all S242 file hashes matched the pushed copies exactly. Baseline ran
+clean: 29/29 gates (5 tier-B skipped, sources not loaded — not needed for a scoping-only census
+turn). B125's census fetched and hash-verified the three raw source files it needed
+(`Datasheets_keywords.csv`, `Datasheets.csv`, `Source.csv`) directly from the private repo rather
+than trusting either B93_SCOPE.md's original count or D338's. Found the chapter-keyword gap is
+Dark Angels-only (Death Company, Wulfen checked clean; Grey Knights structurally exempt), and
+D338 reconciled against the gate — `units.json` itself confirms zero eligible Characters for the
+6 Deathwing-family records today. No code touched this session (scoping-only); B130 (data fix)
+and B131 (gate correction) banked for a future tooling/data turn.

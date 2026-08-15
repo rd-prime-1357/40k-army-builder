@@ -509,3 +509,59 @@ rather than choices.
 
 Banked as **B128**. It is a prerequisite for the 24 Vehicle records specifically, not for B93 as a
 whole — the other 617 clause-bearing records do not depend on it.
+
+## 12. Addendum (S243, B125) — chapter-keyword census closed; §4.2's gap is Dark Angels-only
+
+Re-derived independently from raw source (`Datasheets_keywords.csv`, `Datasheets.csv`,
+`Source.csv`, hash-verified against `source_manifest.json`) rather than trusting either this
+document's original §4.2 or D338's contrary finding.
+
+**Every non-faction keyword on any SM-faction datasheet was checked for whether it spans both a
+`KNOWN_CHAPTERS` classification and the generic "Adeptus Astartes" pool** (the shape that produces
+the Deathwing/Ravenwing bug — a keyword that should gate on one chapter but lives on a datasheet
+shared by all eleven). Only Deathwing and Ravenwing do this. Death Company (Blood Angels, 8 source
+rows) and Wulfen (Space Wolves, 4 source rows) — the two other named-formation keywords that read
+as candidates — both classify cleanly as their owning chapter with zero generic-pool bleed; no fix
+needed. No other chapter has an analogous gap. **Grey Knights is structurally exempt**: it is a
+separate `faction_id` (GK, 31 datasheets, no generic/delta split), so the union-pool mechanism that
+causes this bug never applies to it. §4.2's "very likely the same shape for the other
+`complete`-destined chapters" does not hold — this is a two-keyword, one-chapter gap, not a
+general one.
+
+**D338 reconciled — resolves in favor of this document's original finding, against the gate's.**
+Cross-checked both keyword strings against the actual built `units.json` (not the raw CSV either
+representation was arguing from). `keyword_names` on the shipped Dark Angels pool carries
+Deathwing on 8 units (5 Epic Hero, 3 Infantry — zero Characters) and Ravenwing on 7 (6 Vehicle/
+Mounted, 1 Epic Hero, 1 Character already DA-delta-native). Neither carries the keyword on any of
+the generic-pool Characters that should have it when fielded in a Dark Angels list. Confirmed by
+name and unit_type, not inferred:
+
+| keyword | generic-pool Characters missing it | names |
+|---|--:|---|
+| Deathwing | 5 | Captain/Chaplain/Librarian In Terminator Armour, Ancient In Terminator Armour, Bladeguard Ancient |
+| Ravenwing | 1 | Chaplain On Bike |
+
+This matches this document's original 5-and-1 exactly. D338's `S.all_keywords()` read found these
+same units "not zero-admit" only because it is a raw-CSV check that credits a same-named record in
+the resolved pool without checking whether *that record's own built keyword field* carries the
+restrictive keyword — it is more permissive than what `units.json` actually contains, not a
+correction to it. **The 6 Deathwing-family records (4 `Deathwing model only` + 2 `...with the Deep
+Strike ability only`) belong back on B129's zero-admit exemption list.** B129's docstring
+currently states the opposite; needs a follow-up tooling fix (small, gate-only — does not require
+re-opening B129's build).
+
+(The 23 other Ravenwing-vocabulary datasheets and the remaining Deathwing ones not in the table
+above were checked and are either non-Character unit types, Dark-Angels-delta-native already, or
+excluded 10th-edition-Legends datasheets — `source_id 000000356`, "Space Marines (Warhammer
+Legends)" — correctly absent from `units.json` and not part of this gap.)
+
+**Recommended fix, not built this session (turn typing):** a small per-army keyword-restoration
+map, structurally the mirror of `SUBFACTION_KEYWORD_ARMY` — instead of stripping a sub-faction
+keyword when `army_of != owner`, add it back onto the specific 6 named unit records at the point
+the Dark Angels union pool is resolved, since the shared generic record cannot itself carry a
+keyword that only applies when consumed by one specific chapter. Six named units, one owning
+chapter, no new mechanism class — a data-turn-sized fix, not an architecture change. **Banked as
+B130** (the restore fix, data) and **B131** (the B129 gate/docstring correction, tooling). Two
+different turn types — must ship in separate sessions. Recommended order: B131 first (matches
+today's actual data), B130 later (the real fix), then a small follow-up tooling pass removing
+B131's exemption once B130 lands.

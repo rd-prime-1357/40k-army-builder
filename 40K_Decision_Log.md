@@ -14137,3 +14137,38 @@ session exactly as scoped — no new product or legality call was needed. Noted 
 the build surfaced a fixture bug in `b119_check.js` (Iron Resolve now resolves to a row via the
 new absolute-value table, where the old test asserted it resolved to nothing) — fixed in place,
 not a decision.
+
+## D340 — B125 chapter-keyword census closed; D338 reconciled in favor of B93_SCOPE.md's original finding
+
+S243, scoping-only. Independently re-derived from raw source (`Datasheets_keywords.csv`,
+`Datasheets.csv`, `Source.csv`, hash-verified against `source_manifest.json`) whether B93_SCOPE.md
+§4.2's Deathwing/Ravenwing gap generalizes to other chapters, and which keyword representation the
+engine actually has to work with.
+
+Checked every non-faction keyword on any SM-faction datasheet for the Deathwing/Ravenwing shape
+(a keyword restricted to one chapter but living on a datasheet shared by the generic Adeptus
+Astartes pool). Only Deathwing and Ravenwing do this. Death Company (Blood Angels) and Wulfen
+(Space Wolves) — the two other plausible candidates — both classify cleanly with zero generic-pool
+bleed. Grey Knights is a separate `faction_id` with no shared generic pool at all, so the
+mechanism that causes this bug structurally cannot apply there. **§4.2's gap is Dark Angels-only,
+not the general chapter problem it was flagged as a risk of being.**
+
+**D338 resolved against the gate, in favor of this document's original §4.2 finding.** Cross-
+checked both keyword strings against the actual built `units.json` (neither prior side had done
+this — B93_SCOPE.md's original census predates the file existing in its current form, and D338's
+`S.all_keywords()` read never touched it). `units.json`'s `keyword_names` field carries Deathwing
+on 8 Dark Angels units and Ravenwing on 7, none of them the 5 + 1 generic-pool Characters that
+should have it (Captain/Chaplain/Librarian/Ancient In Terminator Armour, Bladeguard Ancient;
+Chaplain On Bike) — matching B93_SCOPE.md's original 5-and-1 exactly. D338's gate found these
+"not zero-admit" only because a raw-CSV read credits a same-named resolved-pool record without
+checking whether that record's own built keyword field carries the restriction — more permissive
+than what `units.json` actually contains, not a correction to it. **The 6 Deathwing-family
+enhancement records belong back on B129's zero-admit exemption list; B129's docstring is wrong and
+needs a follow-up tooling fix.**
+
+Fix recommended, not built (turn typing): a small per-army keyword-restoration map mirroring
+`SUBFACTION_KEYWORD_ARMY` in reverse, applied when the Dark Angels union pool is resolved, adding
+the keyword back onto the 6 named shared records. Six units, one chapter — a data-turn-sized fix.
+**Banked as B130** (the restore fix) and **B131** (B129 gate/docstring correction — small, should
+ship together with B130's census correction rather than separately). Full census, method, and the
+table of affected units in `B93_SCOPE.md` §12.
