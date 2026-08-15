@@ -279,9 +279,13 @@ ok(E.enhancementBearerStatEffect(mkEntry({ unit_name: 'x' }, null)) === null,
 ok(E.enhancementBearerStatEffect(mkEntry({ unit_name: 'x' },
      { name: 'Rites of War', detachment_key: 'No Such|DETACHMENT' })) === null,
    'an assignment whose record no longer resolves contributes nothing');
+// B123 note: Iron Resolve now resolves to a row via ENHANCEMENT_BEARER_ABSOLUTE
+// (it sets FNP, it does not delta anything), so it no longer belongs in this
+// negative case — "Fear Made Manifest", in the same detachment, is in neither
+// table and stands in for it.
 ok(E.enhancementBearerStatEffect(mkEntry({ unit_name: 'x' },
-     { name: 'Iron Resolve', detachment_key: 'Blood Angels|1ST COMPANY TASK FORCE' })) === null,
-   'a real enhancement with no bearer-statline delta contributes nothing');
+     { name: 'Fear Made Manifest', detachment_key: 'Blood Angels|1ST COMPANY TASK FORCE' })) === null,
+   'a real enhancement with no bearer-statline effect at all contributes nothing');
 
 // ── 6. B119 does not reach across into B99's table ───────────────────────
 console.log('separation from B99');

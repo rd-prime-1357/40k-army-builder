@@ -2222,7 +2222,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.22';
+  const VERSION = '6.23';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3472,6 +3472,107 @@
       { mod: { T: 1 } }
   };
 
+  // ── B123 BEGIN: enhancement-conferred BEARER STATLINE ABSOLUTE values ─────
+  //
+  // B119's sibling for the other half of the same census (D332): 25 records /
+  // 11 names / 11 armies whose text does not modify the bearer's SV, FNP or W
+  // by a delta but SETS it outright — "The bearer has a Save characteristic of
+  // 2+", "...the Feel No Pain 5+ ability", "...a Wounds characteristic of 5".
+  // Every entry rests on a clause that is unconditional and about the bearer
+  // itself; two names (Iron Resolve, Intoxicating Elixir) carry a SECOND,
+  // conditional clause that extends the same ability to the rest of the unit
+  // once per battle — that half is not rendered, same discipline as B119's own
+  // once-per-battle OC extensions.
+  //
+  // DECIDED S240 (Ryan, D335): show the best UNCONDITIONAL value on the cell.
+  // Wargear's own set-values only ever reach `ov` in unconditional form already
+  // (conferredStats/unconditionalStatOverride strip conditional sentences
+  // before they get there), so the live precedence question is: when wargear
+  // and an Enhancement both set the SAME cell, which unconditional number wins?
+  // — the numerically better one (lower for SV/FNP, higher for W), shown either
+  // way. No shipped record collides with a real wargear set-value today, so
+  // that path is exercised by b123_check.js's fixtures, not by shipped data.
+  //
+  // A conditional Enhancement value (enh.condAbs below) never overwrites the
+  // printed cell even when it would be better — no shipped record needs this,
+  // but the applier implements it now so D335's rule holds the moment one does,
+  // rather than being re-derived under time pressure then.
+  const ENHANCEMENT_BEARER_ABSOLUTE = {
+    "Black Templars|GLADIUS TASK FORCE::Artificer Armour":
+      { abs: { SV: '2', FNP: '5' } },
+    "Black Templars|IRONSTORM SPEARHEAD::The Flesh Is Weak":
+      { abs: { FNP: '4' } },
+    "Blood Angels|1ST COMPANY TASK FORCE::Iron Resolve":
+      { abs: { FNP: '5' } },
+    "Blood Angels|GLADIUS TASK FORCE::Artificer Armour":
+      { abs: { SV: '2', FNP: '5' } },
+    "Blood Angels|IRONSTORM SPEARHEAD::The Flesh Is Weak":
+      { abs: { FNP: '4' } },
+    "Blood Angels|THE ANGELIC HOST::Artisan of War":
+      { abs: { SV: '2' } },
+    "Chaos Space Marines|PACTBOUND ZEALOTS::Intoxicating Elixir":
+      { abs: { FNP: '5' } },
+    "Dark Angels|1ST COMPANY TASK FORCE::Iron Resolve":
+      { abs: { FNP: '5' } },
+    "Dark Angels|GLADIUS TASK FORCE::Artificer Armour":
+      { abs: { SV: '2', FNP: '5' } },
+    "Dark Angels|IRONSTORM SPEARHEAD::The Flesh Is Weak":
+      { abs: { FNP: '4' } },
+    "Deathwatch|1ST COMPANY TASK FORCE::Iron Resolve":
+      { abs: { FNP: '5' } },
+    "Deathwatch|GLADIUS TASK FORCE::Artificer Armour":
+      { abs: { SV: '2', FNP: '5' } },
+    "Deathwatch|IRONSTORM SPEARHEAD::The Flesh Is Weak":
+      { abs: { FNP: '4' } },
+    "Death Guard|VIRULENT VECTORIUM::Revolting Regeneration":
+      { abs: { FNP: '5' } },
+    "Drukhari|KABALITE CARTEL::Leechbite Plate":
+      { abs: { SV: '3' } },
+    "Space Marines|1ST COMPANY TASK FORCE::Iron Resolve":
+      { abs: { FNP: '5' } },
+    "Space Marines|BLADE OF ULTRAMAR::Armour of Antoninus":
+      { abs: { SV: '2', FNP: '5' } },
+    "Space Marines|GLADIUS TASK FORCE::Artificer Armour":
+      { abs: { SV: '2', FNP: '5' } },
+    "Space Marines|IRONSTORM SPEARHEAD::The Flesh Is Weak":
+      { abs: { FNP: '4' } },
+    "Space Wolves|1ST COMPANY TASK FORCE::Iron Resolve":
+      { abs: { FNP: '5' } },
+    "Space Wolves|GLADIUS TASK FORCE::Artificer Armour":
+      { abs: { SV: '2', FNP: '5' } },
+    "Space Wolves|IRONSTORM SPEARHEAD::The Flesh Is Weak":
+      { abs: { FNP: '4' } },
+    "Space Wolves|SAGA OF THE HUNTER::Fenrisian Grit":
+      { abs: { FNP: '4' } },
+    "Thousand Sons|WARPMELD PACT::Flowing Flesh":
+      { abs: { FNP: '4', W: '5' } },
+    "World Eaters|KHORNE DAEMONKIN::Blood-Forged Armour":
+      { abs: { SV: '2' } }
+  };
+
+  // Which unconditional value wins a same-cell collision. SV and FNP are "roll
+  // needed to succeed" — lower is better. W is a characteristic — higher is
+  // better. Only these three: B123's population never sets M, T, LD or OC.
+  const B123_BETTER = {
+    SV:  (a, b) => Number(a) < Number(b),
+    FNP: (a, b) => Number(a) < Number(b),
+    W:   (a, b) => Number(a) > Number(b)
+  };
+
+  // D335's second half: a conditional Enhancement value never overwrites the
+  // printed cell, but its presence is disclosed so the player knows the shown
+  // number is the safe unconditional one, not necessarily the best case
+  // available. Same div class and one-cause-per-line convention as
+  // enhModLegend, deliberately — a separate line rather than folded into it,
+  // since the two can both be true on the same table (a written value AND an
+  // undisclosed conditional alternative) and must read as two distinct facts.
+  function enhBetterLegend(sawBetter, name) {
+    if (!sawBetter) return '';
+    const n = escHtml(name || 'an Enhancement');
+    return '<div class="stat-asterisk-legend">* ' + n + ' also has a conditional value here \u2014 shown value is the unconditional one</div>';
+  }
+  // ── B123 END ────────────────────────────────────────────────────────────
+
   // An assignment whose record no longer resolves contributes nothing, exactly
   // as enhancementWeaponEffect and enhancementPoints read it: the effect is a
   // property of a record we no longer hold, and inventing one shows a number the
@@ -3480,7 +3581,11 @@
     const a = entry && entry.enhancement;
     if (!a || !a.name) return null;
     if (!enhancementRecord(a.name, a.detachment_key)) return null;
-    return ENHANCEMENT_BEARER_STATS[a.detachment_key + '::' + a.name] || null;
+    const key = a.detachment_key + '::' + a.name;
+    const mod = ENHANCEMENT_BEARER_STATS[key];
+    const abs = ENHANCEMENT_BEARER_ABSOLUTE[key];
+    if (!mod && !abs) return null;
+    return Object.assign({}, mod, abs);
   }
 
   // T, W and OC are plain integers in every row of units.json (checked, not
@@ -6735,6 +6840,7 @@
     if (!eff) return null;
     return {
       mod:  eff.mod || {},
+      abs:  eff.abs || {},
       name: entry.enhancement.name,
       mode: b119BearerStatMode(raw, mg, mgIndex, entry)
     };
@@ -7738,6 +7844,29 @@
       const v = b119Compose(base, eMod[k]);
       if (v !== null && String(v) !== String(base)) { ov[k] = v; enhWrote = true; }
     }
+    // B123: an Enhancement's unconditional SET value for SV, FNP or W competes
+    // with any set-value wargear already wrote into `ov` (also always
+    // unconditional — see the B123 block's comment above). D335: the
+    // numerically better unconditional value wins and is shown either way. A
+    // conditional Enhancement value (enh.condAbs — no shipped record uses it)
+    // never overwrites the cell even when it would be better, but marks the
+    // cell so the player knows one is in play.
+    const eAbs    = (enh && enh.mode !== 'none') ? (enh.abs || {})     : {};
+    const eCond   = (enh && enh.mode !== 'none') ? (enh.condAbs || {}) : {};
+    const eBetter = {};
+    let enhBetter = false;
+    for (const k of new Set([...Object.keys(eAbs), ...Object.keys(eCond)])) {
+      if (enh.mode === 'some') { eStar[k] = true; enhStar = true; continue; }
+      const cmp = B123_BETTER[k];
+      if (!cmp) continue; // an unimplemented characteristic is never silently applied
+      const before = (ov[k] !== undefined && ov[k] !== null) ? ov[k] : null;
+      let shown = before;
+      if (eAbs[k] !== undefined && (shown === null || cmp(eAbs[k], shown))) shown = eAbs[k];
+      if (shown !== null && String(shown) !== String(before)) { ov[k] = shown; enhWrote = true; }
+      if (eCond[k] !== undefined && shown !== null && cmp(eCond[k], shown)) {
+        eBetter[k] = true; enhBetter = true;
+      }
+    }
     // B7b: aura flags come from attached-leader `bodyguard_stat_flags` unioned
     // at combined-popup time. The set may include INV, FNP, LD, T, M, OC (D157
     // markable-stat list) and rarely W or SV. Aura stars use the same * symbol
@@ -7761,14 +7890,17 @@
     // override value). The asterisk points at the Wargear Abilities section.
     // B7b: an aura on the same cell fires the same asterisk (source disambiguated
     // in the legend text).
+    // B123: eBetter forces the star to show ALONGSIDE a written value — the
+    // one combination the pre-B123 rendering never needed, since every earlier
+    // star source only ever fired when the cell had NO override.
     const invStar = (!invOv && (fl.INV || aura.INV)) ? '<sup class="stat-asterisk">*</sup>' : '';
-    const fnpStar = (!fnpOv && (fl.FNP || aura.FNP)) ? '<sup class="stat-asterisk">*</sup>' : '';
+    const fnpStar = ((!fnpOv && (fl.FNP || aura.FNP || eStar.FNP)) || eBetter.FNP) ? '<sup class="stat-asterisk">*</sup>' : '';
     // B15: W and SV take the same asterisk when some — but not all — models carry
     // the item that would set them. B119 adds a third source on W, T and OC.
     const wOv     = ov.W  !== undefined && ov.W  !== null;
     const svOv    = ov.SV !== undefined && ov.SV !== null;
-    const wStar   = (!wOv  && (fl.W  || aura.W  || eStar.W))  ? '<sup class="stat-asterisk">*</sup>' : '';
-    const svStar  = (!svOv && (fl.SV || aura.SV || eStar.SV)) ? '<sup class="stat-asterisk">*</sup>' : '';
+    const wStar   = ((!wOv  && (fl.W  || aura.W  || eStar.W))  || eBetter.W)  ? '<sup class="stat-asterisk">*</sup>' : '';
+    const svStar  = ((!svOv && (fl.SV || aura.SV || eStar.SV)) || eBetter.SV) ? '<sup class="stat-asterisk">*</sup>' : '';
     // B7b: LD, T, M, OC gain aura-only asterisk support (no wargear-flag or
     // override machinery today; conferralStats has never targeted these cells).
     // B119: T and OC now also take an Enhancement value or an Enhancement star.
@@ -7800,7 +7932,8 @@
     else if (hasWargearStar) legendText = '* see Wargear Abilities';
     const legend = (legendText
       ? `<div class="stat-asterisk-legend">${legendText}</div>` : '')
-      + enhModLegend(enhStar, enhWrote, enh && enh.name);
+      + enhModLegend(enhStar, enhWrote, enh && enh.name)
+      + enhBetterLegend(enhBetter, enh && enh.name);
 
     return `<table class="stat-table">
       <thead>

@@ -3,8 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **26 open** as of S241 (down from 27 — B129 shipped; nothing new opened):
-B125, B126, B127, B128, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+not here, it isn't open. **25 open** as of S242 (down from 26 — B123 shipped; nothing new opened):
+B125, B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
 B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 Scoping-only turn (D334): B93 censused across all 739 enhancement records and re-scoped. The
@@ -669,36 +669,6 @@ easy one; and where the bearer leads an attached unit, the effect lands on a **d
 entry's** popup, and the engine has no cross-entry render path — the right panel renders one
 entry's `raw` at a time. *Blades of Valour* (6 chapters) is in both Set A and Set D, so B99 ships
 its bearer half and this ticket completes it. Needs its own scoping turn before build.
-
-### B123 — Bearer statline changes that SET a value or grant Feel No Pain are uncensused and unrendered — **NEW S238 (D332); engine; S–M; decision-blocked on display precedence**
-Found during B119's build. `B99_SCOPE.md` §1's census table has five rows — Sets A, A2, B, C, D —
-and none of them covers an enhancement that sets the bearer's own statline to an **absolute**
-value or grants it an ability. **25 records / 11 names / 11 armies** take that shape and are as
-unrendered today as Set C was: *Artificer Armour* and *Armour of Antoninus* ("Save characteristic
-of 2+" plus Feel No Pain 5+), *Artisan of War*, *Blood-Forged Armour*, *Leechbite Plate* (Save
-sets), *Flowing Flesh* ("Wounds characteristic of 5" plus Feel No Pain 4+), and *Iron Resolve*,
-*The Flesh Is Weak*, *Intoxicating Elixir*, *Revolting Regeneration*, *Fenrisian Grit* (Feel No
-Pain grants only). Derived this session from `detachments.json`, not carried forward. Army count
-corrected from 10 to 11 at S239 (D333): re-derivation for `B119-CENSUS` found every one of the 11
-armies also carries an unrelated record from B119's own delta population, so no army drops out
-even after excluding *Living Carapace* and *Brazen Form* (which match this shape too but already
-have an `ENHANCEMENT_BEARER_STATS` row and are not double-booked here).
-
-Deliberately excluded from B119 rather than folded in, despite landing on the same
-`buildStatTable` cells and needing no new render machinery. **The reason is a decision, not a
-mechanism:** unlike Set C's T/W/OC deltas, these land on the SV and FNP cells that wargear
-already writes via `statOverrideFromText`, so they raise a precedence question B119 did not —
-what shows when a storm shield and an Enhancement both speak to the same cell. B119's applier
-therefore takes deltas only, with no absolute path stubbed, on the grounds that an untested code
-path is worse than an absent one.
-
-**DECIDED S240 (Ryan, D335) — unblocked.** Show the best **unconditional** value. If a conditional
-value would be better, show the unconditional one and mark the cell so the player knows something
-else is in play. This is a better rule than the recommendation it replaced ("show the better of the
-two"), because "better" is not well defined when one of the pair is contingent — a 2+ Save that
-applies only against ranged attacks is not comparable to an unconditional 3+. The app prints what
-is always true and flags what is sometimes better, and never prints a number the player only
-sometimes has. Generalises past B123 to the whole statline. Ready to build; no decision outstanding.
 
 ### B124 — *Master Artisan*'s unit-wide Toughness half belongs to no ticket — **NEW S238 (D332); engine; XS; folds into B120's scoping turn**
 Found during B119's build. Drukhari's *Master Artisan* (COVENITE COTERIE) reads "Add 1 to the
@@ -1499,6 +1469,49 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B123 — Bearer statline changes that SET a value or grant Feel No Pain are uncensused and unrendered — **NEW S238 (D332); engine; S–M; SHIPPED S242**
+
+Found during B119's build. `B99_SCOPE.md` §1's census table has five rows — Sets A, A2, B, C, D —
+and none of them covers an enhancement that sets the bearer's own statline to an **absolute**
+value or grants it an ability. **25 records / 11 names / 11 armies** take that shape and were as
+unrendered as Set C was: *Artificer Armour* and *Armour of Antoninus* ("Save characteristic
+of 2+" plus Feel No Pain 5+), *Artisan of War*, *Blood-Forged Armour*, *Leechbite Plate* (Save
+sets), *Flowing Flesh* ("Wounds characteristic of 5" plus Feel No Pain 4+), and *Iron Resolve*,
+*The Flesh Is Weak*, *Intoxicating Elixir*, *Revolting Regeneration*, *Fenrisian Grit* (Feel No
+Pain grants only). Army count corrected from 10 to 11 at S239 (D333).
+
+Deliberately excluded from B119 rather than folded in, since these land on the SV and FNP cells
+that wargear already writes via `statOverrideFromText`, raising a precedence question B119 did
+not — what shows when a storm shield and an Enhancement both speak to the same cell. B119's
+applier took deltas only, with no absolute path stubbed, on the grounds that an untested code
+path is worse than an absent one.
+
+**DECIDED S240 (Ryan, D335):** show the best **unconditional** value. If a conditional value
+would be better, show the unconditional one and mark the cell so the player knows something else
+is in play.
+
+**Shipped S242.** `ENHANCEMENT_BEARER_ABSOLUTE` (25 records / 11 names / 11 armies, re-derived
+from `detachments.json` at build time — matched the S238 count exactly, no drift) added alongside
+`ENHANCEMENT_BEARER_STATS`; `enhancementBearerStatEffect` now merges both tables. `buildStatTable`
+gained the D335 precedence merge: when wargear and an Enhancement both set the same SV/FNP/W cell,
+the numerically better unconditional value wins (lower for SV/FNP, higher for W); a conditional
+Enhancement candidate (`enh.condAbs` — no shipped record needs one yet) never overwrites the cell
+but marks it via a new `enhBetterLegend`, distinct wording from B119's own asterisk legend so the
+two facts ("a value is written" and "a better conditional alternative exists") never read as one.
+FNP gained `eStar`/asterisk support for the first time (B119's delta table never touched FNP).
+No real production collision exists between wargear and an Enhancement absolute value in the
+current data — cases 1, 2 and 4 (Enhancement beats wargear; wargear beats a conditional
+Enhancement, cell marked; legend wording) are exercised by `b123_check.js`'s synthetic fixtures,
+not shipped rows; case 3 (a clean FNP grant, no collision) is real and common (10 of the 25
+records are FNP-only grants). `b123_check.js` also re-verifies the table against source: every key
+resolves, every set characteristic is named in its description, every record rests on an
+unconditional bearer-self clause (two names — Iron Resolve, Intoxicating Elixir — carry a second,
+conditional clause extending the same ability unit-wide once per battle; that half stays
+unrendered, same discipline as B119's own once-per-battle OC extensions). Building this surfaced
+one stale assertion in `b119_check.js` itself — Iron Resolve now resolves to a row (via the new
+abs table) where before it resolved to nothing — fixed by swapping the fixture to an unrelated
+enhancement in the same detachment. `index.html` v6.23.
 
 ### B129 — `detachments.json` is undocumented; no field-coverage discipline on censuses — **NEW S240 (D336); tooling; S; root cause of D334**
 
@@ -2393,3 +2406,21 @@ ticket — a push-process defect, fixed in place). B128's "None is modelled" pre
 to hold against `detachment_effects.json` while documenting it for B129 (D339) — B128 itself
 stays open, not re-scoped this session, but its next scoping turn should read that file's `_meta`
 first.
+
+---
+
+## S242 ledger
+
+Engine-only turn (B123). **26 open at S241 close; 25 open at S242 close** (B123 shipped; nothing
+new opened).
+
+Beginning: B125, B126, B127, B128, B116, B120, B122, B123, B124, B97, B103, E28, B93, B90, B94,
+B85, B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17 (26).
+Resolved: B123 (1).
+Added: none (0).
+Ending: B125, B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+B69, B70, B75, P2, P4, E23, B67b, E12, B17 (25).
+
+Repo verified clean at open: all S241 file hashes matched the pushed copies, D337's GUARDED
+registration held this time (no reconciliation needed). B123 built exactly as scoped by D335 —
+no new product or legality decision needed this session.

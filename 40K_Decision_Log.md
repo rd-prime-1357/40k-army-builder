@@ -14129,3 +14129,11 @@ and re-verified S187. S240's B128 census states "None is modelled," which this f
 contradicts for at least 8 of its 35 counted conferrals. Not resolving B128 here — its own
 scoping turn should start from this file's `_meta` rather than re-censusing `rule_text` from
 zero, which is very likely most of the remaining scoping work already done.
+
+## S242 — B123 built, no new decision
+
+B123 (bearer statline SET/FNP-grant enhancements) was decided at D335 (S240) and built this
+session exactly as scoped — no new product or legality call was needed. Noted here only because
+the build surfaced a fixture bug in `b119_check.js` (Iron Resolve now resolves to a row via the
+new absolute-value table, where the old test asserted it resolved to nothing) — fixed in place,
+not a decision.
