@@ -1,95 +1,96 @@
-# NEXT SESSION PROMPT — Session 252
+# NEXT SESSION PROMPT — Session 253
 
 ## Read first
 
-`SESSION_HANDOFF_251.md` and this file are the only authority on current state. Do not trust
+`SESSION_HANDOFF_252.md` and this file are the only authority on current state. Do not trust
 remembered session numbers, version strings or decision numbers — re-derive them.
 
-State at S251 close: `index.html` **v6.26** (unchanged — S251 was a data turn), decision log through
-**D348**, `SCHEMA_VERSION` **5**, baseline **41/41**, rules assertions **137/137**, **25 open**
+State at S252 close: `index.html` **v6.26** (unchanged — S252 was a data turn), decision log through
+**D349**, `SCHEMA_VERSION` **5**, baseline **40/40**, rules assertions **137/137**, **24 open**
 backlog items.
 
 ## Open
 
-Run `./baseline.sh --fetch --data-turn`. It covers every gate in one command. **41/41 must pass.**
+Run `./baseline.sh --fetch --data-turn`. It covers every gate in one command. **40/40 must pass.**
 If a gate fails, reconcile before starting — do not work around it.
 
-Then verify the S251 file hashes in `SESSION_HANDOFF_251.md`'s Files table against the fetched repo.
+Then verify the S252 file hashes in `SESSION_HANDOFF_252.md`'s Files table against the fetched repo.
 This is deliberately redundant with `repo_check`, so a bad sync is still caught when the repo is
 unreachable or stale.
 
-## Assigned work: B137 — data turn
+## Assigned work: B138 — tooling turn
 
-**Type this turn data-only.** No engine or tooling work mixed in.
+**Type this turn tooling-only.** No engine or data work mixed in.
 
-Chaos Space Marines' `units.json` block still builds from `MFM_Chaos_Space_Marines_v1_0.txt` and is
-shipping wrong points today. Read B137's full entry in `OPEN_ITEMS_BACKLOG.md`, then **re-derive the
-diff from the two MFM files yourself before planning anything**. B137's numbers were measured at
-S251 and are good, but S251's own opening lesson was that a ticket's population figure is a snapshot
-— the entry says 17 units and three tier-shape changes; confirm that against source rather than
-building to it.
+Found while closing B137 (S252): the nine Chaos Daemons hand-authored root CSVs (`Unit_Stats.csv`,
+`Unit_Points.csv`, `Unit_Wargear_Options.csv`, `Unit_Other_Options.csv`, `Unit_Weapons.csv`,
+`Unit_Abilities.csv`, `Keywords.csv`, `Rules.csv`, `Weapon_Abilities.csv` — `CD_ROOT_CSVS` in
+`units_repro_check.py`) are not in `pipeline_manifest.py`'s `GUARDED` list. Read B138's full entry in
+`OPEN_ITEMS_BACKLOG.md`, confirm the list yourself before touching anything — do not trust this
+prompt's filename list as final; re-derive it from `CD_ROOT_CSVS` directly.
 
-The shape mirrors S212's detachments migration and S198's Space Marines group turn: re-point
-`units_repro_check.py`'s CSM block and its four `CSM_CULT_TROOP_POINTS` entries at the v1.1 files,
-add `--emit-fourth-plus` to the CSM convert call, regenerate, diff-guard, reconcile any pinned points
-value in `rules_assertions.py` against the new source rather than loosening it.
+**Build shape.** Add the nine filenames to `GUARDED`, run `pipeline_manifest.py --write`, confirm
+`--freshness-check` passes. That should be the entire turn. Sanity-check afterward that a deliberately
+tampered copy of one of the nine files (e.g. `Unit_Points.csv`) actually fails `pipeline_manifest`
+before restoring it — an untested guard is not a known-working guard, per the project's own precedent
+on negative-testing new gates (see S251/`B94-2`).
 
-**Three things to check rather than assume.**
+**Flag the model before any analysis turn.** This one should be entirely mechanical — adding filenames
+to a Python list and running a write/verify command — but if anything about `CD_ROOT_CSVS`'s scope
+turns out ambiguous (e.g. a file used by CD that isn't actually hand-authored, or vice versa), stop and
+flag before guessing.
 
-1. **A unit-count diff-guard is not sufficient here.** Three units change tier *shape*, not value —
-   Accursed Cultists, Dark Commune and Chosen move from `1st unit`/`2nd +` to `1st to 2nd`/`3rd +`,
-   so the **second copy's** price moves even where the printed numbers did not. Read the changed
-   `second_unit` cells directly.
-2. **The four cult troops are cross-file appends, priced from their god-legion's MFM, not CSM's.**
-   Two of them currently disagree with their own parent legion (Plague Marines 180 in DG / 190 in
-   CSM; Khorne Berzerkers 170/330 in WE / 180/345 in CSM). Migrating CSM's own file alone does not
-   fix those — the `CSM_CULT_TROOP_POINTS` entries must move too, and the result should be checked
-   for agreement with the parent legion's committed block afterwards.
-3. **Whether `MFM_Chaos_Space_Marines_v1_0.txt` still belongs in `units_repro_check.py`'s `REQUIRED`
-   list after the swap.** Check what reads it; do not carry it forward by default and do not delete
-   it on assumption.
+## Once B138 closes: two live-risk items are next, pick one
 
-**`B94-2` will police the 4th tier for you.** The moment CSM's Chaos Rhino prices move to 65, the
-assertion demands its `fourth_plus` of 75 and fails loudly if `--emit-fourth-plus` was forgotten.
-That is the gate working as designed — if it fires, add the flag, do not touch the assertion. **B94
-closes when B137 does**, on that one unit.
+Both are large (`L`, spans sessions) and neither is reachable in a single sitting — the choice of which
+to open first is a sequencing call for whoever runs S254, not decided here. Read both scope sections
+before choosing.
 
-**Flag the model before any analysis turn.** Deciding whether a tier-shape change is read correctly,
-and reconciling a cult-troop price against its parent legion, is analysis; regenerating, diffing,
-running gates and writing docs are mechanical.
+**B90 — SM-family chapter rosters union bug, engine+data, blocks further faction work.**
+`resolveUnits()` unions the full generic Adeptus Astartes pool into every `is_subfaction` chapter, with
+no distinction between the six vanilla chapters (correct to union) and the five dedicated-MFM chapters
+— Black Templars, Blood Angels, Dark Angels, Deathwatch, Space Wolves — whose MFM is a complete,
+self-contained roster that should never be unioned with generic. This is shipping wrong rosters today
+for five already-built factions, not a blocker for unbuilt work.
 
-## Precedents from S251 that will matter again
+**B93 — Enhancement/Upgrade eligibility, engine+data, live D0 gap, Ryan-flagged.** The engine checks
+Character-vs-not instead of the Enhancement's own qualification requirement. Censused at 641 records /
+363 names / 173 detachments / 13 armies bearer-restricted, with 369 records over-admitting today (mean
+9.2 illegal bearers per record). This is a live D0 violation — an enhancement can currently be assigned
+to a bearer the rules do not permit — which outranks B90's mispriced-roster defect on the D0 principle
+alone, but B90 affects rosters players see immediately on list-build and B93's fix is larger. Sequencing
+call for S254.
 
-**A ticket's population figure is a snapshot, not a fact.** B94 said 31 units remained; the real
-number was 5, because four factions had picked the field up in their own build turns and nobody
-updated the entry. Re-derive from source before scoping. This is the second session running where
-re-deriving changed the answer.
+## Precedents from S252 that will matter again
 
-**A gate that reproduces the pipeline cannot see an incompletely-invoked pipeline.**
-`units_repro_check.py` reproduced a `convert_to_json.py` call missing `--emit-fourth-plus` as
-faithfully as a correct one, for fifty sessions, green the whole time. When adding an opt-in flag to
-the pipeline, the assertion that the flag is *passed where it should be* is a separate piece of work
-from the flag itself — and it belongs in the same turn.
+**A ticket's population figure is a snapshot — the second session running this has been re-derived and
+confirmed, not just re-derived and corrected.** B137's own 17-unit/3-shape-change/cult-troop figures,
+written at S251, matched exactly when re-parsed from source at S252. Re-deriving does not always find
+an error; it is still the right discipline every time, because the one time it does not match is the
+one that matters.
 
-**An assertion that needs to know which source file a faction is built from should elect it, not be
-told it.** `B94-2` scores every candidate MFM file against the committed prices and takes the top
-scorer, so a migration is picked up automatically. A hardcoded army→filename map is exactly the
-artefact that went stale here.
+**A migration inside a pipeline faction can strand a hand-authored faction that copies its prices.**
+Chaos Daemons' Shadow Legion Thralls census (`B114`) exists specifically because CD borrows CSM
+datasheets by name; it caught the staleness this session created before it shipped. Any future
+migration of a faction whose units are named-copied elsewhere (check for other `allied_group` census
+assertions before starting a migration turn) should budget for this class of downstream check.
 
-**Report, don't fail, on known-open debt.** `B94-2` reports an army still on a v1_0 source rather
-than failing — a gate that goes red on tracked, ticketed work stops every session until it is done.
+**Fix hand-authored input at its own file, never at `units.json`, even when that input isn't guarded.**
+`Unit_Points.csv`'s five stale rows were corrected directly, the same as any MFM-sourced fix would be,
+despite not yet being manifest-guarded (that gap is B138 itself). The manifest's absence does not
+change which file is the source of truth.
 
-**D0 forbids finished illegal armies, not intermediate steps of a visibly-flagged multi-part edit**
-(D346, Ryan's ruling, still current). And **a unit has a keyword if any of its models has it**
-(D346) — any keyword test must read `model_keyword_names` as well as `keyword_names` and
-`faction_keyword_names`.
+**`B94-2`'s election mechanism worked exactly as designed, with zero code change.** It failed the
+moment CSM's prices moved and the flag hadn't been added yet, and passed cleanly once both landed
+together — this is the second session running an assertion built this way needed no maintenance to
+track a migration it was never told about by name.
 
 ## Close
 
 Four rolling documents updated (`40K_Decision_Log.md`, `DECISION_INDEX.md`,
-`OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_252.md`), this file rewritten for S253, then:
+`OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_253.md`), this file rewritten for S254, then:
 
-1. add `SESSION_HANDOFF_252.md` to `pipeline_manifest.py`'s `GUARDED` list **before** writing
+1. add `SESSION_HANDOFF_253.md` to `pipeline_manifest.py`'s `GUARDED` list **before** writing
 2. `python3 pipeline_manifest.py --write`
 3. `python3 pipeline_manifest.py --freshness-check`
 
@@ -98,8 +99,6 @@ Those two commands are the literal last two of the session.
 ## Outstanding Ryan action carried forward from S248, S249 and S250
 
 **A render check covering three sessions' UI.** S248's Tank Ace checkbox, S249's Mark of Chaos
-selector, S250's silent truncation of an over-cap tally on size reduction. S251 shipped no UI, so
-the backlog is three deep and unchanged rather than four. S250's is the one that matters most — it
-is the only one that edits a saved list without telling the player. All three handoffs carry
-step-by-step scripts. If S252 ships a fourth unseen engine change, say so plainly in the handoff
-rather than letting it accumulate quietly.
+selector, S250's silent truncation of an over-cap tally on size reduction. S252 shipped no UI, so the
+backlog is still three deep. S250's is the one that matters most — it is the only one that edits a
+saved list without telling the player. All three handoffs carry step-by-step scripts.

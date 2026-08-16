@@ -3,7 +3,7 @@
  "files": {
   "index.html": "17e9f795ba5c7d05e55b581b8a06eaf1267eecc51a8bb745e4a41d7f36fedd22",
   "list_store.js": "fc3a210e0838703ed0d49f9d150d38e9d7f444a8bf8457166cc1a6c552ffc887",
-  "units.json": "3e965bbccf69391975e06ef9b0e77e98609eedcb74adc5ea40895d19304c0a19",
+  "units.json": "4319e2e5990c405261ca19debecd170f1af417a721ce921a3ad556b02e062d89",
   "unit_loadouts.json": "109669601e8b1ad49b19f6ebaaeb7b7484df38f58408566ac382021a5db5881c",
   "wargear_points.json": "40d8f55d21a9ecb6b2f710cd39084702ae4a79b4fc8a55c73c5572e5332146af",
   "datasheet_wargear_abilities.json": "a67326c10030f35cc58653c821a27a69597b7225ae7ee903ae8d4b9dce61925b",
@@ -21,10 +21,10 @@
   "detachment_parser.py": "7fc60458b51ab0660cea86d4aee8a39c8c3950294a05091e102b1da4f0074937",
   "rules_assertions.py": "1da8109777a21c785342c1c19f6746896da3866fa43ee09e8b9865060201f308",
   "repro_check.py": "27c41e00f8791ac9a35f3df7107ae87dec31cad47ad1bb3a16f447fbcbae6185",
-  "units_repro_check.py": "b99b72e630d3544a168db15e65414fa72a7f342aab0150e71d5e611343c15550",
+  "units_repro_check.py": "84c613d8ed1bd1bc33fed1633e85bd7c7646825854281e5a7b683b78a096d1a6",
   "detachments_repro_check.py": "94bb9f2f223853f75b6788bf6cbff0f4eb1ad19c845189b0cc3545dcf35f927b",
   "integrity_check.py": "7084a604f0b15a2fd8440c9b61660edbad6d1d16ce7277a989f5ab3e924e83a1",
-  "pipeline_manifest.py": "16429fcb3b886a9eec0d769d06d15ff390c7b8e8c288164ed3f4d10e145a976c",
+  "pipeline_manifest.py": "8f1b72c1266b4a12d01982ac00c6dabca6caebba7af2e369c9992542ed805ad0",
   "pts_check.js": "d1ca62181a6f511214391323e80107cf2acee834b40784409b3eedd902e7d263",
   "stat_check.js": "c240c643896de60d212f62d220722d58994b4afd9a5dc3440d1ae81d45a502ab",
   "bundle_check.js": "40e08552f38aa9dfdbe7c1106b7d0e3ff9623ed6e0a47eb5a85d24e43faa3154",
@@ -80,11 +80,11 @@
   "40K_Architecture_Overview.md": "197c79eaac21e9653c029f33a3d75484f71ac69fa25f84c47c0f6a90bbd47092",
   "40K_Data_Dictionary.md": "115ba549db2c74d27a1ce69cf35fc9c16166364e223f8eb151f3d8afef0dfcc0",
   "40K_Data_Pipeline_Process.md": "940b9269a7a33b60315e432b90d4122fa52ed869bd2d5959c7a7c4145a36e50a",
-  "40K_Decision_Log.md": "a9a389bddba76a409c90d549f533e86359e1f28c51e4c4e6d8cfce4f3c7074ef",
+  "40K_Decision_Log.md": "877c58a71d31f33a17de0af3a810bd84b6510f4aa49ff1956ce3e4f32d28ac7c",
   "40K_Functional_Spec.md": "1d57cabc2d8cf8757403476f462d8a16be3c17311a98afd96426e40051d21b49",
   "BACKLOG_ARCHIVE.md": "b1b87709438d55646cb03fd1d3e1d0225f402b28623d25bcdc0dba87b5576298",
   "CSM_BUILD_SCOPE.md": "53c4828c1853e57741fb028b97efc31a1ba880a06e2495933541599fade3733d",
-  "DECISION_INDEX.md": "a7c83da64333258eb03afbff92b2caa5908eba04f38d8d2eac3f76c4b8790456",
+  "DECISION_INDEX.md": "cb6aa823df44baf74e0931e7214b1759822b0bcb342f52006a57710a48e79865",
   "E1_DETACHMENT_SCOPE.md": "bd46666245f734b2f5b24a4230df0144a9881b1eaaae9d70c23621fd3b796e5a",
   "B93_SCOPE.md": "b452b98bcf4b1d2ac98ad71f960706ee1453549112c1cb28e1726aa43c53b6b7",
   "B99_SCOPE.md": "31f11a9a4e4fb55dfab63dc54eab85115bf7ed14684117841a2aac8be2507a7c",
@@ -99,7 +99,7 @@
   "MFM_FW_Reconciliation.md": "6c783bdd3336f80191572a36192535e654d703afef4d8c7c565b2666415fd3db",
   "MFM_Standalone_Pass.md": "fd81918dd611a39aed3e8bcac93392b9457343afc2e1341ecfdd9be2cd40b35e",
   "MFM_v1_1_Reconciliation.md": "5ebd959dd5b3ab30a06c7cf22199016fa8506cd4987b281ce796a01ee7566f45",
-  "OPEN_ITEMS_BACKLOG.md": "323f71c095386603a3ce02ba0d6bf104fcc4470122820ce7994653eb22b2e7ae",
+  "OPEN_ITEMS_BACKLOG.md": "33ba1a0ab3b2534703ef702d2cf294c5ee603b81c23a74a6ef811e21ef099156",
   "OUTPUT_FORMAT_SPEC_for_project_instructions.md": "b7a22f6e9398468dfae577417b318b4e7730fc9f1e23a6b10d7f76bb1177ab19",
   "P4_ARCHITECTURE_SCOPE.md": "e94b0d6c402fd66d843d757450106b44cf9f2cfb7ad550f0101720eb460a5c9a",
   "PROCESS_IMPROVEMENT_PLAN.md": "c8fa79972a8b33ec52668e5b1d95be2ccfd7dbb4c0a3acc3f0853f92c7d99a8a",
@@ -228,6 +228,7 @@
   "SESSION_HANDOFF_248.md": "ef8c031f498f66f5a71e25c70045eb52b32203379946f3f40ca90ac4591d9aaa",
   "SESSION_HANDOFF_249.md": "ad473fbbc84b8d140e2e14e2f28f1a03d808730ee83aa6d1254c3da1d19ee0f0",
   "SESSION_HANDOFF_250.md": "9849b880500a1fe735b4b3e0af35c29f3173e3c37f99a9512f6f1eff67362148",
-  "SESSION_HANDOFF_251.md": "3b086cab290929b873e17522be367b45865ac586eac5d5478b0a584e7988b3e2"
+  "SESSION_HANDOFF_251.md": "3b086cab290929b873e17522be367b45865ac586eac5d5478b0a584e7988b3e2",
+  "SESSION_HANDOFF_252.md": "575a003f26a3a006b75db685aaa0458a5b38ce6084a4eaeab483485c50b6c7fb"
  }
 }

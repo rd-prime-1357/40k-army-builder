@@ -1212,3 +1212,14 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   still read v1_0 siblings, so Plague Marines is 180 in Death Guard and 190 in CSM, Khorne Berzerkers
   170/330 in WE and 180/345 in CSM. Opened as **B137**, sequenced as the next data turn ahead of B90.
   B94 stays open on that one unit.
+D349 — B137: Chaos Space Marines migrated to its v1.1 MFM, closing B89's units-side debt; B94 closes
+  (S252). Re-derived from the two raw MFM files first, confirming S251's 17-unit re-price and
+  3-tier-shape-change count exactly, plus the cult-troop cross-legion disagreement (Plague Marines
+  180 DG/190 CSM, Khorne Berzerkers 170-330 WE/180-345 CSM). `units_repro_check.py` re-pointed CSM's
+  own build and all four `CSM_CULT_TROOP_POINTS` entries to v1.1 sources, added the missing
+  `--emit-fourth-plus`, dropped the now-unread v1_0 files from `REQUIRED`. Diff-guarded: 20 units
+  changed, zero others. **Found by the gate:** Chaos Daemons' hand-authored Shadow Legion Thralls
+  data (never pipeline-derived) went stale on 5 of the same units — fixed at the source CSV, not
+  `units.json`, diff-guarded to exactly those 5. B94 closes (Chaos Rhino was its last unit). New gap
+  found and ticketed rather than fixed here: the Chaos Daemons root CSVs carry no manifest guard at
+  all — opened as **B138**.

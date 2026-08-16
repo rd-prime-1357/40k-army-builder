@@ -14925,3 +14925,59 @@ completeness the data does not have.
 ### Closes
 
 None. B94 advanced and its remaining scope narrowed to one unit behind B137. B137 opened.
+
+## D349 — B137: Chaos Space Marines migrated to its v1.1 MFM, closing B89's units-side debt; B94 closes (S252)
+
+**Type: data.** Re-derived B137's numbers from the two raw CSM MFM files before building to them, per
+S251's own lesson that a ticket's population figure is a snapshot. Parsed both through
+`mfm_points_parser.py` directly (not eyeballed): the diff matches S251's count exactly — 17 units
+re-price from CSM's own file, three of them (Accursed Cultists, Dark Commune, Chosen) changing tier
+*shape*, not just value, and Chaos Rhino gains the esc4 shape (65/65/65, 4th+ 75) that B94 was waiting
+on. Cross-checked the four cult-troop cross-legion prices against each god-legion's own committed
+`units.json` block: Plague Marines confirmed 180 (Death Guard) vs 190 (CSM, stale), Khorne Berzerkers
+confirmed 170/330 (World Eaters) vs 180/345 (CSM, stale), Rubric Marines agreed on base tiers but was
+missing its 4th+ tier, Noise Marines needed no change.
+
+**Build.** `units_repro_check.py`: CSM's own build re-pointed from `MFM_Chaos_Space_Marines_v1_0.txt`
+to `MFM_Chaos_Space_Marines_v1.1.txt`, `--emit-fourth-plus` added to its `convert_to_json.py` call
+(missing before — B94-2 would have caught this the moment CSM's Chaos Rhino price moved), and all four
+`CSM_CULT_TROOP_POINTS` entries re-pointed at their sibling legions' v1.1 files (each already
+`REQUIRED` for that legion's own build, so no new source enters the pipeline). Both
+`MFM_Chaos_Space_Marines_v1_0.txt` and the four v1_0 sibling files dropped from `REQUIRED` — confirmed
+by grep that nothing else in `units_repro_check.py` reads them; `detachments_repro_check.py` and
+`mfm_points_parser.py`'s `FACTION_BY_MFM`/`P4_REFERENCED_SOURCES` still reference the CSM v1_0 file for
+their own reasons and were not touched (detachments turn, not this one).
+
+Regenerated through the full chain and diff-guarded against a byte-identical control run of the
+unmodified pipeline first, so the diff is attributable to the source swap and nothing else. **Exactly
+20 units changed, zero others, zero unit ids added or removed:** the 17 CSM-native re-prices plus
+Khorne Berzerkers, Plague Marines and Rubric Marines (the three cult troops whose cross-legion price
+actually moved — Noise Marines correctly did not change, matching the source finding that TS/EC agree
+between versions on it).
+
+**Found by the gate, not assumed: a second-order staleness in Chaos Daemons.** `B114`'s Shadow Legion
+Thralls assertion — 21 Chaos Daemons allied units required to price identically to their Chaos Space
+Marines native counterparts by name — failed on exactly the 5 of those 21 whose CSM counterpart moved
+price this turn (Chaos Lord with Jump Pack, Chaos Terminator Squad, Chosen, Dark Commune, Accursed
+Cultists). Chaos Daemons is Gen-1 hand-authored data in Wahapedia-shaped CSVs at the project root,
+never routed through `wahapedia_transform.py` — its `Unit_Points.csv` rows for these 5 units still
+carried the old v1_0-shaped CSM prices. Confirmed nothing writes to the root `Unit_Points.csv`
+programmatically (grep across every parser); it is hand-authored input, the same class of file as an
+MFM text file for any other faction, so editing it directly — not `units.json` — is the correct fix.
+Updated the 5 rows to CSM's new prices, regenerated, diff-guarded again: exactly the same 5 unit_ids
+changed and nothing else. 136/137 assertions pass with only the expected pre-manifest-write staleness
+failing; `B114` and `B94-2` both pass clean on the rebuilt data.
+
+**B94 closes.** Its data half is now complete for every built faction — CSM's Chaos Rhino, the last
+outstanding unit, lands with this turn.
+
+**New gap found, not fixed — opened as a ticket rather than touched here (tooling, not data).** The
+Chaos Daemons hand-authored root CSVs (`Unit_Points.csv` and the rest of `CD_ROOT_CSVS`) are not in
+`pipeline_manifest.py`'s `GUARDED` list at all. `detachment_effects.json` carries an explicit comment
+that hand-authored inputs need the manifest precisely because no repro gate can regenerate them if a
+bad sync silently changes them — the same argument applies here and was apparently never applied when
+these CSVs were added. Opened as **B138**.
+
+### Closes
+
+**B94** closes. **B137** closes.

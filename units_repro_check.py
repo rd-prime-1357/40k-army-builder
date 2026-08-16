@@ -113,15 +113,9 @@ REQUIRED = [
     'units.json', 'unit_loadouts.json',
     'bundled_swaps.json', 'faction_taxonomy.json',
     'MFM_Space_Marines_v1.1.txt',
-    # B94/B89 (S195, D288): Thousand Sons migrated to its v1.1 source. v1_0 stays
-    # REQUIRED too — CSM's cult-troop cross-legion pricing (CSM_CULT_TROOP_POINTS
-    # below) still prices Rubric Marines' CSM-army datasheet off TS's v1_0 file
-    # until CSM's own B89 turn migrates it.
+    # B94/B89 (S195, D288): Thousand Sons migrated to its v1.1 source.
     'MFM_Thousand_Sons_v1.1.txt',
-    # B94/B89 (S196, D289): Death Guard migrated to its v1.1 source. v1_0 stays
-    # REQUIRED too — CSM's cult-troop cross-legion pricing (CSM_CULT_TROOP_POINTS
-    # below) still prices Plague Marines' CSM-army datasheet off DG's v1_0 file
-    # until CSM's own B89 turn migrates it.
+    # B94/B89 (S196, D289): Death Guard migrated to its v1.1 source.
     'MFM_Death_Guard_v1.1.txt',
     # B100 (S204): Grey Knights, built directly from v1.1 per D293 — the first faction
     # with no v1_0 migration debt, since it is the first one built after D293 was set.
@@ -144,14 +138,15 @@ REQUIRED = [
     'MFM_Space_Wolves_v1.1.txt', 'MFM_Blood_Angels_v1.1.txt',
     'MFM_Black_Templars_v1.1.txt', 'MFM_Dark_Angels_v1.1.txt',
     'MFM_Death_Watch_v1.1.txt',
-    # D229 / S147 turn A: CSM's own MFM. Prices 54 of CSM's 58 current-edition
-    # datasheets; the four cult-troop units (Khorne Berzerkers, Rubric Marines,
-    # Plague Marines, Noise Marines) are priced in their god-legion's own MFM and
-    # are deliberately withheld from this run — see CSM_CULT_TROOP_IDS below.
-    'MFM_Chaos_Space_Marines_v1_0.txt',
-    # D240 (S147 turn B): the four sibling-legion MFMs the cult-troop points come from.
-    'MFM_World_Eaters_v1_0.txt', 'MFM_Death_Guard_v1_0.txt',
-    'MFM_Thousand_Sons_v1_0.txt', 'MFM_Emperors_Children_v1_0.txt',
+    # B137 (S252, D349): CSM migrated to its v1.1 source, closing the units-side half
+    # of B89 that S199 left blocked. Prices 54 of CSM's 58 current-edition datasheets;
+    # the four cult-troop units (Khorne Berzerkers, Rubric Marines, Plague Marines,
+    # Noise Marines) are priced in their god-legion's own MFM and are deliberately
+    # withheld from this run — see CSM_CULT_TROOP_POINTS below.
+    'MFM_Chaos_Space_Marines_v1.1.txt',
+    # B137 (S252): the four sibling-legion v1.1 MFMs the cult-troop points now come
+    # from — each already REQUIRED above for that legion's own build. The matching
+    # v1_0 sibling files are no longer read anywhere in this script and are dropped.
 ] + CD_ROOT_CSVS
 
 # D229 (S147 turn A) / D240 (S147 turn B). These four CSM datasheets carry no cost in
@@ -163,10 +158,10 @@ REQUIRED = [
 # single-row Unit_Stats.csv via _scope_stats_csv — see that function's docstring for
 # why the full 58-row CSM stats block can't be used here.
 CSM_CULT_TROOP_POINTS = [
-    ('000003582', 'MFM_World_Eaters_v1_0.txt'),      # Khorne Berzerkers
-    ('000003584', 'MFM_Death_Guard_v1_0.txt'),        # Plague Marines
-    ('000003583', 'MFM_Thousand_Sons_v1_0.txt'),      # Rubric Marines
-    ('000004099', 'MFM_Emperors_Children_v1_0.txt'),  # Noise Marines
+    ('000003582', 'MFM_World_Eaters_v1.1.txt'),      # Khorne Berzerkers
+    ('000003584', 'MFM_Death_Guard_v1.1.txt'),        # Plague Marines
+    ('000003583', 'MFM_Thousand_Sons_v1.1.txt'),      # Rubric Marines
+    ('000004099', 'MFM_Emperors_Children_v1.1.txt'),  # Noise Marines
 ]
 
 
@@ -434,7 +429,7 @@ def repro(dir_):
             return False, 'wahapedia_transform.py (CSM) failed:\n' + out[-600:]
         csm_stats = os.path.join(csm_dir, 'Unit_Stats.csv')
         rc, out = _run([sys.executable, 'mfm_points_parser.py',
-                        '--mfm', 'MFM_Chaos_Space_Marines_v1_0.txt',
+                        '--mfm', 'MFM_Chaos_Space_Marines_v1.1.txt',
                         '--out-dir', csm_dir, '--stats', csm_stats],
                         cwd=dir_)
         if rc != 0:
@@ -452,7 +447,8 @@ def repro(dir_):
         os.makedirs(csm_json)
         rc, out = _run([sys.executable, 'convert_to_json.py',
                         '--input-dir', csm_dir, '--output-dir', csm_json,
-                        '--bundles', os.path.join(dir_, 'bundled_swaps.json')], cwd=dir_)
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json'),
+                        '--emit-fourth-plus'], cwd=dir_)
         if rc != 0:
             return False, 'convert_to_json.py (CSM) failed:\n' + out[-600:]
 
