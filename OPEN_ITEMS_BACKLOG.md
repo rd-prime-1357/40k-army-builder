@@ -3,8 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **25 open** as of S242 (down from 26 — B123 shipped; nothing new opened):
-B125, B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+not here, it isn't open. **25 open** as of S246 (unchanged — B132 shipped, B133 opened):
+B133, B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
 B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 Scoping-only turn (D334): B93 censused across all 739 enhancement records and re-scoped. The
@@ -626,31 +626,25 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
-### B132 — Consume `chapter_keyword_additions` in `resolveUnits` (engine half of B130) — **NEW S245 (D342); engine; S; unblocks the 6 Deathwing-family B93 records**
+### B133 — `resolved_pool()` must learn the per-chapter maps before B131's `EXEMPT` block can be removed — **NEW S246 (D343); tooling; S; closes the B125/B130/B131/B132 arc**
 
-B130 (S245) shipped the data: 28 generic Adeptus Astartes units now carry a
-`chapter_keyword_additions` map (`{"Dark Angels": ["Deathwing"|"Ravenwing"]}`). Nothing reads it
-yet, so the field is inert and no behaviour has changed.
+D342 and S246's incoming prompt both described this as a small deletion once B132 shipped. It is
+not. The zero-bearer gate does not run the engine — it runs `rules_assertions.py`'s
+`Sources.resolved_pool()`, a Python mirror of `resolveUnits()` that unions the generic and chapter
+blocks and stops there, applying **neither** per-chapter map. B131's per-unit membership test reads
+each unit's own built keyword fields (D341), so the 6 Deathwing-family records still resolve to zero
+admits under that mirror even now that the engine restores the keyword. Deleting the exemptions
+today fails the gate immediately.
 
-This ticket is the engine half, and it is the direct analogue of **B56d** — read B56d and
-`applyChapterPointOverrides()` before writing anything new. Same shape: at the point `resolveUnits`
-resolves a union-mode chapter's pool, for each unit carrying the map under that chapter's army
-name, add the listed keywords to every model group's `keyword_names`. **Never mutate the shared
-generic unit object** — it is the same object reference across every chapter's resolved set, so an
-in-place edit would leak Deathwing into Ultramarines. Return a fresh object only where an addition
-actually applies, exactly as the point-override path does. The keywords are all-models on every one
-of the 28 records (verified at D342), so a per-model-group carve-out is not needed.
+Scope: teach `resolved_pool()` `chapter_keyword_additions` (mirroring `applyChapterKeywordAdditions`,
+including the non-mutation rule — the Python mirror hands out the same dict objects across pools),
+then remove the 6 exemptions in the same pass. The proof is the gate's own count moving 36 → 30 with
+no other exemption disturbed, and B131's docstring paragraph updated to match.
 
-Ordering against the override map does not matter (disjoint fields), but keep the new step beside
-`applyChapterPointOverrides` rather than scattering a second per-army transform elsewhere.
-
-Needs its own gate on the `b90_check.js` model — a synthetic fixture chapter proving (a) the
-keywords land for the owning chapter, (b) they do not land for any other chapter's resolved pool,
-and (c) the generic Space Marines pool is unchanged.
-
-**Follow-on:** once this ships, B131's `EXEMPT` block in the zero-bearer gate goes stale — the 6
-Deathwing-family enhancement records gain real eligible bearers — and must be removed in a separate
-tooling pass. That pass is gated on this ticket, not on B130.
+Also in scope while there: the mirror has been missing `chapter_point_overrides` since B56d.
+Nothing asserts on pool points today so no assertion is currently wrong, but the docstring claims a
+fidelity the function does not have. Close it in the same pass rather than let a third session
+rediscover it.
 
 ### B116 — Drukhari's Harlequins/Anhrathe allied-unit inclusion has no built-faction precedent — **NEW S222 (D316); product scope call; REQUIRED BEFORE PRODUCTION (Ryan, S240/D335); gated on Aeldari being built**
 **S240 (D335): reclassified by Ryan.** Deferral is fine for now, but this must ship before the
@@ -1473,6 +1467,34 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 ## Closed / Shipped — pointers
 
+### B132 — Consume `chapter_keyword_additions` in `resolveUnits` (engine half of B130) — **NEW S245 (D342); engine; SHIPPED S246 (D343)**
+
+B130 (S245) shipped the data: 28 generic Adeptus Astartes units carry a `chapter_keyword_additions`
+map (`{"Dark Angels": ["Deathwing"|"Ravenwing"]}`). This ticket was the consumer, on the B56d model.
+
+**SHIPPED S246 — engine-only.** `index.html` v6.23 → **v6.24**: new `applyChapterKeywordAdditions()`
+beside `applyChapterPointOverrides()`, applied after it on the union path only; the `complete` early
+return still reaches neither. Copies the unit, its `model_groups` array and each affected group
+object — keywords sit two levels deeper than B56d's `points`, so an in-place push would have leaked
+Deathwing into every other chapter's pool and into the generic Space Marines pool, which all hold
+the same object reference. Unaffected units are returned by their original reference. Dedupes
+against natively-carried keywords; places the addition alphabetically when the existing list is
+sorted and appends when it is not, because the Wahapedia-derived blocks sort `keyword_names` while
+the hand-built Chaos Daemons blocks keep source order (75 of 508 model groups).
+
+New gate `b132_check.js` (net new), on the `b90_check.js` model: owning chapter gets the keyword on
+every model group; no other chapter does; the generic pool is identical to a pre-resolve snapshot;
+the shared `units.json` objects are unmutated; reference identity on both the copied and uncopied
+paths; dedupe; idempotence; sorted and unsorted order; both maps composing on one unit; and a
+call-counting tripwire proving the complete path never calls it. Then a live pass resolving all 11
+built chapters against the shipped `units.json`. Negative-tested against an in-place-mutating
+variant, which fails on chapter leakage, generic-pool contamination, the mutation snapshot, the
+reference checks, the source-order check and the live Dark-Angels-to-Deathwatch leak. Registered in
+`baseline.sh` and `pipeline_manifest.py`'s GUARDED list.
+
+**Follow-on is B133, not a deletion.** B131's `EXEMPT` block cannot be removed until
+`rules_assertions.py`'s `resolved_pool()` mirror learns the map — see B133.
+
 ### B131 — B129's zero-bearer gate wrongly excludes the 6 Deathwing-family records; docstring wrong — **NEW S243 (D340); tooling; SHIPPED S244 (D341)**
 
 D338 found these 6 records "not zero-admit" via a raw-CSV read (`S.all_keywords()`) that credits a
@@ -1573,7 +1595,8 @@ stored.
 
 **Re-derived at build time, the population is 28, not 6 (D342).** §12's figure counted only
 generic-pool *Characters*, which is what B93's bearer arc needs; the underlying data defect is
-larger. 18 Deathwing + 10 Ravenwing, all all-models non-faction keyword rows, all present in the
+larger. 19 Deathwing + 9 Ravenwing (S245's handoff headline said 18/10; the built data and
+that handoff's own enumeration both give 19/9 — corrected at D343), all all-models non-faction keyword rows, all present in the
 shipped generic block. Beyond §12's six: Terminator Squad, Terminator Assault Squad, Bladeguard
 Veteran Squad, Sternguard Veteran Squad, Vanguard Veteran Squad With Jump Packs, Dreadnought,
 Ballistus/Brutalis/Redemptor Dreadnought, the three Land Raiders, Repulsor, Repulsor Executioner;
@@ -2562,3 +2585,23 @@ population was re-derived from raw source rather than taken from `B93_SCOPE.md` 
 **28, not 6** — §12 had counted only generic-pool Characters. Cross-checked against the
 army-composition sources before building. The fix needs both a data emitter and an engine consumer,
 so it was split on the B56c/B56d precedent: data half shipped here, engine half banked as B132.
+
+## S246 ledger
+
+Engine-only turn (B132, D343). **25 open at S245 close; 25 open at S246 close** (B132 shipped;
+B133 opened).
+
+Beginning: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B132 (25).
+Resolved: B132 (1).
+Added: B133 (1).
+Ending: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17, B133 (25).
+
+Repo verified clean at open: all ten S245-changed files matched the S245 handoff table's hashes
+exactly against a fresh clone, `pipeline_manifest.json` included. Session-open baseline
+(`--fetch`, tier A) passed 31/31 with 5 tier-B gates correctly skipped — B132 needs no GW sources.
+Two findings beyond the build: S245's handoff headline of 18 Deathwing / 10 Ravenwing was a typo
+for 19/9 (the data and that handoff's own enumeration are both 19/9; total 28 unchanged), and the
+B131 exemption removal turns out not to be a deletion — `rules_assertions.py`'s `resolved_pool()`
+mirror applies neither per-chapter map, so it must learn them first. Banked as B133.

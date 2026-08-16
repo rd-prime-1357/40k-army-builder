@@ -242,6 +242,7 @@ gate b58_check            node b58_check.js index.html unit_loadouts.json
 gate b72_check            node b72_check.js index.html unit_loadouts.json
 gate b90_check            node b90_check.js index.html
 gate b101_check           node b101_check.js index.html
+gate b132_check           node b132_check.js index.html
 gate b106_check           node b106_check.js index.html
 gate b99_check            node b99_check.js index.html detachments.json units.json unit_loadouts.json
 gate b119_check           node b119_check.js index.html detachments.json units.json unit_loadouts.json

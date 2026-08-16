@@ -14287,3 +14287,81 @@ B131's `EXEMPT` block in the zero-bearer gate reflects today's data, where the 6
 records have zero eligible bearers. That stays true through this session — the field is inert. It
 becomes stale only when **B132** ships, not when B130 did. The follow-up tooling pass is now gated
 on B132.
+
+## D343 — B132 engine half: chapter keyword restoration, and why B131's exemption removal is not a one-line deletion
+
+**Session 246. Engine-only turn.** B130 (D342) shipped `chapter_keyword_additions` onto 28 generic
+Adeptus Astartes units as inert data. B132 is the consumer, and it closes the arc.
+
+### The mechanism
+
+`applyChapterKeywordAdditions(units, armyName)` sits beside `applyChapterPointOverrides()` and runs
+after it on the union path in `resolveUnits()`. The two maps touch disjoint fields — `points` versus
+`model_groups[].keyword_names` — so their relative order carries no meaning; they are adjacent so
+that a reader looking for "what varies by chapter" finds both in one place rather than two.
+
+The `complete` roster path still returns before either map is reached, so a complete-mode chapter
+remains structurally isolated from the generic pool and from both per-chapter transforms.
+
+### Non-mutation is deeper here than it was for B56d
+
+The point-override map only had to avoid mutating the shared unit object; a fresh object with a
+replaced `points` value was enough. Keywords live two levels down, so a correct copy has to clone
+the unit, its `model_groups` array, and each affected group object. An in-place `keyword_names.push`
+would have leaked Deathwing into every other chapter's resolved pool *and* into the generic Space
+Marines pool, because all of them hold the same object reference. Copying happens only where an
+addition actually applies; an unaffected unit is returned by its original reference.
+
+Two smaller behaviours were decided rather than defaulted:
+
+- **Dedupe.** A unit that already carries the keyword is left untouched, so a future map entry that
+  overlaps native data cannot produce a doubled keyword pill.
+- **Order.** The addition is placed alphabetically when the existing list is already sorted, and
+  appended when it is not. Every Wahapedia-derived block sorts `keyword_names`; the hand-built Chaos
+  Daemons blocks preserve source order (75 of 508 model groups). Sorting unconditionally would have
+  silently reordered data the field does not touch today but could reach later. This makes a restored
+  keyword on a generic record read identically to a natively-keyworded chapter record.
+
+### The gate
+
+`b132_check.js` (net new), on the `b90_check.js` model: eight synthetic checks — owning chapter gets
+it on every model group; no other chapter gets it; the generic pool is identical to a pre-resolve
+snapshot; the shared `units.json` objects are unmutated after every resolve; reference identity on
+both the copied and uncopied paths; dedupe; idempotence across two resolves; sorted and unsorted
+order; both maps composing on one unit; and the complete path never calling the function at all
+(call-counting tripwire).
+
+It then runs against the shipped `units.json` and `faction_taxonomy.json`, resolving all 11 built
+chapters and asserting the 28 real records land for Dark Angels, appear in no other chapter's pool,
+and are absent from the generic pool. Negative-tested against a deliberately in-place-mutating
+version of the function, which fails on chapter leakage, generic-pool contamination, the mutation
+snapshot, the reference-identity checks, the source-order check, and the live Dark-Angels-to-
+Deathwatch leak.
+
+The generic-pool check is a snapshot comparison, not "no Deathwing anywhere". The first draft
+asserted absence and failed correctly against live data: generic Adeptus Astartes units that carry
+Deathwing *natively* exist, and the rule being enforced is that resolution changes nothing there,
+not that the keyword is absent.
+
+### D342's population figure was mistyped in the S245 handoff
+
+The handoff's headline said 18 Deathwing / 10 Ravenwing. The built data is **19 Deathwing / 9
+Ravenwing**, and S245's own narrative list in the same paragraph enumerates 19 and 9. The total of
+28 and every downstream claim are unaffected; the summary line was wrong, not the derivation or the
+data. Recorded here so a later session does not treat the discrepancy as a data defect.
+
+### B131's `EXEMPT` block cannot simply be deleted next session — B133
+
+D342 and `NEXT_SESSION_PROMPT.md` both described the exemption removal as a small tooling follow-up
+gated on B132. That framing is wrong. The zero-bearer gate does not run the engine; it runs
+`rules_assertions.py`'s `Sources.resolved_pool()`, a Python mirror of `resolveUnits()` that unions
+the generic and chapter blocks and stops there. It applies **neither** per-chapter map. B131's
+per-unit membership test reads the unit's own built keyword fields (D341), so the 6 Deathwing-family
+records still resolve to zero admits under that mirror, and removing the exemptions today would fail
+the gate immediately.
+
+Opened as **B133**: teach `resolved_pool()` the chapter maps, then remove the exemptions in the same
+pass, with the gate's own count moving 36 → 30 as the proof. Noted while there: the mirror has been
+missing `chapter_point_overrides` since B56d as well. Nothing asserts on pool points today, so no
+assertion is currently wrong because of it, but the mirror's docstring claims a fidelity it does not
+have and the gap should close in the same pass rather than be rediscovered.

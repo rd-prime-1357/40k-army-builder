@@ -1105,3 +1105,16 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   the data half; B132 opened for the engine half** (`resolveUnits` consumption). Field is inert
   until B132. Policed by the `units_repro_check.py` fixed point rather than a new assertion, matching
   how the override map is policed. **B131's EXEMPT block goes stale when B132 ships, not B130.**
+- **D343** — **B132 engine half shipped (S246), engine-only.** `index.html` v6.24: new
+  `applyChapterKeywordAdditions()` beside the point-override transform, applied on the union path
+  only. Restores a chapter-owned sub-faction keyword (Deathwing/Ravenwing) onto the 28 shared
+  generic records for the owning chapter's view alone. Copies unit, `model_groups` array and each
+  affected group object — keywords sit two levels deeper than B56d's `points`, so an in-place push
+  would leak into every other chapter's pool and the generic pool. Dedupes; places the addition
+  alphabetically when the list is sorted and appends when it is not (Chaos Daemons' hand-built
+  blocks keep source order). New gate `b132_check.js`, negative-tested against an in-place variant,
+  with a live pass over all 11 built chapters. Also: S245's handoff headline of 18/10 was a typo —
+  the data is **19 Deathwing / 9 Ravenwing**, total 28 unchanged. **B133 opened**: B131's `EXEMPT`
+  block cannot just be deleted, because `rules_assertions.py`'s `resolved_pool()` mirror applies
+  neither per-chapter map; it must learn them first (and has been missing `chapter_point_overrides`
+  since B56d).

@@ -2222,7 +2222,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.23';
+  const VERSION = '6.24';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2277,17 +2277,55 @@
     });
   }
 
+  // B132: chapter-scoped keyword restoration (D342). A sub-faction keyword that
+  // belongs to exactly one chapter (Deathwing, Ravenwing) is stripped from the
+  // shared generic Adeptus Astartes record by the transform, because the same
+  // record is fielded by every chapter and only one of them may carry it.
+  // chapter_keyword_additions[armyName] puts it back for that chapter's view
+  // only. Same non-mutation rule as applyChapterPointOverrides above, and it
+  // matters more here: the model_group objects are shared too, so both the unit
+  // and the group have to be copied, or a keyword_names push would leak
+  // Deathwing into every other chapter's resolved set and into the generic
+  // Space Marines pool. Copy only where an addition actually applies.
+  //
+  // Whole-unit by construction: the emitter refuses to build a map from a
+  // model-scoped keyword row, so every addition applies to every model group.
+  // Order is preserved when a group's existing keyword list is not already
+  // sorted (Chaos Daemons' hand-built blocks keep source order); the Astartes
+  // blocks this map lives on are sorted, so the restored keyword lands in the
+  // same place a natively-keyworded chapter record shows it.
+  function applyChapterKeywordAdditions(units, armyName) {
+    return units.map(u => {
+      const add = u.chapter_keyword_additions && u.chapter_keyword_additions[armyName];
+      if (!add || add.length === 0) return u;
+      let touched = false;
+      const groups = (u.model_groups || []).map(g => {
+        const have    = g.keyword_names || [];
+        const missing = add.filter(k => have.indexOf(k) < 0);
+        if (missing.length === 0) return g;
+        touched = true;
+        const wasSorted = have.every((k, i) => i === 0 || have[i - 1] <= k);
+        const next = have.concat(missing);
+        if (wasSorted) next.sort();
+        return Object.assign({}, g, { keyword_names: next });
+      });
+      return touched ? Object.assign({}, u, { model_groups: groups }) : u;
+    });
+  }
+
   // Resolve the unit set for a faction record (D276/B90 two-tier chapter model).
   // Generic Space Marines → the Adeptus Astartes block, no chapter filter.
   // A 'complete'-mode chapter → its own units.json block IS the whole legal
   //   roster: no generic union, no chapter-point-override map. The early return
-  //   below sits BEFORE the generic pool is read and BEFORE the override map is
-  //   applied, so the complete path is structurally isolated from both — a
-  //   'complete' faction can never reach unitsByArmy['Adeptus Astartes'] or
-  //   applyChapterPointOverrides().
+  //   below sits BEFORE the generic pool is read and BEFORE either per-chapter
+  //   map is applied, so the complete path is structurally isolated from both —
+  //   a 'complete' faction can never reach unitsByArmy['Adeptus Astartes'],
+  //   applyChapterPointOverrides() or applyChapterKeywordAdditions().
   // A 'union'-mode chapter (anything not exactly 'complete') → union(generic
   //   codex, chapter units), the chapter's copy winning on unit_name, then the
-  //   point-override map. Byte-identical to the pre-B90 behavior.
+  //   point-override map, then the keyword-addition map. The two maps touch
+  //   disjoint fields (points vs. model_groups.keyword_names), so their order
+  //   relative to each other does not matter.
   function resolveUnits(faction) {
     if (!faction.is_subfaction) {
       return (unitsByArmy[faction.data_army] || unitsByArmy['Adeptus Astartes'] || []).slice();
@@ -2297,7 +2335,8 @@
     const generic = unitsByArmy['Adeptus Astartes'] || [];
     const chapterNames = new Set(chapter.map(u => u.unit_name));
     const merged = generic.filter(u => !chapterNames.has(u.unit_name)).concat(chapter);
-    return applyChapterPointOverrides(merged, faction.data_army);
+    return applyChapterKeywordAdditions(
+      applyChapterPointOverrides(merged, faction.data_army), faction.data_army);
   }
 
   // Build the lightweight allUnits view + rawUnits from a resolved unit set.
