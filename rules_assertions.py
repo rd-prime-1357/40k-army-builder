@@ -174,12 +174,90 @@ class Sources:
                 self._cache['tax'] = json.load(f)
         return self._cache['tax']
 
+    def _apply_chapter_point_overrides(self, units, army):
+        """Mirror of index.html's applyChapterPointOverrides() (B56d/D171).
+
+        A unit carrying chapter_point_overrides[army] gets that value substituted for
+        its 'points' field. Never mutate the shared unit dict — self.units() is
+        cached, so the same dict object is hand out to every chapter's pool built
+        from it; an in-place edit here would leak one chapter's price into every
+        other chapter's view exactly as the engine-side comment warns against.
+        Returns a fresh dict only where an override actually applies; everything
+        else is returned by its original reference.
+        """
+        out = []
+        for u in units:
+            override = (u.get('chapter_point_overrides') or {}).get(army)
+            if override is None:
+                out.append(u)
+                continue
+            u2 = dict(u)
+            u2['points'] = override
+            out.append(u2)
+        return out
+
+    def _apply_chapter_keyword_additions(self, units, army):
+        """Mirror of index.html's applyChapterKeywordAdditions() (B132/D342/D343).
+
+        Whole-unit by construction (the emitter refuses a model-scoped row), so an
+        addition applies to every model_group on the unit. Copy depth matters more
+        here than in the point-override mirror above: model_groups is a list of
+        dicts nested inside the shared unit record, so a shallow dict(u) copy is not
+        enough on its own — each touched group dict must be copied too, or an
+        in-place keyword_names append would leak into every other chapter's pool and
+        the generic pool, since they all hold the same group object reference.
+        Ordering matches the engine: appended and re-sorted when the group's
+        existing keyword_names is already sorted (the Wahapedia-derived Astartes
+        blocks), appended in source order when it is not (the hand-built Chaos
+        Daemons blocks). Dedupes against natively-carried keywords. Untouched units
+        and untouched groups are returned by their original reference.
+        """
+        out = []
+        for u in units:
+            add = (u.get('chapter_keyword_additions') or {}).get(army)
+            if not add:
+                out.append(u)
+                continue
+            touched = False
+            new_groups = []
+            for g in (u.get('model_groups') or []):
+                have = g.get('keyword_names') or []
+                missing = [k for k in add if k not in have]
+                if not missing:
+                    new_groups.append(g)
+                    continue
+                touched = True
+                was_sorted = all(have[i - 1] <= have[i] for i in range(1, len(have)))
+                nxt = have + missing
+                if was_sorted:
+                    nxt = sorted(nxt)
+                g2 = dict(g)
+                g2['keyword_names'] = nxt
+                new_groups.append(g2)
+            if touched:
+                u2 = dict(u)
+                u2['model_groups'] = new_groups
+                out.append(u2)
+            else:
+                out.append(u)
+        return out
+
     def resolved_pool(self, army):
         """The unit set a player of `army` can actually reach.
 
-        Mirrors index.html's resolveUnits(): a chapter subfaction is the generic
-        Adeptus Astartes block unioned with its own block, the chapter's copy winning
-        on a name collision. Everything else is just its own block. Returns
+        Mirrors index.html's resolveUnits() in full as of B133 (D343→B133, S247): a
+        chapter subfaction is the generic Adeptus Astartes block unioned with its own
+        block (the chapter's copy winning on a name collision), then
+        chapter_point_overrides and chapter_keyword_additions are applied for that
+        army, exactly as the engine's union path does. Everything else (a non-
+        subfaction army, or — should one ever exist — a 'complete'-roster subfaction,
+        which the engine skips both the union and both maps for) is just its own
+        block; this mirror does not read roster_mode because no 'complete'-mode
+        subfaction exists in faction_taxonomy.json today; if one is added, this
+        function needs a matching branch before it can be trusted for that army.
+        Both per-chapter maps are non-mutating — see the two helpers above — so
+        building one chapter's pool never alters what another chapter's pool, or the
+        generic pool, reads from the same cached units() blocks. Returns
         {unit_name: unit_record}.
         """
         blocks = {a['army']: a for a in self.units()}
@@ -196,6 +274,10 @@ class Sources:
         if army in blocks:
             for u in blocks[army]['units']:
                 pool[u['unit_name']] = u
+        if army in sub:
+            merged = self._apply_chapter_keyword_additions(
+                self._apply_chapter_point_overrides(list(pool.values()), army), army)
+            pool = {u['unit_name']: u for u in merged}
         return pool
 
     def copy_tier_pts(self, size_row, prior_copies):
@@ -2399,14 +2481,14 @@ ASSERTIONS = [
      'Every non-Upgrade enhancement whose description carries a bearer-restriction clause '
      '(the 117-string vocabulary B93_SCOPE.md S9 verified against source) resolves to at '
      'least one eligible Character bearer in its army, UNLESS the record is a named, '
-     'commented exemption. Today\'s exemption population, re-derived from source this '
-     'session rather than carried forward: 30 records — 24 Adeptus Astartes Vehicle '
-     '(Headhunter Task Force, B128), 4 Marks of Chaos (Pactbound Zealots, B126), 1 Spawn '
-     '(Thicket of Bladed Bone — target is Beast-typed, not a vocabulary gap), 1 Harlequins '
-     '(Reaper\'s Cowl — faction not built). The 6 Deathwing records B93_SCOPE.md S4.2 '
-     'named are deliberately NOT exempted here — direct re-verification against '
-     'Datasheets_keywords.csv found 5 eligible Dark Angels Characters, contradicting that '
-     'census; see the function docstring.',
+     'commented exemption. Exemption population as of B133 (S247): 30 records — 24 '
+     'Adeptus Astartes Vehicle (Headhunter Task Force, B128), 4 Marks of Chaos (Pactbound '
+     'Zealots, B126), 1 Spawn (Thicket of Bladed Bone — target is Beast-typed, not a '
+     'vocabulary gap), 1 Harlequins (Reaper\'s Cowl — faction not built). The 6 Deathwing '
+     'records B93_SCOPE.md S4.2 named are NOT exempted here: resolved_pool() applies '
+     'chapter_keyword_additions (B133), so the generic-pool Characters restore Deathwing/ '
+     'Ravenwing under this gate\'s own pool build and resolve to real bearers; see the '
+     'function docstring.',
      'detachments.json enhancement descriptions vs Datasheets_keywords.csv + units.json (B129, D334/D335/D336)',
      lambda S: b129_zero_bearer_gate(S)),
 
@@ -4623,9 +4705,10 @@ def b129_zero_bearer_gate(S):
     vocabulary gap cannot masquerade as a legality finding.
 
     Re-derived at S241, the zero-admit set was 30 records, not the 34 the S240 handoff and
-    NEXT_SESSION_PROMPT.md both carried forward. B131 (S244) adds the 6 Deathwing-family
-    records below, bringing the total to 36 — see the paragraph after this list for why that
-    also required a mechanism fix, not just an EXEMPT addition:
+    NEXT_SESSION_PROMPT.md both carried forward. B131 (S244) temporarily added 6 Deathwing-
+    family records, bringing the total to 36; B133 (S247) removed them again once the real
+    fix (B130 data + B132 engine) landed and resolved_pool() was taught to apply it, so the
+    set is back to 30 — see the two paragraphs after this list for that history:
 
       - 24 Adeptus Astartes Vehicle (Headhunter Task Force, 6 armies) — B128. Confirmed: no
         Character-typed unit in any of the six pools carries the Vehicle keyword except two
@@ -4647,32 +4730,42 @@ def b129_zero_bearer_gate(S):
 
     **The 6 Deathwing records (4 "Deathwing model only" + 2 "...with the Deep Strike ability
     only", Dark Angels, all in INNER CIRCLE TASK FORCE, LION'S BLADE TASK FORCE and WRATH OF THE
-    ROCK) ARE included, as of B131 (S244).** B125 (S243) closed this: cross-checked against the
-    actual built units.json, not either prior side's raw-CSV read. keyword_names carries
-    Deathwing on 8 Dark Angels units (5 Epic Hero, 3 Infantry — zero Characters) and none of the
-    generic-pool Characters that should carry it when fielded in a Dark Angels list actually do
-    (5 records: Captain/Chaplain/Librarian In Terminator Armour, Ancient In Terminator Armour,
-    Bladeguard Ancient — full derivation in B93_SCOPE.md S12 and Decision Log D340).
+    ROCK) resolve to real bearers today and carry no exemption.** B125 (S243) found the root
+    cause: keyword_names carries Deathwing on 8 Dark Angels units (5 Epic Hero, 3 Infantry —
+    zero Characters) while none of the 5 generic-pool Characters that should carry it when
+    fielded in a Dark Angels list actually did (Captain/Chaplain/Librarian In Terminator Armour,
+    Ancient In Terminator Armour, Bladeguard Ancient — full derivation in B93_SCOPE.md S12 and
+    Decision Log D340). That is a real data gap, not a vocabulary or clause-parsing problem.
 
-    B131 (S244) found this couldn't just be an EXEMPT addition: admit_count's own per-unit
-    membership check (ukw_upper, just below) was still reading the same raw per-datasheet-ID
-    CSV row D338/D340 had already found more permissive than the built data — the shared
-    datasheet ID lets a generic-pool Character read as carrying Deathwing even though its own
-    built model_groups keyword field does not. Fixed by reading built_kw_for_unit(urec) (the
-    unit's own built keyword_names/faction_keyword_names/model_keyword_names) for per-unit
-    membership instead, while leaving ALL_KW's vocabulary sourced from the full raw CSV (needed
-    to tokenize clause text for not-yet-built factions, e.g. Harlequins in Reaper's Cowl below).
-    Verified this change alone zeroes the 6 Deathwing records and changes nothing else: all 30
-    pre-existing exemptions (24 Vehicle, 4 Marks, 1 Spawn, 1 Harlequins) still resolve exactly
-    as before. **B130 is the real fix** (restores the Deathwing/Ravenwing keyword onto these
-    named records when the Dark Angels union pool is resolved); once B130 ships, this EXEMPT
-    block becomes stale and should be removed as its own small tooling follow-up (do not leave
-    a live gate depending on a dead exemption).
+    B131 (S244) found a second, gate-local bug on the way to that fix: admit_count's own
+    per-unit membership check (ukw_upper, just below) was reading a raw per-datasheet-ID CSV
+    row D338/D340 had already found more permissive than the built data — the shared datasheet
+    ID let a generic-pool Character read as carrying Deathwing even though its own built
+    model_groups keyword field did not. Fixed by reading built_kw_for_unit(urec) (the unit's own
+    built keyword_names/faction_keyword_names/model_keyword_names) for per-unit membership
+    instead, while leaving ALL_KW's vocabulary sourced from the full raw CSV (needed to tokenize
+    clause text for not-yet-built factions, e.g. Harlequins in Reaper's Cowl below). Landed with
+    the 6 records added to EXEMPT as a placeholder, since the gate-local fix alone still left
+    the underlying data gap open.
 
-    Negative-tested: removing any one EXEMPT entry makes this fail and name that exact record
-    (verified for Astartes Tank Ace and, this session, for Champion of the Deathwing; not
-    re-run automatically every gate pass, since that would require mutating EXEMPT at runtime
-    for no ongoing benefit).
+    B130 (S245, data) then emitted chapter_keyword_additions — the per-army map that restores
+    Deathwing/Ravenwing onto the affected generic-pool records — and B132 (S246, engine) taught
+    index.html's resolveUnits() to apply it. That closed the data gap on the engine side but not
+    here: this gate does not run the engine, and its Python mirror of resolveUnits()
+    (Sources.resolved_pool(), above) still unioned the generic and chapter blocks and stopped
+    there. **B133 (S247)** is what actually retires the placeholder: resolved_pool() now applies
+    chapter_keyword_additions (mirroring applyChapterKeywordAdditions(), non-mutation rule
+    included), so built_kw_for_unit(urec) sees the restored keyword on all 5 generic-pool
+    Characters and admit_count finds real bearers. The 6 EXEMPT entries are removed as of this
+    session; re-adding any of them would be masking a regression, not documenting a known gap.
+
+    Negative-tested at B133 (S247): with the removed EXEMPT entries only, all 6 records fail
+    correctly if chapter_keyword_additions is not applied (verified by reverting resolved_pool()
+    locally and re-running); with them applied, all 6 resolve non-zero and no other exemption's
+    admit count changed. Removing any one of the 30 remaining EXEMPT entries still makes this
+    fail and name that exact record (spot-checked for Astartes Tank Ace); not re-run
+    automatically every gate pass, since that would require mutating EXEMPT at runtime for no
+    ongoing benefit.
     """
     dt = S.detachments().get('detachments', {})
     akw = S.all_keywords()
@@ -4846,15 +4939,11 @@ def b129_zero_bearer_gate(S):
         EXEMPT.add(('Chaos Space Marines|PACTBOUND ZEALOTS', enh))  # B126 — Marks of Chaos
     EXEMPT.add(('Thousand Sons|SERVANTS OF CHANGE', 'Thicket of Bladed Bone'))  # target is Beast-typed, not Character
     EXEMPT.add(("Drukhari|REAPER'S WAGER", "Reaper's Cowl"))  # Harlequins not built (S2)
-    for dkey, enh in (
-        ('Dark Angels|INNER CIRCLE TASK FORCE', 'Champion of the Deathwing'),
-        ('Dark Angels|INNER CIRCLE TASK FORCE', 'Deathwing Assault'),
-        ('Dark Angels|INNER CIRCLE TASK FORCE', 'Eye of the Unseen'),
-        ('Dark Angels|INNER CIRCLE TASK FORCE', 'Singular Will'),
-        ("Dark Angels|LION'S BLADE TASK FORCE", 'Fulgus Magna'),
-        ('Dark Angels|WRATH OF THE ROCK', 'Deathwing Assault'),
-    ):
-        EXEMPT.add((dkey, enh))  # B125/D340/B131 — Deathwing keyword missing from generic-pool Characters; B130 is the real fix
+    # The 6 Deathwing-family entries that lived here through B131 (S244) are gone as of
+    # B133 (S247): resolved_pool() now applies chapter_keyword_additions (B132's engine
+    # fix, mirrored), so the 5 generic-pool Characters restore Deathwing/Ravenwing under
+    # this gate's own pool build and admit_count finds real bearers. Re-adding any of
+    # these six would be masking a regression, not documenting a known gap.
 
     unexpected_zero = []
     exempt_seen = set()
@@ -4882,7 +4971,7 @@ def b129_zero_bearer_gate(S):
         return False, (f'{len(stale)} EXEMPT entr(y/ies) no longer resolve to zero admits — '
                        f'stale exemption, re-derive: {sorted(stale)[:5]}')
     return True, (f'zero-admit population is exactly the {len(EXEMPT)} named exemptions '
-                  f'(24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins, 6 Deathwing/B131); '
+                  f'(24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins); '
                   f'no unexempted zero-admit record found')
 
 

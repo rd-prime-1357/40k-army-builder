@@ -3,8 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **25 open** as of S246 (unchanged — B132 shipped, B133 opened):
-B133, B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+not here, it isn't open. **24 open** as of S247 (B133 shipped, closing the B125/B130/B131/B132 arc):
+B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
 B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 Scoping-only turn (D334): B93 censused across all 739 enhancement records and re-scoped. The
@@ -625,26 +625,6 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
-
-### B133 — `resolved_pool()` must learn the per-chapter maps before B131's `EXEMPT` block can be removed — **NEW S246 (D343); tooling; S; closes the B125/B130/B131/B132 arc**
-
-D342 and S246's incoming prompt both described this as a small deletion once B132 shipped. It is
-not. The zero-bearer gate does not run the engine — it runs `rules_assertions.py`'s
-`Sources.resolved_pool()`, a Python mirror of `resolveUnits()` that unions the generic and chapter
-blocks and stops there, applying **neither** per-chapter map. B131's per-unit membership test reads
-each unit's own built keyword fields (D341), so the 6 Deathwing-family records still resolve to zero
-admits under that mirror even now that the engine restores the keyword. Deleting the exemptions
-today fails the gate immediately.
-
-Scope: teach `resolved_pool()` `chapter_keyword_additions` (mirroring `applyChapterKeywordAdditions`,
-including the non-mutation rule — the Python mirror hands out the same dict objects across pools),
-then remove the 6 exemptions in the same pass. The proof is the gate's own count moving 36 → 30 with
-no other exemption disturbed, and B131's docstring paragraph updated to match.
-
-Also in scope while there: the mirror has been missing `chapter_point_overrides` since B56d.
-Nothing asserts on pool points today so no assertion is currently wrong, but the docstring claims a
-fidelity the function does not have. Close it in the same pass rather than let a third session
-rediscover it.
 
 ### B116 — Drukhari's Harlequins/Anhrathe allied-unit inclusion has no built-faction precedent — **NEW S222 (D316); product scope call; REQUIRED BEFORE PRODUCTION (Ryan, S240/D335); gated on Aeldari being built**
 **S240 (D335): reclassified by Ryan.** Deferral is fine for now, but this must ship before the
@@ -1466,6 +1446,30 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B133 — `resolved_pool()` must learn the per-chapter maps before B131's `EXEMPT` block can be removed — **NEW S246 (D343); tooling; SHIPPED S247 (D344); closes the B125/B130/B131/B132 arc**
+
+D342 and S246's incoming prompt both described this as a small deletion once B132 shipped. It was
+not. The zero-bearer gate does not run the engine — it runs `rules_assertions.py`'s
+`Sources.resolved_pool()`, a Python mirror of `resolveUnits()` that unioned the generic and chapter
+blocks and stopped there, applying **neither** per-chapter map. B131's per-unit membership test
+reads each unit's own built keyword fields (D341), so the 6 Deathwing-family records still resolved
+to zero admits under that mirror even after the engine restored the keyword.
+
+**Shipped S247 (D344).** `resolved_pool()` gained `_apply_chapter_point_overrides()` and
+`_apply_chapter_keyword_additions()`, direct Python mirrors of the two `index.html` transforms
+(B56d, B132) including their non-mutation rules — the mirror caches parsed JSON and hands the same
+nested dict objects to every pool built from it, so a shallow copy is not enough. Verified directly
+(not just via the gate): all 5 generic-pool Dark Angels Characters restore Deathwing; no leakage
+into Ultramarines or the raw generic block; idempotent; untouched units keep reference identity;
+point overrides produce a real price difference where expected (Blood Angels Bladeguard Veteran
+Squad, 85/95 vs. generic 80/90). Negative-tested by reverting the new keyword-additions method to a
+no-op — the gate then fails and names exactly the 6 Deathwing records, confirming the gate's pass is
+load-bearing on this change.
+
+Zero-bearer gate's exemption count moved **36 → 30** exactly as scoped; all 30 remaining exemptions
+(24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins) unaffected. B131's docstring paragraph and the
+shorter `B129` assertion-registration description both rewritten to describe the current mechanism.
 
 ### B132 — Consume `chapter_keyword_additions` in `resolveUnits` (engine half of B130) — **NEW S245 (D342); engine; SHIPPED S246 (D343)**
 
@@ -2605,3 +2609,25 @@ Two findings beyond the build: S245's handoff headline of 18 Deathwing / 10 Rave
 for 19/9 (the data and that handoff's own enumeration are both 19/9; total 28 unchanged), and the
 B131 exemption removal turns out not to be a deletion — `rules_assertions.py`'s `resolved_pool()`
 mirror applies neither per-chapter map, so it must learn them first. Banked as B133.
+
+## S247 ledger
+
+Tooling-only turn (B133, D344). **25 open at S246 close; 24 open at S247 close** (B133 shipped;
+closes the B125/B130/B131/B132 arc; nothing added).
+
+Beginning: B133, B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+B69, B70, B75, P2, P4, E23, B67b, E12, B17 (25).
+Resolved: B133 (1).
+Added: none.
+Ending: B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17 (24).
+
+Full `--fetch --data-turn` baseline at open: 38/38 gates pass, 85 source files verified against
+`source_manifest.json`, all seven of S246's changed files (`index.html`, `b132_check.js`,
+`baseline.sh`, `pipeline_manifest.py`, `40K_Decision_Log.md`, `DECISION_INDEX.md`,
+`OPEN_ITEMS_BACKLOG.md`) matched the S246 handoff table's hashes exactly. `resolved_pool()` taught
+`chapter_point_overrides` and `chapter_keyword_additions`, mirroring `index.html`'s non-mutation
+rule; verified directly (reference-identity, no cross-chapter leakage, idempotence) rather than
+trusting the gate alone. Zero-bearer gate's exemption count moved 36 → 30 exactly as scoped;
+negative-tested by reverting the new method to confirm the gate's pass is load-bearing. B131's
+docstring and the `B129` registration description rewritten to match current state.

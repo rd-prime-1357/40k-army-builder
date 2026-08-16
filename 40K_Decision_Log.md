@@ -14365,3 +14365,65 @@ pass, with the gate's own count moving 36 → 30 as the proof. Noted while there
 missing `chapter_point_overrides` since B56d as well. Nothing asserts on pool points today, so no
 assertion is currently wrong because of it, but the mirror's docstring claims a fidelity it does not
 have and the gap should close in the same pass rather than be rediscovered.
+
+## D344 — B133: `resolved_pool()` learns both per-chapter maps, closing the B125/B130/B131/B132 arc
+
+**Session 247. Tooling-only turn.** Full `--fetch --data-turn` baseline, 38/38, 85 sources verified.
+
+### The mechanism
+
+Two new private methods on `Sources`, `_apply_chapter_point_overrides()` and
+`_apply_chapter_keyword_additions()`, are direct Python mirrors of `index.html`'s
+`applyChapterPointOverrides()` (B56d) and `applyChapterKeywordAdditions()` (B132), including the
+non-mutation rule each one enforces. `resolved_pool()` now calls both, in the same order as the
+engine's union path, immediately after building the generic+chapter union and before returning.
+
+The copy discipline matches the engine exactly rather than approximating it: `_apply_chapter_point_
+overrides` returns a fresh dict only where `chapter_point_overrides[army]` is present, substituting
+the whole `points` value; unaffected records keep their original reference. `_apply_chapter_keyword_
+additions` copies the unit and, for each touched `model_groups` entry, the group dict as well —
+because `self.units()` caches the parsed JSON and hands the same nested dict objects to every pool
+built from it, a shallow `dict(u)` copy alone would still let an in-place `keyword_names` edit leak
+into every other chapter's pool and the generic pool, exactly as the engine-side comment warns
+against. Dedupe and ordering (append-and-sort when the group's list is already sorted, append in
+place otherwise) are copied verbatim from the JS.
+
+Both maps only apply when `army` is a chapter subfaction (the same population the union branch
+already applies to) — a non-subfaction army's pool passes through unchanged, matching the engine's
+structural isolation of the `complete`-roster path. The mirror does not itself read `roster_mode`;
+no `complete`-mode subfaction exists in `faction_taxonomy.json` today, so this is a documented latent
+gap rather than a live one, called out explicitly in the function's own docstring rather than left
+for a third session to rediscover the way the missing `chapter_point_overrides` application was.
+
+### Verification
+
+Confirmed directly, not just via the gate: all 5 generic-pool Dark Angels Characters that should
+carry Deathwing (Captain/Chaplain/Librarian In Terminator Armour, Ancient In Terminator Armour,
+Bladeguard Ancient) now do, under `resolved_pool('Dark Angels')`. No leakage into `resolved_pool
+('Ultramarines')` or into the raw generic `Adeptus Astartes` block read straight from `units()`.
+Idempotent across two calls, no duplicate keyword. An untouched unit (no override, no addition) is
+the *same object* across the resolved pool and the generic block — `is`, not `==`. Point overrides
+verified with a real price difference: Blood Angels' Bladeguard Veteran Squad prices at 85/95 where
+the generic and every other chapter price at 80/90.
+
+Negative-tested by monkeypatching `_apply_chapter_keyword_additions` back to a no-op mirror of the
+pre-B133 state: the gate fails and names exactly the 6 Deathwing-family records, confirming the
+gate's pass is load-bearing on this change rather than incidental.
+
+### The gate: 36 → 30, as specified
+
+`b129_zero_bearer_gate` now returns 30 named exemptions, not 36. The 6 removed were the placeholder
+entries B131 (D341) added when it found the gate-local CSV-vs-built-data bug but had not yet fixed
+the underlying data gap. All 30 remaining exemptions (24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1
+Harlequins) resolve exactly as before — none of B133's changes touch a non-subfaction pool or a
+unit without one of the two per-chapter maps, so nothing else could move.
+
+B131's docstring paragraph, and the shorter description string on the `B129` assertion-registration
+entry, are rewritten to describe the current mechanism (chapter_keyword_additions restoring the
+keyword via `resolved_pool()`) rather than the superseded "direct re-verification" framing the
+registration entry had carried since before B131 and never updated.
+
+### Closes the arc
+
+B125 (found the gap) → B130 (data) → B131 (gate-local bug + placeholder exemption) → B132 (engine
+consumer) → B133 (mirror parity, placeholder removed). No further ticket depends on this chain.

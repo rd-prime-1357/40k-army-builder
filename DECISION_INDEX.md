@@ -1118,3 +1118,14 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   block cannot just be deleted, because `rules_assertions.py`'s `resolved_pool()` mirror applies
   neither per-chapter map; it must learn them first (and has been missing `chapter_point_overrides`
   since B56d).
+- **D344** — **B133 shipped (S247), tooling-only; closes the B125/B130/B131/B132 arc.**
+  `resolved_pool()` gains `_apply_chapter_point_overrides()` and `_apply_chapter_keyword_additions()`,
+  direct Python mirrors of the two `index.html` transforms including their non-mutation rules
+  (shared cached dict objects, so a copy-only-where-touched discipline is required, not optional).
+  Verified directly: all 5 generic-pool Dark Angels Characters restore Deathwing; no leakage into
+  Ultramarines or the raw generic block; idempotent; untouched units keep reference identity; point
+  overrides produce a real price difference where expected. Negative-tested by reverting the new
+  method to a no-op — the gate fails and names exactly the 6 Deathwing records, confirming the
+  gate's pass depends on this change. Zero-bearer gate's exemption count moves **36 → 30** exactly as
+  scoped; all 30 remaining exemptions unaffected. B131's docstring and the `B129` registration
+  entry's description both rewritten to describe the current mechanism.
