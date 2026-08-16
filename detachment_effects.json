@@ -8,7 +8,8 @@
       "D203",
       "D204",
       "D208",
-      "D209"
+      "D209",
+      "D346"
     ],
     "key_format": "Army|DETACHMENT_NAME_RAW — the same key detachments.json uses.",
     "effect_kinds": {
@@ -16,7 +17,8 @@
       "forbid": "Named units, and/or every unit of the named unit_types, cannot be included while this detachment is selected. except_units are exempt.",
       "unlock": "Units outside the army's own faction may be included, bounded by points_cap.",
       "warlord": "Detachment-scoped Warlord constraint. mode is 'cannot_be' or 'must_be_if_present'. Distinct from the per-unit must_be_warlord / cannot_be_warlord fields on units.json, which are unconditional and army-wide.",
-      "tank_ace": "Detachment-wide grant naming an eligible Vehicle pool from which the player picks up to cap units in the Muster Armies step to gain the Character keyword (Enhancement + Warlord eligibility). Pool is base_keyword minus except_keywords/except_unit_types on target; picks are the player's own state, not named here (E23, D209 four-kind list superseded)."
+      "tank_ace": "Detachment-wide grant naming an eligible Vehicle pool from which the player picks up to cap units in the Muster Armies step to gain the Character keyword (Enhancement + Warlord eligibility). Pool is base_keyword minus except_keywords/except_unit_types on target; picks are the player's own state, not named here (E23, D209 four-kind list superseded).",
+      "mark_of_chaos": "Detachment-wide REQUIRED, EXCLUSIVE per-unit selection. Every unit in the pool named by target must be assigned exactly one of marks and the choice noted on the roster; the pool is base_keyword minus except_keywords, and a unit whose datasheet already carries one of marks is outside the pool because it already has one. excluded_marks_by_keyword removes specific options from specific units. attach_restriction: an attached Character and its bodyguard must hold the same mark, refused at the attach but not at a later mark change (D346). Picks are the player's own state, not named here (B126). Distinct from tank_ace: that is an optional capped grant, this is a mandatory exclusive choice with no cap."
     },
     "target_shapes": {
       "units": "Explicit unit_name list. Must resolve in that army's resolved pool (own block plus the generic Adeptus Astartes block for chapter subfactions).",
@@ -27,7 +29,11 @@
       "base_keyword": "A single keyword every pool member must carry, matched against the union of a unit's model_groups[*].keyword_names. Distinct from the bare 'keyword' shape: base_keyword pairs with except_keywords/except_unit_types to fully specify a computable pool, not an unrepresentable one.",
       "except_keywords": "Keywords that exclude a unit from a base_keyword match if the unit carries any of them.",
       "except_unit_types": "unit_type values that exclude a unit from a base_keyword match even if no except_keywords hit — the Fortification/Vehicle-keyword case (Hammerfall Bunker) that except_keywords alone cannot catch.",
-      "cap": "Top-level integer on the effect (sibling of target), not nested under points_cap: a count limit on player picks, distinct from unlock's points-based sub-cap."
+      "cap": "Top-level integer on the effect (sibling of target), not nested under points_cap: a count limit on player picks, distinct from unlock's points-based sub-cap.",
+      "marks": "Top-level list on the effect (sibling of target): the closed vocabulary of mutually exclusive options the player chooses between. Order is the order the source prints them.",
+      "excluded_marks_by_keyword": "Top-level object on the effect: keyword -> list of options that keyword forbids. A unit carrying the keyword is offered marks minus that list.",
+      "attach_restriction": "Top-level object on the effect: {'must_match': true} means an attached Character and its bodyguard must hold the same selected option. Enforced at the attach and at the pick.",
+      "unmodelled_restrictions": "Top-level list on the effect: restrictions carried by the same rule that this app cannot represent because it does not model the underlying state at all. Distinct from enforced: false, which means a representable effect deliberately left off; these are not representable. Each entry states the rule and what would have to exist first."
     },
     "points_cap": "Keyed by the army points total for the battle size — 1000 Incursion, 2000 Strike Force, 3000 Onslaught. Matches how the engine reads POINTS_CAP. Onslaught is carried even though the app does not yet offer it, so a future session adding it needs no re-derivation.",
     "enforced": "Whether every piece of data this effect needs already exists in the app, so the engine can enforce it once wired. It is NOT a claim that the engine enforces it today. enforced: false is load-bearing (D203): a known gap recorded in data and counted by an assertion, rather than made invisible by omission.",
@@ -434,6 +440,55 @@
           },
           "enforced": true,
           "source": "Detachment rule KEYWORDS clause: 'JAKHALS and GOREMONGERS units from your army have the BATTLELINE keyword.' Both Jakhals and Goremongers are World Eaters Infantry in units.json and are the only two units named."
+        }
+      ]
+    },
+    "Chaos Space Marines|PACTBOUND ZEALOTS": {
+      "army": "Chaos Space Marines",
+      "detachment": "Pactbound Zealots",
+      "effects": [
+        {
+          "kind": "mark_of_chaos",
+          "marks": [
+            "Khorne",
+            "Tzeentch",
+            "Nurgle",
+            "Slaanesh",
+            "Chaos Undivided"
+          ],
+          "target": {
+            "base_keyword": "Heretic Astartes",
+            "except_keywords": [
+              "Epic Hero",
+              "Khorne",
+              "Tzeentch",
+              "Nurgle",
+              "Slaanesh",
+              "Chaos Undivided"
+            ]
+          },
+          "excluded_marks_by_keyword": {
+            "Psyker": [
+              "Khorne"
+            ]
+          },
+          "attach_restriction": {
+            "must_match": true,
+            "enforced_at": "attach",
+            "note": "Refused at the attach. NOT refused when a mark CHANGE leaves an existing pair mismatched (D346): re-marking an attached pair is a two-step edit and the intermediate step is an incomplete configuration, flagged like an unchosen mark, not a finished illegal army. A mismatched pair is therefore only ever reachable by editing a pair that was legal when it was made."
+          },
+          "unmodelled_restrictions": [
+            {
+              "rule": "A unit can only embark within (or start the battle embarked within) a TRANSPORT if both of those units share the same mark.",
+              "why_unmodelled": "The app has no transport-assignment model: a saved list is a set of entries and nothing records which unit rides in which TRANSPORT. There is no representable state to gate, so this is not an unenforced effect but an unrepresentable one. Building it means building transport assignment first -- tracked as its own backlog item (B135), not as a gap in B126.",
+              "affected_units": [
+                "Chaos Rhino",
+                "Chaos Land Raider"
+              ]
+            }
+          ],
+          "enforced": true,
+          "source": "Wahapedia Detachment_abilities.csv id 000008362 ('Marks of Chaos', faction_id=CSM, detachment_id 000000751), mirrored byte-for-byte into detachments.json's 'Chaos Space Marines|PACTBOUND ZEALOTS' rule_text and restrictions. RULE: 'When mustering your army, when you select a HERETIC ASTARTES unit to include in your army, if that unit is not an EPIC HERO and does not already have one of the following keywords, you must select one for that unit and note it on your Army Roster: KHORNE, TZEENTCH, NURGLE, SLAANESH, CHAOS UNDIVIDED.' RESTRICTIONS: KHORNE cannot be selected for a Psyker unit; a Character can only attach to a unit sharing its mark; a unit can only embark in a TRANSPORT sharing its mark (see unmodelled_restrictions). Pactbound Zealots is the ONLY detachment in all 211 records carrying this rule, and detachments.json's armies index offers it to Chaos Space Marines alone -- re-derived S249, not carried from the ticket text. Pool re-derived the same way: 58 CSM units, 8 EPIC HERO, 5 non-Epic units already carrying a mark keyword (Khorne Berzerkers, Khorne Lord Of Skulls, Rubric Marines, Plague Marines, Noise Marines), 45 requiring a selection. D346 also settles the keyword-scoping question: a unit is a PSYKER unit if ANY of its models carries PSYKER, the same way a unit containing a CHARACTER model is a CHARACTER unit. The only unit in the pool where this bites is Dark Commune, whose PSYKER sits on the MINDWITCH model alone -- it cannot take KHORNE. D346 also settles the keyword-scoping question: a unit is a PSYKER unit if ANY of its models carries PSYKER, the same way a unit containing a CHARACTER model is a CHARACTER unit. The only unit in the pool where this bites is Dark Commune, whose PSYKER sits on the MINDWITCH model alone -- it cannot take KHORNE. Engine-enforced from S249 (B126/D346)."
         }
       ]
     }

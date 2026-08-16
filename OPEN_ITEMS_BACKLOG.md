@@ -3,9 +3,16 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S248 (B128 shipped, B134 opened):
-B126, B134, B127, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+not here, it isn't open. **24 open** as of S249 (B126 shipped, B135 opened):
+B134, B135, B127, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
 B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+
+**Housekeeping, S249.** Three closed-pointer stubs (B111, B89, B100) were sitting in the Open
+Items section, which the section's own rule forbids. Removed. They did not affect the count —
+every recent handoff's figure was already right — but a grep of `^### ` inside the section
+returned 27 rather than 24, which is exactly the kind of mismatch that gets "explained" instead
+of checked. B111's and B89's full bodies were already in Closed / Shipped; B100's was not, so its
+pointer was moved there rather than deleted.
 
 Scoping-only turn (D334): B93 censused across all 739 enhancement records and re-scoped. The
 bearer-restriction population is **641 records / 363 names / 173 detachments / 13 armies**, not
@@ -650,10 +657,6 @@ illegal-state risk under D0) and open this as its own follow-on build, gated on 
 Aeldari is prioritized. Needs Ryan's call — sets precedent for how the tool handles cross-book
 allied inclusion generally.
 
-### B111 — `mfm_points_parser.py`'s `--wargear` pass was blind to v1.1 `WARGEAR OPTIONS` text
-— **CLOSED S216 (D310); tooling half D309, data half D310**
-See Closed / Shipped for full history.
-
 ### B120 — Enhancements that modify other models' weapons in the bearer's unit — **NEW S235 (D329); engine; L; split out of B99**
 Set D of B99's census: 19 records across 8 armies, 10 distinct names (*Arcane Might*, *Blades of
 Valour*, *Champion of the Feast*, *Elder's Guidance*, *Immolator*, *Incendiary Animus*,
@@ -769,28 +772,29 @@ any of these six actually affect list-construction legality (unit-type change, e
 etc.) before assuming they need an engine consumer at all; if they're purely in-battle flavor
 keywords, this ticket may close as "out of scope for a list builder" with no code change.
 
-### B126 — Marks of Chaos not modelled: mark keyword, attachment restriction and Transport restriction all unenforced — **NEW S240 (D334); data + engine; L; live D0 gap**
+### B135 — Transport assignment is not modelled, so no rule about who is embarked can be enforced — **NEW S249 (D346); engine; L; not started**
 
-Found while censusing B93. Chaos Space Marines' Pactbound Zealots detachment rule (`rule_text` in
-`detachments.json`, read this session) requires that when mustering the army, every
-`HERETIC ASTARTES` unit that is not an `EPIC HERO` and does not already carry one be assigned one
-of `KHORNE`, `TZEENTCH`, `NURGLE`, `SLAANESH` or `CHAOS UNDIVIDED`, noted on the army roster. The
-app does not model this at all: there is no mark selection, no persistence of it in the saved list,
-and no keyword to test against.
+Split out of B126, where it was assumed buildable and is not. Pactbound Zealots' Marks of Chaos rule
+says a unit can only embark within (or start the battle embarked within) a `TRANSPORT` if both share
+the same mark. The engine cannot express this: "embark" appears nowhere in `index.html`, and
+"transport" only as a `unit_type` string driving the Battleline/Dedicated Transport limit doubling.
+A saved list is a set of entries and nothing records which unit rides in which transport.
 
-Four enhancements restrict on the resulting keyword (`Heretic Astartes Khorne/Tzeentch/Nurgle/
-Slaanesh model only`, all Pactbound Zealots) and are unenforceable without it. But the mark is a
-much larger gap than those four records — the same detachment's `restrictions` field carries two
-hard legality rules that also depend on it, neither enforced:
+This is not an unenforced effect, it is an unrepresentable one, and the distinction matters —
+`E21a-4` asserts the unenforced inventory is empty and a bookkeeping entry there would falsify it.
+The restriction is instead recorded on the `mark_of_chaos` effect under `unmodelled_restrictions`,
+with `E29-2` asserting it is present with a reason so it cannot quietly vanish. Two units are
+affected under Pactbound Zealots today: Chaos Rhino and Chaos Land Raider.
 
-- a `CHARACTER` unit can only be attached to a unit if both share the same mark;
-- a unit can only embark within (or begin embarked within) a `TRANSPORT` if both share the same
-  mark.
+**Scoping questions for whoever picks this up, in order.** (1) Does the tool want transport
+assignment at all? It is a real list-building feature independent of marks — New Recruit's behaviour
+here is worth checking with Ryan before any design. (2) If yes, it needs its own persisted per-entry
+field, a capacity model (transport capacity is not in `units.json` today — confirm), and rules about
+which unit types can embark. (3) Only then does the mark check become a one-line addition. Do not
+build it mark-first; the mark rule is the smallest consumer of a much larger feature.
 
-There is a third restriction on the same rule — the `KHORNE` keyword cannot be selected for a
-`PSYKER` unit — which is a constraint on the selection itself. Sized as a feature in its own right:
-data (mark vocabulary and eligibility), engine (selection UI, attachment and embark checks), and
-list persistence. Not part of B93.
+Product call for Ryan before any build: whether transport assignment belongs in this tool.
+
 
 ### B93 — Enhancement/Upgrade eligibility: engine checks Character-vs-not, not the Enhancement's own qualification requirement — **NEW S188 (D281); Ryan-flagged; engine+data; L; spans sessions; live D0 gap**
 
@@ -1018,15 +1022,6 @@ change, correctly). `b87_check.js` extended with a 4th fact pinning the row-leve
 **Scope of the shape (v1.1):** 34 units across the 15 files — Rhino, Razorback, Drop Pod, Impulsor
 (loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom (Drukhari), plus Rubric Marines.
 Rare in v1_0 (only Rubric Marines + Brotherhood Terminator Squad), widespread in v1.1.
-
-### B89 — CLOSED S213 (D307); pointer only — full body in Closed / Shipped
-MFM v1.1 adoption arc (units-side, all factions; detachments-side, CSM/DG/TS S212, SM-family S213).
-CLOSED S213: detachments-side gap closed for the entire Adeptus Astartes group. Chaos Daemons'
-remaining detachments item split off as B112.
-
-### B100 — CLOSED S208 (D302); pointer only — full body in Closed / Shipped
-Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon
-options) shipped; faction fully complete, 25/25 units, zero residual `_parser_flags`.
 
 ### B103 — Non-distinct `replacement_choices` rollup emits past its cap and hides the over-allocation — **NEW S201 (D294); engine; M; affects shipped lists' points**
 Found while landing B101 and deliberately left alone there. In `loRollup`'s multi-model body branch, a
@@ -1420,6 +1415,79 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B100 — Build Grey Knights faction — **CLOSED S208 (D302)**
+Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon
+options) shipped; faction fully complete, 25/25 units, zero residual `_parser_flags`.
+
+### B126 — Marks of Chaos not modelled: mark keyword, attachment restriction and Transport restriction all unenforced — **NEW S240 (D334); data + engine; L; SHIPPED S249 (D346), embark half split to B135**
+
+Found while censusing B93. Chaos Space Marines' Pactbound Zealots detachment rule (`rule_text` in
+`detachments.json`, read this session) requires that when mustering the army, every
+`HERETIC ASTARTES` unit that is not an `EPIC HERO` and does not already carry one be assigned one
+of `KHORNE`, `TZEENTCH`, `NURGLE`, `SLAANESH` or `CHAOS UNDIVIDED`, noted on the army roster. The
+app does not model this at all: there is no mark selection, no persistence of it in the saved list,
+and no keyword to test against.
+
+Four enhancements restrict on the resulting keyword (`Heretic Astartes Khorne/Tzeentch/Nurgle/
+Slaanesh model only`, all Pactbound Zealots) and are unenforceable without it. But the mark is a
+much larger gap than those four records — the same detachment's `restrictions` field carries two
+hard legality rules that also depend on it, neither enforced:
+
+- a `CHARACTER` unit can only be attached to a unit if both share the same mark;
+- a unit can only embark within (or begin embarked within) a `TRANSPORT` if both share the same
+  mark.
+
+There is a third restriction on the same rule — the `KHORNE` keyword cannot be selected for a
+`PSYKER` unit — which is a constraint on the selection itself. Sized as a feature in its own right:
+data (mark vocabulary and eligibility), engine (selection UI, attachment and embark checks), and
+list persistence. Not part of B93.
+
+
+**Shipped S249 (D346).** Population re-derived from source rather than carried from the text above:
+exactly **one** detachment of the 211 built records carries the rule
+(`Chaos Space Marines|PACTBOUND ZEALOTS`, Wahapedia `Detachment_abilities.csv` id `000008362`), and
+`detachments.json`'s own `armies` index offers it to Chaos Space Marines alone — there is no
+cross-faction arc here. Of 58 CSM units: 8 EPIC HERO, 11 carrying an innate mark keyword, **45
+requiring a selection**. The 21 Chaos Daemons units carrying `HERETIC ASTARTES` are B114's Shadow
+Legion Thralls and cannot reach this detachment.
+
+New `entry.mark` field (SCHEMA_VERSION 4→5 with migration) and a new E29/B126 block in
+`index.html`. The field is listId-keyed like `entry.tankAce`, but its *conventions* follow
+`entry.god` — inherited on duplicate and leader-copy, absence is an entry error — because this is a
+required exclusive choice, not an optional capped grant. B128's shape transferred only partly, as
+S248's own sequencing note warned it might.
+
+The vocabulary, pool, Psyker exclusion and attach restriction are all read out of a new
+`mark_of_chaos` row in `detachment_effects.json`, never as engine literals. `markKeywordSet` unions
+`keyword_names`, `faction_keyword_names` and `model_keyword_names` — deliberately wider than
+`unitInTankAcePool`'s single-field reader, and both extra fields are load-bearing:
+`HERETIC ASTARTES` lives in `faction_keyword_names` on all 58 CSM units, and
+`Masters of the Maelstrom` has an **empty** `keyword_names` with `EPIC HERO` and `CHAOS UNDIVIDED`
+in `model_keyword_names`.
+
+**Ryan ruling 1 (D346):** a unit is a `PSYKER` unit if ANY of its models carries `PSYKER`. Only
+**Dark Commune** is affected (its `PSYKER` sits on the `MINDWITCH` model alone); it cannot take
+`KHORNE`. Five pool units in total are Psyker-barred, asserted by name.
+
+**Ryan ruling 2 (D346):** the ATTACH is refused, but a later mark CHANGE that leaves an attached
+pair mismatched is **allowed** and flagged (`entryMarkPairError`, on both halves). Refusing it would
+force a detach-change-change-reattach dance to re-mark a pair. The precedent this sets: D0 forbids
+finished illegal armies, not intermediate steps of a visibly-flagged multi-part edit. A missing mark
+on either side of an attach falls through permissive (D199).
+
+The four mark-restricted Pactbound Zealots enhancements (*Eye of Tzeentch*, *Intoxicating Elixir*,
+*Orbs of Unlife*, *Talisman of Burning Blood*) now enforce via a new `kind: 'mark'` in
+`ENHANCEMENT_BEARER_RESTRICTIONS`, resolving through the same `entryEffectiveMark` the selector and
+attach gate use. B93's total resolver will subsume it.
+
+**The embark half did not ship and is not a gap in this ticket — see B135.** The engine has no
+transport-assignment model at all, so there is no representable state to gate. Recorded on the
+effect under a new `unmodelled_restrictions` shape rather than as `enforced: false`, which would
+have falsified `E21a-4`'s legitimately-empty unenforced inventory.
+
+New `b126_check.js`; `rules_assertions.py` gains `E29-1`..`E29-4` and `e21a_schema_valid` learns the
+`mark_of_chaos` kind.
 
 ### B128 — Detachment-conferred keywords at muster time are not modelled, including a capped player choice — **NEW S240 (D335); data + engine; SHIPPED S248 (D345)**
 

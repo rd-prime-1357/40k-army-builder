@@ -29,12 +29,21 @@
  *        (E25), the same way warlord_entry_id was added inside v1: a record
  *        without it reads as "no Force Disposition chosen", which is the
  *        same thing an older record meant, so it needed no bump.
+ *   v4 — E23/B128. Per-entry `tank_ace`: boolean. A v3 record upgrades to v4
+ *        with `tank_ace: false` on every entry — the only reading that adds
+ *        no information, since v3 had no way to express a pick. (S248 shipped
+ *        the bump and the migration step but not this note; added S249.)
+ *   v5 — E29/B126. Per-entry `mark`: one of the five Marks of Chaos as a
+ *        string, or null. Null on a v4 record for the same reason as above.
+ *        Stored as the chosen string rather than a keyword index because the
+ *        vocabulary lives in detachment_effects.json, not in this module, and
+ *        a record must stay readable if that table is re-ordered.
  * ======================================================================== */
 
 (function (root) {
   'use strict';
 
-  var SCHEMA_VERSION = 4;
+  var SCHEMA_VERSION = 5;
   var NS = '40kab:list:';   // one key per list: 40kab:list:<id>
 
   // ── ids ──────────────────────────────────────────────────────────────────
@@ -108,6 +117,7 @@
         enhancement:   normaliseEnhancement(e.enhancement),
         attached_to:   e.attachedToListId != null ? e.attachedToListId : null,
         tank_ace:      !!e.tankAce,                                          // E23/B128
+        mark:          e.mark != null ? e.mark : null,                       // E29/B126
         points_cache:  e.points != null ? e.points : null  // display-only; recomputed on load
       };
     });
@@ -175,6 +185,7 @@
         enhancement:      normaliseEnhancement(s.enhancement),
         attachedToListId: s.attached_to != null ? s.attached_to : null,
         tankAce:          !!s.tank_ace,        // E23/B128 — flag-don't-drop: staleness is surfaced, not cleared here
+        mark:             s.mark != null ? s.mark : null,   // E29/B126 — same flag-don't-drop rule
         faction_ref:      s.faction_ref || null,
         unit_id:          s.unit_id || null,
         unresolved:       unresolved          // drives the ghost-row flag
@@ -232,6 +243,16 @@
         if (e && typeof e === 'object') e.tank_ace = false;
       });
       record.schema_version = 4;
+    }
+    // v4 -> v5 (E29/B126). A v4 record had no way to express a Mark of Chaos
+    // pick, so null on every entry is the only reading that adds no
+    // information. Same rule as every step above: this ADDS a field and
+    // rewrites none.
+    if (v < 5) {
+      (record.entries || []).forEach(function (e) {
+        if (e && typeof e === 'object') e.mark = null;
+      });
+      record.schema_version = 5;
     }
     return record;
   }

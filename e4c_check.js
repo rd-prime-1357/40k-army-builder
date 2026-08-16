@@ -35,6 +35,11 @@ function slice(lines, startNeedle, endNeedle) {
 function loadEngine(path, defs) {
   const lines = fs.readFileSync(path, 'utf8').split('\n');
   const e23 = slice(lines, '// ── E23/B128: tank_ace capped Character selection', '// ── E23/B128 block end');
+  // E29/B126 defines entryEffectiveMark, which enhancementBearerEligible now calls
+  // for the four mark-restricted Pactbound Zealots rows. Without this slice the
+  // call throws a bare ReferenceError the moment a mark-kind rule is reached —
+  // the exact silent-harness failure S248 hit with entryEffectiveType.
+  const e29 = slice(lines, '// ── E29/B126: Marks of Chaos', '// ── E29/B126 block end');
   const e4b = slice(lines, '// ── E4b: enhancement assignment rules', '// ── E4b block end');
   const e4c = slice(lines, '// ── E4c: enhancement picker', '// ── E4c block end');
   const src = 'let detachmentDefs = DEFS; let selectedDetachments = []; '
@@ -47,7 +52,7 @@ function loadEngine(path, defs) {
             + 'let _detSeq = 0; '
             + 'function infoBtn(){ return "<button></button>"; } '
             + 'function mkDetail(kind, html){ const id = "det" + (++_detSeq); return { btn: infoBtn(), panel: "<div id=\\"" + id + "\\">" + html + "</div>" }; }\n'
-            + e23 + '\n' + e4b + '\n' + e4c
+            + e23 + '\n' + e29 + '\n' + e4b + '\n' + e4c
             + '\nreturn { enhancementLimit, enhancementRecord, enhancementPoints, '
             + 'enhancementIsUpgrade, enhancementIsOffered, offeredEnhancements, '
             + 'assignedEnhancements, enhancementCount, enhancementCopies, '

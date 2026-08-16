@@ -831,6 +831,11 @@
     .god-option.chosen-Tzeentch { border-color: var(--c-0077cc); background: var(--c-001a2a); color: var(--c-44aaff); }
     .god-option.chosen-Nurgle   { border-color: var(--c-447700); background: var(--c-0d1a00); color: var(--c-88cc44); }
     .god-option.chosen-Slaanesh { border-color: var(--c-9933cc); background: var(--c-1a0022); color: var(--c-cc77ff); }
+    /* E29/B126: the Mark of Chaos selector reuses these chips. Chaos Undivided
+       has no god colour of its own — neutral light, distinct from unchosen. */
+    .god-option.chosen-ChaosUndivided { border-color: var(--c-888888); background: var(--c-1e1e1e); color: var(--c-dddddd); }
+    .god-option.disabled { opacity: 0.35; cursor: default; }
+    .god-option.disabled:hover { border-color: var(--c-2a2a2a); color: var(--c-888888); background: var(--c-1a1a1a); }
 
     /* Size selector */
     .size-options {
@@ -1828,12 +1833,21 @@
  *        (E25), the same way warlord_entry_id was added inside v1: a record
  *        without it reads as "no Force Disposition chosen", which is the
  *        same thing an older record meant, so it needed no bump.
+ *   v4 — E23/B128. Per-entry `tank_ace`: boolean. A v3 record upgrades to v4
+ *        with `tank_ace: false` on every entry — the only reading that adds
+ *        no information, since v3 had no way to express a pick. (S248 shipped
+ *        the bump and the migration step but not this note; added S249.)
+ *   v5 — E29/B126. Per-entry `mark`: one of the five Marks of Chaos as a
+ *        string, or null. Null on a v4 record for the same reason as above.
+ *        Stored as the chosen string rather than a keyword index because the
+ *        vocabulary lives in detachment_effects.json, not in this module, and
+ *        a record must stay readable if that table is re-ordered.
  * ======================================================================== */
 
 (function (root) {
   'use strict';
 
-  var SCHEMA_VERSION = 4;
+  var SCHEMA_VERSION = 5;
   var NS = '40kab:list:';   // one key per list: 40kab:list:<id>
 
   // ── ids ──────────────────────────────────────────────────────────────────
@@ -1907,6 +1921,7 @@
         enhancement:   normaliseEnhancement(e.enhancement),
         attached_to:   e.attachedToListId != null ? e.attachedToListId : null,
         tank_ace:      !!e.tankAce,                                          // E23/B128
+        mark:          e.mark != null ? e.mark : null,                       // E29/B126
         points_cache:  e.points != null ? e.points : null  // display-only; recomputed on load
       };
     });
@@ -1974,6 +1989,7 @@
         enhancement:      normaliseEnhancement(s.enhancement),
         attachedToListId: s.attached_to != null ? s.attached_to : null,
         tankAce:          !!s.tank_ace,        // E23/B128 — flag-don't-drop: staleness is surfaced, not cleared here
+        mark:             s.mark != null ? s.mark : null,   // E29/B126 — same flag-don't-drop rule
         faction_ref:      s.faction_ref || null,
         unit_id:          s.unit_id || null,
         unresolved:       unresolved          // drives the ghost-row flag
@@ -2031,6 +2047,16 @@
         if (e && typeof e === 'object') e.tank_ace = false;
       });
       record.schema_version = 4;
+    }
+    // v4 -> v5 (E29/B126). A v4 record had no way to express a Mark of Chaos
+    // pick, so null on every entry is the only reading that adds no
+    // information. Same rule as every step above: this ADDS a field and
+    // rewrites none.
+    if (v < 5) {
+      (record.entries || []).forEach(function (e) {
+        if (e && typeof e === 'object') e.mark = null;
+      });
+      record.schema_version = 5;
     }
     return record;
   }
@@ -2233,7 +2259,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.24';
+  const VERSION = '6.25';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -2930,6 +2956,222 @@
   }
   // ── E23/B128 block end ───────────────────────────────────────────────────
 
+  // ── E29/B126: Marks of Chaos — required exclusive per-unit selection ──────
+  // Pactbound Zealots (Chaos Space Marines only — the ONLY detachment in all
+  // 211 records carrying this rule). When mustering, every HERETIC ASTARTES
+  // unit that is not an EPIC HERO and does not already carry one of the five
+  // mark keywords must be assigned exactly one of them.
+  //
+  // Shape: per-entry (entry.mark), listId-keyed like entry.tankAce — two
+  // entries of the same unit can hold different marks. But unlike tank_ace
+  // this is a REQUIRED, EXCLUSIVE, uncapped choice, so it follows entry.god's
+  // conventions instead: inherited on duplicate and on leader-copy (a copy of
+  // a configured unit keeps its configuration), and its absence is an entry
+  // error rather than simply an unoffered option.
+  //
+  // Everything below reads detachment_effects.json's mark_of_chaos row
+  // directly. The vocabulary, the pool, the Psyker/Khorne exclusion and the
+  // attach rule are all data facts, not literals here (S247/D344).
+
+  // The active mark_of_chaos effect, or null when no selected detachment
+  // carries one. Detachment-scoped: with Pactbound Zealots deselected the rule
+  // does not apply at all, including its attach restriction.
+  function markEffect(keys) {
+    for (const key of (keys || [])) {
+      const rec = detachmentEffects[key];
+      if (!rec || !Array.isArray(rec.effects)) continue;
+      for (const eff of rec.effects) {
+        if (eff.kind === 'mark_of_chaos' && eff.enforced !== false) return eff;
+      }
+    }
+    return null;
+  }
+
+  // Deliberately WIDER than unitInTankAcePool's reader, which sees only
+  // keyword_names. Three fields are needed here and each is load-bearing:
+  // HERETIC ASTARTES lives in faction_keyword_names on all 58 CSM units, and
+  // Masters of the Maelstrom has an EMPTY keyword_names with CHAOS UNDIVIDED
+  // and EPIC HERO both in model_keyword_names — reading one field would put it
+  // in the pool and demand a mark it already has.
+  function markKeywordSet(raw) {
+    const s = new Set();
+    if (!raw) return s;
+    for (const mg of (raw.model_groups || [])) {
+      for (const k of (mg.keyword_names || [])) s.add((k || '').toLowerCase());
+      for (const k of (mg.faction_keyword_names || [])) s.add((k || '').toLowerCase());
+      for (const mk of (mg.model_keyword_names || [])) {
+        for (const k of (mk.keywords || [])) s.add((String(k) || '').toLowerCase());
+      }
+    }
+    return s;
+  }
+
+  // The mark the DATASHEET already carries, if any (Khorne Berzerkers, Rubric
+  // Marines, Plague Marines, Noise Marines, Khorne Lord Of Skulls, and the
+  // Chaos Undivided Epic Heroes). Fixed — never chosen, never changed.
+  function unitInnateMark(raw, eff) {
+    if (!raw || !eff) return null;
+    const kws = markKeywordSet(raw);
+    for (const m of (eff.marks || [])) if (kws.has(m.toLowerCase())) return m;
+    return null;
+  }
+
+  // Pool membership: carries base_keyword, carries none of except_keywords
+  // (which is where both the EPIC HERO carve-out and the already-has-one
+  // carve-out live, exactly as the rule words them).
+  function unitNeedsMark(raw, eff) {
+    if (!raw || !eff) return false;
+    const kws = markKeywordSet(raw);
+    const t = eff.target || {};
+    if (t.base_keyword && !kws.has(t.base_keyword.toLowerCase())) return false;
+    if ((t.except_keywords || []).some(k => kws.has((k || '').toLowerCase()))) return false;
+    return true;
+  }
+
+  // The options offered to one unit: the full vocabulary minus anything its
+  // keywords forbid. Today that is Psyker -> Khorne. D346: a unit is a Psyker
+  // unit if ANY of its models carries Psyker, which is why markKeywordSet
+  // reads model_keyword_names — Dark Commune's Psyker sits on the Mindwitch
+  // model alone and is the only unit in the pool where this matters.
+  function markOptionsForUnit(raw, eff) {
+    if (!eff) return [];
+    const kws = markKeywordSet(raw);
+    const banned = new Set();
+    const excl = eff.excluded_marks_by_keyword || {};
+    for (const kw of Object.keys(excl)) {
+      if (kws.has(kw.toLowerCase())) for (const m of (excl[kw] || [])) banned.add(m);
+    }
+    return (eff.marks || []).filter(m => !banned.has(m));
+  }
+
+  // The mark an ENTRY actually holds right now: the datasheet's own if it has
+  // one, otherwise the player's pick. Null means "no mark" — either not in the
+  // pool at all, or in the pool with the choice still outstanding. Both read
+  // the same here on purpose; the difference is an error-flag question, not an
+  // eligibility one (see markAttachBlock's permissive fall-through).
+  function entryEffectiveMark(entry, keys) {
+    const eff = markEffect(keys);
+    if (!eff || !entry) return null;
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    const innate = unitInnateMark(raw, eff);
+    if (innate) return innate;
+    if (!unitNeedsMark(raw, eff)) return null;
+    return entry.mark || null;
+  }
+
+  // A pick the player made that no longer applies — Pactbound Zealots was
+  // deselected, or the unit left the pool. Kept, never silently cleared
+  // (S139), and surfaced through entryHasError like a stale Tank Ace pick.
+  function entryMarkStale(entry, keys) {
+    if (!entry || !entry.mark) return false;
+    const eff = markEffect(keys);
+    if (!eff) return true;
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    return !unitNeedsMark(raw, eff);
+  }
+
+  // The outstanding-choice state: in the pool, nothing picked. Drives the
+  // "! Choose Mark of Chaos" flag, mirroring needsGod's treatment — the rule
+  // says "you must select one", and a required choice with no legal default
+  // is flagged rather than guessed at.
+  function entryMarkMissing(entry, keys) {
+    const eff = markEffect(keys);
+    if (!eff || !entry || entry.unresolved) return false;
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    if (!unitNeedsMark(raw, eff)) return false;
+    return !entry.mark;
+  }
+
+  // The attach restriction, as a second enforcement point on the exact model
+  // enhancementAttachBlock uses: both sides can be legal alone and illegal
+  // together. Returns a refusal object or null.
+  //
+  // Fall-through is PERMISSIVE when either side holds no mark yet (D199: an
+  // unevaluable restriction must not refuse). That is not a hole — the missing
+  // choice is already flagged on the entry, and the moment both sides hold a
+  // mark the mismatch is refused at the click.
+  function markAttachBlock(leaderEntry, bodyguardEntry, keys) {
+    const eff = markEffect(keys);
+    if (!eff || !(eff.attach_restriction && eff.attach_restriction.must_match)) return null;
+    if (!leaderEntry || !bodyguardEntry) return null;
+    if (leaderEntry.unresolved || bodyguardEntry.unresolved) return null;
+    const a = entryEffectiveMark(leaderEntry, keys);
+    const b = entryEffectiveMark(bodyguardEntry, keys);
+    if (!a || !b) return null;
+    if (a === b) return null;
+    return { reason: 'mark_mismatch', leaderMark: a, bodyguardMark: b };
+  }
+
+  // The selector's own gate: an option the unit's own keywords forbid is
+  // refused at the click (Khorne on a Psyker unit — the one real case is Dark
+  // Commune, whose Psyker sits on the Mindwitch model alone).
+  //
+  // What this deliberately does NOT gate is a change that leaves an existing
+  // attachment mismatched (D346, Ryan's ruling). Refusing it would force a
+  // detach-change-change-reattach dance just to move an attached pair from one
+  // mark to another. Re-marking a pair is a two-step edit and the intermediate
+  // step is an incomplete configuration, not a finished illegal army — the same
+  // class as an unchosen mark or an unchosen Daemonic Allegiance, and it is
+  // flagged the same way (entryMarkPairError). The ATTACH itself is still
+  // refused outright, so a mismatched pair can only ever arise from editing a
+  // pair that was legal when it was made.
+  // reason: null | 'not_offered' | 'not_an_option'
+  function canSetMark(entry, mark, keys) {
+    const eff = markEffect(keys);
+    if (!eff || !entry) return { ok: false, reason: 'not_offered' };
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    if (!unitNeedsMark(raw, eff)) return { ok: false, reason: 'not_offered' };
+    if (markOptionsForUnit(raw, eff).indexOf(mark) < 0) return { ok: false, reason: 'not_an_option' };
+    return { ok: true, reason: null };
+  }
+
+  function markRefusalText(gate) {
+    if (!gate || gate.ok) return '';
+    if (gate.reason === 'not_an_option')
+      return 'That mark cannot be selected for this unit.';
+    return 'This unit does not take a Mark of Chaos.';
+  }
+
+  function setMark(listId, mark) {
+    const entry = armyList.find(e => e.listId === listId);
+    if (!entry) return;
+    const gate = canSetMark(entry, mark, selectedDetachments);
+    if (!gate.ok) { flashBanner(markRefusalText(gate)); return; }
+    entry.mark = mark;
+    renderAll();
+  }
+
+  // Config-panel section: offered only to entries in the pool. An option the
+  // unit cannot take is never rendered (Khorne for a Psyker); an option that
+  // would break an attachment renders disabled with the reason, matching the
+  // Tank Ace checkbox's convention rather than silently swallowing the click.
+  function renderMarkSectionHtml(entry) {
+    const keys = selectedDetachments;
+    const eff  = markEffect(keys);
+    if (!eff) return '';
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    if (!unitNeedsMark(raw, eff)) return '';
+    // Only offerable options are rendered at all — an option the unit cannot
+    // take is absent rather than shown greyed, since the reason is a fixed
+    // property of the datasheet and will never change while the list is open.
+    const opts = markOptionsForUnit(raw, eff);
+    let html = `<div class="detail-section-label">Mark of Chaos</div><div class="god-options">`;
+    for (const m of opts) {
+      const chosen = entry.mark === m;
+      const cls    = 'god-option' + (chosen ? ' chosen-' + m.replace(/\s+/g, '') : '');
+      html += `<div class="${cls}" onclick="setMark(${entry.listId},'${m}')">${m}</div>`;
+    }
+    html += `</div>`;
+    if (entry.mark && entryMarkStale(entry, keys)) {
+      html += `<div class="leader-hint">Mark no longer applies — the granting detachment is not selected.</div>`;
+    }
+    if (entryMarkPairError(entry, keys)) {
+      html += `<div class="leader-hint">Attached unit holds a different mark — change the other half of the pair too, or detach.</div>`;
+    }
+    return html;
+  }
+  // ── E29/B126 block end ───────────────────────────────────────────────────
+
   // ── E1b: detachment selection rules ────────────────────────────────────────
   // Pure functions over (keys, catalogue, battle size). No DOM, no app state —
   // E1c wires them to controls. Everything here reads detachmentDefs live, the
@@ -3252,6 +3494,20 @@
       { kind: 'unit_name', units: ['Master of Executions', 'Slaughterbound'] },
     'World Eaters|KHORNE DAEMONKIN::Disciple of Khorne':
       { kind: 'unit_name', units: ['Lord on Juggernaut'] },
+    // E29/B126: the four Pactbound Zealots enhancements that restrict on the
+    // Mark of Chaos ("Heretic Astartes <mark> model only"). These were the
+    // named blocker on B126 and are unenforceable without a mark to test.
+    // Resolved through entryEffectiveMark — the SAME function the selector and
+    // the attach gate use, not a second reading of the rule (S247/D344).
+    // B93's total resolver will subsume this table, these rows included.
+    'Chaos Space Marines|PACTBOUND ZEALOTS::Eye of Tzeentch':
+      { kind: 'mark', mark: 'Tzeentch' },
+    'Chaos Space Marines|PACTBOUND ZEALOTS::Intoxicating Elixir':
+      { kind: 'mark', mark: 'Slaanesh' },
+    'Chaos Space Marines|PACTBOUND ZEALOTS::Orbs of Unlife':
+      { kind: 'mark', mark: 'Nurgle' },
+    'Chaos Space Marines|PACTBOUND ZEALOTS::Talisman of Burning Blood':
+      { kind: 'mark', mark: 'Khorne' },
   };
 
   function enhancementBearerRestriction(name, detachmentKey) {
@@ -3269,6 +3525,13 @@
       const mg  = raw && raw.model_groups && raw.model_groups[0];
       const fkn = (mg && mg.faction_keyword_names) || [];
       return fkn.indexOf(rule.keyword) >= 0;
+    }
+    // E29/B126. An outstanding choice reads as "not this mark" and refuses:
+    // unlike the attach rule, nothing here is made unreachable by refusing, and
+    // the entry already carries the "! Choose Mark of Chaos" flag telling the
+    // player exactly what to do to make the row eligible.
+    if (rule.kind === 'mark') {
+      return entryEffectiveMark(entry, selectedDetachments) === rule.mark;
     }
     return true;
   }
@@ -4493,6 +4756,27 @@
     // deselected or swapped) stays checked (S139) but is inert — flagged here
     // so it doesn't sit silently doing nothing with no indication.
     if (entry.tankAce && !entryTankAceActive(entry, selectedDetachments)) return true;
+    // E29/B126: three mark states are errors. (1) the required choice is
+    // outstanding; (2) a pick has gone stale — kept (S139) but inert; (3) an
+    // attached pair holds mismatching marks, which the click-time gates make
+    // unreachable but an imported list can still carry.
+    if (entryMarkMissing(entry, selectedDetachments)) return true;
+    if (entryMarkStale(entry, selectedDetachments)) return true;
+    if (entryMarkPairError(entry, selectedDetachments)) return true;
+    return false;
+  }
+
+  // E29/B126: the imported-over-state arm of the mark rule. Reads in both
+  // directions so the flag lands on the leader and its bodyguard alike.
+  function entryMarkPairError(entry, keys) {
+    if (!entry || entry.unresolved) return false;
+    if (entry.attachedToListId != null) {
+      const bg = armyList.find(e => e.listId === entry.attachedToListId);
+      if (bg && markAttachBlock(entry, bg, keys)) return true;
+    }
+    for (const ldr of armyList.filter(e => e.attachedToListId === entry.listId && e.listId !== entry.listId)) {
+      if (markAttachBlock(ldr, entry, keys)) return true;
+    }
     return false;
   }
 
@@ -4791,6 +5075,7 @@
       enhancement:      null,                                  // E4b
       attachedToListId: null,
       tankAce:          false,                                 // E23/B128 — never inherited, never defaulted true
+      mark:             null,                                  // E29/B126 — required choice, never guessed at
     });
 
     selectedListId = listId;
@@ -4919,6 +5204,7 @@
       enhancement:      null,                        // E4b — never inherited
       attachedToListId: null,
       tankAce:          false,                        // E23/B128 — never inherited; cap is shared army-wide
+      mark:             entry.mark,                   // E29/B126 — inherited like god: a copy keeps its configuration
     };
     // E21c/E22b: the duplicate honours the same gate as a fresh add. A forbidden
     // unit can only be present via import (an over-state), so duplicating one is
@@ -4961,6 +5247,7 @@
         enhancement:      null,                      // E4b — never inherited
         attachedToListId: newListId,
         tankAce:          false,                      // E23/B128 — never inherited
+        mark:             leader.mark,                // E29/B126 — inherited like god
       };
       armyList.push(newLeader);
       newLeader.points = ptsForEntry(newLeader);
@@ -5018,6 +5305,15 @@
     const block = enhancementAttachBlock(listId, target);
     if (block) {
       flashBanner(`Cannot attach — ${entry.unit_name} and ${block.carrier} both carry an enhancement (one per unit).`);
+      renderAll();   // snap the select back to what it was
+      return;
+    }
+    // E29/B126 third enforcement point, same model as the enhancement block
+    // above: both units are legal apart, and the attach is what makes the pair
+    // illegal. Permissive when either side's mark is still outstanding (D199).
+    const markBlock = markAttachBlock(entry, armyList.find(e => e.listId === target), selectedDetachments);
+    if (markBlock) {
+      flashBanner(`Cannot attach — ${entry.unit_name} (${markBlock.leaderMark}) and its target (${markBlock.bodyguardMark}) do not share a Mark of Chaos.`);
       renderAll();   // snap the select back to what it was
       return;
     }
@@ -5369,7 +5665,7 @@
         const hasError   = entryHasError(entry);
         const isActive   = entry.listId === selectedListId;
         const isElevated = elevatedNames.has(entry.unit_name);
-        const sub        = [entry.god, entry.sizeIdx !== undefined
+        const sub        = [entry.god, entryEffectiveMark(entry, selectedDetachments), entry.sizeIdx !== undefined
           ? (() => { const u = allUnits.find(u => u.unit_name === entry.unit_name); const s = u && u.sizes[entry.sizeIdx]; return s ? `${s.size} model${s.size===1?'':'s'}` : ''; })()
           : '', isElevated ? 'Battleline — granted by selected detachment' : ''].filter(Boolean).join(' · ');
 
@@ -5381,7 +5677,7 @@
         for (const leader of attachedLeaders) {
           const isLeaderActive = leader.listId === selectedListId;
           const leaderError    = entryHasError(leader);
-          const leaderSub      = leader.god || '';
+          const leaderSub      = [leader.god, entryEffectiveMark(leader, selectedDetachments)].filter(Boolean).join(' · ');
 
           html += `
             <div class="list-item${isLeaderActive ? ' active' : ''}${leaderError ? ' has-error' : ''}"
@@ -5528,6 +5824,12 @@
       html += `<div class="incomplete-flag">! Choose Daemonic Allegiance</div>`;
     }
 
+    // E29/B126: the mark is a required choice, so its absence gets the same
+    // incomplete flag treatment as the Daemonic Allegiance above.
+    if (entryMarkMissing(entry, selectedDetachments)) {
+      html += `<div class="incomplete-flag">! Choose Mark of Chaos</div>`;
+    }
+
     // God selector
     if (unit.needsGod) {
       html += `<div class="detail-section-label">Daemonic Allegiance</div>`;
@@ -5538,6 +5840,11 @@
       }
       html += `</div>`;
     }
+
+    // Mark of Chaos selector — E29/B126. Placed with the other identity-level
+    // choices rather than down with wargear: the mark gates who this unit can
+    // attach to, so it belongs above the Leader assignment that reads it.
+    html += renderMarkSectionHtml(entry);
 
     // Size selector
     const sizes = unit.sizes;
@@ -5563,7 +5870,9 @@
     if (isLeader) {
       const eligibleBgs = armyList.filter(e =>
         unit.leaderEligible.includes(e.unit_name) &&
-        (e.listId === entry.attachedToListId || canAttachLeader(entry.unit_name, e))
+        (e.listId === entry.attachedToListId ||
+          (canAttachLeader(entry.unit_name, e) &&
+           !markAttachBlock(entry, e, selectedDetachments)))   // E29/B126
       );
       const hasEligible = eligibleBgs.length > 0;
       let bgOptions = `<option value="">— Unattached —</option>`;
@@ -7750,14 +8059,20 @@
     // on every render like Battleline's elevation (D204), never stamped onto
     // allKeywordNames above.
     const tankAceKw = unitInTankAcePool(raw, selectedDetachments);
+    // E29/B126: the full (unconfigured) view has no entry, so there is no
+    // chosen mark to show — only the note that one must be chosen. The
+    // configured view below shows the actual pick.
+    const markEff   = markEffect(selectedDetachments);
+    const needsMark = unitNeedsMark(raw, markEff);
 
-    if (allKeywordNames.length > 0 || allFactionKw.length > 0 || modelKwLines.length > 0 || tankAceKw) {
+    if (allKeywordNames.length > 0 || allFactionKw.length > 0 || modelKwLines.length > 0 || tankAceKw || needsMark) {
       html += `<div class="modal-section"><div class="modal-section-label">Keywords</div>`;
       html += `<div class="keyword-list">`;
       for (const name of allKeywordNames) {
         html += `<span class="keyword-pill">${name}</span>`;
       }
       if (tankAceKw) html += `<span class="keyword-pill">Tank Ace</span>`;
+      if (needsMark) html += `<span class="keyword-pill">Mark of Chaos — one to be chosen</span>`;
       html += `</div>`;
       for (const line of modelKwLines) {
         html += `<div class="keyword-model-line">${line}</div>`;
@@ -8006,14 +8321,22 @@
     }
     // E23/B128 — see buildModalFull for the reasoning: derived, not stamped.
     const tankAceKwCfg = unitInTankAcePool(raw, selectedDetachments);
+    // E29/B126 — derived, not stamped, exactly like Tank Ace above. Shows the
+    // player's own pick; a unit whose datasheet already carries a mark renders
+    // it through allKeywordNames as usual and gets nothing extra here.
+    const markEffCfg   = markEffect(selectedDetachments);
+    const chosenMark   = (markEffCfg && unitNeedsMark(raw, markEffCfg) && entry) ? (entry.mark || null) : null;
+    const markPendCfg  = !!(markEffCfg && unitNeedsMark(raw, markEffCfg) && !chosenMark);
 
-    if (allKeywordNames.length > 0 || cfgFactionKw.length > 0 || cfgModelKwLines.length > 0 || tankAceKwCfg) {
+    if (allKeywordNames.length > 0 || cfgFactionKw.length > 0 || cfgModelKwLines.length > 0 || tankAceKwCfg || chosenMark || markPendCfg) {
       html += `<div class="modal-section"><div class="modal-section-label">Keywords</div>`;
       html += `<div class="keyword-list">`;
       for (const name of allKeywordNames) {
         html += `<span class="keyword-pill">${name}</span>`;
       }
       if (tankAceKwCfg) html += `<span class="keyword-pill">Tank Ace</span>`;
+      if (chosenMark)  html += `<span class="keyword-pill">${chosenMark}</span>`;
+      if (markPendCfg) html += `<span class="keyword-pill">Mark of Chaos — not yet chosen</span>`;
       html += `</div>`;
       for (const line of cfgModelKwLines) {
         html += `<div class="keyword-model-line">${line}</div>`;

@@ -2099,11 +2099,15 @@ ASSERTIONS = [
 
     ('E21a-3',
      'The file obeys its own schema: every effect kind is one of the four D204 kinds '
-     '(battleline, forbid, unlock, warlord) and never the dropped "require"; every effect carries '
+     '(battleline, forbid, unlock, warlord), the E23 tank_ace kind or the E29 mark_of_chaos kind, '
+     'and never the dropped "require"; every effect carries '
      'an explicit boolean enforced; every warlord effect carries a mode of cannot_be or '
      'must_be_if_present; every unlock carries a points_cap keyed only by 1000/2000/3000 with '
      'strictly increasing values; and every unit_type named exists as a real unit_type in that '
-     'army\'s pool.',
+     'army\'s pool. A mark_of_chaos row additionally carries a distinct option vocabulary that is '
+     'fully repeated in except_keywords (or a unit that already holds a mark would be asked to '
+     'choose again), no per-keyword exclusion that bars every option, and a why_unmodelled reason '
+     'on every unmodelled restriction.',
      'detachment_effects.json schema, _meta.effect_kinds (E21a, D204, D209)',
      lambda S: e21a_schema_valid(S)),
 
@@ -2397,6 +2401,54 @@ ASSERTIONS = [
      'detachment_effects.json tank_ace.enforced/cap (E23, B128, D345)',
      lambda S: e23_tank_ace_engine_wired(S)),
 
+    # ── E29. Marks of Chaos (S249, B126/D346). Three assertions, split so a failure
+    # names which half broke: coverage (does any detachment carry the rule without a
+    # row), the shipped row's own facts, and the pool re-derived from units.json.
+    ('E29-1',
+     'Coverage: every built detachment whose own rule text carries the Marks of Chaos '
+     'muster clause has a mark_of_chaos row in detachment_effects.json, and no row exists '
+     'for a detachment whose text does not. Re-derived by scanning all 211 built records '
+     'rather than compared against a remembered list, so a detachment added later with the '
+     'same clause fails the baseline instead of being quietly unenforced. Today that is '
+     'exactly one record — Chaos Space Marines PACTBOUND ZEALOTS — and detachments.json\'s '
+     'own armies index offers it to Chaos Space Marines alone.',
+     'detachments.json rule_text scan vs detachment_effects.json (E29, B126, D346)',
+     lambda S: e29_mark_coverage(S)),
+
+    ('E29-2',
+     'The shipped mark_of_chaos row carries enforced:true, the five-mark vocabulary in '
+     'source order, the Psyker->Khorne exclusion, and the attach restriction. The embark '
+     'restriction from the same rule is recorded under unmodelled_restrictions rather than '
+     'as enforced:false — it is not a representable effect deliberately left off, it is a '
+     'rule about state the app does not model at all (no transport assignment exists). '
+     'Recording it there keeps it out of E21a-4\'s unenforced inventory, which is '
+     'legitimately empty, while making sure it cannot be quietly forgotten.',
+     'detachment_effects.json mark_of_chaos row (E29, B126, D346)',
+     lambda S: e29_mark_row_facts(S)),
+
+    ('E29-3',
+     'The pool the row describes, re-derived from units.json rather than trusted from any '
+     'scope document: of the 58 Chaos Space Marines units, 45 must be assigned a mark and 11 '
+     'already carry one on their datasheet, and the two sets do not overlap. Every one of the '
+     '45 has at least one selectable mark — a unit whose keywords excluded every option would '
+     'make the rule unsatisfiable and the list unbuildable. Exactly 5 are PSYKER units barred '
+     'from KHORNE, and Dark Commune is among them: D346 rules that a unit is a PSYKER unit if '
+     'ANY of its models carries PSYKER, and Dark Commune\'s sits on the MINDWITCH model alone, '
+     'so a keyword read that looked only at unit-level keyword_names would silently offer it '
+     'KHORNE.',
+     'detachment_effects.json mark_of_chaos target vs units.json keywords (E29, B126, D346)',
+     lambda S: e29_mark_pool_counts(S)),
+
+    ('E29-4',
+     'b126_check.js passes in full. The mark rule is a set of claims about engine BEHAVIOUR — '
+     'the three-field keyword reader, the detachment scoping, the Psyker exclusion at the gate, '
+     'the attach refusal with its permissive fall-through for an unmade choice, and D346\'s '
+     'deliberate asymmetry (the attach is refused, a later mark change that leaves the pair '
+     'mismatched is allowed and flagged) — so per D107 they are executed against the real '
+     'functions rather than described here.',
+     'b126_check.js (E29, B126, D346)',
+     lambda S: e29_harness_gate(S)),
+
     # ── B101-DATA (D296/S203). loadout_parser.py's marker fix (D295/S202) is not, on
     # its own, provable to hold for a datasheet nobody has looked at — a session
     # building a future faction could reintroduce the bug's symptom (marker text
@@ -2567,7 +2619,7 @@ def e21a_unit_names_resolve(S):
 
 
 def e21a_schema_valid(S):
-    kinds = {'battleline', 'forbid', 'unlock', 'warlord', 'tank_ace'}
+    kinds = {'battleline', 'forbid', 'unlock', 'warlord', 'tank_ace', 'mark_of_chaos'}
     modes = {'cannot_be', 'must_be_if_present'}
     caps = ['1000', '2000', '3000']
     bad = []
@@ -2610,6 +2662,34 @@ def e21a_schema_valid(S):
                     bad.append(f'{key} [tank_ace]: except_unit_types value {t!r} does not exist in {army}')
             if not isinstance(eff.get('cap'), int) or eff.get('cap') < 1:
                 bad.append(f'{key} [tank_ace]: cap must be a positive integer, got {eff.get("cap")!r}')
+        if k == 'mark_of_chaos':
+            tgt = eff.get('target', {})
+            if not isinstance(tgt.get('base_keyword'), str) or not tgt['base_keyword']:
+                bad.append(f'{key} [mark_of_chaos]: target.base_keyword must be a non-empty string')
+            marks = eff.get('marks')
+            if not isinstance(marks, list) or len(marks) < 2 or len(set(marks)) != len(marks):
+                bad.append(f'{key} [mark_of_chaos]: marks must be a list of 2+ distinct options')
+            else:
+                exc = set(tgt.get('except_keywords') or [])
+                if not set(marks).issubset(exc):
+                    bad.append(f'{key} [mark_of_chaos]: every mark must also appear in '
+                               f'except_keywords, or a unit that already has one would be '
+                               f'asked to choose again')
+                for kw, opts in (eff.get('excluded_marks_by_keyword') or {}).items():
+                    unknown = [o for o in opts if o not in marks]
+                    if unknown:
+                        bad.append(f'{key} [mark_of_chaos]: excluded_marks_by_keyword {kw!r} '
+                                   f'names options not in marks: {unknown}')
+                    if len(set(opts)) >= len(marks):
+                        bad.append(f'{key} [mark_of_chaos]: excluded_marks_by_keyword {kw!r} '
+                                   f'bars every option, leaving the rule unsatisfiable')
+            att = eff.get('attach_restriction')
+            if att is not None and not isinstance(att.get('must_match'), bool):
+                bad.append(f'{key} [mark_of_chaos]: attach_restriction.must_match must be a boolean')
+            for u in (eff.get('unmodelled_restrictions') or []):
+                if not u.get('rule') or not u.get('why_unmodelled'):
+                    bad.append(f'{key} [mark_of_chaos]: an unmodelled_restrictions entry must '
+                               f'carry both rule and why_unmodelled')
     if bad:
         return False, '; '.join(bad)
     return True, f'{len(_de_effects(S))} effects across {len(S.detachment_effects()["effects"])} detachments all schema-valid'
@@ -2826,6 +2906,180 @@ def e23_tank_ace_engine_wired(S):
     if bad:
         return False, '; '.join(bad)
     return True, f'all {n} tank_ace rows carry enforced:true, cap:3, no stale unenforced_reason (B128/D345)'
+
+
+_MARK_CLAUSE_RE = re.compile(
+    r'KHORNE.{0,12}TZEENTCH.{0,12}NURGLE.{0,12}SLAANESH.{0,12}CHAOS UNDIVIDED', re.I | re.S)
+
+
+def _mark_rows(S):
+    return [(key, rec, eff) for key, rec, eff in _de_effects(S)
+            if eff.get('kind') == 'mark_of_chaos']
+
+
+def e29_mark_coverage(S):
+    det = S.detachments()['detachments']
+    have = {key for key, rec, eff in _mark_rows(S)}
+    missing, extra = [], []
+    for key, r in det.items():
+        text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
+        if _MARK_CLAUSE_RE.search(text) and key not in have:
+            missing.append(key)
+    for key in have:
+        r = det.get(key, {})
+        text = ' '.join(str(r.get(f) or '') for f in ('rule_text', 'restrictions'))
+        if not _MARK_CLAUSE_RE.search(text):
+            extra.append(key)
+    bad = []
+    if missing:
+        bad.append('detachments carrying the mark clause with no row: ' + '; '.join(sorted(missing)))
+    if extra:
+        bad.append('rows with no matching clause in their own text: ' + '; '.join(sorted(extra)))
+    # the row's owning armies must match detachments.json's armies index, not be assumed
+    for key, rec, eff in _mark_rows(S):
+        owners = _owning_armies(S, key)
+        if owners != [rec['army']]:
+            bad.append(f'{key}: row claims army {rec["army"]!r} but the catalogue offers it to {owners}')
+    if bad:
+        return False, '; '.join(bad)
+    return True, (f'{len(have)} built detachment carries the Marks of Chaos muster clause and has a '
+                  f'mark_of_chaos row; no row exists without one')
+
+
+def e29_mark_row_facts(S):
+    rows = _mark_rows(S)
+    if not rows:
+        return False, 'no mark_of_chaos row found at all'
+    expect_marks = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh', 'Chaos Undivided']
+    bad = []
+    for key, rec, eff in rows:
+        if eff.get('enforced') is not True:
+            bad.append(f'{key}: enforced={eff.get("enforced")!r}, expected True (B126/D346)')
+        if eff.get('marks') != expect_marks:
+            bad.append(f'{key}: marks={eff.get("marks")!r}, expected {expect_marks}')
+        tgt = eff.get('target') or {}
+        if tgt.get('base_keyword') != 'Heretic Astartes':
+            bad.append(f'{key}: base_keyword={tgt.get("base_keyword")!r}, expected Heretic Astartes')
+        exc = set(tgt.get('except_keywords') or [])
+        if not set(expect_marks).issubset(exc):
+            bad.append(f'{key}: except_keywords must carry all five marks (a unit that already '
+                       f'has one is out of the pool by the rule\'s own wording); got {sorted(exc)}')
+        if 'Epic Hero' not in exc:
+            bad.append(f'{key}: except_keywords must carry Epic Hero')
+        if (eff.get('excluded_marks_by_keyword') or {}).get('Psyker') != ['Khorne']:
+            bad.append(f'{key}: excluded_marks_by_keyword Psyker->[Khorne] missing or changed')
+        att = eff.get('attach_restriction') or {}
+        if att.get('must_match') is not True:
+            bad.append(f'{key}: attach_restriction.must_match missing or not True')
+        unmod = eff.get('unmodelled_restrictions') or []
+        if not any('embark' in (u.get('rule') or '').lower() for u in unmod):
+            bad.append(f'{key}: the embark restriction is not recorded under '
+                       f'unmodelled_restrictions — it must not simply vanish')
+        for u in unmod:
+            if not u.get('why_unmodelled'):
+                bad.append(f'{key}: an unmodelled_restrictions entry carries no why_unmodelled')
+        if 'unenforced_reason' in eff:
+            bad.append(f'{key}: unenforced_reason present on an enforced:true row')
+    if bad:
+        return False, '; '.join(bad)
+    return True, ('the mark_of_chaos row is enforced with the five-mark vocabulary, the '
+                  'Psyker->Khorne exclusion and the attach restriction; the embark restriction '
+                  'is recorded as unmodelled (no transport-assignment model exists to gate)')
+
+
+def _mark_kw_set(unit):
+    """Every keyword on a unit across all three fields. Deliberately wider than
+    _tank_ace_eligible's reader: HERETIC ASTARTES lives in faction_keyword_names on
+    every CSM unit, and Masters of the Maelstrom carries EPIC HERO and CHAOS UNDIVIDED
+    in model_keyword_names with an EMPTY keyword_names. Mirrors index.html's
+    markKeywordSet."""
+    kws = set()
+    for mg in unit.get('model_groups', []):
+        for k in (mg.get('keyword_names') or []):
+            kws.add(str(k).lower())
+        for k in (mg.get('faction_keyword_names') or []):
+            kws.add(str(k).lower())
+        for mk in (mg.get('model_keyword_names') or []):
+            for k in (mk.get('keywords') or []):
+                kws.add(str(k).lower())
+    return kws
+
+
+def e29_mark_pool_counts(S):
+    rows = _mark_rows(S)
+    if not rows:
+        return False, 'no mark_of_chaos row found at all'
+    key, rec, eff = rows[0]
+    tgt = eff.get('target') or {}
+    base = (tgt.get('base_keyword') or '').lower()
+    except_kw = {str(k).lower() for k in (tgt.get('except_keywords') or [])}
+    marks = eff.get('marks') or []
+    excl = eff.get('excluded_marks_by_keyword') or {}
+
+    pool = S.resolved_pool(rec['army'])
+    in_pool, innate, starved, psykers = [], [], [], []
+    for name, u in pool.items():
+        kws = _mark_kw_set(u)
+        has_mark = next((m for m in marks if m.lower() in kws), None)
+        if has_mark:
+            innate.append(name)
+        if base and base not in kws:
+            continue
+        if kws & except_kw:
+            continue
+        in_pool.append(name)
+        banned = set()
+        for kw, opts in excl.items():
+            if kw.lower() in kws:
+                banned |= set(opts)
+        offered = [m for m in marks if m not in banned]
+        if not offered:
+            starved.append(name)
+        elif len(offered) < len(marks):
+            psykers.append(name)
+
+    bad = []
+    if len(in_pool) != 45:
+        bad.append(f'{len(in_pool)} {rec["army"]} units require a mark, expected 45')
+    if len(innate) != 11:
+        bad.append(f'{len(innate)} {rec["army"]} units already carry a mark, expected 11')
+    overlap = sorted(set(in_pool) & set(innate))
+    if overlap:
+        bad.append(f'units both in the pool and already marked: {overlap}')
+    if starved:
+        bad.append(f'units in the pool with NO selectable mark (rule unsatisfiable): {sorted(starved)}')
+    if len(psykers) != 5:
+        bad.append(f'{len(psykers)} pool units are barred from a mark, expected 5 (got {sorted(psykers)})')
+    if 'Dark Commune' not in psykers:
+        bad.append('Dark Commune is not among the Psyker-barred units — its PSYKER sits on the '
+                   'MINDWITCH model only, so this means model_keyword_names stopped being read')
+    if bad:
+        return False, '; '.join(bad)
+    return True, (f'{len(in_pool)} {rec["army"]} units require a mark and {len(innate)} carry one '
+                  f'innately, sets disjoint, every pool unit has a selectable mark, '
+                  f'{len(psykers)} PSYKER units barred from KHORNE including Dark Commune')
+
+
+def e29_harness_gate(S):
+    import subprocess
+    p = os.path.join(S.dir, 'b126_check.js')
+    if not os.path.exists(p):
+        return False, 'b126_check.js not found — the B126 behaviour gate is missing'
+    try:
+        r = subprocess.run(['node', p, os.path.join(S.dir, 'index.html'),
+                            os.path.join(S.dir, 'detachment_effects.json'),
+                            os.path.join(S.dir, 'units.json')],
+                           capture_output=True, text=True, timeout=120, cwd=S.dir)
+    except FileNotFoundError:
+        return False, 'node is not available, so the B126 behaviour gate cannot run'
+    except subprocess.TimeoutExpired:
+        return False, 'b126_check.js did not finish within 120s'
+    out = (r.stdout or '') + (r.stderr or '')
+    failed = [l.strip() for l in out.split('\n') if l.strip().startswith('FAIL ')]
+    if r.returncode != 0 or failed:
+        return False, (f'{len(failed)} B126 check(s) failed, e.g. {failed[:2]}' if failed
+                       else f'b126_check.js exited {r.returncode}')
+    return True, 'b126_check.js passes in full'
 
 
 def e21a_belakor_warlord_covered(S):
@@ -3933,7 +4187,7 @@ def e1b_budget_matches_muster(S):
 def e1b_module_copies_agree(S):
     """The inlined list-storage block in index.html must be the same bytes as list_store.js.
     The declared SCHEMA_VERSION moves as tickets add persisted fields (E4b took it to 3,
-    E23/B128 took it to 4); the number is pinned here so a bump on one side without the
+    E23/B128 took it to 4, E29/B126 to 5); the number is pinned here so a bump on one side without the
     other cannot pass. Located by the module's own delimiters rather than by line number,
     so an edit above or below it cannot make this pass or fail for the wrong reason."""
     ip = os.path.join(S.dir, 'index.html')
@@ -3954,9 +4208,9 @@ def e1b_module_copies_agree(S):
         return False, (f'the two copies differ ({len(il)} vs {len(sl)} lines, first difference at '
                        f'line {first + 1} of the block)')
     ver = re.search(r'var SCHEMA_VERSION = (\d+);', standalone)
-    if not ver or ver.group(1) != '4':
-        return False, f'SCHEMA_VERSION is {ver.group(1) if ver else "unreadable"}, expected 4'
-    return True, f'both copies identical ({len(standalone.splitlines())} lines), SCHEMA_VERSION 4'
+    if not ver or ver.group(1) != '5':
+        return False, f'SCHEMA_VERSION is {ver.group(1) if ver else "unreadable"}, expected 5'
+    return True, f'both copies identical ({len(standalone.splitlines())} lines), SCHEMA_VERSION 5'
 
 
 def e1b_harness_gate(S):

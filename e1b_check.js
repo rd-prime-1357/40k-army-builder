@@ -243,15 +243,18 @@ for (const f of ['id', 'name', 'points_target', 'primary_faction', 'warlord_entr
   ok(JSON.stringify(up[f]) === JSON.stringify(before[f]), `${f} is untouched by the migration`);
 }
 // E4b: the v2 -> v3 step ADDS `enhancement: null` to each entry; E23/B128's
-// v3 -> v4 step ADDS `tank_ace: false` to each entry. Compare with both fields
-// stripped, then assert each was added with its expected value — so a
-// migration that touched any other entry field still fails here.
-const stripped = JSON.parse(JSON.stringify(up.entries)).map(e => { delete e.enhancement; delete e.tank_ace; return e; });
+// v3 -> v4 step ADDS `tank_ace: false`; E29/B126's v4 -> v5 step ADDS
+// `mark: null`. Compare with all three fields stripped, then assert each was
+// added with its expected value — so a migration that touched any other entry
+// field still fails here.
+const stripped = JSON.parse(JSON.stringify(up.entries)).map(e => { delete e.enhancement; delete e.tank_ace; delete e.mark; return e; });
 eq(stripped, before.entries, 'no existing entry field is altered by the migration');
 ok(up.entries.every(e => 'enhancement' in e && e.enhancement === null),
    'every entry gains enhancement, set to null');
 ok(up.entries.every(e => 'tank_ace' in e && e.tank_ace === false),
    'every entry gains tank_ace, set to false');
+ok(up.entries.every(e => 'mark' in e && e.mark === null),
+   'every entry gains mark, set to null');
 ok(Object.keys(up).length === Object.keys(before).length + 1,
    'the migration adds exactly one record-level field (detachments) and removes none');
 
@@ -260,14 +263,19 @@ ok(v0.schema_version === V && v0.detachments.length === 0,
    'a record with no schema_version at all is treated as pre-v2 and upgraded');
 const v2 = S.migrate({ schema_version: 2, id: 'y', entries: [{ entry_id: 1 }], detachments: [K_SM1] });
 eq(v2.detachments, [K_SM1], 'a v2 record keeps its detachment set through the v3 step');
-ok(v2.schema_version === V && v2.entries[0].enhancement === null && v2.entries[0].tank_ace === false,
+ok(v2.schema_version === V && v2.entries[0].enhancement === null && v2.entries[0].tank_ace === false
+   && v2.entries[0].mark === null,
    'a v2 record walks every remaining step and lands at the current version');
 const v3 = S.migrate({ schema_version: 3, id: 'y3', entries: [{ entry_id: 1 }], detachments: [K_SM1] });
-eq(v3.detachments, [K_SM1], 'a v3 record keeps its detachment set through the v4 step');
-ok(v3.schema_version === V && v3.entries[0].tank_ace === false,
-   'a v3 record gains tank_ace: false and becomes the current version');
-const v4 = S.migrate({ schema_version: 4, id: 'y4', entries: [], detachments: [K_SM1] });
-eq(v4.detachments, [K_SM1], 'a current-version record passes through untouched');
+eq(v3.detachments, [K_SM1], 'a v3 record keeps its detachment set through the v4 and v5 steps');
+ok(v3.schema_version === V && v3.entries[0].tank_ace === false && v3.entries[0].mark === null,
+   'a v3 record gains tank_ace: false and mark: null and becomes the current version');
+const v4 = S.migrate({ schema_version: 4, id: 'y4', entries: [{ entry_id: 1 }], detachments: [K_SM1] });
+eq(v4.detachments, [K_SM1], 'a v4 record keeps its detachment set through the v5 step');
+ok(v4.schema_version === V && v4.entries[0].mark === null,
+   'a v4 record gains mark: null and becomes the current version');
+const v5 = S.migrate({ schema_version: 5, id: 'y5', entries: [], detachments: [K_SM1] });
+eq(v5.detachments, [K_SM1], 'a current-version record passes through untouched');
 const future = S.migrate({ schema_version: 99, id: 'z' });
 ok(future.__incompatible === true, 'a newer-schema record is still surfaced, not guessed at');
 

@@ -1143,3 +1143,26 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   pinned SCHEMA_VERSION, and `e4b_check.js`/`e4c_check.js`'s function-slice harnesses all updated
   for the new dependency. Confirms `entry.tankAce`'s per-entry-field shape as B126's reference
   pattern.
+- **D346** — **B126 shipped (S249); data + engine.** Marks of Chaos. Re-derived from source: exactly
+  one detachment of 211 carries the rule (`Chaos Space Marines|PACTBOUND ZEALOTS`), offered to CSM
+  alone; of 58 CSM units, 45 require a selection, 11 carry an innate mark, 8 are Epic Heroes. New
+  `entry.mark` field, SCHEMA_VERSION 4→5 with migration; conventions follow `entry.god` (inherited
+  on duplicate/leader-copy, absence is an error) rather than `entry.tankAce`, since this is a
+  required exclusive choice not an optional capped grant. New E29/B126 block in `index.html`
+  (`markEffect`/`markKeywordSet`/`unitNeedsMark`/`markOptionsForUnit`/`entryEffectiveMark`/
+  `markAttachBlock`/`canSetMark`), reading the vocabulary, pool and exclusions out of
+  `detachment_effects.json` rather than as engine literals. **Ryan ruling 1:** a unit is a PSYKER
+  unit if any of its models carries PSYKER — Dark Commune (PSYKER on the Mindwitch model alone) is
+  barred from KHORNE. **Ryan ruling 2:** the attach is refused, but a later mark change that leaves
+  an attached pair mismatched is ALLOWED and flagged — re-marking a pair is a two-step edit and the
+  intermediate step is an incomplete configuration, not a finished illegal army. First case of that
+  distinction; worth keeping. The embark restriction is recorded under a new
+  `unmodelled_restrictions` shape, NOT as `enforced: false` — the app has no transport-assignment
+  model, so there is no state to gate (**B135 opened**). The four mark-restricted Pactbound Zealots
+  enhancements now enforce via a new `kind: 'mark'` resolving through the same `entryEffectiveMark`.
+  New `b126_check.js`; `rules_assertions.py` gains `E29-1`..`E29-4` and `e21a_schema_valid` learns
+  the kind. Collateral: `list_store.js` resynced (plus the v4 history note S248 omitted),
+  `e1b_check.js` migration fixtures, `e1b_module_copies_agree`'s pinned SCHEMA_VERSION 4→5, and the
+  E29 slice added to `e4b_check.js`/`e4c_check.js` — the last found by reading the call graph, since
+  both harnesses passed with the latent `ReferenceError` in place. Also corrects S248's handoff,
+  which recorded its close as 38/38 when the gate it added made it 39/39.

@@ -14519,3 +14519,154 @@ for every existing E4b/E4c fixture — correct, since none of those fixtures inv
 B128 is done. Confirms the per-entry-field pattern (`entry.tankAce`, listId-keyed, not
 detachment-keyed) as the reference shape for B126's mark selection, per the sequencing note in
 S247's `NEXT_SESSION_PROMPT.md`.
+
+## D346 — B126: Marks of Chaos built; the mark is a required per-entry choice, its attach rule is gated at the attach only, and its embark rule is unrepresentable (S249)
+
+**Turn type: data + engine.** Session open clean at 39/39 with 85 source files verified; all twelve
+S248 file hashes matched the S248 handoff table.
+
+### Correction to a prior handoff
+
+S248's handoff records both its open and its close as 38/38. Its close added `b128_check` as a new
+gate, so the close figure should have read 39/39. No gate was lost — `baseline.sh` and the gate
+list are intact and this session opened at 39/39 with no changes — but S248's number is wrong and
+must not be used as a comparison baseline.
+
+### Population, re-derived rather than carried from the ticket
+
+The B126 backlog entry (D334) described the rule from the Pactbound Zealots record found while
+censusing B93. Re-derived this session from source:
+
+- Exactly **one** detachment of the 211 built records carries the rule —
+  `Chaos Space Marines|PACTBOUND ZEALOTS`, `rule_name` "Marks of Chaos", sourced from Wahapedia
+  `Detachment_abilities.csv` id `000008362`. `detachments.json`'s own `armies` index offers it to
+  Chaos Space Marines and nothing else.
+- Death Guard, Thousand Sons, World Eaters and Emperor's Children carry their god as a fixed
+  faction keyword and reference marks nowhere. There is no cross-faction arc here.
+- The 21 Chaos Daemons units carrying `HERETIC ASTARTES` are B114's Shadow Legion Thralls, in the
+  Chaos Daemons army, which cannot reach Pactbound Zealots. Out of scope.
+- Of 58 CSM units: 8 EPIC HERO, 11 carrying an innate mark keyword, **45 requiring a selection**.
+  Two units carry TRANSPORT (Chaos Rhino, Chaos Land Raider).
+- Two Epic Heroes carry no mark at all (Cypher, Vashtorr the Arkifane). Both have no Leader ability
+  and an empty `leader_eligible_units`, so the "a markless Character can never attach" reading is
+  unreachable in practice and needs no carve-out.
+
+### The keyword reader had to be wider than B128's, and this is load-bearing
+
+`unitInTankAcePool` reads only `model_groups[].keyword_names`. That is wrong for this rule in two
+places, both real:
+
+- `HERETIC ASTARTES` sits in `faction_keyword_names` on all 58 CSM units, not `keyword_names`.
+- `Masters of the Maelstrom` has an **empty** `keyword_names`, with `EPIC HERO`, `CHAOS UNDIVIDED`
+  and `PSYKER` all in `model_keyword_names`. Reading one field would have put it in the pool and
+  demanded a mark it already carries.
+
+`markKeywordSet` therefore unions all three fields and is documented as deliberately differing from
+B128's reader. `rules_assertions.py`'s `_mark_kw_set` mirrors it for the same reason and says so.
+
+### Ryan's rulings
+
+**Keyword scoping — a unit is a PSYKER unit if any of its models carries PSYKER**, the same way a
+unit containing a Character model is a Character unit. The only unit in the pool where this bites is
+**Dark Commune**, whose `PSYKER` sits on the `MINDWITCH` model alone; it cannot take `KHORNE`. Four
+other pool units (Sorcerer, Sorcerer In Terminator Armour, Master Of Possession, Nemesis Claw) carry
+`PSYKER` unit-wide. Five in total, asserted by name.
+
+No additional case arises from an attached Psyker conferring `PSYKER` on its bodyguard: a Psyker
+Character can never hold `KHORNE`, and the attach rule already requires matching marks, so a Khorne
+unit can never acquire a Psyker leader in the first place.
+
+**The attach is gated; a later mark change is not.** Claude's first build refused a mark change that
+would leave an existing attached pair mismatched, on a strict D0 reading. Ryan overruled: that
+forces a detach-change-change-reattach dance to move an attached pair from one mark to another.
+Re-marking a pair is a two-step edit and the intermediate step is an **incomplete configuration**,
+the same class as an unchosen mark or an unchosen Daemonic Allegiance — flagged, not forbidden. The
+ATTACH itself is still refused outright, so a mismatched pair is only ever reachable by editing a
+pair that was legal when it was made. `entryMarkPairError` flags it on both halves.
+
+This is the first place the tool knowingly allows a reachable mismatched state, and the distinction
+it draws is worth keeping: **D0 forbids finished illegal armies, not intermediate steps of a
+multi-part edit that the tool visibly flags.**
+
+**Missing-mark fall-through is permissive.** When either side of an attach has no mark chosen yet,
+the attach is allowed rather than refused — D199's standing rule that an unevaluable restriction
+falls through to permissive. The unmade choice is already flagged on the entry.
+
+### The embark restriction is not unenforced — it is unrepresentable
+
+The same rule says a unit can only embark within (or start embarked within) a `TRANSPORT` sharing
+its mark. The engine does not model embarkation at all: "embark" appears nowhere in `index.html`,
+and "transport" only as a `unit_type` string for the Battleline/Dedicated Transport limit doubling.
+A saved list is a set of entries; nothing records which unit rides in which transport. There is no
+representable state to gate.
+
+This is a different thing from `enforced: false`, which has always meant "a representable effect
+deliberately left off", and it must not be recorded that way — `E21a-4` legitimately asserts the
+unenforced inventory is empty and would be falsified by a bookkeeping entry. New
+`unmodelled_restrictions` shape on the effect instead, carrying the rule text, why it is
+unrepresentable, and the two affected units. `E29-2` asserts it is present with a reason, so it
+cannot quietly vanish. **B135 opened** for the transport-assignment feature it would need first.
+
+### Mechanism
+
+`entry.mark` (string or null), listId-keyed like `entry.tankAce`. But its *conventions* follow
+`entry.god`, not `entry.tankAce`, because it is a required exclusive choice rather than an optional
+capped grant: it is **inherited** on duplicate and on leader-copy (a copy keeps its configuration),
+and its absence is an entry error rather than merely an unoffered option. B128's shape transfers
+only partly, exactly as S248's own sequencing note warned it might not.
+
+Persisted: SCHEMA_VERSION 4→5, migration adds `mark: null` to every existing entry on load,
+mirroring the v3→v4 step. `list_store.js` resynced byte-for-byte; its schema-history header gained
+the v5 note **and the v4 note S248 shipped the bump without writing**.
+
+New E29/B126 block in `index.html`. `markEffect` finds the active row; `markKeywordSet`,
+`unitInnateMark`, `unitNeedsMark` and `markOptionsForUnit` read the row's `target`, `marks` and
+`excluded_marks_by_keyword` directly — the vocabulary, the pool and the Psyker exclusion are data
+facts, never literals in the engine (S247/D344). `entryEffectiveMark` returns the innate mark if the
+datasheet carries one, else the player's pick. `entryMarkStale` and `entryMarkMissing` drive the
+error flags. `markAttachBlock` is the attach gate, applied at both the bodyguard picker's filter and
+`editLeaderTarget` — the same two-point pattern `enhancementAttachBlock` uses. It is kept separate
+from `canAttachLeader` rather than folded in, because `canAttachLeader` is unit_name-keyed and
+cannot carry a per-entry mark; folding it in would also have broken `e10_check.js`'s existing calls.
+
+The four Pactbound Zealots enhancements that restrict on the mark (*Eye of Tzeentch* → Tzeentch,
+*Intoxicating Elixir* → Slaanesh, *Orbs of Unlife* → Nurgle, *Talisman of Burning Blood* → Khorne)
+were the named blocker on B126 and are now enforced through a new `kind: 'mark'` in
+`ENHANCEMENT_BEARER_RESTRICTIONS`, resolving through `entryEffectiveMark` — the **same** function
+the selector and the attach gate use, not a second reading of the rule. B93's total resolver (D334)
+will subsume this table, these four rows along with B113's seven.
+
+### Assertions
+
+New `b126_check.js`: the three-field pool reader including the `model_keyword_names`-only case,
+detachment scoping, the Psyker/Khorne exclusion at unit and model level, innate marks, the attach
+gate with its permissive fall-through, D346's change-allowed asymmetry exercised end to end
+(attach → change one half → both flag → change the other → both clear, no detach), staleness across
+deselect/reselect, the four enhancements, and the shipped data facts. Its final section re-derives
+the 45/11 pool from the real `units.json` rather than asserting a remembered number.
+
+`rules_assertions.py` gains `E29-1` (coverage: the mark clause is scanned for across all 211 records
+and the row's owning armies are checked against `detachments.json`'s index, not assumed from the key
+prefix), `E29-2` (the shipped row's facts, including that the embark restriction is recorded as
+unmodelled), `E29-3` (45/11 re-derived, sets disjoint, no pool unit left with zero selectable marks,
+5 Psyker-barred including Dark Commune by name), and `E29-4` (the harness gate). `e21a_schema_valid`
+learns the `mark_of_chaos` kind, and its new checks are the ones that would catch a silently
+unsatisfiable table: every mark must also appear in `except_keywords`, and no per-keyword exclusion
+may bar every option.
+
+`e1b_module_copies_agree`'s hard-pinned `SCHEMA_VERSION` updated 4→5.
+
+### Collateral
+
+`e1b_check.js`'s migration-chain fixtures assumed the chain stopped at v4; updated for the v4→v5
+step with a v5-passthrough case, mirroring the existing pattern. `e4b_check.js` and `e4c_check.js`
+both gained the E29 slice: `enhancementBearerEligible` now calls `entryEffectiveMark`, which sits
+outside their existing slices. **Both harnesses passed before this fix was made** — no existing
+fixture reaches a `kind: 'mark'` rule, so the latent `ReferenceError` would have sat undetected
+until the first Pactbound Zealots fixture was written. That is the same failure S248 hit, caught
+this time by reasoning about the call graph rather than by a red gate.
+
+### Closes
+
+B126 is done apart from its embark half, which is B135. B93's four named mark-restricted
+enhancements are enforced.
