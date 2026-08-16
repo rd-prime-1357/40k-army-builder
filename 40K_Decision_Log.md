@@ -14670,3 +14670,135 @@ this time by reasoning about the call graph rather than by a red gate.
 
 B126 is done apart from its embark half, which is B135. B93's four named mark-restricted
 enhancements are enforced.
+
+## D347 — B103: the multi-model `replacement_choices` rollup clamps each pick against the remaining cap, truncation is deterministic, and the over-cap tally is healed out of storage (S250)
+
+**Turn type: engine-only.** Session open clean at 40/40 with 85 source files verified; all thirteen
+S249 file hashes matched the S249 handoff table. The backlog's `^### ` grep inside Open Items
+returned 24 against a stated 24 — S249's clean-up held.
+
+### The defect, re-derived rather than carried from the ticket
+
+B103's entry describes what was seen at S201. Re-derived from the shipped engine and data at S250,
+it is exactly as described and still live. In `loRollup`'s multi-model branch, a non-distinct
+`replacement_choices` option pushed **every** tallied pick into `emit` in full and then wrote
+`used = Math.min(used, cap)`. Two consequences, both reproduced against the real engine before
+anything was touched:
+
+1. more replacement weapons were emitted — and priced through `wargearCostForRollup` — than the cap
+   allows;
+2. because `chargeSource` was handed the **clamped** figure, the per-source-weapon check below it
+   never saw the overrun, so `overAllocated` stayed `false`. The list read clean while being wrong.
+
+The fixed-1 branch bounded each pick against the remaining cap as it went, so the two branches
+disagreed on the same shape.
+
+### Reachability: the population is size reduction, and nothing else
+
+`editLoadoutChoiceCount` refuses to step past the group cap, so the UI cannot build an over-cap
+tally. `editSizeIdx` sets `entry.sizeIdx`, recalculates points and **never touches**
+`entry.wargear` — and a `per_n_models` cap scales with the bracket. Build at the large bracket, fill
+the option to its ceiling, reduce the size: that is the whole population, and it is why this ticket
+moves the points of already-saved lists. Checked and ruled out: no shipped option in this shape
+carries `requires_weapon`, so the carrier-loss route does not exist; exactly one (Deathwatch
+Veterans `cc_1`) carries a `pool_id`.
+
+### Census
+
+Re-derived through the engine's own `loMaxCount`/`loGroupCounts`, not by a second implementation.
+64 count options carry `replacement_choices`. 49 of them sit on a multi-model group and are
+non-distinct — the branch this ticket fixes. 30 of those have a cap that shrinks between size
+brackets, across 27 units in 12 factions. Two are worse than a partial overrun: **Grey Knights
+Brotherhood Terminator Squad `cc_1`** and **Paladin Squad `cc_1`** both fall to a cap of **zero** at
+their 4-model bracket, so the whole selection was being emitted and priced with no cap at all.
+
+Seven shipped units re-price, each by 5–10 points, always downward: Centurion Devastator Squad,
+Deathwatch Terminator Squad, Talos, Brotherhood Terminator Squad, Paladin Squad, Purifier Squad,
+Thunderwolf Cavalry. Which units move depends on how the player spent the cap — a priced choice has
+to be among the picks that get truncated — so the census exercises three different fills of the same
+cap rather than one.
+
+**A tally that fits its cap is byte-identical before and after**, across all 64 options at every
+bracket: same weapons, same equipment, same points. That is the property the whole fix rests on, and
+it is asserted directly rather than argued.
+
+### Decision 1 — truncation follows the option's own choice order
+
+Previously the multi-model branch emitted in `Object.keys(tally)` order and the fixed-1 branch
+truncated in it. That is storage insertion order, i.e. **click order**, which is not stable across an
+export/reimport round trip: the same saved list could price differently depending on how it was
+serialised. Both branches now iterate `o.replacement_choices`, matching what `loDistinctPicks`
+already does and for the same stated reason.
+
+This is free for legal lists — when every pick fits, order cannot matter — so it changes nothing
+except which picks survive a truncation that only an already-illegal list can reach. The visible
+consequence, worth recording because it is a product-facing choice and not a mechanical one: priced
+options tend to sit later in a datasheet's option list, so the priced pick is usually the one
+dropped. A Talos built at 2 models with a Stinger pod and a Twin haywire blaster, shrunk to 1, keeps
+the Stinger pod. Reversible; flagged to Ryan rather than blocked on.
+
+### Decision 2 — the clamp is silent
+
+S201's reading, carried into the S250 prompt, was that a saved list exceeding a cap should be
+corrected silently under D0 rather than firing `overAllocated`, and that the flag should stay
+reserved for genuine same-source contention. Proceeded on that reading and it holds up on three
+grounds: the state was never legal, so there is nothing to warn about; the flag's own message ("Too
+many weapon swaps for this unit size") is about contention, not staleness; and silent clearing on a
+size change is **already the established precedent** — B34's size-gated picks are cleared exactly
+this way in the same renderer. `overAllocated` still fires for real contention, which is gated.
+
+### Decision 3 — clamping the rollup alone would have left a D0 hole, so the state is healed
+
+The rollup clamp fixes the weapons and the points. It does **not** fix the state: the stepper reads
+`entry.wargear` raw, so a clamped-but-unhealed tally would show four psycannons while the rollup
+priced two. Under D0 the illegal state is removed, not displayed and quietly ignored. New
+`loHealChoiceTallies(def, size, entry, optCounts, isSuppressed)` truncates the stored tally to the
+live cap, in the same place and by the same pattern as the existing cluster heal, and is called from
+`renderLoadoutOptions` immediately before the rollup.
+
+Factored into a named function rather than left inline **specifically so a harness can slice it** —
+S249's lesson that a new call path nothing exercises is a latent failure regardless of what the
+gates say. This is not an extraction out of `index.html`; the standing constraint is about moving
+code into separate files, which this does not do.
+
+Two deliberate narrowings, both recorded in the function's own comment. The heal skips suppressed
+options, whose own clearing pass owns them. And it does **not** apply the shared-pool narrowing the
+stepper applies, because that is read off a rollup that has not run yet — applying it would make the
+heal stricter than the cap the player was last shown. `loRollup` stays the authority for what is
+emitted and priced.
+
+### B136 opened
+
+`loCarriers` reads a `replacement_choices` tally the same way the broken branch did — every pick
+summed, in storage order, with no cap applied — when counting carriers for a `requires_weapon` gate.
+Unreachable today: a scan of the shipped data found **zero** cases where any option's
+`requires_weapon` names a weapon that any `replacement_choices` option grants. Deliberately not
+folded into this turn; a ticket beats a widened scope. `B103-2` is scoped to `loRollup` alone so it
+does not fail for this unrelated reason.
+
+### Assertions
+
+New `b103_check.js`: both branches clamped and truncating identically, insertion order proven not to
+change the result, a cap of zero emitting nothing, the legal-tally-untouched property on fixtures
+**and** across the whole shipped population, the selection path's refusal to build an over-cap tally
+in the first place, genuine same-source contention still firing `overAllocated`, and six cases on
+`loHealChoiceTallies` (heal-and-rollup agreement, distinct per-choice cap, unlisted keys dropped,
+suppressed options skipped, non-object values skipped). Its last two sections re-derive the
+population and the seven re-pricing units from the real data rather than asserting a remembered
+number. Verified to go **red** against a copy of the engine with the single defect line restored —
+10 failures — so the gate is not decorative.
+
+`rules_assertions.py` gains `B103-1` (every `replacement_choices` option carries an authored cap —
+`loMaxCount` returns 0, not Infinity, for one that does not, so an uncapped option silently emits
+nothing; population pinned at 64/49), `B103-2` (the defect line is gone, neither branch iterates in
+storage order, `loHealChoiceTallies` defined once and actually called — a heal that exists but is
+never invoked would clamp the points and leave the picks on screen), and `B103-3` (the harness gate).
+
+### Not verified this session
+
+No browser render check. **This is the third engine turn in a row shipped unseen**, after S248's
+Tank Ace UI and S249's mark selector.
+
+### Closes
+
+B103. B136 opened.

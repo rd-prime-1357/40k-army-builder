@@ -1166,3 +1166,25 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   E29 slice added to `e4b_check.js`/`e4c_check.js` — the last found by reading the call graph, since
   both harnesses passed with the latent `ReferenceError` in place. Also corrects S248's handoff,
   which recorded its close as 38/38 when the gate it added made it 39/39.
+
+- **D347 — B103: the multi-model `replacement_choices` rollup clamps each pick against the remaining
+  cap; truncation is deterministic; the over-cap tally is healed out of storage (S250, engine-only).**
+  `loRollup`'s multi-model branch emitted every tallied pick in full and clamped only the running
+  total afterwards, so more replacement weapons were emitted and priced than the cap allows — and
+  because `chargeSource` got the CLAMPED figure, `overAllocated` never fired and the list read clean
+  while being wrong. Reachability is size reduction and nothing else: the UI refuses to step past the
+  cap, but `editSizeIdx` moves the bracket and never touches `entry.wargear`. Census, re-derived
+  through the engine's own functions: 64 `replacement_choices` count options, 49 on the affected
+  branch, 30 with a cap that shrinks between brackets, and two (Grey Knights Brotherhood Terminator
+  Squad and Paladin Squad) whose cap falls to **zero** at their 4-model bracket. Seven units re-price,
+  5–10 pts each, always downward; **a tally that fits its cap is byte-identical before and after**,
+  which is the property the fix rests on. Three calls: truncation now follows the option's own choice
+  order rather than storage insertion order, which is click order and unstable across an
+  export/reimport (side effect — the priced pick usually sits later and so is usually the one
+  dropped); the clamp is **silent**, per S201's D0 reading and matching B34's existing silent clearing
+  on a size change, with `overAllocated` still firing for real same-source contention; and the stale
+  state is **healed out of storage** by a new `loHealChoiceTallies`, because clamping the rollup alone
+  would leave the stepper showing picks the rollup does not honour. New `b103_check.js`, verified red
+  against the restored defect line; `rules_assertions.py` gains `B103-1`..`B103-3`. **B136 opened** —
+  `loCarriers` reads a tally the same broken way, but a data scan found zero reachable cases, so it is
+  a ticket rather than a widened scope. Third engine turn in a row shipped with no render check.

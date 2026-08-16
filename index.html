@@ -2259,7 +2259,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.25';
+  const VERSION = '6.26';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -6715,6 +6715,50 @@
     }
     return { picks, used };
   }
+  // ── B103: heal a saved replacement_choices tally that no longer fits its cap ─
+  //
+  // The only way to reach an over-cap tally is to build at a large size bracket,
+  // fill the option to its ceiling, then reduce the size: editLoadoutChoiceCount
+  // refuses to step past the cap, but editSizeIdx moves the bracket and never
+  // touches wargear, and a per_n_models cap scales with the bracket. loRollup
+  // clamps such a tally for weapons and points, but the stepper reads
+  // entry.wargear raw, so without this the pane would show more picks than the
+  // rollup honours. Under D0 the illegal state is removed, not shown and ignored.
+  //
+  // Truncation follows the option's own choice order (same reasoning as
+  // loDistinctPicks: a stale over-selection must truncate the same way every time,
+  // not by storage insertion order) and against the same ceiling the renderer puts
+  // on the stepper — the size cap, narrowed for a distinct option. The shared-pool
+  // narrowing the stepper also applies is deliberately NOT applied here: it is read
+  // off a rollup that has not run yet, so applying it would make the heal stricter
+  // than the cap the player was last shown. loRollup stays the authority for what
+  // is emitted and priced.
+  //
+  // Returns the option ids it rewrote. A tally within cap is never touched.
+  function loHealChoiceTallies(def, size, entry, optCounts, isSuppressed) {
+    const healed = [];
+    if (!def || !entry || !entry.wargear) return healed;
+    const gc = loGroupCounts(def, size, optCounts || {});
+    for (const o of def.options) {
+      if (o.type !== 'count' || !Array.isArray(o.replacement_choices)) continue;
+      if (isSuppressed && isSuppressed(o)) continue;
+      const t = entry.wargear[o.id];
+      if (!t || typeof t !== 'object') continue;
+      const cap = loChoiceGroupCap(o, loMaxCount(o, size, gc[o.scope]));
+      const per = loDistinctCap(o);
+      const next = {};
+      let used = 0;
+      for (const k of o.replacement_choices) {
+        const want = Math.max(0, Math.min(Number(t[k]) | 0, per, cap - used));
+        if (want > 0) { next[k] = want; used += want; }
+      }
+      let before = 0;
+      for (const k of Object.keys(t)) before += Math.max(0, Number(t[k]) | 0);
+      if (used < before) { entry.wargear[o.id] = next; healed.push(o.id); }
+    }
+    return healed;
+  }
+
   // ── E14: free, unconditional adds default to selected ─────────────────────
   // A pure add that grants something for free, has no gate, no shared pool and a
   // hard cap of one is a thing no player would decline, so a new entry is seeded
@@ -7114,8 +7158,11 @@
               for (const pk of r.picks) chargeF(pk[0], pk[1]);
               used = r.used;
             } else {
-              for (const k of Object.keys(tally)) {
-                if (!o.replacement_choices.includes(k)) continue;
+              // B103: this branch already bounded each pick against the remaining cap;
+              // only the iteration order changes, from storage insertion order to the
+              // option's own choice order, so both branches truncate a stale
+              // over-selection identically. A within-cap tally is unaffected either way.
+              for (const k of o.replacement_choices) {
                 const want = Math.max(0, Math.min(tally[k] | 0, cap - used));
                 if (want > 0) { chargeF(k, want); used += want; }
               }
@@ -7208,8 +7255,20 @@
             for (const pk of r.picks) emit.push({ opt: o, replacement: pk[0], n: pk[1] });
             used = r.used;
           } else {
-            for (const k of Object.keys(tally)) { const c = Math.max(0, tally[k] | 0); if (c > 0 && o.replacement_choices.includes(k)) { emit.push({ opt: o, replacement: k, n: c }); used += c; } }
-            used = Math.min(used, cap);
+            // B103: bound each pick against what the cap has left, exactly as the
+            // fixed-1 branch does. The old code emitted every tallied pick in full and
+            // clamped only the running total afterwards, so an over-cap saved tally
+            // rolled up (and priced) more replacement weapons than the cap allows —
+            // and, because chargeSource was handed the CLAMPED figure, the per-source
+            // check below never saw the overrun and overAllocated stayed false.
+            // Iteration follows the option's own choice order, not storage insertion
+            // order, so a stale over-selection truncates the same way every time
+            // (same reasoning as loDistinctPicks). For a tally within cap nothing
+            // changes: every pick survives and order is irrelevant.
+            for (const k of o.replacement_choices) {
+              const want = Math.max(0, Math.min(tally[k] | 0, cap - used));
+              if (want > 0) { emit.push({ opt: o, replacement: k, n: want }); used += want; }
+            }
           }
           chargeSource(o.replaces, used);
           usedThis = used;
@@ -7444,6 +7503,10 @@
       }
     }
     const optCounts = loOptCounts(def, entry);
+    // B103: a saved tally that no longer fits its cap is healed before the rollup,
+    // for the same reason the cluster heal above runs here — no illegal state
+    // reaches the rollup or the stepper.
+    loHealChoiceTallies(def, size, entry, optCounts, suppressed);
     const roll = loRollup(def, size, loadoutSelections(entry, def), optCounts);
     const grpCounts = loGroupCounts(def, size, optCounts);
     const byScope = {};

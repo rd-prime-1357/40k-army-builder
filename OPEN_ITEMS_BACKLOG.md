@@ -3,8 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S249 (B126 shipped, B135 opened):
-B134, B135, B127, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+not here, it isn't open. **24 open** as of S250 (B103 shipped, B136 opened):
+B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B94, B85, B86,
 B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 **Housekeeping, S249.** Three closed-pointer stubs (B111, B89, B100) were sitting in the Open
@@ -633,6 +633,23 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
+### B136 — `loCarriers` reads a `replacement_choices` tally uncapped and in storage order — **NEW S250 (D347); engine; S; not reachable today**
+Split out of B103 rather than folded into it. When counting how many models in a scope group still
+carry a named weapon — the `requires_weapon` gate — `loCarriers` sums **every** pick in a
+`replacement_choices` tally, iterating `Object.keys(tally)` and applying no cap. That is the same
+defect B103 fixed in `loRollup`: a stale over-cap tally would over-count the carriers of a weapon the
+option grants, and could unlock a gated option that should stay disabled.
+
+Not reachable on the shipped data. A scan at S250 found **zero** cases where any option's
+`requires_weapon` names a weapon that any `replacement_choices` option grants, in any built faction,
+so nothing today can reach the bad path. It becomes live the first time a faction ships a gate whose
+prerequisite weapon is itself a replacement choice.
+
+The fix is small — `loCarriers` has `size` and `n` in hand, so it can bound the tally with
+`loMaxCount(o, size, n)` and iterate `o.replacement_choices` — but it is not free: `loCarriers` feeds
+`loReqCarriers`, `reqCap` and the B99 bearer-scope reader, so it needs its own harness slice rather
+than riding on B103's. `B103-2` is deliberately scoped to `loRollup` so it does not fail for this.
+
 ### B116 — Drukhari's Harlequins/Anhrathe allied-unit inclusion has no built-faction precedent — **NEW S222 (D316); product scope call; REQUIRED BEFORE PRODUCTION (Ryan, S240/D335); gated on Aeldari being built**
 **S240 (D335): reclassified by Ryan.** Deferral is fine for now, but this must ship before the
 product is production-ready — it is not indefinitely deferrable, and the ticket is no longer
@@ -1023,23 +1040,6 @@ change, correctly). `b87_check.js` extended with a 4th fact pinning the row-leve
 (loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom (Drukhari), plus Rubric Marines.
 Rare in v1_0 (only Rubric Marines + Brotherhood Terminator Squad), widespread in v1.1.
 
-### B103 — Non-distinct `replacement_choices` rollup emits past its cap and hides the over-allocation — **NEW S201 (D294); engine; M; affects shipped lists' points**
-Found while landing B101 and deliberately left alone there. In `loRollup`'s multi-model body branch, a
-`replacement_choices` option pushes **every** tallied pick into `emit` and only then clamps the total
-for the source charge (`used = Math.min(used, cap)`). Two consequences: more replacement weapons can
-be emitted than the cap allows, and because the *source* charge is the clamped figure, the
-per-source-weapon check never sees the overrun, so `overAllocated` does not fire — the list looks
-clean while being wrong. The fixed-1 branch clamps differently again (it bounds each pick against the
-remaining cap as it goes), so the two branches disagree on the same shape.
-
-Not fixed inside B101 on purpose: the emitted weapons feed `wargearCostForRollup`, so tightening this
-changes the **points** of already-saved lists across shipped factions. That needs its own turn, its
-own before/after census of which shipped units can actually reach an over-cap tally, and a decision on
-whether the correct behaviour is to clamp silently or to clamp *and* fire `overAllocated`. My reading
-is that a saved list that exceeds a cap should be corrected silently (D0 — the state was never legal,
-so there is nothing to warn about) and that `overAllocated` should stay reserved for genuine
-same-source contention, but that is a product call and belongs to Ryan, not to the fix.
-
 ### B85 — Converter's faction-keyword detector is noise, not signal — **NEW S172 (D262); diagnostic added S173 (D263), not yet fixed; S**
 `FACTION_KEYWORD_RE` captures the preceding line, so it reports unit names glued to the real keyword:
 "Skarbrand Legiones Daemonica", "Kairos Fateweaver Legiones Daemonica". Chaos Daemons reports ~34
@@ -1419,6 +1419,55 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 ### B100 — Build Grey Knights faction — **CLOSED S208 (D302)**
 Build Grey Knights faction. CLOSED S208: B106-DATA (both Dreadknights' ranged-weapon
 options) shipped; faction fully complete, 25/25 units, zero residual `_parser_flags`.
+
+### B103 — Non-distinct `replacement_choices` rollup emits past its cap and hides the over-allocation — **NEW S201 (D294); engine; M; SHIPPED S250 (D347); `loCarriers`'s copy of the defect split to B136**
+Found while landing B101 and deliberately left alone there. In `loRollup`'s multi-model body branch, a
+`replacement_choices` option pushes **every** tallied pick into `emit` and only then clamps the total
+for the source charge (`used = Math.min(used, cap)`). Two consequences: more replacement weapons can
+be emitted than the cap allows, and because the *source* charge is the clamped figure, the
+per-source-weapon check never sees the overrun, so `overAllocated` does not fire — the list looks
+clean while being wrong. The fixed-1 branch clamps differently again (it bounds each pick against the
+remaining cap as it goes), so the two branches disagree on the same shape.
+
+Not fixed inside B101 on purpose: the emitted weapons feed `wargearCostForRollup`, so tightening this
+changes the **points** of already-saved lists across shipped factions. That needs its own turn, its
+own before/after census of which shipped units can actually reach an over-cap tally, and a decision on
+whether the correct behaviour is to clamp silently or to clamp *and* fire `overAllocated`. My reading
+is that a saved list that exceeds a cap should be corrected silently (D0 — the state was never legal,
+so there is nothing to warn about) and that `overAllocated` should stay reserved for genuine
+same-source contention, but that is a product call and belongs to Ryan, not to the fix.
+
+**SHIPPED S250 (D347), engine-only.** Re-derived from the engine and data before anything was
+touched: the defect was exactly as written above and still live. Reachability is size reduction and
+nothing else — `editLoadoutChoiceCount` refuses to step past the cap, but `editSizeIdx` moves the
+bracket, re-prices, and never touches `entry.wargear`, and a `per_n_models` cap scales with the
+bracket. No shipped option in this shape carries `requires_weapon`; exactly one carries a `pool_id`.
+
+Census, re-derived through the engine's own `loMaxCount`/`loGroupCounts`: 64 `replacement_choices`
+count options, 49 on the multi-model non-distinct branch, 30 with a cap that shrinks between size
+brackets across 27 units in 12 factions. Grey Knights **Brotherhood Terminator Squad** and **Paladin
+Squad** both fall to a cap of **zero** at their 4-model bracket. Seven units re-price by 5–10 pts,
+always downward. **A tally that fits its cap is byte-identical before and after**, across all 64
+options at every bracket.
+
+Ryan's open question — clamp silently or clamp and fire `overAllocated` — was answered on S201's
+reading: **silently**. The state was never legal (D0), the flag's message is about same-source
+contention rather than staleness, and B34 already clears size-gated picks silently in the same
+renderer. `overAllocated` still fires for real contention.
+
+Two calls made and recorded rather than surfaced as blockers. Truncation now follows the option's own
+choice order, not `Object.keys(tally)` — storage insertion order is click order and is not stable
+across an export/reimport round trip; the fixed-1 branch was aligned to match, so the two branches
+finally agree. Side effect worth an eye: priced options tend to sit later in a datasheet's list, so
+the priced pick is usually the one truncated. And the stale state is **healed out of storage** by a
+new `loHealChoiceTallies`, not merely clamped on the way out — the stepper reads `entry.wargear` raw,
+so a clamp alone would show four psycannons while pricing two.
+
+`index.html` v6.26. New `b103_check.js`, verified red (10 failures) against a copy of the engine with
+the single defect line restored. `rules_assertions.py` gains `B103-1` (every option carries an
+authored cap; population pinned at 64/49), `B103-2` (the defect line gone, no storage-order
+iteration, the heal defined once and actually called) and `B103-3` (the harness gate).
+
 
 ### B126 — Marks of Chaos not modelled: mark keyword, attachment restriction and Transport restriction all unenforced — **NEW S240 (D334); data + engine; L; SHIPPED S249 (D346), embark half split to B135**
 
@@ -2702,3 +2751,28 @@ rule; verified directly (reference-identity, no cross-chapter leakage, idempoten
 trusting the gate alone. Zero-bearer gate's exemption count moved 36 → 30 exactly as scoped;
 negative-tested by reverting the new method to confirm the gate's pass is load-bearing. B131's
 docstring and the `B129` registration description rewritten to match current state.
+
+## S250 ledger
+
+Engine-only turn (B103, D347). **24 open at S249 close; 24 open at S250 close** (B103 shipped;
+B136 opened — `loCarriers` carries the same defect in a currently unreachable place, split out
+rather than folded in).
+
+Beginning: B134, B135, B127, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+B69, B70, B75, P2, P4, E23, B67b, E12, B17 (24).
+Resolved: B103 (1).
+Added: B136 (1).
+Ending: B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17 (24).
+
+Full `--fetch --data-turn` baseline at open: 40/40 gates pass, 85 source files verified against
+`source_manifest.json`, all thirteen of S249's changed files matched the S249 handoff table's
+hashes exactly. A `^### ` grep inside Open Items returned 24 against a stated 24 — S249's
+housekeeping held. Close is **41/41** with `b103_check` registered, and **136/136** assertions
+(133 before, plus `B103-1`..`B103-3`).
+
+**Ledger gap, noted not backfilled.** S248 and S249 shipped without adding a ledger section here;
+the last one before this is S247. Both sessions' movements are recorded in their handoffs and in
+`DECISION_INDEX.md`, and the header count was correct throughout, so nothing is lost — but the
+ledger series is not continuous and should not be read as one. Backfilling from prose would be
+inventing a record rather than keeping one.

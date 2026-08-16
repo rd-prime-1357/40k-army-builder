@@ -2449,6 +2449,45 @@ ASSERTIONS = [
      'b126_check.js (E29, B126, D346)',
      lambda S: e29_harness_gate(S)),
 
+    # ── B103 (S250, D347). The multi-model rollup branch emitted every tallied
+    # replacement_choices pick in full and clamped only the total afterwards, so an
+    # over-cap saved tally rolled up and priced more weapons than the cap allows —
+    # and, because the source charge was the clamped figure, overAllocated never
+    # fired. Three assertions: the data population the fix is scoped to, the engine
+    # wiring that a careless revert would undo, and the behaviour gate.
+    ('B103-1',
+     'Every count option carrying replacement_choices has an authored cap (per_n_models, '
+     'max_total or max_total_all). An option with none is not uncapped — loMaxCount returns '
+     '0 for it, so it silently emits nothing. The size of the affected population is pinned '
+     'too: 64 such options exist, 49 of them on a multi-model group and non-distinct, which '
+     'is the branch B103 fixes. A parser change or a new faction that widens that set fails '
+     'here, so the census in b103_check.js is re-derived rather than assumed to still hold.',
+     'unit_loadouts.json replacement_choices cap fields (B103, D347)',
+     lambda S: b103_capped_choice_population(S)),
+
+    ('B103-2',
+     'The clamp and the heal are wired, and the defect line is gone: loRollup no longer '
+     'carries `used = Math.min(used, cap)` after emitting, neither branch iterates a tally '
+     "in storage order rather than the option's own choice order, and loHealChoiceTallies is "
+     'defined exactly once and actually called from the renderer. A heal that exists but is '
+     'never invoked would clamp the points while leaving the over-cap picks on the stepper, '
+     'which is the D0 half of the ticket. Same reasoning as E23-3 — a silent revert would '
+     'fail every b103_check.js assertion without anything in Python naming the line.',
+     'index.html loRollup / loHealChoiceTallies (B103, D347)',
+     lambda S: b103_engine_clamp_wired(S)),
+
+    ('B103-3',
+     'b103_check.js passes in full. B103 is a set of claims about engine BEHAVIOUR — that an '
+     'over-cap tally is clamped on both branches and truncated identically by both, that a '
+     'tally which fits its cap is untouched (the property the whole fix rests on, since a '
+     'legal list must not re-price), that the clamp is silent while genuine same-source '
+     'contention still fires overAllocated, and that the heal and the rollup agree on every '
+     'shipped option at every bracket — so per D107 they are executed against the real '
+     'functions rather than described here. The harness also re-derives the affected '
+     'population and the seven units whose saved lists re-price from the real data.',
+     'b103_check.js (B103, D347)',
+     lambda S: b103_harness_gate(S)),
+
     # ── B101-DATA (D296/S203). loadout_parser.py's marker fix (D295/S202) is not, on
     # its own, provable to hold for a datasheet nobody has looked at — a session
     # building a future faction could reintroduce the bug's symptom (marker text
@@ -3080,6 +3119,131 @@ def e29_harness_gate(S):
         return False, (f'{len(failed)} B126 check(s) failed, e.g. {failed[:2]}' if failed
                        else f'b126_check.js exited {r.returncode}')
     return True, 'b126_check.js passes in full'
+
+
+def b103_capped_choice_population(S):
+    """Every count option carrying replacement_choices must carry an authored cap.
+
+    loMaxCount returns 0 — not Infinity — for an option with no per_n_models, no
+    max_total and no max_total_all. An uncapped option of this shape therefore does
+    not mean "no limit"; it means the rollup silently emits nothing. B103's clamp
+    makes that consequence stricter (every pick is now bounded by the cap as it is
+    read, rather than only the running total being clamped afterwards), so an option
+    that reaches the engine without a cap is a data defect worth naming here rather
+    than discovering as a missing weapon.
+
+    Also pins the size of the affected population. B103's fix is scoped to the
+    non-distinct branch on a multi-model group; if a parser change or a new faction
+    widens that set, this fails and the census in b103_check.js is re-derived rather
+    than assumed to still hold."""
+    lo = S.loadouts()
+    total = multi_plain = 0
+    uncapped = []
+    for uid, d in lo.items():
+        if uid == '_schema':
+            continue
+        groups = {g['name']: g for g in d.get('model_groups', [])}
+        for o in d.get('options', []):
+            if o.get('type') != 'count' or not isinstance(o.get('replacement_choices'), list):
+                continue
+            total += 1
+            if (o.get('per_n_models') is None and o.get('max_total') is None
+                    and not o.get('max_total_all')):
+                uncapped.append(f'{uid}/{o.get("id")}')
+            g = groups.get(o.get('scope'))
+            fixed1 = bool(g and (g.get('count') or {}).get('fixed') == 1)
+            if not fixed1 and not o.get('distinct'):
+                multi_plain += 1
+    if uncapped:
+        return False, (f'{len(uncapped)} replacement_choices option(s) carry no cap field, so '
+                       f'loMaxCount returns 0 and they emit nothing: {uncapped[:4]}')
+    if total != 64:
+        return False, (f'{total} count options carry replacement_choices, not the 64 B103 was '
+                       'censused against — re-derive the population before trusting the fix')
+    if multi_plain != 49:
+        return False, (f'{multi_plain} of them sit on a multi-model group and are non-distinct, '
+                       'not the 49 B103 fixes — the affected branch has changed shape')
+    return True, (f'all {total} replacement_choices options carry a cap; {multi_plain} sit on the '
+                  'multi-model non-distinct branch B103 fixes')
+
+
+def b103_engine_clamp_wired(S):
+    """The clamp and the heal are both present, and the old post-hoc clamp is gone.
+
+    B103's whole defect was a total that was clamped AFTER every pick had already
+    been emitted. That one line is easy to reintroduce and would fail nothing in
+    Python, so it is named here: `used = Math.min(used, cap)` must not reappear in
+    loRollup, loHealChoiceTallies must be defined exactly once, and the renderer must
+    actually call it — a heal that exists but is never invoked leaves the stepper
+    showing picks the rollup does not honour, which is the D0 half of the ticket.
+
+    Same reasoning as E23-3: a silent revert here would fail every b103_check.js
+    assertion, but nothing in Python would say which line went back."""
+    ip = os.path.join(S.dir, 'index.html')
+    if not os.path.exists(ip):
+        return False, 'index.html not found'
+    html = open(ip, encoding='utf-8').read()
+    lines = html.split('\n')
+
+    defs = [i for i, l in enumerate(lines)
+            if re.match(r'^\s*function\s+loHealChoiceTallies\s*\(', l)]
+    if len(defs) != 1:
+        return False, (f'loHealChoiceTallies is defined {len(defs)} times '
+                       f'(lines {[d + 1 for d in defs]}); it must be defined exactly once')
+
+    calls = [i for i, l in enumerate(lines)
+             if 'loHealChoiceTallies(' in l and i != defs[0]]
+    if not calls:
+        return False, ('loHealChoiceTallies is defined but never called — an over-cap saved tally '
+                       'would be clamped for points but left in storage for the stepper to show')
+
+    if 'used = Math.min(used, cap);' in html:
+        return False, ("loRollup carries `used = Math.min(used, cap)` again — that is B103's "
+                       'defect exactly: every pick emitted in full, only the source charge clamped')
+
+    # Scoped to loRollup deliberately. loCarriers also reads a tally in storage order
+    # and without a cap, but that is a separate and currently unreachable defect
+    # (B136, D347) — no shipped requires_weapon names a weapon any replacement_choices
+    # option grants — and folding it in here would make this assertion fail for a
+    # reason that has nothing to do with the rollup.
+    rs = next((i for i, l in enumerate(lines) if 'function loRollup(' in l), -1)
+    re_ = next((i for i, l in enumerate(lines) if '// ── B99 MODE BEGIN' in l), -1)
+    if rs < 0 or re_ <= rs:
+        return False, 'loRollup is no longer locatable in index.html'
+    rollup_src = '\n'.join(lines[rs:re_])
+    if 'Object.keys(tally)' in rollup_src:
+        return False, ('a rollup branch iterates a replacement_choices tally in storage order '
+                       "again; both branches must iterate the option's own choice order so a "
+                       'stale over-selection truncates the same way every time')
+    if rollup_src.count('for (const k of o.replacement_choices)') != 2:
+        return False, ('loRollup no longer carries exactly two capped choice-order loops — the '
+                       'fixed-1 branch and the multi-model branch must each have one')
+
+    return True, ('loHealChoiceTallies defined once and called from the renderer; neither rollup '
+                  'branch clamps after the fact or iterates in storage order')
+
+
+def b103_harness_gate(S):
+    import subprocess
+    p = os.path.join(S.dir, 'b103_check.js')
+    if not os.path.exists(p):
+        return False, 'b103_check.js not found — the B103 behaviour gate is missing'
+    try:
+        r = subprocess.run(['node', p, os.path.join(S.dir, 'index.html'),
+                            os.path.join(S.dir, 'unit_loadouts.json'),
+                            os.path.join(S.dir, 'units.json'),
+                            os.path.join(S.dir, 'wargear_points.json')],
+                           capture_output=True, text=True, timeout=120, cwd=S.dir)
+    except FileNotFoundError:
+        return False, 'node is not available, so the B103 behaviour gate cannot run'
+    except subprocess.TimeoutExpired:
+        return False, 'b103_check.js did not finish within 120s'
+    out = (r.stdout or '') + (r.stderr or '')
+    failed = [l.strip() for l in out.split('\n') if l.strip().startswith('FAIL ')]
+    if r.returncode != 0 or failed:
+        return False, (f'{len(failed)} B103 check(s) failed, e.g. {failed[:2]}' if failed
+                       else f'b103_check.js exited {r.returncode}')
+    return True, 'b103_check.js passes in full'
 
 
 def e21a_belakor_warlord_covered(S):
