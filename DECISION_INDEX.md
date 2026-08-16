@@ -1129,3 +1129,17 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   gate's pass depends on this change. Zero-bearer gate's exemption count moves **36 → 30** exactly as
   scoped; all 30 remaining exemptions unaffected. B131's docstring and the `B129` registration
   entry's description both rewritten to describe the current mechanism.
+- **D345** — **B128 shipped (S248); data + engine.** Headhunter Task Force's capped Tank Ace pick
+  built per Ryan's mechanism ruling: the Tank Ace keyword displays on every qualifying Vehicle
+  automatically (derived, never stamped); a per-entry checkbox in the config panel, capped at 3
+  army-wide, checking it grants Character (Enhancement + Warlord eligibility). New `entry.tankAce`
+  field, SCHEMA_VERSION 3→4 with migration. New E23/B128 block in `index.html`
+  (`unitInTankAcePool`/`entryTankAceActive`/`entryEffectiveType`/`canSetTankAce`), threaded through
+  all four enhancement-eligibility read sites plus `eligibleWarlordEntries`. All six Headhunter
+  `tank_ace` rows in `detachment_effects.json` flipped `enforced: true`. New `b128_check.js` (12
+  checks); `rules_assertions.py` gains `E23-3` and updates `E21a-4`'s hard-pinned unenforced
+  inventory (now empty). Collateral: `list_store.js` resynced to the edited inline copy (E1b-2's
+  drift gate caught it live); `e1b_check.js`'s migration fixtures, `e1b_module_copies_agree`'s
+  pinned SCHEMA_VERSION, and `e4b_check.js`/`e4c_check.js`'s function-slice harnesses all updated
+  for the new dependency. Confirms `entry.tankAce`'s per-entry-field shape as B126's reference
+  pattern.

@@ -1833,7 +1833,7 @@
 (function (root) {
   'use strict';
 
-  var SCHEMA_VERSION = 3;
+  var SCHEMA_VERSION = 4;
   var NS = '40kab:list:';   // one key per list: 40kab:list:<id>
 
   // ── ids ──────────────────────────────────────────────────────────────────
@@ -1906,6 +1906,7 @@
         other_options: e.otherOptions || {},
         enhancement:   normaliseEnhancement(e.enhancement),
         attached_to:   e.attachedToListId != null ? e.attachedToListId : null,
+        tank_ace:      !!e.tankAce,                                          // E23/B128
         points_cache:  e.points != null ? e.points : null  // display-only; recomputed on load
       };
     });
@@ -1972,6 +1973,7 @@
         otherOptions:     s.other_options || {},
         enhancement:      normaliseEnhancement(s.enhancement),
         attachedToListId: s.attached_to != null ? s.attached_to : null,
+        tankAce:          !!s.tank_ace,        // E23/B128 — flag-don't-drop: staleness is surfaced, not cleared here
         faction_ref:      s.faction_ref || null,
         unit_id:          s.unit_id || null,
         unresolved:       unresolved          // drives the ghost-row flag
@@ -2020,6 +2022,15 @@
         if (e && typeof e === 'object') e.enhancement = null;
       });
       record.schema_version = 3;
+    }
+    // v3 -> v4 (E23/B128). A v3 record had no way to express a Tank Ace pick, so
+    // false on every entry is the only reading that adds no information. Same
+    // rule as the step above: this ADDS a field and rewrites none.
+    if (v < 4) {
+      (record.entries || []).forEach(function (e) {
+        if (e && typeof e === 'object') e.tank_ace = false;
+      });
+      record.schema_version = 4;
     }
     return record;
   }
@@ -2793,6 +2804,131 @@
     return false;
   }
   // ── E21c / E22b block end ───────────────────────────────────────────────────
+
+  // ── E23/B128: tank_ace capped Character selection ──────────────────────────
+  // Headhunter Task Force (6 armies). Two-part rule: every qualifying Vehicle
+  // gets the TANK ACE keyword automatically (display only — enables the pick,
+  // confers nothing by itself); separately, in the Muster Armies step the
+  // player selects UP TO THREE of them to gain CHARACTER (Enhancement +
+  // Warlord eligibility). D0: "up to three" has to be a real capped, persisted
+  // per-entry pick (entry.tankAce) — a fourth pick must be unreachable at the
+  // checkbox, not reachable-then-flagged.
+  //
+  // Deliberately NOT folded into effectiveUnitType() (E21b): that helper is
+  // unit_name-keyed (battleline elevation applies to every entry of a named
+  // unit uniformly); this is listId-keyed (two entries of the same Vehicle can
+  // differ — only the checked one gets Character). Kept as its own block.
+  const TANK_ACE_CAP = 3;
+
+  // Whether a unit (by its raw datasheet record) is in ANY selected
+  // detachment's tank_ace pool. base_keyword/except_keywords test the union of
+  // every model_group's keyword_names, case-insensitively; except_unit_types
+  // tests the unit's own unit_type. Mirrors detachment_effects.json's
+  // target_shapes definition exactly — reads the table directly rather than
+  // re-deriving a pool elsewhere (S247/D344's mirror-drift lesson: this is the
+  // ONLY place this pool is computed).
+  function unitInTankAcePool(raw, keys) {
+    if (!raw) return false;
+    const kwSet = new Set();
+    for (const mg of (raw.model_groups || [])) {
+      for (const k of (mg.keyword_names || [])) kwSet.add((k || '').toLowerCase());
+    }
+    for (const key of (keys || [])) {
+      const rec = detachmentEffects[key];
+      if (!rec || !Array.isArray(rec.effects)) continue;
+      for (const eff of rec.effects) {
+        if (eff.kind !== 'tank_ace' || eff.enforced === false) continue;
+        const t = eff.target || {};
+        if (t.base_keyword && !kwSet.has(t.base_keyword.toLowerCase())) continue;
+        if ((t.except_keywords || []).some(k => kwSet.has((k || '').toLowerCase()))) continue;
+        if ((t.except_unit_types || []).includes(raw.unit_type)) continue;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Whether ENTRY currently, ACTIVELY holds a Tank Ace pick: checked by the
+  // player AND still in the pool under the currently selected detachment(s).
+  // A checked box that has gone stale (its granting detachment was deselected
+  // or swapped) is not active — grants no Character eligibility, and is
+  // surfaced as a roster error (entryHasError below) rather than silently
+  // uncheck: S139 — never quietly discard a player's own choice.
+  function entryTankAceActive(entry, keys) {
+    if (!entry || !entry.tankAce) return false;
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    return unitInTankAcePool(raw, keys);
+  }
+
+  // Effective CHARACTER-for-eligibility type: the entry's own unit_type, or
+  // 'Character' when an active Tank Ace pick overrides it. Every read site
+  // that used to test entry.unit_type / unit.isCharacter for Enhancement or
+  // Warlord eligibility goes through here now, so the override is visible
+  // everywhere those questions get asked, not just at the checkbox.
+  function entryEffectiveType(entry, keys) {
+    return entryTankAceActive(entry, keys) ? 'Character' : (entry && entry.unit_type);
+  }
+
+  // Army-wide count of ACTIVE picks — what the cap of 3 is checked against.
+  // A stale checked box (see above) is already inert and does not consume a
+  // slot; ghost (unresolved) entries never count.
+  function tankAceActiveCount(keys) {
+    return armyList.filter(e => !e.unresolved && entryTankAceActive(e, keys)).length;
+  }
+
+  // The checkbox's own gate (D0): checking is refused outright once the cap
+  // is full, so a fourth pick is never reached. Unchecking is always allowed.
+  // reason: null | 'not_offered' | 'cap'
+  function canSetTankAce(entry, checked, keys) {
+    if (!entry) return { ok: false, reason: 'not_offered' };
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    if (!unitInTankAcePool(raw, keys)) return { ok: false, reason: 'not_offered' };
+    if (checked && !entry.tankAce && tankAceActiveCount(keys) >= TANK_ACE_CAP)
+      return { ok: false, reason: 'cap', cap: TANK_ACE_CAP };
+    return { ok: true, reason: null };
+  }
+
+  function tankAceRefusalText(gate) {
+    if (!gate || gate.ok) return '';
+    if (gate.reason === 'cap') return `Already ${gate.cap} Tank Ace picks in this army — uncheck one first.`;
+    return 'This unit cannot be selected as Tank Ace.';
+  }
+
+  function setTankAce(listId, checked) {
+    const entry = armyList.find(e => e.listId === listId);
+    const gate = canSetTankAce(entry, checked, selectedDetachments);
+    if (!gate.ok) { flashBanner(tankAceRefusalText(gate)); return; }
+    entry.tankAce = !!checked;
+    renderAll();
+  }
+
+  // Config-panel section: offered only to entries in the pool. The checkbox
+  // itself is only ever rendered enabled when legal to check (D0) — unchecking
+  // an already-checked box is always allowed, matching the enhancement picker's
+  // clear-has-no-legality-check convention.
+  function renderTankAceSectionHtml(entry) {
+    const keys = selectedDetachments;
+    const raw = rawUnits.find(u => u.unit_name === entry.unit_name);
+    if (!unitInTankAcePool(raw, keys)) return '';
+    const active   = entryTankAceActive(entry, keys);
+    const gate     = canSetTankAce(entry, !entry.tankAce, keys);
+    const disabled = !entry.tankAce && !gate.ok;
+    const cls = 'option-item checkbox' + (entry.tankAce ? ' chosen' : '') + (disabled ? ' disabled' : '');
+    let html = `<div class="detail-section-label lo-heading-row"><span>Tank Ace</span>`
+             + `<span class="lo-head-right"><span class="lo-count">${tankAceActiveCount(keys)}/${TANK_ACE_CAP}</span></span></div>`
+             + `<div class="options-block">`;
+    html += `<div class="${cls}" onclick="${disabled ? '' : `setTankAce(${entry.listId},${!entry.tankAce})`}">
+      <div class="option-item-row">
+        <div class="option-check">${entry.tankAce ? '\u25CF' : ''}</div>
+        <div class="option-item-name">Select as Tank Ace<span style="color:#888;font-size:0.7rem;"> — gains Character (Enhancements + Warlord eligible)</span></div>
+      </div>
+      ${entry.tankAce && !active ? '<div class="option-item-note">No longer valid — the granting detachment is not selected.</div>' : ''}
+      ${disabled ? `<div class="option-item-note">${tankAceRefusalText(gate)}</div>` : ''}
+    </div>`;
+    html += `</div>`;
+    return html;
+  }
+  // ── E23/B128 block end ───────────────────────────────────────────────────
 
   // ── E1b: detachment selection rules ────────────────────────────────────────
   // Pure functions over (keys, catalogue, battle size). No DOM, no app state —
@@ -3809,8 +3945,9 @@
       return { ok: false, reason: 'not_offered' };
 
     const isUpgrade = !!rec.is_upgrade;
-    if (!enhancementTypeEligible(entry.unit_type, isUpgrade))
-      return { ok: false, reason: 'unit_type', unit_type: entry.unit_type || null, is_upgrade: isUpgrade };
+    const effType = entryEffectiveType(entry, selectedDetachments);
+    if (!enhancementTypeEligible(effType, isUpgrade))
+      return { ok: false, reason: 'unit_type', unit_type: effType || null, is_upgrade: isUpgrade };
 
     // B113. Checked here, ahead of unit_has_one/duplicate/army_limit — like
     // unit_type, no rearrangement of the rest of the army fixes a bearer
@@ -3868,7 +4005,7 @@
           duplicates.indexOf(a.name) < 0) duplicates.push(a.name);
       if (!enhancementIsOffered(a.name, a.detachment_key)) notOffered.push(a);
       const e = (armyList || []).find(x => x.listId === a.listId);
-      if (e && !enhancementTypeEligible(e.unit_type, isUpgrade)) wrongType.push(a);
+      if (e && !enhancementTypeEligible(entryEffectiveType(e, selectedDetachments), isUpgrade)) wrongType.push(a);
       // B113: an already-assigned bearer-restricted enhancement can go stale on
       // a data regeneration or a unit swap after assignment — flagged, not
       // silently dropped, same as wrongType.
@@ -4011,7 +4148,8 @@
   // where that staleness gets EXPLAINED; this list is what stays PICKABLE.
   function enhancementOfferedRowsForEntry(entry, pointsTotal) {
     const offered  = offeredEnhancements();
-    const eligible = offered.filter(r => enhancementTypeEligible(entry.unit_type, r.is_upgrade));
+    const effType  = entryEffectiveType(entry, selectedDetachments);
+    const eligible = offered.filter(r => enhancementTypeEligible(effType, r.is_upgrade));
     const held = (entry.enhancement && entry.enhancement.name) ? (() => {
       const rec = enhancementRecord(entry.enhancement.name, entry.enhancement.detachment_key);
       return {
@@ -4345,12 +4483,16 @@
       const enh = entry.enhancement;
       const isUpgrade = enhancementIsUpgrade(enh.name, enh.detachment_key);
       if (!enhancementIsOffered(enh.name, enh.detachment_key)) return true;
-      if (!enhancementTypeEligible(entry.unit_type, isUpgrade)) return true;
+      if (!enhancementTypeEligible(entryEffectiveType(entry, selectedDetachments), isUpgrade)) return true;
       if (groupEnhancementCarriers(entry.listId, entry.listId).length) return true;
     }
     // E21d piece 3 (D218): allied-unlock / sub-cap / forbid over-states — the
     // same visible-not-trimmed treatment as the enhancement over-state above.
     if (entryAlliedError(unit)) return true;
+    // E23/B128: a Tank Ace pick that has gone stale (its granting detachment
+    // deselected or swapped) stays checked (S139) but is inert — flagged here
+    // so it doesn't sit silently doing nothing with no indication.
+    if (entry.tankAce && !entryTankAceActive(entry, selectedDetachments)) return true;
     return false;
   }
 
@@ -4648,6 +4790,7 @@
       otherOptions:     {},
       enhancement:      null,                                  // E4b
       attachedToListId: null,
+      tankAce:          false,                                 // E23/B128 — never inherited, never defaulted true
     });
 
     selectedListId = listId;
@@ -4775,6 +4918,7 @@
       otherOptions:     { ...entry.otherOptions },
       enhancement:      null,                        // E4b — never inherited
       attachedToListId: null,
+      tankAce:          false,                        // E23/B128 — never inherited; cap is shared army-wide
     };
     // E21c/E22b: the duplicate honours the same gate as a fresh add. A forbidden
     // unit can only be present via import (an over-state), so duplicating one is
@@ -4816,6 +4960,7 @@
         otherOptions:     { ...leader.otherOptions },
         enhancement:      null,                      // E4b — never inherited
         attachedToListId: newListId,
+        tankAce:          false,                      // E23/B128 — never inherited
       };
       armyList.push(newLeader);
       newLeader.points = ptsForEntry(newLeader);
@@ -5009,7 +5154,11 @@
     return armyList.filter(e => !e.unresolved).map(e => {
       const unit = allUnits.find(u => u.unit_name === e.unit_name);
       return { entry: e, unit };
-    }).filter(x => x.unit && x.unit.isCharacter && !x.unit.cannotBeWarlord
+    }).filter(x => x.unit
+                   // E23/B128: a Tank Ace pick confers Character for Warlord
+                   // purposes exactly like a native Character unit_type.
+                   && (x.unit.isCharacter || entryTankAceActive(x.entry, selectedDetachments))
+                   && !x.unit.cannotBeWarlord
                    // E22b: detachment-scoped cannot_be — e.g. no Plague Legions
                    // model is Warlord-eligible while Tallyband Summoners is selected.
                    && !warlordBannedByDetachment(x.unit, selectedDetachments));
@@ -5467,6 +5616,12 @@
         html += buildOtherOptionsHtml(entry, raw);
       }
     }
+
+    // Tank Ace — E23/B128. Offered only to entries in a selected detachment's
+    // tank_ace pool; absent otherwise. Placed before Enhancement since
+    // checking it is what makes the Enhancement section (and Warlord picker)
+    // apply to this entry at all.
+    html += renderTankAceSectionHtml(entry);
 
     // Enhancement — E4c. Offered rows come from the currently selected
     // detachments; the section itself is absent for a unit no row on the
@@ -7590,12 +7745,19 @@
         if (!modelKwLines.includes(line)) modelKwLines.push(line);
       }
     }
-    if (allKeywordNames.length > 0 || allFactionKw.length > 0 || modelKwLines.length > 0) {
+    // E23/B128: TANK ACE is conferred by the currently selected detachment
+    // (Headhunter Task Force), not carried on the datasheet itself — derived
+    // on every render like Battleline's elevation (D204), never stamped onto
+    // allKeywordNames above.
+    const tankAceKw = unitInTankAcePool(raw, selectedDetachments);
+
+    if (allKeywordNames.length > 0 || allFactionKw.length > 0 || modelKwLines.length > 0 || tankAceKw) {
       html += `<div class="modal-section"><div class="modal-section-label">Keywords</div>`;
       html += `<div class="keyword-list">`;
       for (const name of allKeywordNames) {
         html += `<span class="keyword-pill">${name}</span>`;
       }
+      if (tankAceKw) html += `<span class="keyword-pill">Tank Ace</span>`;
       html += `</div>`;
       for (const line of modelKwLines) {
         html += `<div class="keyword-model-line">${line}</div>`;
@@ -7842,12 +8004,16 @@
         if (!cfgModelKwLines.includes(line)) cfgModelKwLines.push(line);
       }
     }
-    if (allKeywordNames.length > 0 || cfgFactionKw.length > 0 || cfgModelKwLines.length > 0) {
+    // E23/B128 — see buildModalFull for the reasoning: derived, not stamped.
+    const tankAceKwCfg = unitInTankAcePool(raw, selectedDetachments);
+
+    if (allKeywordNames.length > 0 || cfgFactionKw.length > 0 || cfgModelKwLines.length > 0 || tankAceKwCfg) {
       html += `<div class="modal-section"><div class="modal-section-label">Keywords</div>`;
       html += `<div class="keyword-list">`;
       for (const name of allKeywordNames) {
         html += `<span class="keyword-pill">${name}</span>`;
       }
+      if (tankAceKwCfg) html += `<span class="keyword-pill">Tank Ace</span>`;
       html += `</div>`;
       for (const line of cfgModelKwLines) {
         html += `<div class="keyword-model-line">${line}</div>`;

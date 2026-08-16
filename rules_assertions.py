@@ -1876,9 +1876,10 @@ ASSERTIONS = [
 
     ('E1b-2',
      'list_store.js and the copy of the same module inlined into index.html are byte-identical, '
-     'and both declare SCHEMA_VERSION 3 (E4b\'s per-entry enhancement field). Two files holding one module is a drift risk that '
-     'nothing else checks: the standalone copy silently lost E9b\'s warlord field and no gate '
-     'noticed, because no gate compared them.',
+     'and both declare SCHEMA_VERSION 4 (E23/B128\'s per-entry tank_ace field, the most recent of '
+     'four persisted-field bumps). Two files holding one module is a drift risk that nothing else '
+     'checks: the standalone copy silently lost E9b\'s warlord field once, and no gate noticed, '
+     'because no gate compared them.',
      'index.html inlined block vs list_store.js (E1b, S124)',
      lambda S: e1b_module_copies_agree(S)),
 
@@ -2110,11 +2111,10 @@ ASSERTIONS = [
      'Allied-set targets resolve exactly when they claim to. Every enforced unlock or warlord '
      'effect targeting an allied_group matches at least one unit carrying that allied_group in '
      'the army\'s pool; every effect targeting a bare keyword instead of an allied_group is '
-     'enforced: false and carries an unenforced_reason. The unenforced inventory is exactly the '
-     'six HEADHUNTER TASK FORCE tank_ace rows (pool fully specified, awaiting the E23 engine '
-     'build turn), so the gap is counted rather than invisible. Chaos Daemons SHADOW LEGION\'s '
-     'unlock moved off this list at S231 (B114, D325) — re-shaped onto allied_group and flipped '
-     'to enforced.',
+     'enforced: false and carries an unenforced_reason. The unenforced inventory is exactly empty '
+     '— Chaos Daemons SHADOW LEGION\'s unlock moved off this list at S231 (B114, D325), and the '
+     'six HEADHUNTER TASK FORCE tank_ace rows moved off it at S248 (B128, D345) once the engine '
+     'gained a real per-entry capped pick.',
      'detachment_effects.json vs units.json allied_group (E21a, D203, D204, D209)',
      lambda S: e21a_allied_targets(S)),
 
@@ -2386,6 +2386,17 @@ ASSERTIONS = [
      'detachment_effects.json tank_ace target vs units.json keyword_names/unit_type (E23, D273)',
      lambda S: e23_tank_ace_pool_counts(S)),
 
+    # ── E23-3: engine wiring flip (S248, B128/D345). The pool/cap facts above hold
+    # regardless of enforced; this pins the flag itself, since enforced:false is what
+    # kept the mechanism inert from D273 through S247 — a silent revert of the flag
+    # would fail every b128_check.js gate but nothing in Python would say why.
+    ('E23-3',
+     'All six tank_ace rows carry enforced:true and cap:3, and no longer carry '
+     'unenforced_reason — the flip B128 made once the engine gained a real per-entry '
+     'pick mechanism (index.html unitInTankAcePool/canSetTankAce, b128_check.js).',
+     'detachment_effects.json tank_ace.enforced/cap (E23, B128, D345)',
+     lambda S: e23_tank_ace_engine_wired(S)),
+
     # ── B101-DATA (D296/S203). loadout_parser.py's marker fix (D295/S202) is not, on
     # its own, provable to hold for a datasheet nobody has looked at — a session
     # building a future faction could reintroduce the bug's symptom (marker text
@@ -2625,23 +2636,16 @@ def e21a_allied_targets(S):
             unenforced.append(key + '/' + eff['kind'])
             if not eff.get('unenforced_reason'):
                 bad.append(f'{key} [{eff["kind"]}]: enforced: false with no unenforced_reason')
-    expect = sorted([
-        'Space Marines|HEADHUNTER TASK FORCE/tank_ace',
-        'Black Templars|HEADHUNTER TASK FORCE/tank_ace',
-        'Blood Angels|HEADHUNTER TASK FORCE/tank_ace',
-        'Dark Angels|HEADHUNTER TASK FORCE/tank_ace',
-        'Deathwatch|HEADHUNTER TASK FORCE/tank_ace',
-        'Space Wolves|HEADHUNTER TASK FORCE/tank_ace',
-    ])
+    expect = sorted([])
     if sorted(unenforced) != expect:
         bad.append(f'unenforced inventory is {sorted(unenforced)}, expected {expect}')
     if bad:
         return False, '; '.join(bad)
-    return True, ('allied targets resolve; six documented unenforced effects remain '
-                  '(HEADHUNTER TASK FORCE / tank_ace rows, pool fully specified, awaiting the E23 '
-                  'engine build turn) — Changehost of Deceit flipped to enforced at Thousand Sons '
-                  'turn A (D248/E24); Shadow Legion flipped to enforced at S231 (B114, D325) onto '
-                  'the allied_group mechanism')
+    return True, ('allied targets resolve; zero unenforced effects remain — Changehost of Deceit '
+                  'flipped to enforced at Thousand Sons turn A (D248/E24), Shadow Legion flipped to '
+                  'enforced at S231 (B114, D325) onto the allied_group mechanism, and the six '
+                  'HEADHUNTER TASK FORCE / tank_ace rows flipped to enforced at S248 (B128, D345) '
+                  'once the engine gained a real per-entry capped pick')
 
 
 def csm_roster_count(S):
@@ -2802,6 +2806,26 @@ def e23_tank_ace_pool_counts(S):
     return True, ('all six tank_ace rows resolve correctly across every owning army (seven for '
                   'the shared generic Adeptus Astartes key), matching D273\'s source-verified '
                   'counts (16/16/17/16/16/16); Hammerfall Bunker correctly excluded by unit_type')
+
+
+def e23_tank_ace_engine_wired(S):
+    bad = []
+    n = 0
+    for key, rec, eff in _de_effects(S):
+        if eff.get('kind') != 'tank_ace':
+            continue
+        n += 1
+        if eff.get('enforced') is not True:
+            bad.append(f'{key}: enforced={eff.get("enforced")!r}, expected True (B128/D345)')
+        if eff.get('cap') != 3:
+            bad.append(f'{key}: cap={eff.get("cap")!r}, expected 3')
+        if 'unenforced_reason' in eff:
+            bad.append(f'{key}: unenforced_reason still present; should be removed once enforced:true')
+    if n == 0:
+        return False, 'no tank_ace rows found at all'
+    if bad:
+        return False, '; '.join(bad)
+    return True, f'all {n} tank_ace rows carry enforced:true, cap:3, no stale unenforced_reason (B128/D345)'
 
 
 def e21a_belakor_warlord_covered(S):
@@ -3908,10 +3932,10 @@ def e1b_budget_matches_muster(S):
 
 def e1b_module_copies_agree(S):
     """The inlined list-storage block in index.html must be the same bytes as list_store.js.
-    The declared SCHEMA_VERSION moves as tickets add persisted fields (E4b took it to 3);
-    the number is pinned here so a bump on one side without the other cannot pass.
-    Located by the module's own delimiters rather than by line number, so an edit above or
-    below it cannot make this pass or fail for the wrong reason."""
+    The declared SCHEMA_VERSION moves as tickets add persisted fields (E4b took it to 3,
+    E23/B128 took it to 4); the number is pinned here so a bump on one side without the
+    other cannot pass. Located by the module's own delimiters rather than by line number,
+    so an edit above or below it cannot make this pass or fail for the wrong reason."""
     ip = os.path.join(S.dir, 'index.html')
     sp = os.path.join(S.dir, 'list_store.js')
     for p in (ip, sp):
@@ -3930,9 +3954,9 @@ def e1b_module_copies_agree(S):
         return False, (f'the two copies differ ({len(il)} vs {len(sl)} lines, first difference at '
                        f'line {first + 1} of the block)')
     ver = re.search(r'var SCHEMA_VERSION = (\d+);', standalone)
-    if not ver or ver.group(1) != '3':
-        return False, f'SCHEMA_VERSION is {ver.group(1) if ver else "unreadable"}, expected 3'
-    return True, f'both copies identical ({len(standalone.splitlines())} lines), SCHEMA_VERSION 3'
+    if not ver or ver.group(1) != '4':
+        return False, f'SCHEMA_VERSION is {ver.group(1) if ver else "unreadable"}, expected 4'
+    return True, f'both copies identical ({len(standalone.splitlines())} lines), SCHEMA_VERSION 4'
 
 
 def e1b_harness_gate(S):

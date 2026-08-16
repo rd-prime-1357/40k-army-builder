@@ -14427,3 +14427,95 @@ registration entry had carried since before B131 and never updated.
 
 B125 (found the gap) → B130 (data) → B131 (gate-local bug + placeholder exemption) → B132 (engine
 consumer) → B133 (mirror parity, placeholder removed). No further ticket depends on this chain.
+
+## D345 — B128: Headhunter Task Force's capped Tank Ace pick built; six tank_ace rows flipped to enforced (S248)
+
+### The gap
+
+D273 (S182) fully scoped Headhunter Task Force's `tank_ace` effect in `detachment_effects.json` —
+pool (Vehicle, minus Fly/Walker/Drop Pod/Fortification), cap 3, source-cited — but left it
+`enforced: false` with `unenforced_reason` noting the engine had no per-entry pick mechanism.
+D339 (S241) reconfirmed this was the only genuine gap left under B128's ticket. The rule itself
+(Space Marines Faction Pack v1.0, byte-identical across all six armies, sha256:12 `cadd53c18131`):
+qualifying Adeptus Astartes Vehicles carry the Tank Ace keyword automatically; separately, in the
+Muster Armies step the player may select up to three of them to gain the Character keyword
+(Enhancement + Warlord eligibility).
+
+### Ryan's mechanism ruling
+
+Two parts, not one: (1) the Tank Ace keyword displays on every qualifying Vehicle regardless of
+whether it's picked — enables the pick, confers nothing by itself; (2) a checkbox in the entry's
+own config panel, offered only to pool members, capped at 3 checked army-wide, and checking it is
+what grants Character (not a separate toggle). This is Option A from the scoping turn: a per-entry
+field (`entry.tankAce`), not a detachment-level array — matching how `enhancement` already lives on
+the entry, and the shape B126 (Marks of Chaos) is expected to want for its own per-unit context-
+dependent eligibility problem.
+
+### What shipped
+
+`entry.tankAce`: boolean, default false, never inherited on duplicate/leader-copy (same rule as
+`enhancement`). Persisted — SCHEMA_VERSION 3→4, migration adds `tank_ace: false` to every existing
+entry, mirroring E4b's v2→v3 precedent exactly.
+
+New E23/B128 block in `index.html` (own block, not folded into E21b's `effectiveUnitType` — that
+helper is unit_name-keyed for uniform elevation across every entry of a name; this is listId-keyed,
+since two entries of the same Vehicle can differ):
+
+- `unitInTankAcePool(raw, keys)` — the only place the pool is computed, reading
+  `detachment_effects.json`'s `target` shape directly (base_keyword/except_keywords against the
+  union of a unit's `keyword_names`, except_unit_types against its own `unit_type`).
+- `entryTankAceActive(entry, keys)` — checked AND still in the pool under currently selected
+  detachments. A checked box that goes stale (its detachment deselected) is not active — no
+  Character eligibility — but stays checked rather than being silently cleared (S139: never
+  quietly discard a player's own choice), and is surfaced as a roster error via `entryHasError`.
+- `entryEffectiveType(entry, keys)` — 'Character' while active, else the entry's own `unit_type`.
+  Threaded through all four sites that used to read `entry.unit_type`/`e.unit_type` for enhancement
+  eligibility (`canAssignEnhancement`, the wrongType scan, `enhancementOfferedRowsForEntry`,
+  `entryHasError`), and OR'd into `eligibleWarlordEntries`'s `isCharacter` test.
+- `canSetTankAce`/`setTankAce` — the D0 gate: checking past the cap is refused at the click, not
+  reached then flagged; unchecking is always allowed.
+
+Keyword display: the "Tank Ace" pill renders in both datasheet modals (`buildModalFull`,
+`buildModalConfigured`) alongside the unit's real keywords, derived on every render from
+`unitInTankAcePool` — never stamped onto `allKeywordNames`, same convention as Battleline's
+elevation (D204).
+
+`detachment_effects.json`: all six Headhunter Task Force `tank_ace` rows flipped `enforced: true`,
+`unenforced_reason` removed.
+
+### Assertions
+
+New `b128_check.js` (12 checks): pool exclusions on both except arms, empty pool with no
+detachment selected, cap gate refuses a 4th check but never an uncheck (including re-affirming an
+already-checked entry), staleness (checked-but-deselected goes inactive and frees its cap slot,
+then reactivates on reselect with no re-click), the effective-type flip driving
+`enhancementTypeEligible`, and the six shipped rows' `enforced`/`cap` facts. Wired into
+`baseline.sh` and `pipeline_manifest.py`'s GUARDED list.
+
+`rules_assertions.py` gains `E23-3` (enforced:true, cap:3, no stale `unenforced_reason` on all six
+rows) and updates `E21a-4`'s hard-pinned "unenforced inventory" fixture — previously asserted the
+six Headhunter rows as the *only* permitted unenforced set; now asserts the set is empty, since
+B128 was the last item on it.
+
+### Collateral: two harnesses and one gate had hard-pinned assumptions that no longer held
+
+`list_store.js` had drifted from the newly-edited inlined copy in `index.html` (caught live by
+`E1b-2`'s byte-identity gate, working exactly as designed) — resynced, and its schema-history
+header comment gained the v4 note. `e1b_check.js`'s migration-chain test fixtures assumed the chain
+stopped at v3 (`Object.keys(up).length === Object.keys(before).length + 1` and an explicit
+`schema_version === 3` "current version" case); updated for the v3→v4 step and a new v4-passthrough
+case, mirroring the existing v2→v3 pattern. `rules_assertions.py`'s `e1b_module_copies_agree` had
+`SCHEMA_VERSION` hard-pinned to 3; updated to 4.
+
+`e4b_check.js` and `e4c_check.js` both slice specific named blocks out of `index.html` via
+`new Function` rather than loading the whole file — B128 made `canAssignEnhancement` and
+`enhancementOfferedRowsForEntry` call `entryEffectiveType`, a function outside their existing
+slice, which threw `ReferenceError` at harness load. Both harnesses now also slice the E23/B128
+block and stub `rawUnits`/`detachmentEffects` as empty globals, which resolves to "never active"
+for every existing E4b/E4c fixture — correct, since none of those fixtures involve Tank Ace.
+
+### Closes
+
+B128 is done. Confirms the per-entry-field pattern (`entry.tankAce`, listId-keyed, not
+detachment-keyed) as the reference shape for B126's mark selection, per the sequencing note in
+S247's `NEXT_SESSION_PROMPT.md`.

@@ -34,18 +34,20 @@ function slice(lines, startNeedle, endNeedle) {
 
 function loadEngine(path, defs) {
   const lines = fs.readFileSync(path, 'utf8').split('\n');
+  const e23 = slice(lines, '// ── E23/B128: tank_ace capped Character selection', '// ── E23/B128 block end');
   const e4b = slice(lines, '// ── E4b: enhancement assignment rules', '// ── E4b block end');
   const e4c = slice(lines, '// ── E4c: enhancement picker', '// ── E4c block end');
   const src = 'let detachmentDefs = DEFS; let selectedDetachments = []; '
             + 'let armyList = []; let POINTS_CAP = 2000; '
-            + 'function renderAll(){} '
+            + 'let rawUnits = []; let detachmentEffects = {}; '
+            + 'function renderAll(){} function flashBanner(){} '
             + 'function esc(s){return String(s);} '
             + 'function escHtml(s){return String(s==null?"":s);} '
             + 'function detTier2Badge(source){return source && source !== "faction_pack" ? " [prev.ed]" : "";} '
             + 'let _detSeq = 0; '
             + 'function infoBtn(){ return "<button></button>"; } '
             + 'function mkDetail(kind, html){ const id = "det" + (++_detSeq); return { btn: infoBtn(), panel: "<div id=\\"" + id + "\\">" + html + "</div>" }; }\n'
-            + e4b + '\n' + e4c
+            + e23 + '\n' + e4b + '\n' + e4c
             + '\nreturn { enhancementLimit, enhancementRecord, enhancementPoints, '
             + 'enhancementIsUpgrade, enhancementIsOffered, offeredEnhancements, '
             + 'assignedEnhancements, enhancementCount, enhancementCopies, '

@@ -3,8 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S247 (B133 shipped, closing the B125/B130/B131/B132 arc):
-B126, B127, B128, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
+not here, it isn't open. **24 open** as of S248 (B128 shipped, B134 opened):
+B126, B134, B127, B116, B120, B122, B124, B97, B103, E28, B93, B90, B94, B85, B86,
 B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 Scoping-only turn (D334): B93 censused across all 739 enhancement records and re-scoped. The
@@ -753,47 +753,21 @@ a render branch in the right-panel path. Comparable in size to E1c's original bu
 session should confirm whether per-unit enhancement assignment (unaffected by this move) needs any
 UI adjustment once Detachments get their own detail view.
 
-### B128 — Detachment-conferred keywords at muster time are not modelled, including a capped player choice — **NEW S240 (D335); data + engine; M; live D0 gap**
+### B134 — Six non-legality-critical automatic keyword conferrals from B128's census have no ticket — **NEW S248 (D345); scoping; S; not D0**
 
-Found by D335, after Ryan supplied the Headhunter Task Force rule text and it turned out to be
-present in our own `detachments.json` all along, in `rule_text` — a field the B93 census did not
-read.
+Surfaced by B128's original census (D335) and left explicitly out of B128's scope: 6 automatic
+Heavy Transport conferrals (Armoured Speartip; Transports with W14+, excluding Fly), 6 automatic
+Entrenched conferrals (Ceramite Sentinels), 3 automatic Faction keyword conferrals (Tallyband
+Summoners, Carnival of Excess, a Thousand Sons equivalent), and 2 automatic Daemon/Soul Forge
+conferrals (Cult of the Arkifane). B128's own text called these "eligibility or display inputs,"
+not legality-critical, and closing B128 would otherwise let them fall off the backlog with no
+ticket tracking them.
 
-Censused across all 211 detachments: **28 confer a keyword during mustering, 35 conferrals in
-total.** None is modelled.
-
-**Correction, S241 (D339).** "None is modelled" does not hold. Documenting
-`detachment_effects.json` for B129 found it already carries 7 `battleline` effects with
-`enforced: true` — live in the engine today — and Headhunter Task Force's `tank_ace` effect,
-fully scoped (pool, cap, source citation) back at **D273 (S182)**, re-verified S187, well before
-this ticket opened. The genuine remaining gap is narrower than stated: Headhunter's
-player-choice-with-a-cap mechanism (`enforced: false`), which was already known. **B128's scoping
-turn should start from `detachment_effects.json`'s own `_meta`, not re-census `rule_text` from
-zero** — most of that work is very likely already done.
-
-| conferred keyword | detachments | shape |
-|---|--:|---|
-| Character | 1 | Headhunter Task Force — **player selects up to three** Tank Ace units |
-| Tank Ace | 6 | automatic, on qualifying Adeptus Astartes Vehicles |
-| Heavy Transport | 6 | automatic — Armoured Speartip; Transports with W14+, excluding Fly |
-| Entrenched | 6 | Ceramite Sentinels |
-| Battleline | 6 | Lost Brethren, Company of Hunters, Shamblerot Vectorium, Chaos Cult, Warpmeld Pact, Cult of Blood — each names specific datasheets |
-| Faction keyword | 3 | Tallyband Summoners, Carnival of Excess, Thousand Sons equivalent |
-| Daemon, Soul Forge | 2 | Cult of the Arkifane |
-
-**Headhunter's is the only one that is legality-critical**, and it is the reason this is a D0
-ticket rather than a display one. It is a player choice with a hard cap — "up to three" — and one
-of the three may be Warlord. A list with four Character Tank Aces is illegal and must be
-unreachable, which means the selection has to be a real, capped, persisted list-building step, not
-a derived flag. The rest are automatic and are eligibility or display inputs.
-
-Prerequisite for the 24 `Adeptus Astartes Vehicle model only` enhancement records specifically
-(Headhunter Task Force, six armies), **not** for B93 as a whole — the other 617 clause-bearing
-records do not depend on it. Also the reason B93's resolver must treat Character membership as
-detachment-dependent rather than a fixed property of a datasheet.
-
-Worth checking during its scoping turn whether any conferral runs the other way — a rule that
-*removes* a keyword — since the census only looked for grants.
+**Scoping question for whoever picks this up:** `detachment_effects.json`'s own `_meta.purpose`
+scopes the file to muster-time ARMY-CONSTRUCTION effects only — nothing in-battle. Confirm whether
+any of these six actually affect list-construction legality (unit-type change, eligibility gate,
+etc.) before assuming they need an engine consumer at all; if they're purely in-battle flavor
+keywords, this ticket may close as "out of scope for a list builder" with no code change.
 
 ### B126 — Marks of Chaos not modelled: mark keyword, attachment restriction and Transport restriction all unenforced — **NEW S240 (D334); data + engine; L; live D0 gap**
 
@@ -1446,6 +1420,35 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B128 — Detachment-conferred keywords at muster time are not modelled, including a capped player choice — **NEW S240 (D335); data + engine; SHIPPED S248 (D345)**
+
+Found by D335, after Ryan supplied the Headhunter Task Force rule text and it turned out to be
+present in our own `detachments.json` all along, in `rule_text` — a field the B93 census did not
+read. Census across all 211 detachments found 28 detachments confer a keyword during mustering, 35
+conferrals in total. D339 (S241) found "none is modelled" did not hold: `detachment_effects.json`
+already carried 7 enforced `battleline` effects plus Headhunter Task Force's `tank_ace` effect,
+fully scoped (pool, cap, source citation) back at D273 (S182). The genuine gap was narrower:
+Headhunter's player-choice-with-a-cap mechanism (`enforced: false`), the only one of the 35
+conferrals that is legality-critical — a list with four Character Tank Aces is illegal and must be
+unreachable, not reachable-then-flagged.
+
+**Shipped S248 (D345).** Ryan's mechanism ruling: the Tank Ace keyword displays on every qualifying
+Vehicle automatically (derived on render, never stamped); a checkbox in the entry's own config
+panel, offered only to pool members, capped at 3 checked army-wide, checking it grants Character
+(Enhancement + Warlord eligibility) — not a separate toggle. New `entry.tankAce` persisted field
+(SCHEMA_VERSION 3→4 with migration), new E23/B128 block in `index.html`
+(`unitInTankAcePool`/`entryTankAceActive`/`entryEffectiveType`/`canSetTankAce`) threaded through all
+four enhancement-eligibility read sites and `eligibleWarlordEntries`. All six Headhunter `tank_ace`
+rows flipped `enforced: true`. New `b128_check.js` (12 checks, wired into `baseline.sh` and
+`pipeline_manifest.py`'s GUARDED list); `rules_assertions.py` gains `E23-3` and updates `E21a-4`'s
+hard-pinned unenforced inventory (now empty). Confirms `entry.tankAce`'s per-entry-field shape as
+B126's reference pattern.
+
+The other 34 conferrals the original census found (Heavy Transport, Entrenched, three faction
+keywords, Daemon/Soul Forge) were out of B128's scope from the start — noted at D335 as
+"eligibility or display inputs," not legality-critical. **B134 opened** so they aren't lost from
+the backlog now that B128 closes.
 
 ### B133 — `resolved_pool()` must learn the per-chapter maps before B131's `EXEMPT` block can be removed — **NEW S246 (D343); tooling; SHIPPED S247 (D344); closes the B125/B130/B131/B132 arc**
 

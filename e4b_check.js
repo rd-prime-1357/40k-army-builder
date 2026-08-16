@@ -31,10 +31,13 @@ function slice(lines, startNeedle, endNeedle) {
 
 function loadEngine(path, defs, rawUnits) {
   const lines = fs.readFileSync(path, 'utf8').split('\n');
+  const e23 = slice(lines, '// ── E23/B128: tank_ace capped Character selection', '// ── E23/B128 block end');
   const e4b = slice(lines, '// ── E4b: enhancement assignment rules', '// ── E4b block end');
   const src = 'let detachmentDefs = DEFS; let selectedDetachments = []; '
             + 'let armyList = []; let POINTS_CAP = 2000; let rawUnits = RAWUNITS; '
-            + 'function renderAll(){}\n'
+            + 'let detachmentEffects = {}; '
+            + 'function renderAll(){} function flashBanner(){}\n'
+            + e23 + '\n'
             + e4b
             + '\nreturn { enhancementLimit, enhancementRecord, enhancementPoints, '
             + 'enhancementIsUpgrade, enhancementIsOffered, offeredEnhancements, '

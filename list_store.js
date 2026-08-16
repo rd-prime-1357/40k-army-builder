@@ -34,7 +34,7 @@
 (function (root) {
   'use strict';
 
-  var SCHEMA_VERSION = 3;
+  var SCHEMA_VERSION = 4;
   var NS = '40kab:list:';   // one key per list: 40kab:list:<id>
 
   // ── ids ──────────────────────────────────────────────────────────────────
@@ -107,6 +107,7 @@
         other_options: e.otherOptions || {},
         enhancement:   normaliseEnhancement(e.enhancement),
         attached_to:   e.attachedToListId != null ? e.attachedToListId : null,
+        tank_ace:      !!e.tankAce,                                          // E23/B128
         points_cache:  e.points != null ? e.points : null  // display-only; recomputed on load
       };
     });
@@ -173,6 +174,7 @@
         otherOptions:     s.other_options || {},
         enhancement:      normaliseEnhancement(s.enhancement),
         attachedToListId: s.attached_to != null ? s.attached_to : null,
+        tankAce:          !!s.tank_ace,        // E23/B128 — flag-don't-drop: staleness is surfaced, not cleared here
         faction_ref:      s.faction_ref || null,
         unit_id:          s.unit_id || null,
         unresolved:       unresolved          // drives the ghost-row flag
@@ -221,6 +223,15 @@
         if (e && typeof e === 'object') e.enhancement = null;
       });
       record.schema_version = 3;
+    }
+    // v3 -> v4 (E23/B128). A v3 record had no way to express a Tank Ace pick, so
+    // false on every entry is the only reading that adds no information. Same
+    // rule as the step above: this ADDS a field and rewrites none.
+    if (v < 4) {
+      (record.entries || []).forEach(function (e) {
+        if (e && typeof e === 'object') e.tank_ace = false;
+      });
+      record.schema_version = 4;
     }
     return record;
   }
