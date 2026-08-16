@@ -1223,3 +1223,16 @@ D349 — B137: Chaos Space Marines migrated to its v1.1 MFM, closing B89's units
   `units.json`, diff-guarded to exactly those 5. B94 closes (Chaos Rhino was its last unit). New gap
   found and ticketed rather than fixed here: the Chaos Daemons root CSVs carry no manifest guard at
   all — opened as **B138**.
+D350 — B138 closes: Chaos Daemons' nine hand-authored root CSVs guarded. Scoping found none of the
+  nine were actually in the public repo — excluded as GW-derived source material by `.gitignore`'s
+  blanket `*.csv` rule, same as MFM text files; Ryan had deleted `Unit_Points.csv` from the repo twice
+  before on that basis. Adding them to `GUARDED` as originally scoped would have required silently
+  publishing GW text or left the manifest listing unfetchable files. **Ryan chose to relax the
+  public-repo exclusion for these nine specifically** — the shipped app already renders this exact
+  content directly, so publishing the source CSVs adds no material new exposure. Also fixed: a stale
+  `source_manifest.json` hash for `Unit_Points.csv` (never updated after S252's row correction), and
+  `repo_check.py`'s GW-pattern detection, which explicitly skipped `.gitignore` negation lines and
+  would have flagged these nine as a false `CRITICAL` leak every session — added exact-name negation
+  support. Negative-tested: tampered one guarded CSV, confirmed the manifest gate fails, restored,
+  confirmed it passes. Full baseline clean apart from expected mid-session `repo_check` staleness on
+  files not yet pushed.

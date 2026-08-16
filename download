@@ -18,10 +18,6 @@ wh40k_core_rules.md
 # ── Third-party product references (New Recruit screenshots etc.) ───────
 *.pdf
  
-# ── Credentials — never published (P4/D231): the read-only private-sources-repo
-# token. Already caught by *.txt above; named explicitly so intent is not implicit.
-SOURCE_REPO_TOKEN.txt
- 
 # ── Local scratch ───────────────────────────────────────────────────────
 __pycache__/
 *.pyc
@@ -32,4 +28,17 @@ node_modules/
 *.orig
  
 # ── Explicit re-includes: our own docs that would otherwise be caught ───
-# (none currently — all our docs are .md and none match the patterns above)
+# D350 (B138, S253): these nine files are the only hand-authored *army* data in the
+# project (Chaos Daemons; every other faction is Wahapedia-derived). They match the
+# broad *.csv exclusion above but are deliberately published so pipeline_manifest.py
+# can guard them like every other repo-resident file — see B138 in the decision log.
+# repo_check.py reads these same lines to treat them as ordinary content, not GW-derived.
+!Unit_Stats.csv
+!Unit_Points.csv
+!Unit_Wargear_Options.csv
+!Unit_Other_Options.csv
+!Unit_Weapons.csv
+!Unit_Abilities.csv
+!Keywords.csv
+!Rules.csv
+!Weapon_Abilities.csv

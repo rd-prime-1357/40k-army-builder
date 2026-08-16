@@ -129,14 +129,22 @@ def clone_repo(tmp_dir):
 
 
 def parse_gitignore_gw_patterns(repo_dir):
-    """Read the repo's own .gitignore and return (gw_patterns, other_patterns), bucketed
-    by the section-header comments already in the file. No hardcoded duplicate list —
-    if .gitignore changes, this changes with it."""
+    """Read the repo's own .gitignore and return (gw_patterns, other_patterns, gw_exceptions),
+    bucketed by the section-header comments already in the file. No hardcoded duplicate
+    list — if .gitignore changes, this changes with it.
+
+    D350 (B138, S253): negation lines are now handled rather than skipped. A '!name' line
+    is a deliberate, named carve-out from a broader GW pattern (e.g. '*.csv' still excludes
+    Wahapedia exports generally, but nine specific hand-authored files are allowed through
+    by exact name) — gw_exceptions is that carve-out list, checked before gw_patterns so an
+    excepted file is treated as ordinary repo-resident content, not flagged GW-derived.
+    Only exact-name negations are supported (no wildcard negation) — that matches the one
+    real use case and avoids re-deriving general gitignore precedence rules here."""
     path = os.path.join(repo_dir, '.gitignore')
     if not os.path.exists(path):
-        return [], []
+        return [], [], []
 
-    gw_patterns, other_patterns = [], []
+    gw_patterns, other_patterns, gw_exceptions = [], [], []
     current_is_gw = False
     for line in open(path, encoding='utf-8'):
         line = line.strip()
@@ -147,9 +155,10 @@ def parse_gitignore_gw_patterns(repo_dir):
             current_is_gw = any(marker in header for marker in GW_SECTION_MARKERS)
             continue
         if line.startswith('!'):
-            continue  # no negations in use today; skip rather than mis-handle
+            gw_exceptions.append(line[1:].strip())
+            continue
         (gw_patterns if current_is_gw else other_patterns).append(line)
-    return gw_patterns, other_patterns
+    return gw_patterns, other_patterns, gw_exceptions
 
 
 def matches_any(name, patterns):
@@ -187,7 +196,7 @@ def run(project_dir):
         return 2
 
     try:
-        gw_patterns, _other_patterns = parse_gitignore_gw_patterns(tmp_dir)
+        gw_patterns, _other_patterns, gw_exceptions = parse_gitignore_gw_patterns(tmp_dir)
 
         repo_files = sorted(
             os.path.relpath(os.path.join(root, f), tmp_dir)
@@ -199,7 +208,10 @@ def run(project_dir):
         gw_found = []
         matches, differs, repo_only = [], [], []
         for rel in repo_files:
-            gw_pat = matches_any(rel, gw_patterns)
+            if rel in gw_exceptions:
+                gw_pat = None
+            else:
+                gw_pat = matches_any(rel, gw_patterns)
             if gw_pat:
                 gw_found.append((rel, gw_pat))
                 continue  # GW-derived material is reported separately, not as ordinary drift

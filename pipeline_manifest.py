@@ -327,6 +327,23 @@ GUARDED = [
     'SESSION_HANDOFF_250.md',
     'SESSION_HANDOFF_251.md',
     'SESSION_HANDOFF_252.md',
+    'SESSION_HANDOFF_253.md',
+] + [
+    # B138 (D350, S253): Chaos Daemons' nine hand-authored root CSVs (`CD_ROOT_CSVS` in
+    # units_repro_check.py). Previously excluded from the public repo as GW-derived source
+    # material; D350 relaxed that policy for these specific files so they could be guarded
+    # the same way as every other repo-resident file. They carry no repro gate that can
+    # regenerate them, so a bad sync here is otherwise silent — same class of risk
+    # detachment_effects.json's guard entry already documents.
+    'Unit_Stats.csv',
+    'Unit_Points.csv',
+    'Unit_Wargear_Options.csv',
+    'Unit_Other_Options.csv',
+    'Unit_Weapons.csv',
+    'Unit_Abilities.csv',
+    'Keywords.csv',
+    'Rules.csv',
+    'Weapon_Abilities.csv',
 ]
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):

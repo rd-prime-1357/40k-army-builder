@@ -14981,3 +14981,51 @@ these CSVs were added. Opened as **B138**.
 ### Closes
 
 **B94** closes. **B137** closes.
+
+## D350 — B138: Chaos Daemons' nine root CSVs guarded; public-repo GW-source policy relaxed for
+those nine files specifically (S253)
+
+B138 as scoped (add nine filenames to `pipeline_manifest.py`'s `GUARDED` list) turned out to rest on a
+wrong premise: none of the nine `CD_ROOT_CSVS` files (`Unit_Stats.csv`, `Unit_Points.csv`,
+`Unit_Wargear_Options.csv`, `Unit_Other_Options.csv`, `Unit_Weapons.csv`, `Unit_Abilities.csv`,
+`Keywords.csv`, `Rules.csv`, `Weapon_Abilities.csv`) were actually in the public repo — confirmed by a
+fresh clone. `.gitignore`'s blanket `*.csv` rule excludes them as GW-derived source material, the same
+class as MFM text files, and Ryan had deleted `Unit_Points.csv` from the repo twice before (Aug 5, Aug
+12) on that basis. `GUARDED` only covers repo-resident files by design (per `pipeline_manifest.py`'s
+own docstring); adding these nine as originally scoped would have either required silently publishing
+GW text or left the manifest listing files a plain fetch-only session could never find.
+
+Presented as a decision, not guessed at, per the prior session's own instruction to stop if
+`CD_ROOT_CSVS`'s scope turned out ambiguous. Three options laid out: (A) guard the files via
+`source_manifest.json`'s existing private-sources mechanism instead, keeping the public-repo exclusion
+intact; (B) relax the exclusion for these nine specifically and guard them the normal way; (C) leave
+B138 unactioned. **Ryan chose B** — the shipped app already renders this exact GW content directly to
+every user, so publishing the nine source CSVs (as opposed to, say, the raw MFM text files, which stay
+excluded) adds no material new exposure, and it's the simpler, more maintainable fix.
+
+**A second staleness found in the process, fixed the same turn.** `source_manifest.json`'s stored hash
+for `Unit_Points.csv` was still the pre-S252 value — S252's five-row correction updated the file but
+never updated the source manifest's hash for it. `baseline.sh --data-turn`'s source-fetch step caught
+this itself (verification failed against the correct private-repo copy). Confirmed by direct fetch that
+the private repo's copy was already right; corrected the one stale hash, nothing else.
+
+**`repo_check.py` needed an actual code change, not just a `.gitignore` edit.** Its GW-pattern
+detection explicitly skipped `!name` negation lines ("no negations in use today; skip rather than
+mis-handle"). Naming the nine files as `.gitignore` exceptions without teaching `repo_check.py` to
+honor them would have made every future baseline flag these nine as `CRITICAL — GW-derived file(s)
+found committed to the PUBLIC repo` — a false alarm the tool would raise on its own correctly-scoped
+work. Added exact-name negation parsing to both `parse_gitignore_gw_patterns` and the loud-check path
+that consumes it; no wildcard negation support added, since this project has exactly one real use case
+for it.
+
+**Build shape.** `.gitignore`: nine `!filename` lines added under the Wahapedia CSV section, pointing
+to this decision. `repo_check.py`: negation lines now parsed into `gw_exceptions`, checked before the
+broad GW-pattern match. `pipeline_manifest.py`: nine filenames appended to `GUARDED`.
+`source_manifest.json`: the one stale `Unit_Points.csv` hash corrected. Negative-tested per the
+project's precedent on new gates (S251/`B94-2`): tampered one guarded CSV, confirmed
+`pipeline_manifest.py` fails; restored it, confirmed it passes again. Full baseline (`--fetch
+--data-turn`, sources loaded) run clean apart from expected mid-session `repo_check` staleness — ten
+files not yet pushed, five files differing from the unpushed edit — which resolves once Ryan pushes and
+the next session verifies.
+
+**B138 closes.**

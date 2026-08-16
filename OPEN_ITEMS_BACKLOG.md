@@ -3,8 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S252 (B137 closed; B94 closed; B138 opened):
-B138, B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B85,
+not here, it isn't open. **23 open** as of S253 (B138 closed):
+B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B85,
 B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 **Housekeeping, S249.** Three closed-pointer stubs (B111, B89, B100) were sitting in the Open
@@ -632,20 +632,6 @@ stranded-allied roster warning, shipped.
 
 ## Open Items
 
-
-### B138 — Chaos Daemons' hand-authored root CSVs carry no `pipeline_manifest.py` guard — **NEW S252 (D349); tooling; S; unblocked**
-Found while closing B137. `detachment_effects.json` carries an explicit comment for why hand-authored
-input needs the manifest even though no repro gate can regenerate it: a bad sync changes legality (or,
-here, points) silently. The same argument applies to Chaos Daemons' root CSVs — `Unit_Stats.csv`,
-`Unit_Points.csv`, `Unit_Wargear_Options.csv`, `Unit_Other_Options.csv`, `Unit_Weapons.csv`,
-`Unit_Abilities.csv`, `Keywords.csv`, `Rules.csv`, `Weapon_Abilities.csv` (`CD_ROOT_CSVS` in
-`units_repro_check.py`) — and none of them are in `pipeline_manifest.py`'s `GUARDED` list. Confirmed by
-reading the list directly, not assumed. These are the only hand-authored *army* data in the project
-(every other faction is Wahapedia-derived); a bad sync here would silently reprice or reroster Chaos
-Daemons with `units_repro_check.py` and `pipeline_manifest.py` both reporting clean, since the repro
-gate would faithfully reproduce the wrong committed input and the manifest would never check it at all.
-**Build shape.** Tooling-only: add the nine filenames to `GUARDED`, run `pipeline_manifest.py --write`,
-confirm `--freshness-check` passes. No data or engine change.
 
 ### B136 — `loCarriers` reads a `replacement_choices` tally uncapped and in storage order — **NEW S250 (D347); engine; S; not reachable today**
 Split out of B103 rather than folded into it. When counting how many models in a scope group still
@@ -1387,6 +1373,46 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B138 — Chaos Daemons' hand-authored root CSVs carry no `pipeline_manifest.py` guard — **NEW S252 (D349); CLOSED S253 (D350); tooling; S**
+Found while closing B137. `Unit_Stats.csv`, `Unit_Points.csv`, `Unit_Wargear_Options.csv`,
+`Unit_Other_Options.csv`, `Unit_Weapons.csv`, `Unit_Abilities.csv`, `Keywords.csv`, `Rules.csv`,
+`Weapon_Abilities.csv` (`CD_ROOT_CSVS`) carried no manifest guard, so a bad sync would go undetected.
+
+**Scoping found the ticket's own build shape was wrong, not just incomplete.** All nine files are
+GW-derived source material — the same class as the MFM text files — and were never actually in the
+public repo; `.gitignore`'s blanket `*.csv` rule excludes them, and Ryan had deleted `Unit_Points.csv`
+from the repo twice before (Aug 5, Aug 12) for exactly that reason. `pipeline_manifest.py`'s `GUARDED`
+list only covers repo-resident files by design, so adding these nine as originally scoped would have
+either required committing GW text to the public repo, unflagged, or left the manifest listing files a
+plain fetch-only session could never find — the exact stale-manifest failure mode this file's own
+docstring describes happening three separate times before (S123/S124).
+
+**Ryan decided (D350) to relax the public-repo policy for these nine files specifically**, after
+weighing it against the alternative (a second, sources-repo-side guard mechanism) and against the fact
+that the shipped app already renders this same GW content directly — publishing the source CSVs adds
+no material new exposure. Scope stayed tooling-only per the original ticket.
+
+**A second, unrelated staleness found in the process.** `source_manifest.json`'s stored hash for
+`Unit_Points.csv` was still the pre-S252 value — S252 corrected five rows in the file itself but never
+updated the source manifest's hash for it, so `baseline.sh --data-turn`'s source-fetch step failed
+verification against the (correct) private-repo copy. Corrected the one hash; the private repo's copy
+was already right, confirmed by direct fetch and hash.
+
+**`repo_check.py` needed a real code change, not just a `.gitignore` edit.** Its GW-pattern detection
+explicitly skipped `!name` negation lines ("no negations in use today"). Naming the nine files as
+exceptions in `.gitignore` without teaching `repo_check.py` to honor that exception would have made
+every future baseline report these nine as `CRITICAL — GW-derived file(s) found committed to the PUBLIC
+repo`, a false alarm the tool would have raised on itself. Added exact-name negation support (no
+wildcard negation — this project has exactly one real use case, not a general one) to both the parser
+and the loud-check path.
+
+**Build shape actually shipped.** `.gitignore`: nine `!filename` exceptions added under the existing
+Wahapedia CSV section, with a comment pointing to this ticket. `repo_check.py`: negation lines parsed
+into a `gw_exceptions` list and checked before the broad GW-pattern match. `pipeline_manifest.py`: nine
+filenames added to `GUARDED`. `source_manifest.json`: one stale hash corrected. Negative-tested per
+project precedent on new gates — tampered one guarded CSV, confirmed `pipeline_manifest.py` fails,
+restored, confirmed it passes again.
 
 ### B137 — Chaos Space Marines still builds from its v1_0 MFM and ships wrong points today — **NEW S251 (D348); CLOSED S252 (D349); data; M**
 The units-side half of B89's adoption arc that was never done. B89 closed at S213 (D307) having
