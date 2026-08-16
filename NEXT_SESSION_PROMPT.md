@@ -1,75 +1,83 @@
-# NEXT SESSION PROMPT — Session 251
+# NEXT SESSION PROMPT — Session 252
 
 ## Read first
 
-`SESSION_HANDOFF_250.md` and this file are the only authority on current state. Do not trust
+`SESSION_HANDOFF_251.md` and this file are the only authority on current state. Do not trust
 remembered session numbers, version strings or decision numbers — re-derive them.
 
-State at S250 close: `index.html` **v6.26**, decision log through **D347**, `SCHEMA_VERSION` **5**,
-baseline **41/41**, rules assertions **136/136**, **24 open** backlog items.
+State at S251 close: `index.html` **v6.26** (unchanged — S251 was a data turn), decision log through
+**D348**, `SCHEMA_VERSION` **5**, baseline **41/41**, rules assertions **137/137**, **25 open**
+backlog items.
 
 ## Open
 
-Run `./baseline.sh --fetch --data-turn`. It covers every gate in one command. **41/41 must pass**,
-including the new `b103_check`. If a gate fails, reconcile before starting — do not work around it.
+Run `./baseline.sh --fetch --data-turn`. It covers every gate in one command. **41/41 must pass.**
+If a gate fails, reconcile before starting — do not work around it.
 
-Then verify the S250 file hashes in `SESSION_HANDOFF_250.md`'s Files table against the fetched repo.
+Then verify the S251 file hashes in `SESSION_HANDOFF_251.md`'s Files table against the fetched repo.
 This is deliberately redundant with `repo_check`, so a bad sync is still caught when the repo is
 unreachable or stale.
 
-**One thing to check rather than assume at open.** S250 shipped a change that silently edits saved
-lists — an over-cap `replacement_choices` tally is now truncated in storage, not just clamped on the
-way out. If Ryan reports a saved list whose points moved, that is expected behaviour and the seven
-affected units are named in the S250 handoff; it is not a regression to chase.
-
-## Assigned work: B94 — data turn
+## Assigned work: B137 — data turn
 
 **Type this turn data-only.** No engine or tooling work mixed in.
 
-B94's copy-4 tier schema is built and its engine, pipeline-emit and first two data turns have all
-shipped (D286/D287/D288/D289). What remains is the data turn folded into B89 — the per-faction pass
-applying the real 1st-to-3rd / 4th+ rows. Read B94's full entry in `OPEN_ITEMS_BACKLOG.md` and B89's
-alongside it, then re-derive the remaining population from the MFM sources before planning anything.
-Both entries describe what was true several sessions ago; neither is evidence about what is true now.
+Chaos Space Marines' `units.json` block still builds from `MFM_Chaos_Space_Marines_v1_0.txt` and is
+shipping wrong points today. Read B137's full entry in `OPEN_ITEMS_BACKLOG.md`, then **re-derive the
+diff from the two MFM files yourself before planning anything**. B137's numbers were measured at
+S251 and are good, but S251's own opening lesson was that a ticket's population figure is a snapshot
+— the entry says 17 units and three tier-shape changes; confirm that against source rather than
+building to it.
 
-**Sequencing note, so it is not re-litigated.** B136 was opened by S250 and is small, but it is
-unreachable on today's data by a scan run that session — nothing can hit the bad path until a
-faction ships a `requires_weapon` gate whose prerequisite is itself a replacement choice — so it is
-deliberately below a ticket that moves real data. B127 remains unbuildable (source acquisition, and
-its own entry says there is nothing to build until source exists). B93 is still L, spans sessions,
-and is still partly blocked by B127's 74 text-less records. B90 blocks further faction work and is
-the obvious candidate after B94.
+The shape mirrors S212's detachments migration and S198's Space Marines group turn: re-point
+`units_repro_check.py`'s CSM block and its four `CSM_CULT_TROOP_POINTS` entries at the v1.1 files,
+add `--emit-fourth-plus` to the CSM convert call, regenerate, diff-guard, reconcile any pinned points
+value in `rules_assertions.py` against the new source rather than loosening it.
 
-**Diff-guard this one hard.** A points data turn must confirm that exactly the expected units
-changed and zero others before anything is promoted. `units_repro_check.py` reproducing byte-for-byte
-is necessary, not sufficient — it proves the pipeline is deterministic, not that the change was the
-one intended.
+**Three things to check rather than assume.**
 
-**Flag the model before any analysis turn.** Reading a points table against source and deciding
-which tier a row belongs to is analysis; regenerating, diffing, running gates and writing docs are
-mechanical.
+1. **A unit-count diff-guard is not sufficient here.** Three units change tier *shape*, not value —
+   Accursed Cultists, Dark Commune and Chosen move from `1st unit`/`2nd +` to `1st to 2nd`/`3rd +`,
+   so the **second copy's** price moves even where the printed numbers did not. Read the changed
+   `second_unit` cells directly.
+2. **The four cult troops are cross-file appends, priced from their god-legion's MFM, not CSM's.**
+   Two of them currently disagree with their own parent legion (Plague Marines 180 in DG / 190 in
+   CSM; Khorne Berzerkers 170/330 in WE / 180/345 in CSM). Migrating CSM's own file alone does not
+   fix those — the `CSM_CULT_TROOP_POINTS` entries must move too, and the result should be checked
+   for agreement with the parent legion's committed block afterwards.
+3. **Whether `MFM_Chaos_Space_Marines_v1_0.txt` still belongs in `units_repro_check.py`'s `REQUIRED`
+   list after the swap.** Check what reads it; do not carry it forward by default and do not delete
+   it on assumption.
 
-## Precedents from S250 that will matter again
+**`B94-2` will police the 4th tier for you.** The moment CSM's Chaos Rhino prices move to 65, the
+assertion demands its `fourth_plus` of 75 and fails loudly if `--emit-fourth-plus` was forgotten.
+That is the gate working as designed — if it fires, add the flag, do not touch the assertion. **B94
+closes when B137 does**, on that one unit.
 
-**A single fixture is not a census.** S250's first pass at the re-pricing census filled each option's
-cap one way and found five affected units. Filling the same cap three different ways found seven.
-When a claim is "these are the units affected", vary the input shape before believing the answer —
-the fill that happens to be written first is not the one a player would necessarily build.
+**Flag the model before any analysis turn.** Deciding whether a tier-shape change is read correctly,
+and reconciling a cult-troop price against its parent legion, is analysis; regenerating, diffing,
+running gates and writing docs are mechanical.
 
-**A gate that has not been negative-tested is not known to be a gate.** `b103_check.js` was run
-against a copy of the engine with the single defect line restored and confirmed to fail 10
-assertions. This costs one command and is the only thing that distinguishes a real gate from one
-that passes because it tests nothing. Do it for every new harness.
+## Precedents from S251 that will matter again
 
-**Reachability is worth establishing before scope.** B103's whole population turned out to be "a
-saved list whose size bracket was reduced", which made the census tractable and the fix small. The
-same question applied to `loCarriers` found zero reachable cases, which turned a tempting scope
-widening into B136. Ask what can actually reach the bad path before deciding how big the ticket is.
+**A ticket's population figure is a snapshot, not a fact.** B94 said 31 units remained; the real
+number was 5, because four factions had picked the field up in their own build turns and nobody
+updated the entry. Re-derive from source before scoping. This is the second session running where
+re-deriving changed the answer.
 
-**`loMaxCount` returns 0, not Infinity, for an option with no cap field.** An uncapped option of that
-shape does not mean "no limit" — it means the rollup silently emits nothing. `B103-1` now asserts
-every `replacement_choices` option carries an authored cap. If a parser change makes that assertion
-fail, the fix is in the parser, not in the assertion.
+**A gate that reproduces the pipeline cannot see an incompletely-invoked pipeline.**
+`units_repro_check.py` reproduced a `convert_to_json.py` call missing `--emit-fourth-plus` as
+faithfully as a correct one, for fifty sessions, green the whole time. When adding an opt-in flag to
+the pipeline, the assertion that the flag is *passed where it should be* is a separate piece of work
+from the flag itself — and it belongs in the same turn.
+
+**An assertion that needs to know which source file a faction is built from should elect it, not be
+told it.** `B94-2` scores every candidate MFM file against the committed prices and takes the top
+scorer, so a migration is picked up automatically. A hardcoded army→filename map is exactly the
+artefact that went stale here.
+
+**Report, don't fail, on known-open debt.** `B94-2` reports an army still on a v1_0 source rather
+than failing — a gate that goes red on tracked, ticketed work stops every session until it is done.
 
 **D0 forbids finished illegal armies, not intermediate steps of a visibly-flagged multi-part edit**
 (D346, Ryan's ruling, still current). And **a unit has a keyword if any of its models has it**
@@ -79,9 +87,9 @@ fail, the fix is in the parser, not in the assertion.
 ## Close
 
 Four rolling documents updated (`40K_Decision_Log.md`, `DECISION_INDEX.md`,
-`OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_251.md`), this file rewritten for S252, then:
+`OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_252.md`), this file rewritten for S253, then:
 
-1. add `SESSION_HANDOFF_251.md` to `pipeline_manifest.py`'s `GUARDED` list **before** writing
+1. add `SESSION_HANDOFF_252.md` to `pipeline_manifest.py`'s `GUARDED` list **before** writing
 2. `python3 pipeline_manifest.py --write`
 3. `python3 pipeline_manifest.py --freshness-check`
 
@@ -89,9 +97,9 @@ Those two commands are the literal last two of the session.
 
 ## Outstanding Ryan action carried forward from S248, S249 and S250
 
-**A render check covering three sessions' UI.** Three engine turns have now shipped without anyone
-looking at them on screen — S248's Tank Ace checkbox, S249's Mark of Chaos selector, and S250's
-silent truncation of an over-cap tally on size reduction. All three handoffs carry step-by-step
-scripts. S250's is the one that matters most, because it is the only one that edits a saved list
-without telling the player. If S251 ships a fourth unseen engine change, say so plainly in the
-handoff rather than letting it accumulate quietly.
+**A render check covering three sessions' UI.** S248's Tank Ace checkbox, S249's Mark of Chaos
+selector, S250's silent truncation of an over-cap tally on size reduction. S251 shipped no UI, so
+the backlog is three deep and unchanged rather than four. S250's is the one that matters most — it
+is the only one that edits a saved list without telling the player. All three handoffs carry
+step-by-step scripts. If S252 ships a fourth unseen engine change, say so plainly in the handoff
+rather than letting it accumulate quietly.

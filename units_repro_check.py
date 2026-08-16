@@ -254,7 +254,8 @@ def repro(dir_):
 
         rc, out = _run([sys.executable, 'convert_to_json.py',
                         '--input-dir', sm_dir, '--output-dir', sm_dir,
-                        '--bundles', os.path.join(dir_, 'bundled_swaps.json')], cwd=dir_)
+                        '--bundles', os.path.join(dir_, 'bundled_swaps.json'),
+                        '--emit-fourth-plus'], cwd=dir_)
         if rc != 0:
             return False, 'convert_to_json.py (SM) failed:\n' + out[-600:]
 

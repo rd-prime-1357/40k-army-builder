@@ -14802,3 +14802,126 @@ Tank Ace UI and S249's mark selector.
 ### Closes
 
 B103. B136 opened.
+
+## D348 — B94: the Space Marines 4th+ tier lands, and the gap that hid it for fifty sessions becomes an assertion (S251)
+
+**Turn type: data-only.** Session open clean at 41/41 with 85 source files verified against
+`source_manifest.json`; all eight S250 file hashes matched the S250 handoff table before any work
+started. Nothing was worked around.
+
+### The ticket's own numbers were stale, and the real remaining set was 5 units, not 31
+
+B94's entry states that 31 units across the remaining priority-order factions still needed a
+migration turn. That figure is an S196 snapshot. Re-derived this session from the raw MFM files with
+the real parser rather than from the ticket's prose: the `YOUR 1ST TO 3RD UNITS COST` / `YOUR 4TH +
+UNIT COSTS` shape appears on **34 rows across the 15 v1.1 files**, which matches B94's original scope
+figure exactly. Nine units already carried `fourth_plus` in committed `units.json` — not the three
+the backlog names. Grey Knights, Emperor's Children, World Eaters and Drukhari all picked it up in
+their own build turns, because each was built after S194 added the flag and each block was written
+with `--emit-fourth-plus` from the start. Only two factions were still missing it: Space Marines and
+Chaos Space Marines.
+
+Non-priority factions carry the shape too — Adepta Sororitas' Immolator and two Adeptus Custodes
+units, all in v1_0 files — and are correctly out of scope, unbuilt.
+
+### The Space Marines gap, and why no gate could see it
+
+`--emit-fourth-plus` was added to `convert_to_json.py` at S194. Space Marines migrated to its v1.1
+source at S198 (D291). Nobody added the flag to the SM `convert_to_json.py` call in
+`units_repro_check.py`, and it has been absent ever since — so Rhino, Razorback, Drop Pod and
+Impulsor have priced a 4th copy at the 1st-to-3rd rate for roughly fifty sessions.
+
+**No existing gate could have caught this, and that is the important part.** `units_repro_check.py`
+proves `units.json` is what the pipeline emits. A convert call that was never given the flag
+reproduces byte-for-byte just as faithfully as one that was. `B94-1` pins the engine ladder and the
+well-formedness of any `fourth_plus` row that exists; it is silent about rows that should exist and
+do not — it passed vacuously the whole time. The class of defect is "the pipeline was invoked
+correctly-but-incompletely", and the project had no check of that class at all.
+
+### What shipped: the flag, five units, and the diff-guard
+
+`units_repro_check.py`'s Space Marines block now passes `--emit-fourth-plus`, matching the seven
+faction blocks that already did. `units.json` regenerated through the full chain — transform, points,
+five chapter appends, convert, merge, the four post-processors — and diff-guarded against a
+byte-identical control run of the unmodified pipeline first, so the diff is attributable to the flag
+and nothing else.
+
+**Exactly 5 units changed, zero others, zero unit ids added or removed, and only the `points` field
+on each:** Adeptus Astartes Drop Pod (4th+ 70), Razorback (95), Impulsor (80), Rhino (75), and Black
+Templars Impulsor (85). Every value checked against its MFM source line.
+
+No chapter-override churn, and the reason is worth recording rather than being re-derived next time:
+all six SM-family v1.1 files price Drop Pod, Razorback and Rhino identically, so
+`add_chapter_point_overrides.py` finds nothing to override; and Black Templars' Impulsor, the one
+that differs (75/85 against a base 70/80), is a Black-Templars-owned datasheet with its own
+`units.json` entry, so it never enters the override comparison at all.
+
+### B94-2: the assertion, and why it elects its source file instead of being told it
+
+The remaining item on B94 asked for "a data-side assertion pinning the correct `fourth_plus` value,
+re-derived from the MFM source". The obvious implementation is a table mapping each army to the MFM
+file it is built from. That is precisely the artefact that just went stale for fifty sessions, so it
+is not what was built.
+
+Instead, for each `units.json` army block, every MFM file mapped to that army's faction code in
+`FACTION_BY_MFM` is scored by how many of the block's units it prices at exactly the committed
+1st/2nd/3rd tiers, and the top scorer is **elected**. Only the army *name* is hardcoded; which file
+it is built from is inferred from the data every run, so a migration is picked up automatically. A
+tie is permitted — v1_0 and v1.1 genuinely agree on every unit of several small chapter blocks — but
+the tied files must then agree on the 4th+ tier for the unit under test, or that unit fails as
+ambiguous rather than passing on whichever filename sorted first. This is what disambiguates Grey
+Knights' Brotherhood Terminator Squad, whose v1_0 entry is `esc4` and whose v1.1 entry is not: the
+election picks v1.1 25-to-21 and the correct answer, "no 4th tier", follows from the data rather than
+from a remembered note.
+
+A unit whose committed prices match nothing in the elected file is **skipped**, not failed — it is
+priced by another mechanism (the four CSM cult troops from their god-legion's MFM per D240, the
+chapter override map, Chaos Daemons' hand-authored CSVs). Seven units are in that state today and the
+count is reported so a jump is visible.
+
+An army elected onto a v1_0 file while a v1.1 exists is **reported, not failed**. That is B89
+migration debt with its own ticket; an assertion that fails on known-open work stops every session.
+
+**Negative-tested three ways**, per S250's precedent that an untested gate is not known to be a gate:
+against the pre-change `units.json` it fails on exactly the five units and names each expected value;
+a tampered `fourth_plus` value fails; a `fourth_plus` planted on a unit whose MFM prints no 4th tier
+fails. 137 assertions, 14 units pinned.
+
+`parse_mfm` added to `TIER_B_NAMES`. B94-2 resolves its filenames from `FACTION_BY_MFM` rather than
+naming one literally, so the string-constant path that correctly tiers `E14-1` would have missed it
+and a `--tier a` run would have crashed on absent sources instead of skipping. No existing assertion
+reclassifies.
+
+### Found, not fixed: Chaos Space Marines is shipping wrong points today
+
+`units.json`'s Chaos Space Marines block is still built from `MFM_Chaos_Space_Marines_v1_0.txt`. B89
+closed at S213 having completed every faction's detachments-side migration, but CSM's **units** half
+was never done — it was recorded blocked at S199 because `units.json` held no World Eaters or
+Emperor's Children entries, and both have been built since (S209, S218). The block was never
+revisited when B89 closed.
+
+Direct parse-and-diff of the two CSM files, run this session rather than inferred: **17 units
+re-price**, and three of those change tier *shape* rather than value — Accursed Cultists, Dark Commune
+and Chosen move from v1_0's `1st unit`/`2nd +` break to v1.1's `1st to 2nd`/`3rd +`, so the second
+copy's price is wrong independently of any value change. Separately, the D240 cult-troop cross-file
+appends still read v1_0 sibling files while those factions' own blocks are on v1.1, so the same
+datasheet carries two prices in two armies: **Plague Marines at 10 models is 180 in Death Guard and
+190 in Chaos Space Marines; Khorne Berzerkers is 170/330 in World Eaters and 180/345 in Chaos Space
+Marines.** CSM's Chaos Rhino should be 65 for copies 1–3 with a 4th+ of 75 and ships as a flat 75.
+Rubric Marines' values agree but its CSM copy carries no 4th tier.
+
+This is a live player-facing pricing defect, not schema debt. **Deliberately not folded into this
+turn** — a ~20-unit migration with tier-shape changes and a cult-troop reconciliation is its own
+diff-guarded data turn, and B94's Chaos Rhino is a side effect of it rather than a reason to widen
+scope here. Opened as **B137** and sequenced as the next data turn, ahead of B90: it moves points
+players are being charged today, which outranks a blocker for factions that do not exist yet.
+
+### B94 stays open
+
+Its data half is complete for every faction except Chaos Space Marines, whose one unit lands with
+B137. Closing B94 now would require either shipping a known-wrong Chaos Rhino or claiming a
+completeness the data does not have.
+
+### Closes
+
+None. B94 advanced and its remaining scope narrowed to one unit behind B137. B137 opened.

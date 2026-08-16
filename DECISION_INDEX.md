@@ -1188,3 +1188,27 @@ entries (D93, D103, D104, D113–D115, D124–D129) carry no title on the headin
   against the restored defect line; `rules_assertions.py` gains `B103-1`..`B103-3`. **B136 opened** —
   `loCarriers` reads a tally the same broken way, but a data scan found zero reachable cases, so it is
   a ticket rather than a widened scope. Third engine turn in a row shipped with no render check.
+
+- **D348 — B94: the Space Marines 4th+ tier lands, and the gap that hid it becomes an assertion
+  (S251, data-only).** B94's "31 units remaining" was an S196 snapshot; re-derived from source, the
+  esc4 shape is 34 rows across the 15 v1.1 files and nine units already carried `fourth_plus` — GK,
+  EC, WE and DRU picked it up in their own build turns. Only Space Marines and Chaos Space Marines
+  were missing it. The SM gap: `--emit-fourth-plus` was added at S194, SM migrated to v1.1 at S198,
+  and the flag was never added to the SM convert call — so Rhino, Razorback, Drop Pod and Impulsor
+  priced a 4th copy at the 1st-to-3rd rate for ~50 sessions. **No gate could see it:**
+  `units_repro_check.py` reproduces an incomplete convert call as faithfully as a correct one, and
+  `B94-1` only checks the well-formedness of rows that exist, so it passed vacuously. Flag added; 5
+  units changed and zero others (AA Drop Pod 70, Razorback 95, Impulsor 80, Rhino 75; BT Impulsor 85),
+  diff-guarded against a byte-identical control run. No chapter-override churn — the six SM files
+  agree on three of the four, and BT owns its own Impulsor datasheet. New **B94-2** pins the printed
+  4th+ value per unit, **electing** each army's source file from the committed prices rather than from
+  a hardcoded army→filename map (the artefact that just went stale); ties allowed but must agree, or
+  the unit fails as ambiguous — which is what resolves Grey Knights' Brotherhood Terminator Squad.
+  Units matching nothing in the elected file are skipped as priced elsewhere (7 today); an army on a
+  v1_0 source is reported, not failed. Negative-tested three ways. `parse_mfm` added to
+  `TIER_B_NAMES`, without which a `--tier a` run would crash rather than skip. 137 assertions.
+  **Found and not fixed: Chaos Space Marines still builds from its v1_0 MFM and ships wrong points
+  today** — 17 units re-price, three of them changing tier shape, and the D240 cult-troop appends
+  still read v1_0 siblings, so Plague Marines is 180 in Death Guard and 190 in CSM, Khorne Berzerkers
+  170/330 in WE and 180/345 in CSM. Opened as **B137**, sequenced as the next data turn ahead of B90.
+  B94 stays open on that one unit.

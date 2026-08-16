@@ -3,9 +3,9 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S250 (B103 shipped, B136 opened):
-B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B94, B85, B86,
-B69, B70, B75, P2, P4, E23, B67b, E12, B17.
+not here, it isn't open. **25 open** as of S251 (B137 opened; B94 advanced, not closed):
+B137, B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B94, B85,
+B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 **Housekeeping, S249.** Three closed-pointer stubs (B111, B89, B100) were sitting in the Open
 Items section, which the section's own rule forbids. Removed. They did not affect the count —
@@ -633,6 +633,45 @@ stranded-allied roster warning, shipped.
 ## Open Items
 
 
+### B137 — Chaos Space Marines still builds from its v1_0 MFM and ships wrong points today — **NEW S251 (D348); data; M; unblocked**
+The units-side half of B89's adoption arc that was never done. B89 closed at S213 (D307) having
+migrated every faction's **detachments**; CSM's **units** block was recorded blocked at S199 because
+`units.json` then held no World Eaters or Emperor's Children entries, and it was never revisited once
+both were built (S209, S218). `units_repro_check.py`'s CSM block still names
+`MFM_Chaos_Space_Marines_v1_0.txt`, and the four D240 cult-troop cross-file appends still name their
+siblings' `_v1_0` files.
+
+**This is a live player-facing pricing defect, not schema debt.** Quantified S251 by direct
+parse-and-diff of the two CSM files with the real parser, not inferred:
+
+- **17 units re-price** from CSM's own file. Value changes on Abaddon the Despoiler, Chaos Lord with
+  Jump Pack, Chaos Predator Annihilator, Chaos Predator Destructor, Chaos Terminator Squad, Defiler,
+  Huron Blackheart, Masters of the Maelstrom, Mutilators, Nemesis Claw, Red Corsairs Reave-Captain,
+  Vashtorr the Arkifane, Venomcrawler.
+- **Three of the seventeen change tier *shape*, not just value** — Accursed Cultists, Dark Commune and
+  Chosen move from v1_0's `1st unit`/`2nd +` break to v1.1's `1st to 2nd`/`3rd +`, so the **second
+  copy** prices differently even where the printed numbers are unchanged. Chosen changes both.
+- **Chaos Rhino gains the esc4 shape**: 65 for copies 1–3 with a 4th+ of 75, against a shipped flat
+  75. This is B94's last outstanding unit.
+- **The cult-troop appends disagree with their parent legions**, because those factions migrated and
+  CSM did not: Plague Marines at 10 models is **180** in Death Guard and **190** in Chaos Space
+  Marines; Khorne Berzerkers is **170/330** in World Eaters and **180/345** in Chaos Space Marines.
+  Rubric Marines' values agree but its CSM copy carries no 4th tier. Noise Marines is unchanged
+  between versions and needs nothing.
+
+**Build shape.** A data-only turn mirroring S212's detachments migration and the S198 SM group turn:
+re-point `units_repro_check.py`'s CSM block and the four `CSM_CULT_TROOP_POINTS` entries at the v1.1
+files, regenerate, diff-guard at unit-id level (expect ~20 changed, zero added/removed, `points` only),
+and reconcile any pinned points value in `rules_assertions.py` against the new source rather than
+loosening it. `B94-2` will start requiring CSM's Chaos Rhino `fourth_plus` the moment the prices move,
+so `--emit-fourth-plus` must be added to the CSM convert call in the same turn — the assertion fails
+loudly if it is forgotten, which is the point of it.
+
+**Watch for**, flagged rather than assumed: the tier-shape changes mean a unit-count diff-guard is not
+sufficient on its own; the second-copy price is the thing to eyeball. And `MFM_Chaos_Space_Marines_v1_0.txt`
+must stay in `units_repro_check.py`'s `REQUIRED` list only if something still reads it after the swap —
+check rather than carry it forward.
+
 ### B136 — `loCarriers` reads a `replacement_choices` tally uncapped and in storage order — **NEW S250 (D347); engine; S; not reachable today**
 Split out of B103 rather than folded into it. When counting how many models in a scope group still
 carry a named weapon — the `requires_weapon` gate — `loCarriers` sums **every** pick in a
@@ -1029,12 +1068,35 @@ parser against `MFM_Thousand_Sons_v1.1.txt` (Rubric Marines' row carries 110/200
 blank), and a full-CLI Thousand Sons build diffed flag-off vs flag-on (only Rubric Marines + Chaos Rhino
 change, correctly). `b87_check.js` extended with a 4th fact pinning the row-level carry-through.
 
+**Data turn, Space Marines, and the assertion, shipped S251 (D348).** The remaining-population
+figure above (31 units) was an S196 snapshot and was wrong by S251. Re-derived from source with the
+real parser: the esc4 shape is **34 rows across the 15 v1.1 files**, matching this ticket's original
+scope figure, and **nine units already carried `fourth_plus`** — Grey Knights, Emperor's Children,
+World Eaters and Drukhari each picked it up in their own build turn, having been built after S194
+added the flag. Only Space Marines and Chaos Space Marines were still missing it.
+
+`units_repro_check.py`'s Space Marines `convert_to_json.py` call had lacked `--emit-fourth-plus`
+since S198's v1.1 migration — roughly fifty sessions of pricing a 4th copy at the 1st-to-3rd rate.
+Flag added; **exactly 5 units changed and zero others**: Adeptus Astartes Drop Pod (4th+ 70),
+Razorback (95), Impulsor (80), Rhino (75), Black Templars Impulsor (85). No chapter-override churn —
+the six SM-family files agree on Drop Pod/Razorback/Rhino, and Black Templars owns its own Impulsor
+datasheet so it never enters the override comparison.
+
+New assertion **`B94-2`** covers the class of defect that hid this: `units_repro_check.py` reproduces
+an incompletely-invoked convert call as faithfully as a correct one, and `B94-1` only checks rows
+that exist, so it passed vacuously throughout. `B94-2` re-derives the printed 4th+ value from the MFM
+and **elects** each army's source file from the committed prices rather than reading a hardcoded
+army→filename map — that map being exactly the artefact that went stale here. Ties are allowed but
+must agree or the unit fails ambiguous (this is what resolves Grey Knights' Brotherhood Terminator
+Squad, esc4 in v1_0 and not in v1.1). Negative-tested three ways. 14 units pinned, 7 skipped as
+priced by another mechanism.
+
 **Remaining turn (still open):**
-1. **Data** — regenerate the 34 affected units by running the pipeline with `--emit-fourth-plus`, so
-   their rows carry the real `fourth_plus` value, diff-guarded (only those 34 units' points move,
-   `fourth_plus` added, all else byte-identical). Folds into B89's adoption arc per D283 so the units
-   migrate once. Followed by a data-side assertion pinning the 34 units' correct `fourth_plus` value,
-   re-derived from the MFM source.
+1. **Data, one unit, behind B137** — Chaos Space Marines' Chaos Rhino (65 for copies 1–3, 4th+ 75,
+   against a shipped flat 75). It cannot ship here: the esc4 shape exists only in CSM's v1.1 file and
+   CSM's whole block still builds from v1_0, so this unit lands as part of B137's migration, not as a
+   flag flip. `B94-2` will demand it automatically once CSM's prices move. This ticket closes when
+   B137 does.
 
 **Scope of the shape (v1.1):** 34 units across the 15 files — Rhino, Razorback, Drop Pod, Impulsor
 (loyalist transports), Chaos Rhino (Chaos transports), Raider, Venom (Drukhari), plus Rubric Marines.
@@ -2776,3 +2838,29 @@ the last one before this is S247. Both sessions' movements are recorded in their
 `DECISION_INDEX.md`, and the header count was correct throughout, so nothing is lost — but the
 ledger series is not continuous and should not be read as one. Backfilling from prose would be
 inventing a record rather than keeping one.
+
+## S251 ledger
+
+Data-only turn (B94's Space Marines data half + its assertion, D348). **24 open at S250 close; 25
+open at S251 close** (nothing resolved; B137 opened). B94 advanced and its remaining scope narrowed
+from "31 units" to one unit behind B137, but it does not close.
+
+Beginning: B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B94, B85, B86, B69,
+B70, B75, P2, P4, E23, B67b, E12, B17 (24).
+Resolved: none (0).
+Added: B137 (1).
+Ending: B137, B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B94, B85, B86,
+B69, B70, B75, P2, P4, E23, B67b, E12, B17 (25).
+
+Full `--fetch --data-turn` baseline at open: **41/41** gates pass, 85 source files verified against
+`source_manifest.json`, all eight of S250's changed files matched the S250 handoff table's hashes
+exactly. Close is **41/41** and **137/137** assertions (136 before, plus `B94-2`).
+
+**Why nothing resolved despite a clean ship.** B94's data half is done for every faction except
+Chaos Space Marines, and CSM's one unit is unreachable without the whole-faction v1.1 migration now
+tracked as B137. Closing B94 today would mean either shipping a knowingly-wrong Chaos Rhino or
+claiming a completeness the data does not have.
+
+**Sequencing set this session, not for re-litigation.** B137 is the next data turn, ahead of B90.
+B90 blocks factions that do not exist yet; B137 moves points players are charged today. Two shipped
+CSM units currently disagree with their own parent legion on price.

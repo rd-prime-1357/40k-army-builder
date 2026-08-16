@@ -707,6 +707,146 @@ def b94_1_gate(S):
                   f'branches; {fp_count} committed rows carry a well-formed fourth_plus')
 
 
+# B94-2 (S251). units.json army block -> the MFM faction code whose files can price it.
+# Only the army NAME is hardcoded here; which FILE each army is actually built from is
+# elected from the committed prices themselves (see b94_2_gate), because a hardcoded
+# army->filename map is exactly what went stale for fifty sessions: Space Marines moved
+# to v1.1 at S198 and its four esc4 transports kept shipping with no fourth_plus until
+# S251, and no gate noticed. Chaos Daemons is priced from hand-authored CSVs, never an
+# MFM, so it has no code and is skipped rather than mapped to a lie.
+B94_ARMY_CODE = {
+    'Adeptus Astartes': 'SM', 'Ultramarines': 'SM', 'Iron Hands': 'SM',
+    'Blood Angels': 'SM', 'Dark Angels': 'SM', 'Space Wolves': 'SM',
+    'Deathwatch': 'SM', 'Salamanders': 'SM', 'Imperial Fists': 'SM',
+    'Raven Guard': 'SM', 'White Scars': 'SM', 'Black Templars': 'SM',
+    'Chaos Space Marines': 'CSM', 'Death Guard': 'DG', 'Thousand Sons': 'TS',
+    'Grey Knights': 'GK', "Emperor's Children": 'EC', 'World Eaters': 'WE',
+    'Drukhari': 'DRU',
+}
+B94_NO_MFM_ARMIES = {'Chaos Daemons'}
+
+
+def b94_2_gate(S):
+    """B94 data half: every unit whose MFM entry carries the 'YOUR 1ST TO 3RD UNITS
+    COST' / 'YOUR 4TH + UNIT COSTS' shape carries the matching fourth_plus in committed
+    units.json, and no unit carries one the MFM does not print.
+
+    WHY THIS IS NOT REDUNDANT WITH units_repro_check.py. That gate proves units.json is
+    what the pipeline emits. It cannot see a convert_to_json.py call that was never given
+    --emit-fourth-plus, because it reproduces the same wrong output faithfully. That is
+    the exact defect this gate exists for: the Space Marines convert call lacked the flag
+    from S194 (when the flag was added) until S251, so Rhino, Razorback, Drop Pod and
+    Impulsor silently priced their 4th copy at the 1st-to-3rd rate for fifty sessions
+    with every gate green.
+
+    HOW THE SOURCE FILE IS RESOLVED. Not from a hardcoded army->filename table — that is
+    the thing that goes stale. For each army, every MFM file mapped to its faction code in
+    mfm_points_parser.FACTION_BY_MFM is scored by how many of that army's units it prices
+    at exactly the committed 1st/2nd/3rd tiers, and the top scorer is elected. A tie is
+    allowed (v1_0 and v1.1 agree on every unit of a small chapter block) but the tied
+    files must then agree on the 4th+ tier for the unit being checked, or the unit fails
+    as ambiguous rather than passing on whichever file sorted first.
+
+    WHAT IS SKIPPED, AND WHY THAT IS SAFE. A unit whose committed prices match no entry in
+    the elected file is priced by some other mechanism — the four CSM cult troops priced
+    from their god-legion's MFM (D240), the chapter override map (D167/D169), Chaos
+    Daemons' hand-authored CSVs. Those are out of this gate's reach by construction; the
+    count is reported so a sudden jump is visible.
+
+    NOT A FAILURE, BUT REPORTED: an army elected onto a v1_0 file while a v1.1 exists. That
+    is B89 migration debt, tracked as its own ticket, not a broken fact about the data.
+    """
+    import mfm_points_parser as M
+
+    files_by_code = {}
+    for fn, code in M.FACTION_BY_MFM.items():
+        if os.path.exists(os.path.join(S.dir, fn)):
+            files_by_code.setdefault(code, []).append(fn)
+    if not files_by_code:
+        return False, 'no MFM source files present'
+
+    def eff_and_fourth(info):
+        """(committed-shaped 1st/2nd/3rd rows, {bracket: 4th+ cost}) via the real
+        to_points_row — no second implementation of the bracket/tier grammar."""
+        row = M.to_points_row('x', 'y', dict(info, tiers=[dict(t) for t in info['tiers']]))
+        sz, pts, p4 = row[2:5], row[5:14], row[14:17]
+        base, fourth = [], {}
+        for b in range(3):
+            if sz[b] in ('', None):
+                continue
+            base.append({'size': sz[b], 'first_unit': pts[b],
+                         'second_unit': pts[3 + b], 'third_plus': pts[6 + b]})
+            if p4[b] not in ('', None):
+                fourth[sz[b]] = p4[b]
+        return base, fourth
+
+    cache = {}
+    for code, fns in files_by_code.items():
+        for fn in fns:
+            for nkey, info in M.parse_mfm(os.path.join(S.dir, fn)).items():
+                if any(info['tiers']):
+                    cache[(fn, nkey)] = eff_and_fourth(info)
+
+    bad, pinned, skipped, legacy = [], 0, 0, []
+    for blk in S.units():
+        army = blk.get('army')
+        if army in B94_NO_MFM_ARMIES:
+            continue
+        code = B94_ARMY_CODE.get(army)
+        if code is None:
+            bad.append(f'{army}: units.json army block is not mapped to an MFM faction code')
+            continue
+        cands = files_by_code.get(code) or []
+        if not cands:
+            bad.append(f'{army}: no MFM file present for faction code {code}')
+            continue
+
+        base_of, tally = {}, {}
+        for u in blk['units']:
+            base_of[u['unit_id']] = [
+                {k: v for k, v in r.items() if k != 'fourth_plus'}
+                for r in ((u.get('points') or {}).get('sizes') or [])]
+            nkey = M.norm(u['unit_name'])
+            for fn in cands:
+                got = cache.get((fn, nkey))
+                if got and got[0] == base_of[u['unit_id']]:
+                    tally[fn] = tally.get(fn, 0) + 1
+        if not tally:
+            bad.append(f'{army}: no MFM file matches any committed price in this block')
+            continue
+        top = max(tally.values())
+        elected = sorted(fn for fn, n in tally.items() if n == top)
+        if all('_v1_0' in fn for fn in elected) and any(
+                fn.replace('_v1_0', '_v1.1') in cands for fn in elected):
+            legacy.append(army)
+
+        for u in blk['units']:
+            nkey = M.norm(u['unit_name'])
+            views = [cache[(fn, nkey)] for fn in elected
+                     if (fn, nkey) in cache and cache[(fn, nkey)][0] == base_of[u['unit_id']]]
+            if not views:
+                skipped += 1
+                continue
+            if len({json.dumps(v[1], sort_keys=True) for v in views}) > 1:
+                bad.append(f'{army}/{u["unit_name"]}: elected files disagree on the '
+                           f'4th+ tier ({", ".join(elected)})')
+                continue
+            want = views[0][1]
+            have = {r['size']: r['fourth_plus']
+                    for r in ((u.get('points') or {}).get('sizes') or []) if 'fourth_plus' in r}
+            if want != have:
+                bad.append(f'{army}/{u["unit_name"]}: MFM prints 4th+ '
+                           f'{want or "(none)"} but units.json carries {have or "(none)"}')
+            elif want:
+                pinned += 1
+
+    if bad:
+        return False, '; '.join(bad[:6]) + (f' (+{len(bad) - 6} more)' if len(bad) > 6 else '')
+    note = f'; still on a v1_0 source: {", ".join(sorted(legacy))}' if legacy else ''
+    return True, (f'{pinned} unit(s) carry the MFM 4th+ tier at its printed value, '
+                  f'{skipped} priced outside the elected MFM file{note}')
+
+
 def manifest_gate(S):
     """D123: file-integrity manifest. Any guarded pipeline file arriving as the wrong
     copy fails here and names the file — the cheap first line the repro gate backs up."""
@@ -1141,6 +1281,24 @@ ASSERTIONS = [
      'index.html copyTierPts; rules_assertions.py Sources.copy_tier_pts; units.json '
      'points.sizes[*].fourth_plus (D286)',
      lambda S: b94_1_gate(S)),
+
+    # ── B94-2. The data half of the same ticket. B94-1 pins the engine ladder and the
+    # well-formedness of the field; it says nothing about whether the field is PRESENT
+    # where the MFM prints a 4th+ tier. That gap is what let the four Space Marines
+    # transports ship without one from S198 to S251 with every gate green — the repro
+    # check reproduces a convert call that was never given --emit-fourth-plus just as
+    # faithfully as one that was. This re-derives the expected 4th+ tier from the MFM
+    # itself, per army, electing the source file from the committed prices rather than
+    # from a hardcoded map that can go stale the same way.
+    ('B94-2',
+     "Every unit priced by an MFM 'YOUR 1ST TO 3RD UNITS COST' / 'YOUR 4TH + UNIT COSTS' "
+     "block carries the printed 4th+ cost in units.json's points.sizes[*].fourth_plus, and "
+     "no unit carries a fourth_plus its own source file does not print. The source file is "
+     "elected per army from the committed prices, so a faction that migrates its MFM and "
+     "forgets the flag fails here rather than shipping a silently wrong 4th copy.",
+     'MFM_*.txt 1ST TO 3RD/4TH+ blocks via mfm_points_parser.parse_mfm/to_points_row; '
+     'units.json points.sizes[*].fourth_plus (D283/D286/D287)',
+     lambda S: b94_2_gate(S)),
 
     # ── B46. The Reiver's grav-chute has rules text and the app cannot show it. The text
     # is NOT missing from the data — it is in Datasheets_abilities.csv as a Wargear row.
@@ -6119,6 +6277,11 @@ TIER_B_NAMES = {
     'abilities', 'models', 'datasheets', 'mfm_instructions', 'faction_keywords',
     'mfm_detachment_rows', 'options', 'composition', 'option_text', 'mfm_all',
     'wargear_ability', 'model_stat',
+    # The MFM points-table reader itself. Any assertion that calls it is reading a raw
+    # GW export whether or not it names one literally — B94-2 resolves its filenames from
+    # FACTION_BY_MFM, so the string-constant path that tiers E14-1 would have missed it
+    # and a --tier a run would have crashed on absent sources instead of skipping.
+    'parse_mfm',
     # Embedded rebuild-from-source gates (P1/P4/detachments).
     'repro_gate', 'units_repro_gate', 'detachments_repro_gate',
     # Gates that check for GW source files by name/presence.
