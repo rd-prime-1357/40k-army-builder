@@ -2752,6 +2752,29 @@ ASSERTIONS = [
      'detachments.json enhancement descriptions vs Datasheets_keywords.csv + units.json (B129, D334/D335/D336)',
      lambda S: b129_zero_bearer_gate(S)),
 
+    # ── B93-CENSUS (S254). The data half of B93 shipped a structured
+    # bearer_restriction on every enhancement record in detachments.json, parsed
+    # from the record's own description. B129 already polices the zero-admit END of
+    # bearer eligibility; this polices the PARSE — that the field exists wherever a
+    # clause exists, matches it, and names only real terms. Without it the field
+    # rots the moment a faction lands a clause shape the grammar does not cover, and
+    # it rots SILENTLY in the permissive direction.
+    ('B93-CENSUS',
+     'Every enhancement record in detachments.json whose description carries a '
+     'bearer-restriction clause has a bearer_restriction field whose clause and '
+     'sentence index round-trip to an independent re-derivation from the description '
+     'text, and every record without a clause has none. Population pinned at 739 '
+     'records / 641 with a clause / 117 distinct clause strings / 628 parsed / 13 '
+     'curated / 98 none, with clause position 0/1/2 for 439/183/19 records. Every term '
+     'in every alternatives and exclusions list is a real Datasheets_keywords.csv '
+     'keyword or Datasheets.csv name, so a dropped or mis-split token cannot silently '
+     'widen a restriction. The two curations are pinned: SPEEDER is still absent from '
+     'source and still resolves to exactly 10 Adeptus Astartes speeder datasheets, and '
+     'SPAWN still admits both source spellings.',
+     'detachments.json bearer_restriction vs its own description text + '
+     'Datasheets_keywords.csv / Datasheets.csv (B93-CENSUS, D351)',
+     lambda S: b93_bearer_restriction_census(S)),
+
 ]
 
 
@@ -5573,6 +5596,195 @@ def b129_zero_bearer_gate(S):
     return True, (f'zero-admit population is exactly the {len(EXEMPT)} named exemptions '
                   f'(24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins); '
                   f'no unexempted zero-admit record found')
+
+
+_B93_SENT = re.compile(r'(?<=[.?!])\s+')
+_B93_ONLY = re.compile(r'only\s*(\([^)]*\))?\s*[.?!]?$', re.I)
+_B93_MAXLEN = 110
+
+# Pinned population, re-derived from source at S254 and matching B93_SCOPE.md
+# sections 2, 3 and 9 exactly. Any drift fails and names the direction.
+_B93_TOTAL = 739
+_B93_WITH_CLAUSE = 641
+_B93_DISTINCT = 117
+_B93_PARSED = 628
+_B93_CURATED = 13
+_B93_NONE = 98
+_B93_POSITIONS = {0: 439, 1: 183, 2: 19}
+_B93_SPEEDER_UNITS = 10
+
+
+def _b93_norm(s):
+    s = (s or '').replace('\u2019', "'").replace('\u2018', "'")
+    s = s.replace('\u2013', '-').replace('\u2014', '-')
+    return re.sub(r'\s+', ' ', s).strip()
+
+
+def _b93_find_clause(desc):
+    """Independent re-derivation of clause detection from the description text.
+
+    Deliberately does NOT import detachment_parser: an assertion that reuses the
+    producer's own extractor cannot detect the producer failing to extract.
+    """
+    for i, s in enumerate(x.strip() for x in _B93_SENT.split(desc or '')):
+        if not s or len(s) > _B93_MAXLEN:
+            continue
+        if _B93_ONLY.search(s):
+            return re.sub(r'[.?!]$', '', s).strip(), i
+    return None, None
+
+
+def b93_bearer_restriction_census(S):
+    """B93-CENSUS (S254). detachments.json now carries a structured bearer_restriction
+    per enhancement record, parsed from the record's own description text. This holds
+    that field to its source in both directions and pins the population.
+
+    Four things, none of which the producing parser can vouch for on its own:
+
+    (1) COVERAGE, both ways. Every record whose description carries a restriction
+        clause has a bearer_restriction whose `clause` is byte-identical to the
+        independently re-derived sentence; every record without a clause has null.
+        A parser that quietly stopped emitting, or started emitting on prose, fails
+        here rather than shipping a silently unrestricted enhancement.
+
+    (2) POPULATION. 739 records total; 641 carry a clause across 117 distinct clause
+        strings; 628 parse and 13 are curated; 98 carry none (74 description-empty,
+        B127; 24 Chaos Daemons shorthand, B122). Clause position within the
+        description is 0/1/2 for 439/183/19 records — the figure that shows a
+        first-sentence heuristic would still be wrong, so a regression back to one
+        would be visible here. _meta's own counters are checked against a fresh count
+        over the catalogue, so a stale header cannot pass.
+
+    (3) TERM REALITY. Every term in every `alternatives` and `exclusions` list is a
+        real string in Datasheets_keywords.csv or a real Datasheets.csv name. This is
+        the check that catches a LOOSENED parse: dropping a token, or splitting
+        "Adeptus Astartes" into two words, produces terms that match nothing, and a
+        term that matches nothing silently widens the restriction — the direction
+        that ships an illegal list.
+
+    (4) THE TWO CURATIONS, pinned rather than trusted. SPEEDER is still absent from
+        Datasheets_keywords.csv (1,423 distinct keywords; the reason it needs curating
+        at all), and still resolves to exactly 10 Adeptus Astartes datasheets whose
+        name contains "Speeder". SPAWN still admits both spellings. If a source
+        refresh ever adds a real SPEEDER keyword, this fails and the curation gets
+        removed deliberately instead of sitting there shadowing real data.
+
+    NOT checked here, deliberately: which units satisfy a restriction. That depends on
+    chapter keyword restoration (B132), muster-time conferral (B128) and Marks of Chaos
+    (B126) — all engine-time state. B129 already polices the zero-admit end of that,
+    and the engine turn's own harness will cover the rest.
+    """
+    det = S.detachments()
+    cat = det['detachments']
+
+    # (3) term vocabulary, straight from source — not from units.json, which is a
+    # pipeline output and would let the assertion restate the thing it polices.
+    vocab = set()
+    for kws in S.all_keywords().values():
+        vocab |= {_b93_norm(k).lower() for k in kws}
+    vocab |= {_b93_norm(n).lower() for n in S.datasheets().values() if n}
+
+    total = 0
+    with_clause = 0
+    clauses = {}
+    positions = {}
+    counts = {'parsed': 0, 'curated': 0, 'none': 0}
+    missing, spurious, mismatched, unreal = [], [], [], []
+    speeder_rec = spawn_rec = None
+
+    for key, rec in cat.items():
+        for e in rec['enhancements']:
+            total += 1
+            br = e.get('bearer_restriction')
+            want, pos = _b93_find_clause(e.get('description'))
+            label = '%s::%s' % (key, e['name'])
+
+            if want is None:
+                if br is not None:
+                    spurious.append(label)
+                else:
+                    counts['none'] += 1
+                continue
+
+            with_clause += 1
+            clauses[want] = clauses.get(want, 0) + 1
+            positions[pos] = positions.get(pos, 0) + 1
+            if br is None:
+                missing.append(label)
+                continue
+            if br.get('clause') != want or br.get('sentence_index') != pos:
+                mismatched.append(label)
+                continue
+            counts[br.get('resolution')] = counts.get(br.get('resolution'), 0) + 1
+
+            for group in (br.get('alternatives') or []) + (br.get('exclusions') or []):
+                for term in group:
+                    if _b93_norm(term).lower() not in vocab:
+                        unreal.append('%s: %r' % (label, term))
+            if want == 'SPEEDER unit only':
+                speeder_rec = br
+            if want == 'SPAWN unit only':
+                spawn_rec = br
+
+    if missing:
+        return False, (f'{len(missing)} record(s) carry a restriction clause but no '
+                       f'bearer_restriction — unrestricted in the engine: {missing[:5]}')
+    if spurious:
+        return False, (f'{len(spurious)} record(s) carry a bearer_restriction with no '
+                       f'clause in their description — the parser is reading prose as a '
+                       f'restriction: {spurious[:5]}')
+    if mismatched:
+        return False, (f'{len(mismatched)} record(s) have a bearer_restriction whose clause '
+                       f'or sentence index does not match the description: {mismatched[:5]}')
+    if unreal:
+        return False, (f'{len(unreal)} restriction term(s) match no keyword in '
+                       f'Datasheets_keywords.csv and no Datasheets.csv name — a term that '
+                       f'matches nothing silently widens the restriction: {unreal[:5]}')
+
+    if total != _B93_TOTAL:
+        return False, f'enhancement record count is {total}, pinned at {_B93_TOTAL}'
+    if with_clause != _B93_WITH_CLAUSE:
+        return False, (f'{with_clause} record(s) carry a restriction clause, pinned at '
+                       f'{_B93_WITH_CLAUSE} — re-derive B93_SCOPE.md section 2 before adjusting')
+    if len(clauses) != _B93_DISTINCT:
+        return False, (f'{len(clauses)} distinct clause strings, pinned at {_B93_DISTINCT} — '
+                       f'the vocabulary is meant to be closed; a new string needs reading')
+    if positions != _B93_POSITIONS:
+        return False, (f'clause sentence-position distribution is {dict(sorted(positions.items()))}, '
+                       f'pinned at {_B93_POSITIONS}')
+    if (counts['parsed'], counts['curated'], counts['none']) != (
+            _B93_PARSED, _B93_CURATED, _B93_NONE):
+        return False, (f"resolution split is parsed={counts['parsed']} curated={counts['curated']} "
+                       f"none={counts['none']}, pinned at {_B93_PARSED}/{_B93_CURATED}/{_B93_NONE}")
+
+    meta = det['_meta'].get('enhancement_bearer_restriction_counts') or {}
+    if (meta.get('parsed'), meta.get('curated'), meta.get('none')) != (
+            counts['parsed'], counts['curated'], counts['none']):
+        return False, (f'_meta.enhancement_bearer_restriction_counts is {dict(meta)} but a fresh '
+                       f'count over the catalogue gives {counts} — stale header')
+    if det['_meta'].get('enhancement_bearer_restriction_clauses') != len(clauses):
+        return False, ('_meta.enhancement_bearer_restriction_clauses disagrees with a fresh '
+                       'count over the catalogue — stale header')
+
+    # (4) the two curations
+    if any('speeder' == _b93_norm(k).lower()
+           for kws in S.all_keywords().values() for k in kws):
+        return False, ('a real SPEEDER keyword now exists in Datasheets_keywords.csv — the '
+                       'curation in detachment_parser.py shadows it and must be removed')
+    if speeder_rec is None or spawn_rec is None:
+        return False, 'the SPEEDER and/or SPAWN curated record is no longer present'
+    if speeder_rec.get('resolution') != 'curated' or len(speeder_rec['alternatives']) != _B93_SPEEDER_UNITS:
+        return False, (f"the SPEEDER curation resolves to "
+                       f"{len(speeder_rec['alternatives'])} unit(s), pinned at "
+                       f'{_B93_SPEEDER_UNITS} Adeptus Astartes speeder datasheets')
+    if sorted(a[0] for a in spawn_rec['alternatives']) != ['Chaos Spawn', 'Spawn']:
+        return False, ('the SPAWN curation no longer admits both source spellings '
+                       '(World Eaters prints "Spawn", every other faction "Chaos Spawn")')
+
+    return True, (f'{with_clause} of {total} enhancement records carry a bearer restriction '
+                  f'across {len(clauses)} distinct clauses ({counts["parsed"]} parsed, '
+                  f'{counts["curated"]} curated); every clause round-trips to its description, '
+                  f'every term is real, both curations hold')
 
 
 def e4b_engine_functions_defined_once(S):

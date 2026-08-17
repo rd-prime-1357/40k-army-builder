@@ -1236,3 +1236,16 @@ D350 — B138 closes: Chaos Daemons' nine hand-authored root CSVs guarded. Scopi
   support. Negative-tested: tampered one guarded CSV, confirmed the manifest gate fails, restored,
   confirmed it passes. Full baseline clean apart from expected mid-session `repo_check` staleness on
   files not yet pushed.
+
+D351 — B93 data turn: every enhancement's bearer-restriction clause parsed into `detachments.json`.
+  Chose B93 over B90 on gate status and D0 surface; B127 is a source cap, not a build blocker. S240's
+  census reproduces exactly (641/117/439-183-19/74/24 of 739). Three `B93_SCOPE.md` §5 corrections:
+  `Harlequins` is a real keyword needing no curation; `SPEEDER` confirmed absent and curated; the
+  `SPAWN` case is a GW source inconsistency and the alias buys a clean parse, not a bearer — B129's
+  reading is right and §5's is wrong. One grammar rule handles both slash forms (the slash alternates
+  the head term over a shared tail). Decided `or` does not distribute a shared prefix, verified
+  identical to the distributing reading on all 13 army-scoped multi-alternative clauses. The emitted
+  field names terms, never units — roster resolution stays engine-side because it depends on B132,
+  B128 and B126 state. Parser is total: 628 parsed, 13 curated, 98 no clause. Diff-guarded: only the
+  new key and two `_meta` counters changed. `B93-CENSUS` added (tier B), negative-tested twice.
+  Engine consumption deferred to B93's next turn, so the live D0 gap is unchanged.

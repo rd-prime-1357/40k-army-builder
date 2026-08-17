@@ -328,6 +328,7 @@ GUARDED = [
     'SESSION_HANDOFF_251.md',
     'SESSION_HANDOFF_252.md',
     'SESSION_HANDOFF_253.md',
+    'SESSION_HANDOFF_254.md',
 ] + [
     # B138 (D350, S253): Chaos Daemons' nine hand-authored root CSVs (`CD_ROOT_CSVS` in
     # units_repro_check.py). Previously excluded from the public repo as GW-derived source

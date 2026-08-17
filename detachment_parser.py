@@ -1126,6 +1126,285 @@ def _sm_consume(lines, det):
 
 
 # ---------------------------------------------------------------------------
+# 3b. Enhancement bearer restrictions (B93, D3xx)
+# ---------------------------------------------------------------------------
+#
+# WHAT: almost every enhancement's own text names who may carry it -- "ADEPTUS
+# ASTARTES TERMINATOR model only", "SPEEDER unit only", "Lord of Poxes only".
+# 641 of the 739 records carry such a clause. The engine reads none of it today;
+# it applies a blanket Character-vs-not test, which over-admits 369 records.
+# This section turns each clause into a structured field the engine can evaluate.
+#
+# WHY IN THE PARSER AND NOT IN index.html: B93_SCOPE.md sec.7. At 641 records
+# against B113's curated 7, curation stops being the right answer. Parsing here
+# puts the result under detachments_repro_check.py -- a hand edit or a silent
+# source change fails a gate instead of drifting.
+#
+# WHY A TOTAL PARSER: the clause vocabulary is closed at 117 distinct strings.
+# Every one either parses completely or raises. There is no "mostly parsed"
+# state, because a partly-parsed restriction is indistinguishable from a
+# correctly-parsed looser one, and the loose direction is the one that ships an
+# illegal list.
+#
+# WHAT IS DELIBERATELY NOT DONE HERE: no resolution against any roster. The
+# emitted field names terms, not units. Which units satisfy the terms depends on
+# per-chapter keyword restoration (B125/B132), detachment-conferred keywords at
+# muster (B128) and Marks of Chaos (B126) -- all engine-time state. Resolving at
+# build time would bake a snapshot of all three.
+#
+# GRAMMAR, each feature confirmed against the real 117 strings:
+#   <alternatives> [with the <X> ability] (model|unit)? only [(excluding ...)]
+# with these six traps, all live in the data:
+#   1. The clause is not the first sentence -- position 0 for 439 records, 1 for
+#      183, 2 for 19. Every sentence is tried.
+#   2. Sentences do not all end in "."  -- Unravelled Fates opens on a question,
+#      so the split is on [.?!].
+#   3. Case is not a signal. "ADEPTUS ASTARTES model only" (Wahapedia-sourced)
+#      and "Adeptus Astartes model only" (faction-pack-sourced) are one
+#      restriction. Matching is case-folded and apostrophe-normalised.
+#   4. "only" also occurs in ordinary prose ("...can only be targeted by..."),
+#      so a clause must be a WHOLE sentence ending in "only" or in
+#      "only (excluding ...)", and no longer than 110 characters.
+#   5. "(excluding ...)" appears on both sides of "only" -- both
+#      "HERETIC ASTARTES model only (excluding Damned models)" and
+#      "Heretic Astartes Infantry model (excluding Damned models) only" occur.
+#   6. "/" alternates the HEAD term and shares the tail:
+#      "INFANTRY/MOUNTED THOUSAND SONS PSYKER" is (Infantry or Mounted) and
+#      Thousand Sons and Psyker -- not "Infantry" or "Mounted Thousand Sons
+#      Psyker". The same one rule also gives the right answer for
+#      "SORCERER/EXALTED SORCERER", where the tail is empty.
+#
+# TERM VOCABULARY comes from Datasheets_keywords.csv (every keyword GW prints on
+# a datasheet) plus Datasheets.csv (every datasheet name), both raw sources.
+# Longest-match wins, so "Adeptus Astartes Terminator" splits into the two-word
+# faction keyword and the one-word keyword rather than three loose words.
+
+ER_SCOPE_WORDS = {"model": "model", "models": "model",
+                  "unit": "unit", "units": "unit"}
+
+ER_CLAUSE_MAX = 110
+
+_ER_ONLY_TAIL = re.compile(r"only\s*(\([^)]*\))?\s*[.?!]?$", re.I)
+_ER_EXCLUDING = re.compile(r"\(\s*excluding\s+(.*?)\)", re.I)
+_ER_ABILITY = re.compile(r"\bwith the (.+?) ability\b", re.I)
+_ER_SENT_SPLIT = re.compile(r"(?<=[.?!])\s+")
+
+
+def er_norm(s):
+    s = (s or "").replace("\u2019", "'").replace("\u2018", "'")
+    s = s.replace("\u2013", "-").replace("\u2014", "-")
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def er_key(s):
+    return er_norm(s).lower()
+
+
+def er_build_vocab(root):
+    """lower-cased term -> canonical spelling, from the two raw keyword sources."""
+    vocab = {}
+    for r in read_pipe_csv(os.path.join(root, "Datasheets_keywords.csv")):
+        k = er_norm(r.get("keyword"))
+        if k:
+            vocab.setdefault(er_key(k), k)
+    for r in read_pipe_csv(os.path.join(root, "Datasheets.csv")):
+        n = er_norm(r.get("name"))
+        if n:
+            vocab.setdefault(er_key(n), n)
+    return vocab
+
+
+def er_speeder_units(root):
+    """The SPEEDER curation (12 records, all Upgrades, six SM-family armies).
+
+    There is no SPEEDER keyword anywhere in Datasheets_keywords.csv -- 1,423
+    distinct keywords, checked -- so the token cannot resolve and MFM prints it
+    anyway. Same shape as B113's Pact of Cursed Pinions: curate, comment, and
+    let a census assertion fail if a source refresh ever adds the keyword.
+
+    Derived from source rather than hard-coded to today's four built units, so a
+    later chapter build picks its own speeders up without editing this file. The
+    definition is the Adeptus Astartes datasheets whose name contains "Speeder";
+    the count is pinned by the B93-CENSUS assertion, so a source change that
+    moves it fails a gate instead of silently widening or narrowing the rule.
+    """
+    fac = {}
+    for r in read_pipe_csv(os.path.join(root, "Datasheets_keywords.csv")):
+        if er_key(r.get("keyword")) == "adeptus astartes":
+            fac[r.get("datasheet_id")] = True
+    out = []
+    for r in read_pipe_csv(os.path.join(root, "Datasheets.csv")):
+        n = er_norm(r.get("name"))
+        if n and "speeder" in n.lower() and fac.get(r.get("id")):
+            out.append(n)
+    return sorted(set(out))
+
+
+# Clauses whose head token cannot be resolved from the keyword sources, or whose
+# resolution is a documented source inconsistency. Each entry replaces the parsed
+# alternatives wholesale and is marked resolution="curated" in the output.
+#
+#   SPEEDER unit only          -- no such keyword exists; see er_speeder_units.
+#   SPAWN unit only            -- Thousand Sons. GW's own keyword data is
+#                                 inconsistent: World Eaters' Chaos Spawn carries
+#                                 "Spawn", every other faction's carries "Chaos
+#                                 Spawn" (checked across all seven Spawn
+#                                 datasheets). Both spellings are admitted so the
+#                                 token resolves rather than leaving residue.
+#                                 NOTE, per B129's own re-derivation: this does
+#                                 NOT change the record's legality. Thousand Sons'
+#                                 Chaos Spawn is Beast-typed, so under D335 (the
+#                                 clause narrows WITHIN the Characters-only
+#                                 default) the record stays zero-admit and keeps
+#                                 its B129 exemption. The alias buys a clean parse,
+#                                 not a bearer.
+def er_curations(root):
+    return {
+        "speeder unit only": [[n] for n in er_speeder_units(root)],
+        "spawn unit only": [["Spawn"], ["Chaos Spawn"]],
+    }
+
+
+def er_tokenise(phrase, vocab):
+    """Greedy longest-match into vocabulary terms. Returns (terms, residue)."""
+    words = er_norm(phrase).split()
+    terms, residue, i = [], [], 0
+    while i < len(words):
+        hit = None
+        for j in range(len(words), i, -1):
+            v = vocab.get(er_key(" ".join(words[i:j])))
+            if v:
+                hit = (v, j)
+                break
+        if hit:
+            terms.append(hit[0])
+            i = hit[1]
+        else:
+            residue.append(words[i])
+            i += 1
+    return terms, residue
+
+
+def er_split_alternatives(body, vocab):
+    """Split a clause head into alternative conjunctive term lists.
+
+    "or" and "," alternate whole phrases; "/" alternates only the head term and
+    shares the tail (trap 6). Raises on any word that is not a known term.
+    """
+    alts, residue = [], []
+    for part in re.split(r"\s+or\s+|\s*,\s*", body, flags=re.I):
+        part = er_norm(part)
+        if not part:
+            continue
+        if "/" in part:
+            segs = [er_norm(s) for s in part.split("/")]
+            tail_terms, tail_res = er_tokenise(segs[-1], vocab)
+            residue += tail_res
+            if not tail_terms:
+                residue.append(part)
+                continue
+            shared = tail_terms[1:]
+            alts.append(tail_terms)
+            for s in segs[:-1]:
+                head, hres = er_tokenise(s, vocab)
+                residue += hres
+                if len(head) != 1:
+                    residue.append(s)
+                    continue
+                alts.append(head + shared)
+        else:
+            terms, res = er_tokenise(part, vocab)
+            residue += res
+            if terms:
+                alts.append(terms)
+    return alts, residue
+
+
+def er_split_exclusions(text, vocab):
+    out, residue = [], []
+    for part in re.split(r"\s+and\s+|\s*,\s*", er_norm(text), flags=re.I):
+        part = er_norm(re.sub(r"\b(models?|units?)$", "", er_norm(part), flags=re.I))
+        if not part:
+            continue
+        terms, res = er_tokenise(part, vocab)
+        residue += res
+        if terms:
+            out.append(terms)
+    return out, residue
+
+
+def er_find_clause(desc):
+    """(clause, sentence_index) for the first sentence that is a restriction."""
+    for i, s in enumerate(x.strip() for x in _ER_SENT_SPLIT.split(desc or "")):
+        if not s or len(s) > ER_CLAUSE_MAX:
+            continue
+        if _ER_ONLY_TAIL.search(s):
+            return re.sub(r"[.?!]$", "", s).strip(), i
+    return None, None
+
+
+def er_parse_clause(clause, vocab, curations):
+    """Structured restriction for one clause. Raises SystemExit on any residue."""
+    curated = curations.get(er_key(clause))
+    body = er_norm(clause)
+
+    exclusions, residue = [], []
+    m = _ER_EXCLUDING.search(body)
+    if m:
+        exclusions, residue = er_split_exclusions(m.group(1), vocab)
+        body = er_norm(body[:m.start()] + " " + body[m.end():])
+
+    if not re.search(r"\bonly$", body, re.I):
+        raise SystemExit("B93: clause does not end in 'only': %r" % clause)
+    body = er_norm(re.sub(r"\bonly$", "", body, flags=re.I))
+
+    ability = None
+    m = _ER_ABILITY.search(body)
+    if m:
+        ability = er_norm(m.group(1))
+        body = er_norm(body[:m.start()] + " " + body[m.end():])
+
+    scope = "bare_name"
+    words = body.split()
+    if words and er_key(words[-1]) in ER_SCOPE_WORDS:
+        scope = ER_SCOPE_WORDS[er_key(words[-1])]
+        body = " ".join(words[:-1])
+
+    if curated is not None:
+        alternatives = [list(a) for a in curated]
+    else:
+        alternatives, res = er_split_alternatives(body, vocab)
+        residue += res
+
+    if residue:
+        raise SystemExit(
+            "B93: unparsed token(s) %r in clause %r -- the clause vocabulary has "
+            "changed. Add a term to the source keyword data or a curation, do not "
+            "loosen the parse." % (sorted(set(residue)), clause))
+    if not alternatives:
+        raise SystemExit("B93: clause resolved to no alternatives: %r" % clause)
+
+    return OrderedDict([
+        ("clause", clause),
+        ("scope", scope),
+        ("alternatives", alternatives),
+        ("exclusions", exclusions),
+        ("ability", ability),
+        ("resolution", "curated" if curated is not None else "parsed"),
+    ])
+
+
+def er_restriction(desc, vocab, curations):
+    """(field, sentence_index) for one enhancement description; field may be None."""
+    clause, idx = er_find_clause(desc)
+    if clause is None:
+        return None, None
+    rec = er_parse_clause(clause, vocab, curations)
+    rec["sentence_index"] = idx
+    return rec, idx
+
+
+# ---------------------------------------------------------------------------
 # 4. Build
 # ---------------------------------------------------------------------------
 
@@ -1148,6 +1427,13 @@ def build(root, out_path, report_path=None):
             wanted.add(norm_key(d["name_raw"]))
 
     waha = load_wahapedia(root)
+
+    # B93: term vocabulary and the two curations, built once per run.
+    er_vocab = er_build_vocab(root)
+    er_cur = er_curations(root)
+    er_counts = {"parsed": 0, "curated": 0, "none": 0}
+    er_clauses = {}
+
     packs = {}
     packs.update({k: ("Space Marines Faction Pack v1.0", v)
                   for k, v in parse_sm_pack(os.path.join(root, "Space_Marines_Faction_Pack_v1_0.md"), wanted).items()})
@@ -1235,14 +1521,16 @@ def build(root, out_path, report_path=None):
                     desc = w_enh.get(ek)
                     dsrc = "wahapedia_10e" if desc else "none"
                 desc_counts[dsrc] += 1
-                enh_out.append({
-                    "name": e["name"],
-                    "name_raw": e["name_raw"],
-                    "points": e["points"],
-                    "is_upgrade": e["is_upgrade"],
-                    "description": desc,
-                    "description_source": dsrc,
-                })
+                restriction, _ = er_restriction(desc, er_vocab, er_cur)
+                enh_out.append(OrderedDict([
+                    ("name", e["name"]),
+                    ("name_raw", e["name_raw"]),
+                    ("points", e["points"]),
+                    ("is_upgrade", e["is_upgrade"]),
+                    ("description", desc),
+                    ("description_source", dsrc),
+                    ("bearer_restriction", restriction),
+                ]))
 
             mfm_keys = {norm_key(e["name"]) for e in d["enhancements"]}
             dropped_waha_enh += len([k for k in w_enh if k not in mfm_keys])
@@ -1289,6 +1577,19 @@ def build(root, out_path, report_path=None):
             keys.append(k)
         army_index[army] = keys
 
+    # B93 counters are taken from the deduplicated catalogue, not from the loop
+    # above: that loop runs once per army SLOT (349), and seven armies share the
+    # same generic Space Marines records, so counting there triples parts of the
+    # population. The catalogue is the 739-record set every other figure uses.
+    for _r in catalogue.values():
+        for _e in _r["enhancements"]:
+            _br = _e["bearer_restriction"]
+            if _br is None:
+                er_counts["none"] += 1
+            else:
+                er_counts[_br["resolution"]] += 1
+                er_clauses[_br["clause"]] = er_clauses.get(_br["clause"], 0) + 1
+
     doc = OrderedDict([
         ("_meta", OrderedDict([
             ("generator", "detachment_parser.py"),
@@ -1304,6 +1605,9 @@ def build(root, out_path, report_path=None):
                 _tally(catalogue.values(), lambda r: r["force_disposition"]).items()))),
             ("text_source_counts", OrderedDict(sorted(
                 _tally(catalogue.values(), lambda r: r["text_source"]).items()))),
+            ("enhancement_bearer_restriction_counts", OrderedDict(
+                sorted(er_counts.items()))),
+            ("enhancement_bearer_restriction_clauses", len(er_clauses)),
             ("enhancement_description_source_counts", OrderedDict(sorted(
                 _tally([e for r in catalogue.values() for e in r["enhancements"]],
                        lambda e: e["description_source"]).items()))),

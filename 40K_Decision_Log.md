@@ -15029,3 +15029,98 @@ files not yet pushed, five files differing from the unpushed edit — which reso
 the next session verifies.
 
 **B138 closes.**
+
+## D351 — B93 data turn: every enhancement's bearer restriction parsed into `detachments.json` (S254)
+
+**Turn type: data.** B93's first build turn, per `B93_SCOPE.md` §7's four-turn plan (data → engine →
+assertion → tooling). No engine change; `index.html` is untouched at v6.26.
+
+**Why B93 and not B90.** Both were offered by the S254 prompt as a sequencing call. B93's stated gates
+are effectively clear — B125 closed S243, B126 shipped S249, B128 shipped S248 — and B127, the one
+still open, is a source-acquisition cap rather than a build blocker: its 74 records carry no clause to
+parse, so they fall through to the existing Character default, which is the correct behaviour. B90
+turn 2, by contrast, still needs a per-chapter roster build path that does not exist and was deferred
+once at S186 for exactly that reason; it needs its own scoping turn before a data turn can land. B93
+also covers the wider live D0 surface — 369 over-admitting records across 13 of 14 armies against
+B90's five chapters in one family.
+
+**The S240 census reproduces exactly against today's data.** Re-derived at session open rather than
+inherited: 641 records carry a bearer clause, 117 distinct clause strings, clause at sentence position
+0/1/2 for 439/183/19 records, 74 description-empty, 24 Chaos Daemons shorthand, 739 total. Every
+figure in `B93_SCOPE.md` §2 and §3 holds.
+
+**Three corrections to `B93_SCOPE.md` §5, each checked at source.**
+
+- **`Harlequins` is not unresolvable.** It is a real faction keyword in `Datasheets_keywords.csv`. It
+  has no bearers only because Harlequins is not a built faction — correct behaviour, not a curation
+  case. §5's recommendation to "curate as a no-op" is unnecessary and would have added an entry that
+  does nothing.
+- **`SPEEDER` is confirmed genuinely absent** from all 1,423 keywords, and remains the only token that
+  cannot resolve. It is curated.
+- **The `SPAWN` case is a GW data inconsistency, not a naming mismatch on our side.** Across all seven
+  Chaos Spawn datasheets, World Eaters' carries `Spawn` and every other faction's carries `Chaos
+  Spawn`. Both spellings are admitted so the token resolves. Per B129's own re-derivation this changes
+  no legality: Thousand Sons' Chaos Spawn is Beast-typed, so under D335 the record stays zero-admit and
+  keeps its B129 exemption. The alias buys a clean parse, not a bearer — `B93_SCOPE.md` §5's framing of
+  it as a fix is wrong and B129's reading is the correct one.
+
+**The slash trap needs one grammar rule, not a curated map.** `INFANTRY/MOUNTED THOUSAND SONS PSYKER`
+and `SORCERER/EXALTED SORCERER` have the same surface shape and different parses. Treating the slash as
+alternating the HEAD term over a shared tail gives the right answer for both — the second simply has an
+empty tail, because `Exalted Sorcerer` is itself a single two-word keyword. Verified against both
+records.
+
+**Decision: `or` and `,` alternation does NOT distribute a shared prefix.** `Adeptus Astartes Terminator
+or Gravis model only` is emitted as (Adeptus Astartes AND Terminator) OR (Gravis), not as (Adeptus
+Astartes AND Terminator) OR (Adeptus Astartes AND Gravis). The two readings are indistinguishable on
+real data because an enhancement is always scoped to one army and every unit in that army already
+carries the faction keyword. **Checked, not assumed:** both readings were resolved against every army
+pool for all 13 army-scoped multi-alternative clauses, and the admitted bearer sets are identical in
+every case. Non-distributing was chosen because it needs no rule about how far a prefix reaches, which
+is the part that would be ambiguous.
+
+**Structure emitted, and what is deliberately NOT emitted.** Each enhancement record gains a
+`bearer_restriction` — `null`, or an object carrying the verbatim clause, its sentence index, a scope
+of `model` / `unit` / `bare_name`, a list of alternatives (each a conjunctive list of terms), a list of
+exclusions, an optional ability qualifier, and `resolution` of `parsed` or `curated`. It names TERMS,
+not units. No resolution against any roster happens at build time, because which units satisfy a term
+depends on chapter keyword restoration (B132), muster-time conferral (B128) and Marks of Chaos (B126) —
+all engine-time state. Resolving here would bake a snapshot of all three.
+
+**Where it lives and why.** In `detachment_parser.py`, not in `index.html`. At 641 records against
+B113's curated 7, curation stops being the right answer, and parsing in the pipeline puts the result
+under `detachments_repro_check.py` — a hand edit or a silent source change fails a gate instead of
+drifting. Two raw sources are added as parser inputs for the term vocabulary, `Datasheets_keywords.csv`
+and `Datasheets.csv`; both are read only to tokenise clauses, and no unit, points or roster data is
+taken from either. `detachments_repro_check.py`'s `REQUIRED` list updated to match.
+
+**The parser is total.** Every clause either parses completely or the build stops. There is no
+"partly parsed" state, because a partly-parsed restriction is indistinguishable from a correctly-parsed
+looser one, and loose is the direction that ships an illegal list. Result: 628 parsed, 13 curated
+(12 SPEEDER + 1 SPAWN), 98 with no clause. 628 + 13 = 641, matching the census exactly.
+
+**Diff-guarded before promotion.** The regenerated `detachments.json` differs from the committed file
+in exactly two ways: the new `bearer_restriction` key on each enhancement, and two new `_meta`
+counters. Zero other field changes across all 211 catalogue records, and the army index is unchanged.
+
+**A counting bug found and fixed during the build, worth recording.** The first cut counted restrictions
+inside the per-army loop, which runs once per army SLOT (349), not once per distinct record (739) —
+seven armies share the same generic Space Marines detachment records, so the totals came out at 1,261.
+Counters now derive from the deduplicated catalogue, which is the set every other figure in `_meta`
+uses. The tell was that the total exceeded the known population; an impossible census result means
+widen the read, never explain the result.
+
+**`B93-CENSUS` added to `rules_assertions.py` (tier B).** It re-derives clause detection from the
+description text independently of the parser — deliberately not by importing it, since an assertion that
+reuses the producer's extractor cannot detect the producer failing to extract — and checks coverage in
+both directions, the pinned population, that every emitted term is a real keyword or datasheet name, and
+that both curations still hold including that SPEEDER is still absent from source. The term-reality
+check is the one that matters most: a dropped or mis-split token produces a term matching nothing, which
+silently WIDENS the restriction. Negative-tested per project precedent: dropping one restriction and
+loosening one term were each detected. 138 assertions, all pass.
+
+**Not this turn.** No engine consumption — `enhancementTypeEligible()` is still a gate rather than a
+default and `enhancementBearerEligible()` still reads only B113's seven curated rows, so the live D0 gap
+is unchanged. B93_SCOPE.md §7's zero-admit/one-admit regression pinning also waits for the engine turn,
+because both need the engine's own keyword resolution semantics; B129 already polices the zero-admit end
+from source in the meantime.

@@ -3,8 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S253 (B138 closed):
-B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B85,
+not here, it isn't open. **24 open** as of S254 (B139 opened; B93 progressed, still open):
+B139, B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B85,
 B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 **Housekeeping, S249.** Three closed-pointer stubs (B111, B89, B100) were sitting in the Open
@@ -773,6 +773,36 @@ a render branch in the right-panel path. Comparable in size to E1c's original bu
 session should confirm whether per-unit enhancement assignment (unaffected by this move) needs any
 UI adjustment once Detachments get their own detail view.
 
+### B139 — the nine Chaos Daemons root CSVs are guarded by two manifests with nothing keeping them in step — **NEW S254 (D351); tooling; S**
+
+D350 (S253) added the nine hand-authored root CSVs (`Unit_Stats.csv` … `Weapon_Abilities.csv`) to
+`pipeline_manifest.py`'s `GUARDED` list and relaxed the public-repo GW-source exclusion so they could
+live there. They were already guarded by `source_manifest.json` against the private data-sources repo,
+where they are actually maintained. So the same nine files now carry two custody claims pointing at two
+different repos, and nothing propagates an edit from one to the other.
+
+The cost is not hypothetical: it fired immediately. S254 opened into a 26-gate failure cascade because
+the nine had not yet reached the public repo — `fetch-verify` aborts the entire overlay when any guarded
+file is absent from the fetch, so `units.json`, `detachments.json`, `unit_loadouts.json` and
+`abilities.json` were never brought in, and every gate reading them crashed with a bare Node stack trace
+that is indistinguishable from a real failure. That will recur every time a CSV changes in the private
+repo and the public copy lags.
+
+**Two things to decide and one to fix.**
+
+1. *Which manifest owns these files.* Recommendation: `source_manifest.json` alone, and drop the nine
+   from `GUARDED`. It is the repo where they are maintained, it is verified whenever they are actually
+   consumed (every `--data-turn`), and `repo_check.py` reads its expected-file set live from
+   `pipeline_manifest.json`, so removing them there fixes both gates in one edit. This does not undo
+   D350 — that answered "may we publish these", and Ryan said yes; this says we do not need to. Ryan
+   has since pushed them, so nothing is blocked either way.
+2. *If they stay in both,* something must fail loudly when the two manifests disagree about the same
+   filename, rather than the disagreement surfacing as a fetch cascade.
+3. *Independent of 1 and 2:* `baseline.sh`'s `fetch-verify` should not let one absent file suppress the
+   overlay of every other file. Failing loudly is right; failing in a way that produces 25 further
+   misleading failures is not. Recovering the files it CAN verify, then reporting the absent ones, gives
+   the same information without the cascade.
+
 ### B134 — Six non-legality-critical automatic keyword conferrals from B128's census have no ticket — **NEW S248 (D345); scoping; S; not D0**
 
 Surfaced by B128's original census (D335) and left explicitly out of B128's scope: 6 automatic
@@ -892,6 +922,30 @@ B99-CENSUS/B119-CENSUS pattern. **Gated on B125** — enforcement on today's ros
 legal Dark Angels lists. D199's caution applies throughout: 8 Character-typed units carry no
 Character keyword and 6 have multiple model groups, so an unevaluable restriction must fall through
 to permissive, not refuse. Full detail in `B93_SCOPE.md`.
+
+**PROGRESS — turn 1 of 4 shipped S254 (D351): the data turn.** Every enhancement record in
+`detachments.json` now carries a structured `bearer_restriction` parsed from its own description —
+verbatim clause, sentence index, scope (`model`/`unit`/`bare_name`), alternatives (each a conjunctive
+term list), exclusions, an optional ability qualifier, and `resolution` of `parsed`/`curated`. Parsed
+in `detachment_parser.py` so the result sits under `detachments_repro_check.py`;
+`Datasheets_keywords.csv` and `Datasheets.csv` added as parser inputs for the term vocabulary only.
+628 parsed, 13 curated (12 SPEEDER + 1 SPAWN), 98 no clause — 739 total, matching the S240 census
+exactly, which was re-derived at open and reproduces in every figure. New `B93-CENSUS` assertion
+(tier B, negative-tested twice). Three `B93_SCOPE.md` §5 corrections are recorded in D351:
+`Harlequins` needs no curation, `SPEEDER` is confirmed the only unresolvable token, and the `SPAWN`
+alias buys a clean parse rather than a bearer (B129's reading is right, §5's is wrong).
+**Deliberately not resolved at build time:** the field names terms, never units, because which units
+satisfy a term depends on B132, B128 and B126 engine-time state.
+
+**NEXT: turn 2, the engine turn.** `enhancementBearerEligible()` gains a structured-rule branch
+alongside B113's curated one, and `enhancementTypeEligible()` demotes from gate to default — applied
+when a record carries no clause, superseded when it does (D335: the clause narrows WITHIN the
+Characters-only default). Epic Hero stays an unconditional refusal. D199's fall-through-to-permissive
+rule governs any restriction that cannot be evaluated against a unit's data. B113's seven curated rows
+and the four B126 mark rows are subsumed by the resolver in that turn, not this one. **The live D0 gap
+is unchanged until turn 2 ships** — 369 records still over-admit today. Turn 3 pins the 35 zero-admit
+and 73 one-admit regression sets, which need the engine's own keyword resolution and so cannot be done
+before turn 2.
 
 ### B127 — 74 enhancement records have no rule text in any held source — **NEW S240 (D334); source acquisition; blocks B93/B99/B119/B123**
 

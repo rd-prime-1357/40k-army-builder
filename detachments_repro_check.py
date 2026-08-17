@@ -42,6 +42,10 @@ REQUIRED = [
     'thousand_sons-June_27th_2026.md',
     # Tier-2 prose.
     'Detachments.csv', 'Detachment_abilities.csv', 'Enhancements.csv', 'Stratagems.csv',
+    # B93 bearer-restriction term vocabulary: every keyword GW prints on a
+    # datasheet, plus every datasheet name. Read only to tokenise restriction
+    # clauses -- no unit, points or roster data is taken from either file.
+    'Datasheets_keywords.csv', 'Datasheets.csv',
     # Army keying.
     'faction_taxonomy.json',
 ]
