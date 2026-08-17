@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S255 (B139 closed):
+not here, it isn't open. **23 open** as of S256 (B93 turn 2 shipped, ticket stays open for turns 3-4):
 B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B85,
 B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
@@ -907,15 +907,26 @@ alias buys a clean parse rather than a bearer (B129's reading is right, §5's is
 **Deliberately not resolved at build time:** the field names terms, never units, because which units
 satisfy a term depends on B132, B128 and B126 engine-time state.
 
-**NEXT: turn 2, the engine turn.** `enhancementBearerEligible()` gains a structured-rule branch
-alongside B113's curated one, and `enhancementTypeEligible()` demotes from gate to default — applied
-when a record carries no clause, superseded when it does (D335: the clause narrows WITHIN the
-Characters-only default). Epic Hero stays an unconditional refusal. D199's fall-through-to-permissive
-rule governs any restriction that cannot be evaluated against a unit's data. B113's seven curated rows
-and the four B126 mark rows are subsumed by the resolver in that turn, not this one. **The live D0 gap
-is unchanged until turn 2 ships** — 369 records still over-admit today. Turn 3 pins the 35 zero-admit
-and 73 one-admit regression sets, which need the engine's own keyword resolution and so cannot be done
-before turn 2.
+**PROGRESS — turn 2 of 4 shipped S256 (D353): the engine turn. The live D0 gap is CLOSED.**
+`index.html` v6.27 carries a resolver over the structured field, and the curated
+`ENHANCEMENT_BEARER_RESTRICTIONS` table is deleted — B113's seven rows and B126's four mark rows are
+subsumed, not left running alongside. Terms are matched against four namespaces (the three keyword
+fields via `markKeywordSet`, the datasheet name, and the entry's effective Mark of Chaos), case- and
+apostrophe-folded, on the chapter-resolved `rawUnits` so B132's restored Deathwing keyword is in
+scope. D199's fall-through-to-permissive is implemented in all three places it can arise and is
+pinned by the harness. New `b93_check.js`; E4b-7 restated for the resolver; `b126_check.js`'s
+enhancement coverage moved into `b93_check.js`.
+
+**Two scope corrections, both recorded in D353.** §7.2's "demote the type gate to a default" is
+NOT implemented: it predates D335, which retains the Characters-only default and narrows within it.
+And B113's `Bray Lord` curated row was too narrow — the clause is keyword-scoped, `SORCERER` is a
+real datasheet keyword, and `Sorcerer In Terminator Armour` carries it, so the table had been
+refusing a legal bearer.
+
+**NEXT: turn 3.** Pin the zero-admit and one-admit regression sets in `rules_assertions.py` as a
+source-side census independent of the engine. `b93_check.js` already pins them from the engine side
+(53 zero-admit across six clauses, all four causes known; 98 one-admit), so turn 3 is the
+independent second derivation, not the first one. Turn 4 is the tooling pass.
 
 ### B127 — 74 enhancement records have no rule text in any held source — **NEW S240 (D334); source acquisition; blocks B93/B99/B119/B123**
 

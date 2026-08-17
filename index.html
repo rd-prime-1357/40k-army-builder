@@ -2259,7 +2259,7 @@
   let POINTS_CAP = 2000;
   const GODS = ['Khorne', 'Tzeentch', 'Nurgle', 'Slaanesh'];
   const GOD_UNITS = new Set(['Soul Grinder', 'Daemon Prince of Chaos', 'Daemon Prince of Chaos with Wings']);
-  const VERSION = '6.26';
+  const VERSION = '6.27';
 
   // ── Army selector (two-step: group → faction) ───────────────────────────────
 
@@ -3451,90 +3451,147 @@
     return Number(pointsTotal) <= 1000 ? 2 : 4;
   }
 
-  // B113. Curated bearer-restriction table for the enhancements identified in
-  // B113_LEADER_RESTRICTION_SCOPE.md as carrying a `LEADER:` line in the MFM.
-  // This enforces the OTHER half of each enhancement's rule text — the "X model
-  // only" bearer restriction printed in the enhancement's own description — not
-  // the LEADER: line itself, which is an attach-ENABLER (grants an attachment
-  // the bearer otherwise lacks) and stays unenforced. Enforcing the LEADER: line
-  // as an assignment restriction would make these enhancements assignable to
-  // nobody (scope doc §2): six of the eight named units have zero leaders that
-  // can attach to them at all under the app's own leaderEligible model.
+  // ── B93: enhancement bearer restrictions — the structured resolver ────────
   //
-  // Hand-curated, not parser-derived, because the source prose is not uniformly
-  // parseable: a single named unit in most cases, an "A or B" pair twice
-  // (Bray Lord, Butcher Lord — Butcher Lord's "World Eaters Infantry model
-  // only" resolves to exactly Master of Executions and Slaughterbound, the only
-  // two World Eaters Characters carrying the Infantry keyword; the Daemon
-  // Princes and Bloodthirster are Monster, Lord on Juggernaut is Mounted —
-  // checked against Datasheets_keywords.csv directly), and once a whole-faction
-  // keyword rather than a named unit (Wolf-touched — checked against
-  // faction_keyword_names: generic Adeptus Astartes Characters carry only the
-  // Adeptus Astartes tag, so only the three Space-Wolves-specific Characters
-  // qualify, not e.g. a generic Captain used in a Space Wolves list).
+  // 641 of the 739 enhancement records print a bearer restriction in their own
+  // description ("ADEPTUS ASTARTES model only", "Captain, Chaplain or Lieutenant
+  // model only", "SPEEDER unit only"). Until now the engine enforced 11 of them
+  // from a hand-written table (B113's seven named-unit/keyword rows and B126's
+  // four Mark of Chaos rows) and over-admitted on the other 630.
   //
-  // Murdertalon Raiders' Pact of Cursed Pinions is deliberately ABSENT from this
-  // table: it carries no bearer text anywhere in the held sources (MFM,
-  // Wahapedia web export, or raw CSVs — checked directly this session, not
-  // assumed from its sibling Sorrowscent Vulture, which shares the same
-  // LEADER: target but is a different detachment). Left unenforced pending a
-  // source or a product call, rather than guessed — see B113_LEADER_RESTRICTION_SCOPE.md §4.
-  const ENHANCEMENT_BEARER_RESTRICTIONS = {
-    'Space Wolves|SAGA OF THE BEASTSLAYER::Wolf-touched':
-      { kind: 'faction_keyword', keyword: 'Space Wolves' },
-    "Space Wolves|SAGA OF THE GREAT WOLF::Grimnar's Mark":
-      { kind: 'unit_name', units: ['Captain In Terminator Armour'] },
-    'Chaos Space Marines|NIGHTMARE HUNT::Sorrowscent Vulture':
-      { kind: 'unit_name', units: ['Chaos Lord with Jump Pack'] },
-    'Thousand Sons|WARPMELD PACT::Bray Lord':
-      { kind: 'unit_name', units: ['Sorcerer', 'Infernal Master'] },
-    "Emperor's Children|COURT OF THE PHOENICIAN::Exalted Patron":
-      { kind: 'unit_name', units: ['Lord Exultant'] },
-    'World Eaters|CULT OF BLOOD::Butcher Lord':
-      { kind: 'unit_name', units: ['Master of Executions', 'Slaughterbound'] },
-    'World Eaters|KHORNE DAEMONKIN::Disciple of Khorne':
-      { kind: 'unit_name', units: ['Lord on Juggernaut'] },
-    // E29/B126: the four Pactbound Zealots enhancements that restrict on the
-    // Mark of Chaos ("Heretic Astartes <mark> model only"). These were the
-    // named blocker on B126 and are unenforceable without a mark to test.
-    // Resolved through entryEffectiveMark — the SAME function the selector and
-    // the attach gate use, not a second reading of the rule (S247/D344).
-    // B93's total resolver will subsume this table, these rows included.
-    'Chaos Space Marines|PACTBOUND ZEALOTS::Eye of Tzeentch':
-      { kind: 'mark', mark: 'Tzeentch' },
-    'Chaos Space Marines|PACTBOUND ZEALOTS::Intoxicating Elixir':
-      { kind: 'mark', mark: 'Slaanesh' },
-    'Chaos Space Marines|PACTBOUND ZEALOTS::Orbs of Unlife':
-      { kind: 'mark', mark: 'Nurgle' },
-    'Chaos Space Marines|PACTBOUND ZEALOTS::Talisman of Burning Blood':
-      { kind: 'mark', mark: 'Khorne' },
-  };
+  // The B93 data turn (S254) parsed every clause into a structured
+  // `bearer_restriction` on the enhancement record in detachments.json:
+  //   clause         the verbatim sentence, for the refusal prose
+  //   scope          'model' | 'unit' | 'bare_name'
+  //   alternatives   list of conjunctive term lists — satisfy ANY, all terms in it
+  //   exclusions     list of conjunctive term lists — satisfy NONE
+  //   ability        optional named ability the bearer must have
+  //   resolution     'parsed' | 'curated'
+  // This block is the only reader of that field. The curated table is GONE, not
+  // kept alongside — two implementations of one rule is how S247/D344 happened.
+  //
+  // D335 GOVERNS, NOT D334. The clause NARROWS within the Characters-only
+  // default; it does not replace it. enhancementTypeEligible stays a gate.
+  // The 24 Vehicle-only records are not stranded by that: Headhunter Task
+  // Force's own rule confers CHARACTER on up to three Tank Ace units during
+  // mustering, which the engine already models (B128/E23), and
+  // entryEffectiveType reports it here. B93_SCOPE.md §7.2's "demote the type
+  // gate to a default" wording predates D335 and is not followed.
+  //
+  // D199 FALL-THROUGH IS MANDATORY, and it is a fall-through to PERMISSIVE.
+  // Eight Character-typed units carry no CHARACTER keyword and the keyword
+  // lists are unevenly populated, so a restriction that cannot be evaluated
+  // against a unit's data must admit, never refuse — refusing on absent data
+  // is how a legal pick gets blocked. Two places below do that explicitly: an
+  // entry whose datasheet is not in the current pool, and a unit whose term
+  // set is empty. The ability qualifier does the same when a unit carries no
+  // ability data at all.
+  //
+  // A NOTE ON DIRECTION, because the two failure modes are not symmetrical: a
+  // term that matches nothing makes its alternative unsatisfiable and NARROWS
+  // to zero bearers, while a term dropped from an alternative WIDENS it. The
+  // parser's term-reality check (B93-CENSUS) polices the data side; b93_check.js
+  // polices this side by pinning the bearer sets of the records that resolve to
+  // one unit, where either bug shows up first.
 
-  function enhancementBearerRestriction(name, detachmentKey) {
-    return ENHANCEMENT_BEARER_RESTRICTIONS[detachmentKey + '::' + name] || null;
+  // Case-folded, apostrophe-insensitive. The source spells Emperor's Children
+  // with a curly apostrophe in the keyword tables and a straight one in some
+  // clause text, and that single term is the only non-alphanumeric string in
+  // the whole 78-term vocabulary — so both are folded away rather than mapped.
+  function bearerNorm(s) {
+    return String(s == null ? '' : s)
+      .toLowerCase()
+      .replace(/[\u2018\u2019\u02bc]/g, "'")
+      .replace(/'/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
-  // rawUnits (not the lightweight allUnits view) carries model_groups with
-  // faction_keyword_names, needed for the one keyword-kind restriction.
+  // Everything an ENTRY can satisfy a clause term with. Four namespaces, the
+  // same ones the data was tokenised against:
+  //   - markKeywordSet's three keyword fields (keyword_names,
+  //     faction_keyword_names and model_keyword_names) — reused rather than
+  //     re-read, so the widest keyword reader in the app stays single-sourced;
+  //     ADEPTUS ASTARTES and HERETIC ASTARTES live in faction_keyword_names,
+  //     and some units carry keywords on model rows only
+  //   - the datasheet name, for the 11 bare-name clauses ("HELLBLASTER SQUAD
+  //     only") and for the clauses whose term is both a name and a keyword
+  //   - the entry's effective Mark of Chaos, which is a keyword the unit gains
+  //     during mustering and therefore is not on the datasheet. This is what
+  //     subsumes B126's four curated rows: "Heretic Astartes Khorne model only"
+  //     resolves through entryEffectiveMark, the same function the mark selector
+  //     and the attach gate use.
+  // rawUnits (not allUnits) carries model_groups, and it is already
+  // chapter-resolved — resolveUnits applies chapter_keyword_additions (B132)
+  // before setActiveUnits stores it, so Dark Angels' Deathwing clauses see the
+  // restored keyword and do not regress to zero bearers.
+  // Empty strings are never added: an empty term set is the signal D199's
+  // fall-through reads, and a stray '' in it would make an unevaluable unit look
+  // evaluable and get it refused.
+  function bearerTermSet(entry, keys) {
+    const s = new Set();
+    if (!entry) return s;
+    const add = v => { const n = bearerNorm(v); if (n) s.add(n); };
+    const raw = (rawUnits || []).find(u => u.unit_name === entry.unit_name);
+    if (raw) {
+      for (const k of markKeywordSet(raw)) add(k);
+      add(raw.unit_name);
+    }
+    add(entryEffectiveMark(entry, keys));
+    return s;
+  }
+
+  // Named abilities, for the five "…with the Deep Strike ability only" records.
+  // rule_names carries the core-rules abilities (Deep Strike, Leader, Scouts);
+  // unit_ability_names and wargear_ability_names carry the datasheet's own.
+  function bearerAbilitySet(raw) {
+    const s = new Set();
+    if (!raw) return s;
+    for (const g of (raw.model_groups || [])) {
+      for (const a of (g.rule_names || [])) s.add(bearerNorm(a));
+      for (const a of (g.unit_ability_names || [])) s.add(bearerNorm(a));
+      for (const a of (g.wargear_ability_names || [])) s.add(bearerNorm(a));
+    }
+    for (const a of Object.keys(raw.unit_ability_details || {})) s.add(bearerNorm(a));
+    return s;
+  }
+
+  // The restriction carried by a record, or null when it carries none. Null is
+  // the 98 records with no clause and the records whose clause the parser could
+  // not turn into a single satisfiable alternative — both mean "no bearer rule
+  // to enforce", which is the permissive reading on purpose.
+  function enhancementBearerRestriction(name, detachmentKey) {
+    const rec = enhancementRecord(name, detachmentKey);
+    const br  = rec && rec.bearer_restriction;
+    return (br && Array.isArray(br.alternatives) && br.alternatives.length) ? br : null;
+  }
+
   function enhancementBearerEligible(entry, name, detachmentKey) {
     const rule = enhancementBearerRestriction(name, detachmentKey);
     if (!rule) return true;
-    if (rule.kind === 'unit_name') return rule.units.indexOf(entry.unit_name) >= 0;
-    if (rule.kind === 'faction_keyword') {
-      const raw = (rawUnits || []).find(u => u.unit_name === entry.unit_name);
-      const mg  = raw && raw.model_groups && raw.model_groups[0];
-      const fkn = (mg && mg.faction_keyword_names) || [];
-      return fkn.indexOf(rule.keyword) >= 0;
-    }
-    // E29/B126. An outstanding choice reads as "not this mark" and refuses:
-    // unlike the attach rule, nothing here is made unreachable by refusing, and
-    // the entry already carries the "! Choose Mark of Chaos" flag telling the
-    // player exactly what to do to make the row eligible.
-    if (rule.kind === 'mark') {
-      return entryEffectiveMark(entry, selectedDetachments) === rule.mark;
+    const raw = (rawUnits || []).find(u => u.unit_name === (entry && entry.unit_name));
+    if (!raw) return true;                       // D199 — no data, no refusal
+    const terms = bearerTermSet(entry, selectedDetachments);
+    if (!terms.size) return true;                // D199 — no keywords, no refusal
+    const has = t => terms.has(bearerNorm(t));
+
+    if (!rule.alternatives.some(alt => alt.length > 0 && alt.every(has))) return false;
+
+    // Exclusions read across the whole unit, matching the inclusion side. No
+    // unit in the data carries any of the four exclusion keywords (Damned,
+    // Terminator, Jump Pack, Khorne) on some model groups but not others, so a
+    // per-group reading would change nothing today; b93_check pins that, and a
+    // future unit that splits one becomes a visible gate failure rather than a
+    // silent over-refusal.
+    if ((rule.exclusions || []).some(ex => ex.length > 0 && ex.every(has))) return false;
+
+    if (rule.ability) {
+      const ab = bearerAbilitySet(raw);
+      if (ab.size && !ab.has(bearerNorm(rule.ability))) return false;   // D199 on empty
     }
     return true;
   }
+  // ── B93 block end ─────────────────────────────────────────────────────────
 
 
   // ── B99 BEGIN: enhancement-conferred weapon modifications ─────────────────
@@ -3551,8 +3608,9 @@
   // and miss silently on the rest, and the misses are the dangerous ones — the
   // AP sign rule below, the variable A/D values, Ancient Weapons' anaphora
   // ("…of those weapons"), and Blades of Valour / Eye of the Primarch, which
-  // name the bearer AND other models in one clause. The key shape is B113's
-  // ENHANCEMENT_BEARER_RESTRICTIONS, deliberately: same key, same discipline.
+  // name the bearer AND other models in one clause. The key shape is the
+  // detachment_key::name shape B113's curated bearer table used before B93
+  // replaced it with a resolver, deliberately: same key, same discipline.
   //
   // OUT OF SCOPE, banked: conditional effects (Set B); the bearer's own statline
   // (Set C, B119); other models' weapons (Set D, B120). Chaos Daemons carries
@@ -3861,8 +3919,8 @@
   // 6 names / 8 armies, every one of them an "add 1" or "improve … by 1" on
   // Toughness, Wounds or Objective Control.
   //
-  // Same key shape and same discipline as ENHANCEMENT_WEAPON_EFFECTS and
-  // ENHANCEMENT_BEARER_RESTRICTIONS, deliberately.
+  // Same key shape and same discipline as ENHANCEMENT_WEAPON_EFFECTS,
+  // deliberately.
   //
   // WHAT IS DELIBERATELY NOT HERE (B123, banked): the 25 further records / 11
   // further names that set the bearer's statline to an ABSOLUTE value or grant
@@ -4323,13 +4381,16 @@
       return canAssign.is_upgrade ? 'This unit cannot take this Upgrade.'
                                   : 'Only Characters can be given this enhancement.';
     }
+    // B93. The clause GW printed is already a complete restriction sentence
+    // ("ADEPTUS ASTARTES model only", "Captain, Chaplain or Lieutenant model
+    // only"), so it is shown verbatim rather than reworded — a paraphrase of 117
+    // distinct clauses would be a second reading of the rule, and the player can
+    // match what they see here against the enhancement's own text.
     if (canAssign.reason === 'bearer_restriction') {
-      const rule = canAssign.bearer_rule;
-      if (rule && rule.kind === 'unit_name')
-        return 'Only ' + rule.units.join(' or ') + ' can take this enhancement.';
-      if (rule && rule.kind === 'faction_keyword')
-        return 'Only a ' + rule.keyword + ' model can take this enhancement.';
-      return 'This unit cannot take this enhancement.';
+      const rule   = canAssign.bearer_rule;
+      const clause = rule && rule.clause ? String(rule.clause).trim() : '';
+      if (!clause) return 'This unit cannot take this enhancement.';
+      return /[.!?]$/.test(clause) ? clause : clause + '.';
     }
     if (canAssign.reason === 'unit_has_one')
       return canAssign.attached

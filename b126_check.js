@@ -1,8 +1,8 @@
 // b126_check.js — B126 (D346). Loads the real markEffect / markKeywordSet /
 // unitInnateMark / unitNeedsMark / markOptionsForUnit / entryEffectiveMark /
-// entryMarkStale / entryMarkMissing / markAttachBlock / canSetMark / setMark and
-// the real enhancementBearerEligible out of index.html, and proves the Marks of
-// Chaos rule behaves as ruled rather than as described in prose (D107):
+// entryMarkStale / entryMarkMissing / markAttachBlock / canSetMark / setMark out
+// of index.html, and proves the Marks of Chaos rule behaves as ruled rather than
+// as described in prose (D107):
 //
 //   1. Pool membership. HERETIC ASTARTES in EITHER keyword_names or
 //      faction_keyword_names puts a unit in the pool; EPIC HERO and each of the
@@ -22,12 +22,15 @@
 //      mismatched is ALLOWED and surfaces through entryMarkPairError instead.
 //   7. Staleness and the outstanding-choice flag: a pick survives its detachment
 //      being deselected (S139) but reads stale, and an unmade choice reads missing.
-//   8. The four mark-restricted Pactbound Zealots enhancements resolve through
-//      entryEffectiveMark — right mark allowed, wrong mark and no mark refused.
-//   9. Round-trip against the real detachment_effects.json and units.json: the
+//   8. Round-trip against the real detachment_effects.json and units.json: the
 //      shipped row is enforced, its vocabulary is the five marks, and the pool it
 //      describes is exactly the 45 Chaos Space Marines units re-derived from
 //      units.json — not a number carried from a scope document.
+//
+// The four mark-restricted Pactbound Zealots enhancements USED to be checked
+// here, against B113's curated table. B93 replaced that table with a resolver
+// reading detachments.json, so that coverage moved to b93_check.js where the
+// real enhancement records are loaded — one rule, one test site.
 //
 // Build-time only; not part of the served app.
 // Usage: node b126_check.js index.html detachment_effects.json units.json
@@ -43,9 +46,6 @@ function slice(lines, startNeedle, endNeedle) {
 function load(path) {
   const lines = fs.readFileSync(path, 'utf8').split('\n');
   const markSrc = slice(lines, '── E29/B126: Marks of Chaos', '── E29/B126 block end');
-  // enhancementBearerEligible lives in the E4b block; sliced from its own table
-  // declaration so the four mark rows are the REAL ones, not a copy here.
-  const bearerSrc = slice(lines, 'const ENHANCEMENT_BEARER_RESTRICTIONS = {', '// ── B99 BEGIN');
   // entryMarkPairError sits with entryHasError, outside the E29 block.
   const pairSrc = slice(lines, '  function entryMarkPairError(entry, keys) {', '  function getAttachedLeaders(');
 
@@ -63,12 +63,11 @@ function load(path) {
   `;
 
   return new Function(
-    prelude + '\n' + markSrc + '\n' + pairSrc + '\n' + bearerSrc + '\n' +
+    prelude + '\n' + markSrc + '\n' + pairSrc + '\n' +
     'return { setState, flashBanner,' +
     ' markEffect, markKeywordSet, unitInnateMark, unitNeedsMark, markOptionsForUnit,' +
     ' entryEffectiveMark, entryMarkStale, entryMarkMissing, entryMarkPairError,' +
     ' markAttachBlock, canSetMark, setMark, renderMarkSectionHtml,' +
-    ' enhancementBearerRestriction, enhancementBearerEligible,' +
     ' getArmyList: () => armyList };'
   )();
 }
@@ -278,31 +277,7 @@ console.log('B126 — an unmade choice is flagged; a made one survives deselecti
   check(M.entryEffectiveMark(M.getArmyList()[0], [PZ_KEY]) === 'Slaanesh', 'and it confers again');
 }
 
-// ── 8. the four mark-restricted enhancements ─────────────────────────────────
-console.log('B126 — the four Pactbound Zealots mark enhancements resolve through the mark');
-{
-  const EXPECT = { 'Eye of Tzeentch': 'Tzeentch', 'Intoxicating Elixir': 'Slaanesh',
-                   'Orbs of Unlife': 'Nurgle', 'Talisman of Burning Blood': 'Khorne' };
-  for (const [name, mark] of Object.entries(EXPECT)) {
-    const rule = M.enhancementBearerRestriction(name, PZ_KEY);
-    check(rule && rule.kind === 'mark' && rule.mark === mark, `${name} carries a mark rule for ${mark}`);
-  }
-  const other = Object.keys(EXPECT).find(n => EXPECT[n] !== 'Nurgle');
-  set([entry(1, 'Chaos Lord', 'Character', 'Nurgle')], [PZ_KEY]);
-  const e = M.getArmyList()[0];
-  check(M.enhancementBearerEligible(e, 'Orbs of Unlife', PZ_KEY) === true,
-        'a Nurgle Chaos Lord may take Orbs of Unlife');
-  check(M.enhancementBearerEligible(e, other, PZ_KEY) === false,
-        `a Nurgle Chaos Lord may not take ${other}`);
-  set([entry(1, 'Chaos Lord', 'Character', null)], [PZ_KEY]);
-  check(M.enhancementBearerEligible(M.getArmyList()[0], 'Orbs of Unlife', PZ_KEY) === false,
-        'a Chaos Lord with no mark chosen yet may not take a mark-restricted enhancement');
-  set([entry(1, 'Khorne Berzerkers', 'Battleline', null)], [PZ_KEY]);
-  check(M.enhancementBearerEligible(M.getArmyList()[0], 'Talisman of Burning Blood', PZ_KEY) === true,
-        'an innate Khorne unit satisfies the Khorne enhancement restriction');
-}
-
-// ── 9. the shipped data, and the pool re-derived from units.json ─────────────
+// ── 8. the shipped data, and the pool re-derived from units.json ─────────────
 console.log('B126 — shipped data facts, and the real pool re-derived from units.json');
 {
   const rec = DE.effects[PZ_KEY];
@@ -344,7 +319,7 @@ console.log('B126 — shipped data facts, and the real pool re-derived from unit
 }
 
 if (failures === 0) {
-  console.log('PASS b126_check    all B126 checks pass (three-field pool reader, detachment scoping, Psyker/Khorne exclusion incl. model-level, innate marks, attach gate with permissive fall-through, D346 change-allowed asymmetry, staleness, the four mark enhancements, shipped data and the real 45-unit pool)');
+  console.log('PASS b126_check    all B126 checks pass (three-field pool reader, detachment scoping, Psyker/Khorne exclusion incl. model-level, innate marks, attach gate with permissive fall-through, D346 change-allowed asymmetry, staleness, shipped data and the real 45-unit pool)');
 } else {
   console.log(`FAIL b126_check    ${failures} check(s) failed`);
   process.exitCode = 1;

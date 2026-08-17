@@ -1259,3 +1259,18 @@ D352 — B139 closes: D350 reverted. The nine Chaos Daemons root CSVs return to 
   verified subset on failure as well as success and `baseline.sh` overlays it either way, so one absent
   file no longer suppresses recovery of `units.json` and friends and cannot turn one defect into 26
   failed gates. Replayed the S255 failure to prove it: 4 failures instead of 26, outputs recovered.
+
+D353 — B93 turn 2 (engine): the structured bearer-restriction resolver ships in `index.html` v6.27
+  and the curated `ENHANCEMENT_BEARER_RESTRICTIONS` table is deleted, subsuming B113's seven rows and
+  B126's four mark rows. Terms match four namespaces (three keyword fields via `markKeywordSet`, the
+  datasheet name, the entry's effective Mark of Chaos), case- and apostrophe-folded, over
+  chapter-resolved `rawUnits`. D199's fall-through is permissive in all three places it arises.
+  Two corrections: `B93_SCOPE.md` §7.2's "demote the type gate to a default" is NOT implemented —
+  it predates D335, which retains the Characters-only default and narrows within it, and the session
+  prompt inherited the stale wording; and B113's `Bray Lord` row was too narrow — `SORCERER` is a
+  real keyword and `Sorcerer In Terminator Armour` carries it, so a legal bearer was being refused.
+  Census over 1,145 army x record evaluations: 53 zero-admit in six clauses, every one reachable by
+  another mechanism (Tank Ace, mark selection) or an unbuilt faction (Harlequins); 98 one-admit. Both
+  pinned in the new `b93_check.js`. E4b-7 restated in place for the resolver (138 assertions,
+  unchanged). Product call: ineligible picker rows stay visible and disabled with the clause as the
+  reason, not dropped.

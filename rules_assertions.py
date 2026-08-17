@@ -2145,17 +2145,19 @@ ASSERTIONS = [
      lambda S: b113_leader_line_census(S)),
 
     ('E4b-7',
-     'The curated ENHANCEMENT_BEARER_RESTRICTIONS table enforces the bearer restriction '
-     'printed in each enhancement\'s own description ("X model only") — the half of the rule '
-     'that makes an illegal army reachable — not the LEADER: attach-enablement, which would '
-     'make these enhancements assignable to nobody (scope doc §2). Checked against source, '
-     'not merely present: exactly 7 rows (Pact of Cursed Pinions has no bearer text anywhere '
-     'in the held sources and stays deliberately unenforced), every named-unit row resolves '
-     'in its army\'s real unit pool, the one faction-keyword row (Wolf-touched) is not vacuous, '
-     'and Butcher Lord\'s "World Eaters Infantry model only" two-unit set is verified against '
-     'Datasheets_keywords.csv rather than assumed from the datasheet list.',
-     'index.html ENHANCEMENT_BEARER_RESTRICTIONS vs units.json / Datasheets_keywords.csv (B113, S228)',
-     lambda S: b113_bearer_table_matches_source(S)),
+     'The bearer restriction printed in each enhancement\'s own description ("X model only") '
+     'is enforced from the structured bearer_restriction field in detachments.json, by ONE '
+     'implementation. B93 (S256) replaced B113\'s curated 7-row table and B126\'s 4 mark rows '
+     'with a resolver, so this checks the successor rather than the table: index.html declares '
+     'no curated bearer table at all, the resolver block is present and reads the four term '
+     'namespaces, Pact of Cursed Pinions still carries no clause (no bearer text anywhere in '
+     'the held sources — it must not acquire a guessed one), and Butcher Lord\'s "World Eaters '
+     'Infantry model only" still resolves to exactly the World Eaters Characters carrying the '
+     'Infantry keyword in Datasheets_keywords.csv. The LEADER: attach-enablement stays '
+     'unenforced — enforcing it as an assignment restriction would make these enhancements '
+     'assignable to nobody (B113 scope doc §2).',
+     'index.html B93 resolver vs detachments.json / units.json / Datasheets_keywords.csv (B113 S228, B93 S256)',
+     lambda S: b93_bearer_resolver_matches_source(S)),
 
     # ── B63. Soul Grinder's god weapons were reachable simultaneously — a live D0
     # violation on a built faction (D206). Allegiance_Condition never reached units.json,
@@ -4921,106 +4923,101 @@ def b113_leader_line_census(S):
     return True, f'{len(rows)} LEADER: lines found across ARMY_TO_MFM v1.1 files, matching the pinned census exactly'
 
 
-def b113_bearer_table_matches_source(S):
-    """B113 option (A): the curated ENHANCEMENT_BEARER_RESTRICTIONS table in index.html
-    enforces the bearer restriction printed in each enhancement's own description ("X model
-    only"), not the LEADER: attach-enablement. This checks the table is well-formed against
-    source rather than merely present:
-      - exactly 7 rows (Pact of Cursed Pinions is deliberately absent — no bearer text
-        anywhere in the held sources, confirmed directly, not assumed from its sibling
-        Sorrowscent Vulture which shares the same LEADER: target)
-      - every unit_name-kind row names a real unit in the right army's resolved pool
-      - the one faction_keyword-kind row (Wolf-touched: Space Wolves) is not vacuous — at
-        least one real Space Wolves Character actually carries that keyword
-      - Butcher Lord's "World Eaters Infantry model only" resolves to exactly the World
-        Eaters Characters carrying the Infantry keyword (Datasheets_keywords.csv) — checked
-        against source instead of eyeballing the datasheet list, since the Daemon Princes and
-        Bloodthirster are Monster and Lord on Juggernaut is Mounted, none of them Infantry
+def b93_bearer_resolver_matches_source(S):
+    """B93 turn 2 (S256), superseding B113's table check.
+
+    The enforcement of "X model only" moved from a hand-written table in index.html to a
+    resolver reading detachments.json's structured `bearer_restriction`. Three things have
+    to hold, and only the third survives unchanged from the B113 version:
+
+      - ONE implementation. index.html must not declare ENHANCEMENT_BEARER_RESTRICTIONS
+        anywhere, and the B93 resolver block must be present and reading all four term
+        namespaces (the three keyword fields via markKeywordSet, plus the datasheet name)
+        together with the entry's effective Mark of Chaos. Two live readings of one rule is
+        the S247/D344 failure this assertion now exists to prevent.
+      - Pact of Cursed Pinions still carries NO clause. It has no bearer text in any held
+        source (checked directly at S228, not inferred from its sibling Sorrowscent Vulture,
+        which shares the same LEADER: target), so the data turn must not have invented one.
+      - Butcher Lord's "World Eaters Infantry model only" still resolves, from source
+        keywords, to exactly the World Eaters Characters carrying Infantry — the Daemon
+        Princes and Bloodthirster are Monster and Lord on Juggernaut is Mounted, so the set
+        is derived from Datasheets_keywords.csv rather than eyeballed off the datasheet list.
+        Checked here as a source->data agreement; b93_check.js checks the engine end.
+
+    NOT checked here: the resolver's behaviour, the whole-army admit census and the D199
+    fall-through, all of which need the real JS and live in b93_check.js.
     """
     ix = S.index_html()
-    m = re.search(r'const ENHANCEMENT_BEARER_RESTRICTIONS = \{(.*?)\n  \};', ix, re.S)
-    if not m:
-        return False, 'ENHANCEMENT_BEARER_RESTRICTIONS is no longer locatable in index.html'
-    # Normalise whitespace/newlines so a row's key and its object literal can be split
-    # across lines in the source (as written, for readability) without affecting parsing.
-    flat = re.sub(r'\s+', ' ', m.group(1)).strip()
-    row_re = re.compile(
-        r"""(['"])(.+?)::(.+?)\1\s*:\s*\{\s*kind:\s*'(\w+)',\s*"""
-        r"""(?:units:\s*\[(.*?)\]|keyword:\s*'([^']+)')\s*\}""")
-    entries = []
-    pos = 0
-    for mm in row_re.finditer(flat):
-        entries.append(mm)
-        pos = mm.end()
-    if not entries:
-        return False, f'no rows matched the expected shape in ENHANCEMENT_BEARER_RESTRICTIONS: {flat[:200]!r}'
-    parsed = []
-    for mm in entries:
-        _, det_key, name, kind, units_raw, keyword = mm.groups()
-        units = [u.strip().strip("'\"") for u in units_raw.split(',')] if units_raw else None
-        parsed.append((det_key, name, kind, units, keyword))
-    entries = parsed
-
-    if len(entries) != 7:
-        return False, f'{len(entries)} curated bearer rows, expected 7 (8 census rows minus Pact of Cursed Pinions)'
-
-    by_key = {(d, n): (kind, units, keyword) for d, n, kind, units, keyword in entries}
-    if ('Chaos Space Marines|MURDERTALON RAIDERS', 'Pact of Cursed Pinions') in by_key:
-        return False, 'Pact of Cursed Pinions has a curated bearer row — it has no source text and should stay unenforced'
-
-    pool_cache = {}
-    def pool_for(army):
-        if army not in pool_cache:
-            pool_cache[army] = S.resolved_pool(army)
-        return pool_cache[army]
-
-    KEY_TO_ARMY = {
-        "Space Wolves|SAGA OF THE GREAT WOLF": 'Space Wolves',
-        'Chaos Space Marines|NIGHTMARE HUNT': 'Chaos Space Marines',
-        'Thousand Sons|WARPMELD PACT': 'Thousand Sons',
-        "Emperor's Children|COURT OF THE PHOENICIAN": "Emperor's Children",
-        'World Eaters|CULT OF BLOOD': 'World Eaters',
-        'World Eaters|KHORNE DAEMONKIN': 'World Eaters',
-    }
     bad = []
-    for det_key, name, kind, units, keyword in entries:
-        if kind == 'unit_name':
-            army = KEY_TO_ARMY.get(det_key)
-            if not army:
-                bad.append(f'{det_key}/{name}: unrecognised detachment key')
-                continue
-            pool = pool_for(army)
-            for u in units:
-                if u not in pool:
-                    bad.append(f'{det_key}/{name}: bearer unit {u!r} not found in {army}\'s resolved pool')
 
-    # Wolf-touched: the keyword must actually distinguish a real Space Wolves Character.
-    sw_pool = pool_for('Space Wolves')
-    sw_chars_with_kw = [n for n, u in sw_pool.items() if u['unit_type'] == 'Character'
-                        and 'Space Wolves' in ((u.get('model_groups') or [{}])[0].get('faction_keyword_names') or [])]
-    if not sw_chars_with_kw:
-        bad.append("Wolf-touched's Space Wolves faction_keyword restriction matches zero real Characters")
+    if 'ENHANCEMENT_BEARER_RESTRICTIONS' in ix:
+        bad.append('index.html still declares ENHANCEMENT_BEARER_RESTRICTIONS — '
+                   'the curated table must not survive alongside the B93 resolver')
 
-    # Butcher Lord: World Eaters Infantry Characters, derived from source keywords, must equal
-    # the curated 2-unit set exactly.
+    m = re.search(r'// \u2500\u2500 B93: enhancement bearer restrictions(.*?)// \u2500\u2500 B93 block end',
+                  ix, re.S)
+    if not m:
+        bad.append('the B93 resolver block is not locatable in index.html')
+        block = ''
+    else:
+        block = m.group(1)
+        for fn in ('function bearerNorm(', 'function bearerTermSet(', 'function bearerAbilitySet(',
+                   'function enhancementBearerRestriction(', 'function enhancementBearerEligible('):
+            if fn not in block:
+                bad.append(f'the B93 block is missing {fn.split("(")[0]}')
+        # The four namespaces, each named because each was needed for a real record.
+        for needle, why in (('markKeywordSet(', 'the three keyword fields'),
+                            ('raw.unit_name', 'the datasheet name'),
+                            ('entryEffectiveMark(', 'the entry\'s Mark of Chaos'),
+                            ('rule_names', 'the ability qualifier\'s source')):
+            if needle not in block:
+                bad.append(f'the B93 resolver no longer reads {why} ({needle})')
+
+    dets = S.detachments()['detachments']
+    pact = None
+    for rec in dets.values():
+        for e in rec.get('enhancements') or []:
+            if e.get('name') == 'Pact of Cursed Pinions':
+                pact = e
+    if pact is None:
+        bad.append('Pact of Cursed Pinions is no longer in detachments.json')
+    elif pact.get('bearer_restriction'):
+        bad.append('Pact of Cursed Pinions has acquired a bearer_restriction — it has no bearer '
+                   'text in any held source and must stay unenforced')
+
+    # Butcher Lord, source -> data.
     ds = S.datasheets()
     akw = S.all_keywords()
     name_to_id = {v.lower(): k for k, v in ds.items()}
-    we_pool = pool_for('World Eaters')
+    we_pool = S.resolved_pool('World Eaters')
     we_infantry_chars = sorted(
         n for n, u in we_pool.items() if u['unit_type'] == 'Character'
         and 'Infantry' in akw.get(name_to_id.get(n.lower(), ''), set()))
-    curated_butcher = sorted(by_key.get(('World Eaters|CULT OF BLOOD', 'Butcher Lord'), (None, [], None))[1] or [])
-    if we_infantry_chars != curated_butcher:
-        bad.append(f"Butcher Lord's curated bearer set {curated_butcher} != source-derived World "
-                   f"Eaters Infantry Characters {we_infantry_chars}")
+    butcher = None
+    for e in (dets.get('World Eaters|CULT OF BLOOD', {}).get('enhancements') or []):
+        if e.get('name') == 'Butcher Lord':
+            butcher = e.get('bearer_restriction')
+    if not butcher:
+        bad.append('Butcher Lord carries no bearer_restriction')
+    else:
+        terms = {t.lower() for alt in butcher['alternatives'] for t in alt}
+        if terms != {'world eaters', 'infantry'}:
+            bad.append(f"Butcher Lord's parsed terms {sorted(terms)} are not "
+                       f"{{'infantry', 'world eaters'}}")
+        resolved = sorted(
+            n for n, u in we_pool.items() if u['unit_type'] == 'Character'
+            and all(t in {k.lower() for g in (u.get('model_groups') or [])
+                          for k in (g.get('keyword_names') or []) + (g.get('faction_keyword_names') or [])}
+                    for t in terms))
+        if resolved != we_infantry_chars:
+            bad.append(f"Butcher Lord's clause resolves to {resolved}, but the source-derived "
+                       f"World Eaters Infantry Characters are {we_infantry_chars}")
 
     if bad:
         return False, '; '.join(bad)
-    return True, (f'7 curated bearer rows, Pact of Cursed Pinions correctly absent, every unit_name row '
-                  f'resolves in its army pool, the Space Wolves keyword matches {len(sw_chars_with_kw)} real '
-                  f"Character(s), and Butcher Lord's set matches the source-derived Infantry-keyword "
-                  f'Characters exactly ({curated_butcher})')
+    return True, ('the curated bearer table is gone, the B93 resolver reads all four term '
+                  'namespaces, Pact of Cursed Pinions carries no clause, and Butcher Lord\'s '
+                  f'clause resolves to the source-derived Infantry Characters ({we_infantry_chars})')
 
 
 def b99_source_census_matches_curated_table(S):

@@ -168,6 +168,7 @@ GUARDED = [
     'b132_check.js',
     'b128_check.js',
     'b126_check.js',
+    'b93_check.js',
     'b103_check.js',
     'harness.js',
     'sweep.js',
@@ -330,6 +331,7 @@ GUARDED = [
     'SESSION_HANDOFF_253.md',
     'SESSION_HANDOFF_254.md',
     'SESSION_HANDOFF_255.md',
+    'SESSION_HANDOFF_256.md',
 ]
 
 # Chaos Daemons' nine hand-authored root CSVs (`CD_ROOT_CSVS` in units_repro_check.py) are

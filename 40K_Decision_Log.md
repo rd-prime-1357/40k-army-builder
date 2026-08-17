@@ -15184,3 +15184,101 @@ named the sentinel, all four outputs recovered anyway, and the run came out at *
 `detachments.json` survived intact (`fd160d4ae14b`, repro gate byte-for-byte).
 
 **B139 closes.**
+
+---
+
+## D353 — B93 turn 2: the bearer-restriction resolver ships, the curated table is deleted, and §7.2's type-gate demotion is not implemented (S256)
+
+**Turn type: engine.** `index.html` **v6.26 → v6.27**. No data file, parser or pipeline script
+touched. `rules_assertions.py` stays at **138** assertions — E4b-7 was restated in place rather than
+retired, because the fact it holds is still legality-critical, only its subject moved.
+
+### The live D0 gap this closes
+
+641 of 739 enhancement records print a bearer restriction in their own description. The engine
+enforced eleven of them from a hand-written table — B113's seven and B126's four marks — and
+over-admitted on the other 630. `enhancementBearerEligible()` now resolves the structured
+`bearer_restriction` the S254 data turn wrote into `detachments.json`, and the curated table is
+**deleted**, not kept alongside. Two live readings of one rule is the S247/D344 failure; leaving both
+in would have reintroduced it deliberately.
+
+### Correction 1 — `B93_SCOPE.md` §7.2 is superseded, and the assigned scope inherited its error
+
+§7.2 and this session's `NEXT_SESSION_PROMPT.md` both instruct that `enhancementTypeEligible()`
+demote from gate to default, "superseded when a record carries a clause" — and then, in the same
+paragraph, that **D335 governs, under which the clause narrows *within* the Characters-only default
+and does not replace it**. Those are opposite instructions. §7 was written under D334 and never
+rewritten when D335 reversed it the same session; the prompt copied §7's wording and bolted D335 on
+top.
+
+**D335 governs. The Character gate is retained.** `enhancementTypeEligible()` is unchanged. This is
+the reading the scope document's own §4.1 argues for at length, and it was tested before it was
+adopted rather than after: under the retained gate the resolver strands nothing that is not already
+reachable another way (see the census below).
+
+*Standing lesson, and the second time in three sessions: a scope document written under a decision
+that was later reversed will keep giving the reversed instruction. When a prompt cites a decision
+and an instruction that disagree, the decision wins and the instruction is stale.*
+
+### Correction 2 — B113's `Bray Lord` row refused a legal bearer
+
+The clause is "Sorcerer or Infernal Master model only". B113 curated it as two unit names. Both
+strings are real datasheet keywords, `Sorcerer In Terminator Armour` carries `Sorcerer`, and "model
+only" is GW's keyword-scoped form throughout the vocabulary. The curated row was narrower than the
+rule it was enforcing. The resolver admits all three, and `b93_check.js` pins the corrected set so it
+cannot silently revert to the old two. The other six B113 rows and all four B126 mark rows resolve
+identically under the resolver — checked, not assumed.
+
+### The mechanism
+
+**Four term namespaces**, case-folded and apostrophe-insensitive: the three keyword fields via
+`markKeywordSet` (reused, not re-read, so the widest keyword reader in the app stays single-sourced),
+the datasheet name, and the entry's effective Mark of Chaos. The last of those is what subsumes
+B126's four rows — a mark is a keyword gained at muster, so it cannot come off the datasheet, and it
+resolves through `entryEffectiveMark`, the same function the selector and the attach gate use.
+`rawUnits` is already chapter-resolved, so B132's restored Deathwing keyword is in scope and Dark
+Angels does not regress to zero bearers.
+
+**D199's fall-through is permissive in all three places it can arise**: an entry whose datasheet is
+absent from the pool, a unit whose term set is empty, and a unit with no ability data at all facing
+an ability-qualified clause. Each admits. `bearerTermSet` skips empty strings deliberately — a stray
+`''` in the set would make an unevaluable unit look evaluable and get it refused, which is the exact
+inversion D199 exists to prevent. `b93_check.js` checks all three, plus the negative control that a
+unit **with** keywords that simply do not match is still refused.
+
+**Exclusions read across the whole unit**, matching the inclusion side. No unit in `units.json`
+carries any of the four exclusion keywords (Damned, Terminator, Jump Pack, Khorne) on some model
+groups but not others — 24 multi-group units, zero split cases — so a per-group reading would change
+nothing today. That assumption is a gate, not a comment: `b93_check.js` fails and names the unit if a
+future datasheet splits one, at which point the reader must go per-group.
+
+**Refusal prose shows the clause verbatim.** GW's clause is already a complete restriction sentence,
+and paraphrasing 117 distinct clauses would be a second reading of the rule.
+
+### The census, and why 53 zero-admit records are not 53 defects
+
+1,145 army × record evaluations across every built faction. **53 zero-admit, in six clauses, all four
+causes known and pinned**: 48 `Adeptus Astartes Vehicle model only` (12 armies × 4 records), reachable
+through the Tank Ace checkbox that confers CHARACTER at muster — this is precisely the case D334 got
+backwards; four Mark of Chaos records, reachable once the player picks a mark; and one Drukhari
+record, `Reaper's Cowl` / `Harlequins model only`, which has no bearer because **Harlequins is not a
+built faction**. That last one is honest, not broken, and it resolves itself when Harlequins ships.
+**98 one-admit**, the set where a resolver bug turns into an unassignable enhancement rather than a
+mildly wrong list. Both figures are pinned in the harness.
+
+### Product call made, not asked
+
+**Bearer-ineligible rows stay in the picker, disabled with the clause as their reason**, rather than
+being dropped. The picker already drops type-ineligible rows and disables everything else with a
+stated reason, so this is the existing convention; and a player who cannot see why a relic is
+unavailable to this Character has been told less than nothing. Reversible in one line if Ryan
+disagrees.
+
+### Assertion and harness changes
+
+**E4b-7 restated**, same id, same count. It no longer parses a table literal; it now checks that
+`ENHANCEMENT_BEARER_RESTRICTIONS` appears nowhere in `index.html`, that the resolver block is present
+and still reads all four namespaces, that `Pact of Cursed Pinions` has not acquired a guessed clause,
+and that `Butcher Lord`'s clause still resolves to the source-derived World Eaters Infantry
+Characters. **`b126_check.js` loses its item 8** — the four mark enhancements — to `b93_check.js`,
+where the real enhancement records are loaded. One rule, one test site.
