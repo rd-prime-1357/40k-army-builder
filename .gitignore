@@ -4,17 +4,7 @@
  
 # ── Wahapedia CSV exports ───────────────────────────────────────────────
 *.csv
-!Unit_Stats.csv
-!Unit_Points.csv
-!Unit_Wargear_Options.csv
-!Unit_Other_Options.csv
-!Unit_Weapons.csv
-!Unit_Abilities.csv
-!Keywords.csv
-!Rules.csv
-!Weapon_Abilities.csv
-# D350/B138: these nine root CSVs are the same content the app already renders
-# to every user; exception scoped to exactly these nine, not a general carve-out. 
+
 # ── Source text: MFM points files, faction web composition files, rules text ──
 *.txt
  
