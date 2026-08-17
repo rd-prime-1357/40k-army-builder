@@ -15124,3 +15124,63 @@ default and `enhancementBearerEligible()` still reads only B113's seven curated 
 is unchanged. B93_SCOPE.md §7's zero-admit/one-admit regression pinning also waits for the engine turn,
 because both need the engine's own keyword resolution semantics; B129 already polices the zero-admit end
 from source in the meantime.
+
+## D352 — B139: D350 reverted; the nine root CSVs return to single custody, and one absent file no longer suppresses the whole overlay (S255)
+
+**Turn type: tooling.** No engine, parser or data change. `index.html` untouched at v6.26,
+`detachments.json` untouched from S254.
+
+**D350 rested on a premise I got wrong, and this reverts it.** B138 set out to add a hash guard to
+Chaos Daemons' nine hand-authored root CSVs (`Unit_Stats.csv`, `Unit_Points.csv`,
+`Unit_Wargear_Options.csv`, `Unit_Other_Options.csv`, `Unit_Weapons.csv`, `Unit_Abilities.csv`,
+`Keywords.csv`, `Rules.csv`, `Weapon_Abilities.csv`). Three options were put to Ryan and he chose B —
+relax the public-repo GW-source exclusion so the nine could be guarded by `pipeline_manifest.py` the
+normal way. **The guard already existed.** All nine were already in `source_manifest.json`, hashed
+against the private data-sources repo and verified by `baseline.sh --data-turn` on every turn that
+reads them. Option A was not an alternative to add; it was the state of the world. Presenting it as a
+choice is what produced a second custody claim on the same nine files.
+
+**The cost was not hypothetical and did not wait.** Two manifests, two repos, nothing propagating an
+edit between them — and the files are maintained in the private repo, so the public copies go stale the
+moment one changes. That broke the S255 open: nine CSVs unpushed, and because `check_overlay` returned
+its whole target list unusable on any single problem, `units.json`, `detachments.json`,
+`unit_loadouts.json` and `abilities.json` never overlaid, and roughly 25 downstream gates crashed on
+absent inputs with bare Node stack traces. **26 failed gates for one defect, 25 of them
+indistinguishable from real failures.** Diagnosed from the GitHub API rather than guessed at: the
+22:33 upload commit was empty (0 files, 0 additions, 0 deletions) because the `.gitignore` carrying the
+exceptions had itself landed under the filename `download`, and later attempts went to the private repo
+rather than the public one.
+
+**Decision: `source_manifest.json` owns the nine alone.** Removed from `pipeline_manifest.py`'s
+`GUARDED`; the nine `!filename` negation lines removed from `.gitignore`; the nine files deleted from
+the public repo by Ryan. They remain in the private data-sources repo, unchanged, which is where they
+are authored. This does not undo Ryan's D350 call — that answered "may we publish these," and the
+answer was yes; this says we no longer need to.
+
+**Grounds for the deletion, checked this session rather than asserted.** No pipeline script reads them
+from the public repo — all nine are consumed by scripts running in the workspace, where the private
+fetch supplies them. `index.html` fetches twelve JSON files and no CSV at all. `rules_assertions.py`
+already derives `GW_SOURCE_FILENAMES` straight from `source_manifest.json`, so the assertion tier
+classifier already treated them as private source material irrespective of `GUARDED`. And the whole
+arrangement was tested end to end before recommending it: with the nine deleted from disk and dropped
+from `GUARDED`, a clean `--fetch --data-turn` ran 40/41, the single failure being the expected
+mid-session diff on the manifest files themselves.
+
+**`repo_check.py`'s negation parsing is left in place.** It becomes unexercised, but it is correct and
+tested, and removing working code because nothing currently calls it is churn.
+
+**Second, independent fix: one absent file no longer withholds the rest of the overlay.**
+`check_overlay` now returns the subset it verified — present in the fetch and matching the manifest —
+on failure as well as success, and `--overlay-check` prints that list in both cases. `baseline.sh`
+copies it either way. The gate still fails, still names every absent and every mismatched file, and now
+also reports how many were recovered and how many withheld. Failing loudly is right; manufacturing 25
+misleading failures alongside is not. **This fix is worth having regardless of the custody decision**,
+and it is the part that would have made S255's open readable in thirty seconds instead of an hour.
+
+**Negative-tested by replaying the exact S255 failure.** Added a sentinel filename to `GUARDED` that
+exists in no repo, deleted the four large generated outputs, and ran `--fetch`: the gate failed and
+named the sentinel, all four outputs recovered anyway, and the run came out at **4 failures instead of
+26** — every one of the four naming the real defect. Restored, and confirmed the S254
+`detachments.json` survived intact (`fd160d4ae14b`, repro gate byte-for-byte).
+
+**B139 closes.**

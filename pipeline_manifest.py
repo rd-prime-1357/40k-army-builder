@@ -329,23 +329,12 @@ GUARDED = [
     'SESSION_HANDOFF_252.md',
     'SESSION_HANDOFF_253.md',
     'SESSION_HANDOFF_254.md',
-] + [
-    # B138 (D350, S253): Chaos Daemons' nine hand-authored root CSVs (`CD_ROOT_CSVS` in
-    # units_repro_check.py). Previously excluded from the public repo as GW-derived source
-    # material; D350 relaxed that policy for these specific files so they could be guarded
-    # the same way as every other repo-resident file. They carry no repro gate that can
-    # regenerate them, so a bad sync here is otherwise silent — same class of risk
-    # detachment_effects.json's guard entry already documents.
-    'Unit_Stats.csv',
-    'Unit_Points.csv',
-    'Unit_Wargear_Options.csv',
-    'Unit_Other_Options.csv',
-    'Unit_Weapons.csv',
-    'Unit_Abilities.csv',
-    'Keywords.csv',
-    'Rules.csv',
-    'Weapon_Abilities.csv',
+    'SESSION_HANDOFF_255.md',
 ]
+
+# Chaos Daemons' nine hand-authored root CSVs (`CD_ROOT_CSVS` in units_repro_check.py) are
+# deliberately NOT here — see the exclusions note below. D350 (S253) added them; D352 (S255)
+# took them back out.
 
 # Never guarded, on purpose — not a gap, a documented exclusion (P4/M0, D231):
 #   NEXT_SESSION_PROMPT.md — legitimately edited after the handoff/manifest that
@@ -364,6 +353,18 @@ GUARDED = [
 #     substance was already reconstructed into 40K_Decision_Log.md as D296 by S204,
 #     verified line-for-line against the handoff before the file itself was lost.
 #     Removing the GUARDED entry rather than leaving the gate permanently red.
+#   Unit_Stats.csv, Unit_Points.csv, Unit_Wargear_Options.csv, Unit_Other_Options.csv,
+#     Unit_Weapons.csv, Unit_Abilities.csv, Keywords.csv, Rules.csv, Weapon_Abilities.csv
+#     — Chaos Daemons' nine hand-authored root CSVs. GW-derived source material, so they
+#     live in the private data-sources repo and are hash-guarded by source_manifest.json,
+#     which baseline.sh --data-turn verifies on every turn that reads them. D350 (S253)
+#     briefly published them here so they could ALSO be guarded the normal way; D352 (S255)
+#     reverted that. The guard D350 set out to add already existed — source_manifest.json
+#     had all nine — so the second entry bought no coverage and cost a sync obligation
+#     nothing enforced: they are edited in the private repo, which left the public copy
+#     stale until someone remembered to push twice. That is not hypothetical. It broke the
+#     S254 open, and because fetch-verify aborts the whole overlay when any guarded file is
+#     absent, nine stale CSVs surfaced as 26 failed gates. One file, one custody claim.
 
 
 def sha256(path):
@@ -507,10 +508,26 @@ def check_overlay(fetched_dir, local_dir):
         problems.append(f'{len(orphan_handoffs)} session handoff(s) in the repo but not in '
                         f'GUARDED — add to pipeline_manifest.py: ' + ', '.join(orphan_handoffs))
 
+    # B139 (D352, S255): the recoverable subset is returned on FAILURE as well as on
+    # success, and the caller overlays it either way. Previously any single problem
+    # returned the whole target list unusable, the caller copied nothing, and large
+    # generated outputs (units.json, detachments.json, unit_loadouts.json,
+    # abilities.json) never arrived — so roughly 25 downstream gates crashed on absent
+    # inputs with bare stack traces indistinguishable from real failures. That is what
+    # S254's open looked like, and the actual defect was nine unpushed CSVs. Failing
+    # loudly is right; manufacturing 25 misleading failures alongside is not. The gate
+    # still fails and still names every problem — it just no longer withholds the files
+    # it was able to verify.
+    recoverable = [f for f in overlay_targets
+                   if f not in absent and f not in mismatch]
+
     if problems:
-        return False, '; '.join(problems), overlay_targets
+        withheld = len(overlay_targets) - len(recoverable)
+        return False, ('; '.join(problems)
+                       + f' [{len(recoverable)} other overlay file(s) verified and still '
+                         f'recovered; {withheld} withheld]'), recoverable
     return True, (f'{len(overlay_targets)} overlay-needed file(s) verified '
-                  f'({len(GUARDED) - len(overlay_targets)} already local, not checked)'), overlay_targets
+                  f'({len(GUARDED) - len(overlay_targets)} already local, not checked)'), recoverable
 
 
 DECISION_LOG = '40K_Decision_Log.md'
@@ -590,9 +607,11 @@ def main():
     if a.overlay_check is not None:
         ok, msg, targets = check_overlay(a.dir, a.overlay_check)
         print(('OK   ' if ok else 'FAIL ') + msg)
-        if ok:
-            for f in targets:
-                print(f)
+        # Printed on failure too — see check_overlay. The summary is always line 1 and
+        # the recoverable file list always follows it, so the caller reads them the same
+        # way in both cases.
+        for f in targets:
+            print(f)
         return 0 if ok else 1
 
     ok, msg = check(a.dir)

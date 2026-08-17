@@ -107,16 +107,29 @@ if [ "$FETCH" -eq 1 ]; then
       # source. Files already resident locally are never checked here — area-ahead-of-
       # repo drift on files we are not overlaying (e.g. an edited backlog doc not yet
       # pushed) must not block recovering files that were genuinely evicted (M1).
+      # B139 (D352, S255): the overlay runs on FAILURE as well as success. --overlay-check
+      # prints its summary on line 1 and the files it verified from line 2 on, in both
+      # cases, so recovery no longer depends on the gate being green. One unpushed file
+      # used to withhold every other file, which meant units.json and friends never
+      # arrived and ~25 downstream gates crashed on absent inputs — 26 failures for one
+      # defect, and the 25 were indistinguishable from real ones. The gate below still
+      # fails and still names the problem; it just does not take the rest down with it.
       if VERIFY_OUT="$(python3 pipeline_manifest.py --dir "$FETCHED_DIR" --overlay-check . 2>&1)"; then
-        SUMMARY_LINE="$(printf '%s\n' "$VERIFY_OUT" | head -1)"
-        printf 'PASS %-24s %s\n' fetch-verify "$SUMMARY_LINE"
-        printf '%s\n' "$VERIFY_OUT" | tail -n +2 | while IFS= read -r rel; do
-          [ -z "$rel" ] && continue
-          mkdir -p "$(dirname "$rel")"
-          cp "$FETCHED_DIR/$rel" "$rel"
-        done
+        VERIFY_RC=0
       else
-        printf 'FAIL %-24s %s\n' fetch-verify "$VERIFY_OUT"
+        VERIFY_RC=1
+      fi
+      SUMMARY_LINE="$(printf '%s\n' "$VERIFY_OUT" | head -1)"
+      printf '%s\n' "$VERIFY_OUT" | tail -n +2 | while IFS= read -r rel; do
+        [ -z "$rel" ] && continue
+        mkdir -p "$(dirname "$rel")"
+        [ -f "$FETCHED_DIR/$rel" ] || continue
+        cp "$FETCHED_DIR/$rel" "$rel"
+      done
+      if [ "$VERIFY_RC" -eq 0 ]; then
+        printf 'PASS %-24s %s\n' fetch-verify "$SUMMARY_LINE"
+      else
+        printf 'FAIL %-24s %s\n' fetch-verify "$SUMMARY_LINE"
         FAILS=$((FAILS+1))
       fi
     fi

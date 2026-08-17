@@ -1249,3 +1249,13 @@ D351 — B93 data turn: every enhancement's bearer-restriction clause parsed int
   B128 and B126 state. Parser is total: 628 parsed, 13 curated, 98 no clause. Diff-guarded: only the
   new key and two `_meta` counters changed. `B93-CENSUS` added (tier B), negative-tested twice.
   Engine consumption deferred to B93's next turn, so the live D0 gap is unchanged.
+
+D352 — B139 closes: D350 reverted. The nine Chaos Daemons root CSVs return to single custody under
+  `source_manifest.json` — dropped from `pipeline_manifest.py`'s `GUARDED`, `.gitignore` exceptions
+  removed, files deleted from the public repo, unchanged in the private one. D350's premise was wrong:
+  the guard it set out to add already existed, so option B bought no coverage and cost a two-repo sync
+  obligation nothing enforced. Grounds for deletion checked, not asserted, and the arrangement tested
+  end to end at 40/41 before recommending. Second, independent fix: `check_overlay` now returns the
+  verified subset on failure as well as success and `baseline.sh` overlays it either way, so one absent
+  file no longer suppresses recovery of `units.json` and friends and cannot turn one defect into 26
+  failed gates. Replayed the S255 failure to prove it: 4 failures instead of 26, outputs recovered.

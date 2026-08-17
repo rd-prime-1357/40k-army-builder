@@ -3,8 +3,8 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **24 open** as of S254 (B139 opened; B93 progressed, still open):
-B139, B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B85,
+not here, it isn't open. **23 open** as of S255 (B139 closed):
+B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B85,
 B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
 **Housekeeping, S249.** Three closed-pointer stubs (B111, B89, B100) were sitting in the Open
@@ -773,36 +773,6 @@ a render branch in the right-panel path. Comparable in size to E1c's original bu
 session should confirm whether per-unit enhancement assignment (unaffected by this move) needs any
 UI adjustment once Detachments get their own detail view.
 
-### B139 — the nine Chaos Daemons root CSVs are guarded by two manifests with nothing keeping them in step — **NEW S254 (D351); tooling; S**
-
-D350 (S253) added the nine hand-authored root CSVs (`Unit_Stats.csv` … `Weapon_Abilities.csv`) to
-`pipeline_manifest.py`'s `GUARDED` list and relaxed the public-repo GW-source exclusion so they could
-live there. They were already guarded by `source_manifest.json` against the private data-sources repo,
-where they are actually maintained. So the same nine files now carry two custody claims pointing at two
-different repos, and nothing propagates an edit from one to the other.
-
-The cost is not hypothetical: it fired immediately. S254 opened into a 26-gate failure cascade because
-the nine had not yet reached the public repo — `fetch-verify` aborts the entire overlay when any guarded
-file is absent from the fetch, so `units.json`, `detachments.json`, `unit_loadouts.json` and
-`abilities.json` were never brought in, and every gate reading them crashed with a bare Node stack trace
-that is indistinguishable from a real failure. That will recur every time a CSV changes in the private
-repo and the public copy lags.
-
-**Two things to decide and one to fix.**
-
-1. *Which manifest owns these files.* Recommendation: `source_manifest.json` alone, and drop the nine
-   from `GUARDED`. It is the repo where they are maintained, it is verified whenever they are actually
-   consumed (every `--data-turn`), and `repo_check.py` reads its expected-file set live from
-   `pipeline_manifest.json`, so removing them there fixes both gates in one edit. This does not undo
-   D350 — that answered "may we publish these", and Ryan said yes; this says we do not need to. Ryan
-   has since pushed them, so nothing is blocked either way.
-2. *If they stay in both,* something must fail loudly when the two manifests disagree about the same
-   filename, rather than the disagreement surfacing as a fetch cascade.
-3. *Independent of 1 and 2:* `baseline.sh`'s `fetch-verify` should not let one absent file suppress the
-   overlay of every other file. Failing loudly is right; failing in a way that produces 25 further
-   misleading failures is not. Recovering the files it CAN verify, then reporting the absent ones, gives
-   the same information without the cascade.
-
 ### B134 — Six non-legality-critical automatic keyword conferrals from B128's census have no ticket — **NEW S248 (D345); scoping; S; not D0**
 
 Surfaced by B128's original census (D335) and left explicitly out of B128's scope: 6 automatic
@@ -1427,6 +1397,62 @@ existing → re-parse → splice options/flags, keeping B16 `default_weapons` by
 
 
 ## Closed / Shipped — pointers
+
+### B139 — the nine Chaos Daemons root CSVs are guarded by two manifests with nothing keeping them in step — **NEW S254 (D351); tooling; S**
+
+D350 (S253) added the nine hand-authored root CSVs (`Unit_Stats.csv` … `Weapon_Abilities.csv`) to
+`pipeline_manifest.py`'s `GUARDED` list and relaxed the public-repo GW-source exclusion so they could
+live there. They were already guarded by `source_manifest.json` against the private data-sources repo,
+where they are actually maintained. So the same nine files now carry two custody claims pointing at two
+different repos, and nothing propagates an edit from one to the other.
+
+The cost is not hypothetical: it fired immediately. S254 opened into a 26-gate failure cascade because
+the nine had not yet reached the public repo — `fetch-verify` aborts the entire overlay when any guarded
+file is absent from the fetch, so `units.json`, `detachments.json`, `unit_loadouts.json` and
+`abilities.json` were never brought in, and every gate reading them crashed with a bare Node stack trace
+that is indistinguishable from a real failure. That will recur every time a CSV changes in the private
+repo and the public copy lags.
+
+**Two things to decide and one to fix.**
+
+1. *Which manifest owns these files.* Recommendation: `source_manifest.json` alone, and drop the nine
+   from `GUARDED`. It is the repo where they are maintained, it is verified whenever they are actually
+   consumed (every `--data-turn`), and `repo_check.py` reads its expected-file set live from
+   `pipeline_manifest.json`, so removing them there fixes both gates in one edit. This does not undo
+   D350 — that answered "may we publish these", and Ryan said yes; this says we do not need to. Ryan
+   has since pushed them, so nothing is blocked either way.
+2. *If they stay in both,* something must fail loudly when the two manifests disagree about the same
+   filename, rather than the disagreement surfacing as a fetch cascade.
+3. *Independent of 1 and 2:* `baseline.sh`'s `fetch-verify` should not let one absent file suppress the
+   overlay of every other file. Failing loudly is right; failing in a way that produces 25 further
+   misleading failures is not. Recovering the files it CAN verify, then reporting the absent ones, gives
+   the same information without the cascade.
+
+**CLOSED S255 (D352).** All three items actioned in one tooling turn.
+
+*Item 1 — custody.* `source_manifest.json` owns the nine alone. Dropped from
+`pipeline_manifest.py`'s `GUARDED` (231 guarded files, down from 240), the nine `!filename` negation
+lines removed from `.gitignore`, and the nine files deleted from the public repo by Ryan. They remain
+unchanged in the private data-sources repo, where they are authored. D350's premise was wrong: the
+guard it set out to add already existed, so option B added a second custody claim rather than a first
+one. Grounds for the deletion were checked rather than asserted — no pipeline script reads them from
+the public repo, `index.html` fetches no CSV, `rules_assertions.py` already derived
+`GW_SOURCE_FILENAMES` from `source_manifest.json` regardless of `GUARDED` — and the arrangement was
+tested end to end at 40/41 before it was recommended.
+
+*Item 2 — two manifests disagreeing.* Moot. There is only one claim now, so there is nothing to
+disagree. The exclusion is documented in `pipeline_manifest.py` alongside the other never-guarded
+files, with the reasoning, so a future session does not re-add them.
+
+*Item 3 — the cascade.* `check_overlay` now returns the subset it verified on failure as well as
+success, `--overlay-check` prints it in both cases, and `baseline.sh` overlays it either way. The gate
+still fails and still names every absent and mismatched file, and now reports how many were recovered
+and how many withheld. Negative-tested by replaying the S255 failure exactly: 4 failures instead of 26,
+all four naming the real defect, and all four large generated outputs recovered despite the red gate.
+
+*Left alone deliberately:* `repo_check.py`'s `.gitignore` negation parsing, added S253. It is now
+unexercised but correct and tested; removing working code because nothing calls it is churn.
+
 
 ### B138 — Chaos Daemons' hand-authored root CSVs carry no `pipeline_manifest.py` guard — **NEW S252 (D349); CLOSED S253 (D350); tooling; S**
 Found while closing B137. `Unit_Stats.csv`, `Unit_Points.csv`, `Unit_Wargear_Options.csv`,
