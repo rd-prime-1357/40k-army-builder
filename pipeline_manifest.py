@@ -228,6 +228,7 @@ GUARDED = [
     'B99_SCOPE.md',
     'GREY_KNIGHTS_BUILD_SCOPE.md',
     'PROJECT_COLD_STORAGE.md',
+    'Ryan_Restart_Instructions.md',
     # B121 (S237): six scope documents that were never added to GUARDED when they were
     # written. Each verified present in the repo before appending — a GUARDED entry for
     # an absent file turns this gate permanently red. Emperor's Children's filename

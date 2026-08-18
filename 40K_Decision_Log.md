@@ -15457,3 +15457,11 @@ a scope deferral as a closure.
 
 Both corrections follow the standing rule that prior prose — including a session's own prompt — is
 re-derived rather than trusted.
+
+**Added after close.** `Ryan_Restart_Instructions.md` (net new) — a short personal note held in the
+repo alongside the cold-storage document. It covers the one asset that exists nowhere durable: the
+read-only token for the private sources repo, which lives only in the project working area, is never
+committed, and is recoverable only if a future reader knows to mint a replacement. It also restates
+the five outstanding render checks and the five-step restart procedure. No token value and no
+GW-derived material, so it passes the content test for the public repo. Added to `GUARDED`; the
+manifest was rewritten and the freshness check re-run.
