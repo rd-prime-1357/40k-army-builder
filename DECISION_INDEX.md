@@ -1288,3 +1288,14 @@ D354 — B93 turn 3 (tooling): the independent second census, in Python, agrees 
   exemption count 30 → 29. `pipeline_manifest.py` gains a documented FILES-TABLE ORDERING note (append
   the session handoff to GUARDED before writing its own Files table — S255's wrong hash, S256's ad hoc
   workaround, now written down).
+
+D355 — Custody audit ahead of the project being set aside (tooling). Both repos read directly; 99 of
+  104 project-area files byte-identical to the public repo; `source_manifest.json`'s 85 declared
+  sources all present in the private repo with a sampled hash match; full baseline with sources
+  fetched passes 42/42, proving the committed chain still reproduces the shipped data. Four of the
+  five project-only files are correct exclusions (GW-derived, credential, apostrophe-filename,
+  deliberately deleted checklist). One real gap: `Example_of_what_not_to_do.md` has never been in any
+  commit — handed back for push. `detachments_repro_check.py`'s divergence runs the opposite way to
+  what three sessions assumed (repo copy is newer); the re-upload ask is dropped in favour of always
+  taking the repo copy at open. `SESSION_HANDOFF_203.md` was never committed and is a bounded,
+  probably unrecoverable hole in an otherwise unbroken 125–257 chain.

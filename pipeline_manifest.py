@@ -352,6 +352,7 @@ GUARDED = [
     'SESSION_HANDOFF_255.md',
     'SESSION_HANDOFF_256.md',
     'SESSION_HANDOFF_257.md',
+    'SESSION_HANDOFF_258.md',
 ]
 
 # Chaos Daemons' nine hand-authored root CSVs (`CD_ROOT_CSVS` in units_repro_check.py) are

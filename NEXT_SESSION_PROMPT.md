@@ -1,94 +1,123 @@
-# NEXT SESSION PROMPT — Session 258
+# NEXT SESSION PROMPT — Session 259
 
 ## Read first
 
-`SESSION_HANDOFF_257.md` and this file are the only authority on current state. Do not trust
+`SESSION_HANDOFF_258.md` and this file are the only authority on current state. Do not trust
 remembered session numbers, version strings or decision numbers — re-derive them.
 
-State at S257 close: `index.html` **v6.27** (untouched this session), decision log through
-**D354**, `SCHEMA_VERSION` **5**, `rules_assertions.py` at **139** assertions, **42** gates in
-`baseline.sh`, **23 open** backlog items.
+This is a **wind-down session**, not a feature session. The project is being set aside. S258 confirmed
+custody is complete: the public repo plus the private sources repo hold a self-reproducing record.
+S259's whole job is the cold-storage document.
 
-## Open
+## Session open
 
-**Before anything else: confirm `detachments_repro_check.py` in the project area matches the
-repo.** This has now been stale at open for two consecutive sessions (S256, S257) despite the ask
-each time. If still stale, take the repo copy, say so, and consider raising to Ryan directly
-whether the re-upload step should just be dropped in favor of always pulling the repo copy at
-open — see S257 handoff's Ryan action.
+Run `./baseline.sh --fetch`. Expect 35/35 with 5 tier-B gates skipped; `--fetch --data-turn` gives
+42/42. This turn touches no data, so tier-A is sufficient.
 
-Then run `./baseline.sh --fetch --data-turn` and verify the S257 file hashes in
-`SESSION_HANDOFF_257.md`'s Files table against the fetched repo.
+**Take `detachments_repro_check.py` from the repo, always.** Do not ask Ryan to re-upload it. The
+project-area copy is stale and the repo copy is the newer, authoritative one — D355 settled this after
+three sessions asked for the re-upload backwards.
 
-## Assigned work: B93 turn 4 — the final tooling pass, closing the arc
+Verify the four hashes in S258's Files table against a fresh clone.
 
-**Turn type: tooling.** Do not touch `index.html`, `detachments.json` or any parser this session.
+## Turn type: documentation
 
-The four-turn sequence `B93_SCOPE.md` §7 laid out is functionally complete: data (S254, D351),
-engine (S256, D353), independent census (S257, D354). Turn 4 is not new mechanism — it is closing
-out the paper trail so nothing is left half-stated across the documents that describe B93:
+No engine, data, parser or assertion change. If the work starts pulling toward a code change, stop and
+bank it — the point of this session is a durable record, not a fix.
 
-1. **`B93_SCOPE.md` itself.** Written S240 under D334/D335 with a recommended mechanism section
-   (§7) that predates the actual build. Add a short status note at the top (or a new final
-   section) recording what actually shipped and where: data turn S254, engine turn S256, census
-   turn S257, and that §7.2's "demote the type gate" instruction was superseded by D335 and never
-   built (already recorded in D353, but not yet reflected in the scope doc itself — the doc still
-   reads as a forward-looking plan). Do not rewrite the historical sections; append a closing note.
+## The assigned work — `PROJECT_COLD_STORAGE.md` (net new)
 
-2. **`OPEN_ITEMS_BACKLOG.md`'s B93 entry.** Move it from Open Items to Closed / Shipped once this
-   turn's close note is written, following the standing rule that an item moves to Closed/Shipped
-   as soon as its last piece of work ships. Confirm first that there is no fifth piece hiding —
-   re-read `B93_SCOPE.md` §4 (the four blockers) and confirm all four are actually resolved:
-   B125 (closed S243), B128 (closed — verify session), B126 (closed — verify session), B127
-   (still open — confirm B127 is NOT a B93 blocker for closing B93 itself, since B127 covers the
-   74 no-text records, which are simply out of scope for a bearer restriction that does not
-   exist; re-read `B93_SCOPE.md` §6 to confirm this reading before closing B93).
+One document, written for a reader who has none of this context: a future Ryan returning after a long
+gap, or a future model opening the repo cold. It replaces reading back through 133 handoffs. Plain
+prose, no assumed knowledge, no padding.
 
-3. **Sanity pass on `b93_check.js` and `B93-ENGINE-CENSUS`'s continued agreement.** No new
-   population change is expected this session (no data/engine turn), so this is a re-run and
-   confirm, not new work — but confirm explicitly rather than assuming turn 3's numbers still hold
-   after any repo sync.
+It must cover:
 
-4. **Only if it fits:** the render check backlog (five sessions deep now — S248, S249, S250,
-   S256, and nothing new from S257 since it touched no UI) is Ryan's action, not a session task,
-   but if B93 closes cleanly with time remaining, a written note summarizing exactly what a
-   from-scratch verification pass would need to check (consolidating the four separate scripts
-   currently scattered across handoffs into one place) would reduce the chance a fifth item gets
-   added to an already-long list Ryan has not had a chance to work through.
+**What the thing is.** A browser-based Warhammer 40,000 11th Edition Matched Play list builder,
+single-file `index.html`, deployed on GitHub Pages, currently **v6.27**. Its differentiator is D0 —
+illegal army states must be unreachable, not merely flagged. That one principle explains most of the
+architecture, including why rules live in engine code rather than in a data schema.
 
-## Precedents that will matter again
+**What actually works today.** Twenty factions built: twelve Adeptus Astartes, five Heretic Astartes,
+Chaos Daemons, Drukhari. Say plainly what a user can and cannot do end to end.
 
-**A check can pass for the wrong reason.** B129's `Thicket of Bladed Bone` exemption was zero for
-one reason (its own parser missed an alias) while being justified for a different, wrong reason
-(mistaking an Upgrade for a Character-gated record). Two independent-looking checks agreeing is
-not the same as either one being right — cross-checking against a genuinely independent
-derivation (this session's `B93-ENGINE-CENSUS`) is what surfaced it, not re-reading either check's
-own logic in isolation.
+**What the pipeline is.** Private GW sources → parsers → JSON data files → single-file app, with
+`baseline.sh` as the one command that checks everything. Name the gates and what each protects. Make
+clear the private sources repo is required to regenerate but not to run.
 
-**When a prompt or scope document cites a decision and an instruction that disagree, the decision
-wins.** Third time this has mattered across B93 alone (D350's stale premise, S256's §7.2, this
-session's D351 framing of the SPAWN alias).
+**What is broken or missing.** The 23 open tickets grouped by meaning, not listed by ID. Call out the
+live D0 gaps specifically — B93's remaining turn, B90's union-vs-complete roster bug, B135's
+unmodelled transports, B120, E23 — because those are places the app is confidently wrong rather than
+merely incomplete. Note that B116 was resolved by Aeldari going out of scope: Drukhari ships without
+Harlequin and Anhrathe allied units.
 
-## Close
+**The traps.** The things that cost multiple sessions each and would cost them again: the project-area
+mount is not evidence of what exists; a census result that looks small is usually an unread field;
+scope-document instructions can be superseded by later decisions; hand-edited output files are lost on
+the next regeneration; GW-derived material must never reach the public repo, tested by content and not
+by author.
 
-Four rolling documents updated (`40K_Decision_Log.md`, `DECISION_INDEX.md`,
-`OPEN_ITEMS_BACKLOG.md`, `SESSION_HANDOFF_258.md`), this file rewritten for S259, then:
+**Why it was set aside, and what a revival faces.** Be straight. Rules are encoded as engine code plus
+curated tables, which is what makes D0 achievable and also what caps throughput at one maintainer's
+rate — the 26 sessions from S232 to S257 closed 24 tickets and opened 23, a steady state rather than a
+queue draining. A revival that fixes throughput is a rules-as-data rebuild, not a continuation of this
+backlog. Say that plainly rather than implying the project is nearly finished.
 
-1. add `SESSION_HANDOFF_258.md` to `pipeline_manifest.py`'s `GUARDED` list **before** writing the
-   handoff's Files table — this file's own hash is one of that table's rows and gets edited a
-   second time by the append; see `pipeline_manifest.py`'s FILES-TABLE ORDERING note (added S257)
-2. `python3 pipeline_manifest.py --write`
-3. `python3 pipeline_manifest.py --freshness-check`
+**Where everything lives.** Public repo `rd-prime-1357/40k-army-builder`; private sources repo
+`rd-prime-1357/rd-prime-1357-data-sources` with the read-only token at `SOURCE_REPO_TOKEN.txt`; which
+documents are living and which are archival; the fact that `SESSION_HANDOFF_203.md` is missing from an
+otherwise unbroken 125–257 chain.
 
-Those two commands are the literal last two of the session.
+## Also this session
 
-## Outstanding Ryan actions carried forward
+Nothing else. Do not start a ticket.
 
-**`detachments_repro_check.py` re-upload**, two sessions overdue as of S257 — see that handoff's
-Ryan action for the suggestion to just drop the ask if it keeps being missed.
+## Session close
 
-**A render check covering five sessions' UI**, unchanged since S257 (which touched no UI):
-S248's Tank Ace checkbox, S249's Mark of Chaos selector, S250's silent truncation of an over-cap
-tally on size reduction, S256's enhancement picker. S250's is still the one that matters most —
-the only one that edits a saved list without telling the player. Scripts are in the named
-handoffs.
+Add `SESSION_HANDOFF_259.md` to `GUARDED` **before** `--write` (FILES-TABLE ORDERING, S257). Then
+`pipeline_manifest.py --write` followed immediately by `pipeline_manifest.py --freshness-check` as the
+literal last two commands. Produce the handoff, the decision log entry and the backlog update as
+usual — the chain stays unbroken even on the last session.
+
+Push after close: `PROJECT_COLD_STORAGE.md`, `40K_Decision_Log.md`, `DECISION_INDEX.md`,
+`OPEN_ITEMS_BACKLOG.md`, `pipeline_manifest.py`, `pipeline_manifest.json`,
+`SESSION_HANDOFF_259.md`, `NEXT_SESSION_PROMPT.md`.
+
+---
+
+## Standing item: the render checks, six sessions deep
+
+Four scripts, reproduced here in full so this file is self-contained and no handoff lookup is needed.
+Run them against the deployed app. **S250's is the one that matters** — it is the only one that edits
+a saved list without telling the player.
+
+**S250 — silent over-cap truncation.** Create a **Grey Knights** list. Add a **Purifier Squad** at
+**10 models**. Open its wargear pane and fill the psycannon/psilencer/incinerator option to its ceiling
+of 4. Note the unit's points. Change the size to **5 models**. Expect: points fall, the stepper shows
+**2** picks rather than 4, and **no warning banner appears** — the correction is silent by design.
+Reopen the pane and confirm the two surviving picks are the first two in the option's listed order,
+not the first two you clicked. If a "Too many weapon swaps for this unit size" banner appears at any
+point, that is a real defect.
+
+**S256 — enhancement picker eligibility.** Build a **Space Marines** list on **Headhunter Task
+Force**. Add a Captain and a Rhino. On the Captain, open the enhancement section: all four
+enhancements should be **visible but disabled**, each reading "Adeptus Astartes Vehicle model only."
+On the Rhino, check **Select as Tank Ace**, then open its enhancement section: the same four should
+now be **enabled**. Uncheck Tank Ace and confirm they return to disabled. Then switch to **Thousand
+Sons / Warpmeld Pact** and confirm `Bray Lord` is offered on `Sorcerer`, `Infernal Master` **and**
+`Sorcerer In Terminator Armour`, and disabled on any other Character.
+
+**S249 — Marks of Chaos.** Create a **Chaos Space Marines** list, select **Pactbound Zealots**, add
+Legionaries and a Chaos Lord. Both should show "! Choose Mark of Chaos" and a five-chip selector. Pick
+Khorne on both, attach the Lord — the attach should be offered. Change the Legionaries to Nurgle: the
+change must be **allowed**, and both entries must then flag the mismatch. Change the Lord to Nurgle
+and confirm both clear with no detach. Add a **Dark Commune** and confirm only four chips render, with
+Khorne absent. Add **Khorne Berzerkers** and confirm no selector appears and "Khorne" shows on its
+roster line. Deselect Pactbound Zealots and confirm the picks are kept but flagged; reselect and
+confirm they revive with no re-click.
+
+**S248 — Tank Ace.** Open a **Space Marines** list, select **Headhunter Task Force**, add a qualifying
+Vehicle. Confirm the "Tank Ace" pill shows in the datasheet modal and the checkbox appears in the
+config panel. Check it, and confirm the Enhancement section and Warlord picker both pick the entry up.
+Add three more qualifying Vehicles and confirm the 4th checkbox is disabled with a cap message.
+Uncheck one and confirm it re-enables.

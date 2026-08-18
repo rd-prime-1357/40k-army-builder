@@ -15339,3 +15339,61 @@ without writing the rule down. It is written down now instead of relying on sess
 **New `B93-ENGINE-CENSUS`** (138 → 139 assertions). **B129 corrected in place**, same id, same
 assertion count contribution (still one assertion) — exemption population 30 → 29, docstring and
 registration text both updated to explain the SPAWN/Upgrade finding rather than the earlier framing.
+
+## D355 — Custody audit: the record is intact; one file was project-area-only, one handoff never reached the repo (S258)
+
+**Turn type: tooling.** No engine, data or parser file was touched. This session's purpose was custody
+verification ahead of the project being set aside, not feature work: establishing what exists only in
+the project area (which goes stale and is not the record) versus what is durably held in the public
+`40k-army-builder` repo and the private `rd-prime-1357-data-sources` repo.
+
+### What was verified, and how
+
+Both repos were read directly — the public one by fresh clone, the private one through the GitHub
+contents API with the read-only token. Every filename in the project area was compared by SHA-256
+against its repo counterpart. `source_manifest.json`'s 85 declared source files were reconciled
+against the private repo's 88 blobs by name, and a one-in-seven sample of those files was re-hashed
+from the API and matched against the manifest's recorded digests. The full baseline was then run
+against the fresh clone with sources fetched: **42/42 gates pass**, meaning the shipped `units.json`,
+`detachments.json` and their siblings still reproduce from the private sources through the committed
+parsers. That reproduction is the strongest custody statement available — it proves the repo holds not
+just files but a working chain.
+
+### Findings
+
+**The record is in better shape than the wind-down risk implied.** 99 of 104 project-area files are
+byte-identical to the repo. Of the five that are not:
+
+- `Thousand_Sons_web.txt` is GW-derived and correctly absent from the public repo and present in the
+  private one (this is B108's closure holding).
+- `SOURCE_REPO_TOKEN.txt` is a credential and must never be committed.
+- `EMPEROR_S_CHILDREN_BUILD_SCOPE.md` is present in the repo under its true apostrophe filename,
+  `EMPEROR'S_CHILDREN_BUILD_SCOPE.md`, and is byte-identical; the underscore is the project-area
+  mount stripping the apostrophe, already noted at D331.
+- `gw_source_deletion_checklist.txt` was deliberately deleted from the repo (commit `8264590`). It is
+  a filename list with no GW text, so it would pass the content test, but it is a completed one-time
+  checklist and re-adding it would reverse a deliberate act. Left deleted.
+- **`Example_of_what_not_to_do.md` has never existed in the repo, in any commit.** It is a process
+  reference — a transcript of Claude's own output demonstrating the narration and pre-action-summary
+  failure modes the output rules forbid — and contains no GW-derived material. This is the one real
+  custody gap on the file side, and the one file this session hands back for push.
+
+**`detachments_repro_check.py` diverges, and the repo copy is the newer one.** The project-area copy
+is four lines shorter, missing the B93 bearer-restriction term vocabulary added to the tier-B source
+list. The staleness has run the wrong direction the whole time: three consecutive sessions asked Ryan
+to re-upload it, when the correct and already-practised action is simply to take the repo copy at
+open. **The ask is dropped.** No file is at risk; the authoritative copy is committed.
+
+**`SESSION_HANDOFF_203.md` was never committed.** Handoffs run 125–257 in the repo with exactly one
+gap at 203, and the file appears in no commit in any branch. Sessions 1–124 pre-date the convention
+and were never committed at all; that is expected, not a loss. S203 is inside the covered range and
+is a genuine hole in the record. If a copy does not exist locally it is unrecoverable, and the
+decision log and index still carry that session's substance, so the loss is bounded.
+
+### Decision
+
+The public repo, plus the private sources repo, is confirmed as a complete and self-reproducing record
+of the project. Setting the project aside carries no data-loss risk once `Example_of_what_not_to_do.md`
+is pushed. The project file area can be allowed to go stale or be cleared without consequence — it is
+a working cache, never the record. The deployed GitHub Pages app at `index.html` v6.27 continues to
+serve independently of any subscription.
