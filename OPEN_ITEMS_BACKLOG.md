@@ -3,7 +3,7 @@
 Originally logged Session 18; reorganised **S126 (T5)** — closed/shipped ticket bodies moved in
 full to `BACKLOG_ARCHIVE.md`. Each keeps a one-line pointer here (ID, title, closing session,
 decision reference). The Open Items section below is the only section awaiting work; if it is
-not here, it isn't open. **23 open** as of S256 (B93 turn 2 shipped, ticket stays open for turns 3-4):
+not here, it isn't open. **23 open** as of S257 (B93 turn 3 shipped, ticket stays open for turn 4):
 B134, B135, B136, B127, B116, B120, B122, B124, B97, E28, B93, B90, B85,
 B86, B69, B70, B75, P2, P4, E23, B67b, E12, B17.
 
@@ -927,6 +927,36 @@ refusing a legal bearer.
 source-side census independent of the engine. `b93_check.js` already pins them from the engine side
 (53 zero-admit across six clauses, all four causes known; 98 one-admit), so turn 3 is the
 independent second derivation, not the first one. Turn 4 is the tooling pass.
+
+**PROGRESS — turn 3 of 4 shipped S257: the independent second census.** New `B93-ENGINE-CENSUS`
+assertion in `rules_assertions.py` (138 → 139) re-derives the admit-count census in Python against
+`detachments.json`'s own `bearer_restriction` field and `units.json`, through a fresh
+re-implementation of the matching logic rather than a port of the JavaScript. **It agrees exactly**
+with `b93_check.js`'s engine-side census: 1,145 army x record evaluations, 53 zero-admit across the
+same six known-cause clauses at the same counts, 98 one-admit — now pinned by
+`(detachment_key, enhancement_name, bearer_name)` triple, not just count, so a resolver regression
+that swaps which unit an enhancement resolves to is caught even when the total holds at 98.
+
+**Found in the cross-check, not assigned: `B129`'s `Thicket of Bladed Bone` exemption was stale.**
+It was reasoned zero-admit because the target unit is Beast-typed, not a Character — but the record
+is an Upgrade, which bypasses the Character gate entirely, and the shipped resolver has always
+admitted the real bearer (`Chaos Spawn Beast`) via its own curated SPAWN/Chaos Spawn alias. B129's
+separate, older from-scratch parser did not know that alias and independently computed zero for an
+unrelated reason, so two wrongs canceled into a pass. Fixed by mirroring the alias in B129's own
+tokeniser (30 → 29 named exemptions); docstring and registration text corrected in place. Also
+corrected: B129's registration text claimed every checked record needs "a Character bearer," which
+is wrong for the Upgrade records it also evaluates.
+
+**Small bundled fix:** `pipeline_manifest.py` gains a documented FILES-TABLE ORDERING note — append
+the session's own handoff to `GUARDED` before writing that handoff's Files table, since this file's
+hash is one of that table's rows and gets edited a second time by the append. S255 recorded a wrong
+hash for exactly this reason; S256 worked around it without writing the rule down; it is written
+down now.
+
+**NEXT: turn 4 — the final tooling pass.** Nothing scoped yet beyond closing out the arc; likely a
+documentation/cleanup turn confirming the four-turn sequence is fully landed (data S254, engine S256,
+census S257) with no loose ends across `B93_SCOPE.md`, the decision log and the backlog. Scope at
+S258 open.
 
 ### B127 — 74 enhancement records have no rule text in any held source — **NEW S240 (D334); source acquisition; blocks B93/B99/B119/B123**
 

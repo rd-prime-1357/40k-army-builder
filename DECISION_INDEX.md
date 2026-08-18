@@ -1274,3 +1274,17 @@ D353 — B93 turn 2 (engine): the structured bearer-restriction resolver ships i
   pinned in the new `b93_check.js`. E4b-7 restated in place for the resolver (138 assertions,
   unchanged). Product call: ineligible picker rows stay visible and disabled with the clause as the
   reason, not dropped.
+
+D354 — B93 turn 3 (tooling): the independent second census, in Python, agrees exactly with
+  `b93_check.js`'s engine-side derivation — 1,145 army x record evaluations, 53 zero-admit across the
+  same six known-cause clauses, 98 one-admit now pinned by (detachment_key, enhancement_name,
+  bearer_name) triple rather than by count alone. New `B93-ENGINE-CENSUS` assertion (139 total).
+  Building the cross-check exposed a stale `B129` exemption: `Thicket of Bladed Bone` (SPAWN unit
+  only, Thousand Sons) was listed zero-admit on the reasoning that its target is Beast-typed and not
+  a Character, but the record is an Upgrade and bypasses the Character gate entirely — the shipped
+  resolver has always gotten this right via its own curated SPAWN/Chaos Spawn alias; B129's separate,
+  older parser did not know that alias and independently (and for an unrelated reason) also computed
+  zero, so two wrongs canceled into a pass. Fixed by mirroring the alias in B129's own tokeniser;
+  exemption count 30 → 29. `pipeline_manifest.py` gains a documented FILES-TABLE ORDERING note (append
+  the session handoff to GUARDED before writing its own Files table — S255's wrong hash, S256's ad hoc
+  workaround, now written down).

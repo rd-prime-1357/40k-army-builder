@@ -87,6 +87,25 @@ catches a handoff lost from the repo. Auto-discovering "whatever handoffs are
 present" would guard files correctly but could never notice one going missing,
 trading a real failure mode for the one this fixes. The static list stays; this
 check makes forgetting to update it loud instead of silent.
+
+FILES-TABLE ORDERING (S255/S256/S257) — THIS FILE GETS EDITED TWICE AT CLOSE
+------------------------------------------------------------------------------
+This file is itself edited once at close to append the new session's handoff to
+GUARDED, same as every other close-time edit — but its own hash is *also* one of
+the rows the handoff's Files table records. If the table is written before the
+GUARDED append, the row it records for THIS file is the pre-append hash, and the
+row is wrong the moment the append happens next — S255's handoff recorded a hash
+this file never actually had at close. S256 worked around it once by doing the
+append first; that is now the documented order, not a one-session memory:
+
+    1. append SESSION_HANDOFF_N.md to GUARDED, in this file
+    2. write the handoff's Files table (this file's row now matches what ships)
+    3. python3 pipeline_manifest.py --write
+    4. python3 pipeline_manifest.py --freshness-check
+
+Steps 3 and 4 stay the literal last two commands of the session, per the
+CLOSE-TIME FRESHNESS CHECK section above; step 1 just has to land before step 2,
+not before step 3.
 """
 
 import argparse, hashlib, json, os, re, sys
@@ -332,6 +351,7 @@ GUARDED = [
     'SESSION_HANDOFF_254.md',
     'SESSION_HANDOFF_255.md',
     'SESSION_HANDOFF_256.md',
+    'SESSION_HANDOFF_257.md',
 ]
 
 # Chaos Daemons' nine hand-authored root CSVs (`CD_ROOT_CSVS` in units_repro_check.py) are

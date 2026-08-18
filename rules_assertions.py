@@ -2740,16 +2740,18 @@ ASSERTIONS = [
     # produces a NEW zero-admit record — the exact shape of the D334 mistake — fails here
     # instead of surviving a session on an inference about designer intent.
     ('B129',
-     'Every non-Upgrade enhancement whose description carries a bearer-restriction clause '
+     'Every enhancement whose description carries a bearer-restriction clause '
      '(the 117-string vocabulary B93_SCOPE.md S9 verified against source) resolves to at '
-     'least one eligible Character bearer in its army, UNLESS the record is a named, '
-     'commented exemption. Exemption population as of B133 (S247): 30 records — 24 '
-     'Adeptus Astartes Vehicle (Headhunter Task Force, B128), 4 Marks of Chaos (Pactbound '
-     'Zealots, B126), 1 Spawn (Thicket of Bladed Bone — target is Beast-typed, not a '
-     'vocabulary gap), 1 Harlequins (Reaper\'s Cowl — faction not built). The 6 Deathwing '
-     'records B93_SCOPE.md S4.2 named are NOT exempted here: resolved_pool() applies '
-     'chapter_keyword_additions (B133), so the generic-pool Characters restore Deathwing/ '
-     'Ravenwing under this gate\'s own pool build and resolve to real bearers; see the '
+     'least one eligible bearer in its army — a Character for a non-Upgrade record, any '
+     'unit type for an Upgrade record — UNLESS the record is a named, commented exemption. '
+     'Exemption population as of S257: 29 records — 24 Adeptus Astartes Vehicle (Headhunter '
+     'Task Force, B128), 4 Marks of Chaos (Pactbound Zealots, B126), 1 Harlequins (Reaper\'s '
+     'Cowl — faction not built). The 6 Deathwing records B93_SCOPE.md S4.2 named are NOT '
+     'exempted here: resolved_pool() applies chapter_keyword_additions (B133), so the '
+     'generic-pool Characters restore Deathwing/Ravenwing under this gate\'s own pool build '
+     'and resolve to real bearers; see the function docstring. SPAWN unit only (Thicket of '
+     'Bladed Bone) is also not exempted as of S257 — it is an Upgrade with a mirrored '
+     'Chaos-Spawn alias in this gate\'s own parser and resolves to one real bearer; see the '
      'function docstring.',
      'detachments.json enhancement descriptions vs Datasheets_keywords.csv + units.json (B129, D334/D335/D336)',
      lambda S: b129_zero_bearer_gate(S)),
@@ -2776,6 +2778,26 @@ ASSERTIONS = [
      'detachments.json bearer_restriction vs its own description text + '
      'Datasheets_keywords.csv / Datasheets.csv (B93-CENSUS, D351)',
      lambda S: b93_bearer_restriction_census(S)),
+
+    # ── B93-ENGINE-CENSUS (S257). Turn 3 of 4, the independent second derivation.
+    # b93_check.js already pins the admit-count census from the JavaScript side; this is
+    # the same census re-derived in Python against detachments.json's own bearer_restriction
+    # field and units.json, with a fresh re-implementation of the matching logic rather than
+    # a port of the JS, so a shared bug cannot cancel out between the two derivations. Found
+    # in passing: B129's own EXEMPT list carried one stale entry (Thicket of Bladed Bone) that
+    # this census's cross-check exposed — fixed in B129 itself this session, not restated here.
+    ('B93-ENGINE-CENSUS',
+     'Every enhancement record with a bearer_restriction, evaluated against every BUILT '
+     "faction's own resolved unit pool (all twelve Space Marines armies plus all eight "
+     'non-Astartes built factions — 1,145 army x record evaluations, not 641 records), agrees '
+     "with b93_check.js's engine-side census exactly: 53 zero-admit across the same six "
+     'known-cause clauses at the same per-clause counts, 98 one-admit pinned by '
+     '(detachment_key, enhancement_name, bearer_name) triple rather than by count alone, so a '
+     'resolver regression that swaps which unit an enhancement resolves to is caught even when '
+     'the total stays 98.',
+     "detachments.json bearer_restriction + units.json vs b93_check.js's engine-side census "
+     '(B93-ENGINE-CENSUS, D354)',
+     lambda S: b93_engine_bearer_census(S)),
 
 ]
 
@@ -5337,16 +5359,26 @@ def b129_zero_bearer_gate(S):
         keywords (Khorne/Tzeentch/Nurgle/Slaanesh as a bearer-restricting mark, distinct from
         the God-keyword some units already carry natively) are not modelled anywhere in
         source data reachable from a static unit record.
-      - 1 SPAWN unit only (Thicket of Bladed Bone, Thousand Sons). B93_SCOPE.md S5 frames this
-        as a vocabulary synonym (source keyword "Chaos Spawn" vs. clause token "SPAWN") fixable
-        by a one-entry alias. Re-checked here: the named unit resolves to "Chaos Spawn",
-        unit_type "Beast" — not a Character under any name. The alias would let the token
-        match the unit; it would not make the unit a Character. Recorded as it is, not as the
-        doc's framing — an alias here would be a curation entry that quietly changes nothing.
       - 1 Harlequins model only (Reaper's Cowl, Drukhari). Harlequins is not a built faction
         (S2). Correctly zero today; becomes live only once Harlequins is built. No-op, kept as
         an exemption rather than "fixed", per B93_SCOPE.md S5's own recommendation for this
         record.
+
+    **SPAWN unit only (Thicket of Bladed Bone, Thousand Sons) is REMOVED from EXEMPT as of S257
+    — it was never actually zero-admit, and the prior entry was masking a parser gap, not
+    documenting a real one.** D351 (S254) framed the SPAWN/Chaos Spawn alias as buying "a clean
+    parse rather than a bearer", on the reasoning that the target unit is Beast-typed and
+    therefore not a Character. That reasoning overlooked that the record is an Upgrade
+    (is_upgrade), which bypasses the Character gate entirely — Upgrades go to any unit type per
+    the Muster Rules' own exemption, so a Spawn-only Upgrade reaching a Beast-typed Spawn unit is
+    exactly correct, not a gap. The shipped resolver has always gotten this right (it reads
+    detachments.json's own curated alias directly); this gate's independent from-scratch parser
+    did not know the alias and returned an unresolved parse for "SPAWN", which happened to fall
+    through to the EXEMPT list rather than surface as a real disagreement. Fixed here by mirroring
+    the shipped alias in this parser's own tokeniser (see parse_clause, above) rather than by
+    trusting the coincidence: with the alias, this gate now finds the same one bearer the shipped
+    resolver and b93_check.js's independent whole-army census both find (Chaos Spawn Beast),
+    confirmed by re-running with the EXEMPT entry removed.
 
     **The 6 Deathwing records (4 "Deathwing model only" + 2 "...with the Deep Strike ability
     only", Dark Angels, all in INNER CIRCLE TASK FORCE, LION'S BLADE TASK FORCE and WRATH OF THE
@@ -5499,6 +5531,22 @@ def b129_zero_bearer_gate(S):
                     alts.append(' '.join(words[:slash_idx] + [repl] + words[slash_idx+1:]))
             else:
                 alts.append(part)
+        # SPAWN/Chaos Spawn synonym (B93_SCOPE.md S5, D351): the bare word SPAWN in
+        # clause text names the datasheet keyword "Chaos Spawn"; the literal keyword
+        # "Spawn" that exists in source is an unrelated, coincidental World Eaters
+        # keyword. detachment_parser.py already carries this exact one-entry curated
+        # alias in the shipped bearer_restriction field (resolution: 'curated',
+        # alternatives Spawn OR Chaos Spawn) -- mirrored here rather than re-derived,
+        # so this independent parser reaches the same branch the shipped data does.
+        # Found stale S257: D351 framed the alias as buying "a clean parse rather
+        # than a bearer", reasoning the target unit is Beast-typed and therefore not
+        # a Character -- but the record is an Upgrade (is_upgrade), which bypasses
+        # the Character gate entirely per the Muster Rules' own exemption, so the
+        # alias buys a real bearer (Chaos Spawn Beast) once it can parse the branch.
+        for part in list(alts):
+            pwords = part.upper().split()
+            if 'SPAWN' in pwords and 'CHAOS' not in pwords:
+                alts.append(re.sub(r'\bSPAWN\b', 'CHAOS SPAWN', part, flags=re.I))
         parsed_alts = []
         for a in alts:
             words = norm_apos(a.upper()).split()
@@ -5557,8 +5605,11 @@ def b129_zero_bearer_gate(S):
     for enh in ('Eye of Tzeentch', 'Intoxicating Elixir', 'Orbs of Unlife',
                 'Talisman of Burning Blood'):
         EXEMPT.add(('Chaos Space Marines|PACTBOUND ZEALOTS', enh))  # B126 — Marks of Chaos
-    EXEMPT.add(('Thousand Sons|SERVANTS OF CHANGE', 'Thicket of Bladed Bone'))  # target is Beast-typed, not Character
     EXEMPT.add(("Drukhari|REAPER'S WAGER", "Reaper's Cowl"))  # Harlequins not built (S2)
+    # 'Thousand Sons|SERVANTS OF CHANGE', 'Thicket of Bladed Bone' (SPAWN unit only) is
+    # deliberately NOT here as of S257 — see the docstring. It is an Upgrade, bypasses the
+    # Character gate, and the SPAWN/Chaos Spawn alias (mirrored above in parse_clause) finds
+    # its one real bearer, Chaos Spawn Beast.
     # The 6 Deathwing-family entries that lived here through B131 (S244) are gone as of
     # B133 (S247): resolved_pool() now applies chapter_keyword_additions (B132's engine
     # fix, mirrored), so the 5 generic-pool Characters restore Deathwing/Ravenwing under
@@ -5591,7 +5642,7 @@ def b129_zero_bearer_gate(S):
         return False, (f'{len(stale)} EXEMPT entr(y/ies) no longer resolve to zero admits — '
                        f'stale exemption, re-derive: {sorted(stale)[:5]}')
     return True, (f'zero-admit population is exactly the {len(EXEMPT)} named exemptions '
-                  f'(24 Vehicle/B128, 4 Marks/B126, 1 Spawn, 1 Harlequins); '
+                  f'(24 Vehicle/B128, 4 Marks/B126, 1 Harlequins); '
                   f'no unexempted zero-admit record found')
 
 
@@ -5783,6 +5834,292 @@ def b93_bearer_restriction_census(S):
                   f'{counts["curated"]} curated); every clause round-trips to its description, '
                   f'every term is real, both curations hold')
 
+
+def b93_engine_bearer_census(S):
+    """B93 turn 3 (S257). The independent SECOND derivation of the admit-count census
+
+    turn 2's b93_check.js already pins from the engine side (JavaScript, index.html's real
+    bearerNorm/bearerTermSet/bearerAbilitySet/enhancementBearerEligible): 1,145 army x record
+    evaluations, 53 zero-admit across six known-cause clauses, 98 one-admit. This is that same
+    census re-derived here in Python, reading detachments.json's own bearer_restriction field
+    and units.json directly, with a fresh re-implementation of the resolver's matching logic
+    rather than a re-import of it -- so a bug shared between the two derivations (e.g. the JS
+    resolver and a Python port of the same JS) cannot cancel out and pass silently.
+
+    This is deliberately NOT B129: B129 re-derives the CLAUSE from description text with its own
+    from-scratch tokeniser and evaluates one detachment key at a time (13-ish keys, Character-only
+    non-Upgrade records, zero-admit only). This assertion reads the ALREADY-PARSED
+    bearer_restriction field (B93-CENSUS polices that the field matches the text; this assertion
+    does not re-litigate the parse) and evaluates every BUILT FACTION's own resolved pool
+    separately -- all twelve Space Marines armies (the generic pool plus eleven chapters,
+    matching resolveUnits()/resolved_pool()'s per-chapter union and both per-chapter maps) and
+    all eight non-Astartes built factions -- which is why the population here is 1,145 army x
+    record evaluations, not 641 records. That is the same granularity b93_check.js's whole-army
+    census (its check 8) uses, and the two must agree.
+
+    Independent re-implementation, not a port: bearer_norm/mark_keyword_set/bearer_ability_set/
+    mark_effect/unit_innate_mark/unit_needs_mark/entry_effective_mark/eligible below are each
+    written fresh against Army_Muster_Rules.txt and detachment_effects.json's own mark_of_chaos
+    shape, mirroring index.html's bearerNorm/markKeywordSet/bearerAbilitySet/markEffect/
+    unitInnateMark/unitNeedsMark/entryEffectiveMark/enhancementBearerEligible in what they DO,
+    not in how the JavaScript is written. Entries carry no tankAce pick and no player mark pick
+    in this census (mirroring b93_check.js's own entry() helper, which sets mark: null and never
+    sets tankAce) -- so a Vehicle is evaluated as its raw unit_type, never as the Character
+    Tank Ace confers, and a mark-needing unit with no innate mark is evaluated with no mark. That
+    is what makes the 24 Vehicle-clause and 4 Mark-clause zero-admit results appear here too: they
+    are zero WITHOUT a player pick, not zero in a legal list, exactly as B129 and b93_check.js
+    both already establish by other means.
+
+    Result, re-derived at S257, agreeing with b93_check.js exactly: 1,145 evaluated, 53 zero-admit
+    in the same six clauses at the same per-clause counts, 98 one-admit. The 98 are pinned by
+    (detachment_key, enhancement_name, bearer_name) rather than by count alone, because a count
+    alone would not catch a resolver regression that swaps which unit an enhancement resolves to
+    while leaving the total unchanged. 68 distinct triples, five of which repeat across the
+    Adeptus Astartes chapters that share a detachment key with no chapter-specific override
+    (Techmarine x2, Chaplain On Bike x3) -- each repeating exactly 7 times, once per built
+    Astartes army (Space Marines plus six vanilla chapters plus Black Templars, Blood Angels,
+    Dark Angels, Deathwatch, Space Wolves; the 68+5x6=98 arithmetic is checked directly, not
+    assumed.
+    """
+    dt = S.detachments()
+    tax = S.taxonomy()
+    de = S.detachment_effects()['effects']
+
+    def bearer_norm(s):
+        s = '' if s is None else str(s)
+        s = s.lower()
+        s = re.sub(r"[\u2018\u2019\u02bc]", "'", s)
+        s = s.replace("'", '')
+        return re.sub(r'\s+', ' ', s).strip()
+
+    def mark_keyword_set(raw):
+        s = set()
+        for mg in (raw.get('model_groups') or []):
+            for k in (mg.get('keyword_names') or []):
+                s.add((k or '').lower())
+            for k in (mg.get('faction_keyword_names') or []):
+                s.add((k or '').lower())
+            for mk in (mg.get('model_keyword_names') or []):
+                for k in (mk.get('keywords') or []):
+                    s.add((str(k) or '').lower())
+        return s
+
+    def bearer_ability_set(raw):
+        s = set()
+        for mg in (raw.get('model_groups') or []):
+            for a in (mg.get('rule_names') or []):
+                s.add(bearer_norm(a))
+            for a in (mg.get('unit_ability_names') or []):
+                s.add(bearer_norm(a))
+            for a in (mg.get('wargear_ability_names') or []):
+                s.add(bearer_norm(a))
+        for a in (raw.get('unit_ability_details') or {}).keys():
+            s.add(bearer_norm(a))
+        return s
+
+    def mark_effect(keys):
+        for k in keys:
+            rec = de.get(k)
+            if not rec:
+                continue
+            for eff in rec.get('effects', []):
+                if eff.get('kind') == 'mark_of_chaos' and eff.get('enforced') is not False:
+                    return eff
+        return None
+
+    def unit_innate_mark(raw, eff):
+        if not raw or not eff:
+            return None
+        kws = mark_keyword_set(raw)
+        for m in eff.get('marks', []):
+            if m.lower() in kws:
+                return m
+        return None
+
+    def unit_needs_mark(raw, eff):
+        if not raw or not eff:
+            return False
+        kws = mark_keyword_set(raw)
+        t = eff.get('target') or {}
+        if t.get('base_keyword') and t['base_keyword'].lower() not in kws:
+            return False
+        if any((k or '').lower() in kws for k in (t.get('except_keywords') or [])):
+            return False
+        return True
+
+    def entry_effective_mark(raw, keys):
+        eff = mark_effect(keys)
+        if not eff or not raw:
+            return None
+        innate = unit_innate_mark(raw, eff)
+        if innate:
+            return innate
+        if not unit_needs_mark(raw, eff):
+            return None
+        return None  # no player pick modelled in this census -- matches b93_check.js's entry()
+
+    def bearer_term_set(raw, keys):
+        s = set()
+
+        def add(v):
+            n = bearer_norm(v)
+            if n:
+                s.add(n)
+        for k in mark_keyword_set(raw):
+            add(k)
+        add(raw.get('unit_name'))
+        add(entry_effective_mark(raw, keys))
+        return s
+
+    def eligible(rule, raw, keys):
+        if not rule:
+            return True
+        if raw is None:
+            return True
+        terms = bearer_term_set(raw, keys)
+        if not terms:
+            return True
+
+        def has(t):
+            return bearer_norm(t) in terms
+        if not any(alt and all(has(t) for t in alt) for alt in rule['alternatives']):
+            return False
+        if any(ex and all(has(t) for t in ex) for ex in (rule.get('exclusions') or [])):
+            return False
+        if rule.get('ability'):
+            ab = bearer_ability_set(raw)
+            if ab and bearer_norm(rule['ability']) not in ab:
+                return False
+        return True
+
+    FACTIONS = [f for g in tax['groups'] for f in g['factions'] if f.get('built')]
+
+    evaluated = 0
+    zero = {}
+    one_pinned = {}
+    for f in FACTIONS:
+        army = f['data_army']
+        keys = dt['armies'].get(army, [])
+        pool = S.resolved_pool(army)
+        for k in keys:
+            drec = dt['detachments'][k]
+            for e in drec.get('enhancements', []):
+                br = e.get('bearer_restriction')
+                if not br or not br.get('alternatives'):
+                    continue
+                evaluated += 1
+                admits = []
+                for uname, urec in pool.items():
+                    utype = urec.get('unit_type')
+                    if utype == 'Epic Hero':
+                        continue
+                    if not e.get('is_upgrade') and utype != 'Character':
+                        continue
+                    if eligible(br, urec, [k]):
+                        admits.append(uname)
+                if len(admits) == 0:
+                    zero[br['clause']] = zero.get(br['clause'], 0) + 1
+                elif len(admits) == 1:
+                    triple = (k, e['name'], admits[0])
+                    one_pinned[triple] = one_pinned.get(triple, 0) + 1
+
+    if evaluated != 1145:
+        return False, f'expected 1145 army x record evaluations, got {evaluated}'
+
+    EXPECT_ZERO = {
+        'Adeptus Astartes Vehicle model only': 48,
+        'Heretic Astartes Khorne model only': 1,
+        'Heretic Astartes Tzeentch model only': 1,
+        'Heretic Astartes Nurgle model only': 1,
+        'Heretic Astartes Slaanesh model only': 1,
+        'Harlequins model only': 1,
+    }
+    if zero != EXPECT_ZERO:
+        return False, f'zero-admit census {zero} != pinned {EXPECT_ZERO}'
+
+    EXPECT_ONE = {
+    ("Death Guard|MORTARION'S HAMMER", 'Bilemaw Blight', 'Malignant Plaguecaster'): 1,
+    ("Death Guard|MORTARION'S HAMMER", 'Tendrilous Emissions', 'Lord of Virulence'): 1,
+    ("Emperor's Children|COURT OF THE PHOENICIAN", 'Exalted Patron', 'Lord Exultant'): 1,
+    ("Emperor's Children|COURT OF THE PHOENICIAN", 'Spiritsliver', 'Daemon Prince of Slaanesh'): 1,
+    ('Black Templars|IRONSTORM SPEARHEAD', 'Adept of the Omnissiah', 'Techmarine'): 1,
+    ('Black Templars|IRONSTORM SPEARHEAD', 'Target Augury Web', 'Techmarine'): 1,
+    ('Black Templars|STORMLANCE TASK FORCE', "Hunter's Instincts", 'Chaplain On Bike'): 1,
+    ('Black Templars|STORMLANCE TASK FORCE', 'Fury of the Storm', 'Chaplain On Bike'): 1,
+    ('Black Templars|VINDICATION TASK FORCE', 'Warden of Honour', 'Crusade Ancient'): 1,
+    ('Blood Angels|IRONSTORM SPEARHEAD', 'Adept of the Omnissiah', 'Techmarine'): 1,
+    ('Blood Angels|IRONSTORM SPEARHEAD', 'Target Augury Web', 'Techmarine'): 1,
+    ('Blood Angels|STORMLANCE TASK FORCE', "Hunter's Instincts", 'Chaplain On Bike'): 1,
+    ('Blood Angels|STORMLANCE TASK FORCE', 'Fury of the Storm', 'Chaplain On Bike'): 1,
+    ('Chaos Space Marines|CHAOS CULT', 'Amulet of Tainted Vigour', 'Dark Apostle'): 1,
+    ('Chaos Space Marines|CULT OF THE ARKIFANE', 'Crown of Worms', 'Warpsmith'): 1,
+    ('Chaos Space Marines|DECEPTORS', 'Falsehood', 'Chaos Lord'): 1,
+    ('Chaos Space Marines|DREAD TALONS', 'Warp-Fuelled Thrusters', 'Chaos Lord with Jump Pack'): 1,
+    ('Chaos Space Marines|NIGHTMARE HUNT', 'Sorrowscent Vulture', 'Chaos Lord with Jump Pack'): 1,
+    ('Chaos Space Marines|NIGHTMARE HUNT', 'Warp-Fuelled Thrusters', 'Chaos Lord with Jump Pack'): 1,
+    ('Chaos Space Marines|SOULFORGED WARPACK', 'Invigorated Mechatendrils', 'Warpsmith'): 1,
+    ('Dark Angels|DARK AGE ARSENAL', 'Entreaty of Perpetual Ardour', 'Hellblaster Squad'): 1,
+    ('Dark Angels|DARKFLIGHT PURSUIT', 'Nightforged Battery', 'Land Speeder Vengeance'): 1,
+    ('Dark Angels|IRONSTORM SPEARHEAD', 'Adept of the Omnissiah', 'Techmarine'): 1,
+    ('Dark Angels|IRONSTORM SPEARHEAD', 'Target Augury Web', 'Techmarine'): 1,
+    ('Death Guard|CHAMPIONS OF CONTAGION', 'Cornucophagus', 'Lord of Poxes'): 1,
+    ('Death Guard|CHAMPIONS OF CONTAGION', 'Final Ingredient', 'Biologus Putrifier'): 1,
+    ('Death Guard|CHAMPIONS OF CONTAGION', 'Needle of Nurgle', 'Plague Surgeon'): 1,
+    ('Death Guard|CHAMPIONS OF CONTAGION', 'Visions of Virulence', 'Malignant Plaguecaster'): 1,
+    ('Death Guard|SHAMBLEROT VECTORIUM', 'Sorrowsyphon', 'Malignant Plaguecaster'): 1,
+    ('Death Guard|SHAMBLEROT VECTORIUM', 'Witherbone Pipes', 'Noxious Blightbringer'): 1,
+    ('Death Guard|TALLYBAND SUMMONERS', 'Entropic Knell', 'Great Unclean One'): 1,
+    ('Death Guard|TALLYBAND SUMMONERS', 'Tome of Bounteous Blessings', 'Malignant Plaguecaster'): 1,
+    ('Deathwatch|IRONSTORM SPEARHEAD', 'Adept of the Omnissiah', 'Techmarine'): 1,
+    ('Deathwatch|IRONSTORM SPEARHEAD', 'Target Augury Web', 'Techmarine'): 1,
+    ('Deathwatch|STORMLANCE TASK FORCE', "Hunter's Instincts", 'Chaplain On Bike'): 1,
+    ('Deathwatch|STORMLANCE TASK FORCE', 'Fury of the Storm', 'Chaplain On Bike'): 1,
+    ('Drukhari|COVENITE COTERIE', 'Master Artisan', 'Haemonculus'): 1,
+    ('Drukhari|COVENITE COTERIE', 'Master Nemesine', 'Haemonculus'): 1,
+    ('Drukhari|COVENITE COTERIE', 'Master Regenesist', 'Haemonculus'): 1,
+    ('Drukhari|COVENITE COTERIE', 'Master Repugnomancer', 'Haemonculus'): 1,
+    ('Drukhari|KABALITE CARTEL', 'Informant Network', 'Archon'): 1,
+    ('Drukhari|KABALITE CARTEL', 'Leechbite Plate', 'Archon'): 1,
+    ('Drukhari|KABALITE CARTEL', 'Towering Arrogance', 'Archon'): 1,
+    ('Drukhari|KABALITE CARTEL', 'Webway Awl', 'Archon'): 1,
+    ('Drukhari|REALSPACE RAIDERS', 'Crucible of Malediction', 'Haemonculus'): 1,
+    ('Drukhari|REALSPACE RAIDERS', 'Eye of Spite', 'Succubus'): 1,
+    ('Drukhari|REALSPACE RAIDERS', 'Labyrinthine Cunning', 'Archon'): 1,
+    ('Drukhari|SPECTACLE OF SPITE', "Morghenna's Curse", 'Succubus'): 1,
+    ('Drukhari|SPECTACLE OF SPITE', 'Chronoshard', 'Succubus'): 1,
+    ('Drukhari|SPECTACLE OF SPITE', 'Periapt of Torments', 'Succubus'): 1,
+    ('Drukhari|SPECTACLE OF SPITE', 'Pharmacophex', 'Succubus'): 1,
+    ('Space Marines|IRONSTORM SPEARHEAD', 'Adept of the Omnissiah', 'Techmarine'): 7,
+    ('Space Marines|IRONSTORM SPEARHEAD', 'Target Augury Web', 'Techmarine'): 7,
+    ('Space Marines|SPEARPOINT TASK FORCE', 'Chogorian Huntmaster', 'Chaplain On Bike'): 7,
+    ('Space Marines|STORMLANCE TASK FORCE', "Hunter's Instincts", 'Chaplain On Bike'): 7,
+    ('Space Marines|STORMLANCE TASK FORCE', 'Fury of the Storm', 'Chaplain On Bike'): 7,
+    ('Space Wolves|SAGA OF THE GREAT WOLF', "Grimnar's Mark", 'Captain In Terminator Armour'): 1,
+    ('Space Wolves|SAGA OF THE GREAT WOLF', "Skjald's Foretelling", 'Wolf Guard Battle Leader'): 1,
+    ('Space Wolves|SAGA OF THE GREAT WOLF', 'Howlmaw', 'Wolf Priest'): 1,
+    ('Space Wolves|STORMLANCE TASK FORCE', "Hunter's Instincts", 'Chaplain On Bike'): 1,
+    ('Space Wolves|STORMLANCE TASK FORCE', 'Fury of the Storm', 'Chaplain On Bike'): 1,
+    ('Thousand Sons|SERVANTS OF CHANGE', 'Thicket of Bladed Bone', 'Chaos Spawn'): 1,
+    ('Thousand Sons|SERVANTS OF CHANGE', 'Unravelled Fates', 'Tzaangor Shaman'): 1,
+    ('Thousand Sons|WARPMELD PACT', 'Diamond of Distortion', 'Tzaangor Shaman'): 1,
+    ('Thousand Sons|WARPMELD PACT', 'Flowing Flesh', 'Tzaangor Shaman'): 1,
+    ('Thousand Sons|WARPMELD PACT', 'Warpmeld Dagger', 'Tzaangor Shaman'): 1,
+    ('World Eaters|KHORNE DAEMONKIN', 'Disciple of Khorne', 'Lord on Juggernaut'): 1,
+    ('World Eaters|POSSESSED SLAUGHTERBAND', 'Malicious Vigour', 'Slaughterbound'): 1,
+    }
+    if one_pinned != EXPECT_ONE:
+        missing = {k: v for k, v in EXPECT_ONE.items() if one_pinned.get(k) != v}
+        extra = {k: v for k, v in one_pinned.items() if EXPECT_ONE.get(k) != v}
+        return False, (f'one-admit census disagrees with the pinned set -- '
+                       f'{len(missing)} pinned triple(s) not matched, {len(extra)} unpinned '
+                       f'triple(s) found: missing {list(missing.items())[:3]}, '
+                       f'extra {list(extra.items())[:3]}')
+    if sum(EXPECT_ONE.values()) != 98:
+        return False, f'pinned one-admit total {sum(EXPECT_ONE.values())} != 98'
+
+    return True, (f'independent Python re-derivation agrees with b93_check.js exactly: '
+                  f'1145 evaluated, 53 zero-admit in the same six clauses, 98 one-admit '
+                  f'across 68 pinned triples')
 
 def e4b_engine_functions_defined_once(S):
     """E1c-1's guard, applied to E4b. The functions that answer enhancement legality are declared

@@ -15282,3 +15282,60 @@ and still reads all four namespaces, that `Pact of Cursed Pinions` has not acqui
 and that `Butcher Lord`'s clause still resolves to the source-derived World Eaters Infantry
 Characters. **`b126_check.js` loses its item 8** — the four mark enhancements — to `b93_check.js`,
 where the real enhancement records are loaded. One rule, one test site.
+
+---
+
+## D354 — B93 turn 3: the independent second census ships, and it exposes a stale B129 exemption (S257)
+
+**Turn type: tooling.** No `index.html`, `detachments.json` or parser touched. `rules_assertions.py`
+gains one assertion (**138 → 139**), and one existing assertion (B129) is corrected in place.
+
+### The independent second derivation
+
+`b93_check.js` already pinned the admit-count census from the engine side (JavaScript): 1,145 army x
+record evaluations, 53 zero-admit across six known-cause clauses, 98 one-admit. Turn 3 re-derives the
+same census in Python, reading `detachments.json`'s own `bearer_restriction` field and `units.json`
+directly through a fresh re-implementation of the matching logic — not a port of the JavaScript, so a
+bug shared between the two derivations cannot cancel out and pass silently. New `B93-ENGINE-CENSUS`
+assertion. **The two derivations agree exactly**: same 1,145 evaluated, same six zero-admit clauses at
+the same counts, same 98 one-admit — now pinned by `(detachment_key, enhancement_name, bearer_name)`
+triple rather than by count alone, so a resolver regression that swaps which unit an enhancement
+resolves to is caught even when the total stays 98.
+
+### B129's `Thicket of Bladed Bone` exemption was stale, and it was passing for the wrong reason
+
+Building the cross-check surfaced a real disagreement one level down, between this new census and the
+older **B129** (S241): B129 had `Thousand Sons|SERVANTS OF CHANGE`'s `Thicket of Bladed Bone` (`SPAWN
+unit only`) in its named zero-admit exemption list, reasoning the target unit is Beast-typed and
+therefore not a Character (D351 framed the SPAWN/Chaos Spawn alias the same way — "buys a clean parse
+rather than a bearer"). **That reasoning overlooked that the record is an Upgrade.** Upgrades bypass
+the Character gate entirely, per the Muster Rules' own exemption — Upgrades go to any unit type. A
+Spawn-only Upgrade reaching a Beast-typed Spawn unit is exactly correct, not a gap. The shipped
+resolver has always gotten this right, because it reads `detachments.json`'s own curated SPAWN alias
+directly. B129's own from-scratch parser did not know that alias, so it independently computed zero
+too — but for an unrelated reason (an unresolved token, not a real Character-type refusal) — and the
+two zeros (the exemption's reasoning and the parser's actual output) happened to agree, so B129 kept
+passing while documenting a gap that was never real.
+
+**Fixed in `B129`, not restated in the new assertion.** `parse_clause`'s tokeniser now carries the same
+one-entry SPAWN/Chaos Spawn alias `detachment_parser.py` already carries in the shipped field,
+mirrored rather than re-derived. With it, B129's own independent derivation finds the same one bearer
+this session's new census and `b93_check.js` both find — `Chaos Spawn Beast`. The exemption entry is
+removed (**30 → 29** named exemptions); the docstring is corrected to explain why, not just what.
+
+### Two small tooling fixes bundled in
+
+`b93_engine_bearer_census`'s registration docstring also corrected a stale claim in B129's own
+registration text ("resolves to at least one eligible Character bearer" — wrong for an Upgrade record,
+which is evaluated against any unit type). And `pipeline_manifest.py` gains a documented ordering note
+(FILES-TABLE ORDERING) recording the fix S256 applied ad hoc: the current session's handoff must be
+appended to `GUARDED` *before* the handoff's own Files table is written, because this file's hash is
+one of that table's rows and is edited a second time (the append) after `--write` would otherwise have
+already recorded it. S255's handoff carried a wrong hash for exactly this reason; S256 worked around it
+without writing the rule down. It is written down now instead of relying on session memory again.
+
+### Assertion changes
+
+**New `B93-ENGINE-CENSUS`** (138 → 139 assertions). **B129 corrected in place**, same id, same
+assertion count contribution (still one assertion) — exemption population 30 → 29, docstring and
+registration text both updated to explain the SPAWN/Upgrade finding rather than the earlier framing.
