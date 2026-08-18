@@ -1299,3 +1299,16 @@ D355 — Custody audit ahead of the project being set aside (tooling). Both repo
   what three sessions assumed (repo copy is newer); the re-upload ask is dropped in favour of always
   taking the repo copy at open. `SESSION_HANDOFF_203.md` was never committed and is a bounded,
   probably unrecoverable hole in an otherwise unbroken 125–257 chain.
+
+D356 — The cold-storage document (documentation). `PROJECT_COLD_STORAGE.md` ships: one orientation
+  file for a reader with no context, replacing 134 handoffs — what the tool is, what D0 explains, what
+  twenty built armies give a user end to end, the pipeline and what each of the 42 gates protects, the
+  23 open tickets grouped by meaning with the live D0 gaps separated from mere incompleteness, the six
+  repeat traps, why the project was set aside, and where every file lives. Every figure re-derived
+  from S259 command output; the full data-turn baseline re-run so the self-reproducing claim is a
+  check, not a belief (3 repro gates and 139/139 assertions pass). `SESSION_HANDOFF_203.md` was
+  recovered and pushed by Ryan, which the open baseline caught as three red gates; the `GUARDED` entry
+  is restored and **D299 is reversed** — the chain 125–259 is unbroken. Two corrections made to this
+  session's own prompt rather than inherited: B93 is not a live D0 gap (the resolver shipped at D353;
+  B127 holds that slot instead), and B116 is not resolved by Aeldari going out of scope — it is an
+  open ticket and an accepted limitation.

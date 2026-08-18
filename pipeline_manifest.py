@@ -227,6 +227,7 @@ GUARDED = [
     'B93_SCOPE.md',
     'B99_SCOPE.md',
     'GREY_KNIGHTS_BUILD_SCOPE.md',
+    'PROJECT_COLD_STORAGE.md',
     # B121 (S237): six scope documents that were never added to GUARDED when they were
     # written. Each verified present in the repo before appending — a GUARDED entry for
     # an absent file turns this gate permanently red. Emperor's Children's filename
@@ -298,6 +299,7 @@ GUARDED = [
     'SESSION_HANDOFF_200.md',
     'SESSION_HANDOFF_201.md',
     'SESSION_HANDOFF_202.md',
+    'SESSION_HANDOFF_203.md',
     'SESSION_HANDOFF_204.md',
     'SESSION_HANDOFF_205.md',
     'SESSION_HANDOFF_206.md',
@@ -353,6 +355,7 @@ GUARDED = [
     'SESSION_HANDOFF_256.md',
     'SESSION_HANDOFF_257.md',
     'SESSION_HANDOFF_258.md',
+    'SESSION_HANDOFF_259.md',
 ]
 
 # Chaos Daemons' nine hand-authored root CSVs (`CD_ROOT_CSVS` in units_repro_check.py) are
@@ -370,12 +373,9 @@ GUARDED = [
 #     hashing them.
 #   pipeline_manifest.json — the manifest cannot guard itself (build() writes it
 #     from the state of every *other* guarded file).
-#   SESSION_HANDOFF_203.md — removed S206 (D299). Never committed to the repo and
-#     no longer present in the project area (confirmed via a fresh clone, twice,
-#     across S205 and S206); genuinely unrecoverable, not a housekeeping gap. Its
-#     substance was already reconstructed into 40K_Decision_Log.md as D296 by S204,
-#     verified line-for-line against the handoff before the file itself was lost.
-#     Removing the GUARDED entry rather than leaving the gate permanently red.
+#   (SESSION_HANDOFF_203.md was excluded here from S206 to S258 as unrecoverable,
+#     per D299. It was recovered from a local copy and pushed ahead of S259; the
+#     GUARDED entry is restored and the handoff chain 125-259 is unbroken. D356.)
 #   Unit_Stats.csv, Unit_Points.csv, Unit_Wargear_Options.csv, Unit_Other_Options.csv,
 #     Unit_Weapons.csv, Unit_Abilities.csv, Keywords.csv, Rules.csv, Weapon_Abilities.csv
 #     — Chaos Daemons' nine hand-authored root CSVs. GW-derived source material, so they

@@ -3037,3 +3037,30 @@ claiming a completeness the data does not have.
 **Sequencing set this session, not for re-litigation.** B137 is the next data turn, ahead of B90.
 B90 blocks factions that do not exist yet; B137 moves points players are charged today. Two shipped
 CSM units currently disagree with their own parent legion on price.
+
+## S259 ledger
+
+**Turn type: documentation.** No ticket was worked. `index.html` stays v6.27; no data file, parser,
+harness or assertion changed; `rules_assertions.py` stays at 139. **23 open at S258 close, 23 open at
+S259 close.**
+
+Beginning: B136, B116, B120, B124, B122, B97, E28, B134, B135, B93, B127, B90, B85, B86, B69, B70,
+B75, P2, P4, E23, B67b, E12, B17 (23).
+Resolved: none (0).
+Added: none (0).
+Ending: B136, B116, B120, B124, B122, B97, E28, B134, B135, B93, B127, B90, B85, B86, B69, B70, B75,
+P2, P4, E23, B67b, E12, B17 (23).
+
+**Two ticket-status corrections recorded, no ticket moved.** S259's own session prompt described B93
+as a live D0 gap and B116 as resolved by Aeldari going out of scope. Neither is right. B93's engine
+resolver shipped at S256 (D353) and its independent census at S257 (D354); what remains is turn 4, a
+documentation and cleanup pass, and the live D0 slot the prompt meant belongs to **B127** — the 74
+enhancement records with no rule text in any held source. B116 remains **open**: Aeldari's absence is
+why Drukhari ships without its Harlequin and Anhrathe allied units, and D335 records Ryan classifying
+the ticket as required before production. `PROJECT_COLD_STORAGE.md` states both correctly; see D356.
+
+**Session-open reconciliation.** Three gates failed at open because `SESSION_HANDOFF_203.md` had been
+recovered and pushed but was not in `pipeline_manifest.py`'s `GUARDED` list. Entry restored, D299
+reversed, chain 125–259 unbroken. Full `--fetch --data-turn` rerun: 41/42, the only red being
+`repo_check` reporting this session's own in-flight edits. All three repro gates and 139/139
+assertions pass.

@@ -1,92 +1,61 @@
-# NEXT SESSION PROMPT — Session 259
+# NEXT SESSION PROMPT — Session 260 (only if the project is picked up again)
 
 ## Read first
 
-`SESSION_HANDOFF_258.md` and this file are the only authority on current state. Do not trust
-remembered session numbers, version strings or decision numbers — re-derive them.
+The project was set aside at S259. **Read `PROJECT_COLD_STORAGE.md` before this file and before
+anything else.** It is written for a reader with no context and replaces reading back through the
+handoff chain. This file only covers what that document deliberately leaves out: the mechanics of
+opening a session, and the render checks.
 
-This is a **wind-down session**, not a feature session. The project is being set aside. S258 confirmed
-custody is complete: the public repo plus the private sources repo hold a self-reproducing record.
-S259's whole job is the cold-storage document.
+`SESSION_HANDOFF_259.md` is the last handoff. Do not trust remembered session numbers, version
+strings or decision numbers — re-derive them. `index.html` is at **v6.27**, `rules_assertions.py` at
+**139**, the decision log through **D356**, the backlog at **23 open**.
 
 ## Session open
 
-Run `./baseline.sh --fetch`. Expect 35/35 with 5 tier-B gates skipped; `--fetch --data-turn` gives
-42/42. This turn touches no data, so tier-A is sufficient.
+Clone the public repo. Put `SOURCE_REPO_TOKEN.txt` next to `baseline.sh`. Run
+`./baseline.sh --fetch --data-turn`.
 
-**Take `detachments_repro_check.py` from the repo, always.** Do not ask Ryan to re-upload it. The
-project-area copy is stale and the repo copy is the newer, authoritative one — D355 settled this after
-three sessions asked for the re-upload backwards.
+Expect **42/42**, or 41/42 if the project file area is out of sync with the repo — that is
+`repo_check` telling you about the area, not about the repo, and it is normal after a gap. A tier-A
+run without sources gives 35/35 with 5 tier-B gates skipped.
 
-Verify the four hashes in S258's Files table against a fresh clone.
+If any other gate is red, reconcile it before starting work. Do not work around it and carry the
+explanation forward in prose; that is how manifest work was reverted twice without anyone noticing.
 
-## Turn type: documentation
+Verify the hashes in `SESSION_HANDOFF_259.md`'s Files table against the clone.
 
-No engine, data, parser or assertion change. If the work starts pulling toward a code change, stop and
-bank it — the point of this session is a durable record, not a fix.
+**Take `detachments_repro_check.py` from the repo, always.** The project-area copy has been stale
+three times running. D355 settled this.
 
-## The assigned work — `PROJECT_COLD_STORAGE.md` (net new)
+## Before choosing work
 
-One document, written for a reader who has none of this context: a future Ryan returning after a long
-gap, or a future model opening the repo cold. It replaces reading back through 133 handoffs. Plain
-prose, no assumed knowledge, no padding.
+Section 7 of `PROJECT_COLD_STORAGE.md` frames the real choice: keep twenty armies correct and current,
+or rebuild rules-as-data to make faction coverage a data task. Those are different projects. Decide
+which one you are doing before picking a ticket, because the answer changes whether the backlog is a
+work queue or a specification.
 
-It must cover:
+If the answer is "keep twenty armies correct", the order is: run the render checks below; then **B90**
+(the union-vs-complete chapter roster bug — the largest live D0 violation, five chapters affected);
+then **B127** (source acquisition for the 74 enhancement records with no rule text, which blocks four
+other tickets and cannot be built around).
 
-**What the thing is.** A browser-based Warhammer 40,000 11th Edition Matched Play list builder,
-single-file `index.html`, deployed on GitHub Pages, currently **v6.27**. Its differentiator is D0 —
-illegal army states must be unreachable, not merely flagged. That one principle explains most of the
-architecture, including why rules live in engine code rather than in a data schema.
-
-**What actually works today.** Twenty factions built: twelve Adeptus Astartes, five Heretic Astartes,
-Chaos Daemons, Drukhari. Say plainly what a user can and cannot do end to end.
-
-**What the pipeline is.** Private GW sources → parsers → JSON data files → single-file app, with
-`baseline.sh` as the one command that checks everything. Name the gates and what each protects. Make
-clear the private sources repo is required to regenerate but not to run.
-
-**What is broken or missing.** The 23 open tickets grouped by meaning, not listed by ID. Call out the
-live D0 gaps specifically — B93's remaining turn, B90's union-vs-complete roster bug, B135's
-unmodelled transports, B120, E23 — because those are places the app is confidently wrong rather than
-merely incomplete. Note that B116 was resolved by Aeldari going out of scope: Drukhari ships without
-Harlequin and Anhrathe allied units.
-
-**The traps.** The things that cost multiple sessions each and would cost them again: the project-area
-mount is not evidence of what exists; a census result that looks small is usually an unread field;
-scope-document instructions can be superseded by later decisions; hand-edited output files are lost on
-the next regeneration; GW-derived material must never reach the public repo, tested by content and not
-by author.
-
-**Why it was set aside, and what a revival faces.** Be straight. Rules are encoded as engine code plus
-curated tables, which is what makes D0 achievable and also what caps throughput at one maintainer's
-rate — the 26 sessions from S232 to S257 closed 24 tickets and opened 23, a steady state rather than a
-queue draining. A revival that fixes throughput is a rules-as-data rebuild, not a continuation of this
-backlog. Say that plainly rather than implying the project is nearly finished.
-
-**Where everything lives.** Public repo `rd-prime-1357/40k-army-builder`; private sources repo
-`rd-prime-1357/rd-prime-1357-data-sources` with the read-only token at `SOURCE_REPO_TOKEN.txt`; which
-documents are living and which are archival; the fact that `SESSION_HANDOFF_203.md` is missing from an
-otherwise unbroken 125–257 chain.
-
-## Also this session
-
-Nothing else. Do not start a ticket.
+Turn typing still applies: engine-only, data-only, or tooling-only, never mixed.
 
 ## Session close
 
-Add `SESSION_HANDOFF_259.md` to `GUARDED` **before** `--write` (FILES-TABLE ORDERING, S257). Then
-`pipeline_manifest.py --write` followed immediately by `pipeline_manifest.py --freshness-check` as the
-literal last two commands. Produce the handoff, the decision log entry and the backlog update as
-usual — the chain stays unbroken even on the last session.
-
-Push after close: `PROJECT_COLD_STORAGE.md`, `40K_Decision_Log.md`, `DECISION_INDEX.md`,
-`OPEN_ITEMS_BACKLOG.md`, `pipeline_manifest.py`, `pipeline_manifest.json`,
-`SESSION_HANDOFF_259.md`, `NEXT_SESSION_PROMPT.md`.
+Add `SESSION_HANDOFF_260.md` to `GUARDED` **before** `--write` (FILES-TABLE ORDERING, S257 — the
+handoff's own hash is a row in its own table). Then `pipeline_manifest.py --write` followed
+immediately by `pipeline_manifest.py --freshness-check` as the literal last two commands. Produce the
+handoff, the decision log entry and the backlog update as usual.
 
 ---
 
-## Standing item: the render checks, six sessions deep
+## Standing item: the render checks, seven sessions deep
 
+Four scripts, reproduced here in full so this file is self-contained and no handoff lookup is needed.
+Run them against the deployed app. **S250's is the one that matters** — it is the only one that edits
+a saved list without telling the player.
 Four scripts, reproduced here in full so this file is self-contained and no handoff lookup is needed.
 Run them against the deployed app. **S250's is the one that matters** — it is the only one that edits
 a saved list without telling the player.

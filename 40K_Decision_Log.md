@@ -15397,3 +15397,63 @@ of the project. Setting the project aside carries no data-loss risk once `Exampl
 is pushed. The project file area can be allowed to go stale or be cleared without consequence — it is
 a working cache, never the record. The deployed GitHub Pages app at `index.html` v6.27 continues to
 serve independently of any subscription.
+
+---
+
+## D356 — The cold-storage document, and handoff 203's recovery reverses D299 (S259)
+
+**Turn type: documentation.** No engine, data, parser or assertion file was touched. `index.html`
+stays v6.27, `rules_assertions.py` stays at 139, the backlog stays at 23 open. This is the last
+working session before the project is set aside; its whole job was one durable orientation file.
+
+### Handoff 203 was recovered, and the baseline caught it
+
+The session-open baseline failed three gates — `fetch-verify`, `rules_assertions` and
+`pipeline_manifest` — all with the same cause: `SESSION_HANDOFF_203.md` was present in the repo but
+absent from `pipeline_manifest.py`'s `GUARDED` list. Ryan pushed a local copy after S258 handed the
+question back. The file is complete (110 lines, a full data-only handoff for the `unit_loadouts.json`
+turn, ending with its own Files table and backlog ledger), so it is the real thing and not a stub.
+
+This reverses **D299** (S206), which removed the `GUARDED` entry on the grounds that the file was
+genuinely unrecoverable — a conclusion reached honestly after two fresh clones across S205 and S206,
+and simply overtaken by a copy surviving somewhere off-repo. The entry is restored in place and the
+exclusion note replaced with a three-line record of the reversal. Reconciled before any work started,
+per the standing rule; the rerun passes 41 of 42 with only `repo_check` red, which reports this
+session's own two in-flight edits.
+
+**The handoff chain 125–259 is now unbroken.** Any earlier document describing 203 as a permanent hole
+is superseded.
+
+### The document
+
+`PROJECT_COLD_STORAGE.md` (net new) is written for a reader with none of this project's context — a
+future Ryan after a long gap, or a model opening the repo cold — and is meant to replace reading back
+through 134 handoffs. It covers what the tool is and why D0 shapes its architecture; what the twenty
+built armies actually give a user end to end and what they do not; the source→parser→JSON→app pipeline
+and what each of the 42 gates protects; the 23 open tickets grouped by meaning, with the live D0 gaps
+called out separately from mere incompleteness; the six traps that each cost multiple sessions; why
+the project was set aside; and where every file lives.
+
+Every figure in it was taken from S259 command output rather than from prior prose. The full data-turn
+baseline was re-run specifically so the document's central claim could be stated as a check rather
+than a belief: the three repro gates and all 139 assertions pass, so the committed parsers plus the
+private sources still reproduce the shipped `units.json`, `unit_loadouts.json` and `detachments.json`
+byte-for-byte today.
+
+### Two corrections to S259's own session prompt, made rather than inherited
+
+**B93 is not a live D0 gap.** The prompt listed "B93's remaining turn" among the places the app is
+confidently wrong. It is not: D353 shipped the bearer-restriction resolver into v6.27 at S256 and
+deleted the curated table, and D354's independent Python census at S257 agreed with it exactly. What
+remains is turn 4, a documentation and cleanup pass. The document instead names **B127** in that
+slot — the 74 enhancement records with no rule text in any held source, which is a real and current
+eligibility hole and, unlike B93, cannot be closed by building anything.
+
+**B116 is not resolved.** The prompt said Aeldari going out of scope had resolved it. Aeldari's
+absence is the *reason* Drukhari ships without its Harlequin and Anhrathe allied units; the ticket
+remains open and D335 records Ryan classifying it as required before production. The document states
+it as an accepted limitation with the ticket explicitly still open, so a future reader does not treat
+a scope deferral as a closure.
+
+Both corrections follow the standing rule that prior prose — including a session's own prompt — is
+re-derived rather than trusted.
